@@ -34,7 +34,7 @@ const main = async () => {
     '  }\n' +
     '}'
   ));
-  fs.writeFile('src/utils/getEnv.ts', data, (err) => {
+  fs.writeFile('utils/getEnv.ts', data, (err) => {
     if (err) throw err;
     console.log('The file has been saved!');
   });
