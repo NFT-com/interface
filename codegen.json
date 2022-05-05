@@ -2,11 +2,11 @@
     "overwrite": true,
     "schema": "http://localhost:10010/graphql",
     "documents": [
-      "src/graphql/queries/*.graphql",
-      "src/graphql/mutations/*.graphql"
+      "graphql/queries/*.graphql",
+      "graphql/mutations/*.graphql"
     ],
     "generates": {
-      "src/graphql/generated/types.ts": {
+      "graphql/generated/types.ts": {
         "plugins": [
           "typescript",
           "typescript-operations",
