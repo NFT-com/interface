@@ -1,6 +1,9 @@
 {
-  "name": "nft-interface",
+  "name": "nft",
+  "description": "NFT.com Interface",
+  "homepage": "https://nft.com",
   "version": "0.1.0",
+  "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
     "dev": "next dev",
