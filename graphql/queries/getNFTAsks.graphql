@@ -1,0 +1,45 @@
+query getNFTAsks($input: NftAsksInput!) {
+  getNFTAsks(input: $input) {
+    id
+    cancelTxHash
+    approvalTxHash
+    makerAddress
+    takerAddress
+    signature {
+      v
+      r
+      s
+    }
+    makeAsset {
+      standard {
+        assetClass
+        contractAddress
+        tokenId
+        allowAll
+        bytes
+      }
+      value
+      minimumBid
+      bytes
+    }
+    takeAsset {
+      standard {
+        assetClass
+        contractAddress
+        tokenId
+        allowAll
+        bytes
+      }
+      bytes
+      value
+      minimumBid
+    }
+    nonce
+    start
+    end
+    salt
+    offerAcceptedAt
+    chainId
+    auctionType
+  }
+}

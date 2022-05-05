@@ -1,0 +1,18 @@
+query RecentProfiles($input: LatestProfilesInput) {
+  latestProfiles(input: $input) {
+    items {
+      id
+      bannerURL
+      owner {
+        address
+      }
+      photoURL
+      url
+    }
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+  }
+}

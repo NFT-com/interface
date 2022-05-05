@@ -1,0 +1,24 @@
+query Profile($url: String!) {
+  profilePassive(url: $url) {
+    id
+    url
+    status
+    bannerURL
+    photoURL
+    description
+    isFollowedByMe
+    showGallery
+    owner {
+      address
+      chainId
+      network
+    }
+    winningBid {
+      id
+      price
+      wallet {
+        address
+      }
+    }
+  }
+}

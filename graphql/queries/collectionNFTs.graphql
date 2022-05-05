@@ -1,0 +1,24 @@
+query CollectionNFTs($input: CollectionNFTsInput!) {
+  collectionNFTs(input: $input) {
+    items {
+      id
+      tokenId
+      type
+      isOwnedByMe
+      metadata {
+        name
+        description
+        imageURL
+        traits {
+          type
+          value
+        }
+      }
+    }
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+  }
+}

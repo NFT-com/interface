@@ -1,0 +1,19 @@
+query MyNFTs($input: NFTsInput) {
+  myNFTs(input: $input) {
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    items {
+      contract
+      tokenId
+      id
+      type
+      metadata {
+        imageURL
+        description
+        name
+      }
+    }
+  }
+}

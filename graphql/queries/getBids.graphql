@@ -1,0 +1,56 @@
+query GetBids($input: MarketBidsInput!) {
+  getBids(input: $input) {
+    items {
+      id
+      structHash
+      nonce
+      signature {
+        v
+        r
+        s
+      }
+      marketAskId
+      makerAddress
+      makeAsset {
+        standard {
+          assetClass
+          bytes
+          contractAddress
+          tokenId
+          allowAll
+        }
+        nftId
+        bytes
+        value
+        minimumBid
+      }
+      takerAddress
+      takeAsset {
+        standard {
+          assetClass
+          bytes
+          contractAddress
+          tokenId
+          allowAll
+        }
+        nftId
+        bytes
+        value
+        minimumBid
+      }
+      marketSwapId
+      approvalTxHash
+      cancelTxHash
+      message
+      start
+      end
+      salt
+      offerAcceptedAt
+      acceptedAt
+      rejectedAt
+      rejectedReason
+      chainId
+      auctionType
+    }
+  }
+}

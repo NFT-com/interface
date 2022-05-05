@@ -1,0 +1,54 @@
+query GetAsks($input: AsksInput!) {
+  getAsks(input: $input) {
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+    items {
+      id
+      cancelTxHash
+      approvalTxHash
+      makerAddress
+      takerAddress
+      signature {
+        v
+        r
+        s
+      }
+      makeAsset {
+        standard {
+          assetClass
+          contractAddress
+          tokenId
+          allowAll
+          bytes
+        }
+        nftId
+        value
+        minimumBid
+        bytes
+      }
+      takeAsset {
+        standard {
+          assetClass
+          contractAddress
+          tokenId
+          allowAll
+          bytes
+        }
+        nftId
+        bytes
+        value
+        minimumBid
+      }
+      nonce
+      start
+      end
+      salt
+      offerAcceptedAt
+      chainId
+      auctionType
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation CancelMarketAsk($input: CancelAskInput!) {
+  cancelAsk(input: $input)
+}
