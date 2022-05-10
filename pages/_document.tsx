@@ -1,5 +1,4 @@
 import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document';
-import Image from 'next/image';
 import Script from 'next/script';
 import { ReactElement } from 'react';
 
@@ -130,17 +129,6 @@ class MyDocument extends Document {
                   fbq('track', 'PageView');
             `}
           </Script>
-          <noscript>
-            <Image
-              alt='metapixel'
-              height="1"
-              width="1"
-              style= {{
-                display: 'none',
-              }}
-              src="https://www.facebook.com/tr?id=1332665313901251&ev=PageView&noscript=1"
-            />
-          </noscript>
         </Head>
         <body>
           <noscript>
