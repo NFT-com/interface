@@ -33,7 +33,7 @@ import {
   WETH,
   WETH_RINKEBY
 } from 'constants/tokens';
-import { getEnv, Secret } from 'utils/env';
+import { getEnv, Secret } from 'utils/getEnv';
 
 import { ethers } from 'ethers';
 

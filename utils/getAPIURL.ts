@@ -1,4 +1,4 @@
-import { getEnv, Secret } from 'utils/env';
+import { getEnv, Secret } from 'utils/getEnv';
 
 export function getAPIURL() {
   switch (getEnv(Secret.REACT_APP_ENV)) {

@@ -1,4 +1,4 @@
-import { getEnvBool, Secret } from 'utils/env';
+import { getEnvBool, Secret } from 'utils/getEnv';
 
 import ReactGA from 'react-ga';
 import { WalletSubTab } from 'types';

@@ -1,7 +1,8 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { getEnv, Secret } from 'utils/env';
+import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
+import { getEnv, Secret } from 'utils/getEnv';
 
 import {
   apiProvider,
@@ -9,6 +10,7 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
+import { UserContext, useUserContextValue } from 'context/UserContext';
 import type { AppProps } from 'next/app';
 import { chain, createClient, WagmiProvider } from 'wagmi';
 
@@ -34,10 +36,15 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const userContextValue = useUserContextValue();
   return (
     <WagmiProvider client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
-        <Component {...pageProps} />
+        <GraphQLProvider>
+          <UserContext.Provider value={userContextValue}>
+            <Component {...pageProps} />
+          </UserContext.Provider>
+        </GraphQLProvider>
       </RainbowKitProvider>
     </WagmiProvider>
   );

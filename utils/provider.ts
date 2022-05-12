@@ -1,4 +1,4 @@
-import { getEnv, Secret } from 'utils/env';
+import { getEnv, Secret } from 'utils/getEnv';
 
 import { isSandbox } from './httpHooks';
 

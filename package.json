@@ -6,11 +6,15 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "yarn typechain:gen & doppler run -- next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain"
+    "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain",
+    "gql:gen": "graphql-codegen --config codejen.json",
+    "doppler:pull": "echo 'export const secretNames = ' > ./scripts/doppler_secret_names.mjs && doppler secrets --only-names --json >> ./scripts/doppler_secret_names.mjs",
+    "doppler:gen": "node --experimental-specifier-resolution=node --loader ts-node/esm ./scripts/gen-doppler.mjs",
+    "doppler:all": "yarn doppler:pull && yarn doppler:gen"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.2",
@@ -47,6 +51,7 @@
     "postcss-import": "^14.1.0",
     "react-ga": "^3.3.0",
     "tailwindcss": "^3.0.24",
+    "ts-node": "^10.7.0",
     "typechain": "^8.0.0",
     "typescript": "^4.6.4"
   }
