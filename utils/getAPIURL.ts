@@ -1,15 +1,15 @@
 import { getEnv, Secret } from 'utils/getEnv';
 
 export function getAPIURL() {
-  switch (getEnv(Secret.REACT_APP_ENV)) {
+  switch (getEnv(Secret.NEXT_PUBLIC_ENV)) {
   case 'DEBUG':
-    return getEnv(Secret.REACT_APP_DEBUG_URL);
+    return getEnv(Secret.NEXT_PUBLIC_DEBUG_URL);
   case 'SANDBOX':
-    return getEnv(Secret.REACT_APP_SANDBOX_URL);
+    return getEnv(Secret.NEXT_PUBLIC_SANDBOX_URL);
   case 'STAGING':
-    return getEnv(Secret.REACT_APP_STAGING_URL);
+    return getEnv(Secret.NEXT_PUBLIC_STAGING_URL);
   case 'PRODUCTION':
   default:
-    return getEnv(Secret.REACT_APP_PRODUCTION_URL);
+    return getEnv(Secret.NEXT_PUBLIC_PRODUCTION_URL);
   }
 }

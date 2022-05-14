@@ -15,7 +15,7 @@ export enum LoggingCategory {
 }
 
 function logEvent(category: string, action: string, extras?: string) {
-  if (getEnvBool(Secret.REACT_APP_ENGAGEMENT_LOGGING_ENABLED)) {
+  if (getEnvBool(Secret.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED)) {
     ReactGA.event({
       action: action,
       category: category,

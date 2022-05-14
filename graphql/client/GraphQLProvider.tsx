@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { getAPIURL } from 'utils/getAPIURL';
+import { getEnv, Secret } from 'utils/getEnv';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useUserContextValue } from 'context/UserContext';
@@ -68,7 +69,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       }
     }
     try {
-      const signature = await signMessageAsync( { message: process.env.REACT_APP_APOLLO_AUTH_MESSAGE } );
+      const signature = await signMessageAsync( { message: getEnv(Secret.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE) } );
       localStorage.setItem('signatureData', JSON.stringify({
         signature,
         address: account.address,

@@ -17,9 +17,9 @@ import { chain, createClient, WagmiProvider } from 'wagmi';
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.rinkeby],
   [
-    apiProvider.alchemy(getEnv(Secret.REACT_APP_ALCHEMY_MAINNET_KEY)),
-    apiProvider.alchemy(getEnv(Secret.REACT_APP_ALCHEMY_RINKEBY_KEY)),
-    apiProvider.infura(getEnv(Secret.REACT_APP_INFURA_PROJECT_ID)),
+    apiProvider.alchemy(getEnv(Secret.NEXT_PUBLIC_ALCHEMY_MAINNET_KEY)),
+    apiProvider.alchemy(getEnv(Secret.NEXT_PUBLIC_ALCHEMY_RINKEBY_KEY)),
+    apiProvider.infura(getEnv(Secret.NEXT_PUBLIC_INFURA_PROJECT_ID)),
     apiProvider.fallback()
   ]
 );

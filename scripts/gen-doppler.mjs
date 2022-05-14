@@ -3,7 +3,7 @@ import { secretNames } from './doppler_secret_names.mjs';
 import * as fs from 'fs';
 
 const main = async () => {
-  const names = Object.keys(secretNames).filter((name) => name.includes('REACT_APP_'));
+  const names = Object.keys(secretNames).filter((name) => name.includes('NEXT_PUBLIC_'));
 
   console.log(
     '! generating config types for the following secrets: ',

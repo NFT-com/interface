@@ -72,7 +72,7 @@ export type SupportedTokenContract =
   | 'genesisKeyTeamClaim';
 
 export const getAddress = (token: SupportedTokenContract, chainId: number | string | undefined) => {
-  if (getEnv(Secret.REACT_APP_ENV) === 'PRODUCTION') {
+  if (getEnv(Secret.NEXT_PUBLIC_ENV) === 'PRODUCTION') {
     chainId = 1;
   }
   switch (token) {
