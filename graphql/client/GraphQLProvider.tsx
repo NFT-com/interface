@@ -1,9 +1,9 @@
 import { GraphQLClient } from 'graphql-request';
+import useUser from 'hooks/state/useUser';
 import { getAPIURL } from 'utils/getAPIURL';
 import { getEnv, Secret } from 'utils/getEnv';
 import { isNullOrEmpty } from 'utils/helpers';
 
-import { useUserContextValue } from 'context/UserContext';
 import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useAccount, useNetwork, useProvider, useSignMessage } from 'wagmi';
 
@@ -26,7 +26,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   const { activeChain } = useNetwork();
   const { data: account } = useAccount();
   const { signMessageAsync } = useSignMessage();
-  const { isSignedOut, updateIsSignedOut } = useUserContextValue();
+  const { isSignedOut, updateIsSignedOut } = useUser();
 
   const [sigRejected, setSigRejected] = useState(!isSignedOut);
   const [client, setClient] = useState(defaultClient);

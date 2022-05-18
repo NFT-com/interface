@@ -16,7 +16,6 @@ export enum Secret {
   NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED = 'NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED',
   NEXT_PUBLIC_ENV = 'NEXT_PUBLIC_ENV',
   NEXT_PUBLIC_FORCE_DARK_MODE = 'NEXT_PUBLIC_FORCE_DARK_MODE',
-  NEXT_PUBLIC_FORTMATIC_KEY = 'NEXT_PUBLIC_FORTMATIC_KEY',
   NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED = 'NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED',
   NEXT_PUBLIC_GK_BLIND_AUCTION_END = 'NEXT_PUBLIC_GK_BLIND_AUCTION_END',
   NEXT_PUBLIC_GK_BLIND_AUCTION_START = 'NEXT_PUBLIC_GK_BLIND_AUCTION_START',
@@ -48,9 +47,7 @@ export function getEnv(name: Secret): any {
 }
 
 export function getEnvBool(name: Secret): boolean {
-  console.log(name);
   const value = process.env[name];
-  console.log(value);
   if (typeof value === 'boolean') {
     return value;
   } else if (value === 'true') {

@@ -10,7 +10,6 @@ import {
   getDefaultWallets,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
-import { UserContext, useUserContextValue } from 'context/UserContext';
 import type { AppProps } from 'next/app';
 import { chain, createClient, WagmiProvider } from 'wagmi';
 
@@ -36,14 +35,11 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const userContextValue = useUserContextValue();
   return (
     <WagmiProvider client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
         <GraphQLProvider>
-          <UserContext.Provider value={userContextValue}>
-            <Component {...pageProps} />
-          </UserContext.Provider>
+          <Component {...pageProps} />
         </GraphQLProvider>
       </RainbowKitProvider>
     </WagmiProvider>
