@@ -1,123 +1,113 @@
+import { SignatureModal } from 'components/modules/SignatureModal';
 import { GraphQLClient } from 'graphql-request';
-import useUser from 'hooks/state/useUser';
-import { getAPIURL } from 'utils/getAPIURL';
-import { getEnv, Secret } from 'utils/getEnv';
+import { useUser } from 'hooks/state/useUser';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react';
-import { useAccount, useNetwork, useProvider, useSignMessage } from 'wagmi';
-
-const defaultClient = new GraphQLClient(getAPIURL());
-
+import { useAccount, useConnect, useNetwork, useSignMessage } from 'wagmi';
+const defaultClient = new GraphQLClient(process.env.NODE_ENV);
 export const GraphQLContext = createContext({
-  client: defaultClient,
-  signed: false,
-  trySignature: () => null,
+  client: defaultClient
 });
-
 export const GraphQLProviderProps = {};
-
 /**
  * gQL provider which sets the required auth
  * headers specific to nft.com.
  */
 export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderProps>) {
-  const provider = useProvider();
-  const { activeChain } = useNetwork();
   const { data: account } = useAccount();
-  const { signMessageAsync } = useSignMessage();
-  const { isSignedOut, updateIsSignedOut } = useUser();
-
-  const [sigRejected, setSigRejected] = useState(!isSignedOut);
-  const [client, setClient] = useState(defaultClient);
+  const { isConnected } = useConnect();
+  const { activeChain } = useNetwork();
+  const { user, signature: userSignature, setUserSignature } = useUser();
   const [signed, setSigned] = useState(false);
+  const [client, setClient] = useState(defaultClient);
+  const [sigRejected, setSigRejected] = useState(!userSignature);
+
+  const { signMessageAsync, isIdle } = useSignMessage({
+    message: process.env.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE,
+    onSuccess(data) {
+      setUserSignature({ address: account.address, authSignature: data, signIn: true });
+    },
+  });
 
   const createSignedClient = useCallback((signature: string) => {
-    const gqlClient = new GraphQLClient(getAPIURL() + '/api', {
+    const gqlClient = new GraphQLClient(process.env.NODE_ENV + '/api', {
       cache: 'default',
       headers: {
         authorization: signature,
-        'chain-id': String(activeChain.id),
-        chainId: String(activeChain.id),
+        'chain-id': String(activeChain?.id),
+        chainId: String(activeChain?.id),
         network: 'ethereum', // TODO: support new networks
       },
     });
     setClient(gqlClient);
-  }, [activeChain]);
-
+  }, [activeChain?.id]);
+  
   const trySignature = useCallback(async () => {
-    setSigned(false);
-    if(isSignedOut) {
+    if(!isConnected || !isIdle) {
       return false;
     }
+    setSigned(false);
     /**
      * First check if there's a signature available in the cache.
      */
-    const cachedSigData = localStorage.getItem('signatureData');
-    if (!isNullOrEmpty(cachedSigData)) {
+    if (userSignature !== null) {
       try {
-        const parsedSigData = JSON.parse(cachedSigData);
-        const cachedAddress = parsedSigData['address'];
-        const cachedSignature = parsedSigData['signature'];
-        if (account === cachedAddress) {
-          createSignedClient(cachedSignature);
+        if (account?.address === userSignature.address) {
+          createSignedClient(userSignature.authSignature);
           setSigned(true);
           return true;
         }
       } catch {
-      // fall through if invalid signature or incorrect address.
+        // fall through if invalid signature or incorrect address.
+      }
+    } else {
+      try {
+        const signature = await signMessageAsync();
+        createSignedClient(signature);
+        setSigned(true);
+        return true;
+      } catch (error) {
+        setSigned(false);
+        console.log('Failed to get login signature. Only public endpoints will succeed.');
+        return false;
       }
     }
-    try {
-      const signature = await signMessageAsync( { message: getEnv(Secret.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE) } );
-      localStorage.setItem('signatureData', JSON.stringify({
-        signature,
-        address: account.address,
-      }));
-      createSignedClient(signature);
-      setSigned(true);
-      return true;
-    } catch (error) {
-      console.log(error);
-      setSigned(false);
-      console.log('Failed to get login signature. Only public endpoints will succeed.');
-      return false;
-    }
-  }, [account, createSignedClient, isSignedOut, signMessageAsync]);
+  }, [userSignature, isConnected, isIdle, account?.address, createSignedClient, signMessageAsync]);
 
   useEffect(() => {
-    if (isSignedOut) {
+    if(!userSignature || !isConnected || !user.isSignedIn) {
       console.log('setting sigRejected false');
       setSigRejected(false);
     }
-  }, [isSignedOut]);
+  }, [isConnected, user.isSignedIn, userSignature]);
 
   useEffect(() => {
-    if(provider == null) {
+    if (!isConnected && !userSignature) {
+      setUserSignature(null);
+      setSigRejected(false);
       return;
-    }
-    if(!account) {
-      updateIsSignedOut(true);
     }
     (async () => {
       const sigResult = await trySignature();
       // we only want to count the rejection of a real signature request.
       // if there is no connected wallet, it should fail silently.
-      setSigRejected(!sigResult && !isNullOrEmpty(account.address));
-    });
-    trySignature();
-  }, [account, provider, trySignature, updateIsSignedOut]);
-
+      setSigRejected(!sigResult && !isNullOrEmpty(account?.address));
+    })();
+  }, [account, isConnected, setUserSignature, trySignature, userSignature]);
+  
   return (
     <GraphQLContext.Provider
       value={{
-        client,
-        signed,
-        trySignature,
+        client
       }}
     >
+      <SignatureModal
+        visible={!signed && !isNullOrEmpty(account?.address) && isConnected}
+        showRetry={sigRejected}
+        onRetry={trySignature}
+      />
       {props.children}
     </GraphQLContext.Provider>
   );
 }
-

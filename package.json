@@ -12,9 +12,7 @@
     "lint": "next lint",
     "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain",
     "gql:gen": "graphql-codegen --config codejen.json",
-    "doppler:pull": "echo 'export const secretNames = ' > ./scripts/doppler_secret_names.mjs && doppler secrets --only-names --json >> ./scripts/doppler_secret_names.mjs",
-    "doppler:gen": "node --experimental-specifier-resolution=node --loader ts-node/esm ./scripts/gen-doppler.mjs",
-    "doppler:all": "yarn doppler:pull && yarn doppler:gen"
+    "doppler:pull": "doppler secrets --json >> .env.local"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.2",
@@ -24,12 +22,15 @@
     "@rainbow-me/rainbowkit": "^0.1.0",
     "@types/tailwindcss": "^3.0.10",
     "ethers": "^5.6.5",
+    "framer-motion": "^6.3.3",
     "graphql": "^16.4.0",
     "graphql-request": "^4.2.0",
     "graphql-tag": "^2.12.6",
     "next": "12.1.6",
+    "polished": "^4.2.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "siwe": "^1.1.6",
     "swr": "^1.3.0",
     "wagmi": "^0.3.3"
   },

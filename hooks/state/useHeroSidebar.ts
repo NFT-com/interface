@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-export default function useHeroSidebar() {
+export function useHeroSidebar() {
   const { data, mutate } = useSWR('heroSidebar', { fallbackData: false });
 
   const loading = !data;

@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-export default function useSettingsMenu() {
+export function useSettingsMenu() {
   const { data, mutate } = useSWR('settingsMenu', { fallbackData: false });
 
   const loading = !data;

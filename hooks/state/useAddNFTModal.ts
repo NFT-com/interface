@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-export default function useAddNFTModal() {
+export function useAddNFTModal() {
   const { data, mutate } = useSWR('addNFTModal', { fallbackData: false });
 
   const loading = !data;

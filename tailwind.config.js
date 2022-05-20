@@ -1,7 +1,7 @@
 module.exports = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
@@ -73,7 +73,7 @@ module.exports = {
         'red-1':'#FF6871',
         'text-4':'#C3C5CB',
         'footer-txt':'#787E91',
-        'primary-btn-txt-disabled':'777E91',
+        'primary-btn-txt-disabled':'#777E91',
         'transparent-border':'#7A8092',
         'toggle-bg':'#00A4FF',
         'grey-txt':'#d4d4d4',
@@ -99,43 +99,43 @@ module.exports = {
         'hero-heading1': ['Stretch Pro'],
         'hero-heading2': ['Bebas Neue'],
         'dm-mono': ['DM Mono'],
-    },
-    keyFrames: {
-      pulseBorder: {
-        '0%, 100%': { borderColor: 'rgba(0, 164, 255, 1)' },
-        '50%': { borderColor: 'rgba(0, 164, 255, 0)' },
+      },
+      keyFrames: {
+        pulseBorder: {
+          '0%, 100%': { borderColor: 'rgba(0, 164, 255, 1)' },
+          '50%': { borderColor: 'rgba(0, 164, 255, 0)' },
+        }
+      },
+      animation: {
+        'spin-slow': 'spin 2s linear infinite',
+        'pulse-border': 'pulseBorder 2s linear infinite',
+      },
+      padding: {
+        '30px': '30px',
+        '20px': '20px',
+      },
+      margin: {
+        'n3':'-3px',
+      },
+      width: {
+        'pic1': '15.125rem',
+        'slider-button': '1.5625rem',
+        '61':'14.5rem',
+        'slider-card': '93.5%',
+      },
+      height: {
+        'slider-button': '2.1875rem',
+        'sumBanner':'2.875rem',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'hero-radial-gradient':
+      'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)',
+        'hero-gradient':
+      'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
       }
     },
-    animation: {
-      'spin-slow': 'spin 2s linear infinite',
-      'pulse-border': 'pulseBorder 2s linear infinite',
-    },
-    padding: {
-      '30px': '30px',
-      '20px': '20px',
-    },
-    margin: {
-      'n3':'-3px',
-    },
-    width: {
-      'pic1': '15.125rem',
-      'slider-button': '1.5625rem',
-      '61':'14.5rem',
-      'slider-card': '93.5%',
-    },
-    height: {
-      'slider-button': '2.1875rem',
-      'sumBanner':'2.875rem',
-    },
-    backgroundImage: {
-      'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-      'hero-radial-gradient':
-      'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)',
-      'hero-gradient':
-      'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
-    }
   },
-},
   variants: {
     fill: ['hover', 'focus'],
     extend: {},

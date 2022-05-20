@@ -1,0 +1,162 @@
+import Loader from 'components/elements/Loader';
+import { useThemeColors } from 'hooks/useThemeColors';
+import { isNullOrEmpty } from 'utils/helpers';
+import { tw } from 'utils/tw';
+
+import Image from 'next/image';
+import { useCallback } from 'react';
+
+export enum AccentType {
+  SCALE = 'SCALE',
+  OPACITY = 'OPACITY',
+}
+
+export enum ButtonType {
+  PRIMARY = 'PRIMARY',
+  SECONDARY = 'SECONDARY',
+  ERROR = 'ERROR'
+}
+
+export enum ButtonSize {
+  SMALL = 'SMALL',
+}
+
+export interface ButtonProps {
+  stretch?: boolean;
+  label: string;
+  icon?: string;
+  accent?: AccentType;
+  onClick: () => void;
+  loading?: boolean;
+  loadingText?: string;
+  disabled?: boolean;
+  type: ButtonType;
+  color?: string;
+  size?: ButtonSize;
+  bgColor?: string;
+  outline?: string;
+}
+
+/**
+ * Renders a blue button with the input label as white text.
+ */
+export function Button(props: ButtonProps) {
+  const {
+    primaryButtonBackground,
+    primaryButtonBackgroundDisabled,
+    primaryButtonTextDisabled,
+    secondaryButtonBackground,
+    secondaryButtonBackgroundDisabled,
+    secondaryButtonTextDisabled,
+    red,
+    alwaysBlack
+  } = useThemeColors();
+
+  const bgColor = useCallback(() => {
+    if(!isNullOrEmpty(props?.bgColor)) {
+      return props?.bgColor;
+    }
+    const disabledBgColors = {
+      'PRIMARY': primaryButtonBackgroundDisabled,
+      'SECONDARY': secondaryButtonBackgroundDisabled,
+      'ERROR': red
+    };
+    const enabledBgColors = {
+      'PRIMARY': primaryButtonBackground,
+      'SECONDARY': secondaryButtonBackground,
+      'ERROR': red
+    };
+    if (props?.disabled ?? false) {
+      return disabledBgColors[props?.type];
+    } else {
+      return enabledBgColors[props?.type];
+    }
+  }, [primaryButtonBackground,
+    primaryButtonBackgroundDisabled,
+    props?.bgColor,
+    props?.disabled,
+    props?.type,
+    secondaryButtonBackground,
+    secondaryButtonBackgroundDisabled,
+    red]);
+
+  const textColor = useCallback(() => {
+    if(!isNullOrEmpty(props?.color)) {
+      return props?.color;
+    }
+    const disabledTextColors = {
+      'PRIMARY': primaryButtonTextDisabled,
+      'SECONDARY': secondaryButtonTextDisabled,
+      'ERROR': red
+    };
+    const enabledTextColors = {
+      'PRIMARY': alwaysBlack,
+      'SECONDARY': alwaysBlack
+    };
+    if (props?.disabled ?? false) {
+      return disabledTextColors[props?.type];
+    } else {
+      return enabledTextColors[props?.type];
+    }
+  }, [props?.color,
+    props?.disabled,
+    props?.type,
+    primaryButtonTextDisabled,
+    secondaryButtonTextDisabled,
+    red,
+    alwaysBlack]);
+
+  const accent = useCallback(() => {
+    if(isNullOrEmpty(props?.accent) && !props?.loading) {
+      return 'hover:opacity-80';
+    }
+    else if(props?.accent === AccentType.SCALE) {
+      return 'transform hover:scale-105';
+    }
+    return '';
+  }, [props?.accent, props?.loading]);
+
+  return (
+    <div
+      className={tw(
+        'flex items-center',
+        'justify-center rounded-xl',
+        'no-underline',
+        !props?.loading && 'cursor-pointer',
+        props?.outline ?? '',
+        props?.size === ButtonSize.SMALL ? 'min-h-[2.5rem] px-3 minsm:px-6 text-xs' : 'min-h-[3rem] px-6 text-lg',
+        props?.stretch ? 'w-full grow' : 'w-fit',
+        props?.disabled
+          ? ''
+          : accent(),
+        props?.type === ButtonType.SECONDARY || props?.type === ButtonType.ERROR ? 'border' : ''
+      )}
+      style={{
+        backgroundColor: bgColor(),
+        color: textColor(),
+        borderColor: props?.type === ButtonType.ERROR ? red : '#CAD2E8'
+      }}
+      onClick={() => {
+        if (props?.disabled ?? false) {
+          return;
+        }
+        props?.onClick();
+      }}
+    >
+      {props?.loading ?
+        <div className='flex w-full items-center justify-center'>
+          <Loader />
+          <span className="flex ml-2 whitespace-normal">{props?.loadingText}</span>
+        </div> :
+        <>
+          {props?.icon &&
+            <Image
+              className={tw('mr-2 ',
+                props?.size === ButtonSize.SMALL ? 'h-3 w-3 minsm:h-5 minsm:w-5':'h-5 w-5')}
+              src={props?.icon} alt={props?.label}/>}
+          {props?.label}
+        </>
+      }
+    </div>
+  );
+}

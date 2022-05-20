@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-export default function useBidModal() {
+export function useBidModal() {
   const { data, mutate } = useSWR('bidModal', { fallbackData: false });
 
   const loading = !data;

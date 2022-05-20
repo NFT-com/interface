@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-export default function useAddFundsDialog() {
+export function useAddFundsDialog() {
   const { data, mutate } = useSWR('addFundsDialog', { fallbackData: false });
 
   const loading = !data;

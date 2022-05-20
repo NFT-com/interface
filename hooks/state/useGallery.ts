@@ -5,7 +5,7 @@ export interface GalleryState {
   galleryShowMyStuff: boolean;
 }
 
-export default function useGallery() {
+export function useGallery() {
   const { data, mutate } = useSWR('gallery',
     {
       fallbackData:
