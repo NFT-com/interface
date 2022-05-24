@@ -1,0 +1,56 @@
+import { GraphQLContext } from 'graphql/client/GraphQLProvider';
+import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+import { User } from 'graphql/generated/types';
+import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
+import { isNullOrEmpty } from 'utils/helpers';
+
+import { useContext, useState } from 'react';
+import useSWR, { mutate } from 'swr';
+import { PartialDeep } from 'type-fest';
+import { useAccount } from 'wagmi';
+
+export interface MeQueryData {
+  loading: boolean;
+  me: PartialDeep<User>;
+  usernameFound: string | null;
+  userEmailFound: string | null;
+  userEmailVerified: boolean;
+  mutate: () => void;
+}
+
+export function useMeQuery(): MeQueryData {
+  const sdk = useGraphQLSDK();
+  const { data: account } = useAccount();
+  const { signed } = useContext(GraphQLContext);
+  const { isSupported } = useSupportedNetwork();
+
+  const [loading, setLoading] = useState(false);
+
+  const keyString = 'MeQuery' + account?.address + signed;
+
+  const { data } = useSWR(keyString, async () => {
+    if (isNullOrEmpty(account?.address) || !signed || !isSupported) {
+      return null;
+    }
+    setLoading(true);
+    try {
+      const result = await sdk.Me();
+      setLoading(false);
+      return result?.me;
+    } catch (error) {
+      setLoading(false);
+      return null;
+    }
+  });
+
+  return {
+    loading: loading,
+    me: data,
+    usernameFound: data?.username,
+    userEmailFound: data?.email,
+    userEmailVerified: data?.isEmailConfirmed ?? false,
+    mutate: () => {
+      mutate(keyString);
+    },
+  };
+}

@@ -2,6 +2,7 @@ import { Maybe } from 'graphql/generated/types';
 
 import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { ethers } from 'ethers';
 // import { AddressZero } from '@ethersproject/constants';
 // import { Contract } from '@ethersproject/contracts';
 // import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
@@ -13,6 +14,18 @@ export function isAddress(value: any): string | false {
   try {
     return getAddress(value);
   } catch {
+    return false;
+  }
+}
+
+export function sameAddress(first: Maybe<string>, second: Maybe<string>) {
+  if (first == null || second == null) {
+    return false;
+  }
+  try {
+    return ethers.utils.getAddress(first) === ethers.utils.getAddress(second);
+  } catch (error) {
+    console.log('Invalid addresses');
     return false;
   }
 }

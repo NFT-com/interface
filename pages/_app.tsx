@@ -6,26 +6,44 @@ import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import {
   apiProvider,
   configureChains,
-  getDefaultWallets,
+  connectorsForWallets,
   RainbowKitProvider,
+  wallet
 } from '@rainbow-me/rainbowkit';
 import type { AppProps } from 'next/app';
+import { rainbowDark } from 'styles/RainbowKitThemes';
 import { chain, createClient, WagmiProvider } from 'wagmi';
 
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.rinkeby],
+  process.env.NEXT_PUBLIC_ENV !== 'PRODUCTION' ?
+    [chain.mainnet, chain.rinkeby] :
+    [chain.mainnet],
   [
     apiProvider.alchemy(process.env.NEXT_PUBLIC_ALCHEMY_MAINNET_KEY),
-    apiProvider.alchemy(process.env.NEXT_PUBLIC_ALCHEMY_RINKEBY_KEY),
     apiProvider.infura(process.env.NEXT_PUBLIC_INFURA_PROJECT_ID),
     apiProvider.fallback()
   ]
 );
 
-const { connectors } = getDefaultWallets({
-  appName: 'NFT.com',
-  chains,
-});
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Recommended',
+    wallets: [
+      wallet.metaMask({ chains, shimDisconnect: true }),
+      wallet.rainbow({ chains }),
+    ],
+  },
+  {
+    groupName: 'Others',
+    wallets: [
+      wallet.walletConnect({ chains }),
+      wallet.coinbase({ chains, appName: 'NFT.com' }),
+      wallet.trust({ chains }),
+      wallet.ledger({ chains }),
+      wallet.argent({ chains })
+    ],
+  },
+]);
 
 const wagmiClient = createClient({
   autoConnect: true,
@@ -36,7 +54,13 @@ const wagmiClient = createClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiProvider client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
+      <RainbowKitProvider
+        appInfo={{
+          appName: 'NFT.com',
+          learnMoreUrl: 'https://docs.nft.com/',
+        }}
+        theme={rainbowDark}
+        chains={chains}>
         <GraphQLProvider>
           <Component {...pageProps} />
         </GraphQLProvider>
