@@ -15,7 +15,7 @@ export function useHeroSidebar() {
   return {
     loading,
     heroSidebarOpen: data,
-    useToggleHeroSidebar,
+    toggleHeroSidebar: useToggleHeroSidebar,
     setHeroSidebarOpen,
   };
 }

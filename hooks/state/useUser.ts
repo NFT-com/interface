@@ -3,13 +3,13 @@ import { getCurrentTimestamp } from 'utils/helpers';
 import useSWR from 'swr';
 
 export interface UserState {
-  userDarkMode: boolean | null;
+  isDarkMode: boolean;
   matchesDarkMode: boolean;
   timestamp: number;
 }
 
 export const userStateInitial: UserState = {
-  userDarkMode: null,
+  isDarkMode: false,
   matchesDarkMode: false,
   timestamp: getCurrentTimestamp(),
 };
@@ -21,7 +21,7 @@ export function useUser() {
   const updateDarkMode = (darkMode: boolean) => {
     mutate({
       ...data,
-      userDarkMode: darkMode,
+      isDarkMode: darkMode,
       timestamp: getCurrentTimestamp()
     });
   };
@@ -29,7 +29,7 @@ export function useUser() {
   return {
     user: data,
     loading,
-    userDarkMode: data?.userDarkMode,
+    isDarkMode: data?.isDarkMode,
     matchesDarkMode: data?.matchesDarkMode,
     timestamp: data?.timestamp,
     updateDarkMode,

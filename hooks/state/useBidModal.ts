@@ -8,7 +8,7 @@ export function useBidModal() {
     mutate(!data);
   };
 
-  const setBidModal = (open: boolean) => {
+  const setBidModalOpen = (open: boolean) => {
     mutate(open);
   };
 
@@ -16,6 +16,6 @@ export function useBidModal() {
     loading,
     bidModalOpen: data,
     useToggleBidModal,
-    setBidModal,
+    setBidModalOpen,
   };
 }

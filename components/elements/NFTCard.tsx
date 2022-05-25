@@ -1,0 +1,175 @@
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { tw } from 'utils/tw';
+
+import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
+
+import { MouseEvent, useCallback, useState } from 'react';
+import { CheckSquare,Eye,EyeOff,Square } from 'react-feather';
+import { useThemeColors } from 'styles/theme/useThemeColors';
+
+export interface NFTCardTrait {
+  key: string,
+  value: string,
+}
+
+export interface NFTCardProps {
+  title: string;
+  subtitle?: string;
+  cta?: string;
+  header?: NFTCardTrait;
+  traits?: NFTCardTrait[];
+  description?: string;
+  images: Array<string | null>;
+  onClick: () => void;
+  onSelectToggle?: (selected: boolean) => void;
+  visible?: boolean;
+  onVisibleToggle?: (visible: boolean) => void;
+
+  // By default this component takes the full width of its container.
+  // If you need this component to constrain its own width, use this prop.
+  // The result of this is not guaranteed, and the recommended approach is to
+  // wrap this in a container with a specified width.
+  constrain?: boolean;
+  customBackground?: string;
+  customBorderRadius?: string;
+}
+
+export function NFTCard(props: NFTCardProps) {
+  const { tileBackground, secondaryText, pink, link, secondaryIcon } = useThemeColors();
+
+  const [selected, setSelected] = useState(false);
+
+  const processedImageURLs = props.images?.map(processIPFSURL);
+
+  const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
+    return <div key={key} className="flex mt-2">
+      <span className='text-sm sm:text-xs' style={{ color: pink }}>
+        {pair.key}{isNullOrEmpty(pair.key) ? '' : ' '}
+      </span>
+      <span
+        className='text-sm sm:text-xs ml-1'
+        style={{ color: secondaryText }}
+      >
+        {pair.value}
+      </span>
+    </div>;
+  }, [pink, secondaryText]);
+
+  return (
+    <div
+      className={tw(
+        'drop-shadow-md rounded-xl flex flex-col',
+        props.constrain ?
+          // constrain self to 2 or 4 per row
+          'md:w-2/5 w-[23%]' :
+          'w-full',
+        'justify-between cursor-pointer transform hover:scale-105',
+        'overflow-hidden mb-4',
+      )}
+      style={{
+        backgroundColor: props.customBackground ?? tileBackground
+      }}
+      onClick={props.onClick}
+    >
+      {(props.header || props.onSelectToggle != null) &&
+        <div className='flex w-full px-5 md:px-4 pt-5 md:pt-4 pb-3 md:pb-2 justify-between'>
+          <div className='flex flex-col'>
+            <span className='text-xs text-secondary-txt font-semibold'>
+              {props.header?.key ?? ''}
+            </span>
+            <span
+              className='text-sm sm:text-xs font-bold text-primary-txt dark:text-primary-txt-dk'
+            >
+              {props.header?.value ?? ''}
+            </span>
+          </div>
+          {
+            props.onSelectToggle != null &&
+            <div
+              className='p-1'
+              onClick={(e: MouseEvent<HTMLDivElement>) => {
+                setSelected(!selected);
+                props.onSelectToggle(selected);
+                e.stopPropagation();
+              }}>
+              {selected ? <CheckSquare color={secondaryIcon} /> : <Square color={secondaryIcon} />}
+            </div>
+          }
+        </div>
+      }
+      {
+        props.visible != null &&
+          <div
+            className='absolute right-3 top-4'
+            onClick={(e: MouseEvent<HTMLDivElement>) => {
+              props.onVisibleToggle(!props.visible);
+              e.stopPropagation();
+            }}>
+            {props.visible ? <Eye color={pink} /> : <EyeOff color={pink} /> }
+          </div>
+      }
+      {
+        props.images.length <= 1 ?
+          <div
+            className={tw(
+              'w-full overflow-hidden',
+              props.customBorderRadius ?? 'rounded-3xl',
+              props.images[0] == null ? 'aspect-square' : '',
+            )}
+            style={{
+              background: 'linear-gradient(135deg, #ED3492 0%, #09BEFB 100%)',
+            }}
+          >
+            { props.images.length === 0 || props.images[0] == null ?
+              null :
+              <RoundedCornerMedia
+                extraClasses='w-full'
+                variant={RoundedCornerVariant.None}
+                src={processedImageURLs[0]}
+              />}
+          </div> :
+          <div className="grid grid-cols-2">
+            {processedImageURLs.slice(0, 4).map((image: string, index: number) => {
+              return <RoundedCornerMedia
+                key={index}
+                src={image}
+                variant={RoundedCornerVariant.None}
+                extraClasses='w-full rounded-3xl overflow-hidden'
+              />;
+            })}
+          </div>
+      }
+      <div className="p-4 md:p-3 flex flex-col">
+        <span className={tw(
+          'text-2xl lg:text-xl md:text-lg sm:text-base font-semibold truncate',
+          isNullOrEmpty(props.title) ?
+            'text-secondary-txt' :
+            'text-primary-txt dark:text-primary-txt-dk'
+        )}>
+          {isNullOrEmpty(props.title) ? 'Unknown Name' : props.title}
+        </span>
+        {props.subtitle && <span
+          className='text-sm sm:text-xs text-secondary-txt mt-2'
+        >
+          {props.subtitle}
+        </span>}
+        {(props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
+ 
+        {props.description && (
+          <div className='mt-4 text-secondary-txt text-sm sm:text-xs'>
+            {props.description}
+          </div>
+        )}
+        {
+          props.cta &&
+            <div
+              className="mt-4 text-sm sm:text-xs cursor-pointer hover:underline"
+              style={{ color: link }}
+            >
+              {props.cta}
+            </div>
+        }
+      </div>
+    </div>
+  );
+}

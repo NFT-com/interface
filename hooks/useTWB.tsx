@@ -1,4 +1,4 @@
-import DateTime from 'luxon';
+import moment from 'moment';
 import { useCallback, useState } from 'react';
 
 type getTWBSignature = (
@@ -21,7 +21,7 @@ type getTWBSignature = (
  * If you need to render a constantly-updating current TWB, you should use {@link RealTimeTWB}.
  */
 export function useTWB(): getTWBSignature {
-  const [time] = useState(DateTime.now().utc().unix());
+  const [time] = useState(moment.utc().unix());
 
   const getTWB: getTWBSignature = useCallback(
     (
@@ -34,7 +34,7 @@ export function useTWB(): getTWBSignature {
         (Number(_stakeWeightedSeconds) +
           (_timeUpdated == null
             ? 0
-            : ((live ? DateTime.now().utc().unix() : time) - _timeUpdated) * Number(stakedAmount))) /
+            : ((live ? moment.utc().unix() : time) - _timeUpdated) * Number(stakedAmount))) /
         (1000 * 1000)
       );
       // 1st 1000 is to convert milliseconds => seconds

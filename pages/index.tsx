@@ -1,10 +1,17 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import type { NextPage } from 'next';
+import { HeroLayout } from 'components/layouts/HeroLayout';
 
-const Home: NextPage = () => {
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import type { ReactElement } from 'react';
+
+export default function HeroPage() {
+  return <ConnectButton />;
+}
+
+HeroPage.getLayout = function getLayout(page: ReactElement) {
   return (
-    <ConnectButton />
+    <HeroLayout>
+      {page}
+    </HeroLayout>
   );
 };
 
-export default Home;

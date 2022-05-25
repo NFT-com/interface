@@ -10,6 +10,7 @@ import { ethers } from 'ethers';
 // import { chain, chainId } from 'wagmi';
 
 // returns the checksummed address if the address is valid, otherwise returns false
+
 export function isAddress(value: any): string | false {
   try {
     return getAddress(value);
@@ -59,7 +60,7 @@ export function shortenString(value: string | null | number, limit: number, leng
   return value.toString().length > limit ? value.toString().substring(0, length) + '...' : value;
 }
 
-export function prettify(num: number | string, dec: number) {
+export function prettify(num: number | string, dec?: number) {
   if (num === 0) {
     return '0';
   }
@@ -168,4 +169,3 @@ export function getAPIURL() {
     return process.env.NEXT_PUBLIC_PRODUCTION_URL;
   }
 }
-

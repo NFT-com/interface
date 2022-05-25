@@ -10,9 +10,19 @@ import {
   RainbowKitProvider,
   wallet
 } from '@rainbow-me/rainbowkit';
+import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
+import type { ReactElement, ReactNode } from 'react';
 import { rainbowDark } from 'styles/RainbowKitThemes';
 import { chain, createClient, WagmiProvider } from 'wagmi';
+
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+}
 
 const { chains, provider } = configureChains(
   process.env.NEXT_PUBLIC_ENV !== 'PRODUCTION' ?
@@ -51,8 +61,10 @@ const wagmiClient = createClient({
   provider
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return (
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  return getLayout(
     <WagmiProvider client={wagmiClient}>
       <RainbowKitProvider
         appInfo={{
@@ -68,5 +80,3 @@ function MyApp({ Component, pageProps }: AppProps) {
     </WagmiProvider>
   );
 }
-
-export default MyApp;

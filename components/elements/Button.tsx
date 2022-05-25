@@ -1,10 +1,10 @@
 import Loader from 'components/elements/Loader';
-import { useThemeColors } from 'hooks/useThemeColors';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import { useCallback } from 'react';
+import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export enum AccentType {
   SCALE = 'SCALE',

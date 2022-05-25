@@ -48,7 +48,7 @@ export interface ThemeColors {
 }
 
 export function useThemeColors(): ThemeColors {
-  const { userDarkMode: isDarkMode } = useUser();
+  const { isDarkMode } = useUser();
   return {
     // constants
     alwaysBlack: '#000000',

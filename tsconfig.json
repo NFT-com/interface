@@ -17,7 +17,9 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "incremental": true,
-    "types": [],
+    "types": [
+      "jest"
+    ],
     "noFallthroughCasesInSwitch": true
   },
   "include": [
