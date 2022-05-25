@@ -1,14 +1,12 @@
-import { getEnv, Secret } from 'utils/getEnv';
-
 import { isSandbox } from './httpHooks';
 
 import { ethers } from 'ethers';
 
 // const getZmokURL = (chainId: number): string => {
 //   if (isSandbox(chainId)) {
-//     return 'https://api.zmok.io/testnet/' + getEnv(Secret.NEXT_PUBLIC_ZMOK_KEY_RINKEBY);
+//     return 'https://api.zmok.io/testnet/' + process.env.NEXT_PUBLIC_ZMOK_KEY_RINKEBY);
 //   } else {
-//     return 'https://api.zmok.io/mainnet/' + getEnv(Secret.NEXT_PUBLIC_ZMOK_KEY);
+//     return 'https://api.zmok.io/mainnet/' + process.env.NEXT_PUBLIC_ZMOK_KEY);
 //   }
 // };
 
@@ -60,9 +58,9 @@ export const provider = (chainId: number) => {
   // );
   return ethers.getDefaultProvider(chainId, {
     etherscan: getRandomAPI(),
-    infura: getEnv(Secret.NEXT_PUBLIC_INFURA_PROJECT_ID),
+    infura: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID,
     alchemy: isSandbox(chainId) ?
-      getEnv(Secret.NEXT_PUBLIC_ALCHEMY_RINKEBY_KEY) :
-      getEnv(Secret.NEXT_PUBLIC_ALCHEMY_MAINNET_KEY),
+      process.env.NEXT_PUBLIC_ALCHEMY_RINKEBY_KEY :
+      process.env.NEXT_PUBLIC_ALCHEMY_MAINNET_KEY,
   });
 };

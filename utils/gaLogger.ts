@@ -1,5 +1,3 @@
-import { getEnvBool, Secret } from 'utils/getEnv';
-
 import ReactGA from 'react-ga';
 import { WalletSubTab } from 'types';
 
@@ -15,7 +13,7 @@ export enum LoggingCategory {
 }
 
 function logEvent(category: string, action: string, extras?: string) {
-  if (getEnvBool(Secret.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED)) {
+  if (process.env.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED === 'true') {
     ReactGA.event({
       action: action,
       category: category,
