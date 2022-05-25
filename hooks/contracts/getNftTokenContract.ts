@@ -1,8 +1,8 @@
-import { NftToken__factory } from 'constants/typechain/factories/NftToken__factory';
-import { NftToken } from 'constants/typechain/NftToken';
+import { Nft_token } from 'constants/typechain';
+import { Nft_token__factory } from 'constants/typechain/factories/Nft_token__factory';
 
 import { Provider } from '@ethersproject/providers';
 
-export function getNftTokenContract(address: string, provider: Provider): NftToken {
-  return NftToken__factory.connect(address, provider);
+export function getNftTokenContract(address: string, provider: Provider): Nft_token {
+  return Nft_token__factory.connect(address, provider);
 }

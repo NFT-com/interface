@@ -1,8 +1,8 @@
-import { NftProfile__factory } from 'constants/typechain/factories/NftProfile__factory';
-import { NftProfile } from 'constants/typechain/NftProfile';
+import { Nft_profile } from 'constants/typechain';
+import { Nft_profile__factory } from 'constants/typechain/factories/Nft_profile__factory';
 
 import { Provider } from '@ethersproject/providers';
 
-export function getNftProfileContract(address: string, provider: Provider): NftProfile {
-  return NftProfile__factory.connect(address, provider);
+export function getNftProfileContract(address: string, provider: Provider): Nft_profile {
+  return Nft_profile__factory.connect(address, provider);
 }

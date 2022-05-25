@@ -1,16 +1,18 @@
-import { Dai } from 'constants/typechain/Dai';
-import { GenesisKey } from 'constants/typechain/GenesisKey';
-import { GenesisKeyDistributor } from 'constants/typechain/GenesisKeyDistributor';
-import { GenesisKeyTeamClaim } from 'constants/typechain/GenesisKeyTeamClaim';
-import { GenesisKeyTeamDistributor } from 'constants/typechain/GenesisKeyTeamDistributor';
-import { Marketplace } from 'constants/typechain/Marketplace';
-import { MarketplaceEvent } from 'constants/typechain/MarketplaceEvent';
-import { NftProfile } from 'constants/typechain/NftProfile';
-import { NftToken } from 'constants/typechain/NftToken';
-import { ProfileAuction } from 'constants/typechain/ProfileAuction';
-import { Usdc } from 'constants/typechain/Usdc';
-import { ValidationLogic } from 'constants/typechain/ValidationLogic';
-import { Weth } from 'constants/typechain/Weth';
+import {
+  Dai,
+  Genesis_key,
+  Genesis_key_distributor,
+  Genesis_key_team_claim,
+  Genesis_key_team_distributor,
+  Marketplace,
+  Marketplace_event,
+  Nft_profile,
+  Nft_token,
+  Profile_auction,
+  Usdc,
+  Validation_logic,
+  Weth
+} from 'constants/typechain';
 import { getDaiContract } from 'hooks/contracts/getDaiContract';
 import { getGenesisKeyContract } from 'hooks/contracts/getGenesisKeyContract';
 import { getNftProfileContract } from 'hooks/contracts/getNftProfileContract';
@@ -34,16 +36,16 @@ export interface Contracts {
   dai: Dai;
   weth: Weth;
   usdc: Usdc;
-  nftToken: NftToken;
-  nftProfile: NftProfile;
-  profileAuction: ProfileAuction;
-  genesisKey: GenesisKey;
-  genesisKeyDistributor: GenesisKeyDistributor;
+  nftToken: Nft_token;
+  nftProfile: Nft_profile;
+  profileAuction: Profile_auction;
+  genesisKey: Genesis_key;
+  genesisKeyDistributor: Genesis_key_distributor;
   marketplace: Marketplace;
-  marketplaceEvent: MarketplaceEvent;
-  marketplaceValidator: ValidationLogic;
-  genesisKeyTeamDistributor: GenesisKeyTeamDistributor;
-  genesisKeyTeamClaim: GenesisKeyTeamClaim;
+  marketplaceEvent: Marketplace_event;
+  marketplaceValidator: Validation_logic;
+  genesisKeyTeamDistributor: Genesis_key_team_distributor;
+  genesisKeyTeamClaim: Genesis_key_team_claim;
 }
 
 export function useAllContracts(): Contracts {

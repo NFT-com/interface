@@ -1,7 +1,8 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
-import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
+
+import { useDisconnect } from 'wagmi';
 
 export interface SignatureModalProps {
   visible: boolean;
@@ -10,7 +11,12 @@ export interface SignatureModalProps {
 }
 
 export function SignatureModal(props: SignatureModalProps) {
-  const { setUserSignature, updateIsSignedIn } = useUser();
+  const { disconnect } = useDisconnect();
+
+  if (process.env.NEXT_PUBLIC_HERO_ONLY === 'true') {
+    return null;
+  }
+
   return (
     <Modal
       visible={props.visible}
@@ -45,8 +51,7 @@ export function SignatureModal(props: SignatureModalProps) {
               label={'CANCEL'}
               stretch
               onClick={() => {
-                updateIsSignedIn(false);
-                setUserSignature(null);
+                disconnect();
               }}
             />
           </div>

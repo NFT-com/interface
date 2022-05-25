@@ -33,9 +33,9 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         signature: data,
         address: account?.address,
       }));
-      // analytics.track('SignIn', {
-      //   ethereumAddress: account
-      // });
+      analytics.track('SignIn', {
+        ethereumAddress: account
+      });
       setSigned(true);
     },
     onError(error) {

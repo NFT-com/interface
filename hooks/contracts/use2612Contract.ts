@@ -1,8 +1,8 @@
-import { Eip2612 } from 'constants/typechain/Eip2612';
-import { Eip2612__factory } from 'constants/typechain/factories/Eip2612__factory';
+import { Eip_2612 } from 'constants/typechain/Eip_2612';
+import { Eip_2612__factory } from 'constants/typechain/factories/Eip_2612__factory';
 
 import { Provider } from '@ethersproject/providers';
 
-export function useEIP2612Contract(tokenAddress: string, provider: Provider): Eip2612 {
-  return Eip2612__factory.connect(tokenAddress, provider);
+export function useEIP2612Contract(tokenAddress: string, provider: Provider): Eip_2612 {
+  return Eip_2612__factory.connect(tokenAddress, provider);
 }

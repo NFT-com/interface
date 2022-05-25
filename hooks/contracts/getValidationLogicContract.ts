@@ -1,8 +1,8 @@
-import { ValidationLogic__factory } from 'constants/typechain/factories/ValidationLogic__factory';
-import { ValidationLogic } from 'constants/typechain/ValidationLogic';
+import { Validation_logic } from 'constants/typechain';
+import { Validation_logic__factory } from 'constants/typechain/factories/Validation_logic__factory';
 
 import { Provider } from '@ethersproject/providers';
 
-export function getValidationLogicContract(address: string, provider: Provider): ValidationLogic {
-  return ValidationLogic__factory.connect(address, provider);
+export function getValidationLogicContract(address: string, provider: Provider): Validation_logic {
+  return Validation_logic__factory.connect(address, provider);
 }
