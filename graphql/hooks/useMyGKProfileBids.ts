@@ -1,15 +1,15 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Bid, NftType } from 'graphql/generated/types';
-import helpers from 'utils/utils';
+import { isNullOrEmpty } from 'utils/helpers';
 
-import { DeepPartial } from '@reduxjs/toolkit';
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
 export interface MyGKProfileBids {
-  bids: DeepPartial<Bid>[];
+  bids: PartialDeep<Bid>[];
   error: any;
   mutate: () => void;
 }
@@ -23,7 +23,7 @@ export function useMyGKProfileBids(): MyGKProfileBids {
   const keyString = 'MyGenesisKeyProfileBids ' + account?.address + signed;
 
   const { data, error } = useSWR(keyString, async () => {
-    if (helpers.isNullOrEmpty(account?.address) || !signed) {
+    if (isNullOrEmpty(account?.address) || !signed) {
       return null;
     }
     const result = await sdk.MyBids({

@@ -2,13 +2,13 @@ import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Nft, PageInput } from 'graphql/generated/types';
 
-import { DeepPartial } from '@reduxjs/toolkit';
 import { useContext, useState } from 'react';
 import useSWR, { mutate } from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork } from 'wagmi';
 
 export interface NftsData {
-  data: DeepPartial<Nft>[];
+  data: PartialDeep<Nft>[];
   totalItems: number,
   loading: boolean;
   mutate: () => void;

@@ -1,12 +1,12 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Nft } from 'graphql/generated/types';
 
-import { DeepPartial } from '@reduxjs/toolkit';
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
+import { PartialDeep } from 'type-fest';
 
 export interface NftData {
-  data: DeepPartial<Nft>;
+  data: PartialDeep<Nft>;
   loading: boolean;
   mutate: () => void;
 }

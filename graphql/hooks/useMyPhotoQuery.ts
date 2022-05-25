@@ -1,6 +1,6 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import helpers from 'utils/utils';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import { useContext, useState } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -22,7 +22,7 @@ export function useMyPhotoQuery(): MyPhotoData {
   const keyString = 'MyPhotoQuery' + account?.address + signed;
 
   const { data } = useSWR(keyString, async () => {
-    if (helpers.isNullOrEmpty(account?.address) || !signed) {
+    if (isNullOrEmpty(account?.address) || !signed) {
       return null;
     }
     setLoading(true);

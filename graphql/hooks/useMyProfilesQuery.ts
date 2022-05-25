@@ -1,7 +1,7 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { MyProfilesQuery, ProfileStatus } from 'graphql/generated/types';
-import helpers from 'utils/utils';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -21,7 +21,7 @@ export function useMyProfilesQuery(): MyProfilesQueryData {
   const keyString = 'MyProfilesQueryQuery' + account?.address + signed;
 
   const { data } = useSWR(keyString, async () => {
-    if (helpers.isNullOrEmpty(account?.address) || !signed) {
+    if (isNullOrEmpty(account?.address) || !signed) {
       return null;
     }
 
@@ -38,7 +38,7 @@ export function useMyProfilesQuery(): MyProfilesQueryData {
   });
   return {
     data: data,
-    loading: data == null && !helpers.isNullOrEmpty(account?.address) && signed,
+    loading: data == null && !isNullOrEmpty(account?.address) && signed,
     mutate: () => {
       mutate(keyString);
     },

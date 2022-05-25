@@ -1,16 +1,16 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { UserPreferences } from 'graphql/generated/types';
-import helpers from 'utils/utils';
+import { isNullOrEmpty } from 'utils/helpers';
 
-import { DeepPartial } from '@reduxjs/toolkit';
 import { useContext, useState } from 'react';
 import useSWR, { mutate } from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
 export interface MyPreferencesQueryData {
   loading: boolean;
-  myPreferences: DeepPartial<UserPreferences>;
+  myPreferences: PartialDeep<UserPreferences>;
   mutate: () => void;
 }
 
@@ -24,7 +24,7 @@ export function useMyPreferencesQuery(): MyPreferencesQueryData {
   const keyString = 'MyPreferencesQuery' + account?.address + signed;
 
   const { data } = useSWR(keyString, async () => {
-    if (helpers.isNullOrEmpty(account?.address) || !signed) {
+    if (isNullOrEmpty(account?.address) || !signed) {
       return null;
     }
     setLoading(true);
