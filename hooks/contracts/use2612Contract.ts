@@ -1,4 +1,4 @@
-import { Eip_2612 } from 'constants/typechain/Eip_2612';
+import { Eip_2612 } from 'constants/typechain';
 import { Eip_2612__factory } from 'constants/typechain/factories/Eip_2612__factory';
 
 import { Provider } from '@ethersproject/providers';

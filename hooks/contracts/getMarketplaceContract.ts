@@ -1,5 +1,5 @@
+import { Marketplace } from 'constants/typechain';
 import { Marketplace__factory } from 'constants/typechain/factories/Marketplace__factory';
-import { Marketplace } from 'constants/typechain/Marketplace';
 
 import { Provider } from '@ethersproject/providers';
 export function getMarketplaceContract(address: string, provider: Provider): Marketplace {

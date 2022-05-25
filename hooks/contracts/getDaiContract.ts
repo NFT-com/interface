@@ -1,4 +1,4 @@
-import { Dai } from 'constants/typechain/Dai';
+import { Dai } from 'constants/typechain';
 import { Dai__factory } from 'constants/typechain/factories/Dai__factory';
 
 import { Provider } from '@ethersproject/providers';

@@ -1,4 +1,4 @@
-import { Erc721 } from 'constants/typechain/Erc721';
+import { Erc721 } from 'constants/typechain';
 import { Erc721__factory } from 'constants/typechain/factories/Erc721__factory';
 
 import { Provider } from '@ethersproject/providers';
