@@ -2,6 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 import * as Dom from 'graphql-request/dist/types.dom';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -59,8 +60,8 @@ export enum AskSortType {
 }
 
 export type AsksInput = {
-  makerAddress?: Maybe<Scalars['Address']>;
-  pageInput?: Maybe<PageInput>;
+  makerAddress?: InputMaybe<Scalars['Address']>;
+  pageInput?: InputMaybe<PageInput>;
 };
 
 export enum AssetClass {
@@ -84,7 +85,7 @@ export type AssetTypeInput = {
   assetClass: AssetClass;
   bytes: Scalars['String'];
   contractAddress: Scalars['String'];
-  tokenId?: Maybe<Scalars['Uint256']>;
+  tokenId?: InputMaybe<Scalars['Uint256']>;
 };
 
 export type Attributes = {
@@ -116,7 +117,7 @@ export type Bid = {
 export type BidInput = {
   nftType: NftType;
   price: Scalars['Uint256'];
-  profileURL?: Maybe<Scalars['String']>;
+  profileURL?: InputMaybe<Scalars['String']>;
   signature: SignatureInput;
   wallet: WalletInput;
 };
@@ -127,10 +128,10 @@ export enum BidStatus {
 }
 
 export type BidsInput = {
-  nftType?: Maybe<NftType>;
-  pageInput?: Maybe<PageInput>;
-  profileId?: Maybe<Scalars['ID']>;
-  wallet?: Maybe<WalletInput>;
+  nftType?: InputMaybe<NftType>;
+  pageInput?: InputMaybe<PageInput>;
+  profileId?: InputMaybe<Scalars['ID']>;
+  wallet?: InputMaybe<WalletInput>;
 };
 
 export type BidsOutput = {
@@ -163,13 +164,13 @@ export type Collection = {
 };
 
 export type CollectionInput = {
-  contract?: Maybe<Scalars['Address']>;
-  network?: Maybe<Scalars['String']>;
+  contract?: InputMaybe<Scalars['Address']>;
+  network?: InputMaybe<Scalars['String']>;
 };
 
 export type CollectionNfTsInput = {
   collectionAddress: Scalars['Address'];
-  pageInput?: Maybe<PageInput>;
+  pageInput?: InputMaybe<PageInput>;
 };
 
 export type ConvertEnsToEthAddress = {
@@ -177,18 +178,22 @@ export type ConvertEnsToEthAddress = {
   ethAddresses: Array<Scalars['String']>;
 };
 
+export type CreateAllCompositeImagesInput = {
+  pageInput?: InputMaybe<PageInput>;
+};
+
 export type CreateAskInput = {
   auctionType: AuctionType;
   chainId: Scalars['String'];
   end: Scalars['Int'];
-  makeAsset?: Maybe<Array<MarketplaceAssetInput>>;
+  makeAsset?: InputMaybe<Array<MarketplaceAssetInput>>;
   makerAddress: Scalars['Address'];
   nonce: Scalars['Int'];
   salt: Scalars['Int'];
   signature: SignatureInput;
   start: Scalars['Int'];
   structHash: Scalars['String'];
-  takeAsset?: Maybe<Array<MarketplaceAssetInput>>;
+  takeAsset?: InputMaybe<Array<MarketplaceAssetInput>>;
   takerAddress: Scalars['Address'];
 };
 
@@ -196,7 +201,7 @@ export type CreateBidInput = {
   auctionType: AuctionType;
   chainId: Scalars['String'];
   end: Scalars['Int'];
-  makeAsset?: Maybe<Array<MarketplaceAssetInput>>;
+  makeAsset?: InputMaybe<Array<MarketplaceAssetInput>>;
   makerAddress: Scalars['Address'];
   marketAskId: Scalars['String'];
   message: Scalars['String'];
@@ -205,7 +210,7 @@ export type CreateBidInput = {
   signature: SignatureInput;
   start: Scalars['Int'];
   structHash: Scalars['String'];
-  takeAsset?: Maybe<Array<MarketplaceAssetInput>>;
+  takeAsset?: InputMaybe<Array<MarketplaceAssetInput>>;
   takerAddress: Scalars['Address'];
 };
 
@@ -225,7 +230,7 @@ export type Curation = {
 
 export type CurationInput = {
   curationId: Scalars['ID'];
-  pageInput?: Maybe<PageInput>;
+  pageInput?: InputMaybe<PageInput>;
 };
 
 export type CurationItem = {
@@ -236,7 +241,7 @@ export type CurationItem = {
 
 export type CurationItemInput = {
   id: Scalars['ID'];
-  size?: Maybe<NftSize>;
+  size?: InputMaybe<NftSize>;
 };
 
 export type CurationNft = {
@@ -253,7 +258,7 @@ export type CurationNfTsOutput = {
 };
 
 export type CurationsInput = {
-  pageInput?: Maybe<PageInput>;
+  pageInput?: InputMaybe<PageInput>;
 };
 
 export type CurationsOutput = {
@@ -261,33 +266,6 @@ export type CurationsOutput = {
   items: Array<Curation>;
   pageInfo?: Maybe<PageInfo>;
   totalItems?: Maybe<Scalars['Int']>;
-};
-
-export type EndAuctionInput = {
-  profileId: Scalars['String'];
-  walletId: Scalars['String'];
-};
-
-export type EndAuctionOutput = {
-  __typename?: 'EndAuctionOutput';
-  id: Scalars['ID'];
-  price: Scalars['Uint256'];
-  profile?: Maybe<Profile>;
-};
-
-export type EndGkOutput = {
-  __typename?: 'EndGkOutput';
-  firstLosingBid: Array<Maybe<EndGkWinner>>;
-  medianPrice: Scalars['String'];
-  topBids: Array<Maybe<EndGkWinner>>;
-  totalBidsCount: Scalars['Uint256'];
-  whitelistWinnersCount: Scalars['Uint256'];
-};
-
-export type EndGkWinner = {
-  __typename?: 'EndGkWinner';
-  key?: Maybe<Scalars['String']>;
-  value?: Maybe<Scalars['String']>;
 };
 
 export type FileUploadOutput = {
@@ -299,14 +277,14 @@ export type FileUploadOutput = {
 };
 
 export type FilterAskInput = {
-  auctionType?: Maybe<AuctionType>;
-  chainId?: Maybe<Scalars['String']>;
-  pageInput?: Maybe<PageInput>;
-  sortBy?: Maybe<AskSortType>;
+  auctionType?: InputMaybe<AuctionType>;
+  chainId?: InputMaybe<Scalars['String']>;
+  pageInput?: InputMaybe<PageInput>;
+  sortBy?: InputMaybe<AskSortType>;
 };
 
 export type FollowersInput = {
-  pageInput?: Maybe<PageInput>;
+  pageInput?: InputMaybe<PageInput>;
   profileId: Scalars['ID'];
 };
 
@@ -330,6 +308,17 @@ export type GetContracts = {
   nftToken: Scalars['String'];
   profileAuction: Scalars['String'];
   validationLogic: Scalars['String'];
+};
+
+export type GetGkNftsOutput = {
+  __typename?: 'GetGkNFTSOutput';
+  description: Scalars['String'];
+  error?: Maybe<Scalars['String']>;
+  media?: Maybe<Array<Maybe<NftMedia>>>;
+  metadata?: Maybe<NftMetadataAlchemy>;
+  timeLastUpdated: Scalars['String'];
+  title: Scalars['String'];
+  tokenUri?: Maybe<TokenUri>;
 };
 
 export type GetMarketAsk = {
@@ -364,7 +353,7 @@ export type InsiderReservedProfilesInput = {
 };
 
 export type LatestProfilesInput = {
-  pageInput?: Maybe<PageInput>;
+  pageInput?: InputMaybe<PageInput>;
 };
 
 export type MarketAsk = {
@@ -416,9 +405,9 @@ export type MarketBid = {
 };
 
 export type MarketBidsInput = {
-  makerAddress?: Maybe<Scalars['Address']>;
-  marketAskId?: Maybe<Scalars['String']>;
-  pageInput?: Maybe<PageInput>;
+  makerAddress?: InputMaybe<Scalars['Address']>;
+  marketAskId?: InputMaybe<Scalars['String']>;
+  pageInput?: InputMaybe<PageInput>;
 };
 
 export type MarketSwap = {
@@ -456,8 +445,8 @@ export type Metadata = {
 };
 
 export type MintGkProfileInput = {
-  count?: Maybe<Scalars['Int']>;
-  startIndex?: Maybe<Scalars['Int']>;
+  count?: InputMaybe<Scalars['Int']>;
+  startIndex?: InputMaybe<Scalars['Int']>;
 };
 
 export type Mutation = {
@@ -476,8 +465,6 @@ export type Mutation = {
   createCompositeImage: Profile;
   createCuration: Curation;
   deleteFromWatchlist?: Maybe<Scalars['Boolean']>;
-  endGKBlindAuction: EndGkOutput;
-  endProfileAuction: EndAuctionOutput;
   followProfile: Profile;
   mintGKProfile: Scalars['String'];
   profileClaimed: Profile;
@@ -494,6 +481,7 @@ export type Mutation = {
   updateCuration: Curation;
   updateEmail: User;
   updateMe: User;
+  updateNFTsForProfile: NfTsOutput;
   updateProfile: Profile;
   uploadFileSession: FileUploadOutput;
   uploadProfileImages: Profile;
@@ -556,7 +544,7 @@ export type MutationCreateBidArgs = {
 
 
 export type MutationCreateCompositeImageArgs = {
-  input?: Maybe<CreateCompositeImageInput>;
+  input?: InputMaybe<CreateCompositeImageInput>;
 };
 
 
@@ -570,18 +558,13 @@ export type MutationDeleteFromWatchlistArgs = {
 };
 
 
-export type MutationEndProfileAuctionArgs = {
-  input: EndAuctionInput;
-};
-
-
 export type MutationFollowProfileArgs = {
-  url?: Maybe<Scalars['String']>;
+  url?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationMintGkProfileArgs = {
-  input?: Maybe<MintGkProfileInput>;
+  input?: InputMaybe<MintGkProfileInput>;
 };
 
 
@@ -645,13 +628,18 @@ export type MutationUpdateMeArgs = {
 };
 
 
+export type MutationUpdateNfTsForProfileArgs = {
+  input?: InputMaybe<UpdateNfTsForProfileInput>;
+};
+
+
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
 };
 
 
 export type MutationUploadProfileImagesArgs = {
-  input?: Maybe<UploadProfileImagesInput>;
+  input?: InputMaybe<UploadProfileImagesInput>;
 };
 
 export type Nft = {
@@ -697,9 +685,9 @@ export enum NftType {
 }
 
 export type NfTsInput = {
-  pageInput?: Maybe<PageInput>;
-  profileId?: Maybe<Scalars['ID']>;
-  types?: Maybe<Array<NftType>>;
+  pageInput?: InputMaybe<PageInput>;
+  profileId?: InputMaybe<Scalars['ID']>;
+  types?: InputMaybe<Array<NftType>>;
 };
 
 export type NfTsOutput = {
@@ -710,9 +698,28 @@ export type NfTsOutput = {
 };
 
 export type NftAsksInput = {
-  makerAddress?: Maybe<Scalars['Address']>;
+  makerAddress?: InputMaybe<Scalars['Address']>;
   nftContractAddress: Scalars['Address'];
   nftTokenId: Scalars['Uint256'];
+};
+
+export type NftAttributeRecord = {
+  __typename?: 'NftAttributeRecord';
+  type?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
+};
+
+export type NftMedia = {
+  __typename?: 'NftMedia';
+  uri?: Maybe<TokenUri>;
+};
+
+export type NftMetadataAlchemy = {
+  __typename?: 'NftMetadataAlchemy';
+  attributes?: Maybe<Array<Maybe<NftAttributeRecord>>>;
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type PageInfo = {
@@ -722,10 +729,10 @@ export type PageInfo = {
 };
 
 export type PageInput = {
-  afterCursor?: Maybe<Scalars['String']>;
-  beforeCursor?: Maybe<Scalars['String']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
+  afterCursor?: InputMaybe<Scalars['String']>;
+  beforeCursor?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 export type Profile = {
@@ -739,7 +746,6 @@ export type Profile = {
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
   owner?: Maybe<Wallet>;
   photoURL?: Maybe<Scalars['String']>;
-  showGallery?: Maybe<Scalars['Boolean']>;
   status?: Maybe<ProfileStatus>;
   tokenId?: Maybe<Scalars['String']>;
   url: Scalars['String'];
@@ -763,8 +769,8 @@ export enum ProfileStatus {
 }
 
 export type ProfilesInput = {
-  pageInput?: Maybe<PageInput>;
-  statuses?: Maybe<Array<Maybe<ProfileStatus>>>;
+  pageInput?: InputMaybe<PageInput>;
+  statuses?: InputMaybe<Array<InputMaybe<ProfileStatus>>>;
 };
 
 export type ProfilesOutput = {
@@ -790,6 +796,7 @@ export type Query = {
   getNFTOffers: Array<MarketAsk>;
   getSwaps: GetMarketSwap;
   getUserSwaps: GetMarketSwap;
+  gkNFTs: GetGkNftsOutput;
   insiderReservedProfiles: Array<Scalars['String']>;
   isAddressWhitelisted: Scalars['Boolean'];
   latestProfiles: ProfilesOutput;
@@ -876,23 +883,28 @@ export type QueryGetUserSwapsArgs = {
 };
 
 
+export type QueryGkNfTsArgs = {
+  tokenId: Scalars['String'];
+};
+
+
 export type QueryInsiderReservedProfilesArgs = {
   input: InsiderReservedProfilesInput;
 };
 
 
 export type QueryIsAddressWhitelistedArgs = {
-  input?: Maybe<WhitelistCheckInput>;
+  input?: InputMaybe<WhitelistCheckInput>;
 };
 
 
 export type QueryLatestProfilesArgs = {
-  input?: Maybe<LatestProfilesInput>;
+  input?: InputMaybe<LatestProfilesInput>;
 };
 
 
 export type QueryMyBidsArgs = {
-  input?: Maybe<BidsInput>;
+  input?: InputMaybe<BidsInput>;
 };
 
 
@@ -902,12 +914,12 @@ export type QueryMyCurationsArgs = {
 
 
 export type QueryMyNfTsArgs = {
-  input?: Maybe<NfTsInput>;
+  input?: InputMaybe<NfTsInput>;
 };
 
 
 export type QueryMyProfilesArgs = {
-  input?: Maybe<ProfilesInput>;
+  input?: InputMaybe<ProfilesInput>;
 };
 
 
@@ -943,12 +955,12 @@ export type QueryProfilePassiveArgs = {
 
 
 export type QueryProfilesFollowedByMeArgs = {
-  input?: Maybe<ProfilesInput>;
+  input?: InputMaybe<ProfilesInput>;
 };
 
 
 export type QueryTopBidsArgs = {
-  input?: Maybe<TopBidsInput>;
+  input?: InputMaybe<TopBidsInput>;
 };
 
 
@@ -982,10 +994,10 @@ export type SignHashOutput = {
 };
 
 export type SignUpInput = {
-  avatarURL?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  referredBy?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
+  avatarURL?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  referredBy?: InputMaybe<Scalars['String']>;
+  username?: InputMaybe<Scalars['String']>;
   wallet: WalletInput;
 };
 
@@ -1009,15 +1021,21 @@ export type SwapNftInput = {
 };
 
 export type SwapsInput = {
-  marketAskIds?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  marketBidIds?: Maybe<Array<Maybe<Scalars['ID']>>>;
-  pageInput?: Maybe<PageInput>;
+  marketAskIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  marketBidIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
+  pageInput?: InputMaybe<PageInput>;
+};
+
+export type TokenUri = {
+  __typename?: 'TokenUri';
+  gateway: Scalars['String'];
+  raw: Scalars['String'];
 };
 
 export type TopBidsInput = {
-  pageInput?: Maybe<PageInput>;
-  profileId?: Maybe<Scalars['ID']>;
-  status?: Maybe<BidStatus>;
+  pageInput?: InputMaybe<PageInput>;
+  profileId?: InputMaybe<Scalars['ID']>;
+  status?: InputMaybe<BidStatus>;
 };
 
 export type UpdateCurationInput = {
@@ -1029,24 +1047,33 @@ export type UpdateEmailInput = {
   email: Scalars['String'];
 };
 
+export type UpdateNfTsForProfileInput = {
+  pageInput?: InputMaybe<PageInput>;
+  profileId: Scalars['ID'];
+};
+
 export type UpdateProfileInput = {
-  bannerURL?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
+  bannerURL?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  hideAllNFTs?: InputMaybe<Scalars['Boolean']>;
+  hideNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   id: Scalars['ID'];
-  photoURL?: Maybe<Scalars['String']>;
-  showGallery?: Maybe<Scalars['Boolean']>;
+  photoURL?: InputMaybe<Scalars['String']>;
+  showAllNFTs?: InputMaybe<Scalars['Boolean']>;
+  showNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type UpdateUserInput = {
-  avatarURL?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  preferences?: Maybe<UserPreferencesInput>;
+  avatarURL?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  preferences?: InputMaybe<UserPreferencesInput>;
 };
 
 export type UploadProfileImagesInput = {
-  avatar?: Maybe<Scalars['Upload']>;
-  banner?: Maybe<Scalars['Upload']>;
-  description?: Maybe<Scalars['String']>;
+  avatar?: InputMaybe<Scalars['Upload']>;
+  banner?: InputMaybe<Scalars['Upload']>;
+  compositeProfileURL: Scalars['Boolean'];
+  description?: InputMaybe<Scalars['String']>;
   profileId: Scalars['ID'];
 };
 
@@ -1074,15 +1101,15 @@ export type UserPreferences = {
 };
 
 export type UserPreferencesInput = {
-  bidActivityNotifications?: Maybe<Scalars['Boolean']>;
-  outbidNotifications?: Maybe<Scalars['Boolean']>;
-  priceChangeNotifications?: Maybe<Scalars['Boolean']>;
-  promotionalNotifications?: Maybe<Scalars['Boolean']>;
-  purchaseSuccessNotifications?: Maybe<Scalars['Boolean']>;
+  bidActivityNotifications?: InputMaybe<Scalars['Boolean']>;
+  outbidNotifications?: InputMaybe<Scalars['Boolean']>;
+  priceChangeNotifications?: InputMaybe<Scalars['Boolean']>;
+  promotionalNotifications?: InputMaybe<Scalars['Boolean']>;
+  purchaseSuccessNotifications?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UserSwapsInput = {
-  pageInput?: Maybe<PageInput>;
+  pageInput?: InputMaybe<PageInput>;
   participant: Scalars['Address'];
 };
 
@@ -1139,7 +1166,7 @@ export type AddToWatchlistMutationVariables = Exact<{
 }>;
 
 
-export type AddToWatchlistMutation = { __typename?: 'Mutation', followProfile: { __typename?: 'Profile', id: string, isFollowedByMe?: boolean | null | undefined } };
+export type AddToWatchlistMutation = { __typename?: 'Mutation', followProfile: { __typename?: 'Profile', id: string, isFollowedByMe?: boolean | null } };
 
 export type CancelBidMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -1188,14 +1215,14 @@ export type CreateMarketAskMutationVariables = Exact<{
 }>;
 
 
-export type CreateMarketAskMutation = { __typename?: 'Mutation', createAsk: { __typename?: 'MarketAsk', makerAddress: any, takerAddress: any, start: number, end: number, salt: number, offerAcceptedAt?: any | null | undefined, chainId: string, auctionType: AuctionType, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean } }> | null | undefined, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean } }> | null | undefined } };
+export type CreateMarketAskMutation = { __typename?: 'Mutation', createAsk: { __typename?: 'MarketAsk', makerAddress: any, takerAddress: any, start: number, end: number, salt: number, offerAcceptedAt?: any | null, chainId: string, auctionType: AuctionType, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean } }> | null } };
 
 export type CreateMarketBidMutationVariables = Exact<{
   input: CreateBidInput;
 }>;
 
 
-export type CreateMarketBidMutation = { __typename?: 'Mutation', createBid: { __typename?: 'MarketBid', takerAddress: any, structHash: string, start: number, salt: number, rejectedReason?: string | null | undefined, rejectedAt?: any | null | undefined, offerAcceptedAt?: any | null | undefined, message: string, marketSwapId?: string | null | undefined, marketAskId: string, makerAddress: any, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, nftId?: string | null | undefined, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', tokenId: any, contractAddress: any, bytes: string, assetClass: AssetClass, allowAll: boolean } }> | null | undefined, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, nftId?: string | null | undefined, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', tokenId: any, contractAddress: any, bytes: string, assetClass: AssetClass, allowAll: boolean } }> | null | undefined } };
+export type CreateMarketBidMutation = { __typename?: 'Mutation', createBid: { __typename?: 'MarketBid', takerAddress: any, structHash: string, start: number, salt: number, rejectedReason?: string | null, rejectedAt?: any | null, offerAcceptedAt?: any | null, message: string, marketSwapId?: string | null, marketAskId: string, makerAddress: any, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, nftId?: string | null, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', tokenId: any, contractAddress: any, bytes: string, assetClass: AssetClass, allowAll: boolean } }> | null, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, nftId?: string | null, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', tokenId: any, contractAddress: any, bytes: string, assetClass: AssetClass, allowAll: boolean } }> | null } };
 
 export type FileUploadMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -1207,14 +1234,14 @@ export type ProfileClaimedMutationVariables = Exact<{
 }>;
 
 
-export type ProfileClaimedMutation = { __typename?: 'Mutation', profileClaimed: { __typename?: 'Profile', status?: ProfileStatus | null | undefined, url: string, id: string } };
+export type ProfileClaimedMutation = { __typename?: 'Mutation', profileClaimed: { __typename?: 'Profile', status?: ProfileStatus | null, url: string, id: string } };
 
 export type RemoveFromWatchlistMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type RemoveFromWatchlistMutation = { __typename?: 'Mutation', unfollowProfile: { __typename?: 'Profile', isFollowedByMe?: boolean | null | undefined } };
+export type RemoveFromWatchlistMutation = { __typename?: 'Mutation', unfollowProfile: { __typename?: 'Profile', isFollowedByMe?: boolean | null } };
 
 export type ResendEmailMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -1247,77 +1274,84 @@ export type SubmitProfilePreferencesMutationVariables = Exact<{
 }>;
 
 
-export type SubmitProfilePreferencesMutation = { __typename?: 'Mutation', setProfilePreferences: Array<{ __typename?: 'Bid', id: string, profile?: { __typename?: 'Profile', url: string } | null | undefined }> };
+export type SubmitProfilePreferencesMutation = { __typename?: 'Mutation', setProfilePreferences: Array<{ __typename?: 'Bid', id: string, profile?: { __typename?: 'Profile', url: string } | null }> };
 
 export type UpdateEmailMutationVariables = Exact<{
   input: UpdateEmailInput;
 }>;
 
 
-export type UpdateEmailMutation = { __typename?: 'Mutation', updateEmail: { __typename?: 'User', id: string, email?: string | null | undefined } };
+export type UpdateEmailMutation = { __typename?: 'Mutation', updateEmail: { __typename?: 'User', id: string, email?: string | null } };
 
 export type UpdateMeMutationVariables = Exact<{
   input: UpdateUserInput;
 }>;
 
 
-export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string, email?: string | null | undefined, avatarURL?: string | null | undefined } };
+export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string, email?: string | null, avatarURL?: string | null } };
 
 export type UpdateProfileMutationVariables = Exact<{
   input: UpdateProfileInput;
 }>;
 
 
-export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'Profile', id: string, photoURL?: string | null | undefined, bannerURL?: string | null | undefined, description?: string | null | undefined } };
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'Profile', id: string, photoURL?: string | null, bannerURL?: string | null, description?: string | null } };
+
+export type UploadProfileImagesMutationVariables = Exact<{
+  input: UploadProfileImagesInput;
+}>;
+
+
+export type UploadProfileImagesMutation = { __typename?: 'Mutation', uploadProfileImages: { __typename?: 'Profile', id: string } };
 
 export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, contract: any, name?: string | null | undefined } | null | undefined };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, contract: any, name?: string | null } | null };
 
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
 }>;
 
 
-export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null | undefined, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null | undefined, metadata: { __typename?: 'NFTMetadata', name?: string | null | undefined, description?: string | null | undefined, imageURL?: string | null | undefined, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined } };
+export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
 export type GetAsksQueryVariables = Exact<{
   input: AsksInput;
 }>;
 
 
-export type GetAsksQuery = { __typename?: 'Query', getAsks: { __typename?: 'GetMarketAsk', totalItems?: number | null | undefined, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined, items?: Array<{ __typename?: 'MarketAsk', id: string, cancelTxHash?: string | null | undefined, approvalTxHash?: string | null | undefined, makerAddress: any, takerAddress: any, nonce: number, start: number, end: number, salt: number, offerAcceptedAt?: any | null | undefined, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null | undefined, value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null | undefined, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined }> | null | undefined } };
+export type GetAsksQuery = { __typename?: 'Query', getAsks: { __typename?: 'GetMarketAsk', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'MarketAsk', id: string, cancelTxHash?: string | null, approvalTxHash?: string | null, makerAddress: any, takerAddress: any, nonce: number, start: number, end: number, salt: number, offerAcceptedAt?: any | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null }> | null } };
 
 export type GetBidsQueryVariables = Exact<{
   input: MarketBidsInput;
 }>;
 
 
-export type GetBidsQuery = { __typename?: 'Query', getBids: { __typename?: 'GetMarketBid', items?: Array<{ __typename?: 'MarketBid', id: string, structHash: string, nonce: number, marketAskId: string, makerAddress: any, takerAddress: any, marketSwapId?: string | null | undefined, approvalTxHash?: string | null | undefined, cancelTxHash?: string | null | undefined, message: string, start: number, end: number, salt: number, offerAcceptedAt?: any | null | undefined, acceptedAt?: any | null | undefined, rejectedAt?: any | null | undefined, rejectedReason?: string | null | undefined, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null | undefined, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null | undefined, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null | undefined, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null | undefined }> | null | undefined } };
+export type GetBidsQuery = { __typename?: 'Query', getBids: { __typename?: 'GetMarketBid', items?: Array<{ __typename?: 'MarketBid', id: string, structHash: string, nonce: number, marketAskId: string, makerAddress: any, takerAddress: any, marketSwapId?: string | null, approvalTxHash?: string | null, cancelTxHash?: string | null, message: string, start: number, end: number, salt: number, offerAcceptedAt?: any | null, acceptedAt?: any | null, rejectedAt?: any | null, rejectedReason?: string | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null }> | null } };
 
 export type GetNftAsksQueryVariables = Exact<{
   input: NftAsksInput;
 }>;
 
 
-export type GetNftAsksQuery = { __typename?: 'Query', getNFTAsks: Array<{ __typename?: 'MarketAsk', id: string, cancelTxHash?: string | null | undefined, approvalTxHash?: string | null | undefined, makerAddress: any, takerAddress: any, nonce: number, start: number, end: number, salt: number, offerAcceptedAt?: any | null | undefined, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined }> };
+export type GetNftAsksQuery = { __typename?: 'Query', getNFTAsks: Array<{ __typename?: 'MarketAsk', id: string, cancelTxHash?: string | null, approvalTxHash?: string | null, makerAddress: any, takerAddress: any, nonce: number, start: number, end: number, salt: number, offerAcceptedAt?: any | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null }> };
 
 export type GetNftOffersQueryVariables = Exact<{
   input: NftAsksInput;
 }>;
 
 
-export type GetNftOffersQuery = { __typename?: 'Query', getNFTOffers: Array<{ __typename?: 'MarketAsk', id: string, makerAddress: any, takerAddress: any, nonce: number, start: number, end: number, salt: number, offerAcceptedAt?: any | null | undefined, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined }> };
+export type GetNftOffersQuery = { __typename?: 'Query', getNFTOffers: Array<{ __typename?: 'MarketAsk', id: string, makerAddress: any, takerAddress: any, nonce: number, start: number, end: number, salt: number, offerAcceptedAt?: any | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null }> };
 
 export type GetUserSwapsQueryVariables = Exact<{
   input: UserSwapsInput;
 }>;
 
 
-export type GetUserSwapsQuery = { __typename?: 'Query', getUserSwaps: { __typename?: 'GetMarketSwap', totalItems?: number | null | undefined, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined, items?: Array<{ __typename?: 'MarketSwap', txHash: string, blockNumber: string, private?: boolean | null | undefined, marketAsk?: { __typename?: 'MarketAsk', id: string, makerAddress: any, takerAddress: any, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null | undefined, value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null | undefined, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined } | null | undefined, marketBid?: { __typename?: 'MarketBid', id: string, makerAddress: any, takerAddress: any, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null | undefined, value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null | undefined, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null | undefined } | null | undefined }> | null | undefined } };
+export type GetUserSwapsQuery = { __typename?: 'Query', getUserSwaps: { __typename?: 'GetMarketSwap', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'MarketSwap', txHash: string, blockNumber: string, private?: boolean | null, marketAsk?: { __typename?: 'MarketAsk', id: string, makerAddress: any, takerAddress: any, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null } | null, marketBid?: { __typename?: 'MarketBid', id: string, makerAddress: any, takerAddress: any, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null } | null }> | null } };
 
 export type InsiderReservedProfilesQueryVariables = Exact<{
   input: InsiderReservedProfilesInput;
@@ -1327,7 +1361,7 @@ export type InsiderReservedProfilesQueryVariables = Exact<{
 export type InsiderReservedProfilesQuery = { __typename?: 'Query', insiderReservedProfiles: Array<string> };
 
 export type IsAddressWhitelistedQueryVariables = Exact<{
-  input?: Maybe<WhitelistCheckInput>;
+  input?: InputMaybe<WhitelistCheckInput>;
 }>;
 
 
@@ -1336,33 +1370,33 @@ export type IsAddressWhitelistedQuery = { __typename?: 'Query', isAddressWhiteli
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, avatarURL?: string | null | undefined, email?: string | null | undefined, username?: string | null | undefined, isEmailConfirmed: boolean, referralId: string } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, avatarURL?: string | null, email?: string | null, username?: string | null, isEmailConfirmed: boolean, referralId: string } };
 
 export type MyBidsQueryVariables = Exact<{
-  input?: Maybe<BidsInput>;
+  input?: InputMaybe<BidsInput>;
 }>;
 
 
-export type MyBidsQuery = { __typename?: 'Query', myBids: { __typename?: 'BidsOutput', items: Array<{ __typename?: 'Bid', id: string, status: BidStatus, price: any, updatedAt: any, createdAt: any, stakeWeightedSeconds?: number | null | undefined, profile?: { __typename?: 'Profile', url: string } | null | undefined, wallet?: { __typename?: 'Wallet', address: any } | null | undefined, signature: { __typename?: 'Signature', r: any, s: any, v: number } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined } };
+export type MyBidsQuery = { __typename?: 'Query', myBids: { __typename?: 'BidsOutput', items: Array<{ __typename?: 'Bid', id: string, status: BidStatus, price: any, updatedAt: any, createdAt: any, stakeWeightedSeconds?: number | null, profile?: { __typename?: 'Profile', url: string } | null, wallet?: { __typename?: 'Wallet', address: any } | null, signature: { __typename?: 'Signature', r: any, s: any, v: number } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
 export type MyNfTsQueryVariables = Exact<{
-  input?: Maybe<NfTsInput>;
+  input?: InputMaybe<NfTsInput>;
 }>;
 
 
-export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined, items: Array<{ __typename?: 'NFT', contract?: any | null | undefined, tokenId: any, id: string, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null | undefined, description?: string | null | undefined, name?: string | null | undefined } }> } };
+export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', contract?: any | null, tokenId: any, id: string, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
 
 export type MyPhotoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyPhotoQuery = { __typename?: 'Query', me: { __typename?: 'User', avatarURL?: string | null | undefined } };
+export type MyPhotoQuery = { __typename?: 'Query', me: { __typename?: 'User', avatarURL?: string | null } };
 
 export type MyProfilesQueryVariables = Exact<{
-  input?: Maybe<ProfilesInput>;
+  input?: InputMaybe<ProfilesInput>;
 }>;
 
 
-export type MyProfilesQuery = { __typename?: 'Query', myProfiles: { __typename?: 'ProfilesOutput', pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined, items: Array<{ __typename?: 'Profile', photoURL?: string | null | undefined, status?: ProfileStatus | null | undefined, id: string, url: string, winningBid?: { __typename?: 'Bid', id: string, price: any, profile?: { __typename?: 'Profile', id: string, url: string } | null | undefined, wallet?: { __typename?: 'Wallet', id: string, address: any } | null | undefined, signature: { __typename?: 'Signature', v: number, r: any, s: any } } | null | undefined }> } };
+export type MyProfilesQuery = { __typename?: 'Query', myProfiles: { __typename?: 'ProfilesOutput', pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'Profile', photoURL?: string | null, status?: ProfileStatus | null, id: string, url: string, winningBid?: { __typename?: 'Bid', id: string, price: any, profile?: { __typename?: 'Profile', id: string, url: string } | null, wallet?: { __typename?: 'Wallet', id: string, address: any } | null, signature: { __typename?: 'Signature', v: number, r: any, s: any } } | null }> } };
 
 export type NftQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -1370,26 +1404,26 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null | undefined, price?: any | null | undefined, contract?: any | null | undefined, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null | undefined, metadata: { __typename?: 'NFTMetadata', name?: string | null | undefined, imageURL?: string | null | undefined, description?: string | null | undefined, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null | undefined, price?: any | null | undefined, contract?: any | null | undefined, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null | undefined, metadata: { __typename?: 'NFTMetadata', name?: string | null | undefined, imageURL?: string | null | undefined, description?: string | null | undefined, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type MyPreferencesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyPreferencesQuery = { __typename?: 'Query', me: { __typename?: 'User', preferences: { __typename?: 'UserPreferences', outbidNotifications?: boolean | null | undefined, bidActivityNotifications?: boolean | null | undefined, priceChangeNotifications?: boolean | null | undefined, promotionalNotifications?: boolean | null | undefined, purchaseSuccessNotifications?: boolean | null | undefined } } };
+export type MyPreferencesQuery = { __typename?: 'Query', me: { __typename?: 'User', preferences: { __typename?: 'UserPreferences', outbidNotifications?: boolean | null, bidActivityNotifications?: boolean | null, priceChangeNotifications?: boolean | null, promotionalNotifications?: boolean | null, purchaseSuccessNotifications?: boolean | null } } };
 
 export type ProfileQueryVariables = Exact<{
   url: Scalars['String'];
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profilePassive: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null | undefined, bannerURL?: string | null | undefined, photoURL?: string | null | undefined, description?: string | null | undefined, isFollowedByMe?: boolean | null | undefined, showGallery?: boolean | null | undefined, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null | undefined, winningBid?: { __typename?: 'Bid', id: string, price: any, wallet?: { __typename?: 'Wallet', address: any } | null | undefined } | null | undefined } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, isFollowedByMe?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -1404,35 +1438,35 @@ export type ProfileFollowersQueryVariables = Exact<{
 }>;
 
 
-export type ProfileFollowersQuery = { __typename?: 'Query', profileFollowers: { __typename?: 'FollowersOutput', pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined, items: Array<{ __typename?: 'Wallet', address: any, chainId: string, network: string }> } };
+export type ProfileFollowersQuery = { __typename?: 'Query', profileFollowers: { __typename?: 'FollowersOutput', pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'Wallet', address: any, chainId: string, network: string }> } };
 
-export type ProfileNfTsQueryVariables = Exact<{
-  input: NfTsInput;
+export type ProfileNfTsMutationVariables = Exact<{
+  input?: InputMaybe<UpdateNfTsForProfileInput>;
 }>;
 
 
-export type ProfileNfTsQuery = { __typename?: 'Query', nfts: { __typename?: 'CurationNFTsOutput', pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined, items: Array<{ __typename?: 'CurationNFT', size?: NftSize | null | undefined, nft: { __typename?: 'NFT', contract?: any | null | undefined, id: string, tokenId: any, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null | undefined, description?: string | null | undefined, name?: string | null | undefined } } }> } };
+export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', contract?: any | null, id: string, tokenId: any, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
 
 export type RecentProfilesQueryVariables = Exact<{
-  input?: Maybe<LatestProfilesInput>;
+  input?: InputMaybe<LatestProfilesInput>;
 }>;
 
 
-export type RecentProfilesQuery = { __typename?: 'Query', latestProfiles: { __typename?: 'ProfilesOutput', totalItems?: number | null | undefined, items: Array<{ __typename?: 'Profile', id: string, bannerURL?: string | null | undefined, photoURL?: string | null | undefined, url: string, owner?: { __typename?: 'Wallet', address: any } | null | undefined }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined } };
+export type RecentProfilesQuery = { __typename?: 'Query', latestProfiles: { __typename?: 'ProfilesOutput', totalItems?: number | null, items: Array<{ __typename?: 'Profile', id: string, bannerURL?: string | null, photoURL?: string | null, url: string, owner?: { __typename?: 'Wallet', address: any } | null }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
 export type TopBidsQueryVariables = Exact<{
-  input?: Maybe<TopBidsInput>;
+  input?: InputMaybe<TopBidsInput>;
 }>;
 
 
-export type TopBidsQuery = { __typename?: 'Query', topBids: { __typename?: 'BidsOutput', totalItems?: number | null | undefined, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined, items: Array<{ __typename?: 'Bid', id: string, status: BidStatus, price: any, wallet?: { __typename?: 'Wallet', address: any } | null | undefined, profile?: { __typename?: 'Profile', url: string, createdAt: any, bannerURL?: string | null | undefined, photoURL?: string | null | undefined, owner?: { __typename?: 'Wallet', address: any } | null | undefined } | null | undefined }> } };
+export type TopBidsQuery = { __typename?: 'Query', topBids: { __typename?: 'BidsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'Bid', id: string, status: BidStatus, price: any, wallet?: { __typename?: 'Wallet', address: any } | null, profile?: { __typename?: 'Profile', url: string, createdAt: any, bannerURL?: string | null, photoURL?: string | null, owner?: { __typename?: 'Wallet', address: any } | null } | null }> } };
 
 export type WatchlistQueryVariables = Exact<{
-  input?: Maybe<ProfilesInput>;
+  input?: InputMaybe<ProfilesInput>;
 }>;
 
 
-export type WatchlistQuery = { __typename?: 'Query', profilesFollowedByMe: { __typename?: 'ProfilesOutput', pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null | undefined, lastCursor?: string | null | undefined } | null | undefined, items: Array<{ __typename?: 'Profile', id: string, status?: ProfileStatus | null | undefined, url: string, winningBid?: { __typename?: 'Bid', price: any } | null | undefined }> } };
+export type WatchlistQuery = { __typename?: 'Query', profilesFollowedByMe: { __typename?: 'ProfilesOutput', pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'Profile', id: string, status?: ProfileStatus | null, url: string, winningBid?: { __typename?: 'Bid', price: any } | null }> } };
 
 
 export const AddToWatchlistDocument = gql`
@@ -1644,6 +1678,13 @@ export const UpdateProfileDocument = gql`
     photoURL
     bannerURL
     description
+  }
+}
+    `;
+export const UploadProfileImagesDocument = gql`
+    mutation UploadProfileImages($input: UploadProfileImagesInput!) {
+  uploadProfileImages(input: $input) {
+    id
   }
 }
     `;
@@ -2024,6 +2065,7 @@ export const MyNfTsDocument = gql`
       firstCursor
       lastCursor
     }
+    totalItems
     items {
       contract
       tokenId
@@ -2141,7 +2183,7 @@ export const MyPreferencesDocument = gql`
     `;
 export const ProfileDocument = gql`
     query Profile($url: String!) {
-  profilePassive(url: $url) {
+  profile(url: $url) {
     id
     url
     status
@@ -2149,18 +2191,10 @@ export const ProfileDocument = gql`
     photoURL
     description
     isFollowedByMe
-    showGallery
     owner {
       address
       chainId
       network
-    }
-    winningBid {
-      id
-      price
-      wallet {
-        address
-      }
     }
   }
 }
@@ -2186,23 +2220,21 @@ export const ProfileFollowersDocument = gql`
 }
     `;
 export const ProfileNfTsDocument = gql`
-    query ProfileNFTs($input: NFTsInput!) {
-  nfts(input: $input) {
+    mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
+  updateNFTsForProfile(input: $input) {
     pageInfo {
       firstCursor
       lastCursor
     }
+    totalItems
     items {
-      size
-      nft {
-        contract
-        id
-        tokenId
-        metadata {
-          imageURL
-          description
-          name
-        }
+      contract
+      id
+      tokenId
+      metadata {
+        imageURL
+        description
+        name
       }
     }
   }
@@ -2275,144 +2307,147 @@ export const WatchlistDocument = gql`
 }
     `;
 
-export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     AddToWatchlist(variables: AddToWatchlistMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AddToWatchlistMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<AddToWatchlistMutation>(AddToWatchlistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AddToWatchlist');
+      return withWrapper((wrappedRequestHeaders) => client.request<AddToWatchlistMutation>(AddToWatchlistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AddToWatchlist', 'mutation');
     },
     CancelBid(variables: CancelBidMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CancelBidMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CancelBidMutation>(CancelBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CancelBid');
+      return withWrapper((wrappedRequestHeaders) => client.request<CancelBidMutation>(CancelBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CancelBid', 'mutation');
     },
     CancelMarketAsk(variables: CancelMarketAskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CancelMarketAskMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CancelMarketAskMutation>(CancelMarketAskDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CancelMarketAsk');
+      return withWrapper((wrappedRequestHeaders) => client.request<CancelMarketAskMutation>(CancelMarketAskDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CancelMarketAsk', 'mutation');
     },
     CancelMarketBid(variables: CancelMarketBidMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CancelMarketBidMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CancelMarketBidMutation>(CancelMarketBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CancelMarketBid');
+      return withWrapper((wrappedRequestHeaders) => client.request<CancelMarketBidMutation>(CancelMarketBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CancelMarketBid', 'mutation');
     },
     ConfirmEmail(variables: ConfirmEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ConfirmEmailMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ConfirmEmailMutation>(ConfirmEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ConfirmEmail');
+      return withWrapper((wrappedRequestHeaders) => client.request<ConfirmEmailMutation>(ConfirmEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ConfirmEmail', 'mutation');
     },
     CreateApproval(variables: CreateApprovalMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateApprovalMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateApprovalMutation>(CreateApprovalDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateApproval');
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateApprovalMutation>(CreateApprovalDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateApproval', 'mutation');
     },
     CreateBid(variables: CreateBidMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateBidMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateBidMutation>(CreateBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateBid');
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateBidMutation>(CreateBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateBid', 'mutation');
     },
     CreateMarketAsk(variables: CreateMarketAskMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateMarketAskMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateMarketAskMutation>(CreateMarketAskDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateMarketAsk');
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateMarketAskMutation>(CreateMarketAskDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateMarketAsk', 'mutation');
     },
     CreateMarketBid(variables: CreateMarketBidMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateMarketBidMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CreateMarketBidMutation>(CreateMarketBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateMarketBid');
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateMarketBidMutation>(CreateMarketBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateMarketBid', 'mutation');
     },
     FileUpload(variables?: FileUploadMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileUploadMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<FileUploadMutation>(FileUploadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FileUpload');
+      return withWrapper((wrappedRequestHeaders) => client.request<FileUploadMutation>(FileUploadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FileUpload', 'mutation');
     },
     ProfileClaimed(variables: ProfileClaimedMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileClaimedMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProfileClaimedMutation>(ProfileClaimedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileClaimed');
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileClaimedMutation>(ProfileClaimedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileClaimed', 'mutation');
     },
     RemoveFromWatchlist(variables: RemoveFromWatchlistMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RemoveFromWatchlistMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<RemoveFromWatchlistMutation>(RemoveFromWatchlistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RemoveFromWatchlist');
+      return withWrapper((wrappedRequestHeaders) => client.request<RemoveFromWatchlistMutation>(RemoveFromWatchlistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RemoveFromWatchlist', 'mutation');
     },
     ResendEmail(variables?: ResendEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ResendEmailMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ResendEmailMutation>(ResendEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ResendEmail');
+      return withWrapper((wrappedRequestHeaders) => client.request<ResendEmailMutation>(ResendEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ResendEmail', 'mutation');
     },
     SignHash(variables: SignHashMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignHashMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SignHashMutation>(SignHashDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignHash');
+      return withWrapper((wrappedRequestHeaders) => client.request<SignHashMutation>(SignHashDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignHash', 'mutation');
     },
     SignHashProfile(variables: SignHashProfileMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignHashProfileMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SignHashProfileMutation>(SignHashProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignHashProfile');
+      return withWrapper((wrappedRequestHeaders) => client.request<SignHashProfileMutation>(SignHashProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignHashProfile', 'mutation');
     },
     SignUp(variables: SignUpMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignUpMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SignUpMutation>(SignUpDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignUp');
+      return withWrapper((wrappedRequestHeaders) => client.request<SignUpMutation>(SignUpDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignUp', 'mutation');
     },
     SubmitProfilePreferences(variables: SubmitProfilePreferencesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SubmitProfilePreferencesMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<SubmitProfilePreferencesMutation>(SubmitProfilePreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SubmitProfilePreferences');
+      return withWrapper((wrappedRequestHeaders) => client.request<SubmitProfilePreferencesMutation>(SubmitProfilePreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SubmitProfilePreferences', 'mutation');
     },
     UpdateEmail(variables: UpdateEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateEmailMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateEmailMutation>(UpdateEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateEmail');
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateEmailMutation>(UpdateEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateEmail', 'mutation');
     },
     UpdateMe(variables: UpdateMeMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateMeMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateMeMutation>(UpdateMeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateMe');
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateMeMutation>(UpdateMeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateMe', 'mutation');
     },
     UpdateProfile(variables: UpdateProfileMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateProfileMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<UpdateProfileMutation>(UpdateProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateProfile');
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateProfileMutation>(UpdateProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateProfile', 'mutation');
+    },
+    UploadProfileImages(variables: UploadProfileImagesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadProfileImagesMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UploadProfileImagesMutation>(UploadProfileImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadProfileImages', 'mutation');
     },
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection');
+      return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs');
+      return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');
     },
     GetAsks(variables: GetAsksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetAsksQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAsksQuery>(GetAsksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAsks');
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAsksQuery>(GetAsksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAsks', 'query');
     },
     GetBids(variables: GetBidsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBidsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetBidsQuery>(GetBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetBids');
+      return withWrapper((wrappedRequestHeaders) => client.request<GetBidsQuery>(GetBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetBids', 'query');
     },
     getNFTAsks(variables: GetNftAsksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNftAsksQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetNftAsksQuery>(GetNftAsksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTAsks');
+      return withWrapper((wrappedRequestHeaders) => client.request<GetNftAsksQuery>(GetNftAsksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTAsks', 'query');
     },
     getNFTOffers(variables: GetNftOffersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNftOffersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetNftOffersQuery>(GetNftOffersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTOffers');
+      return withWrapper((wrappedRequestHeaders) => client.request<GetNftOffersQuery>(GetNftOffersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTOffers', 'query');
     },
     GetUserSwaps(variables: GetUserSwapsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetUserSwapsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetUserSwapsQuery>(GetUserSwapsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserSwaps');
+      return withWrapper((wrappedRequestHeaders) => client.request<GetUserSwapsQuery>(GetUserSwapsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserSwaps', 'query');
     },
     InsiderReservedProfiles(variables: InsiderReservedProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<InsiderReservedProfilesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<InsiderReservedProfilesQuery>(InsiderReservedProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'InsiderReservedProfiles');
+      return withWrapper((wrappedRequestHeaders) => client.request<InsiderReservedProfilesQuery>(InsiderReservedProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'InsiderReservedProfiles', 'query');
     },
     IsAddressWhitelisted(variables?: IsAddressWhitelistedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IsAddressWhitelistedQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<IsAddressWhitelistedQuery>(IsAddressWhitelistedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IsAddressWhitelisted');
+      return withWrapper((wrappedRequestHeaders) => client.request<IsAddressWhitelistedQuery>(IsAddressWhitelistedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IsAddressWhitelisted', 'query');
     },
     Me(variables?: MeQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MeQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<MeQuery>(MeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Me');
+      return withWrapper((wrappedRequestHeaders) => client.request<MeQuery>(MeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Me', 'query');
     },
     MyBids(variables?: MyBidsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyBidsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<MyBidsQuery>(MyBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyBids');
+      return withWrapper((wrappedRequestHeaders) => client.request<MyBidsQuery>(MyBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyBids', 'query');
     },
     MyNFTs(variables?: MyNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyNfTsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<MyNfTsQuery>(MyNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyNFTs');
+      return withWrapper((wrappedRequestHeaders) => client.request<MyNfTsQuery>(MyNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyNFTs', 'query');
     },
     MyPhoto(variables?: MyPhotoQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyPhotoQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<MyPhotoQuery>(MyPhotoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyPhoto');
+      return withWrapper((wrappedRequestHeaders) => client.request<MyPhotoQuery>(MyPhotoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyPhoto', 'query');
     },
     MyProfiles(variables?: MyProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyProfilesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<MyProfilesQuery>(MyProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyProfiles');
+      return withWrapper((wrappedRequestHeaders) => client.request<MyProfilesQuery>(MyProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyProfiles', 'query');
     },
     Nft(variables: NftQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NftQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<NftQuery>(NftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Nft');
+      return withWrapper((wrappedRequestHeaders) => client.request<NftQuery>(NftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Nft', 'query');
     },
     NftById(variables: NftByIdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NftByIdQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<NftByIdQuery>(NftByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NftById');
+      return withWrapper((wrappedRequestHeaders) => client.request<NftByIdQuery>(NftByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NftById', 'query');
     },
     MyPreferences(variables?: MyPreferencesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyPreferencesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<MyPreferencesQuery>(MyPreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyPreferences');
+      return withWrapper((wrappedRequestHeaders) => client.request<MyPreferencesQuery>(MyPreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyPreferences', 'query');
     },
     Profile(variables: ProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProfileQuery>(ProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Profile');
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileQuery>(ProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Profile', 'query');
     },
     ProfileBlocklist(variables: ProfileBlocklistQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileBlocklistQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProfileBlocklistQuery>(ProfileBlocklistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileBlocklist');
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileBlocklistQuery>(ProfileBlocklistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileBlocklist', 'query');
     },
     ProfileFollowers(variables: ProfileFollowersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileFollowersQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProfileFollowersQuery>(ProfileFollowersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileFollowers');
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileFollowersQuery>(ProfileFollowersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileFollowers', 'query');
     },
-    ProfileNFTs(variables: ProfileNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNfTsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProfileNfTsQuery>(ProfileNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNFTs');
+    ProfileNFTs(variables?: ProfileNfTsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNfTsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileNfTsMutation>(ProfileNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNFTs', 'mutation');
     },
     RecentProfiles(variables?: RecentProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RecentProfilesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<RecentProfilesQuery>(RecentProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RecentProfiles');
+      return withWrapper((wrappedRequestHeaders) => client.request<RecentProfilesQuery>(RecentProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RecentProfiles', 'query');
     },
     TopBids(variables?: TopBidsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TopBidsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<TopBidsQuery>(TopBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'TopBids');
+      return withWrapper((wrappedRequestHeaders) => client.request<TopBidsQuery>(TopBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'TopBids', 'query');
     },
     Watchlist(variables?: WatchlistQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<WatchlistQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<WatchlistQuery>(WatchlistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Watchlist');
+      return withWrapper((wrappedRequestHeaders) => client.request<WatchlistQuery>(WatchlistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Watchlist', 'query');
     }
   };
 }

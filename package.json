@@ -11,12 +11,16 @@
     "start": "next start",
     "lint": "next lint",
     "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain",
-    "gql:gen": "graphql-codegen --config codejen.json",
+    "gql:gen": "graphql-codegen --config codegen.json",
     "doppler:pull": "doppler secrets --json >> .env.local"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.2",
     "@aws-sdk/client-s3": "^3.83.0",
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/typescript": "^2.4.11",
+    "@graphql-codegen/typescript-graphql-request": "^4.4.8",
+    "@graphql-codegen/typescript-operations": "^2.4.0",
     "@headlessui/react": "^1.6.1",
     "@heroicons/react": "^1.0.6",
     "@rainbow-me/rainbowkit": "^0.1.0",

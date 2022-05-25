@@ -4,6 +4,7 @@ query MyNFTs($input: NFTsInput) {
       firstCursor
       lastCursor
     }
+    totalItems
     items {
       contract
       tokenId

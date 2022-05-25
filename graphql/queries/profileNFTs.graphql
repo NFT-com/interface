@@ -1,20 +1,18 @@
-query ProfileNFTs($input: NFTsInput!) {
-  nfts(input: $input) {
+mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
+  updateNFTsForProfile(input: $input) {
     pageInfo {
       firstCursor
       lastCursor
     }
+    totalItems
     items {
-      size
-      nft {
-        contract
-        id
-        tokenId
-        metadata {
-          imageURL
-          description
-          name
-        }
+      contract
+      id
+      tokenId
+      metadata {
+        imageURL
+        description
+        name
       }
     }
   }
