@@ -1,11 +1,11 @@
 import { SignatureModal } from 'components/modules/SignatureModal';
 import { GraphQLClient } from 'graphql-request';
-import { isNullOrEmpty } from 'utils/helpers';
+import { getAPIURL, isNullOrEmpty } from 'utils/helpers';
 
 import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { useAccount, useNetwork, useSignMessage } from 'wagmi';
 
-const defaultClient = new GraphQLClient(process.env.NEXT_PUBLIC_ENV);
+const defaultClient = new GraphQLClient(getAPIURL());
 
 export const GraphQLContext = createContext({
   client: defaultClient,
@@ -45,7 +45,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   });
 
   const createSignedClient = useCallback((signature: string) => {
-    const gqlClient = new GraphQLClient(process.env.NEXT_PUBLIC_ENV + '/api', {
+    const gqlClient = new GraphQLClient(getAPIURL() + '/api', {
       cache: 'default',
       headers: {
         authorization: signature,

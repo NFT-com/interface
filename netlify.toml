@@ -16,11 +16,6 @@
   status = 200
   force = true
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
 [context.prod.environment]
   NEXT_PUBLIC_GOOGLE_ANALYTICS_ID = "G-FKHMGFQKR0"
   NEXT_PUBLIC_ENV = "PRODUCTION"
