@@ -1,4 +1,4 @@
-import { TeamGKEvent } from 'constants/typechain/GenesisKeyTeamClaim';
+import { TeamGKEvent } from 'constants/typechain/Genesis_key_team_claim';
 import { Maybe } from 'graphql/generated/types';
 
 import { useAllContracts } from './contracts/useAllContracts';
