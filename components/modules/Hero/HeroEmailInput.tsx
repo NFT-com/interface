@@ -1,5 +1,5 @@
-import { Button, ButtonType } from 'components/Button/Button';
-import helpers from 'utils/utils';
+import { Button, ButtonType } from 'components/elements/Button';
+import { joinClasses } from 'utils/helpers';
 
 import { useState } from 'react';
 
@@ -11,7 +11,7 @@ export function HeroEmailInput(props: HeroEmailInputProps) {
   const [email, setEmail] = useState('');
   return (
     <div
-      className={helpers.joinClasses(
+      className={joinClasses(
         'rounded-xl p-8 flex flex-col',
         props.center === true ? 'items-center px-20' : ''
       )}
