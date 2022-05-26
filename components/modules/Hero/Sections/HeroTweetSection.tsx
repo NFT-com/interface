@@ -2,11 +2,11 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Image, { StaticImageData } from 'next/image';
-import defaultLogo from 'public/default_user.svg';
+import DefaultLogo from 'public/default_user.svg';
 import jade from 'public/jade.jpg';
 import kevinoLeary from 'public/kevinoleary.png';
 import medici from 'public/medici.png';
-import twitterIcon from 'public/twitter_icon.svg';
+import TwitterIcon from 'public/twitter_icon.svg';
 import { ExternalLink } from 'styles/theme/Components';
 
 type Tweet = {
@@ -70,28 +70,27 @@ export default function HeroTweetSection() {
                 )}
               >
                 <div className='flex flex-col'>
-                  {/* <Image
-                    key={tweet.author}
-                    src={
-                      isNullOrEmpty(tweet.image.src) ? defaultLogo : tweet.image
+                  <div className={tw('rounded-full border-2 w-16 h-16 mr-6 object-cover border-[#010101]')}>
+                    {
+                      isNullOrEmpty(tweet.image.src) ?
+                        <DefaultLogo />
+                        :
+                        <Image
+                          src={tweet.image.src}
+                          alt={tweet.author}
+                          layout='fill'
+                        />
                     }
-                    alt="tweet author"
-                    className="rounded-full border-2 w-16 h-16 mr-6 object-cover border-[#010101]"
-                    style={{
-                      minWidth: '64px',
-                    }}
-                  /> */}
+                  </div>
                 </div>
                 <div className='flex flex-col'>
                   <div className="flex text-4xl deprecated_md:text-3xl deprecated_sm:text-2xl font-hero-heading2 font-medium text-always-white tracking-wide">
                     {tweet.author}
                     <div className='flex h-full items-center px-4'>
                       <ExternalLink href={tweet.twitterURL}>
-                        {/* <Image
-                          className={tw('cursor-pointer flex shrink-0 w-6')}
-                          src={twitterIcon}
-                          alt="twitter link"
-                        /> */}
+                        <TwitterIcon
+                          className={'cursor-pointer flex shrink-0 w-6'}
+                        />
                       </ExternalLink>
                     </div>
                   </div>

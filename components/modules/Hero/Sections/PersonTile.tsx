@@ -2,9 +2,9 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Image, { StaticImageData } from 'next/image';
-import defaultLogo from 'public/default_user.svg';
-import linkedInIcon from 'public/linkedin_icon.svg';
-import twitterIcon from 'public/twitter_icon.svg';
+import DefaultLogo from 'public/default_user.svg';
+import LinkedInIcon from 'public/linkedin_icon.svg';
+import TwitterIcon from 'public/twitter_icon.svg';
 import { ExternalLink } from 'styles/theme/Components';
 
 export type Person = {
@@ -35,16 +35,21 @@ export function PersonTile(props: PersonTileProps) {
         direction === 'left' ? 'flex-row-reverse' : 'flex-row pt-56',
         direction === 'left' ? 'deprecated_minsm:pr-72' : 'deprecated_minsm:pl-72'
       )}>
-        {/* { <Image
-          className={tw('absolute top-0 w-52 h-52 rounded-full transform',
-            'deprecated_minmd:w-64 deprecated_minmd:h-64',
-            direction === 'left' ? 'deprecated_minsm:right-0' : 'deprecated_minsm:left-0'
-          )}
-          alt={person.name}
-          src={!person?.pictureUrl ?
-            defaultLogo :
-            person.pictureUrl}
-        /> } */}
+        <div className={tw('absolute top-0 w-52 h-52 rounded-full transform',
+          'deprecated_minmd:w-64 deprecated_minmd:h-64',
+          direction === 'left' ? 'deprecated_minsm:right-0' : 'deprecated_minsm:left-0'
+        )}
+        >
+          {!person?.pictureUrl ?
+            <DefaultLogo />
+            :
+            <Image
+              alt={person.name}
+              src={person.pictureUrl}
+              layout='fill'
+            />
+          }
+        </div>
         <div className="flex-shrink">
           <div className={tw('relative z-20 text-hero-pink font-hero-heading1',
             'break-normal text-4xl deprecated_minsm:text-[2.5rem]',
@@ -73,20 +78,16 @@ export function PersonTile(props: PersonTileProps) {
             <div className="flex flex-row mt-4 w-full items-center">
               {!isNullOrEmpty(person.linkedInUrl) &&
                 <ExternalLink href={person.linkedInUrl}>
-                  {/* <Image
+                  <LinkedInIcon
                     className={tw('w-8 deprecated_minlg:w-6 cursor-pointer flex shrink-0')}
-                    src={linkedInIcon}
-                    alt="linkedIn Link"
-                  /> */}
+                  />
                 </ExternalLink>
               }
               {!isNullOrEmpty(person.twitterUrl) &&
                 <ExternalLink href={person.twitterUrl}>
-                  {/* <Image
+                  <TwitterIcon
                     className={tw('w-8 deprecated_minlg:w-6 cursor-pointer flex shrink-0 ml-5')}
-                    src={twitterIcon}
-                    alt="twitter link"
-                  /> */}
+                  />
                 </ExternalLink>
               }
             </div>
