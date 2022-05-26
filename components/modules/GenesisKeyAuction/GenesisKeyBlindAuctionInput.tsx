@@ -36,7 +36,7 @@ export function GenesisKeyBlindAuctionInput() {
   const userEthBalance = useEthBalance(account?.address);
   const { createBid } = useCreateBidMutation();
   const { cancelBid } = useCancelBidMutation();
-  const { useToggleAddFundsDialog } = useAddFundsDialog();
+  const { setAddFundsDialogOpen, addFundsDialogOpen } = useAddFundsDialog();
 
   const { bid: myGenesisKeyBid, mutate: mutateMyGenesisKeyBid } = useMyGenesisKeyBid();
 
@@ -151,7 +151,7 @@ export function GenesisKeyBlindAuctionInput() {
                   return;
                 }
                 if (!enoughETH) {
-                  useToggleAddFundsDialog();
+                  setAddFundsDialogOpen(!addFundsDialogOpen);
                 } else {
                   setSubmitting(true);
                   if (isNullOrEmpty(currentBidDraft)) {
