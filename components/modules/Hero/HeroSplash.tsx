@@ -316,10 +316,7 @@ export default function HeroSplash(props: HeroSplashProps) {
               autoPlay
               muted
               loop
-              className={tw(
-                'absolute' ,
-                width > height ? 'w-full top-0' : 'h-full object-top object-cover top-0',
-              )}
+              className='w-full h-full object-top object-cover absolute top-0'
               src={cloudVid}
             />
           }
