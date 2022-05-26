@@ -10,8 +10,9 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Disclosure } from '@headlessui/react';
-import Image from 'next/image';
 import Link from 'next/link';
+import HeroCorner from 'public/hero_corner.svg';
+import HeroCornerDark from 'public/hero_corner_dark.svg';
 import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Menu } from 'react-feather';
@@ -80,14 +81,12 @@ export default function Header(props: HeaderProps) {
                       'lg:ml-2 ml-20',
                       'dark:text-always-white text-always-black',
                       'font-hero-heading1 flex items-center')}>
-                      <Image
-                        className={tw('h-10 w-10 mr-1')}
-                        src={
-                          isDarkMode
-                            ? 'https://cdn.nft.com/hero_corner.svg'
-                            : 'https://cdn.nft.com/hero_corner_dark.svg' }
-                        alt="nft.com"
-                        layout='fill' />
+                      <div className='h-10 w-10 mr-1'>
+                        { isDarkMode ?
+                          <HeroCorner />
+                          : <HeroCornerDark />
+                        }
+                      </div>
                       <span>NFT.COM</span>
                     </div>
                   </Link>
