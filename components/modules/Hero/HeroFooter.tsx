@@ -1,6 +1,7 @@
 import { tw } from 'utils/tw';
 
 import moment from 'moment';
+import Image from 'next/image';
 
 export default function HeroFooter() {
   return (
@@ -14,7 +15,7 @@ export default function HeroFooter() {
       )}
     >
       <div className="text-grey-txt font-hero-heading1 flex items-center">
-        <img
+        <Image
           className="h-10 w-10 text-always-white mr-1"
           src={'https://cdn.nft.com/hero_corner_gray.svg'}
           alt="nft.com"
