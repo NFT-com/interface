@@ -96,14 +96,14 @@ export function DropdownPicker(props: DropdownPickerProps) {
         className={tw('flex flex-row items-center px-2.5',
           'bg-white dark:bg-black border py-2 h-full',
           'justify-between rounded-xl border-select-brdr w-full')}
-        key={props.options[props.selectedIndex].label}
+        key={props?.options[props?.selectedIndex]?.label}
       >
-        {/* {props.options[props.selectedIndex].icon &&
-          <Image 
+        {props?.options[props?.selectedIndex]?.icon &&
+          <Image
             className="h-4 mr-2"
-            src={props.options[props.selectedIndex].icon}
-            alt={props.options[props.selectedIndex].label} />
-        } */}
+            src={props?.options[props?.selectedIndex]?.icon}
+            alt={props?.options[props?.selectedIndex]?.label} />
+        }
         <div className='mr-2'>
           {(props.placeholder && !selected) ?
             <span style={{ color: secondaryText }}>{props.placeholder}</span>

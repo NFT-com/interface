@@ -12,7 +12,6 @@ const nextConfig = {
   images: {
     domains: ['cdn.nft.com'],
   },
-  swcMinify: true,
 };
 
 module.exports = nextConfig;
