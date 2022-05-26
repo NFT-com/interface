@@ -4,13 +4,11 @@ import useSWR from 'swr';
 
 export interface UserState {
   isDarkMode: boolean;
-  matchesDarkMode: boolean;
   timestamp: number;
 }
 
 export const userStateInitial: UserState = {
-  isDarkMode: false,
-  matchesDarkMode: false,
+  isDarkMode: true,
   timestamp: getCurrentTimestamp(),
 };
 
@@ -30,7 +28,6 @@ export function useUser() {
     user: data,
     loading,
     isDarkMode: data?.isDarkMode,
-    matchesDarkMode: data?.matchesDarkMode,
     timestamp: data?.timestamp,
     updateDarkMode,
   };

@@ -10,10 +10,9 @@ import HeroTweetSection from 'components/modules/Hero/Sections/HeroTweetSection'
 import HeroVideoSection from 'components/modules/Hero/Sections/HeroVideoSection';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
-import discordIcon from 'public/discord_gray_icon.svg';
-import twitterIcon from 'public/twitter_gray_icon.svg';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import DiscordIcon from 'public/discord_gray_icon.svg';
+import TwitterIcon from 'public/twitter_gray_icon.svg';
+import React, { useEffect, useRef, useState } from 'react';
 
 export interface HeroPageProps {
   scrollToAbout?: boolean;
@@ -60,24 +59,18 @@ export function HeroPage(props: HeroPageProps) {
     }
   }, [props.scrollToAbout, props.scrollToSchedule, scrolled]);
   
-  const getSides = useCallback(() => {
-    return (
+  return (
+    <>
       <div
         className={tw('z-50 right-0 bottom-0 deprecated_minmd:bottom-[50px] absolute items-center',
           'm-3 deprecated_minmd:m-10 flex flex-col justify-between h-20')}>
         <a href="https://twitter.com/nftcomofficial" target="_blank" rel="noreferrer">
-          {/* <Image src={twitterIcon} className="w-8" alt="twitter icon"/> */}
+          <TwitterIcon />
         </a>
         <a href="https://discord.gg/nftdotcom" target="_blank" rel="noreferrer">
-          {/* <Image src={discordIcon} className="w-8" alt="discord icon"/> */}
+          <DiscordIcon className='w-8' />
         </a>
       </div>
-    );
-  }, []);
-  
-  return (
-    <>
-      {getSides()}
       <div
         ref={contentRef}
         className={tw(

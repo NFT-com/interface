@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "style:build": "tailwind -c ./tailwind.config.js build -i styles/globals.css -o styles/tailwind.css",
-    "dev": "yarn typechain:gen & doppler run -- next dev",
+    "style:watch": "yarn run style:build -- --watch",
+    "dev": "yarn typechain:gen & doppler run -- next dev & yarn style:build -- --watch",
     "build": "yarn typechain:gen && next build",
     "start": "next start",
     "lint": "next lint",

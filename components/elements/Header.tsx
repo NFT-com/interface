@@ -79,9 +79,9 @@ export default function Header(props: HeaderProps) {
                   <Link href="/">
                     <div className={tw(
                       'lg:ml-2 ml-20',
-                      'dark:text-always-white text-always-black',
+                      'text-always-white',
                       'font-hero-heading1 flex items-center')}>
-                      <div className='h-10 w-10 mr-1'>
+                      <div className='h-10 w-10 mr-2'>
                         { isDarkMode ?
                           <HeroCorner />
                           : <HeroCornerDark />
