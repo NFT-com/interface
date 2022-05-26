@@ -1,8 +1,8 @@
-import { Button, ButtonType } from 'components/Button/Button';
-import { useThemeColors } from 'styles/theme/useThemeColors';
+import { Button, ButtonType } from 'components/elements/Button';
 import { tw } from 'utils/tw';
 
 import { isMobile } from 'react-device-detect';
+import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export interface AllClaimedErrorTileProps {
   onRefresh: () => void
