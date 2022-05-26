@@ -70,7 +70,7 @@ export default function HeroTweetSection() {
                 )}
               >
                 <div className='flex flex-col'>
-                  <Image
+                  {/* <Image
                     key={tweet.author}
                     src={
                       isNullOrEmpty(tweet.image.src) ? defaultLogo : tweet.image
@@ -80,18 +80,18 @@ export default function HeroTweetSection() {
                     style={{
                       minWidth: '64px',
                     }}
-                  />
+                  /> */}
                 </div>
                 <div className='flex flex-col'>
                   <div className="flex text-4xl deprecated_md:text-3xl deprecated_sm:text-2xl font-hero-heading2 font-medium text-always-white tracking-wide">
                     {tweet.author}
                     <div className='flex h-full items-center px-4'>
                       <ExternalLink href={tweet.twitterURL}>
-                        <Image
+                        {/* <Image
                           className={tw('cursor-pointer flex shrink-0 w-6')}
                           src={twitterIcon}
                           alt="twitter link"
-                        />
+                        /> */}
                       </ExternalLink>
                     </div>
                   </div>
@@ -125,11 +125,11 @@ export default function HeroTweetSection() {
         >
           {/* adds overlay transition  */}
         </div>
-        <Image
+        {/* <Image
           src={bgGif}
           alt="tweet gif"
           className='w-full mt-32 block aspect-square bg-cover bg-no-repeat bg-center'
-        />
+        /> */}
       </div>
     </div>
   );

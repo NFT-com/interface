@@ -46,7 +46,7 @@ export default function HeroSidebarAccountDetails(
         <div className='flex w-full justify-between items-center'>
           <ConnectedAddress ensName={ENSName} color='link'/>
           <div className='flex h-full items-center sm:px-5 sm:py-0 py-3'>
-            {isCopied ?
+            {/* {isCopied ?
               <CheckCircle
                 className='flex-shrink-0 h-5 aspect-square'
                 color={secondaryIcon}
@@ -59,7 +59,7 @@ export default function HeroSidebarAccountDetails(
                 src={CopyIcon}
                 alt="Copy Address"
               />
-            }
+            } */}
           </div>
         </div>
       </div>

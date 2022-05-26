@@ -95,7 +95,7 @@ export default function HeroCommunitySection() {
           {/* adds overlay transition between bg sections  */}
         </div>
         <div className="h-[50rem] relative overflow-hidden">
-          {isMobile ?
+          {/* {isMobile ?
             <Image
               src='https://cdn.nft.com/NftCity2Still.jpg'
               className='block z-0 absolute top-0 left-0 w-full h-full object-cover'
@@ -110,7 +110,7 @@ export default function HeroCommunitySection() {
               className="block z-0 absolute top-0 left-0 w-full h-full object-cover"
               src='https://cdn.nft.com/NFTCityLoop.mp4'
             />
-          }
+          } */}
         </div>
       </div>
 

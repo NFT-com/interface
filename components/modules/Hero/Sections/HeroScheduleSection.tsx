@@ -26,7 +26,7 @@ export default function HeroScheduleSection() {
       backgroundAttachment: 'fixed',
       backgroundRepeat: 'no-repeat'
     }}>
-      <Image
+      {/* <Image
         className={tw(
           'opacity-40',
           'absolute -top-12 left-0 w-full transform scale-90 z-10 deprecated_minsm:w-1/4',
@@ -34,7 +34,7 @@ export default function HeroScheduleSection() {
         )}
         src={keyImage}
         alt=""
-      />
+      /> */}
       <div
         className={tw(
           'deprecated_minmd:flex deprecated_minmd:justify-between deprecated_minmd:items-start',

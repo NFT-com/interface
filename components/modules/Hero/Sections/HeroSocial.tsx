@@ -21,9 +21,9 @@ const HeroSocial = (props: Social) => {
         'deprecated_minmd:w-1/3'
       )}
     >
-      <Image
+      {/* <Image
         className='h-24'
-        src={props.icon} alt={props.source} style={{ minWidth: '73px', }}/>
+        src={props.icon} alt={props.source} style={{ minWidth: '73px', }}/> */}
       {isVisible &&
         <div className={tw('deprecated_minlg:mt-4 deprecated_minxl:mt-6 w-full',
           'text-2xl deprecated_minlg:text-3xl deprecated_min2xl:text-3xl mt-6 deprecated_minmd:mt-0',

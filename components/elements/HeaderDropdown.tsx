@@ -59,7 +59,7 @@ export const HeaderDropdown = ({ dropDownOptions, component }: IDropdownProps) =
                   setImage(item.image ?? null);
                 }))}
               >
-                {image && <Image src={item.image} alt="currencyImage" className='mx-2'/>}
+                {/* {image && <Image src={item.image} alt="currencyImage" className='mx-2'/>} */}
                 {item.label}
               </div>
             );
@@ -79,9 +79,9 @@ export const HeaderDropdown = ({ dropDownOptions, component }: IDropdownProps) =
       }
     >
       <div className="text-header-txt font-normal flex justify-between">
-        {image && <Image src={image} alt="currencyImage" className='mx-2'/>}
+        {/* {image && <Image src={image} alt="currencyImage" className='mx-2'/>} */}
         <div>{title}</div>
-        {!component && <Image src={ArrowDown} alt="ArrowDown" className='mx-2'/>}
+        {/* {!component && <Image src={ArrowDown} alt="ArrowDown" className='mx-2'/>} */}
         <div>{component}</div>
       </div>
     </CustomTooltip>

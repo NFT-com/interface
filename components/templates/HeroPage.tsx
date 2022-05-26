@@ -66,10 +66,10 @@ export function HeroPage(props: HeroPageProps) {
         className={tw('z-50 right-0 bottom-0 deprecated_minmd:bottom-[50px] absolute items-center',
           'm-3 deprecated_minmd:m-10 flex flex-col justify-between h-20')}>
         <a href="https://twitter.com/nftcomofficial" target="_blank" rel="noreferrer">
-          <Image src={twitterIcon} className="w-8" alt="twitter icon"/>
+          {/* <Image src={twitterIcon} className="w-8" alt="twitter icon"/> */}
         </a>
         <a href="https://discord.gg/nftdotcom" target="_blank" rel="noreferrer">
-          <Image src={discordIcon} className="w-8" alt="discord icon"/>
+          {/* <Image src={discordIcon} className="w-8" alt="discord icon"/> */}
         </a>
       </div>
     );

@@ -35,7 +35,7 @@ export function PersonTile(props: PersonTileProps) {
         direction === 'left' ? 'flex-row-reverse' : 'flex-row pt-56',
         direction === 'left' ? 'deprecated_minsm:pr-72' : 'deprecated_minsm:pl-72'
       )}>
-        { <Image
+        {/* { <Image
           className={tw('absolute top-0 w-52 h-52 rounded-full transform',
             'deprecated_minmd:w-64 deprecated_minmd:h-64',
             direction === 'left' ? 'deprecated_minsm:right-0' : 'deprecated_minsm:left-0'
@@ -44,7 +44,7 @@ export function PersonTile(props: PersonTileProps) {
           src={!person?.pictureUrl ?
             defaultLogo :
             person.pictureUrl}
-        /> }
+        /> } */}
         <div className="flex-shrink">
           <div className={tw('relative z-20 text-hero-pink font-hero-heading1',
             'break-normal text-4xl deprecated_minsm:text-[2.5rem]',
@@ -73,20 +73,20 @@ export function PersonTile(props: PersonTileProps) {
             <div className="flex flex-row mt-4 w-full items-center">
               {!isNullOrEmpty(person.linkedInUrl) &&
                 <ExternalLink href={person.linkedInUrl}>
-                  <Image
+                  {/* <Image
                     className={tw('w-8 deprecated_minlg:w-6 cursor-pointer flex shrink-0')}
                     src={linkedInIcon}
                     alt="linkedIn Link"
-                  />
+                  /> */}
                 </ExternalLink>
               }
               {!isNullOrEmpty(person.twitterUrl) &&
                 <ExternalLink href={person.twitterUrl}>
-                  <Image
+                  {/* <Image
                     className={tw('w-8 deprecated_minlg:w-6 cursor-pointer flex shrink-0 ml-5')}
                     src={twitterIcon}
                     alt="twitter link"
-                  />
+                  /> */}
                 </ExternalLink>
               }
             </div>

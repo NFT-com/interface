@@ -124,7 +124,7 @@ export default function HeroSidebarFunds() {
               )}
             >
               <div className="flex items-center">
-                <Image className="h-8 mr-4" src={item.logo} alt={item.symbol} />
+                {/* <Image className="h-8 mr-4" src={item.logo} alt={item.symbol} /> */}
               </div>
               <div className="w-full">
                 <div className="flex items-center justify-between font-bold text-base mb-1">

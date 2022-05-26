@@ -61,9 +61,9 @@ export function DropdownPicker(props: DropdownPickerProps) {
           setSelected(item);
         }}
       >
-        {item.icon &&
+        {/* {item.icon &&
           <Image className="h-full mr-2" src={item.icon} alt={item.label} />
-        }
+        } */}
         {item.label}
       </div>
     );
@@ -98,12 +98,12 @@ export function DropdownPicker(props: DropdownPickerProps) {
           'justify-between rounded-xl border-select-brdr w-full')}
         key={props.options[props.selectedIndex].label}
       >
-        {props.options[props.selectedIndex].icon &&
-          <Image
+        {/* {props.options[props.selectedIndex].icon &&
+          <Image 
             className="h-4 mr-2"
             src={props.options[props.selectedIndex].icon}
             alt={props.options[props.selectedIndex].label} />
-        }
+        } */}
         <div className='mr-2'>
           {(props.placeholder && !selected) ?
             <span style={{ color: secondaryText }}>{props.placeholder}</span>
