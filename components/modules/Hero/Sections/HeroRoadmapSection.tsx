@@ -40,7 +40,7 @@ export default function HeroRoadmapSection() {
       deprecated_minxs:w-[80%] deprecated_minmd:w-1/2 deprecated_minlg:w-2/3 deprecated_min2xl:w-1/2 deprecated_minxl:flex
       deprecated_minxl:justify-between deprecated_minxl:gap-10">
         <div className="mt-5 deprecated_minxl:mt-0 w-full deprecated_min2xl:w-1/2">
-          <div className={tw('text-4xl font-medium mt-4 font-bold',
+          <div className={tw('text-4xl mt-4 font-bold',
             'text-always-white font-hero-heading2 tracking-wider')}>
           Q1 2022
           </div>

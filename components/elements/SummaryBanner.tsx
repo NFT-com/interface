@@ -34,7 +34,7 @@ export const SummaryBanner = (props: SummaryBannerProps) => {
             'items-stretch justify-start',
           )}
         >
-          {props.hideAnalytics !== true && <div className="block ml-6 block ml-3">
+          {props.hideAnalytics !== true && <div className="block ml-6">
             <div className="flex space-x-4">
               <div className="px-3">
                 <span className="text-header-txt font-normal deprecated_2xl:text-sm deprecated_md:text-xs">

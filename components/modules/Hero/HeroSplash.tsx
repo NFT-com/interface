@@ -83,7 +83,7 @@ export default function HeroSplash(props: HeroSplashProps) {
   const getSplashContent = useCallback(() => {
     const genesisKeyRecognized = myGKTokens?.length > 0;
     if ((process.env.NEXT_PUBLIC_GK_FLOWS_ENABLED === 'true') && !auctionStarted) {
-      return <div className='flex flex-col h-full justify-end items-center justify-between dark'>
+      return <div className='flex flex-col h-full items-center justify-between dark'>
         <div className='flex flex-col items-center grow justify-center'>
           <HeroTitle color="blue" items={[liveAuctionName === 'blind' ? 'THE AUCTION' : 'THE PUBLIC SALE']} />
           <HeroTitle color="blue" items={['WILL START SOON']} />
