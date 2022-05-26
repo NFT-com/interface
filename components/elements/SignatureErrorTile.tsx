@@ -1,12 +1,12 @@
-import { Button, ButtonType } from 'components/Button/Button';
-import { WalletRainbowKitButton } from 'components/Header/WalletRainbowKitButton';
-import { OptionGrid } from 'components/WalletModal/OptionGrid';
+import { Button, ButtonType } from 'components/elements/Button';
+import { OptionGrid } from 'components/elements/OptionGrid';
+import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 import { tw } from 'utils/tw';
 
 import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
+import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
 export function SignatureErrorTile() {
