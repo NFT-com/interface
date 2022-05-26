@@ -10,6 +10,7 @@ import {
   RainbowKitProvider,
   wallet
 } from '@rainbow-me/rainbowkit';
+import { AnimatePresence } from 'framer-motion';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
@@ -74,7 +75,9 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         theme={rainbowDark}
         chains={chains}>
         <GraphQLProvider>
-          {getLayout(<Component {...pageProps} />)}
+          <AnimatePresence>
+            {getLayout(<Component {...pageProps} />)}
+          </AnimatePresence>
         </GraphQLProvider>
       </RainbowKitProvider>
     </WagmiProvider>
