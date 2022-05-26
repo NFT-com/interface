@@ -1,15 +1,26 @@
 import { HeroLayout } from 'components/layouts/HeroLayout';
+import { HeroPage } from 'components/templates/HeroPage';
 
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import type { ReactElement } from 'react';
+import { ReactElement } from 'react';
+import { isMobile } from 'react-device-detect';
 
-export default function HeroPage() {
-  return <ConnectButton />;
+export default function Main() {
+  return <HeroPage />;
 }
 
-HeroPage.getLayout = function getLayout(page: ReactElement) {
+Main.getLayout = function getLayout(page: ReactElement) {
   return (
-    <HeroLayout>
+    <HeroLayout
+      headerOptions={{
+        walletOnly: true,
+        removeBackground: true,
+        walletPopupMenu: true,
+        removeSummaryBanner: true,
+        sidebar: 'hero',
+        heroHeader: true,
+      }}
+      removePinkSides={isMobile}
+    >
       {page}
     </HeroLayout>
   );

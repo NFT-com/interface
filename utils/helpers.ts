@@ -169,3 +169,17 @@ export function getAPIURL() {
     return process.env.NEXT_PUBLIC_PRODUCTION_URL;
   }
 }
+
+export const getAuctionCalendarLink = () => {
+  return 'https://www.google.com/calendar/render?action=TEMPLATE&text=NFT.' +
+  'com+Genesis+Key+Blind+Auction&details=The+NFT.' +
+  'com+Genesis+Key+Blind+Auction+will+begin+on+April+26th+at+7pm+EDT.' +
+  '+If+you+are+whitelisted%2C+you%27ll+be+able+to+connect+your' +
+  '+wallet+to+NFT.com+and+place+your+bid+for+a+Genesis+Key.+Return' +
+  '+to+NFT.com+on+Friday%2C+April+29th+at+7PM+EDT+to+see+if+you%27' +
+  've+won+one+of+the+3%2C000+available+Genesis+Keys.+Be+sure+to+' +
+  'claim+your+key+quickly.+The+claim+window+will+last+only+48+hours.' +
+  '+All+unclaimed+keys+will+be+forfeited+to+the+Public+Sale.&location' +
+  '=https%3A%2F%2Fnft.' +
+  'com&dates=20220426T230000Z%2F20220428T230000Z';
+};

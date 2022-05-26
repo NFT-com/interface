@@ -1,10 +1,10 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import HeroSidebarAccountDetails from 'components/elements/HeroSidebarAccountDetails';
-import HeroSidebarFunds from 'components/elements/HeroSidebarFunds';
-import { HeroSidebarProfiles } from 'components/elements/HeroSidebarProfiles';
 import { OptionGrid } from 'components/elements/OptionGrid';
-import { SidebarCTA, useActiveSidebarCTA } from 'components/elements/useActiveSidebarCTA';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
+import HeroSidebarAccountDetails from 'components/modules/HeroSidebar/HeroSidebarAccountDetails';
+import HeroSidebarFunds from 'components/modules/HeroSidebar/HeroSidebarFunds';
+import { HeroSidebarProfiles } from 'components/modules/HeroSidebar/HeroSidebarProfiles';
+import { SidebarCTA, useActiveSidebarCTA } from 'components/modules/HeroSidebar/useActiveSidebarCTA';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
 import useENSName from 'hooks/useENSName';
@@ -20,11 +20,7 @@ import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
-export interface ISidebarProps {
-  onScrollToSchedule?: () => void;
-}
-
-export default function HeroSidebar({ onScrollToSchedule }: ISidebarProps) {
+export default function HeroSidebar() {
   const [showWalletOptions, setShowWalletOptions] = useState(false);
   const { heroSidebarOpen, setHeroSidebarOpen } = useHeroSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
@@ -45,7 +41,7 @@ export default function HeroSidebar({ onScrollToSchedule }: ISidebarProps) {
    * Note: this sidebar is only rendered when REACT_APP_HERO_ONLY has been disabled,
    * which turns on wallet connect functionality.
    */
-  const activeCTA: SidebarCTA = useActiveSidebarCTA(onScrollToSchedule);
+  const activeCTA: SidebarCTA = useActiveSidebarCTA();
 
   const getSidebarContent = useCallback(() => {
     return (

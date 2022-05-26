@@ -1,6 +1,6 @@
+import AddFundsDialog from 'components/elements/AddFundsDialog';
 import { ConnectedAddress } from 'components/elements/ConnectedAddress';
 import Loader from 'components/elements/Loader';
-import AddFundsDialog from 'components/modules/AddFundsDialog';
 import { Maybe } from 'graphql/generated/types';
 import { useEthBalance } from 'hooks/balances/useEthBalance';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';

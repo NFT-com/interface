@@ -1,4 +1,3 @@
-import { DashboardTabTitle } from 'components/elements/DashboardTabTitle';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { LoadingRow } from 'components/elements/LoadingRow';
 import { NFTCard } from 'components/elements/NFTCard';
@@ -6,6 +5,8 @@ import { Nft } from 'graphql/generated/types';
 import { useFetchMyNFTs } from 'graphql/hooks/useFetchMyNFTs';
 import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import useLazyLoad from 'hooks/useLazyLoad';
+
+import { DashboardTabTitle } from './DashboardTabTitle';
 
 import { useRouter } from 'next/router';
 import { useCallback, useRef, useState } from 'react';

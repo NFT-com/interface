@@ -1,10 +1,10 @@
+import AddFundsDialog from 'components/elements/AddFundsDialog';
+import { Footer } from 'components/elements/Footer';
+import Header from 'components/elements/Header';
+import { Sidebar } from 'components/elements/Sidebar';
+import { SignOutModal } from 'components/elements/SignOutModal';
 import { Subscription } from 'components/elements/Subscription';
-import AddFundsDialog from 'components/modules/AddFundsDialog';
-import { Footer } from 'components/modules/Footer';
-import Header from 'components/modules/Header';
-import { Sidebar } from 'components/modules/Sidebar';
-import { SignOutModal } from 'components/modules/SignOutModal';
-import { SummaryBanner } from 'components/modules/SummaryBanner';
+import { SummaryBanner } from 'components/elements/SummaryBanner';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
@@ -17,7 +17,6 @@ import { useAccount } from 'wagmi';
 export interface HeroLayoutProps {
   bgColorClasses?: string;
   removePinkSides?: boolean;
-  onScrollToSchedule?: () => void;
   headerOptions?: {
     omit?: boolean;
     walletOnly?: boolean;
@@ -90,7 +89,7 @@ export const HeroLayout = (props: PropsWithChildren<HeroLayoutProps>) => {
           />
         </div>}
         
-        <Sidebar onScrollToSchedule={props.onScrollToSchedule}/>
+        <Sidebar />
 
         <SignOutModal
           visible={signOutDialogOpen}

@@ -1,4 +1,4 @@
-import { SignatureModal } from 'components/modules/SignatureModal';
+import { SignatureModal } from 'components/elements/SignatureModal';
 import { GraphQLClient } from 'graphql-request';
 import { getAPIURL, isNullOrEmpty } from 'utils/helpers';
 

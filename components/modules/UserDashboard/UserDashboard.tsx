@@ -1,10 +1,10 @@
-import { DashboardAssetsTab } from 'components/elements/DashboardAssetsTab';
-import { DashboardBidsTab } from 'components/elements/DashboardBidsTab';
-import { DashboardListingsTab } from 'components/elements/DashboardListingsTab';
-import { DashboardOffersTab } from 'components/elements/DashboardOffersTab';
-import { DashboardPurchasesTab } from 'components/elements/DashboardPurchasesTab';
-import { DashboardSettingsTab } from 'components/elements/DashboardSettingsTab';
 import { NavPill } from 'components/elements/NavPill';
+import { DashboardAssetsTab } from 'components/modules/UserDashboard/DashboardAssetsTab';
+import { DashboardBidsTab } from 'components/modules/UserDashboard/DashboardBidsTab';
+import { DashboardListingsTab } from 'components/modules/UserDashboard/DashboardListingsTab';
+import { DashboardOffersTab } from 'components/modules/UserDashboard/DashboardOffersTab';
+import { DashboardPurchasesTab } from 'components/modules/UserDashboard/DashboardPurchasesTab';
+import { DashboardSettingsTab } from 'components/modules/UserDashboard/DashboardSettingsTab';
 import { tw } from 'utils/tw';
 
 import { useCallback, useState } from 'react';

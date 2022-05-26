@@ -1,4 +1,4 @@
-import { UserDashboard } from 'components/modules/UserDashboard';
+import { UserDashboard } from 'components/modules/UserDashboard/UserDashboard';
 import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { tw } from 'utils/tw';
