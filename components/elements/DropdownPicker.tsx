@@ -1,6 +1,7 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
+import Image from 'next/image';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -61,7 +62,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         }}
       >
         {item.icon &&
-          <img className="h-full mr-2" src={item.icon} alt={item.label} />
+          <Image className="h-full mr-2" src={item.icon} alt={item.label} />
         }
         {item.label}
       </div>
@@ -98,7 +99,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         key={props.options[props.selectedIndex].label}
       >
         {props.options[props.selectedIndex].icon &&
-          <img
+          <Image
             className="h-4 mr-2"
             src={props.options[props.selectedIndex].icon}
             alt={props.options[props.selectedIndex].label} />
