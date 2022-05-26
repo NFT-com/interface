@@ -1,4 +1,3 @@
-import defaultPhoto from 'assets/images/default_user.svg';
 import { Button, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
 import { EmailVerification } from 'components/elements/EmailVerification';
@@ -12,6 +11,7 @@ import { tw } from 'utils/tw';
 
 import validator from 'email-validator';
 import Image from 'next/image';
+import defaultPhoto from 'public/default_user.svg';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useDropzone } from 'react-dropzone';
@@ -47,7 +47,9 @@ export function SettingsDetailsView(props: SettingsDetailsViewProps) {
   };
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: 'image/*',
+    accept: {
+      'image/*': ['.*'],
+    },
     maxFiles: 1,
   });
 

@@ -1,9 +1,9 @@
-import ArrowDown from 'assets/images/arrow_down.svg';
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import Link from 'next/link';
+import ArrowDown from 'public/arrow_down.svg';
 import { useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 

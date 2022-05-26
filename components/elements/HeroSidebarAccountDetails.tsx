@@ -1,4 +1,3 @@
-import CopyIcon from 'assets/images/hero_copy.svg';
 import { ConnectedAddress } from 'components/elements/ConnectedAddress';
 import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
@@ -10,6 +9,7 @@ import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import CopyIcon from 'public/hero_copy.svg';
 import { isMobile } from 'react-device-detect';
 import { CheckCircle } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';

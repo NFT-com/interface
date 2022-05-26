@@ -1,4 +1,3 @@
-import fiatBlack from 'assets/images/fiat.svg';
 import { Button, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
 import { Modal } from 'components/elements/Modal';
@@ -7,6 +6,7 @@ import { logAddFundsLinkClick, logAddFundsModalImpression } from 'utils/gaLogger
 import { shorten } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import fiatBlack from 'public/fiat.svg';
 import QRCode from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';

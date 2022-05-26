@@ -1,4 +1,3 @@
-import ETH_LOGO from 'assets/images/eth.svg';
 import Loader from 'components/elements/Loader';
 import { Maybe } from 'graphql/generated/types';
 import { useEthBalance } from 'hooks/balances/useEthBalance';
@@ -9,6 +8,7 @@ import { tw } from 'utils/tw';
 
 import { ethers } from 'ethers';
 import Image from 'next/image';
+import ETH_LOGO from 'public/eth.svg';
 import { useCallback } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { BalanceData } from 'types';

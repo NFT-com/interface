@@ -64,7 +64,7 @@ const wagmiClient = createClient({
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  return getLayout(
+  return (
     <WagmiProvider client={wagmiClient}>
       <RainbowKitProvider
         appInfo={{
@@ -74,7 +74,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         theme={rainbowDark}
         chains={chains}>
         <GraphQLProvider>
-          <Component {...pageProps} />
+          {getLayout(<Component {...pageProps} />)}
         </GraphQLProvider>
       </RainbowKitProvider>
     </WagmiProvider>

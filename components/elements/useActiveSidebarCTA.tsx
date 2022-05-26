@@ -1,7 +1,3 @@
-import { ReactComponent as CTAKeyIcon } from 'assets/images/key_icon.svg';
-import { ReactComponent as UserIcon } from 'assets/images/logo-user-sign-in.svg';
-import { ReactComponent as QuestionMarkIcon } from 'assets/images/question_mark.svg';
-import { ReactComponent as HourglassIcon } from 'assets/images/simple_hourglass.svg';
 import Loader from 'components/elements/Loader';
 import { Maybe } from 'graphql/generated/types';
 import { useMyGenesisKeyBid } from 'graphql/hooks/useMyGenesisKeyBid';
@@ -17,6 +13,10 @@ import { useWhitelistCheck } from 'hooks/useWhitelistCheck';
 import { ClipboardListIcon } from '@heroicons/react/solid';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
+import CTAKeyIcon from 'public/key_icon.svg';
+import UserIcon from 'public/logo-user-sign-in.svg';
+import QuestionMarkIcon from 'public/question_mark.svg';
+import HourglassIcon from 'public/simple_hourglass.svg';
 import React, { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 

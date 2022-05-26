@@ -1,4 +1,3 @@
-import profileGeneric from 'assets/images/generic_profile_item.svg';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
 import { shortenString } from 'utils/helpers';
@@ -6,6 +5,7 @@ import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import profileGeneric from 'public/generic_profile_item.svg';
 import { useState } from 'react';
 
 export interface HeroSidebarProfileProps {

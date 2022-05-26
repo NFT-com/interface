@@ -1,11 +1,12 @@
-import CircleDollar from 'assets/images/circle_dollar.svg';
-import logoMoon from 'assets/images/moon.svg';
-import logoSun from 'assets/images/sun.svg';
 import { HeaderDropdown } from 'components/elements/HeaderDropdown';
 import { HeaderNavItem } from 'components/elements/HeaderNavItem';
 import { TAB_ICON_EXTRA_CLASSES } from 'constants/misc';
 import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
+
+import CircleDollar from 'public/circle_dollar.svg';
+import logoMoon from 'public/moon.svg';
+import logoSun from 'public/sun.svg';
 
 export interface SummaryBannerProps {
   walletPopup?: boolean;

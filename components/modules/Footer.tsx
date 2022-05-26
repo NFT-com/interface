@@ -144,7 +144,8 @@ export const Footer = () => {
                 isDarkMode
                   ? 'https://cdn.nft.com/hero_corner.svg'
                   : 'https://cdn.nft.com/hero_corner_dark.svg' }
-              alt="nft.com" />
+              alt="nft.com"
+              layout='fill' />
             <span>NFT.COM</span>
           </div>
         </Link>

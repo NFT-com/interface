@@ -1,4 +1,3 @@
-import ETH_LOGO from 'assets/images/eth.svg';
 import { ConnectedAddress } from 'components/elements/ConnectedAddress';
 import Loader from 'components/elements/Loader';
 import AddFundsDialog from 'components/modules/AddFundsDialog';
@@ -15,6 +14,7 @@ import { tw } from 'utils/tw';
 import { ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import ETH_LOGO from 'public/eth.svg';
 import { useCallback, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { ChevronDown, ChevronUp } from 'react-feather';

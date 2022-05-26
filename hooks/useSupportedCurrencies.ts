@@ -1,7 +1,3 @@
-import DAI_LOGO from 'assets/images/dai.svg';
-import ETH_LOGO from 'assets/images/eth.svg';
-import USDC_LOGO from 'assets/images/usdc.svg';
-import WETH_LOGO from 'assets/images/weth.svg';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Dai, Usdc, Weth } from 'constants/typechain';
 import { AssetClass } from 'graphql/generated/types';
@@ -15,6 +11,10 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { MAX_UINT_256 } from 'utils/marketplaceUtils';
 
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import DAI_LOGO from 'public/dai.svg';
+import ETH_LOGO from 'public/eth.svg';
+import USDC_LOGO from 'public/usdc.svg';
+import WETH_LOGO from 'public/weth.svg';
 import { useCallback, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 

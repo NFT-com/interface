@@ -51,18 +51,18 @@ export const WETH_RINKEBY = new Token(
   'Wrapped Ether'
 );
 
-export const NFT_TOKEN = new Token(
-  chainId.mainnet,
-  nftToken[chainId.mainnet],
-  18,
-  'NFT',
-  'NFT.com'
-);
+// export const NFT_TOKEN = new Token(
+//   chainId.mainnet,
+//   nftToken[chainId.mainnet],
+//   18,
+//   'NFT',
+//   'NFT.com'
+// );
 
-export const NFT_TOKEN_RINKEBY = new Token(
-  chainId.rinkeby,
-  nftToken[chainId.rinkeby],
-  18,
-  'NFT',
-  'NFT.com'
-);
+// export const NFT_TOKEN_RINKEBY = new Token(
+//   chainId.rinkeby,
+//   nftToken[chainId.rinkeby],
+//   18,
+//   'NFT',
+//   'NFT.com'
+// );

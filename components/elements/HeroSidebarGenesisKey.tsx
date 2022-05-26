@@ -1,4 +1,3 @@
-import gkCircleGeneric from 'assets/images/gk_circle_generic.svg';
 import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
 import { isNullOrEmpty, processIPFSURL, shortenString } from 'utils/helpers';
@@ -7,6 +6,7 @@ import { tw } from 'utils/tw';
 import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import gkCircleGeneric from 'public/gk_circle_generic.svg';
 import { useState } from 'react';
 
 export interface HeroSidebarGenesisKeyProps {
