@@ -6,6 +6,7 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
+    "style:build": "tailwind -c ./tailwind.config.js build -i styles/globals.css -o styles/tailwind.css",
     "dev": "yarn typechain:gen & doppler run -- next dev",
     "build": "yarn typechain:gen && next build",
     "start": "next start",
