@@ -56,11 +56,11 @@ export const HeroSidebarGenesisKey = (props: HeroSidebarGenesisKeyProps) => {
         <div className='flex w-full overflow-hidden'>
           <div className={tw('flex justify-between items-center pl-4 w-full overflow-hidden')}>
             <div className='flex h-full items-center z-50'>
-              {/* <Image
+              {<Image
                 className='flex-shrink-0 aspect-square h-9'
                 src={gkCircleGeneric}
                 alt="genesis key generic"
-              /> */}
+              />}
               <div className="flex flex-col text-primary-txt-dk deprecated_sm:grow ml-2">
                 Genesis Key
                 <span className='text-lg text-always-white deprecated_sm:ml-2'>
@@ -74,7 +74,7 @@ export const HeroSidebarGenesisKey = (props: HeroSidebarGenesisKeyProps) => {
                 'absolute top-0 right-24 w-24 h-full flex rounded-r-xl z-40'
               )}
             />
-            {/* {!isNullOrEmpty(genesisKeyMetadata?.metadata?.image) &&
+            {!isNullOrEmpty(genesisKeyMetadata?.metadata?.image) &&
               <Image
                 className={tw(
                   'absolute -top-4 -right-12 flex flex-shrink-0 aspect-square w-60 self-start rounded-r-xl z-30',
@@ -82,7 +82,7 @@ export const HeroSidebarGenesisKey = (props: HeroSidebarGenesisKeyProps) => {
                 src={processIPFSURL(genesisKeyMetadata?.metadata?.image)}
                 alt="genesis key specific"
               />
-            } */}
+            }
           </div>
         </div>
       </div>

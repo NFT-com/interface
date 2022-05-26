@@ -223,7 +223,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
           </>
       }
       {!mintSuccess && <div className='flex z-[20] justify-center deprecated_sm:px-4 mt-40 deprecated_sm:mt-12'>
-        {/* <Image src={truststamps} alt="quant stamp" className='mb-4'/> */}
+        <Image src={truststamps} alt="quant stamp" className='mb-4'/>
       </div>}
       <div className='flex flex-col justify-end grow items-center'>
         <div className='flex w-full items-center'>

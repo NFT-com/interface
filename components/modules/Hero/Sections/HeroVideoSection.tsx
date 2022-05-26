@@ -79,13 +79,14 @@ export default function HeroVideoSection() {
           <div className={tw('w-full deprecated_minxl:w-2/3 mb-12 aspect-video',
             'relative deprecated_minlg:mr-32 deprecated_minlg:mb-4')}>
             <ExternalLink href={videoExternalUrl}>
-              {/* <Image
+              <Image
                 className={tw('top-0 left-0',
                   'w-full h-full object-cover'
                 )}
                 alt={'preview'}
                 src={videoUrl}
-              /> */}
+                layout='fill'
+              />
             </ExternalLink>
           </div>
         </div>

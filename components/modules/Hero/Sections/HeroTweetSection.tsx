@@ -125,11 +125,12 @@ export default function HeroTweetSection() {
         >
           {/* adds overlay transition  */}
         </div>
-        {/* <Image
+        <Image
           src={bgGif}
           alt="tweet gif"
           className='w-full mt-32 block aspect-square bg-cover bg-no-repeat bg-center'
-        /> */}
+          layout='fill'
+        />
       </div>
     </div>
   );

@@ -116,7 +116,7 @@ export default function HeroSplash(props: HeroSplashProps) {
                 />
               </div>
             }
-            {/* <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/> */}
+            <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/>
           </div>
         </div>
         {getLearnMoreLink()}
@@ -180,9 +180,9 @@ export default function HeroSplash(props: HeroSplashProps) {
                 }}
                 type={ButtonType.PRIMARY}
               />}
-              {/* { liveAuctionName === 'blind' && !auctionEnded &&
+              { liveAuctionName === 'blind' && !auctionEnded &&
               <Image src={truststamps} alt="quant stamp" className='mb-4 mt-32'/>
-              } */}
+              }
             </div>
           </>
           }
@@ -260,7 +260,7 @@ export default function HeroSplash(props: HeroSplashProps) {
               </span>
             </span> :
             ''}
-          {/* <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/> */}
+          <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/>
         </div>
         {liveAuctionName === 'public' && <span
           className={tw(
@@ -302,7 +302,7 @@ export default function HeroSplash(props: HeroSplashProps) {
             background: 'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)'
           }}
         >
-          {/* {isMobile ?
+          {isMobile ?
             <Image
               src={keySplashMobile}
               className={tw(
@@ -322,7 +322,7 @@ export default function HeroSplash(props: HeroSplashProps) {
               )}
               src={cloudVid}
             />
-          } */}
+          }
           <div
             className="w-full absolute z-18 h-full"
             // eslint-disable-next-line max-len

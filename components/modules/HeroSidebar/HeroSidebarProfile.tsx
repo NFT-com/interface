@@ -51,11 +51,11 @@ export function HeroSidebarProfile(props: HeroSidebarProfileProps) {
           'bg-modal-overlay-dk border-accent-border-dk',
         )}
       >
-        {/* <Image
+        { <Image
           className="ml-4 mr-2.5 h-9 aspect-square rounded-full"
           src={profileData?.profile?.photoURL ?? profileGeneric}
           alt="genesis key generic"
-        /> */}
+        /> }
         <div className="flex flex-col text-secondary-txt">
           Profile
           <span className='text-lg text-always-white'>

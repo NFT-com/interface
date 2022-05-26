@@ -148,7 +148,7 @@ export function GenesisKeyAuction(props: GenesisKeyAuctionProps) {
               setAuctionStarted(true);
             }}
           />
-          {/* <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/> */}
+          <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/>
           <div className='flex grow justify-end items-center'>
             <GenesisFooter />
           </div>

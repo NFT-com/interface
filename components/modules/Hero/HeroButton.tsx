@@ -106,11 +106,11 @@ export function Button(props: ButtonProps) {
       {props.loading ?
         <Loader /> :
         <>
-          {/* {props.icon &&
+          {props.icon &&
             <Image
               className={tw('mr-2 ',
                 props.size === ButtonSize.SMALL ? 'h-3 w-3 deprecated_minsm:h-5 deprecated_minsm:w-5':'h-5 w-5')}
-              src={props.icon} alt={props.label}/>} */}
+              src={props.icon} alt={props.label}/>}
           {props.label}
         </>
       }

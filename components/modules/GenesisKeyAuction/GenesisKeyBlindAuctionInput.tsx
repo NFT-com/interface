@@ -245,7 +245,7 @@ export function GenesisKeyBlindAuctionInput() {
         <GenesiskeyEducationModal />
       </div>
       <div className='flex justify-center w-screen deprecated_sm:px-4'>
-        {/* <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/> */}
+        <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/>
       </div>
       <div className='flex justify-end deprecated_sm:justify-center items-center deprecated_sm:relative bottom-0'>
         <GenesisFooter />
