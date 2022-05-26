@@ -5,7 +5,6 @@ import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { useGenesisKeyInsiderMerkleCheck } from 'hooks/merkle/useGenesisKeyInsiderMerkleCheck';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import { tw } from 'utils/tw';
 
 import { DefaultSplash } from './DefaultSplash';
@@ -32,7 +31,6 @@ export default function HeroSplash(props: HeroSplashProps) {
   const { alwaysBlack } = useThemeColors();
   const router = useRouter();
   const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(account?.address);
-  const { width, height } = useWindowDimensions();
 
   const liveAuctionName = process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME;
   const [auctionStarted, setAuctionStarted] = useState(
