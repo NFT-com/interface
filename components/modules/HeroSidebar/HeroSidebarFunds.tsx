@@ -7,7 +7,6 @@ import { filterNulls, prettify } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ethers } from 'ethers';
-import Image from 'next/image';
 import ETH_LOGO from 'public/eth.svg';
 import { useCallback } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
@@ -30,13 +29,11 @@ export default function HeroSidebarFunds() {
   type CoinData = {
     name: string;
     symbol: string;
-    logo: string;
+    logo: any;
     balance: string;
     usd: string;
     address: string;
   };
-
-  // const balances = useBalances(account);
 
   const formatBalance = (item: Maybe<BalanceData>) => {
     if (item == null) {
@@ -56,52 +53,9 @@ export default function HeroSidebarFunds() {
           usd: ethPriceUSD,
           address: null,
         },
-        // getEnvBool(Secret.REACT_APP_ANALYTICS_ENABLED)
-        //   ? {
-        //     name: 'NFT.com',
-        //     symbol: 'NFT',
-        //     logo: NFT_LOGO,
-        //     balance: formatBalance(balances?.nft),
-        //     usd: 0.1,
-        //     address: getAddress('nft', chainId),
-        //   }
-        //   : null,
-        // getEnvBool(Secret.REACT_APP_ANALYTICS_ENABLED)
-        //   ? {
-        //     name: 'USDC',
-        //     symbol: 'USDC',
-        //     logo: USDC_LOGO,
-        //     balance: formatBalance(balances?.usdc),
-        //     usd: 1,
-        //     address: getAddress('usdc', chainId),
-        //   }
-        //   : null,
-        // getEnvBool(Secret.REACT_APP_ANALYTICS_ENABLED)
-        //   ? {
-        //     name: 'Dai',
-        //     symbol: 'DAI',
-        //     logo: DAI_LOGO,
-        //     balance: formatBalance(balances?.dai),
-        //     usd: 1,
-        //     address: getAddress('dai', chainId),
-        //   }
-        //   : null,
-        // {
-        //   name: 'Wrapped Ethereum',
-        //   symbol: 'WETH',
-        //   logo: WETH_LOGO,
-        //   balance: formatBalance(balances?.weth),
-        //   usd: ethPriceUSD,
-        //   address: getAddress('weth', chainId),
-        // },
       ]
     );
   }, [
-    // balances?.dai,
-    // balances?.nft,
-    // balances?.usdc,
-    // balances?.weth,
-    // chainId,
     ethPriceUSD,
     userEthBalance,
   ]);
@@ -124,7 +78,7 @@ export default function HeroSidebarFunds() {
               )}
             >
               <div className="flex items-center">
-                {<Image className="h-8 mr-4" src={item.logo} alt={item.symbol} />}
+                <ETH_LOGO className='h-8 mr-4' />
               </div>
               <div className="w-full">
                 <div className="flex items-center justify-between font-bold text-base mb-1">

@@ -7,7 +7,6 @@ import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import CopyIcon from 'public/hero_copy.svg';
 import { isMobile } from 'react-device-detect';
@@ -51,13 +50,11 @@ export default function HeroSidebarAccountDetails(
                 className='flex-shrink-0 h-5 aspect-square'
                 color={secondaryIcon}
               /> :
-              <Image
+              <CopyIcon
                 className='h-5 aspect-square cursor-pointer hover:opacity-90 flex-shrink-0'
                 onClick={() => {
                   setCopied(account?.address);
                 }}
-                src={CopyIcon}
-                alt="Copy Address"
               />
             }
           </div>

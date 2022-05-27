@@ -19,7 +19,7 @@ export default function LoggedInIdenticon({ large, round, border }: LoggedInIden
   const ref = useRef<HTMLDivElement>();
 
   const { data: account } = useAccount();
-  const { myPhoto } = useMyPhotoQuery();
+  const { myPhoto, loading } = useMyPhotoQuery();
   const { primaryIcon } = useThemeColors();
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function LoggedInIdenticon({ large, round, border }: LoggedInIden
     return null;
   }
 
-  if (myPhoto) {
+  if (myPhoto && !loading) {
     return (
       <Image
         className={joinClasses(
