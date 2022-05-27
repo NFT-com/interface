@@ -62,7 +62,7 @@ const wagmiClient = createClient({
   provider
 });
 
-export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+export default function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
@@ -75,8 +75,8 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         theme={rainbowDark}
         chains={chains}>
         <GraphQLProvider>
-          <AnimatePresence>
-            {getLayout(<Component {...pageProps} />)}
+          <AnimatePresence exitBeforeEnter>
+            {getLayout(<Component {...pageProps} key={router.pathname} />)}
           </AnimatePresence>
         </GraphQLProvider>
       </RainbowKitProvider>
