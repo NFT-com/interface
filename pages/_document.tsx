@@ -13,7 +13,6 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
           <meta
             name="description"
             content="NFT.com"
