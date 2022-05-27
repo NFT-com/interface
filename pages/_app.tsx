@@ -26,8 +26,8 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 }
 
-const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_MAINNET_KEY;
-const infuraId = process.env.NEXT_PUBLIC_INFURA_PROJECT_ID;
+const alchemyId = process.env.ALCHEMY_MAINNET_KEY;
+const infuraId = process.env.INFURA_PROJECT_ID;
 
 const { chains, provider } = configureChains(
   process.env.NEXT_PUBLIC_ENV !== 'PRODUCTION' ?

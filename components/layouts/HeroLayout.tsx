@@ -9,11 +9,10 @@ import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
 
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import ReactTooltip from 'react-tooltip';
 import { useAccount } from 'wagmi';
-
 export interface HeroLayoutProps {
   bgColorClasses?: string;
   removePinkSides?: boolean;
@@ -27,7 +26,6 @@ export interface HeroLayoutProps {
     hideAnalytics?: boolean;
     sidebar?: 'hero' | 'dashboard'
     heroHeader?: boolean;
-    heroHeaderBlack?: boolean;
     profileHeader?: boolean;
   }
 }
@@ -35,9 +33,23 @@ export interface HeroLayoutProps {
 export const HeroLayout = (props: PropsWithChildren<HeroLayoutProps>) => {
   const { headerOptions, bgColorClasses } = props;
 
+  const [headerBlack, setHeaderBlack] = useState(false);
+
+  const contentRef = useRef<HTMLDivElement>();
+
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   
   const { data: account } = useAccount();
+
+  const listenScrollEvent = () => {
+    window.scrollY > 10
+      ? setHeaderBlack(true)
+      : setHeaderBlack(false);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', listenScrollEvent);
+  });
 
   useMaybeCreateUser();
   
@@ -46,7 +58,18 @@ export const HeroLayout = (props: PropsWithChildren<HeroLayoutProps>) => {
       'flex flex-col h-screen',
       isMobile ? 'overflow-x-hidden' : ''
     )}>
-      {props.headerOptions &&
+      <div
+        ref={contentRef}
+        className={tw(
+          'relative',
+          'overflow-x-hidden bg-black w-screen h-screen')}
+        onScroll={(event: React.UIEvent<HTMLDivElement>) => {
+          const containerHeight = event.currentTarget.clientHeight;
+          const scrollTop = event.currentTarget.scrollTop;
+          setHeaderBlack(scrollTop >= containerHeight);
+        }}
+      >
+        {props.headerOptions &&
       props.headerOptions.sidebar === 'hero' &&
       props.removePinkSides !== true &&
       <div
@@ -54,21 +77,21 @@ export const HeroLayout = (props: PropsWithChildren<HeroLayoutProps>) => {
           'border-t-[100vh] border-t-hero-pink border-l-0',
           'border-l-transparent border-r-[21px] border-r-transparent')}>
       </div>
-      }
-      <main
-        className={tw(
-          'absolute w-full h-full',
-          isMobile ? 'overflow-x-hidden' : '',
-          bgColorClasses ?? 'bg-black'
-        )}
-        style={{
-          minHeight: '100vh',
-          overflow: 'scroll',
-        }}
-      >
-        <AddFundsDialog key={account?.address} account={account?.address} />
-        <ReactTooltip className="whitespace-pre-wrap" />
-        {headerOptions?.omit !== true &&
+        }
+        <main
+          className={tw(
+            'absolute w-full h-full',
+            isMobile ? 'overflow-x-hidden' : '',
+            bgColorClasses ?? 'bg-black'
+          )}
+          style={{
+            minHeight: '100vh',
+            overflow: 'scroll',
+          }}
+        >
+          <AddFundsDialog key={account?.address} account={account?.address} />
+          <ReactTooltip className="whitespace-pre-wrap" />
+          {headerOptions?.omit !== true &&
         <div className="fixed z-[99] top-0 w-full">
           {props.headerOptions?.removeSummaryBanner && ( // TODO: Remove this temporary hidding after fixing proper behavior and zIndex stack for buttons on the left
             props.headerOptions?.removeSummaryBanner !== true &&
@@ -84,29 +107,30 @@ export const HeroLayout = (props: PropsWithChildren<HeroLayoutProps>) => {
             removeBackground={headerOptions?.removeBackground}
             sidebar={headerOptions?.sidebar ?? 'dashboard'}
             heroHeader={headerOptions?.heroHeader}
-            heroHeaderBlack={headerOptions?.heroHeaderBlack}
+            heroHeaderBlack={headerBlack}
             profileHeader={headerOptions?.profileHeader}
           />
         </div>}
         
-        <Sidebar />
+          <Sidebar />
 
-        <SignOutModal
-          visible={signOutDialogOpen}
-          onClose={() => {
-            setSignOutDialogOpen(false);
-          }}
-        />
+          <SignOutModal
+            visible={signOutDialogOpen}
+            onClose={() => {
+              setSignOutDialogOpen(false);
+            }}
+          />
         
-        {props.children}
+          {props.children}
 
-        {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
+          {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
           <>
             <Subscription />
             <Footer />
           </>
-        }
-      </main>
+          }
+        </main>
+      </div>
     </div>
   );
 };

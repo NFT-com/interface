@@ -20,17 +20,10 @@ export interface HeroPageProps {
 }
 
 export function HeroPage(props: HeroPageProps) {
-  const [headerBlack, setHeaderBlack] = useState(false);
   const scheduleRef = useRef<HTMLDivElement>();
   const aboutRef = useRef<HTMLDivElement>();
   const contentRef = useRef<HTMLDivElement>();
   const [scrolled, setScrolled] = useState(false);
-
-  const listenScrollEvent = () => {
-    window.scrollY > 10
-      ? setHeaderBlack(true)
-      : setHeaderBlack(false);
-  };
 
   const handleScrollToAbout = () => {
     contentRef.current.scroll({
@@ -43,10 +36,6 @@ export function HeroPage(props: HeroPageProps) {
       top: scheduleRef.current.offsetTop + 150,
       behavior: 'smooth'
     });};
-
-  useEffect(() => {
-    window.addEventListener('scroll', listenScrollEvent);
-  });
 
   useEffect(() => {
     if(!scrolled) {
@@ -71,49 +60,36 @@ export function HeroPage(props: HeroPageProps) {
           <DiscordIcon className='w-8' />
         </a>
       </div>
-      <div
-        ref={contentRef}
-        className={tw(
-          'relative',
-          'overflow-x-hidden bg-black w-screen h-screen')}
-        onScroll={(event: React.UIEvent<HTMLDivElement>) => {
-          const containerHeight = event.currentTarget.clientHeight;
-          const scrollTop = event.currentTarget.scrollTop;
-          setHeaderBlack(scrollTop >= containerHeight);
-        }}
-      >
-        <HeroSplash onScrollToAbout={() => {
-          contentRef.current.scroll({
-            top: aboutRef.current.offsetTop,
-            behavior: 'smooth'
-          });
-        }}/>
+      <HeroSplash onScrollToAbout={() => {
+        contentRef.current.scroll({
+          top: aboutRef.current.offsetTop,
+          behavior: 'smooth'
+        });
+      }}/>
         
-        <div ref={aboutRef} className='w-full'>
-          <HeroAboutSection />
-        </div>
-
-        <div className='w-full'>
-          <HeroVideoSection />
-        </div>
-
-        <HeroCTA />
-
-        <div ref={scheduleRef} className='w-full'>
-          <HeroScheduleSection />
-        </div>
-
-        <HeroCalendarCTA />
-
-        <HeroTweetSection />
-
-        <HeroTeamSection />
-
-        <HeroCommunitySection />
-      
-        <Footer />
-
+      <div ref={aboutRef} className='w-full'>
+        <HeroAboutSection />
       </div>
+
+      <div className='w-full'>
+        <HeroVideoSection />
+      </div>
+
+      <HeroCTA />
+
+      <div ref={scheduleRef} className='w-full'>
+        <HeroScheduleSection />
+      </div>
+
+      <HeroCalendarCTA />
+
+      <HeroTweetSection />
+
+      <HeroTeamSection />
+
+      <HeroCommunitySection />
+      
+      <Footer />
     </>
   );
 }
