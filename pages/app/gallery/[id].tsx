@@ -1,57 +1,20 @@
 import { Footer } from 'components/elements/Footer';
-import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
 import { NullState } from 'components/elements/NullState';
 import { PageWrapper } from 'components/layouts/PageWrapper';
-import { GenesisKeyGalleryDetailView } from 'components/modules/Gallery/GenesisKeyGalleryDetailView';
-import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
+import { GenesisKeyDetailContent } from 'components/modules/Gallery/GenesisKeyDetailContent';
 
-import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
-import { useCallback } from 'react';
-import { useAccount } from 'wagmi';
 
 /**
  * Renders a detailed view of a single Genesis Key
  */
 export default function GalleryDetailPage() {
-  const { data: account } = useAccount();
   const router = useRouter();
   const { id } = router.query;
 
-  const { isSupported } = useSupportedNetwork();
-
-  const getGenesisKeyDetailContent = useCallback(() => {
-    if( id === null ) {
-      return <NullState />;
-    }
-    if (account && !isSupported) {
-      return <div className='w-full justify-center flex mt-12'>
-        <NetworkErrorTile />
-      </div>;
-    }
-    // Show a 404 for an unminted key.
-    if (BigNumber.from(id).gt(10000)) {
-      return (
-        <NullState
-          showImage
-          primaryMessage='This Genesis Key doesnt exist yet. '
-          buttonLabel={'Back to Gallery'}
-          onClick={() => {
-            router.push('/app/gallery');
-          }}/>
-      );
-    }
-    return <div className="flex flex-col h-full w-full items-center justify-center overflow-y-scroll">
-      <GenesisKeyGalleryDetailView
-        verticalDetail
-        hideCloseButton
-        id={String(id)}
-        onClose={() => {
-          // nothing
-        }}
-      />ß
-    </div>;
-  }, [account, id, isSupported, router]);
+  if( id === null ) {
+    return <NullState />;
+  }
   
   return (
     <PageWrapper removePinkSides headerOptions={{
@@ -61,7 +24,7 @@ export default function GalleryDetailPage() {
       walletPopupMenu: true,
     }}>
       <div className='w-full mt-24 flex flex-col items-center'>
-        {getGenesisKeyDetailContent()}
+        <GenesisKeyDetailContent id={id.toString()} />
         <div className='w-full'>
           <Footer />
         </div>
