@@ -17,7 +17,7 @@ export interface ProfilePageRouteParams {
 /**
  * Shows a public profile e.g. nft.com/satoshi
  */
-export function ProfilePage() {
+export default function ProfilePage() {
   const router = useRouter();
   const { profileURI } = router.query;
   const processedProfileURI = profileURI.toString().toLowerCase();
