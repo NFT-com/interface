@@ -3,7 +3,6 @@ import useCounterUp from 'hooks/useCounterUp';
 import useOnViewPort from 'hooks/useOnViewPort';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { useRef } from 'react';
 import { ExternalLink } from 'styles/theme/Components';
 import { Social } from 'types';
