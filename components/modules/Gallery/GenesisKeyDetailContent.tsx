@@ -8,7 +8,7 @@ import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 
-export function GenesisKeyDetailContent(props: { id: string }) {
+export function GenesisKeyDetailContent(props: { id: string | string[] }) {
   const { data: account } = useAccount();
   const { isSupported } = useSupportedNetwork();
   const router = useRouter();

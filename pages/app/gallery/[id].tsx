@@ -24,7 +24,7 @@ export default function GalleryDetailPage() {
       walletPopupMenu: true,
     }}>
       <div className='w-full mt-24 flex flex-col items-center'>
-        <GenesisKeyDetailContent id={id.toString()} />
+        <GenesisKeyDetailContent id={id} />
         <div className='w-full'>
           <Footer />
         </div>
