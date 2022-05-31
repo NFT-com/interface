@@ -5,7 +5,6 @@ import HeroAboutSection from 'components/modules/Hero/Sections/HeroAboutSection'
 import { HeroCalendarCTA } from 'components/modules/Hero/Sections/HeroCalendarCTA';
 import HeroCommunitySection from 'components/modules/Hero/Sections/HeroCommunitySection';
 import { HeroCTA } from 'components/modules/Hero/Sections/HeroCTA';
-import HeroScheduleSection from 'components/modules/Hero/Sections/HeroScheduleSection';
 import HeroTeamSection from 'components/modules/Hero/Sections/HeroTeamSection';
 import HeroTweetSection from 'components/modules/Hero/Sections/HeroTweetSection';
 import HeroVideoSection from 'components/modules/Hero/Sections/HeroVideoSection';
@@ -18,12 +17,10 @@ import { isMobile } from 'react-device-detect';
 
 export interface HeroPageProps {
   scrollToAbout?: boolean;
-  scrollToSchedule?: boolean;
 }
 
 export function HeroPage(props: HeroPageProps) {
   const [headerBlack, setHeaderBlack] = useState(false);
-  const scheduleRef = useRef<HTMLDivElement>();
   const aboutRef = useRef<HTMLDivElement>();
   const contentRef = useRef<HTMLDivElement>();
   const [scrolled, setScrolled] = useState(false);
@@ -40,12 +37,6 @@ export function HeroPage(props: HeroPageProps) {
       behavior: 'smooth'
     });};
 
-  const handleScrollToSchedule = () => {
-    contentRef.current.scroll({
-      top: scheduleRef.current.offsetTop + 150,
-      behavior: 'smooth'
-    });};
-
   useEffect(() => {
     window.addEventListener('scroll', listenScrollEvent);
   });
@@ -54,12 +45,10 @@ export function HeroPage(props: HeroPageProps) {
     if(!scrolled) {
       if(props.scrollToAbout) {
         handleScrollToAbout();
-      } else if(props.scrollToSchedule) {
-        handleScrollToSchedule();
       }
       setScrolled(true);
     }
-  }, [props.scrollToAbout, props.scrollToSchedule, scrolled]);
+  }, [props.scrollToAbout, scrolled]);
 
   const getSides = useCallback(() => {
     return (
@@ -88,12 +77,6 @@ export function HeroPage(props: HeroPageProps) {
         heroHeaderBlack: headerBlack,
       }}
       removePinkSides={isMobile}
-      onScrollToSchedule={() => {
-        contentRef.current.scroll({
-          top: scheduleRef.current.offsetTop,
-          behavior: 'smooth'
-        });
-      }}
     >
       {getSides()}
       <div
@@ -123,10 +106,6 @@ export function HeroPage(props: HeroPageProps) {
         </div>
 
         <HeroCTA />
-
-        <div ref={scheduleRef} className='w-full'>
-          <HeroScheduleSection />
-        </div>
 
         <HeroCalendarCTA />
 

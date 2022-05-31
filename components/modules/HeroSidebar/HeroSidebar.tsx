@@ -20,11 +20,7 @@ import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
-export interface ISidebarProps {
-  onScrollToSchedule?: () => void;
-}
-
-export default function HeroSidebar({ onScrollToSchedule }: ISidebarProps) {
+export default function HeroSidebar() {
   const [showWalletOptions, setShowWalletOptions] = useState(false);
   const { heroSidebarOpen, setHeroSidebarOpen } = useHeroSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
@@ -45,7 +41,7 @@ export default function HeroSidebar({ onScrollToSchedule }: ISidebarProps) {
    * Note: this sidebar is only rendered when REACT_APP_HERO_ONLY has been disabled,
    * which turns on wallet connect functionality.
    */
-  const activeCTA: SidebarCTA = useActiveSidebarCTA(onScrollToSchedule);
+  const activeCTA: SidebarCTA = useActiveSidebarCTA();
 
   const getSidebarContent = useCallback(() => {
     return (

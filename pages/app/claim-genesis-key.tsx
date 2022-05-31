@@ -77,10 +77,6 @@ export default function ClaimGenesisKeyPage() {
   return (
     <PageWrapper
       removePinkSides
-      onScrollToSchedule={() => {
-        toggleHeroSidebar();
-        router.push('/');
-      }}
       headerOptions={{
         walletOnly: true,
         removeBackground: true,

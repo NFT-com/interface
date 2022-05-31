@@ -16,7 +16,6 @@ import { useAccount } from 'wagmi';
 export interface PageWrapperProps {
   bgColorClasses?: string;
   removePinkSides?: boolean;
-  onScrollToSchedule?: () => void;
   headerOptions?: {
     omit?: boolean;
     walletOnly?: boolean;

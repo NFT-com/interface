@@ -2,7 +2,6 @@ import { CountdownUnits } from 'components/elements/CountdownUnits';
 import { Button, ButtonType } from 'components/modules/Hero/HeroButton';
 import { useGallery } from 'hooks/state/useGallery';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
-import { getAuctionCalendarLink } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
@@ -91,35 +90,5 @@ export function HeroCalendarCTA() {
         }
       />
     </div>
-    {!whitelistClosed && <div className="mt-4 mb-16 font-hero-heading2 flex deprecated_sm:flex-col deprecated_sm:items-center">
-      <div className="font-hero-heading1">
-        <Button
-          type={ButtonType.PRIMARY}
-          label={'REGISTER NOW'}
-          textColor="black"
-          onClick={() => {
-            window.open(
-              'https://whitelist.nft.com',
-              '_blank'
-            );
-          }} />
-      </div>
-      <div className={tw(
-        whitelistClosed ? '' : 'ml-4',
-        'font-hero-heading1 deprecated_sm:ml-0 deprecated_sm:mt-4'
-      )}>
-        <Button
-          type={ButtonType.PRIMARY}
-          label={'ADD TO CALENDAR'}
-          textColor="black"
-          onClick={() => {
-            window.open(
-              getAuctionCalendarLink(),
-              '_blank'
-            );
-          }}
-        />
-      </div>
-    </div>}
   </div>;
 }

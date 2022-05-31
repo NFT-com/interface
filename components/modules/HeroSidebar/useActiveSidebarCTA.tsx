@@ -37,9 +37,7 @@ export interface SidebarCTA {
   }
 }
 
-export function useActiveSidebarCTA(
-  onScrollToSchedule: () => void
-): Maybe<SidebarCTA> {
+export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
   const { data: account } = useAccount();
   const router = useRouter();
   const location = router.pathname;
@@ -73,10 +71,9 @@ export function useActiveSidebarCTA(
       disabled: false,
       onClick: () => {
         // todo: open FAQ site in new tab ... faq.nft.com
-        onScrollToSchedule && onScrollToSchedule();
       }
     };
-  }, [onScrollToSchedule]);
+  }, []);
 
   const nonwhitelistedScrollDown: SidebarCTA = useMemo(() => {
     const whitelistClosed = 1650970800000 <= new Date().getTime();
@@ -93,7 +90,6 @@ export function useActiveSidebarCTA(
       disabled: false,
       onClick: () => {
         if (whitelistClosed) {
-          onScrollToSchedule && onScrollToSchedule();
           setHeroSidebarOpen(false);
         } else {
           window.open(
@@ -103,7 +99,7 @@ export function useActiveSidebarCTA(
         }
       }
     };
-  }, [onScrollToSchedule, setHeroSidebarOpen]);
+  }, [setHeroSidebarOpen]);
 
   const calculatingResults: SidebarCTA = useMemo(() => {
     return {
@@ -171,11 +167,10 @@ export function useActiveSidebarCTA(
           router.push('/schedule');
         } else {
           setHeroSidebarOpen(false);
-          onScrollToSchedule && onScrollToSchedule();
         }
       }
     };
-  }, [location, onScrollToSchedule, router, setHeroSidebarOpen]);
+  }, [location, router, setHeroSidebarOpen]);
 
   const postBlindGKToClaim: SidebarCTA = useMemo(() => {
     const isInsider = insiderMerkleData != null;
@@ -210,10 +205,10 @@ export function useActiveSidebarCTA(
       buttonText: 'Learn About the Public Sale',
       iconColor: 'bg-primary-pink',
       onClick: () => {
-        onScrollToSchedule && onScrollToSchedule();
+        console.log('test');
       }
     };
-  }, [onScrollToSchedule]);
+  }, []);
 
   const gkRecognizedProfilesToMint: SidebarCTA = useMemo(() => {
     return {
