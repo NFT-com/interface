@@ -13,7 +13,7 @@ import { useAccount } from 'wagmi';
 /**
  * Renders a detailed view of a single Genesis Key
  */
-export function GalleryDetailPage() {
+export default function GalleryDetailPage() {
   const { data: account } = useAccount();
   const router = useRouter();
   const { id: urlTokenId } = router.query;
