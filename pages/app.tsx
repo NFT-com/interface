@@ -1,6 +1,6 @@
 import { HeroPage } from 'components/templates/HeroPage';
 
-export default function Main() {
+export default function App() {
   return <HeroPage />;
 }
 
