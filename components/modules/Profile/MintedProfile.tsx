@@ -264,7 +264,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 addressOwner !== account ? 'cursor-pointer ' : ''
               )}
               >
-                <div className="mx-auto md:text-base lg:text-lg text-xl mx-auto w-3/5 md:text-center text-left font-bold">
+                <div className="mx-auto md:text-base lg:text-lg text-xl w-3/5 md:text-center text-left font-bold">
                   <div
                     onClick={() => {
                       if (addressOwner !== account?.address) {

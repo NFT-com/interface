@@ -24,7 +24,6 @@ export interface ISidebarProps {
   onScrollToSchedule?: () => void;
 }
 
-
 export default function HeroSidebar({ onScrollToSchedule }: ISidebarProps) {
   const [showWalletOptions, setShowWalletOptions] = useState(false);
   const { heroSidebarOpen, setHeroSidebarOpen } = useHeroSidebar();
@@ -88,7 +87,7 @@ export default function HeroSidebar({ onScrollToSchedule }: ISidebarProps) {
           <div
             className={tw(
               'px-7 pt-7 items-center mx-5 shrink-0',
-              'px-4 rounded-xl mb-3.5 rounded-xl border',
+              'px-4 rounded-xl mb-3.5 border',
               'bg-accent-dk',
               'border-accent-border-dk',
             )}
@@ -295,7 +294,7 @@ export default function HeroSidebar({ onScrollToSchedule }: ISidebarProps) {
             }}
             className={
               tw('flex flex-col fixed inset-y-0 right-0 sm:top-0',
-                'w-screen max-w-full max-w-md h-full',
+                'w-screen max-w-md h-full',
                 'pb-6 shadow-xl overflow-y-scroll overflow-x-hidden',
                 'bg-pagebg-dk dark',
                 'border-l border-accent-border-dk')

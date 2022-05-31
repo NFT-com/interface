@@ -237,7 +237,7 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
               }}
               className={tw(
                 'flex items-center mx-5 cursor-pointer shrink-0',
-                'h-16 px-4 rounded-xl mb-3.5 rounded-xl border',
+                'h-16 px-4 rounded-xl mb-3.5 border',
                 'dark:bg-accent-dk bg-accent',
                 'dark:border-accent-border-dk border-accent-border',
               )}
@@ -259,7 +259,7 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
               key={i}
               className={tw(
                 'flex items-center justify-center px-4',
-                'py-3 h-18 rounded-xl mb-3.5 rounded-xl border',
+                'py-3 h-18 rounded-xl mb-3.5 border',
                 'dark:bg-accent-dk bg-accent',
                 'dark:border-accent-border-dk border-accent-border',
               )}

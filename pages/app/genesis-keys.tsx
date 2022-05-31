@@ -111,7 +111,7 @@ export default function GenesisKeysPage() {
          </div>
         }
         <div className={tw(
-          'flex flex-col flex-grow grow h-full overflow-auto',
+          'flex flex-col flex-grow h-full overflow-auto',
           'border-t border-accent-border-dk bg-modal-overlay-dk',
           'px-4 sm:px-0 pt-6'
         )}>

@@ -48,14 +48,14 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
 
         </div>
       </div>
-      <main className='justify-start space-y-4 w-full justify-start space-y-4 flex flex-col'>
+      <main className='w-full justify-start space-y-4 flex flex-col'>
         <div className='lg:text-sm text-xl text-primary-txt dark:text-primary-txt-dk w-full flex justify-center cursor-pointer flex-col'>
           <div className="text-center font-bold mx-auto w-full">
             {(notAvailable || currentURIBlocked) ? 'This profile is not available.' : 'This profile is available and is ready to be minted!' }
           </div>
         </div>
         <div className='text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col'>
-          <div className="lg:text-sm text-xl sm:mb-8 md:mx-0 lg:mx-auto mx-0 lg:mx-0 mx-auto mb-10 text-center">
+          <div className="lg:text-sm text-xl sm:mb-8 md:mx-0 lg:mx-auto mx-auto mb-10 text-center">
             <p>
               {`Learn how to claim ${(notAvailable || currentURIBlocked) ? 'a' : 'this'} profile for your own by visiting either NFT.com or our Support knowledge base.`}
             </p>
