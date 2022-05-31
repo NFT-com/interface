@@ -16,7 +16,7 @@ import { useAccount } from 'wagmi';
 export default function GalleryDetailPage() {
   const { data: account } = useAccount();
   const router = useRouter();
-  const { id: urlTokenId } = router.query;
+  const { id } = router.query;
 
   const { isSupported } = useSupportedNetwork();
 
@@ -27,7 +27,7 @@ export default function GalleryDetailPage() {
       </div>;
     }
     // Show a 404 for an unminted key.
-    if (BigNumber.from(urlTokenId).gt(10000)) {
+    if (BigNumber.from(id).gt(10000)) {
       return (
         <NullState
           showImage
@@ -42,13 +42,13 @@ export default function GalleryDetailPage() {
       <GenesisKeyGalleryDetailView
         verticalDetail
         hideCloseButton
-        id={String(urlTokenId)}
+        id={String(id)}
         onClose={() => {
           // nothing
         }}
-      />
+      />ß
     </div>;
-  }, [account, isSupported, router, urlTokenId]);
+  }, [account, id, isSupported, router]);
   
   return (
     <PageWrapper removePinkSides headerOptions={{

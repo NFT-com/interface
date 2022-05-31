@@ -10,10 +10,6 @@ import { tw } from 'utils/tw';
 import { useRouter } from 'next/router';
 import { Loader } from 'react-feather';
 
-export interface ProfilePageRouteParams {
-  profileURI: string;
-}
-
 /**
  * Shows a public profile e.g. nft.com/satoshi
  */
