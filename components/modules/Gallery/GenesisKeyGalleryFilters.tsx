@@ -1,0 +1,80 @@
+import searchIcon from 'assets/images/search.svg';
+import { SwitchComponent } from 'components/Collections/SwitchComponent';
+import { CheckBox } from 'components/Input/CheckBox';
+import {
+  useGalleryItemType,
+  useGalleryShowMyStuff,
+  useSetGalleryItemType,
+  useSetGalleryShowMyStuff
+} from 'state/application/hooks';
+import { tw } from 'utils/tw';
+
+export interface GenesisKeyGalleryFiltersProps {
+  showFilters: boolean;
+  currentFilter: string;
+  setCurrentFilter: (filter: string) => void;
+}
+
+export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
+  const showMyStuff = useGalleryShowMyStuff();
+  const galleryItemType: 'gk' | 'profile' = useGalleryItemType();
+  const setGalleryItemType = useSetGalleryItemType();
+  const setGalleryShowMyStuff = useSetGalleryShowMyStuff();
+  return (
+    <>
+      <span className='text-4xl deprecated_md:text-2xl'>Filter</span>
+      <div className='w-full mt-4 dark border-b border-accent-border-dk py-4'>
+        <SwitchComponent
+          left="Genesis Keys"
+          right="Profiles"
+          enabled={galleryItemType === 'profile'}
+          setEnabled={(enabled: boolean) => {
+            setGalleryItemType(enabled ? 'profile' : 'gk');
+          }}
+        />
+      </div>
+      <div className={tw(
+        'w-full flex items-center py-8',
+        'border-b border-accent-border-dk'
+      )}>
+        <CheckBox
+          checked={showMyStuff}
+          onToggle={(selected: boolean) => {
+            setGalleryShowMyStuff(selected);
+          }}
+        />
+        <span
+          onClick={() => {
+            setGalleryShowMyStuff(!showMyStuff);
+          }}
+          className='text-base ml-2 cursor-pointer'
+        >
+          Show My Assets
+        </span>
+      </div>
+      {galleryItemType === 'gk' &&
+        <div className='w-full dark border-b border-accent-border-dk py-4 flex items-center'>
+          <img src={searchIcon} className="w-6 h-6 mr-2 shrink-0 aspect-square" alt="Search" />
+          <input
+            className={tw(
+              'text-lg deprecated_md:text-lg min-w-0 block',
+              'text-left px-3 py-3 w-full rounded-lg font-medium',
+              'text-white bg-transparent shrink-0'
+            )}
+            placeholder="Filter by ID number"
+            value={props.currentFilter}
+            spellCheck={false}
+            onChange={async e => {
+              const validReg = /^[0-9]*$/;
+              if (
+                validReg.test(e.target.value.toLowerCase()) && e.target.value.length <= 5
+              ) {
+                props.setCurrentFilter(e.target.value.toLowerCase());
+              }
+            }}
+          />
+        </div>
+      }
+    </>
+  );
+}

@@ -1,0 +1,220 @@
+import Loader from 'components/elements/Loader';
+import { PropertyCard } from 'components/modules/NFTDetail/PropertyCard';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
+import { useGenesisKeyOwner } from 'hooks/useGenesisKeyOwner';
+import { formatID, getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress, shortenAddress } from 'utils/helpers';
+import { tw } from 'utils/tw';
+
+import { XIcon } from '@heroicons/react/solid';
+import { getAccountLink } from '@metamask/etherscan-link';
+import { BigNumber, BigNumberish } from 'ethers';
+import { saveAs } from 'file-saver';
+import JSZip from 'jszip';
+import JSZipUtils from 'jszip-utils';
+import BackgroundTraitIcon from 'public/genesis_key_background_trait_icon.svg';
+import GlitchIcon from 'public/genesis_key_glitch_icon.svg';
+import PaintBrush from 'public/genesis_key_paint_brush.svg';
+import StandIcon from 'public/genesis_key_stand_icon.svg';
+import CTAKeyIcon from 'public/key_icon.svg';
+import UserIcon from 'public/logo-user-sign-in.svg';
+import { useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import { Download } from 'react-feather';
+import { useThemeColors } from 'styles/theme/useThemeColors';
+import { useAccount, useNetwork } from 'wagmi';
+
+const traitIcons = {
+  'Owner': <UserIcon className='h-5 ml-2' />,
+  'Profile Mints Remaining': <UserIcon className='h-5 ml-2' />,
+  'Key Id': <CTAKeyIcon className='h-3' />,
+  'Key Body': <CTAKeyIcon className='h-3' />,
+  'Key Blade': <CTAKeyIcon className='h-3' />,
+  'Key Handle': <CTAKeyIcon className='h-3' />,
+  'Material': <PaintBrush className='h-3 ml-2' />,
+  'Stand': <StandIcon className="h-3 ml-2" />,
+  'Background': <BackgroundTraitIcon className="h-4 ml-1" />,
+  'Glitch': <GlitchIcon className="h-4 ml-1" />,
+};
+
+export interface GenesisKeyGalleryDetailViewProps {
+  id: BigNumberish;
+  onClose: () => void;
+  verticalDetail?: boolean;
+  hideCloseButton?: boolean;
+}
+
+export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewProps) {
+  const { data: account } = useAccount();
+  const { activeChain } = useNetwork();
+  const { profileAuction } = useAllContracts();
+  const genesisKeyMetadata = useGenesisKeyMetadata(BigNumber.from(props.id));
+  const { primaryIcon, secondaryIcon } = useThemeColors();
+  const { owner } = useGenesisKeyOwner(BigNumber.from(props.id));
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const userIsOwner = sameAddress(account?.address, owner) ?? false;
+
+  const [claimableProfileCount, setClaimableProfileCount] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const [
+        isWhitelistPhaseOnly, claimedByThisTokenId
+      ] = await Promise.all([
+        profileAuction.genKeyWhitelistOnly().catch(() => true),
+        profileAuction.genesisKeyClaimNumber(props.id).catch(() => null)
+      ]);
+
+      if (claimedByThisTokenId != null) {
+        const claimable = (isWhitelistPhaseOnly ? 4 : 7) - claimedByThisTokenId?.toNumber();
+        setClaimableProfileCount(claimable);
+      }
+    })();
+  }, [profileAuction, props.id]);
+
+  return (
+    <div className={tw(
+      props.verticalDetail ? 'flex flex-col items-center md:max-w-full max-w-6xl' : 'flex sm:flex-col max-w-6xl',
+      'text-primary-txt-dk dark',
+    )}>
+      {props.hideCloseButton !== true && <div className={tw(
+        'pt-8 pr-8 absolute right-0 top-0 flex deprecated_sm:block hidden z-50'
+      )} onClick={props.onClose}>
+        <XIcon
+          className="h-6 w-6 cursor-pointer"
+          aria-hidden="true"
+          style={{ color: primaryIcon }}
+        />
+      </div>}
+      <div className={tw(
+        props.verticalDetail ? 'w-3/4 deprecated_sm:w-full' : 'w-1/2 deprecated_sm:w-full',
+        props.verticalDetail ? 'rounded-xl' : 'rounded-bl-xl deprecated_sm:rounded-bl-none rounded-tl-xl',
+      )}>
+        <video
+          className={tw(
+            props.verticalDetail ? 'rounded-xl w-full' : 'rounded-tl-xl rounded-bl-xl',
+            'h-full aspect-square cursor-pointer',
+            'deprecated_sm:rounded-none z-30 object-cover',
+          )}
+          autoPlay
+          muted
+          loop
+          playsInline={!isMobile}
+          preload="none"
+          poster={getGenesisKeyThumbnail(props.id)}
+          src={processIPFSURL(genesisKeyMetadata?.metadata?.animation_url)}
+        />
+      </div>
+      <div className={tw(
+        props.verticalDetail ? 'w-3/4 deprecated_sm:w-full' : 'w-1/2 deprecated_sm:w-full',
+        'flex flex-col px-6 my-6 overflow-y-scroll'
+      )}>
+        <div className='w-full flex justify-between'>
+          <div className='flex flex-col'>
+            <span className='text-xs text-left w-full'>GENESIS KEY</span>
+            <span className={tw(
+              props.verticalDetail ? 'text-5xl' : 'text-3xl',
+              'font-black font-rubik'
+            )}>
+              {formatID(BigNumber.from(props.id))}
+            </span>
+          </div>
+          {userIsOwner &&
+            <div className={tw(
+              'flex w-2/5',
+              'rounded-full bg-modal-overlay-dk h-10 aspect-square mr-1',
+              'cursor-pointer justify-center items-center',
+              isDownloading ? 'opacity-80' : 'opacity-100',
+              'hover:opacity-75',
+            )}
+            onClick={() => {
+              if (isDownloading) {
+                return;
+              }
+              try {
+                setIsDownloading(true);
+                const zip = new JSZip();
+                let count = 0;
+                const zipFilename = `NFT_COM_GK${formatID(BigNumber.from(props.id))}.zip`;
+                const urls = [
+                  processIPFSURL(genesisKeyMetadata?.metadata?.image),
+                  processIPFSURL(genesisKeyMetadata?.metadata?.animation_url),
+                ];
+                urls.forEach(url => {
+                  JSZipUtils.getBinaryContent(url, function (err, data) {
+                    if (err) {
+                      throw err;
+                    }
+                    zip.file(
+                      count === 1
+                        ? `NFT_COM_GK${formatID(BigNumber.from(props.id))}.mp4`
+                        : `NFT_COM_GK${formatID(BigNumber.from(props.id))}.png`,
+                      data,
+                      { binary: true }
+                    );
+                    ++count;
+                    if (count === urls.length) {
+                      zip.generateAsync({ type: 'blob' }).then(function (content) {
+                        saveAs(content, zipFilename);
+                        setIsDownloading(false);
+                      });
+                    }
+                  });
+                });
+              } catch (e) {
+                setIsDownloading(false);
+              }
+            }}
+            >
+              {isDownloading ? <Loader /> : <Download size={16} color={secondaryIcon} fill={secondaryIcon} />}
+              <span className='text-xs text-left ml-2'>
+                {isDownloading ? 'Downloading...' : 'Download'}
+              </span>
+            </div>
+          }
+        </div>
+        <div className={tw(
+          'grid gap-2 overflow-y-scroll overflow-x-hidden mt-4',
+          props.verticalDetail && !isMobile ? 'grid-cols-3 sm:grid-cols-2 w-full' : 'grid-cols-2 w-full'
+        )}>
+          {[
+            {
+              type: 'Owner',
+              value: isNullOrEmpty(owner) ?
+                <Loader /> :
+                userIsOwner ?
+                  'You' :
+                  shortenAddress(owner, isMobile ? 3 : 4),
+              onClick: () => {
+                window.open(
+                  getAccountLink(owner, activeChain?.id.toString())
+                  , '_blank'
+                );
+              }
+            },
+            {
+              type: 'Profile Mints Remaining',
+              value: claimableProfileCount == null ? <Loader /> : claimableProfileCount,
+            },
+            ...(genesisKeyMetadata?.metadata?.attributes ?? [])
+          ]?.map((item, index) => {
+            return <div
+              key={index}
+              className={item.onClick ? 'cursor-pointer' : ''}
+              onClick={item.onClick}
+            >
+              <PropertyCard
+                type={item.type ?? item.trait_type}
+                value={item.value}
+                variant="gallery"
+                icon={traitIcons[item.type ?? item.trait_type]}
+                valueClasses={item.type === 'Owner' ? 'font-dm-mono' : ''}
+              />
+            </div>;
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

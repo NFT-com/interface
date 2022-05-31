@@ -1,0 +1,169 @@
+import GenesisKeyGalleryCard from 'components/Card/GenesisKeyGalleryCard';
+import { Maybe } from 'graphql/generated/types';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import useWindowDimensions from 'hooks/useWindowDimensions';
+import { tw } from 'utils/tw';
+import helpers from 'utils/utils';
+
+import { BigNumber } from 'ethers';
+import { memo, useCallback } from 'react';
+import { isMobile } from 'react-device-detect';
+import { useNavigate } from 'react-router-dom';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { areEqual, FixedSizeGrid } from 'react-window';
+import { useAccount } from 'wagmi';
+
+export interface GenesisKeyGalleryItemsProps {
+  showMyStuff: boolean;
+  currentFilter: string;
+  setDetailId: (id: Maybe<number>) => void;
+}
+
+export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
+  const { data: account } = useAccount();
+  const navigate = useNavigate();
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  const itemsPerRow = useCallback(() => {
+    if (screenWidth < 640) {
+      return 2;
+    } else if (screenWidth < 960) {
+      return 3;
+    } else if (screenWidth < 1280) {
+      return 4;
+    } else {
+      return 5;
+    }
+  }, [screenWidth]);
+
+  const getRowHeight = useCallback((rowWidth: number) => {
+    return Math.floor(rowWidth / itemsPerRow());
+  }, [itemsPerRow]);
+
+  const getTokenIdForGrid = useCallback((rowIndex: number, columnIndex: number) => {
+    const start = rowIndex * itemsPerRow() + 1;
+    return start + columnIndex;
+  }, [itemsPerRow]);
+
+  const GKGridCell = memo<{
+    columnIndex: number,
+    rowIndex: number;
+    style: any;
+  }>((cellProps) => {
+    const tokenId = getTokenIdForGrid(cellProps.rowIndex, cellProps.columnIndex);
+    if (BigNumber.from(tokenId).gt(10000)) {
+      return null;
+    }
+    return (
+      <div
+        style={cellProps.style}
+        key={tokenId}
+        className={tw(
+          'flex mb-4 items-center justify-center px-4',
+          'w-1/5 deprecated_lg:w-1/4 deprecated_md:w-1/3 deprecated_sm:w-2/5'
+        )}
+      >
+        <GenesisKeyGalleryCard
+          key={tokenId}
+          id={tokenId}
+          onClick={() => {
+            if (isMobile) {
+              navigate('/app/gallery/' + tokenId);
+            } else {
+              props.setDetailId(tokenId);
+            }
+          }}
+        />
+      </div>
+    );
+  },
+  // custom areEqual function from react-window.
+  areEqual
+  );
+  GKGridCell.displayName = 'GKGridCell';
+
+  const gkIDFilter: (id: number) => boolean = useCallback((id: number) => {
+    if (helpers.isNullOrEmpty(props.currentFilter)) {
+      return true;
+    }
+    return String(id) === props.currentFilter;
+  }, [props.currentFilter]);
+
+  if (!helpers.isNullOrEmpty(props.currentFilter) && !props.showMyStuff) {
+    const filterID = parseInt(props.currentFilter, 10);
+    if (BigNumber.from(filterID).gt(10000)) {
+      return null;
+    }
+    return (
+      <div
+        key={props.currentFilter}
+        className={tw(
+          'flex mb-4 items-center justify-center px-4',
+          'w-1/5 deprecated_lg:w-1/4 deprecated_md:w-1/3 deprecated_sm:w-2/5'
+        )}
+      >
+        <GenesisKeyGalleryCard
+          key={props.currentFilter}
+          id={filterID}
+          onClick={() => {
+            if (isMobile) {
+              navigate('/app/gallery/' + filterID);
+            } else {
+              props.setDetailId(filterID);
+            }
+          }}
+        />
+      </div>
+    );
+  } else if (props.showMyStuff) {
+    return (
+      <>
+        {(ownedGKTokens?.filter(gkIDFilter) ?? []).map((genesisKeyTokenId) => {
+          return (
+            <div
+              key={genesisKeyTokenId}
+              className={tw(
+                'flex mb-4 items-center justify-center px-4',
+                'w-1/5 deprecated_lg:w-1/4 deprecated_md:w-1/3 deprecated_sm:w-2/5'
+              )}
+            >
+              <GenesisKeyGalleryCard
+                key={genesisKeyTokenId}
+                id={genesisKeyTokenId}
+                onClick={() => {
+                  if (isMobile) {
+                    navigate('/app/gallery/' + genesisKeyTokenId);
+                  } else {
+                    props.setDetailId(genesisKeyTokenId);
+                  }
+                }}
+              />
+            </div>
+          );
+        })}
+      </>
+    );
+  } else {
+    return (
+      <AutoSizer>
+        {({ width }) => {
+          return (
+            <FixedSizeGrid
+              width={width}
+              layout="vertical"
+              height={screenHeight}
+              columnCount={itemsPerRow()}
+              columnWidth={getRowHeight(width)}
+              rowHeight={getRowHeight(width)}
+              rowCount={Math.ceil(10000 / itemsPerRow())}
+              overscanColumnCount={2}
+            >
+              {GKGridCell}
+            </FixedSizeGrid>
+          );
+        }}
+      </AutoSizer>
+    );
+  }
+}
