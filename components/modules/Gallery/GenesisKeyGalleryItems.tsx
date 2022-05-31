@@ -1,14 +1,15 @@
-import GenesisKeyGalleryCard from 'components/Card/GenesisKeyGalleryCard';
 import { Maybe } from 'graphql/generated/types';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
-import helpers from 'utils/utils';
+
+import GenesisKeyGalleryCard from './GenesisKeyGalleryCard';
 
 import { BigNumber } from 'ethers';
+import { useRouter } from 'next/router';
 import { memo, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
-import { useNavigate } from 'react-router-dom';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { areEqual, FixedSizeGrid } from 'react-window';
 import { useAccount } from 'wagmi';
@@ -21,7 +22,7 @@ export interface GenesisKeyGalleryItemsProps {
 
 export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
   const { data: account } = useAccount();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
@@ -69,7 +70,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
           id={tokenId}
           onClick={() => {
             if (isMobile) {
-              navigate('/app/gallery/' + tokenId);
+              router.push('/app/gallery/' + tokenId);
             } else {
               props.setDetailId(tokenId);
             }
@@ -84,13 +85,13 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
   GKGridCell.displayName = 'GKGridCell';
 
   const gkIDFilter: (id: number) => boolean = useCallback((id: number) => {
-    if (helpers.isNullOrEmpty(props.currentFilter)) {
+    if (isNullOrEmpty(props.currentFilter)) {
       return true;
     }
     return String(id) === props.currentFilter;
   }, [props.currentFilter]);
 
-  if (!helpers.isNullOrEmpty(props.currentFilter) && !props.showMyStuff) {
+  if (!isNullOrEmpty(props.currentFilter) && !props.showMyStuff) {
     const filterID = parseInt(props.currentFilter, 10);
     if (BigNumber.from(filterID).gt(10000)) {
       return null;
@@ -108,7 +109,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
           id={filterID}
           onClick={() => {
             if (isMobile) {
-              navigate('/app/gallery/' + filterID);
+              router.push('/app/gallery/' + filterID);
             } else {
               props.setDetailId(filterID);
             }
@@ -133,7 +134,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
                 id={genesisKeyTokenId}
                 onClick={() => {
                   if (isMobile) {
-                    navigate('/app/gallery/' + genesisKeyTokenId);
+                    router.push('/app/gallery/' + genesisKeyTokenId);
                   } else {
                     props.setDetailId(genesisKeyTokenId);
                   }

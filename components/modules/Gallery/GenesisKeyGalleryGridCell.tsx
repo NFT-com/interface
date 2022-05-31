@@ -1,10 +1,11 @@
-import GenesisKeyGalleryCard from 'components/Card/GenesisKeyGalleryCard';
 import { tw } from 'utils/tw';
 
+import GenesisKeyGalleryCard from './GenesisKeyGalleryCard';
+
 import { BigNumber } from 'ethers';
+import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
-import { useNavigate } from 'react-router-dom';
 import { areEqual } from 'react-window';
 
 export interface GenesisKeyGalleryGridCellProps {
@@ -17,7 +18,7 @@ export interface GenesisKeyGalleryGridCellProps {
 }
 
 function GenesisKeyGalleryGridCell(props: GenesisKeyGalleryGridCellProps) {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const getTokenIdForGrid = useCallback((rowIndex: number, columnIndex: number) => {
     const start = rowIndex * props.itemsPerRow + 1;
@@ -43,7 +44,7 @@ function GenesisKeyGalleryGridCell(props: GenesisKeyGalleryGridCellProps) {
         id={tokenId}
         onClick={() => {
           if (isMobile) {
-            navigate('/app/gallery/' + tokenId);
+            router.push('/app/gallery/' + tokenId);
           } else {
             props.onModalOpen();
           }

@@ -1,18 +1,18 @@
-import { Button, ButtonType } from 'components/Button/Button';
-import GalleryCard from 'components/Card/GalleryCard';
-import { OwnedProfileGalleryCard } from 'components/Card/OwnedProfileGalleryCard';
+import { Button, ButtonType } from 'components/elements/Button';
+import GalleryCard from 'components/elements/GalleryCard';
+import { OwnedProfileGalleryCard } from 'components/modules/Gallery/OwnedProfileGalleryCard';
 import { Maybe } from 'graphql/generated/types';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { useGallery } from 'hooks/state/useGallery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { usePaginator } from 'hooks/usePaginator';
-import { useGalleryShowMyStuff } from 'state/application/hooks';
+import { filterNulls, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
-import helpers from 'utils/utils';
 
 import { BigNumber } from 'ethers';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect,useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export interface GenesisKeyGalleryProfileItemsProps {
   showMyStuff: boolean;
@@ -21,8 +21,8 @@ export interface GenesisKeyGalleryProfileItemsProps {
 const PROFILE_LOAD_COUNT = 20;
 
 export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileItemsProps) {
-  const navigate = useNavigate();
-  const showMyStuff = useGalleryShowMyStuff();
+  const router = useRouter();
+  const { galleryShowMyStuff: showMyStuff } = useGallery();
   const { profileTokens } = useMyNftProfileTokens();
   const { nftProfile } = useAllContracts();
 
@@ -61,7 +61,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
     ) {
       setAllLoadedProfiles([
         ...allLoadedProfiles,
-        ...helpers.filterNulls(loadedProfilesNextPage?.latestProfiles?.items)
+        ...filterNulls(loadedProfilesNextPage?.latestProfiles?.items)
       ]);
       setLastAddedPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor);
       setTotalCount(loadedProfilesNextPage?.latestProfiles?.totalItems);
@@ -71,7 +71,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
   if (props.showMyStuff) {
     return (
       <>
-        {helpers.filterNulls(profileTokens)
+        {filterNulls(profileTokens)
           .map((profileToken, index) => {
             return (
               <div
@@ -84,7 +84,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
                 <OwnedProfileGalleryCard
                   token={profileToken}
                   onClick={() => {
-                    navigate('/' + profileToken.uri.split('/').pop());
+                    router.push('/' + profileToken.uri.split('/').pop());
                   }}
                 />
               </div>
@@ -96,16 +96,16 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
     return (
       <>
         {
-          helpers.filterNulls(allLoadedProfiles ?? [])
+          filterNulls(allLoadedProfiles ?? [])
             .filter(element => {
               const isDuplicate = uniqueIds.has(element.id);
               uniqueIds.add(element.id);
               return !isDuplicate;
             })
             .map((profile, index) => {
-              const image = helpers.isNullOrEmpty(profile?.photoURL)
+              const image = isNullOrEmpty(profile?.photoURL)
                 ? 'https://cdn.nft.com/profile-image-default.svg'
-                : helpers.processIPFSURL(
+                : processIPFSURL(
                   profile?.photoURL
                 );
               return (
@@ -122,7 +122,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
                     label={''}
                     imageURL={image}
                     onClick={() => {
-                      navigate('/' + profile?.url);
+                      router.push('/' + profile?.url);
                     }}
                   />
                 </div>

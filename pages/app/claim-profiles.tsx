@@ -15,7 +15,7 @@ import { useAccount } from 'wagmi';
 
 const keySplash = 'https://cdn.nft.com/key_splash2.png';
 
-export function ProfilePreferencesPage() {
+export default function ProfilePreferencesPage() {
   const { data: account } = useAccount();
   const { data: ownedGKs, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(account?.address ?? null);
   const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(account?.address);

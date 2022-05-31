@@ -32,7 +32,7 @@ import { useAccount } from 'wagmi';
  * 
  * Profiles owned by the logged in user are not delayed, because we query the contract directly.
  */
-export default function GenesisKeysPage() {
+export default function GalleryPage() {
   const parentRef = useRef();
 
   const { data: account } = useAccount();

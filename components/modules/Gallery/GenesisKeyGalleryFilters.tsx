@@ -1,13 +1,10 @@
 import searchIcon from 'assets/images/search.svg';
-import { SwitchComponent } from 'components/Collections/SwitchComponent';
-import { CheckBox } from 'components/Input/CheckBox';
-import {
-  useGalleryItemType,
-  useGalleryShowMyStuff,
-  useSetGalleryItemType,
-  useSetGalleryShowMyStuff
-} from 'state/application/hooks';
+import { CheckBox } from 'components/elements/CheckBox';
+import { Switch } from 'components/elements/Switch';
+import { useGallery } from 'hooks/state/useGallery';
 import { tw } from 'utils/tw';
+
+import Image from 'next/image';
 
 export interface GenesisKeyGalleryFiltersProps {
   showFilters: boolean;
@@ -16,15 +13,13 @@ export interface GenesisKeyGalleryFiltersProps {
 }
 
 export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
-  const showMyStuff = useGalleryShowMyStuff();
-  const galleryItemType: 'gk' | 'profile' = useGalleryItemType();
-  const setGalleryItemType = useSetGalleryItemType();
-  const setGalleryShowMyStuff = useSetGalleryShowMyStuff();
+  const { galleryShowMyStuff: showMyStuff, galleryItemType, setGalleryItemType, setGalleryShowMyStuff } = useGallery();
+
   return (
     <>
       <span className='text-4xl deprecated_md:text-2xl'>Filter</span>
       <div className='w-full mt-4 dark border-b border-accent-border-dk py-4'>
-        <SwitchComponent
+        <Switch
           left="Genesis Keys"
           right="Profiles"
           enabled={galleryItemType === 'profile'}
@@ -54,7 +49,7 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
       </div>
       {galleryItemType === 'gk' &&
         <div className='w-full dark border-b border-accent-border-dk py-4 flex items-center'>
-          <img src={searchIcon} className="w-6 h-6 mr-2 shrink-0 aspect-square" alt="Search" />
+          <Image src={searchIcon} className="w-6 h-6 mr-2 shrink-0 aspect-square" layout='fill' alt="Search" />
           <input
             className={tw(
               'text-lg deprecated_md:text-lg min-w-0 block',

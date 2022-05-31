@@ -18,7 +18,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
-export function ClaimGenesisKeyPage() {
+export default function ClaimGenesisKeyPage() {
   const [firstLoaded, setFirstLoaded] = useState(false);
 
   const router = useRouter();

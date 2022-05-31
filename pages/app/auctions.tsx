@@ -2,7 +2,7 @@ import { PageWrapper } from 'components/layouts/PageWrapper';
 import { AuctionType, GenesisKeyAuction } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
 import { tw } from 'utils/tw';
 
-export function GenesisKeyAuctionsPage() {
+export default function GenesisKeyAuctionsPage() {
   return (
     <PageWrapper
       removePinkSides
