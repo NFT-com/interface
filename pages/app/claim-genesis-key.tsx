@@ -6,14 +6,12 @@ import { GenesisKeyWinnerView } from 'components/modules/GenesisKeyAuction/Genes
 import { SignedOutView } from 'components/modules/GenesisKeyAuction/SignedOutView';
 import { useGenesisKeyBlindMerkleCheck } from 'hooks/merkle/useGenesisKeyBlindMerkleCheck';
 import { useGenesisKeyInsiderMerkleCheck } from 'hooks/merkle/useGenesisKeyInsiderMerkleCheck';
-import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
 import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useInsiderGenesisKeyIDs } from 'hooks/useInsiderGenesisKeyIDs';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
@@ -21,8 +19,6 @@ import { useAccount } from 'wagmi';
 export default function ClaimGenesisKeyPage() {
   const [firstLoaded, setFirstLoaded] = useState(false);
 
-  const router = useRouter();
-  const { toggleHeroSidebar } = useHeroSidebar();
   const { bg: keyBackground, img: keyImg } = useKeyBackground();
   const { data: account } = useAccount();
   const merkleData = useGenesisKeyBlindMerkleCheck(account?.address);

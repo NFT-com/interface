@@ -27,8 +27,10 @@ function GalleryCard(props: GalleryCardProps) {
         'w-full h-full rounded-xl bg-gradient-to-tr from-hero-pink to-hero-blue',
       )} />}
       <Image
-        alt=""
+        alt={props.label}
         src={props.imageURL}
+        width={'100%'}
+        height={'100%'}
         className={tw(
           'h-full w-full aspect-square rounded-xl absolute z-20',
         )}
