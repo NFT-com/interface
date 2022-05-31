@@ -147,20 +147,23 @@ export default function Header(props: HeaderProps) {
                     'font-rubik text-blue-50 tracking-wide',
                     'font-normal flex items-center'
                   )}>
-                    {
-                      isMobile ?
-                        <div className="sm:block hidden cursor-pointer" onClick={() => {
+                    <>
+                      <div
+                        className="sm:block hidden cursor-pointer"
+                        onClick={() => {
                           if (props.sidebar === 'dashboard') {
                             toggleWalletSlide();
                           } else {
                             toggleHeroSidebar();
                           }
-                        }}>
-                          <Menu color={primaryIcon} />
-                        </div>
-                        :
+                        }}
+                      >
+                        <Menu color={primaryIcon} />
+                      </div>
+                      <div className='sm:hidden block'>
                         <WalletRainbowKitButton sidebar={props.sidebar} />
-                    }
+                      </div>
+                    </>
                   </div>
                 </div>
               </div>

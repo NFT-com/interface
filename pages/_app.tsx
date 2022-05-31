@@ -9,22 +9,12 @@ import {
   wallet
 } from '@rainbow-me/rainbowkit';
 import { AnimatePresence } from 'framer-motion';
-import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
-import type { ReactElement, ReactNode } from 'react';
 import { rainbowDark } from 'styles/RainbowKitThemes';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
-
-type NextPageWithLayout = NextPage & {
-  getLayout?: (page: ReactElement) => ReactNode;
-}
-
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
-}
 
 const alchemyId = process.env.ALCHEMY_MAINNET_KEY;
 const infuraId = process.env.INFURA_PROJECT_ID;
@@ -66,9 +56,7 @@ const wagmiClient = createClient({
   provider
 });
 
-export default function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? ((page) => page);
-
+export default function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
@@ -80,7 +68,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
         chains={chains}>
         <AnimatePresence exitBeforeEnter>
           <GraphQLProvider>
-            {getLayout(<Component {...pageProps} key={router.pathname} />)}
+            <Component {...pageProps} key={router.pathname} />
           </GraphQLProvider>
         </AnimatePresence>
       </RainbowKitProvider>

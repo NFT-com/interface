@@ -37,7 +37,9 @@ export interface SidebarCTA {
   }
 }
 
-export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
+export function useActiveSidebarCTA(
+  onScrollToSchedule: () => void
+): Maybe<SidebarCTA> {
   const { data: account } = useAccount();
   const router = useRouter();
   const location = router.pathname;
@@ -71,10 +73,10 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
       disabled: false,
       onClick: () => {
         // todo: open FAQ site in new tab ... faq.nft.com
-        
+        onScrollToSchedule && onScrollToSchedule();
       }
     };
-  }, []);
+  }, [onScrollToSchedule]);
 
   const nonwhitelistedScrollDown: SidebarCTA = useMemo(() => {
     const whitelistClosed = 1650970800000 <= new Date().getTime();
@@ -91,6 +93,7 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
       disabled: false,
       onClick: () => {
         if (whitelistClosed) {
+          onScrollToSchedule && onScrollToSchedule();
           setHeroSidebarOpen(false);
         } else {
           window.open(
@@ -100,7 +103,7 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
         }
       }
     };
-  }, [setHeroSidebarOpen]);
+  }, [onScrollToSchedule, setHeroSidebarOpen]);
 
   const calculatingResults: SidebarCTA = useMemo(() => {
     return {
@@ -168,10 +171,11 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
           router.push('/schedule');
         } else {
           setHeroSidebarOpen(false);
+          onScrollToSchedule && onScrollToSchedule();
         }
       }
     };
-  }, [location, router, setHeroSidebarOpen]);
+  }, [location, onScrollToSchedule, router, setHeroSidebarOpen]);
 
   const postBlindGKToClaim: SidebarCTA = useMemo(() => {
     const isInsider = insiderMerkleData != null;
@@ -206,11 +210,10 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
       buttonText: 'Learn About the Public Sale',
       iconColor: 'bg-primary-pink',
       onClick: () => {
-        //todo: remove this
-        console.log('test');
+        onScrollToSchedule && onScrollToSchedule();
       }
     };
-  }, []);
+  }, [onScrollToSchedule]);
 
   const gkRecognizedProfilesToMint: SidebarCTA = useMemo(() => {
     return {
