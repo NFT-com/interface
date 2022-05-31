@@ -1,4 +1,4 @@
-import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
@@ -16,9 +16,12 @@ export interface NFTCardProps {
   title: string;
   subtitle?: string;
   cta?: string;
+  contractAddress?: string;
+  tokenId?: string;
   header?: NFTCardTrait;
   traits?: NFTCardTrait[];
   description?: string;
+  profileURI?: string;
   images: Array<string | null>;
   onClick: () => void;
   onSelectToggle?: (selected: boolean) => void;
@@ -39,7 +42,10 @@ export function NFTCard(props: NFTCardProps) {
 
   const [selected, setSelected] = useState(false);
 
-  const processedImageURLs = props.images?.map(processIPFSURL);
+  const processedImageURLs = sameAddress(props.contractAddress, '0x8fb5a7894ab461a59acdfab8918335768e411414') ?
+    [`https://cdn.nft.com/gk-min/${Number(props?.tokenId)}.jpeg`]
+    :
+    props.images?.map(processIPFSURL);
 
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
