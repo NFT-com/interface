@@ -1,5 +1,6 @@
 import { tw } from 'utils/tw';
 
+import Image from 'next/image';
 import React from 'react';
 
 export interface GalleryCardProps {
@@ -25,7 +26,7 @@ function GalleryCard(props: GalleryCardProps) {
         'absolute z-10 animate-pulse',
         'w-full h-full rounded-xl bg-gradient-to-tr from-hero-pink to-hero-blue',
       )} />}
-      <img
+      <Image
         alt=""
         src={props.imageURL}
         className={tw(

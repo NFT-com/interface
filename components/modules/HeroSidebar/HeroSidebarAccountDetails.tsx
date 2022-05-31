@@ -15,11 +15,10 @@ import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 interface HeroSidebarAccountDetailsProps {
   ENSName?: string;
-  openOptions?: () => void;
 }
 
 export default function HeroSidebarAccountDetails(
-  { ENSName, openOptions }: HeroSidebarAccountDetailsProps
+  { ENSName }: HeroSidebarAccountDetailsProps
 ) {
   const { data: account } = useAccount();
   const { activeChain, chains } = useNetwork();

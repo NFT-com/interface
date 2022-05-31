@@ -75,12 +75,7 @@ export default function HeroSidebar({ onScrollToSchedule }: ISidebarProps) {
           key='sidebarAccountDetails'
           className='w-full border-b border-accent-border-dk'
         >
-          <HeroSidebarAccountDetails
-            ENSName={ENSName}
-            openOptions={() => {
-              setShowWalletOptions(true);
-            }}
-          />
+          <HeroSidebarAccountDetails ENSName={ENSName} />
         </motion.div>
         {activeCTA &&
         <motion.div

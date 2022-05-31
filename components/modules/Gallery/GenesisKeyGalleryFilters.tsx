@@ -1,10 +1,9 @@
-import searchIcon from 'assets/images/search.svg';
 import { CheckBox } from 'components/elements/CheckBox';
 import { Switch } from 'components/elements/Switch';
 import { useGallery } from 'hooks/state/useGallery';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
+import SearchIcon from 'public/search.svg';
 
 export interface GenesisKeyGalleryFiltersProps {
   showFilters: boolean;
@@ -49,7 +48,7 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
       </div>
       {galleryItemType === 'gk' &&
         <div className='w-full dark border-b border-accent-border-dk py-4 flex items-center'>
-          <Image src={searchIcon} className="w-6 h-6 mr-2 shrink-0 aspect-square" layout='fill' alt="Search" />
+          <SearchIcon className='w-6 h-6 mr-2 shrink-0 aspect-square' />
           <input
             className={tw(
               'text-lg deprecated_md:text-lg min-w-0 block',
