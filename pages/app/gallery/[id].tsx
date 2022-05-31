@@ -21,6 +21,9 @@ export default function GalleryDetailPage() {
   const { isSupported } = useSupportedNetwork();
 
   const getGenesisKeyDetailContent = useCallback(() => {
+    if( id === null ) {
+      return <NullState />;
+    }
     if (account && !isSupported) {
       return <div className='w-full justify-center flex mt-12'>
         <NetworkErrorTile />
