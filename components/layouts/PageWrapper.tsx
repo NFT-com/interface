@@ -11,7 +11,6 @@ import { tw } from 'utils/tw';
 
 import { PropsWithChildren } from 'react';
 import { isMobile } from 'react-device-detect';
-import ReactTooltip from 'react-tooltip';
 import { useAccount } from 'wagmi';
 
 export interface PageWrapperProps {
@@ -68,7 +67,6 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
         }}
       >
         <AddFundsDialog key={account?.address} account={account?.address} />
-        <ReactTooltip className="whitespace-pre-wrap" />
         {headerOptions?.omit !== true &&
         <div className="fixed z-[99] top-0 w-full">
           {props.headerOptions?.removeSummaryBanner && ( // TODO: Remove this temporary hidding after fixing proper behavior and zIndex stack for buttons on the left

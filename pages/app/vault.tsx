@@ -1,4 +1,3 @@
-import keyImage from 'assets/images/hero-key--static.png';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { NullState } from 'components/elements/NullState';
 import { PageWrapper } from 'components/layouts/PageWrapper';
@@ -9,6 +8,7 @@ import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import DiscordIcon from 'public/discord_black_icon.svg';
+import keyImage from 'public/hero-key--static.png';
 import keyBg from 'public/key-hero.jpg';
 import tokenHeroBg from 'public/token-hero2.jpg';
 import TwitterIcon from 'public/twitter_black_icon.svg';
