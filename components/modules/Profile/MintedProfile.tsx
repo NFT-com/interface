@@ -1,4 +1,3 @@
-import cameraIcon from 'assets/images/camera.png';
 import { Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
@@ -19,6 +18,7 @@ import { ProfileEditGalleryContext } from './ProfileEditGalleryContext';
 import { PencilIcon } from '@heroicons/react/solid';
 import { getAccountLink } from '@metamask/etherscan-link';
 import Image from 'next/image';
+import cameraIcon from 'public/camera.png';
 import { useContext } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
