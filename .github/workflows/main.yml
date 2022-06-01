@@ -1,0 +1,43 @@
+name: Deploy NFT.com Frontend
+on: [push]
+jobs:
+  deploy-sandbox:
+    if: ${{ github.ref_name == 'main' }}
+    runs-on: ubuntu-latest
+    environment: sandbox
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: yarn install
+      - name: Build site
+        run: |
+          yarn build
+          ls
+          pwd
+      - name: Deploy Site
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
+        run: netlify deploy --dir=build --prod --message "main@${{github.sha}}"
+#   deploy-staging:
+#     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'staging') }}
+#     runs-on: ubuntu-latest
+#     environment: nftcom_staging
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: ./.github/actions/deploy-env
+#         with:
+#           secrets: ${{ toJSON(secrets) }}
+#           stage: staging
+#   deploy-prod:
+#     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'prod') }}
+#     runs-on: ubuntu-latest
+#     environment: nftcom_prod
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: ./.github/actions/deploy-env
+#         with:
+#           secrets: ${{ toJSON(secrets) }}
+#           stage: prod
+	
