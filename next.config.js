@@ -2,6 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   webpack(config) {
+    // This allows you to import SVG files as strings/urls
+    // but doesn't work with typescript yet.
     config.module.rules.push({
       test: /\.svg$/i,
       type: 'asset',
