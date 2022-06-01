@@ -9,7 +9,7 @@
     "style:build": "tailwind -c ./tailwind.config.js build -i styles/globals.css -o styles/tailwind.css",
     "style:watch": "yarn run style:build --watch",
     "dev": "yarn typechain:gen & doppler run -- next dev",
-    "build": "yarn typechain:gen && doppler run -- next build",
+    "build": "yarn typechain:gen && next build",
     "start": "next start",
     "lint": "next lint",
     "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain",
