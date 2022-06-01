@@ -14,11 +14,7 @@ export function SignedOutView(props: SignedOutViewProps) {
       {
         props.auctionText === true ?
           <>
-            <HeroTitle items={[
-              process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME === 'blind' ?
-                'THE AUCTION' :
-                'THE SALE'
-            ]}/>
+            <HeroTitle items={['THE SALE']}/>
             <HeroTitle items={[props.ended === true ? 'HAS ENDED' : 'HAS STARTED']}/>
           </>
           : <>

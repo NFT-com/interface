@@ -1,29 +1,17 @@
-import { CountdownUnits } from 'components/elements/CountdownUnits';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
-import { WhitelistErrorTile } from 'components/elements/WhitelistErrorTile';
-import { GenesisFooter } from 'components/modules/GenesisKeyAuction/GenesisFooter';
 import { useMyGenesisKeyBid } from 'graphql/hooks/useMyGenesisKeyBid';
-import { useGenesisKeyBlindMerkleCheck } from 'hooks/merkle/useGenesisKeyBlindMerkleCheck';
-import { useGenesisKeyInsiderMerkleCheck } from 'hooks/merkle/useGenesisKeyInsiderMerkleCheck';
 import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useGenesisKeyPublicSaleData } from 'hooks/useGenesisKeyPublicSaleData';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
-import { useWhitelistCheck } from 'hooks/useWhitelistCheck';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { AuctionCountdownTile } from './AuctionCountdownTile';
-import { GenesisKeyBlindAuctionInput } from './GenesisKeyBlindAuctionInput';
-import { GenesisKeyLoserView } from './GenesisKeyLoserView';
 import { GenesisKeyPublicSale } from './GenesisKeyPublicSale';
-import { GenesisKeyWinnerView } from './GenesisKeyWinnerView';
 import { SignedOutView } from './SignedOutView';
 
-import Image from 'next/image';
-import truststamps from 'public/trust_stamps.png';
 import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
@@ -33,9 +21,6 @@ export enum AuctionType {
   Public = 'Public'
 }
 
-export interface GenesisKeyAuctionProps {
-  liveAuctionName: AuctionType;
-}
 /**
  * the whole genesis key auction flow, with the following steps:
  * - wallet connection (if not connected)
@@ -43,16 +28,12 @@ export interface GenesisKeyAuctionProps {
  * - Bid input (initial and modify existing)
  * - post-auction UI (congrats if won, sorry if lost)
  */
-export function GenesisKeyAuction(props: GenesisKeyAuctionProps) {
-  const { liveAuctionName } = props;
+export function GenesisKeyAuction() {
+  const liveAuctionName = 'public';
   const { data: account } = useAccount();
   const { isSupported } = useSupportedNetwork();
   const { bid: myGenesisKeyBid, loading: loadingMyGKBid } = useMyGenesisKeyBid();
   const { totalRemaining, loading: loadingTotalGKRemaining } = useTotalGKPublicRemaining();
-
-  const merkleData = useGenesisKeyBlindMerkleCheck(account?.address);
-  const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(account?.address);
-  const { isWhitelisted, loading: loadingWhitelisted } = useWhitelistCheck(account?.address);
 
   const keyBackground: { img, bg } = useKeyBackground();
 
@@ -71,13 +52,6 @@ export function GenesisKeyAuction(props: GenesisKeyAuctionProps) {
     if (!firstLoaded) {
       if (!account) {
         setFirstLoaded(true);
-      } else if (liveAuctionName === AuctionType.Blind) {
-        setFirstLoaded(
-          !loadingMyGKBid &&
-          !loadingWhitelisted &&
-          !loadingOwnedGenesisKeys &&
-          ownedGenesisKeyTokens != null
-        );
       } else {
         setFirstLoaded(
           !loadingTotalGKRemaining &&
@@ -91,7 +65,6 @@ export function GenesisKeyAuction(props: GenesisKeyAuctionProps) {
   }, [
     ownedGenesisKeyTokens,
     liveAuctionName,
-    loadingWhitelisted,
     isSupported,
     firstLoaded,
     loadingMyGKBid,
@@ -103,22 +76,12 @@ export function GenesisKeyAuction(props: GenesisKeyAuctionProps) {
     account
   ]);
 
-  const [auctionStarted, setAuctionStarted] = useState(
-    liveAuctionName === AuctionType.Blind ?
-      Number(process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_START) <= new Date().getTime() :
-      Number(process.env.NEXT_PUBLIC_GK_PUBLIC_SALE_TENTATIVE_START) <= new Date().getTime()
-  );
   const [auctionEnded, setAuctionEnded] = useState(
-    liveAuctionName === AuctionType.Blind ?
-      Number(process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_END) <= new Date().getTime() :
-      totalRemaining?.lte(0) ?? false
+    totalRemaining?.lte(0) ?? false
   );
   
   useEffect(() => {
-    setAuctionEnded(liveAuctionName === AuctionType.Blind ?
-      Number(process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_END) <= new Date().getTime() :
-      totalRemaining?.lte(0) ?? false
-    );
+    setAuctionEnded(totalRemaining?.lte(0) ?? false);
   }, [liveAuctionName, totalRemaining]);
 
   const getAuctionContent = useCallback(() => {
@@ -131,76 +94,15 @@ export function GenesisKeyAuction(props: GenesisKeyAuctionProps) {
     if (!isSupported) {
       return null;
     }
-    if (!auctionStarted) {
-      return (
-        <div className='w-full flex h-full flex-col items-center'>
-          <div className="text-2xl mb-5 text-primary-txt-dk text-center">
-            The {' '}
-            {liveAuctionName === AuctionType.Blind ? 'Auction' : 'Sale'}{' '}
-            has <span className="font-bold">not</span> started
-          </div>
-          <AuctionCountdownTile
-            to={liveAuctionName === AuctionType.Blind
-              ? Number(process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_START)
-              : Number(process.env.NEXT_PUBLIC_GK_PUBLIC_SALE_TENTATIVE_START)}
-            nextAuctionName={liveAuctionName}
-            onEnded={() => {
-              setAuctionStarted(true);
-            }}
-          />
-          <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/>
-          <div className='flex grow justify-end items-center'>
-            <GenesisFooter />
-          </div>
-        </div>
-      );
-    }
-    if (auctionStarted && !auctionEnded && !account) {
+    if (!auctionEnded && !account) {
       return <div className='w-full flex h-full flex-col items-center'>
         <SignedOutView auctionText />
       </div>;
     }
-    if (auctionStarted && !auctionEnded && account) {
+    if (!auctionEnded && account) {
       return (
         <div className='w-full flex flex-col h-full items-center'>
-          {liveAuctionName === AuctionType.Blind && <div
-            className={tw(
-              'flex flex-col w-full items-center',
-              'justify-center text-lg text-center pt-8',
-              isMobile ? 'px-4 mb-12' : '',
-              'text-primary-txt-dk'
-            )}
-          >
-            <span>
-              {liveAuctionName} Auction is <span className="font-bold">Live</span>.
-              {' '}Ends in{' '}
-            </span>
-            <div className="flex">
-              <CountdownUnits
-                to={Number(process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_END)}
-                onEnded={() => {
-                  setAuctionEnded(true);
-                }}
-              />
-            </div>
-          </div>}
-          {
-            (
-              process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME === 'blind' &&
-              !isWhitelisted
-            ) ?
-              <div className='mt-16 flex flex-col items-center h-full'>
-                <WhitelistErrorTile />
-                <div className='flex flex-col justify-end grow'>
-                  <div className='flex items-center grow'>
-                    <GenesisFooter />
-                  </div>
-                </div>
-              </div> :
-              liveAuctionName === AuctionType.Blind
-                ? <GenesisKeyBlindAuctionInput />
-                : <GenesisKeyPublicSale currentPrice={currentPrice}/>
-          }
+          <GenesisKeyPublicSale currentPrice={currentPrice}/>
         </div>
       );
     }
@@ -220,48 +122,14 @@ export function GenesisKeyAuction(props: GenesisKeyAuctionProps) {
           )}
           >
             The {' '}
-            {liveAuctionName === AuctionType.Blind ? 'Auction' : 'Public Sale'}{' '}
+            {'Public Sale'}{' '}
             has <span className="font-bold">Ended</span>.
           </div>
-          {
-            liveAuctionName === AuctionType.Public ?
-              <GenesisKeyPublicSale currentPrice={currentPrice} /> :
-              ownedGenesisKeyTokens?.length > 0 || merkleData != null || insiderMerkleData != null
-                ? <GenesisKeyWinnerView
-                  liveAuction={liveAuctionName}
-                  ownedTokenID={ownedGenesisKeyTokens?.[0]}
-                  claimData={merkleData}
-                  insiderClaimData={insiderMerkleData}
-                />
-                : !isWhitelisted
-                  ?
-                  <div className='mt-16 flex flex-col items-center h-full'>
-                    <WhitelistErrorTile />
-                    <div className='flex flex-col justify-end grow'>
-                      <div className='flex items-center grow'>
-                        <GenesisFooter />
-                      </div>
-                    </div>
-                  </div> :
-                  <GenesisKeyLoserView
-                    liveAuction={liveAuctionName}
-                  />
-          }
+          <GenesisKeyPublicSale currentPrice={currentPrice} />
         </div>
       );
     }
-  }, [
-    isSupported,
-    auctionStarted,
-    auctionEnded,
-    account,
-    liveAuctionName,
-    isWhitelisted,
-    currentPrice,
-    ownedGenesisKeyTokens,
-    merkleData,
-    insiderMerkleData
-  ]);
+  }, [isSupported, auctionEnded, account, currentPrice]);
 
   return (
     <div className={tw(

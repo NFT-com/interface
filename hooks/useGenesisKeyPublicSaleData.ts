@@ -20,14 +20,6 @@ export function useGenesisKeyPublicSaleData(): GenesisKeyPublicSaleData {
   const { data } = useSWR(
     keyString,
     async () => {
-      if (process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME === 'blind') {
-        return {
-          publicAuctionStartSeconds: BigNumber.from(0),
-          publicAuctionDurationSeconds: BigNumber.from(0),
-          currentPrice: BigNumber.from(0),
-        };
-      }
-
       setLoading(true);
       const [
         publicAuctionStartSeconds,

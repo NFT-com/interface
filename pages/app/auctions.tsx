@@ -17,11 +17,7 @@ export default function GenesisKeyAuctionsPage() {
         'relative flex flex-col overflow-y-scroll',
         'overflow-x-hidden bg-black w-screen h-screen',
       )}>
-        <GenesisKeyAuction
-          liveAuctionName={process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME === 'blind'
-            ? AuctionType.Blind
-            : AuctionType.Public}
-        />
+        <GenesisKeyAuction liveAuctionName={AuctionType.Public} />
       </div>
     </PageWrapper>
   );
