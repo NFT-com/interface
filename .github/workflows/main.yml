@@ -19,7 +19,7 @@ jobs:
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
-        run: netlify deploy --dir=build --prod --message "main@${{github.sha}}"
+        run: netlify deploy --dir=.next --prod --message "main@${{github.sha}}"
 #   deploy-staging:
 #     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'staging') }}
 #     runs-on: ubuntu-latest
