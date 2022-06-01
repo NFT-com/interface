@@ -13,20 +13,23 @@ import type { AppProps } from 'next/app';
 import Script from 'next/script';
 import { rainbowDark } from 'styles/RainbowKitThemes';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { infuraProvider } from 'wagmi/providers/infura';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
-
-const alchemyId = process.env.ALCHEMY_MAINNET_KEY;
-const infuraId = process.env.INFURA_PROJECT_ID;
 
 const { chains, provider } = configureChains(
   process.env.NEXT_PUBLIC_ENV !== 'PRODUCTION' ?
     [chain.mainnet, chain.rinkeby] :
     [chain.mainnet],
   [
-    alchemyProvider({ alchemyId }),
-    infuraProvider({ infuraId }),
+    jsonRpcProvider({
+      rpc: (chain) => {
+        const url = new URL(process.env.NEXT_PUBLIC_BASE_URL + 'api/ethrpc');
+        url.searchParams.set('chainId', String(chain.id));
+        return {
+          http: url.toString(),
+        };
+      }
+    }),
     publicProvider()
   ]
 );

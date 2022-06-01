@@ -38,7 +38,7 @@ export default function HeroSidebar() {
   }, [promoteZIndex, heroSidebarOpen, restoreZIndex]);
   
   /**
-   * Note: this sidebar is only rendered when REACT_APP_HERO_ONLY has been disabled,
+   * Note: this sidebar is only rendered when NEXT_PUBLIC_HERO_ONLY has been disabled,
    * which turns on wallet connect functionality.
    */
   const activeCTA: SidebarCTA = useActiveSidebarCTA();

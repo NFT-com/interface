@@ -10,7 +10,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['cdn.nft.com'],
+    domains: ['cdn.nft.com', 'nft-llc.mypinata.cloud'],
   },
 };
 

@@ -264,7 +264,7 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
   if(!(process.env.NEXT_PUBLIC_GK_FLOWS_ENABLED === 'true')) {
     /**
      * This is after the auction and public sale have both long ended, and the auction
-     * surface has been disabled. REACT_APP_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED will remain true
+     * surface has been disabled. NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED will remain true
      * after it's initially set to true, so we use it as a proxy to say that there are no more
      * auction/sale related CTAs to show.
      */
