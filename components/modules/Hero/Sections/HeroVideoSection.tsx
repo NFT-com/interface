@@ -40,8 +40,6 @@ export default function HeroVideoSection() {
         description,
         videoUrl,
         videoExternalUrl,
-        date,
-        location
       }: any, index: number) => (
         <div id={`video${index}`} key={index}
           className={tw('relative flex flex-col-reverse mb-8 pt-16 px-8 deprecated_minmd:px-12 deprecated_minlg:px-12',

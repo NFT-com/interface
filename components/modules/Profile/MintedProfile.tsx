@@ -194,7 +194,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 if (userIsAdmin) onDropProfile(files);
               }}
             >
-              {({ getRootProps, getInputProps, open }) => (
+              {({ getRootProps, getInputProps }) => (
                 <section>
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',

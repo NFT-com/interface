@@ -72,7 +72,7 @@ export const SearchBar = () => {
   });
 
   const Results = connectStateResults(
-    ({ searchResults, searchState, children }) => {
+    ({ searchResults, searchState }) => {
       if (!searchState.query) {
         setShowHits(false);
         return '';
@@ -98,7 +98,7 @@ export const SearchBar = () => {
       <InstantSearch
         searchClient={searchClient}
         indexName="collections"
-        onSearchStateChange={(searchState) => {
+        onSearchStateChange={() => {
           // TODO: depending on the data from searchState.query, add behavior
         }}>
 

@@ -1,5 +1,5 @@
 import { PageWrapper } from 'components/layouts/PageWrapper';
-import { AuctionType, GenesisKeyAuction } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
+import { GenesisKeyAuction } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
 import { tw } from 'utils/tw';
 
 export default function GenesisKeyAuctionsPage() {
@@ -17,7 +17,7 @@ export default function GenesisKeyAuctionsPage() {
         'relative flex flex-col overflow-y-scroll',
         'overflow-x-hidden bg-black w-screen h-screen',
       )}>
-        <GenesisKeyAuction liveAuctionName={AuctionType.Public} />
+        <GenesisKeyAuction />
       </div>
     </PageWrapper>
   );

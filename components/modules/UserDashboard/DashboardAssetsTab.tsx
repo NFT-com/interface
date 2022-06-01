@@ -21,7 +21,7 @@ export function DashboardAssetsTab() {
   const [sortBy, setSortBy] = useState(0);
   const [itemTypes, setItemTypes] = useState(0);
 
-  const onGrabData = useCallback((currentPage) => {
+  const onGrabData = useCallback(() => {
     // when we reach the end of the list
     if (nextCursor == null) {
       return [];

@@ -66,7 +66,7 @@ export default function Header(props: HeaderProps) {
   // todo: remove Disclosure in favor of typical wallet slide toggling.
   return (
     <Disclosure as="nav" className={tw('w-full', `${headerStyles()}`)}>
-      {({ open }) => (
+      {() => (
         <>
           <div className={tw('w-full mx-auto',
             ' pl-5',
