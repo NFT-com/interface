@@ -232,7 +232,7 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
 
   const publicSaleCTA: SidebarCTA = useMemo(() => {
     return {
-      icon: <CTAKeyIcon className='h-8'/>,
+      icon: <div className='h-8 w-8 rounded-full flex items-center justify-center'><CTAKeyIcon /></div>,
       iconColor: totalRemaining?.gt(100) ? 'bg-primary-button-bckg' : 'bg-primary-pink',
       mainText: totalRemaining ? totalRemaining + ' Keys Left!' : <Loader />,
       secondaryText: 'There\'s still time to buy a key!',
@@ -255,7 +255,7 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
           setHeroSidebarOpen(false);
           router.push('/app/claim-profiles');
         },
-        icon: <UserIcon className='h-8'/>,
+        icon: <div className='h-8 w-8 rounded-full flex items-center justify-center'><UserIcon/></div>,
         iconColor: 'bg-primary-green',
       }
     };

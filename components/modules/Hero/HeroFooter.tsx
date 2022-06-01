@@ -15,11 +15,14 @@ export default function HeroFooter() {
       )}
     >
       <div className="text-grey-txt font-hero-heading1 flex items-center">
-        <Image
-          className="h-10 w-10 text-always-white mr-1"
-          src={'https://cdn.nft.com/hero_corner_gray.svg'}
-          alt="nft.com"
-        />
+        <div className="h-10 w-10 text-always-white mr-1 relative">
+          <Image
+            src={'https://cdn.nft.com/hero_corner_gray.svg'}
+            alt="nft.com"
+            layout="fill"
+            objectFit="cover"
+          />
+        </div>
         <span>NFT.COM</span>
       </div>
       <div className={tw(

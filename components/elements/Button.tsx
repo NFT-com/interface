@@ -149,11 +149,18 @@ export function Button(props: ButtonProps) {
           <span className="flex ml-2 whitespace-normal">{props?.loadingText}</span>
         </div> :
         <>
-          {props?.icon &&
-            <Image
-              className={tw('mr-2 ',
-                props?.size === ButtonSize.SMALL ? 'h-3 w-3 minsm:h-5 minsm:w-5':'h-5 w-5')}
-              src={props?.icon} alt={props?.label}/>}
+          {props?.icon && props?.icon &&
+            <div className={tw('mr-2 relative',
+              props?.size === ButtonSize.SMALL ? 'h-3 w-3 minsm:h-5 minsm:w-5':'h-5 w-5'
+            )}>
+              <Image
+                src={props?.icon}
+                alt={props?.label}
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+          }
           {props?.label}
         </>
       }

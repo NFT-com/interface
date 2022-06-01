@@ -27,12 +27,14 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
         <div className="flex items-center md:flex-col">
           <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px]">
             <section>
-              <div className='relative outline-none'>
+              <div className='relative outline-none rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60'>
                 <Image
                   src={'https://cdn.nft.com/profile-image-default.svg'}
                   alt="profilePicture"
                   draggable={false}
-                  className="object-center rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60"
+                  className="object-center"
+                  layout="fill"
+                  objectFit="cover"
                   style={{ zIndex: 101, }}
                 />
               </div>
