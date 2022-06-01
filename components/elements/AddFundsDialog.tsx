@@ -6,7 +6,7 @@ import { logAddFundsLinkClick, logAddFundsModalImpression } from 'utils/gaLogger
 import { shorten } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import fiatBlack from 'public/fiat.svg?url';
+import fiatBlack from 'public/fiat.svg';
 import QRCode from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
