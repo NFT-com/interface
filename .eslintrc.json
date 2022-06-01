@@ -139,6 +139,15 @@
     "function-call-argument-newline": [
       "warn",
       "consistent"
+    ],
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": [
+          "\\.svg",
+          "\\.svg?url"
+        ]
+      }
     ]
   }
 }

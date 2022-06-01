@@ -1,10 +1,9 @@
 import { Maybe } from 'graphql/generated/types';
+import { getNftsByContract } from 'utils/alchemyNFT';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
-import { useAlchemySDK } from './useAlchemySDK';
-
-import { GetNftsResponse, Nft } from '@alch/alchemy-web3';
+import { Nft } from '@alch/alchemy-web3';
 import { BigNumber } from 'ethers';
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -22,7 +21,6 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
 } {
   const [loading, setLoading] = useState(false);
   const { activeChain } = useNetwork();
-  const alchemySdk = useAlchemySDK();
 
   const keyString = 'OwnedGenesisKeyTokens' + address + activeChain?.id;
 
@@ -36,10 +34,11 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
     }
     setLoading(true);
 
-    const result: GetNftsResponse = await alchemySdk.alchemy.getNfts({
-      owner: address,
-      contractAddresses: [getAddress('genesisKey', activeChain?.id)]
-    });
+    const result = await getNftsByContract(
+      address,
+      getAddress('genesisKey', activeChain?.id ?? process.env.NEXT_PUBLIC_CHAIN_ID),
+      String(activeChain?.id) ?? process.env.NEXT_PUBLIC_CHAIN_ID
+    );
 
     setLoading(false);
     return filterNulls(result?.ownedNfts.map((gk: Nft) => BigNumber.from(gk?.id?.tokenId)?.toNumber()) ?? []);

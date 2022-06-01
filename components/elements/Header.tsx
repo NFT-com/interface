@@ -78,6 +78,7 @@ export default function Header(props: HeaderProps) {
                 <div className="flex-shrink-0 flex items-center text-base">
                   <Link href="/">
                     <div className={tw(
+                      'cursor-pointer',
                       'lg:ml-2 ml-20',
                       'text-always-white',
                       'font-hero-heading1 flex items-center')}>
@@ -105,14 +106,14 @@ export default function Header(props: HeaderProps) {
                       )}
                     >
                       <Link href ='/app/gallery'>
-                        <span className='hover:text-link'>Gallery</span>
+                        <span className='hover:text-link cursor-pointer'>Gallery</span>
                       </Link>
                       <span onClick={() => {
                         window.open('https://docs.nft.com', '_open');
                       }} className='hover:text-link cursor-pointer'>Docs</span>
                       {hasGksOrTokens && <Link href ='/app/vault'>
                         <span
-                          className='hover:text-white'
+                          className='hover:text-white cursor-pointer'
                           style={{
                             background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
                             backgroundSize: '200% 200%',

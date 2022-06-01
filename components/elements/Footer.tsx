@@ -138,15 +138,17 @@ export const Footer = () => {
             'dark:text-always-white text-always-black',
             'font-hero-heading1 flex items-center md:mb-0 mb-8',
           )}>
-            <Image
-              className={tw('h-10 w-10 mr-1')}
-              src={
-                isDarkMode
-                  ? 'https://cdn.nft.com/hero_corner.svg'
-                  : 'https://cdn.nft.com/hero_corner_dark.svg' }
-              alt="nft.com"
-              layout="fill"
-              objectFit="contain" />
+            <div className={tw('h-10 w-10 mr-1 relative')}>
+              <Image
+                src={
+                  isDarkMode
+                    ? 'https://cdn.nft.com/hero_corner.svg'
+                    : 'https://cdn.nft.com/hero_corner_dark.svg' }
+                alt="nft.com"
+                layout='fill'
+                objectFit='cover'
+              />
+            </div>
             <span>NFT.COM</span>
           </div>
         </Link>

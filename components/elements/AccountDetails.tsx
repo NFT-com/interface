@@ -81,7 +81,7 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
         //   usd: ethPriceUSD,
         //   address: getAddress('weth', chainId),
         // },
-        // getEnvBool(Secret.REACT_APP_ANALYTICS_ENABLED)
+        // getEnvBool(Secret.NEXT_PUBLIC_ANALYTICS_ENABLED)
         //   ? {
         //     name: 'NFT.com',
         //     symbol: 'NFT',

@@ -5,7 +5,7 @@ import { tw } from 'utils/tw';
 
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import profileGeneric from 'public/generic_profile_item.svg';
+import ProfileGeneric from 'public/generic_profile_item.svg';
 import { useState } from 'react';
 
 export interface HeroSidebarProfileProps {
@@ -51,11 +51,19 @@ export function HeroSidebarProfile(props: HeroSidebarProfileProps) {
           'bg-modal-overlay-dk border-accent-border-dk',
         )}
       >
-        { <Image
-          className="ml-4 mr-2.5 h-9 aspect-square rounded-full"
-          src={profileData?.profile?.photoURL ?? profileGeneric}
-          alt="genesis key generic"
-        /> }
+        {
+          profileData?.profile?.photoURL ?
+            <div className="ml-4 mr-2.5 h-9 aspect-square rounded-full relative">
+              <Image
+                className='rounded-full'
+                layout="fill"
+                objectFit="cover"
+                src={profileData?.profile?.photoURL}
+                alt="genesis key generic"
+              />
+            </div> :
+            <ProfileGeneric className="ml-4 mr-2.5 h-9 aspect-square rounded-full" />
+        }
         <div className="flex flex-col text-secondary-txt">
           Profile
           <span className='text-lg text-always-white'>

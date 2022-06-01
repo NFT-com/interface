@@ -1,16 +1,13 @@
 import { Maybe } from 'graphql/generated/types';
+import { getNftMetadata } from 'utils/alchemyNFT';
 import { getAddress } from 'utils/httpHooks';
 
-import { useAlchemySDK } from './useAlchemySDK';
-
-import { GetNftMetadataResponse } from '@alch/alchemy-web3';
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumberish } from 'ethers';
 import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export function useGenesisKeyMetadata(tokenId: BigNumberish | null): Maybe<any> {
   const { activeChain } = useNetwork();
-  const alchemySdk = useAlchemySDK();
 
   const keyString = 'GenesisKeyMetadata' + tokenId + activeChain?.id;
 
@@ -21,11 +18,11 @@ export function useGenesisKeyMetadata(tokenId: BigNumberish | null): Maybe<any> 
         return null;
       }
 
-      const result: GetNftMetadataResponse = await alchemySdk.alchemy.getNftMetadata({
-        contractAddress: getAddress('genesisKey', activeChain?.id),
-        tokenId: BigNumber.from(tokenId).toString(),
-        tokenType: 'erc721'
-      });
+      const result = await getNftMetadata(
+        getAddress('genesisKey', activeChain?.id ?? process.env.NEXT_PUBLIC_CHAIN_ID),
+        tokenId,
+        String(activeChain?.id) ?? process.env.NEXT_PUBLIC_CHAIN_ID
+      );
       
       return result;
     }

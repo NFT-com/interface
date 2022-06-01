@@ -212,26 +212,32 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <Loader/>
                     </div>}
-                    <Image
-                      src={
-                        !isNullOrEmpty(draftProfileImg?.preview)
-                          ? draftProfileImg?.preview
-                          : profileData?.profile?.photoURL ??
-                          (!(process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true')
-                            ? 'https://cdn.nft.com/profile-image-default.svg' :
-                            cameraIcon)
-                      }
-                      alt="profilePicture"
-                      draggable={false}
+                    <div
                       className={tw(
-                        'object-center rounded-full',
+                        'rounded-full',
                         'h-full w-full',
                         'shrink-0 aspect-square',
                         userIsAdmin && editMode ? 'cursor-pointer' : '',
                         userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
                       )}
-                      style={{ zIndex: 101, }}
-                    />
+                    >
+                      <Image
+                        src={
+                          !isNullOrEmpty(draftProfileImg?.preview)
+                            ? draftProfileImg?.preview
+                            : profileData?.profile?.photoURL ??
+                          (!(process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true')
+                            ? 'https://cdn.nft.com/profile-image-default.svg' :
+                            cameraIcon)
+                        }
+                        alt="profilePicture"
+                        draggable={false}
+                        className="object-center rounded-full shrink-0"
+                        layout="fill"
+                        objectFit='cover'
+                        style={{ zIndex: 101, }}
+                      />
+                    </div>
                     {editMode && <div
                       className={tw(
                         'absolute bottom-5 -right-4 md:-right-8'

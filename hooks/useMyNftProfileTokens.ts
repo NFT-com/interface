@@ -1,10 +1,10 @@
+import { getNftsByContract } from 'utils/alchemyNFT';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
 import { useAllContracts } from './contracts/useAllContracts';
-import { useAlchemySDK } from './useAlchemySDK';
 
-import { GetNftsResponse, Nft } from '@alch/alchemy-web3';
+import { Nft } from '@alch/alchemy-web3';
 import { BigNumber, BigNumberish } from 'ethers';
 import useSWR, { mutate } from 'swr';
 import { useAccount, useNetwork } from 'wagmi';
@@ -25,7 +25,6 @@ export function useMyNftProfileTokens(): ProfileTokenResults {
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const { nftProfile } = useAllContracts();
-  const alchemySdk = useAlchemySDK();
 
   const keyString = 'MyNftProfileTokens ' + account?.address + activeChain?.id;
 
@@ -34,10 +33,11 @@ export function useMyNftProfileTokens(): ProfileTokenResults {
       return null;
     }
 
-    const result: GetNftsResponse = await alchemySdk.alchemy.getNfts({
-      owner: account?.address,
-      contractAddresses: [getAddress('nftProfile', activeChain?.id)]
-    });
+    const result = await getNftsByContract(
+      account?.address,
+      getAddress('nftProfile', activeChain?.id ?? process.env.NEXT_PUBLIC_CHAIN_ID),
+      String(activeChain?.id) ?? process.env.NEXT_PUBLIC_CHAIN_ID
+    );
 
     const ownedTokenIds = filterNulls(result?.ownedNfts?.map((profile: Nft) => BigNumber.from(profile?.id?.tokenId)?.toNumber()));
     
