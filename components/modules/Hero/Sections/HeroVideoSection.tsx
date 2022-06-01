@@ -85,7 +85,8 @@ export default function HeroVideoSection() {
                 )}
                 alt={'preview'}
                 src={videoUrl}
-                layout='fill'
+                layout="fill"
+                objectFit="contain"
               />
             </ExternalLink>
           </div>

@@ -145,7 +145,8 @@ export const Footer = () => {
                   ? 'https://cdn.nft.com/hero_corner.svg'
                   : 'https://cdn.nft.com/hero_corner_dark.svg' }
               alt="nft.com"
-              layout='fill' />
+              layout="fill"
+              objectFit="contain" />
             <span>NFT.COM</span>
           </div>
         </Link>

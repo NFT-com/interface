@@ -78,7 +78,8 @@ export default function HeroTweetSection() {
                         <Image
                           src={tweet.image.src}
                           alt={tweet.author}
-                          layout='fill'
+                          layout="fill"
+                          objectFit="contain"
                         />
                     }
                   </div>
@@ -128,7 +129,8 @@ export default function HeroTweetSection() {
           src={bgGif}
           alt="tweet gif"
           className='w-full mt-32 block aspect-square bg-cover bg-no-repeat bg-center'
-          layout='fill'
+          layout="fill"
+          objectFit="contain"
         />
       </div>
     </div>
