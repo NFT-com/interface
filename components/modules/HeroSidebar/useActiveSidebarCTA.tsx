@@ -35,8 +35,6 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
   
   const { totalClaimable: totalClaimableForThisAddress } = useClaimableProfileCount(account?.address);
 
-  const auctionStarted = Number(process.env.NEXT_PUBLIC_GK_PUBLIC_SALE_TENTATIVE_START) <= new Date().getTime();
-
   const { setHeroSidebarOpen } = useHeroSidebar();
 
   const gkRecognizedProfilesToMint: SidebarCTA = useMemo(() => {
@@ -63,13 +61,13 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
       mainText: totalRemaining ? totalRemaining + ' Keys Left!' : <Loader />,
       secondaryText: 'There\'s still time to buy a key!',
       buttonText: 'Buy Keys',
-      disabled: !auctionStarted,
+      disabled: false,
       onClick: () => {
         setHeroSidebarOpen(false);
         router.push('/app/auctions');
       }
     };
-  }, [auctionStarted, router, setHeroSidebarOpen, totalRemaining]);
+  }, [router, setHeroSidebarOpen, totalRemaining]);
 
   const publicSaleCTAWithMintableProfiles: SidebarCTA = useMemo(() => {
     return {
@@ -86,14 +84,6 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
       }
     };
   }, [publicSaleCTA, router, setHeroSidebarOpen, totalClaimableForThisAddress]);
-  
-  /**
-   * The public sale phase has begun. If the sale hasn't started yet,
-   * just check if they have profiles to mint.
-   */
-  if (!auctionStarted && hasUnclaimedProfiles) {
-    return gkRecognizedProfilesToMint;
-  }
 
   /**
    * If there are no remaining GKs in the public sale, don't show a CTA.

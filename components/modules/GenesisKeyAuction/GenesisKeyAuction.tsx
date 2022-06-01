@@ -1,6 +1,5 @@
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
-import { useMyGenesisKeyBid } from 'graphql/hooks/useMyGenesisKeyBid';
 import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useGenesisKeyPublicSaleData } from 'hooks/useGenesisKeyPublicSaleData';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
@@ -32,7 +31,6 @@ export function GenesisKeyAuction() {
   const liveAuctionName = 'public';
   const { data: account } = useAccount();
   const { isSupported } = useSupportedNetwork();
-  const { bid: myGenesisKeyBid, loading: loadingMyGKBid } = useMyGenesisKeyBid();
   const { totalRemaining, loading: loadingTotalGKRemaining } = useTotalGKPublicRemaining();
 
   const keyBackground: { img, bg } = useKeyBackground();
@@ -67,10 +65,8 @@ export function GenesisKeyAuction() {
     liveAuctionName,
     isSupported,
     firstLoaded,
-    loadingMyGKBid,
     loadingPublicAuctionData,
     loadingTotalGKRemaining,
-    myGenesisKeyBid,
     totalRemaining,
     loadingOwnedGenesisKeys,
     account

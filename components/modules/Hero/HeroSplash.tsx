@@ -1,8 +1,5 @@
-import { AuctionCountdownTile } from 'components/modules/GenesisKeyAuction/AuctionCountdownTile';
-import { AuctionType } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
 import { AccentType, Button, ButtonType } from 'components/modules/Hero/HeroButton';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
-import { useGenesisKeyInsiderMerkleCheck } from 'hooks/merkle/useGenesisKeyInsiderMerkleCheck';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
 import { tw } from 'utils/tw';
@@ -30,16 +27,9 @@ export default function HeroSplash(props: HeroSplashProps) {
   const { data: account } = useAccount();
   const { alwaysBlack } = useThemeColors();
   const router = useRouter();
-  const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(account?.address);
 
-  const liveAuctionName = 'public';
-  const [auctionStarted, setAuctionStarted] = useState(
-    Number(process.env.NEXT_PUBLIC_GK_PUBLIC_SALE_TENTATIVE_START) <= new Date().getTime()
-  );
   const { data: myGKTokens, loading: loadingMyGkTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { totalRemaining, loading: loadingTotalRemaining } = useTotalGKPublicRemaining();
-
-  const auctionEnded = totalRemaining?.lte(0) ?? false;
 
   const getLearnMoreLink = useCallback(() => {
     return (
@@ -75,121 +65,46 @@ export default function HeroSplash(props: HeroSplashProps) {
   }, [props.onScrollToAbout]);
 
   const getSplashContent = useCallback(() => {
-    if (!auctionStarted) {
-      return <div className='flex flex-col h-full items-center justify-between dark'>
-        <div className='flex flex-col items-center grow justify-center'>
-          <HeroTitle color="blue" items={['THE PUBLIC SALE']} />
-          <HeroTitle color="blue" items={['WILL START SOON']} />
-          <div className="mt-4 deprecated_sm:w-full">
-            <div className='w-full flex justify-center'>
-              <AuctionCountdownTile
-                to={Number(process.env.NEXT_PUBLIC_GK_PUBLIC_SALE_TENTATIVE_START)}
-                nextAuctionName={AuctionType.Public}
-                onEnded={() => {
-                  setAuctionStarted(true);
-                }}
-              />
-            </div>
-            {
-              /* 4/26/2022, 6:00:00 PM (1 hour before auction) */
-              1651010400000 < new Date().getTime() &&
-              <div className="mt-8 tracking-widest font-hero-heading2 w-full flex justify-center">
-                <Button
-                  textColor={alwaysBlack}
-                  accent={AccentType.SCALE}
-                  label={'BUY KEYS'}
-                  onClick={() => {
-                    router.push('/app/auctions');
-                  }}
-                  type={ButtonType.PRIMARY}
-                />
-              </div>
-            }
-            <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/>
-          </div>
-        </div>
-        {getLearnMoreLink()}
-      </div>;
-    } else if (auctionEnded) {
-      return <div className='flex flex-col items-center h-full justify-between'>
-        <div className='flex flex-col items-center grow justify-center space-y-5'>
-          {
-            insiderMerkleData ?
-              <>
-                <HeroTitle color="blue" items={['THANK YOU FOR']} />
-                <HeroTitle color="blue" items={['SUPPORTING NFT.COM']} />
-              </> :
-              <>
-                <HeroTitle color="blue" items={['THE PUBLIC SALE']} />
-                <HeroTitle color="blue" items={['WILL START SOON']} />
-                <AuctionCountdownTile
-                  hideLabel
-                  to={Number(process.env.NEXT_PUBLIC_GK_PUBLIC_SALE_TENTATIVE_START)}
-                  nextAuctionName={AuctionType.Public}
-                  onEnded={() => {
-                    // do nothing
-                  }}
-                />
-              </>
-          }
-        </div>
-        <div className='flex flex-col items-center'>
-          <span
-            className={tw(
-              'text-xl deprecated_minxs:text-2xl deprecated_minxs:2:text-3xl deprecated_minxl:text-4xl z-26',
-              'text-center font-bold text-white',
-              'tracking-wider font-hero-heading2',
-            )}
-          >
-            {
-              'I\'VE GOT ALL THE KEYS I NEED. WHAT\'S NEXT?'
-            }
-          </span>
-          {getLearnMoreLink()}
-        </div>
-      </div>;
-    } else if (auctionStarted) {
-      return <div className='flex flex-col items-center h-full justify-between'>
-        <div className='flex flex-col items-center grow justify-center'>
-          <HeroTitle color="blue" items={['UNLOCK THE NFT BETA WITH YOUR GENESIS KEY']} />
-          {!account && <span
-            className='text-primary-txt-dk text-xl mt-3 font-bold text-center'
-            style={{
-              textShadow: '0px 4px 4px rgba(0,0,0,0.9)',
-            }}
-          >
-            Connect with one of our available wallet providers to start minting!
-          </span>}
-          <div className="mt-8 tracking-widest font-hero-heading2 w-full flex justify-center">
-            <Button
-              textColor={alwaysBlack}
-              accent={AccentType.SCALE}
-              label={'BUY KEYS'}
-              onClick={() => {
-                router.push('/app/auctions');
-              }}
-              type={ButtonType.PRIMARY}
-            />
-          </div>
-          <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/>
-        </div>
-        {liveAuctionName === 'public' && <span
-          className={tw(
-            'text-xl deprecated_minxs:text-2xl deprecated_minxs:2:text-3xl deprecated_minxl:text-4xl z-26',
-            'text-center font-bold text-white',
-            'tracking-wider font-hero-heading2',
-          )}
+    return <div className='flex flex-col items-center h-full justify-between'>
+      <div className='flex flex-col items-center grow justify-center'>
+        <HeroTitle color="blue" items={['UNLOCK THE NFT BETA WITH YOUR GENESIS KEY']} />
+        {!account && <span
+          className='text-primary-txt-dk text-xl mt-3 font-bold text-center'
+          style={{
+            textShadow: '0px 4px 4px rgba(0,0,0,0.9)',
+          }}
         >
-          {'I\'VE GOT ALL THE KEYS I NEED. WHAT\'S NEXT?'}
+          Connect with one of our available wallet providers to start minting!
         </span>}
-        {getLearnMoreLink()}
-      </div>;
-    }
+        <div className="mt-8 tracking-widest font-hero-heading2 w-full flex justify-center">
+          <Button
+            textColor={alwaysBlack}
+            accent={AccentType.SCALE}
+            label={'BUY KEYS'}
+            onClick={() => {
+              router.push('/app/auctions');
+            }}
+            type={ButtonType.PRIMARY}
+          />
+        </div>
+        <Image src={truststamps} alt="quant stamp" className='mb-4 mt-8'/>
+      </div>
+      <span
+        className={tw(
+          'text-xl deprecated_minxs:text-2xl deprecated_minxs:2:text-3xl deprecated_minxl:text-4xl z-26',
+          'text-center font-bold text-white',
+          'tracking-wider font-hero-heading2',
+        )}
+      >
+        {'I\'VE GOT ALL THE KEYS I NEED. WHAT\'S NEXT?'}
+      </span>
+      {getLearnMoreLink()}
+    </div>;
 
     // Default splash page content. We show this if there was no more relevant content to show
     // about the auctions (e.g. if they haven't started yet, or if they're long over).
     return <DefaultSplash />;
-  }, [auctionStarted, auctionEnded, liveAuctionName, alwaysBlack, getLearnMoreLink, router, insiderMerkleData, account]);
+  }, [alwaysBlack, getLearnMoreLink, router, account]);
 
   const [firstLoaded, setFirstLoaded] = useState(false);
   useEffect(() => {

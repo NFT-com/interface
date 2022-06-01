@@ -2,7 +2,6 @@ import { Footer } from 'components/elements/Footer';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import HeroSplash from 'components/modules/Hero/HeroSplash';
 import HeroAboutSection from 'components/modules/Hero/Sections/HeroAboutSection';
-import { HeroCalendarCTA } from 'components/modules/Hero/Sections/HeroCalendarCTA';
 import HeroCommunitySection from 'components/modules/Hero/Sections/HeroCommunitySection';
 import { HeroCTA } from 'components/modules/Hero/Sections/HeroCTA';
 import HeroTeamSection from 'components/modules/Hero/Sections/HeroTeamSection';
@@ -106,8 +105,6 @@ export function HeroPage(props: HeroPageProps) {
         </div>
 
         <HeroCTA />
-
-        <HeroCalendarCTA />
 
         <HeroTweetSection />
 

@@ -96,7 +96,7 @@ export default function GalleryPage() {
         'text-primary-txt-dk absolute'
       )}>
         {/* Desktop Filters - sidebar */}
-        {!isMobile && (process.env.NEXT_PUBLIC_ENABLE_GALLERY_FILTERS === 'true') &&
+        {!isMobile &&
          <div className={tw(
            'flex flex-col w-1/4 shrink-0 h-full min-h-4/5 border-r border-accent-border-dk',
            'border-t px-10 pt-6 md:hidden'
@@ -132,23 +132,21 @@ export default function GalleryPage() {
         </div>
       </div>
       {/* mobile filters */}
-      {(process.env.NEXT_PUBLIC_ENABLE_GALLERY_FILTERS === 'true') &&
-        <div className={tw(
-          'hidden w-full h-full absolute dark top-0 left-0',
-          !showFilters ? 'md:hidden' : 'md:block',
-          'bg-modal-overlay-dk mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
-          'border-t border-accent-border-dk'
-        )}>
-          <GenesisKeyGalleryFilters
-            showFilters={showFilters}
-            currentFilter={currentFilter}
-            setCurrentFilter={(filter: string) => {
-              setCurrentFilter(filter);
-            }}
-          />
-        </div>
-      }
-      {(process.env.NEXT_PUBLIC_ENABLE_GALLERY_FILTERS === 'true') && <div className={tw(
+      <div className={tw(
+        'hidden w-full h-full absolute dark top-0 left-0',
+        !showFilters ? 'md:hidden' : 'md:block',
+        'bg-modal-overlay-dk mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
+        'border-t border-accent-border-dk'
+      )}>
+        <GenesisKeyGalleryFilters
+          showFilters={showFilters}
+          currentFilter={currentFilter}
+          setCurrentFilter={(filter: string) => {
+            setCurrentFilter(filter);
+          }}
+        />
+      </div>
+      <div className={tw(
         'md:block absolute bottom-0 left-0 hidden w-full mb-8 flex justify-center',
         'drop-shadow-md px-8'
       )}>
@@ -160,7 +158,7 @@ export default function GalleryPage() {
           }}
           type={ButtonType.PRIMARY}
         />
-      </div>}
+      </div>
       <Footer />
     </PageWrapper>
   );

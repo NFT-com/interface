@@ -49,7 +49,7 @@ export default function Header(props: HeaderProps) {
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { primaryIcon } = useThemeColors();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
-  const showHeaderNav = (process.env.NEXT_PUBLIC_PREFERENCE_COLLECTION_FLOW_ENABLED === 'true') && !isMobile;
+  const showHeaderNav = !isMobile;
 
   const headerStyles = useCallback(() => {
     if(props.removeBackground && !props.heroHeader) {

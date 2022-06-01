@@ -27,8 +27,7 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
   const { data } = useSWR(keyString, async () => {
     if (
       isNullOrEmpty(address) ||
-      address == null ||
-      (process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED === 'false')
+      address == null
     ) {
       return [];
     }
