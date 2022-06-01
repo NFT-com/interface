@@ -79,6 +79,7 @@
     "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "^28.1.0",
+    "netlify-cli": "^10.4.0",
     "postcss": "^8.4.13",
     "postcss-import": "^14.1.0",
     "react-feather": "^2.0.9",

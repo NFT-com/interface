@@ -107,7 +107,7 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
         `}
       </Script>
       <noscript dangerouslySetInnerHTML={{ __html: 'https://www.facebook.com/tr?id=1332665313901251&ev=PageView&noscript=1' }} />
-
+        
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider
           appInfo={{
