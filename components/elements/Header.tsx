@@ -83,8 +83,8 @@ export default function Header(props: HeaderProps) {
                       'font-hero-heading1 flex items-center')}>
                       <div className='h-10 w-10 mr-2'>
                         { isDarkMode ?
-                          <HeroCorner className='w-full h-full' />
-                          : <HeroCornerDark className='w-full h-full' />
+                          <HeroCorner />
+                          : <HeroCornerDark />
                         }
                       </div>
                       <span>NFT.COM</span>

@@ -4,9 +4,9 @@ import { tw } from 'utils/tw';
 import HeroSocial from './HeroSocial';
 
 import Image from 'next/image';
-import discordIcon from 'public/discord_gray_icon.svg';
-import emailIcon from 'public/email_icon_white.svg';
-import twitterIcon from 'public/twitter_gray_icon.svg';
+import DiscordIcon from 'public/discord_gray_icon.svg';
+import EmailIcon from 'public/email_icon_white.svg';
+import TwitterIcon from 'public/twitter_gray_icon.svg';
 import React from 'react';
 import { isMobile } from 'react-device-detect';
 import { Social } from 'types';
@@ -14,7 +14,7 @@ import { Social } from 'types';
 const SOCIALS: Social[] = [
   {
     source: 'email',
-    icon: emailIcon,
+    icon: EmailIcon,
     number: isNullOrEmpty(process.env.NEXT_PUBLIC_EMAIL_COUNT) ?
       '100000' :
       process.env.NEXT_PUBLIC_EMAIL_COUNT,
@@ -24,7 +24,7 @@ const SOCIALS: Social[] = [
   },
   {
     source: 'discord',
-    icon: discordIcon,
+    icon: DiscordIcon,
     number: isNullOrEmpty(process.env.NEXT_PUBLIC_DISCORD_COUNT) ?
       '20000' :
       process.env.NEXT_PUBLIC_DISCORD_COUNT,
@@ -34,7 +34,7 @@ const SOCIALS: Social[] = [
   },
   {
     source: 'twitter',
-    icon: twitterIcon,
+    icon: TwitterIcon,
     number: isNullOrEmpty(process.env.NEXT_PUBLIC_TWITTER_COUNT) ?
       '5000' :
       process.env.NEXT_PUBLIC_TWITTER_COUNT,

@@ -4,7 +4,7 @@ export * from './tabs';
 
 export type Social = {
   source: string,
-  icon: string,
+  icon: any,
   number: string,
   subtitle: string,
   action: string,
