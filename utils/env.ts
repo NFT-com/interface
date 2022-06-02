@@ -23,11 +23,31 @@ export enum Doppler {
 }
 
 export function getEnv(name: Doppler): any {
-  return process.env[name];
+  switch(name) {
+  case Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED: return process.env.NEXT_PUBLIC_ANALYTICS_ENABLED;
+  case Doppler.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE: return process.env.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE;
+  case Doppler.NEXT_PUBLIC_BASE_URL: return process.env.NEXT_PUBLIC_BASE_URL;
+  case Doppler.NEXT_PUBLIC_CHAIN_ID: return process.env.NEXT_PUBLIC_CHAIN_ID;
+  case Doppler.NEXT_PUBLIC_CUSTOM_PROFILES_ENABLED: return process.env.NEXT_PUBLIC_CUSTOM_PROFILES_ENABLED;
+  case Doppler.NEXT_PUBLIC_DEBUG_LOGGING: return process.env.NEXT_PUBLIC_DEBUG_LOGGING;
+  case Doppler.NEXT_PUBLIC_DISCORD_COUNT: return process.env.NEXT_PUBLIC_DISCORD_COUNT;
+  case Doppler.NEXT_PUBLIC_EMAIL_COUNT: return process.env.NEXT_PUBLIC_EMAIL_COUNT;
+  case Doppler.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED: return process.env.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED;
+  case Doppler.NEXT_PUBLIC_ENV: return process.env.NEXT_PUBLIC_ENV;
+  case Doppler.NEXT_PUBLIC_FORCE_DARK_MODE: return process.env.NEXT_PUBLIC_FORCE_DARK_MODE;
+  case Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: return process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+  case Doppler.NEXT_PUBLIC_GRAPHQL_URL: return process.env.NEXT_PUBLIC_GRAPHQL_URL;
+  case Doppler.NEXT_PUBLIC_SEARCH_ENABLED: return process.env.NEXT_PUBLIC_SEARCH_ENABLED;
+  case Doppler.NEXT_PUBLIC_SHOW_USER_BUTTON_NOTIFICATION: return process.env.NEXT_PUBLIC_SHOW_USER_BUTTON_NOTIFICATION;
+  case Doppler.NEXT_PUBLIC_SUPPORTED_NETWORKS: return process.env.NEXT_PUBLIC_SUPPORTED_NETWORKS;
+  case Doppler.NEXT_PUBLIC_TWITTER_COUNT: return process.env.NEXT_PUBLIC_TWITTER_COUNT;
+  case Doppler.NEXT_PUBLIC_TYPESENSE_APIKEY: return process.env.NEXT_PUBLIC_TYPESENSE_APIKEY;
+  case Doppler.NEXT_PUBLIC_TYPESENSE_HOST: return process.env.NEXT_PUBLIC_TYPESENSE_HOST;
+  }
 }
 
 export function getEnvBool(name: Doppler): boolean {
-  const value = process.env[name];
+  const value = getEnv(name);
   if (typeof value === 'boolean') {
     return value;
   } else if (value === 'true') {
