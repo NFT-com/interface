@@ -19,7 +19,11 @@ const main = async () => {
       .join('') +
     '}\n' +
     '\nexport function getEnv(name: Doppler): any {\n'+
-    '  return process.env[name];\n' +
+    '  switch(name) {\n' +
+    names
+      .map((name) => '  case Doppler.' + name + ': return process.env.' + name + ';\n')
+      .join('') +
+    '  }\n' +
     '}\n' +
     '\nexport function getEnvBool(name: Doppler): boolean {\n' +
     '  const value = process.env[name];\n' +
