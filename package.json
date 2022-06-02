@@ -15,7 +15,8 @@
     "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain",
     "gql:gen": "graphql-codegen --config codegen.json",
     "doppler:pull": "doppler secrets --json >> .env.local",
-    "doppler:gen": "echo 'export const dopplerNames = ' > ./scripts/doppler_variable_names.ts && doppler secrets --only-names --json >> ./scripts/doppler_variable_names.ts && ts-node -O '{\"module\":\"commonjs\"}' ./scripts/gen-doppler.ts"
+    "doppler:gen": "echo 'export const dopplerNames = ' > ./scripts/doppler_variable_names.ts && doppler secrets --only-names --json >> ./scripts/doppler_variable_names.ts && ts-node -O '{\"module\":\"commonjs\"}' ./scripts/gen-doppler.ts",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.2",
@@ -74,6 +75,7 @@
     "@typescript-eslint/parser": "^5.22.0",
     "@uniswap/v3-sdk": "^3.8.2",
     "autoprefixer": "^10.4.7",
+    "cypress": "^10.0.1",
     "eslint": "^8.14.0",
     "eslint-config-next": "12.1.6",
     "eslint-plugin-react": "^7.29.4",
