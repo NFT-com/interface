@@ -1,4 +1,5 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
+import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
@@ -42,10 +43,10 @@ export const SearchBar = () => {
 
   const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
     server: {
-      apiKey: process.env.TYPESENSE_APIKEY,
+      apiKey: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_APIKEY),
       nodes: [
         {
-          host: process.env.TYPESENSE_HOST,
+          host: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_HOST),
           port: 443,
           protocol: 'https',
         },
@@ -72,7 +73,7 @@ export const SearchBar = () => {
   });
 
   const Results = connectStateResults(
-    ({ searchResults, searchState, children }) => {
+    ({ searchResults, searchState }) => {
       if (!searchState.query) {
         setShowHits(false);
         return '';
@@ -98,7 +99,7 @@ export const SearchBar = () => {
       <InstantSearch
         searchClient={searchClient}
         indexName="collections"
-        onSearchStateChange={(searchState) => {
+        onSearchStateChange={() => {
           // TODO: depending on the data from searchState.query, add behavior
         }}>
 

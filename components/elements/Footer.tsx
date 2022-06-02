@@ -16,37 +16,33 @@ export const Footer = () => {
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { profileTokens } = useMyNftProfileTokens();
 
-  const showNFTSection = !(process.env.NEXT_PUBLIC_HERO_ONLY === 'true') && (process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED === 'true');
-
   const footerData = [
-    showNFTSection ?
-      {
-        title: 'Learn',
-        links: filterNulls([
-          !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(profileTokens)
-            ? {
-              name: 'Vault',
-              onClick: () => {
-                router.push('/app/vault');
-              },
-              stylize: true,
-            }
-            : null,
-          {
-            name: 'Gallery',
+    {
+      title: 'Learn',
+      links: filterNulls([
+        !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(profileTokens)
+          ? {
+            name: 'Vault',
             onClick: () => {
-              router.push('/app/gallery');
+              router.push('/app/vault');
             },
+            stylize: true,
+          }
+          : null,
+        {
+          name: 'Gallery',
+          onClick: () => {
+            router.push('/app/gallery');
           },
-          {
-            name: 'Docs',
-            onClick: () => {
-              window.open('https://docs.nft.com', '_open');
-            },
+        },
+        {
+          name: 'Docs',
+          onClick: () => {
+            window.open('https://docs.nft.com', '_open');
           },
-        ])
-      } :
-      null,
+        },
+      ])
+    },
     {
       title: 'Resources',
       links: [

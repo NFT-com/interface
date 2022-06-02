@@ -4,6 +4,7 @@ import { NFTCard } from 'components/elements/NFTCard';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -121,7 +122,7 @@ export function NftGallery(props: NftGalleryProps) {
                 toggleHidden(nft?.id, nft?.hidden);
               }}
               onClick={() => {
-                if ((process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true')) {
+                if (getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) {
                   router.push('/app/nft/' + nft?.contract?.address + '/' + nft?.id);
                 } else if (editMode) {
                   toggleHidden(nft?.id, nft?.hidden);

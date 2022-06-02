@@ -1,3 +1,5 @@
+import { Doppler,getEnv } from './env';
+
 import { BigNumber, BigNumberish } from 'ethers';
 
 export async function getNftMetadata(
@@ -5,7 +7,7 @@ export async function getNftMetadata(
   tokenId: BigNumberish,
   chainId: string,
 ) {
-  const url = new URL(process.env.NEXT_PUBLIC_BASE_URL + 'api/alchemynft');
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('contractAddress', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
   url.searchParams.set('tokenType', 'erc721');
@@ -20,7 +22,7 @@ export async function getNftsByContract(
   contract: string,
   chainId: string,
 ) {
-  const url = new URL(process.env.NEXT_PUBLIC_BASE_URL + 'api/alchemynft');
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('contractAddress', contract);
   url.searchParams.set('owner', owner);
   url.searchParams.set('action', 'getNfts');

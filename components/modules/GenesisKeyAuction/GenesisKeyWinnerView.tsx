@@ -3,10 +3,9 @@ import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { KeyClaimVideo } from 'components/modules/GenesisKeyAuction/KeyClaimVideo';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { MerkleResult } from 'hooks/merkle/useGenesisKeyBlindMerkleCheck';
+import { MerkleResult } from 'hooks/merkle/useGenesisKeyInsiderMerkleCheck';
 import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useKeyVideo } from 'hooks/state/useKeyVideo';
-import { useExecutedBlindAuctionPrice } from 'hooks/useExecutedBlindAuctionPrice';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { processIPFSURL } from 'utils/helpers';
@@ -14,7 +13,6 @@ import { tw } from 'utils/tw';
 
 import { AuctionType } from './GenesisKeyAuction';
 import { GenesisKeyPostClaimView } from './GenesisKeyPostClaimView';
-import { GenesisKeyWaitingView } from './GenesisKeyWaitingView';
 
 import { BigNumber } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
@@ -30,7 +28,7 @@ export interface GenesisKeyWinnerViewProps {
   /**
    * This should be non-null if we want the user to claim a GK in this component.
    */
-  claimData: MerkleResult | null;
+  claimData: null;
   /**
    * This should be non-null if we want the insider to claim a GK in this component.
    * This uses a different claiming function.
@@ -44,7 +42,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
   const {
     alwaysBlack
   } = useThemeColors();
-  const { genesisKeyDistributor, genesisKeyTeamDistributor } = useAllContracts();
+  const { genesisKeyTeamDistributor } = useAllContracts();
   const { data: account } = useAccount();
   const { data: signer } = useSigner();
   const { keyVideoVisible: showVideo, useKeyVideoToggle: playKeyVideo } = useKeyVideo();
@@ -57,8 +55,6 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
     : genesisKeyMetadata?.metadata?.animation_url);
   
   const { mutate: mutateOwnedGKs } = useOwnedGenesisKeyTokens(account?.address);
-    
-  const executedBlindAuctionPrice: BigNumber = useExecutedBlindAuctionPrice();
 
   const [showPostClaimView, setShowPostClaimView] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -152,13 +148,6 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
       </div>);
   }, [alwaysBlack, mintSucceeded, props.ownedTokenID, setKeyBackground]);
 
-  if (
-    props.liveAuction === AuctionType.Blind &&
-    !(process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED === 'true')
-  ) {
-    return <GenesisKeyWaitingView />;
-  }
-
   return (
     <>
       <div className='flex flex-col'>
@@ -205,52 +194,6 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                       </>
                   }
                 </>
-
-                {props.liveAuction === AuctionType.Blind &&
-                  props.claimData != null &&
-                  props.ownedTokenID == null &&
-                  props.insiderClaimData == null &&
-                  <div className={tw('mt-12 flex w-full deprecated_sm:flex-col',
-                    'items-center justify-center',
-                    'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
-                    <Button
-                      type={ButtonType.PRIMARY}
-                      color={alwaysBlack}
-                      label={mintSucceeded ? 'Key Minted!' : 'Mint Your Key'}
-                      loading={submitting}
-                      loadingText={'Minting...'}
-                      onClick={async () => {
-                        if (submitting || mintSucceeded) {
-                          return;
-                        }
-                        try {
-                          const result = await genesisKeyDistributor
-                            .connect(signer)
-                            .claim(
-                              props.claimData.index,
-                              account?.address,
-                              BigNumber.from(props.claimData.amount),
-                              props.claimData.proof,
-                              {
-                                value: executedBlindAuctionPrice
-                              }
-                            );
-
-                          setSubmitting(true);
-                          if (result) {
-                            await result.wait(1);
-                            playKeyVideo();
-                            mutateOwnedGKs();
-                            setMintSucceeded(true);
-                          }
-                          setSubmitting(false);
-                        } catch (err) {
-                          setSubmitting(false);
-                        }
-                      }}
-                    />
-                  </div>
-                }
                 {
                   props.insiderClaimData != null && props.ownedTokenID == null && !mintSucceeded &&
                   <div className={tw(

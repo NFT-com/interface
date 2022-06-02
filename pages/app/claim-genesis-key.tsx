@@ -4,7 +4,6 @@ import { AuctionType } from 'components/modules/GenesisKeyAuction/GenesisKeyAuct
 import { GenesisKeyLoserView } from 'components/modules/GenesisKeyAuction/GenesisKeyLoserView';
 import { GenesisKeyWinnerView } from 'components/modules/GenesisKeyAuction/GenesisKeyWinnerView';
 import { SignedOutView } from 'components/modules/GenesisKeyAuction/SignedOutView';
-import { useGenesisKeyBlindMerkleCheck } from 'hooks/merkle/useGenesisKeyBlindMerkleCheck';
 import { useGenesisKeyInsiderMerkleCheck } from 'hooks/merkle/useGenesisKeyInsiderMerkleCheck';
 import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useInsiderGenesisKeyIDs } from 'hooks/useInsiderGenesisKeyIDs';
@@ -21,7 +20,6 @@ export default function ClaimGenesisKeyPage() {
 
   const { bg: keyBackground, img: keyImg } = useKeyBackground();
   const { data: account } = useAccount();
-  const merkleData = useGenesisKeyBlindMerkleCheck(account?.address);
   const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(account?.address);
   const {
     data: ownedGenesisKeyTokens,
@@ -39,14 +37,10 @@ export default function ClaimGenesisKeyPage() {
   }, [firstLoaded, insiderReservedIDs, loadingInsiderReservedGKs, loadingOwnedGenesisKeys, ownedGenesisKeyTokens]);
 
   const shouldShowClaim = useCallback(() => {
-    if (process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME === 'public') {
-      // only insiders should have access to GK claiming here now.
-      // they should only be able to claim if they don't yet have a reserved GK.
-      return insiderMerkleData != null;
-    }
-    // otherwise, this is just another place for everyone to claim their GKs
-    return ownedGenesisKeyTokens?.length > 0 || merkleData != null || insiderMerkleData != null;
-  }, [insiderMerkleData, merkleData, ownedGenesisKeyTokens]);
+    // only insiders should have access to GK claiming here now.
+    // they should only be able to claim if they don't yet have a reserved GK.
+    return insiderMerkleData != null;
+  }, [insiderMerkleData]);
 
   const getContent = useCallback(() => {
     if (!account) {
@@ -58,8 +52,8 @@ export default function ClaimGenesisKeyPage() {
           shouldShowClaim()
             ? <GenesisKeyWinnerView
               liveAuction={AuctionType.Blind}
-              ownedTokenID={process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME === 'public' ? null : ownedGenesisKeyTokens?.[0]}
-              claimData={merkleData}
+              ownedTokenID={null}
+              claimData={null}
               insiderClaimData={insiderMerkleData}
             />
             : <GenesisKeyLoserView
@@ -68,7 +62,7 @@ export default function ClaimGenesisKeyPage() {
         }
       </>
     );
-  }, [insiderMerkleData, merkleData, ownedGenesisKeyTokens, shouldShowClaim, account]);
+  }, [insiderMerkleData, shouldShowClaim, account]);
 
   return (
     <PageWrapper

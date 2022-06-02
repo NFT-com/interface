@@ -2,7 +2,6 @@ import Loader from 'components/elements/Loader';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { useCallback } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
@@ -24,7 +23,7 @@ export enum ButtonSize {
 export interface ButtonProps {
   stretch?: boolean;
   label: string;
-  icon?: string;
+  icon?: React.ReactElement;
   accent?: AccentType;
   onClick: () => void;
   loading?: boolean;
@@ -149,16 +148,11 @@ export function Button(props: ButtonProps) {
           <span className="flex ml-2 whitespace-normal">{props?.loadingText}</span>
         </div> :
         <>
-          {props?.icon && props?.icon &&
+          {props?.icon &&
             <div className={tw('mr-2 relative',
               props?.size === ButtonSize.SMALL ? 'h-3 w-3 minsm:h-5 minsm:w-5':'h-5 w-5'
             )}>
-              <Image
-                src={props?.icon}
-                alt={props?.label}
-                layout="fill"
-                objectFit="cover"
-              />
+              {props.icon}
             </div>
           }
           {props?.label}

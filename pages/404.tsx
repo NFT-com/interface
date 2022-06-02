@@ -1,5 +1,6 @@
 import { NullState } from 'components/elements/NullState';
 import { PageWrapper } from 'components/layouts/PageWrapper';
+import { Doppler, getEnvBool } from 'utils/env';
 
 import { useRouter } from 'next/router';
 
@@ -11,9 +12,9 @@ export default function NotFoundPage() {
     headerOptions={{
       removeSummaryBanner: true,
       heroHeader: true,
-      walletOnly: !(process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true'),
-      walletPopupMenu: !(process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true'),
-      sidebar: (process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true') ? 'dashboard' : 'hero',
+      walletOnly: !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED),
+      walletPopupMenu: !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED),
+      sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
       hideAnalytics: true
     }}
     bgColorClasses={'bg-pagebg dark:bg-pagebg-dk'}

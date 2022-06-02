@@ -13,10 +13,6 @@ export interface SignatureModalProps {
 export function SignatureModal(props: SignatureModalProps) {
   const { disconnect } = useDisconnect();
 
-  if (process.env.NEXT_PUBLIC_HERO_ONLY === 'true') {
-    return null;
-  }
-
   return (
     <Modal
       visible={props.visible}

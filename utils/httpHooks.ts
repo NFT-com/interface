@@ -34,6 +34,8 @@ import {
   WETH_RINKEBY
 } from 'constants/tokens';
 
+import { Doppler, getEnv } from './env';
+
 import { ethers } from 'ethers';
 
 export const isSandbox = (chainId: number | string | undefined) => {
@@ -71,7 +73,7 @@ export type SupportedTokenContract =
   | 'genesisKeyTeamClaim';
 
 export const getAddress = (token: SupportedTokenContract, chainId: number | string | undefined) => {
-  if (process.env.NEXT_PUBLIC_ENV === 'PRODUCTION') {
+  if (getEnv(Doppler.NEXT_PUBLIC_ENV) === 'PRODUCTION') {
     chainId = 1;
   }
   switch (token) {

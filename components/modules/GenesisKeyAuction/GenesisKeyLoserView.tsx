@@ -2,9 +2,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { HeroTitle } from 'components/modules/Hero/HeroTitle';
 import { tw } from 'utils/tw';
 
-import { AuctionCountdownTile } from './AuctionCountdownTile';
 import { AuctionType } from './GenesisKeyAuction';
-import { GenesisKeyWaitingView } from './GenesisKeyWaitingView';
 
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
@@ -14,13 +12,6 @@ export interface GenesisKeyLoserViewProps {
 
 export function GenesisKeyLoserView(props: GenesisKeyLoserViewProps) {
   const { primaryText } = useThemeColors();
-
-  if (
-    props.liveAuction === AuctionType.Blind &&
-    !(process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED === 'true')
-  ) {
-    return <GenesisKeyWaitingView />;
-  }
 
   return (
     <div className="flex flex-col items-center deprecated_sm:text-center">
@@ -43,16 +34,6 @@ export function GenesisKeyLoserView(props: GenesisKeyLoserViewProps) {
         have the opportunity to purchase one in{' '}
         our upcoming Public Sale.
         </span>}
-      </div>
-      <div className='mt-8 mb-4'>
-        <AuctionCountdownTile
-          hideLabel
-          to={Number(process.env.NEXT_PUBLIC_GK_PUBLIC_SALE_TENTATIVE_START)}
-          nextAuctionName={AuctionType.Public}
-          onEnded={() => {
-            // do nothing
-          }}
-        />
       </div>
       {props.liveAuction === AuctionType.Blind &&
         <div className={tw(

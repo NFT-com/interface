@@ -1,4 +1,5 @@
 import { getNftsByContract } from 'utils/alchemyNFT';
+import { Doppler,getEnv } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
@@ -35,8 +36,8 @@ export function useMyNftProfileTokens(): ProfileTokenResults {
 
     const result = await getNftsByContract(
       account?.address,
-      getAddress('nftProfile', activeChain?.id ?? process.env.NEXT_PUBLIC_CHAIN_ID),
-      String(activeChain?.id) ?? process.env.NEXT_PUBLIC_CHAIN_ID
+      getAddress('nftProfile', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+      String(activeChain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
     );
 
     const ownedTokenIds = filterNulls(result?.ownedNfts?.map((profile: Nft) => BigNumber.from(profile?.id?.tokenId)?.toNumber()));

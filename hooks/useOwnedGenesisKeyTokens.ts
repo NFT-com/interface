@@ -1,5 +1,6 @@
 import { Maybe } from 'graphql/generated/types';
 import { getNftsByContract } from 'utils/alchemyNFT';
+import { Doppler,getEnv } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
@@ -27,8 +28,7 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
   const { data } = useSWR(keyString, async () => {
     if (
       isNullOrEmpty(address) ||
-      address == null ||
-      (process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED === 'false')
+      address == null
     ) {
       return [];
     }
@@ -36,8 +36,8 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
 
     const result = await getNftsByContract(
       address,
-      getAddress('genesisKey', activeChain?.id ?? process.env.NEXT_PUBLIC_CHAIN_ID),
-      String(activeChain?.id) ?? process.env.NEXT_PUBLIC_CHAIN_ID
+      getAddress('genesisKey', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+      String(activeChain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
     );
 
     setLoading(false);

@@ -1,5 +1,7 @@
 import { Maybe } from 'graphql/generated/types';
 
+import { Doppler, getEnv } from './env';
+
 import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
@@ -151,15 +153,5 @@ export const getGenesisKeyThumbnail: (id: BigNumberish) => string = (id: BigNumb
 export const getCurrentTimestamp = () => new Date().getTime();
 
 export function getAPIURL() {
-  switch(process.env.NEXT_PUBLIC_ENV) {
-  case 'DEBUG':
-    return process.env.NEXT_PUBLIC_DEBUG_URL;
-  case 'SANDBOX':
-    return process.env.NEXT_PUBLIC_SANDBOX_URL;
-  case 'STAGING':
-    return process.env.NEXT_PUBLIC_STAGING_URL;
-  case 'PRODUCTION':
-  default:
-    return process.env.NEXT_PUBLIC_PRODUCTION_URL;
-  }
+  return getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL);
 }

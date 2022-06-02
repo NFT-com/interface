@@ -7,6 +7,7 @@ import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -49,10 +50,9 @@ export function MintedProfile(props: MintedProfileProps) {
   const { activeChain } = useNetwork();
   const { profileUris: myOwnedProfileTokenUris } = useMyNftProfileTokens();
   const { profileData } = useProfileQuery(profileURI);
-  const userIsAdmin = (process.env.NEXT_PUBLIC_CUSTOM_PROFILES_ENABLED === 'true')
-    && myOwnedProfileTokenUris
-      .map(fullUri => fullUri.split('/').pop())
-      .includes(profileURI);
+  const userIsAdmin = myOwnedProfileTokenUris
+    .map(fullUri => fullUri.split('/').pop())
+    .includes(profileURI);
 
   const { mutate: mutateMyNFTs } = useMyNFTsQuery({
     first: 20
@@ -195,7 +195,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 if (userIsAdmin) onDropProfile(files);
               }}
             >
-              {({ getRootProps, getInputProps, open }) => (
+              {({ getRootProps, getInputProps }) => (
                 <section>
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',
@@ -226,7 +226,7 @@ export function MintedProfile(props: MintedProfileProps) {
                           !isNullOrEmpty(draftProfileImg?.preview)
                             ? draftProfileImg?.preview
                             : profileData?.profile?.photoURL ??
-                          (!(process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true')
+                          ((!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED))
                             ? 'https://cdn.nft.com/profile-image-default.svg' :
                             cameraIcon)
                         }

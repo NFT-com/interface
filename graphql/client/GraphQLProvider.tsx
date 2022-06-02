@@ -1,5 +1,6 @@
 import { SignatureModal } from 'components/elements/SignatureModal';
 import { GraphQLClient } from 'graphql-request';
+import { Doppler, getEnv } from 'utils/env';
 import { getAPIURL, isNullOrEmpty } from 'utils/helpers';
 
 import { createContext, PropsWithChildren, useCallback, useEffect, useState } from 'react';
@@ -27,7 +28,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   const [signed, setSigned] = useState(false);
   const [sigRejected, setSigRejected] = useState(!account);
   const { signMessageAsync } = useSignMessage({
-    message: process.env.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE,
+    message: getEnv(Doppler.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE),
     onSuccess(data) {
       localStorage.setItem('signatureData', JSON.stringify({
         signature: data,

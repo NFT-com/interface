@@ -26,7 +26,7 @@ export function DashboardPurchasesTab() {
   const { fetchSwaps } = useFetchSwaps();
   const { setWalletSlideOpen } = useWalletSlide();
 
-  const onGrabData = useCallback((currentPage) => {
+  const onGrabData = useCallback(() => {
     // when we reach the end of the list
     if (nextCursor == null) {
       return [];

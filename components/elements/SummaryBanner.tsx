@@ -2,6 +2,7 @@ import { HeaderDropdown } from 'components/elements/HeaderDropdown';
 import { HeaderNavItem } from 'components/elements/HeaderNavItem';
 import { TAB_ICON_EXTRA_CLASSES } from 'constants/misc';
 import { useUser } from 'hooks/state/useUser';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import CircleDollar from 'public/circle_dollar.svg';
@@ -94,7 +95,7 @@ export const SummaryBanner = (props: SummaryBannerProps) => {
                 </div>
               </>
           }
-          { !(process.env.NEXT_PUBLIC_FORCE_DARK_MODE === 'true') && <div className="ml-2 mr-7">
+          {(!getEnvBool(Doppler.NEXT_PUBLIC_FORCE_DARK_MODE)) && <div className="ml-2 mr-7">
             <HeaderNavItem
               alt="Dark/Light Toggle"
               active={false}

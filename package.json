@@ -14,7 +14,8 @@
     "lint": "next lint",
     "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain",
     "gql:gen": "graphql-codegen --config codegen.json",
-    "doppler:pull": "doppler secrets --json >> .env.local"
+    "doppler:pull": "doppler secrets --json >> .env.local",
+    "doppler:gen": "echo 'export const dopplerNames = ' > ./scripts/doppler_variable_names.ts && doppler secrets --only-names --json >> ./scripts/doppler_variable_names.ts && ts-node -O '{\"module\":\"commonjs\"}' ./scripts/gen-doppler.ts"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.2",
@@ -26,7 +27,7 @@
     "@headlessui/react": "^1.6.1",
     "@heroicons/react": "^1.0.6",
     "@metamask/etherscan-link": "^2.1.0",
-    "@rainbow-me/rainbowkit": "^0.2.0",
+    "@rainbow-me/rainbowkit": "^0.2.2",
     "@types/tailwindcss": "^3.0.10",
     "email-validator": "^2.0.4",
     "ethers": "^5.6.5",

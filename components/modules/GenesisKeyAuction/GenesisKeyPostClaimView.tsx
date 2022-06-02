@@ -34,7 +34,6 @@ export function GenesisKeyPostClaimView(props: GenesisKeyPostClaimViewProps) {
           <div className={tw('flex w-full deprecated_sm:flex-col',
             'items-center justify-center',
             'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
-            {process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME === 'public' &&
             <div className='w-2/4 deprecated_sm:w-3/4 deprecated_sm:mb-4 mr-2 deprecated_sm:mr-0 text-center'>
               <Button
                 stretch
@@ -44,7 +43,6 @@ export function GenesisKeyPostClaimView(props: GenesisKeyPostClaimViewProps) {
                 type={ButtonType.PRIMARY}
               />
             </div>
-            }
             <div className='w-2/4 deprecated_sm:w-3/4 ml-2 deprecated_sm:ml-0 text-center'>
               <Button
                 stretch

@@ -12,6 +12,7 @@ export default function Loader({
 }) {
   return (
     <svg
+      style={rest}
       className={`${size} ${stroke ?? 'stroke-primary-1'} animate-spin-slow`}
       viewBox="0 0 24 24"
       fill="none"
