@@ -11,6 +11,7 @@ async function AlchemyNftHandler(req: NextApiRequest, res: NextApiResponse) {
     }
   } catch (e) {
     res.status(400).json({ message: 'Invalid Chain ID' });
+    return;
   }
   
   const alchemyAPIKey = Number(chainId) !== 1 ?
@@ -31,6 +32,7 @@ async function AlchemyNftHandler(req: NextApiRequest, res: NextApiResponse) {
         !(tokenType === 'erc721' || tokenType === 'erc1155')
     ) {
       res.status(400).json({ message: 'getNftMetadata: Invalid Arguments' });
+      return;
     }
   
     const requestUrl = new URL(apiUrl + '/getNFTMetadata/');
@@ -43,10 +45,10 @@ async function AlchemyNftHandler(req: NextApiRequest, res: NextApiResponse) {
         redirect: 'follow',
       }).then(alchemyRes => alchemyRes.json());
       res.status(200).json( result );
-      break;
+      return;
     } catch (e) {
       res.status(500).json(JSON.stringify({ message: 'getNfts: error processing Alchemy result' }));
-      break;
+      return;
     }
   }
   case 'getNfts': {
@@ -55,6 +57,7 @@ async function AlchemyNftHandler(req: NextApiRequest, res: NextApiResponse) {
   
     if (isNullOrEmpty(contractAddress) || isNullOrEmpty(owner)) {
       res.status(400).json(JSON.stringify({ message: 'getNfts: Invalid Arguments' }));
+      return;
     }
   
     const requestUrl = new URL(apiUrl + '/getNFTs/');
@@ -66,14 +69,15 @@ async function AlchemyNftHandler(req: NextApiRequest, res: NextApiResponse) {
         redirect: 'follow',
       }).then(alchemyRes => alchemyRes.json());
       res.status(200).json(result);
-      break;
+      return;
     } catch (e) {
       res.status(500).json(JSON.stringify({ message: 'getNfts: error processing Alchemy result' }));
-      break;
+      return;
     }
   }
   default:
     res.status(400).json(JSON.stringify({ message: 'Action not recognized' }));
+    return;
   }
 }
 

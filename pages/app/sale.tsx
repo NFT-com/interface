@@ -5,7 +5,6 @@ import { tw } from 'utils/tw';
 export default function GenesisKeyAuctionsPage() {
   return (
     <PageWrapper
-      removePinkSides
       headerOptions={{
         walletOnly: true,
         removeBackground: true,

@@ -37,7 +37,7 @@ export function useMyNftProfileTokens(): ProfileTokenResults {
     const result = await getNftsByContract(
       account?.address,
       getAddress('nftProfile', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-      String(activeChain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+      activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
     );
 
     const ownedTokenIds = filterNulls(result?.ownedNfts?.map((profile: Nft) => BigNumber.from(profile?.id?.tokenId)?.toNumber()));

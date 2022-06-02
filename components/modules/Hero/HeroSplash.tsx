@@ -76,7 +76,7 @@ export default function HeroSplash(props: HeroSplashProps) {
         >
           Connect with one of our available wallet providers to start minting!
         </span>}
-        <div className="mt-8 tracking-widest font-hero-heading2 w-full flex justify-center">
+        <div className="my-8 tracking-widest font-hero-heading2 w-full flex justify-center">
           <Button
             textColor={alwaysBlack}
             accent={AccentType.SCALE}

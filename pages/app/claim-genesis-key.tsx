@@ -66,7 +66,6 @@ export default function ClaimGenesisKeyPage() {
 
   return (
     <PageWrapper
-      removePinkSides
       headerOptions={{
         walletOnly: true,
         removeBackground: true,

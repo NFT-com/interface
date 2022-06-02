@@ -18,11 +18,10 @@ export function useGenesisKeyMetadata(tokenId: BigNumberish | null): Maybe<any> 
       if (tokenId == null) {
         return null;
       }
-
       const result = await getNftMetadata(
         getAddress('genesisKey', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
         tokenId,
-        String(activeChain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+        activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
       );
       
       return result;

@@ -61,7 +61,6 @@ export function ProfilePage(props: ProfilePageProps) {
   return (
     <PageWrapper
       bgColorClasses='dark:bg-pagebg-secondary-dk bg-pagebg'
-      removePinkSides
       headerOptions={{
         removeSummaryBanner: true,
         walletOnly: true,
