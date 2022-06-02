@@ -3,7 +3,7 @@ import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
-import helpers from 'utils/utils';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
@@ -29,11 +29,8 @@ interface ProfileEditContextType {
   setDraftBio: (bio: string) => void,
   draftGkIconVisible: Maybe<boolean>,
   setDraftGkIconVisible: (val: boolean) => void,
-<<<<<<< HEAD:components/modules/Profile/ProfileEditGalleryContext.tsx
-=======
   draftDisplayType: ProfileDisplayType,
   setDraftDisplayType: (displayType: ProfileDisplayType) => void,
->>>>>>> 82c21f5 (feat: wip migrate collection grouping):components/modules/Profile/ProfileEditContext.tsx
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   clearDrafts: () => void;
@@ -48,33 +45,27 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   draftToHide: new Set(),
   draftToShow: new Set(),
   toggleHidden: () => null,
-  hideNftIds: (toHide: string[]) => null,
-  showNftIds: (toShow: string[]) => null,
+  hideNftIds: () => null,
+  showNftIds: () => null,
   onHideAll: () => null,
   onShowAll: () => null,
   draftHeaderImg: { preview: '', raw: '' },
-  setDraftHeaderImg: (img: DraftImg) => null,
+  setDraftHeaderImg: () => null,
   draftProfileImg: { preview: '', raw: '' },
-  setDraftProfileImg: (img: DraftImg) => null,
+  setDraftProfileImg: () => null,
   draftBio: null,
-<<<<<<< HEAD:components/modules/Profile/ProfileEditGalleryContext.tsx
   setDraftBio: () => null,
-  draftGkIconVisible: false,
-  setDraftGkIconVisible: () => null,
-=======
-  setDraftBio: (bio: string) => null,
   draftGkIconVisible: true,
-  setDraftGkIconVisible: (val: boolean) => null,
+  setDraftGkIconVisible: () => null,
   draftDisplayType: ProfileDisplayType.Nft,
   setDraftDisplayType: () => null,
->>>>>>> 82c21f5 (feat: wip migrate collection grouping):components/modules/Profile/ProfileEditContext.tsx
   editMode: false,
   setEditMode: () => null,
   clearDrafts: () => null,
   saveProfile: () => null,
   saving: false,
   selectedCollection: null,
-  setSelectedCollection: (collectionAddress: string) => null,
+  setSelectedCollection: () => null,
 });
 
 export interface ProfileEditContextProviderProps {
@@ -143,18 +134,12 @@ export function ProfileEditContextProvider(
     setEditMode(false);
     setDraftToHide(new Set());
     setDraftToShow(new Set());
-<<<<<<< HEAD:components/modules/Profile/ProfileEditGalleryContext.tsx
-    setDraftShowAll(false);
-    setDraftHideAll(false);
-  }, [draftBio, draftGkIconVisible]);
-=======
     setDraftDisplayType(null);
   }, [draftBio, draftGkIconVisible]);
 
   useEffect(() => {
     setSelectedCollection(null);
   }, [editMode]);
->>>>>>> 82c21f5 (feat: wip migrate collection grouping):components/modules/Profile/ProfileEditContext.tsx
 
   const saveProfile = useCallback(async () => {
     try {
@@ -176,13 +161,13 @@ export function ProfileEditContextProvider(
         let headerUploadImage: string;
         let profileUploadImage: string;
         if (!imageUploadResult) {
-          if (!helpers.isNullOrEmpty(draftHeaderImg.raw)) {
+          if (!isNullOrEmpty(draftHeaderImg.raw)) {
             headerUploadImage = await fileUpload(
               draftHeaderImg,
               props.profileURI + '-header-img-' + moment.now()
             );
           }
-          if (!helpers.isNullOrEmpty(draftProfileImg.raw)) {
+          if (!isNullOrEmpty(draftProfileImg.raw)) {
             profileUploadImage = await fileUpload(
               draftProfileImg,
               props.profileURI + '-profile-img-' + moment.now()
@@ -196,13 +181,7 @@ export function ProfileEditContextProvider(
           gkIconVisible: draftGkIconVisible,
           hideNFTIds: Array.from(draftToHide),
           showNFTIds: Array.from(draftToShow),
-<<<<<<< HEAD:components/modules/Profile/ProfileEditGalleryContext.tsx
-          showAllNFTs: draftShowAll,
-          hideAllNFTs: draftHideAll,
-          gkIconVisible: draftGkIconVisible,
-=======
           displayType: draftDisplayType,
->>>>>>> 82c21f5 (feat: wip migrate collection grouping):components/modules/Profile/ProfileEditContext.tsx
           ...(imageUploadResult
             ? {}
             : {
@@ -234,13 +213,7 @@ export function ProfileEditContextProvider(
     draftGkIconVisible,
     draftToHide,
     draftToShow,
-<<<<<<< HEAD:components/modules/Profile/ProfileEditGalleryContext.tsx
-    draftShowAll,
-    draftHideAll,
-    draftGkIconVisible,
-=======
     draftDisplayType,
->>>>>>> 82c21f5 (feat: wip migrate collection grouping):components/modules/Profile/ProfileEditContext.tsx
     fileUpload,
     props.profileURI,
     mutateProfileData
@@ -268,18 +241,6 @@ export function ProfileEditContextProvider(
     draftGkIconVisible,
     setDraftGkIconVisible: (val: boolean) => {
       setDraftGkIconVisible(val);
-<<<<<<< HEAD:components/modules/Profile/ProfileEditGalleryContext.tsx
-    },
-    toggleHidden,
-    draftHideAll,
-    draftShowAll,
-    onHideAll: () => {
-      setDraftShowAll(false);
-      setDraftToHide(new Set());
-      setDraftToShow(new Set());
-      setDraftHideAll(true);
-=======
->>>>>>> 82c21f5 (feat: wip migrate collection grouping):components/modules/Profile/ProfileEditContext.tsx
     },
     draftDisplayType,
     setDraftDisplayType,

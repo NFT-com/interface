@@ -10,6 +10,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { processIPFSURL } from 'utils/helpers';
 
 import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
+import { NftGrid } from './NftGrid';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import { CaretLeft } from 'phosphor-react';
@@ -131,11 +132,14 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             return <RoundedCornerMedia
               key={image + index}
               src={image}
-              variant={index === arr.length - 1 ?
-                RoundedCornerVariant.Right :
-                index === 0 ?
-                  RoundedCornerVariant.Left :
-                  RoundedCornerVariant.None
+              variant={
+                arr.length === 1
+                  ? RoundedCornerVariant.All :
+                  index === arr.length - 1 ?
+                    RoundedCornerVariant.Right :
+                    index === 0 ?
+                      RoundedCornerVariant.Left :
+                      RoundedCornerVariant.None
               }
               extraClasses='h-full w-1/3'
             />;

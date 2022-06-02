@@ -217,12 +217,12 @@ export function MintedProfile(props: MintedProfileProps) {
                     </div>}
                     <div
                       className={tw(
-                        'rounded-full',
-                        'h-full w-full',
-                        'shrink-0 aspect-square',
+                        'rounded-full h-full w-full shrink-0',
+                        'shrink-0 aspect-square ',
                         userIsAdmin && editMode ? 'cursor-pointer' : '',
                         userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
                       )}
+                      style={{ zIndex: 101 }}
                     >
                       <Image
                         src={
@@ -235,10 +235,9 @@ export function MintedProfile(props: MintedProfileProps) {
                         }
                         alt="profilePicture"
                         draggable={false}
-                        className="object-center rounded-full shrink-0"
+                        className="rounded-full scale-95"
                         layout="fill"
                         objectFit='cover'
-                        style={{ zIndex: 101, }}
                       />
                     </div>
                     {editMode && <div
