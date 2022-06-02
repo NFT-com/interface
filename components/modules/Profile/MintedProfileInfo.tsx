@@ -31,7 +31,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   } = useContext(ProfileEditGalleryContext);
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
 
-  console.log(editMode, ownedGenesisKeyTokens);
   return (
     <div className="flex items-center my-6 mx-4 w-full md:flex-col">
       <div className="flex flex-col w-full">
