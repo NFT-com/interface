@@ -25,7 +25,7 @@ jobs:
     environment: staging
     steps:
       - name: Checkout
-      - uses: actions/checkout@v2.4.2
+        uses: actions/checkout@v2.4.2
       
       - name: Install Dependencies
         run: yarn install --immutable
@@ -42,7 +42,7 @@ jobs:
     environment: prod
     steps:
       - name: Checkout
-      - uses: actions/checkout@v2.4.2
+        uses: actions/checkout@v2.4.2
       
       - name: Install Dependencies
         run: yarn install --immutable
