@@ -1,13 +1,16 @@
+import { Switch } from 'components/elements/Switch';
+import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { tw } from 'utils/tw';
 
+import { CollectionGallery } from './CollectionGallery';
+import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
 import { NftGallery, PROFILE_GALLERY_PAGE_SIZE } from './NftGallery';
-import { ProfileEditGalleryContext } from './ProfileEditGalleryContext';
+import { ProfileEditContext } from './ProfileEditContext';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { isMobile } from 'react-device-detect';
-import { Eye, EyeOff } from 'react-feather';
 import { useAccount } from 'wagmi';
 
 export interface MintedProfileGalleryProps {
@@ -19,71 +22,67 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     editMode,
     onShowAll,
     onHideAll,
-    saveProfile,
-    draftShowAll,
-    draftHideAll,
-    draftToShow
-  } = useContext(ProfileEditGalleryContext);
-  const [updated, setUpdated] = useState(0);
-  const [currentUpdate, setCurrentUpdate] = useState(0);
+    draftDisplayType,
+    setDraftDisplayType,
+    selectedCollection
+  } = useContext(ProfileEditContext);
   
   const { data: account } = useAccount();
   const { profileData } = useProfileQuery(props.profileURI);
   const { totalItems: publicNFTCount } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    false,
     { first: PROFILE_GALLERY_PAGE_SIZE }
   );
 
-  useEffect(() => {
-    if (updated !== currentUpdate) {
-      saveProfile();
-      setCurrentUpdate(updated);
-    }
-  }, [updated, currentUpdate, saveProfile]);
-
   return (
     <div className={tw(
-      'flex flex-col mt-8 align-items', isMobile ? 'px-2' : 'sm:px-2 md:px-12 lg:px-20 px-32')}>
-      {editMode && <div className='flex items-center w-full mb-12 px-8 justify-end text-white'>
-        <div
-          className={tw(
-            'flex mr-4 items-center cursor-pointer',
-            draftShowAll ? 'text-link' : ''
-          )}
-          onClick={() => {
-            onShowAll();
-            analytics.track('Show All NFTs', {
-              ethereumAddress: account?.address,
-              profile: props.profileURI
-            });
-            setUpdated(updated + 1);
-          }}
-        >
-          <Eye size={16} className="mr-2" />
-          Show All
+      'flex flex-col mt-8 align-items',
+      isMobile ? 'px-2' : 'sm:px-2 md:px-12 lg:px-20 px-32'
+    )}>
+      {editMode && selectedCollection == null &&
+        <div className='flex items-center w-full mb-12 px-8 justify-between text-white'>
+          <div>
+            <Switch
+              left=""
+              right="Group by Collection"
+              enabled={
+                (
+                  profileData?.profile?.displayType === ProfileDisplayType.Collection &&
+                  draftDisplayType !== ProfileDisplayType.Nft
+                ) || draftDisplayType === ProfileDisplayType.Collection
+              }
+              setEnabled={(enabled: boolean) => {
+                setDraftDisplayType(enabled ? ProfileDisplayType.Collection : ProfileDisplayType.Nft);
+              }}
+            />
+          </div>
+          <GalleryToggleAllButtons
+            publicNFTCount={publicNFTCount}
+            onShowAll={() => {
+              onShowAll();
+              analytics.track('Show All NFTs', {
+                ethereumAddress: account?.address,
+                profile: props.profileURI
+              });
+            }}
+            onHideAll={() => {
+              onHideAll();
+              analytics.track('Hide All NFTs', {
+                ethereumAddress: account?.address,
+                profile: props.profileURI
+              });
+            }}
+          />
         </div>
-        <div
-          className={tw(
-            'flex items-center cursor-pointer',
-            draftHideAll || (publicNFTCount === 0 && draftToShow?.size === 0) ? 'text-link' : ''
-          )}
-          onClick={() => {
-            onHideAll();
-            analytics.track('Hide All NFTs', {
-              ethereumAddress: account?.address,
-              profile: props.profileURI
-            });
-            setUpdated(updated + 1);
-          }}
-        >
-          <EyeOff size={16} className="mr-2" />
-          Hide All
-        </div>
-      </div>}
-      {/* TODO: show CollectionGallery here if the profile's display mode is "collection" */}
-      
-      <NftGallery profileURI={props.profileURI} />
+      }
+      {
+        (
+          profileData?.profile?.displayType === ProfileDisplayType.Collection &&
+          draftDisplayType !== ProfileDisplayType.Nft
+        ) || draftDisplayType === ProfileDisplayType.Collection ?
+          <CollectionGallery profileURI={props.profileURI} /> :
+          <NftGallery profileURI={props.profileURI} />
+      }
     </div>
   );
 }

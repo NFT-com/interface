@@ -1,6 +1,6 @@
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
-import { ProfileEditGalleryContextProvider } from 'components/modules/Profile/ProfileEditGalleryContext';
+import { ProfileEditContextProvider } from 'components/modules/Profile/ProfileEditContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
@@ -76,7 +76,7 @@ export function ProfilePage(props: ProfilePageProps) {
           profileURI={processedProfileURI}
         /> :
         (
-          <ProfileEditGalleryContextProvider
+          <ProfileEditContextProvider
             key={processedProfileURI}
             profileURI={processedProfileURI}
           >
@@ -85,7 +85,7 @@ export function ProfilePage(props: ProfilePageProps) {
               profileURI={processedProfileURI}
               addressOwner={profileOwner}
             />
-          </ProfileEditGalleryContextProvider>
+          </ProfileEditContextProvider>
         )
       }
     </PageWrapper>

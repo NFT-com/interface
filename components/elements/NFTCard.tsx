@@ -4,9 +4,9 @@ import { tw } from 'utils/tw';
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import { MouseEvent, useCallback, useState } from 'react';
-import { CheckSquare,Eye,EyeOff,Square } from 'react-feather';
+import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-
+import { useAccount } from 'wagmi';
 export interface NFTCardTrait {
   key: string,
   value: string,
@@ -35,17 +35,18 @@ export interface NFTCardProps {
   constrain?: boolean;
   customBackground?: string;
   customBorderRadius?: string;
+  imageLayout?: 'row' | 'grid';
 }
 
 export function NFTCard(props: NFTCardProps) {
   const { tileBackground, secondaryText, pink, link, secondaryIcon } = useThemeColors();
 
+  const { data: account } = useAccount();
   const [selected, setSelected] = useState(false);
 
   const processedImageURLs = sameAddress(props.contractAddress, '0x8fb5a7894ab461a59acdfab8918335768e411414') ?
     [`https://cdn.nft.com/gk-min/${Number(props?.tokenId)}.jpeg`]
-    :
-    props.images?.map(processIPFSURL);
+    : props.images?.map(processIPFSURL);
 
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
@@ -75,7 +76,17 @@ export function NFTCard(props: NFTCardProps) {
       style={{
         backgroundColor: props.customBackground ?? tileBackground
       }}
-      onClick={props.onClick}
+      onClick={() => {
+        // TODO: move to helper / logger class at some point
+        analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
+          ethereumAddress: account?.address,
+          title: props?.title,
+          processedImageURLs: processedImageURLs?.[0],
+          profile: props?.profileURI,
+        });
+
+        props.onClick();
+      }}
     >
       {(props.header || props.onSelectToggle != null) &&
         <div className='flex w-full px-5 md:px-4 pt-5 md:pt-4 pb-3 md:pb-2 justify-between'>
@@ -110,12 +121,13 @@ export function NFTCard(props: NFTCardProps) {
             onClick={(e: MouseEvent<HTMLDivElement>) => {
               props.onVisibleToggle(!props.visible);
               e.stopPropagation();
-            }}>
+            }}
+          >
             {props.visible ? <Eye color={pink} /> : <EyeOff color={pink} /> }
           </div>
       }
       {
-        props.images.length <= 1 ?
+        props.images.length <= 1 && props.imageLayout !== 'row' ?
           <div
             className={tw(
               'w-full overflow-hidden',
@@ -134,16 +146,27 @@ export function NFTCard(props: NFTCardProps) {
                 src={processedImageURLs[0]}
               />}
           </div> :
-          <div className="grid grid-cols-2">
-            {processedImageURLs.slice(0, 4).map((image: string, index: number) => {
-              return <RoundedCornerMedia
-                key={index}
-                src={image}
-                variant={RoundedCornerVariant.None}
-                extraClasses='w-full rounded-3xl overflow-hidden'
-              />;
-            })}
-          </div>
+          props.imageLayout === 'row' ?
+            <div className='flex h-full justify-center'>
+              {processedImageURLs.slice(0,3).map((image: string, index: number) => {
+                return <RoundedCornerMedia
+                  key={image + index}
+                  src={image}
+                  variant={RoundedCornerVariant.None}
+                  extraClasses='h-full w-1/3'
+                />;
+              })}
+            </div> :
+            <div className="grid grid-cols-2">
+              {processedImageURLs.slice(0, 4).map((image: string, index: number) => {
+                return <RoundedCornerMedia
+                  key={image + index}
+                  src={image}
+                  variant={RoundedCornerVariant.None}
+                  extraClasses='w-full rounded-3xl overflow-hidden'
+                />;
+              })}
+            </div>
       }
       <div className="p-4 md:p-3 flex flex-col">
         <span className={tw(

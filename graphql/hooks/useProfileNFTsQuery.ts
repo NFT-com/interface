@@ -15,14 +15,12 @@ export interface ProfileNFTsQueryData {
 
 export function useProfileNFTsQuery(
   profileId: string,
-  includeHidden: boolean,
   pageInput: PageInput
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
   
   const keyString = 'ProfileNFTsQuery' +
     profileId +
-    includeHidden +
     JSON.stringify(pageInput);
 
   const { data } = useSWR(keyString, async () => {

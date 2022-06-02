@@ -14,13 +14,13 @@ import { tw } from 'utils/tw';
 import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
-import { ProfileEditGalleryContext } from './ProfileEditGalleryContext';
+import { ProfileEditContext } from './ProfileEditContext';
 
 import { PencilIcon } from '@heroicons/react/solid';
 import { getAccountLink } from '@metamask/etherscan-link';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
@@ -44,7 +44,7 @@ export function MintedProfile(props: MintedProfileProps) {
     draftHeaderImg,
     setDraftHeaderImg,
     setDraftProfileImg
-  } = useContext(ProfileEditGalleryContext);
+  } = useContext(ProfileEditContext);
 
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
@@ -60,11 +60,14 @@ export function MintedProfile(props: MintedProfileProps) {
       
   const { nfts: publiclyVisibleNFTs, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    false /* includeHidden */,
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
     { first: 20 }
   );
+
+  useEffect(() => {
+    mutateProfileNFTs();
+  }, [editMode, mutateProfileNFTs]);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const hasGks = !isNullOrEmpty(ownedGKTokens);
@@ -214,12 +217,12 @@ export function MintedProfile(props: MintedProfileProps) {
                     </div>}
                     <div
                       className={tw(
-                        'rounded-full',
-                        'h-full w-full',
-                        'shrink-0 aspect-square',
+                        'rounded-full h-full w-full shrink-0',
+                        'shrink-0 aspect-square ',
                         userIsAdmin && editMode ? 'cursor-pointer' : '',
                         userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
                       )}
+                      style={{ zIndex: 101 }}
                     >
                       <Image
                         src={
@@ -232,10 +235,9 @@ export function MintedProfile(props: MintedProfileProps) {
                         }
                         alt="profilePicture"
                         draggable={false}
-                        className="object-center rounded-full shrink-0"
+                        className="rounded-full scale-95"
                         layout="fill"
                         objectFit='cover'
-                        style={{ zIndex: 101, }}
                       />
                     </div>
                     {editMode && <div
