@@ -27,6 +27,8 @@ interface ProfileEditGalleryContextType {
   setDraftProfileImg: (img: DraftImg) => void,
   draftBio: Maybe<string>,
   setDraftBio: (bio: string) => void,
+  draftGkIconVisible: Maybe<boolean>,
+  setDraftGkIconVisible: (val: boolean) => void,
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   clearDrafts: () => void;
@@ -49,6 +51,8 @@ export const ProfileEditGalleryContext = React.createContext<ProfileEditGalleryC
   setDraftProfileImg: () => null,
   draftBio: null,
   setDraftBio: () => null,
+  draftGkIconVisible: false,
+  setDraftGkIconVisible: () => null,
   editMode: false,
   setEditMode: () => null,
   clearDrafts: () => null,
@@ -79,6 +83,7 @@ export function ProfileEditGalleryContextProvider(
   const [draftShowAll, setDraftShowAll] = useState(false);
   const [draftHideAll, setDraftHideAll] = useState(false);
   const [draftBio, setDraftBio] = useState<string>(profileData?.profile?.description);
+  const [draftGkIconVisible, setDraftGkIconVisible] = useState<boolean>(profileData?.profile?.gkIconVisible);
   const [draftProfileImg, setDraftProfileImg] = useState({ preview: '', raw: null });
   const [draftHeaderImg, setDraftHeaderImg] = useState({ preview: '', raw: null });
 
@@ -119,12 +124,13 @@ export function ProfileEditGalleryContextProvider(
     setDraftProfileImg({ preview: '', raw: null });
     setDraftHeaderImg({ preview: '', raw: null });
     setDraftBio(draftBio);
+    setDraftGkIconVisible(draftGkIconVisible);
     setEditMode(false);
     setDraftToHide(new Set());
     setDraftToShow(new Set());
     setDraftShowAll(false);
     setDraftHideAll(false);
-  }, [draftBio]);
+  }, [draftBio, draftGkIconVisible]);
 
   const saveProfile = useCallback(async () => {
     try {
@@ -167,6 +173,7 @@ export function ProfileEditGalleryContextProvider(
           showNFTIds: Array.from(draftToShow),
           showAllNFTs: draftShowAll,
           hideAllNFTs: draftHideAll,
+          gkIconVisible: draftGkIconVisible,
           ...(imageUploadResult
             ? {}
             : {
@@ -197,6 +204,7 @@ export function ProfileEditGalleryContextProvider(
     draftToShow,
     draftShowAll,
     draftHideAll,
+    draftGkIconVisible,
     fileUpload,
     uploadProfileImages,
     props.profileURI,
@@ -222,6 +230,10 @@ export function ProfileEditGalleryContextProvider(
     draftBio,
     setDraftBio: (bio: string) => {
       setDraftBio(bio);
+    },
+    draftGkIconVisible,
+    setDraftGkIconVisible: (val: boolean) => {
+      setDraftGkIconVisible(val);
     },
     toggleHidden,
     draftHideAll,
