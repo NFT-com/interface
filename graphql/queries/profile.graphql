@@ -7,6 +7,7 @@ query Profile($url: String!) {
     photoURL
     description
     isFollowedByMe
+    gkIconVisible
     owner {
       address
       chainId

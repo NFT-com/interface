@@ -1,10 +1,14 @@
+import { Switch } from 'components/elements/Switch';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { tw } from 'utils/tw';
 
 import { ProfileEditGalleryContext } from './ProfileEditGalleryContext';
 
+import GKHolderIcon from 'public/gk-holder.svg';
 import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
+import { useAccount } from 'wagmi';
 
 export interface MintedProfileInfoProps {
   profileURI: string;
@@ -13,18 +17,41 @@ export interface MintedProfileInfoProps {
 
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
+
+  const { data: account } = useAccount();
   
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
-  const { editMode, draftBio, setDraftBio } = useContext(ProfileEditGalleryContext);
+  const {
+    editMode,
+    draftBio,
+    setDraftBio,
+    setDraftGkIconVisible,
+    draftGkIconVisible
+  } = useContext(ProfileEditGalleryContext);
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
 
+  console.log(editMode, ownedGenesisKeyTokens);
   return (
     <div className="flex items-center my-6 mx-4 w-full md:flex-col">
       <div className="flex flex-col w-full">
-        <div className={tw(
-          'font-bold lg:text-2xl text-4xl text-primary-txt dark:text-primary-txt-dk md:text-center md:mb-4'
-        )}>
+        <div className={tw('flex w-full justify-around items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
+          <div className={tw(
+            'font-bold lg:text-2xl text-4xl text-primary-txt dark:text-primary-txt-dk md:text-center md:mb-4 mr-4',
+          )}>
             @{profileURI}
+          </div>
+          {editMode && ownedGenesisKeyTokens.length > 0 && <Switch
+            left="Hide GK Icon"
+            right="Show GK Icon"
+            enabled={draftGkIconVisible ?? profileData?.profile?.gkIconVisible}
+            setEnabled={() => {
+              setDraftGkIconVisible(!(draftGkIconVisible ?? profileData?.profile?.gkIconVisible));
+            }}
+          />}
+          {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) &&
+            <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square relative" />
+          }
         </div>
         {profileData?.profile?.description &&
           <div className={tw(
