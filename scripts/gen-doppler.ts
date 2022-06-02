@@ -26,7 +26,7 @@ const main = async () => {
     '  }\n' +
     '}\n' +
     '\nexport function getEnvBool(name: Doppler): boolean {\n' +
-    '  const value = process.env[name];\n' +
+    '  const value = getEnv(name);\n' +
     '  if (typeof value === \'boolean\') {\n' +
     '    return value;\n' +
     '  } else if (value === \'true\') {\n' +

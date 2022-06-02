@@ -1,8 +1,9 @@
 import { isNullOrEmpty } from 'utils/helpers';
 
+import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-async function AlchemyNftHandler(req: NextApiRequest, res: NextApiResponse) {
+const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const action = req.query['action'];
   const chainId = req.query['chainId'];
   try {
@@ -79,6 +80,12 @@ async function AlchemyNftHandler(req: NextApiRequest, res: NextApiResponse) {
     res.status(400).json(JSON.stringify({ message: 'Action not recognized' }));
     return;
   }
-}
+};
 
-export default AlchemyNftHandler;
+export default withSentry(alchemyNftHandler);
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};

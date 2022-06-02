@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { withSentryConfig } = require('@sentry/nextjs');
+
+const sentryWebpackPluginOptions = {
+  silent: true,
+};
+
+const moduleExports = {
   reactStrictMode: true,
   webpack(config) {
     // This allows you to import SVG files as strings/urls
@@ -22,4 +29,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
