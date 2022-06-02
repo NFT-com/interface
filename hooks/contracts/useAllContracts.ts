@@ -51,7 +51,7 @@ export interface Contracts {
 export function useAllContracts(): Contracts {
   const { activeChain } = useNetwork();
   const provider = useProvider({ chainId: activeChain?.id ?? 0 });
-  
+
   const [daiContract, setDaiContract] =
     useState(getDaiContract(getAddress('weth', activeChain?.id), provider));
   const [wethContract, setWethContract] =

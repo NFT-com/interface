@@ -1,5 +1,4 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Footer } from 'components/elements/Footer';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { Modal } from 'components/elements/Modal';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
@@ -70,7 +69,7 @@ export default function GalleryPage() {
   }, [currentFilter, galleryItemType, showMyStuff, signedIn]);
 
   return (
-    <PageWrapper removePinkSides headerOptions={{
+    <PageWrapper headerOptions={{
       walletOnly: true,
       sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
       removeSummaryBanner: true,
@@ -160,7 +159,6 @@ export default function GalleryPage() {
           type={ButtonType.PRIMARY}
         />
       </div>
-      <Footer />
     </PageWrapper>
   );
 }

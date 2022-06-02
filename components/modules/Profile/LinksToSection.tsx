@@ -99,7 +99,7 @@ export function LinksToSection(props: LinksToSectionParams) {
                 onClick={item.linkTo}
                 className="bg-modal-overlay-dk rounded-xl lg:w-full w-52 grow cursor-pointer">
                 <div className="lg:text-sm text-lg md:p-2 p-4">{item.section}</div>
-                <div className="w-full">
+                <div className="w-full relative">
                   <Image src={item.image}
                     layout="fill"
                     objectFit="contain"

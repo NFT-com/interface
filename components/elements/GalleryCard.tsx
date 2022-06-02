@@ -15,6 +15,7 @@ function GalleryCard(props: GalleryCardProps) {
   return (
     <div
       className={tw(
+        'relative',
         'drop-shadow-md rounded-xl flex flex-col',
         'w-full aspect-square',
         'justify-between cursor-pointer transform hover:scale-105',

@@ -50,7 +50,6 @@ export default function ProfilePreferencesPage() {
 
   return (
     <PageWrapper
-      removePinkSides
       headerOptions={{
         walletOnly: true,
         removeBackground: true,

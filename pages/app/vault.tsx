@@ -187,7 +187,6 @@ export default function RoadmapPage() {
   
   return (
     <PageWrapper
-      removePinkSides
       headerOptions={{
         walletOnly: true,
         removeBackground: true,

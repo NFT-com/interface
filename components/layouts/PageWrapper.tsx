@@ -15,7 +15,6 @@ import { useAccount } from 'wagmi';
 
 export interface PageWrapperProps {
   bgColorClasses?: string;
-  removePinkSides?: boolean;
   headerOptions?: {
     omit?: boolean;
     walletOnly?: boolean;
@@ -45,15 +44,6 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
       'flex flex-col h-screen',
       isMobile ? 'overflow-x-hidden' : ''
     )}>
-      {props.headerOptions &&
-      props.headerOptions.sidebar === 'hero' &&
-      props.removePinkSides !== true &&
-      <div
-        className={tw('z-[200] absolute left-0 md:w-[23px] w-[26px] h-0',
-          'border-t-[100vh] border-t-hero-pink border-l-0',
-          'border-l-transparent border-r-[21px] border-r-transparent')}>
-      </div>
-      }
       <main
         className={tw(
           'absolute w-full h-full',

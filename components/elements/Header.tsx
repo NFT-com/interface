@@ -53,10 +53,10 @@ export default function Header(props: HeaderProps) {
   const showHeaderNav = !isMobile;
 
   const headerStyles = useCallback(() => {
-    if(props.removeBackground && !props.heroHeader) {
+    if (props.removeBackground && !props.heroHeader) {
       return 'transparent';
     }
-    else if(props.removeBackground && props.heroHeader) {
+    else if (props.removeBackground && props.heroHeader) {
       return `z-50 drop-shadow-md ${props.heroHeaderBlack ? 'bg-black' : 'bg-transparent'}`;
     }
     else {
@@ -70,7 +70,7 @@ export default function Header(props: HeaderProps) {
       {() => (
         <>
           <div className={tw('w-full mx-auto',
-            ' pl-5',
+            'pl-5',
             `${props.removeBackground ? '' : 'border-b'}`,
             walletSlideOpen ? 'border-action-primary' : 'border-gray-200 dark:border-gray-800',
           )}>

@@ -37,7 +37,7 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
     const result = await getNftsByContract(
       address,
       getAddress('genesisKey', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-      String(activeChain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+      activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
     );
 
     setLoading(false);

@@ -70,7 +70,7 @@ export default function GenesisKeysPage() {
   }, [currentFilter, galleryItemType, showMyStuff, signedIn]);
 
   return (
-    <PageWrapper removePinkSides headerOptions={{
+    <PageWrapper headerOptions={{
       walletOnly: true,
       sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
       removeSummaryBanner: true,

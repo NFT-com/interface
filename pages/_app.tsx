@@ -15,7 +15,6 @@ import Script from 'next/script';
 import { rainbowDark } from 'styles/RainbowKitThemes';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, provider } = configureChains(
   getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
@@ -31,7 +30,6 @@ const { chains, provider } = configureChains(
         };
       }
     }),
-    publicProvider()
   ]
 );
 

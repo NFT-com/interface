@@ -12,7 +12,6 @@ import { tw } from 'utils/tw';
 import DiscordIcon from 'public/discord_gray_icon.svg';
 import TwitterIcon from 'public/twitter_gray_icon.svg';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 
 export interface HeroPageProps {
   scrollToAbout?: boolean;
@@ -75,7 +74,6 @@ export function HeroPage(props: HeroPageProps) {
         heroHeader: true,
         heroHeaderBlack: headerBlack,
       }}
-      removePinkSides={isMobile}
     >
       {getSides()}
       <div
