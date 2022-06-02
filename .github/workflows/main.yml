@@ -1,7 +1,6 @@
 name: Deploy NFT.com Frontend
 on:
   pull_request:
-    types: ['opened', 'edited', 'synchronize']
   push:
 jobs:
   deploy-preview:
