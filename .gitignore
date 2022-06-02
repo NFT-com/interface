@@ -39,3 +39,6 @@ yarn-error.log*
 # compiled
 **/tailwind.css
 **/typechain/**
+
+# Sentry
+.sentryclirc
