@@ -1,5 +1,6 @@
 import { Maybe } from 'graphql/generated/types';
 import { getNftMetadata } from 'utils/alchemyNFT';
+import { Doppler, getEnv } from 'utils/env';
 import { getAddress } from 'utils/httpHooks';
 
 import { BigNumberish } from 'ethers';
@@ -19,9 +20,9 @@ export function useGenesisKeyMetadata(tokenId: BigNumberish | null): Maybe<any> 
       }
 
       const result = await getNftMetadata(
-        getAddress('genesisKey', activeChain?.id ?? process.env.NEXT_PUBLIC_CHAIN_ID),
+        getAddress('genesisKey', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
         tokenId,
-        String(activeChain?.id) ?? process.env.NEXT_PUBLIC_CHAIN_ID
+        String(activeChain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
       );
       
       return result;

@@ -2,6 +2,7 @@ import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
+import { Doppler,getEnv } from 'utils/env';
 
 import {
   connectorsForWallets,
@@ -17,13 +18,13 @@ import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
 
 const { chains, provider } = configureChains(
-  process.env.NEXT_PUBLIC_ENV !== 'PRODUCTION' ?
+  getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
     [chain.mainnet, chain.rinkeby] :
     [chain.mainnet],
   [
     jsonRpcProvider({
       rpc: (chain) => {
-        const url = new URL(process.env.NEXT_PUBLIC_BASE_URL + 'api/ethrpc');
+        const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
         url.searchParams.set('chainId', String(chain.id));
         return {
           http: url.toString(),

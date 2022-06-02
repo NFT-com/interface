@@ -7,6 +7,7 @@ import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -225,7 +226,7 @@ export function MintedProfile(props: MintedProfileProps) {
                           !isNullOrEmpty(draftProfileImg?.preview)
                             ? draftProfileImg?.preview
                             : profileData?.profile?.photoURL ??
-                          (!(process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true')
+                          ((!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED))
                             ? 'https://cdn.nft.com/profile-image-default.svg' :
                             cameraIcon)
                         }

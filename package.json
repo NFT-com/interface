@@ -14,7 +14,8 @@
     "lint": "next lint",
     "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain",
     "gql:gen": "graphql-codegen --config codegen.json",
-    "doppler:pull": "doppler secrets --json >> .env.local"
+    "doppler:pull": "doppler secrets --json >> .env.local",
+    "doppler:gen": "echo 'export const dopplerNames = ' > ./scripts/doppler_variable_names.ts && doppler secrets --only-names --json >> ./scripts/doppler_variable_names.ts && ts-node -O '{\"module\":\"commonjs\"}' ./scripts/gen-doppler.ts"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.2",

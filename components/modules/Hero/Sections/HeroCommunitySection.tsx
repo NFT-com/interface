@@ -1,3 +1,4 @@
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -15,9 +16,9 @@ const SOCIALS: Social[] = [
   {
     source: 'email',
     icon: EmailIcon,
-    number: isNullOrEmpty(process.env.NEXT_PUBLIC_EMAIL_COUNT) ?
+    number: isNullOrEmpty(getEnv(Doppler.NEXT_PUBLIC_EMAIL_COUNT)) ?
       '100000' :
-      process.env.NEXT_PUBLIC_EMAIL_COUNT,
+      getEnv(Doppler.NEXT_PUBLIC_EMAIL_COUNT),
     subtitle: 'Email Subscribers',
     action: 'SUBSCRIBE NOW',
     destination: 'https://whitelist.nft.com'
@@ -25,9 +26,9 @@ const SOCIALS: Social[] = [
   {
     source: 'discord',
     icon: DiscordIcon,
-    number: isNullOrEmpty(process.env.NEXT_PUBLIC_DISCORD_COUNT) ?
+    number: isNullOrEmpty(getEnv(Doppler.NEXT_PUBLIC_DISCORD_COUNT)) ?
       '20000' :
-      process.env.NEXT_PUBLIC_DISCORD_COUNT,
+      getEnv(Doppler.NEXT_PUBLIC_DISCORD_COUNT),
     subtitle: 'People on Discord',
     action: 'JOIN NOW',
     destination: 'https://discord.gg/nftdotcom'
@@ -35,9 +36,9 @@ const SOCIALS: Social[] = [
   {
     source: 'twitter',
     icon: TwitterIcon,
-    number: isNullOrEmpty(process.env.NEXT_PUBLIC_TWITTER_COUNT) ?
+    number: isNullOrEmpty(getEnv(Doppler.NEXT_PUBLIC_TWITTER_COUNT)) ?
       '5000' :
-      process.env.NEXT_PUBLIC_TWITTER_COUNT,
+      getEnv(Doppler.NEXT_PUBLIC_TWITTER_COUNT),
     subtitle: 'Followers on Twitter',
     action: 'JOIN NOW',
     destination: 'https://twitter.com/nftcomofficial'

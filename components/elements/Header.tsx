@@ -6,6 +6,7 @@ import { useUser } from 'hooks/state/useUser';
 import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -133,7 +134,7 @@ export default function Header(props: HeaderProps) {
                   'flex items-center h-full',
                   walletSlideOpen ? '' : 'md:pr-5 lg:pr-6 pr-7'
                 )}>
-                {(process.env.NEXT_PUBLIC_SEARCH_ENABLED === 'true') && !props.heroHeader &&
+                {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && !props.heroHeader &&
                   <div className={tw(
                     'flex items-center mr-4 md:hidden',
                     'block lg:w-1/2 w-80'
@@ -170,7 +171,7 @@ export default function Header(props: HeaderProps) {
               </div>
             </div>
           </div>
-          {(process.env.NEXT_PUBLIC_SEARCH_ENABLED === 'true') && props.walletOnly !== true &&
+          {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && props.walletOnly !== true &&
           <>
             <div className="my-4 ml-3 flex items-center mr-4 md:mr-3 pb-4 md:block hidden">
               <SearchBar />

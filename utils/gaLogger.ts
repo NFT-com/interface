@@ -1,3 +1,5 @@
+import { Doppler, getEnvBool } from './env';
+
 import ReactGA from 'react-ga';
 import { WalletSubTab } from 'types';
 
@@ -13,7 +15,7 @@ export enum LoggingCategory {
 }
 
 function logEvent(category: string, action: string, extras?: string) {
-  if (process.env.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED === 'true') {
+  if (getEnvBool(Doppler.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED)) {
     ReactGA.event({
       action: action,
       category: category,
