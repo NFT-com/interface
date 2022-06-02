@@ -3,7 +3,7 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { tw } from 'utils/tw';
 
-import { ProfileEditGalleryContext } from './ProfileEditGalleryContext';
+import { ProfileEditContext } from './ProfileEditContext';
 
 import GKHolderIcon from 'public/gk-holder.svg';
 import { useContext } from 'react';
@@ -28,7 +28,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     setDraftBio,
     setDraftGkIconVisible,
     draftGkIconVisible
-  } = useContext(ProfileEditGalleryContext);
+  } = useContext(ProfileEditContext);
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
 
   return (

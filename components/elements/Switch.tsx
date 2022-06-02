@@ -25,7 +25,8 @@ export const Switch = ({
         checked={enabled}
         onChange={setEnabled}
         className={tw(
-          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 bg-toggle-bg',
+          enabled ? 'bg-toggle-bg' : 'bg-accent-dk',
+          'relative inline-flex flex-shrink-0 h-6 w-11 border-2',
           'border-transparent rounded-full cursor-pointer',
           'transition-colors ease-in-out duration-200',
           'focus:outline-none focus:ring-offset-2 focus:toggle-bg'

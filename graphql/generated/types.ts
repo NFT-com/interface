@@ -1434,7 +1434,11 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
+<<<<<<< HEAD
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, isFollowedByMe?: boolean | null, gkIconVisible?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
+=======
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, displayType?: ProfileDisplayType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
+>>>>>>> 82c21f5 (feat: wip migrate collection grouping)
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -2201,8 +2205,12 @@ export const ProfileDocument = gql`
     bannerURL
     photoURL
     description
+<<<<<<< HEAD
     isFollowedByMe
     gkIconVisible
+=======
+    displayType
+>>>>>>> 82c21f5 (feat: wip migrate collection grouping)
     owner {
       address
       chainId

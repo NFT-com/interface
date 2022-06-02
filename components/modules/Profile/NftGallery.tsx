@@ -8,7 +8,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ProfileEditGalleryContext } from './ProfileEditGalleryContext';
+import { ProfileEditContext } from './ProfileEditContext';
 
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
@@ -36,7 +36,6 @@ export function NftGallery(props: NftGalleryProps) {
   });
   const { nfts: profileNFTs, totalItems: publicNFTCount, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    false,
     { first: loadedCount }
   );
   const {
@@ -47,7 +46,7 @@ export function NftGallery(props: NftGalleryProps) {
     draftToShow,
     draftShowAll,
     saving
-  } = useContext(ProfileEditGalleryContext);
+  } = useContext(ProfileEditContext);
   const { tileBackgroundSecondary } = useThemeColors();
 
   useEffect(() => {
