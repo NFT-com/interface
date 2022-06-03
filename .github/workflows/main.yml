@@ -1,7 +1,6 @@
 name: Deploy NFT.com Frontend
 on:
   push:
-  pull_request:
 jobs:
   deploy-preview:
     if: ${{ startsWith(github.ref_name, 'feat') || startsWith(github.ref_name, 'fix') }}
