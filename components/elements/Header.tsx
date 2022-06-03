@@ -14,7 +14,6 @@ import { Disclosure } from '@headlessui/react';
 import Link from 'next/link';
 import HeroCorner from 'public/hero_corner.svg';
 import HeroCornerDark from 'public/hero_corner_dark.svg';
-import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -52,26 +51,13 @@ export default function Header(props: HeaderProps) {
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
   const showHeaderNav = !isMobile;
 
-  const headerStyles = useCallback(() => {
-    if (props.removeBackground && !props.heroHeader) {
-      return 'transparent';
-    }
-    else if (props.removeBackground && props.heroHeader) {
-      return `z-50 drop-shadow-md ${props.heroHeaderBlack ? 'bg-black' : 'bg-transparent'}`;
-    }
-    else {
-      return 'bg-headerbg ' + (props.profileHeader ? 'dark:bg-headerbg-profile-dk opacity-90' : 'dark:bg-headerbg-dk');
-    }
-  }, [props.heroHeader, props.heroHeaderBlack, props.profileHeader, props.removeBackground]);
-
   // todo: remove Disclosure in favor of typical wallet slide toggling.
   return (
-    <Disclosure as="nav" className={tw('w-full', `${headerStyles()}`)}>
+    <Disclosure as="nav" className={tw('w-full', 'bg-transparent')}>
       {() => (
         <>
           <div className={tw('w-full mx-auto',
             'pl-5',
-            `${props.removeBackground ? '' : 'border-b'}`,
             walletSlideOpen ? 'border-action-primary' : 'border-gray-200 dark:border-gray-800',
           )}>
             <div className="flex justify-between h-20">
@@ -89,17 +75,24 @@ export default function Header(props: HeaderProps) {
                           : <HeroCornerDark />
                         }
                       </div>
-                      <span>NFT.COM</span>
+                      <span className="flex md:hidden">NFT.COM</span>
                     </div>
                   </Link>
-                  { showHeaderNav &&
+                </div>
+              </div>
+              <div
+                className={tw(
+                  'flex items-center h-full',
+                  walletSlideOpen ? '' : 'md:pr-5 lg:pr-6 pr-7'
+                )}>
+                { showHeaderNav &&
                     <div
                       style={{
                         textShadow: '0px 2px 4px rgba(0,0,0,0.4)',
                       }}
                       className={tw(
                         'sm:hidden block',
-                        'md:ml-2 ml-20',
+                        'md:mr-5 mr-20',
                         'h-full flex-shrink-0',
                         'space-x-5',
                         'font-rubik text-blue-50 font-bold tracking-wide',
@@ -126,14 +119,7 @@ export default function Header(props: HeaderProps) {
                         </span>
                       </Link>}
                     </div>
-                  }
-                </div>
-              </div>
-              <div
-                className={tw(
-                  'flex items-center h-full',
-                  walletSlideOpen ? '' : 'md:pr-5 lg:pr-6 pr-7'
-                )}>
+                }
                 {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && !props.heroHeader &&
                   <div className={tw(
                     'flex items-center mr-4 md:hidden',

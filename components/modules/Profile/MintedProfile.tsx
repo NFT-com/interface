@@ -1,12 +1,8 @@
-import { Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
-import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
-import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -35,11 +31,7 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const {
     editMode,
-    setEditMode,
-    clearDrafts,
-    saveProfile,
     saving,
-    draftBio,
     draftProfileImg,
     draftHeaderImg,
     setDraftHeaderImg,
@@ -53,10 +45,6 @@ export function MintedProfile(props: MintedProfileProps) {
   const userIsAdmin = myOwnedProfileTokenUris
     .map(fullUri => fullUri.split('/').pop())
     .includes(profileURI);
-
-  const { mutate: mutateMyNFTs } = useMyNFTsQuery({
-    first: 20
-  });
       
   const { nfts: publiclyVisibleNFTs, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
@@ -68,9 +56,6 @@ export function MintedProfile(props: MintedProfileProps) {
   useEffect(() => {
     mutateProfileNFTs();
   }, [editMode, mutateProfileNFTs]);
-
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
-  const hasGks = !isNullOrEmpty(ownedGKTokens);
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -96,16 +81,31 @@ export function MintedProfile(props: MintedProfileProps) {
 
   return (
     <div className="relative h-screen">
-      <BannerWrapper
-        imageOverride={
-          editMode ?
+      <div
+        className={tw(
+          'bg-no-repeat bg-cover bg-center',
+          'relative flex flex-row items-end justify-center bg-[#05080c]',
+        )}
+        style={{
+          height: '240px',
+          backgroundImage: 'url(' +
+            editMode ?
             (isNullOrEmpty(draftHeaderImg?.preview) ?
               profileData?.profile?.bannerURL :
               draftHeaderImg?.preview) :
             profileData?.profile?.bannerURL
-        }
-        loading={saving}
+            + ')',
+        }}
       >
+        {saving && <div
+          style={{ zIndex: 102 }}
+          className={tw(
+            'absolute flex bg-white/10',
+            'items-center justify-center w-full h-full'
+          )}
+        >
+          <Loader/>
+        </div>}
         <div className='w-full h-full'>
           <Dropzone
             disabled={!userIsAdmin}
@@ -121,54 +121,6 @@ export function MintedProfile(props: MintedProfileProps) {
                 <div {...getRootProps()} style={{ outline: 'none' }}>
                   <input {...getInputProps()} />
                 </div>
-                {userIsAdmin && hasGks && (
-                  editMode ?
-                    <div
-                      className={tw(
-                        'flex absolute top-24 right-32 sm:right-28'
-                      )}
-                      style={{ zIndex: 49 }}
-                    >
-                      <div className='mr-4'>
-                        <Button
-                          type={ButtonType.PRIMARY}
-                          label={'Save'}
-                          onClick={() => {
-                            analytics.track('Update Profile', {
-                              ethereumAddress: account?.address,
-                              profile: profileURI,
-                              newProfile: draftProfileImg?.preview ? true : false,
-                              newHeader: draftHeaderImg?.preview ? true : false,
-                              newDescription: draftBio,
-                            });
-
-                            saveProfile();
-                            setEditMode(false);
-                            mutateProfileNFTs();
-                            mutateMyNFTs();
-                          }}
-                        />
-                      </div>
-                      <Button
-                        type={ButtonType.SECONDARY}
-                        label={'Cancel'}
-                        onClick={clearDrafts}
-                      />
-                    </div> :
-                    <div
-                      className={tw(
-                        'absolute top-24 right-32 sm:right-28'
-                      )}
-                      style={{ zIndex: 49 }}
-                    >
-                      <Button
-                        type={ButtonType.SECONDARY}
-                        label={'Edit Profile'}
-                        onClick={() => {
-                          setEditMode(true);
-                        }}
-                      />
-                    </div>)}
                 {editMode && <div
                   className={tw(
                     'absolute bottom-5 right-32 sm:right-28'
@@ -182,14 +134,14 @@ export function MintedProfile(props: MintedProfileProps) {
             )}
           </Dropzone>
         </div>
-      </BannerWrapper>
+      </div>
       <div
         className='flex justify-center items-center'
         style={{
           zIndex: 103,
         }}
       >
-        <div className="flex items-center md:flex-col justify-center">
+        <div className="flex items-center md:flex-col justify-center md:items-start md:w-full md:px-8">
           <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px] mr-20 ml-[-4rem] md:ml-0 md:mr-0">
             <Dropzone
               accept={'image/*' ['.*']}

@@ -103,6 +103,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           };
         }
       });
+    console.log(editMode);
     
     return <div className={'w-full flex flex-col items-center'}>
       <div className='w-full flex items-center px-8 mb-8 cursor-pointer justify-between'>
@@ -110,7 +111,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           <CaretLeft className='mr-4' color="white" />
           <span className='text-primary-txt dark:text-primary-txt-dk'>Back to Collections</span>
         </div>
-        <div className='flex items-center text-primary-txt dark:text-primary-txt-dk'>
+        {editMode && <div className='flex items-center text-primary-txt dark:text-primary-txt-dk'>
           <GalleryToggleAllButtons
             onShowAll={() => {
               showNftIds(detailedCollectionNFTs.map(nft => nft.id));
@@ -120,7 +121,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             }}
             publicNFTCount={detailedCollectionNFTs.filter(nft => !nft.hidden).length}
           />
-        </div>
+        </div>}
       </div>
       <div className='w-full flex items-center mb-8 justify-center h-40'>
         {
