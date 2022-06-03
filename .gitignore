@@ -40,5 +40,9 @@ yarn-error.log*
 **/tailwind.css
 **/typechain/**
 
+# cypress
+**/cypress/screenshots/**
+**/cypress/videos/**
+
 # Sentry
 .sentryclirc
