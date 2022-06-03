@@ -1,8 +1,9 @@
 import { isNullOrEmpty } from 'utils/helpers';
 
+import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-async function EthRpcHandler(req: NextApiRequest, res: NextApiResponse) {
+const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const chainId = req.query['chainId'];
   try {
     if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId))) {
@@ -26,6 +27,12 @@ async function EthRpcHandler(req: NextApiRequest, res: NextApiResponse) {
   } catch (e) {
     res.status(500).json({ message: 'ETH RPC: error' });
   }
-}
+};
 
-export default EthRpcHandler;
+export default withSentry(ethRpcHandler);
+
+export const config = {
+  api: {
+    externalResolver: true,
+  },
+};
