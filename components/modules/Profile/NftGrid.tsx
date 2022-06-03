@@ -43,6 +43,7 @@ export function NftGrid(props: NftGridProps) {
           images={[nft?.metadata?.imageURL]}
           profileURI={props.profileURI}
           contractAddress={nft?.contract}
+          tokenId={nft?.tokenId}
           // only show the eye icons to the owner in edit mode
           visible={editMode ?
             nft?.hidden ?
@@ -57,7 +58,7 @@ export function NftGrid(props: NftGridProps) {
           }}
           onClick={() => {
             if (getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) {
-              router.push('/app/nft/' + nft?.contract?.address + '/' + nft?.id);
+              router.push('/app/nft/' + nft?.contract?.address + '/' + nft?.tokenId);
             } else if (editMode) {
               toggleHidden(nft?.id, !nft?.hidden);
             } else {

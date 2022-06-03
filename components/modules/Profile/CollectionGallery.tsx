@@ -6,7 +6,8 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { processIPFSURL } from 'utils/helpers';
+import { getGenesisKeyThumbnail, processIPFSURL, sameAddress } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
@@ -15,6 +16,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 
 import { CaretLeft } from 'phosphor-react';
 import { useContext, useEffect, useState } from 'react';
+import { useNetwork } from 'wagmi';
 
 export interface CollectionGalleryProps {
   profileURI: string;
@@ -24,7 +26,8 @@ export function CollectionGallery(props: CollectionGalleryProps) {
   const { profileURI } = props;
 
   const [loadedCount,] = useState(100);
-
+  
+  const { activeChain } = useNetwork();
   const { profileData } = useProfileQuery(profileURI);
 
   const {
@@ -126,6 +129,9 @@ export function CollectionGallery(props: CollectionGalleryProps) {
       <div className='w-full flex items-center mb-8 justify-center h-40'>
         {
           detailedCollectionNFTs?.slice(0, 3).map(nft => {
+            if (sameAddress(nft?.contract, getAddress('genesisKey', activeChain?.id ?? 1))) {
+              return getGenesisKeyThumbnail(nft?.tokenId);
+            }
             return processIPFSURL(nft?.metadata?.imageURL);
           }).map((image: string, index: number, arr: string[]) => {
             return <RoundedCornerMedia
@@ -165,7 +171,12 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           <NFTCollectionCard
             contract={key}
             count={collections.get(key)?.length}
-            images={collections.get(key).map((nft) => nft?.metadata?.imageURL)}
+            images={collections.get(key).map((nft) => {
+              if (sameAddress(nft?.contract, getAddress('genesisKey', activeChain?.id ?? 1))) {
+                return getGenesisKeyThumbnail(nft?.tokenId);
+              }
+              return nft?.metadata?.imageURL;
+            })}
             onClick={() => {
               setSelectedCollection(key);
             }}
