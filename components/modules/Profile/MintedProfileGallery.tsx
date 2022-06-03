@@ -37,7 +37,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   return (
     <div className={tw(
       'flex flex-col mt-8 align-items',
-      isMobile ? 'px-2' : 'sm:px-2 md:px-12 lg:px-20 px-32'
+      isMobile ? 'px-2' : 'sm:px-2 md:px-8 lg:px-16 px-20'
     )}>
       {editMode && selectedCollection == null &&
         <div className='flex items-center w-full mb-12 px-8 justify-between text-white'>

@@ -103,7 +103,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             </div> :
             <div style={{ zIndex: 49 }} className="mt-4">
               <Button
-                type={ButtonType.SECONDARY}
+                type={ButtonType.PRIMARY}
                 label={'Edit Profile'}
                 onClick={() => {
                   setEditMode(true);

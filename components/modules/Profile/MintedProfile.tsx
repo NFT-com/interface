@@ -88,13 +88,12 @@ export function MintedProfile(props: MintedProfileProps) {
         )}
         style={{
           height: '240px',
-          backgroundImage: 'url(' +
+          backgroundImage:
             editMode ?
-            (isNullOrEmpty(draftHeaderImg?.preview) ?
-              profileData?.profile?.bannerURL :
-              draftHeaderImg?.preview) :
-            profileData?.profile?.bannerURL
-            + ')',
+              (isNullOrEmpty(draftHeaderImg?.preview) ?
+                profileData?.profile?.bannerURL :
+                `url(${draftHeaderImg?.preview})`) :
+              profileData?.profile?.bannerURL
         }}
       >
         {saving && <div
