@@ -1,10 +1,11 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress';
 
 export default defineConfig({
+  projectId: '1gkqo9',
   component: {
     devServer: {
-      framework: "next",
-      bundler: "webpack",
+      framework: 'next',
+      bundler: 'webpack',
     },
   },
 

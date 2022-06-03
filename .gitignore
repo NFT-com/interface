@@ -39,3 +39,7 @@ yarn-error.log*
 # compiled
 **/tailwind.css
 **/typechain/**
+
+# cypress
+**/cypress/screenshots/**
+**/cypress/videos/**
