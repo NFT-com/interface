@@ -1,4 +1,5 @@
-import { isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
+import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
@@ -6,7 +7,7 @@ import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 import { MouseEvent, useCallback, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 export interface NFTCardTrait {
   key: string,
   value: string,
@@ -42,10 +43,11 @@ export function NFTCard(props: NFTCardProps) {
   const { tileBackground, secondaryText, pink, link, secondaryIcon } = useThemeColors();
 
   const { data: account } = useAccount();
+  const { activeChain } = useNetwork();
   const [selected, setSelected] = useState(false);
 
-  const processedImageURLs = sameAddress(props.contractAddress, '0x8fb5a7894ab461a59acdfab8918335768e411414') ?
-    [`https://cdn.nft.com/gk-min/${Number(props?.tokenId)}.jpeg`]
+  const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', activeChain?.id ?? 1)) && !isNullOrEmpty(props.tokenId) ?
+    [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
