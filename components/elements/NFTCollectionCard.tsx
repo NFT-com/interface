@@ -22,6 +22,7 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
       images={processedImages}
       imageLayout="row"
       onClick={props.onClick}
+      contractAddress={collection?.contract}
     />
   );
 }

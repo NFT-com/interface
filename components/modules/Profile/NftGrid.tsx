@@ -28,8 +28,7 @@ export function NftGrid(props: NftGridProps) {
   const { tileBackgroundSecondary } = useThemeColors();
   const router = useRouter();
 
-  return <div
-    className={'profile-page-grid w-full'}>
+  return <div className={'profile-page-grid w-full'}>
     {props.nfts?.map((nft: PartialDeep<DetailedNft>) => (
       <div
         key={nft?.id + '-' + nft?.contract?.address}

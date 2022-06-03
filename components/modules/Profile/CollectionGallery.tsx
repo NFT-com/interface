@@ -6,8 +6,8 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import { processIPFSURL } from 'utils/helpers';
+import { tw } from 'utils/tw';
 
 import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
 import { NftGrid } from './NftGrid';
@@ -15,7 +15,6 @@ import { ProfileEditContext } from './ProfileEditContext';
 
 import { CaretLeft } from 'phosphor-react';
 import { useContext, useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 
 export interface CollectionGalleryProps {
   profileURI: string;
@@ -26,7 +25,6 @@ export function CollectionGallery(props: CollectionGalleryProps) {
 
   const [loadedCount,] = useState(100);
 
-  const { width } = useWindowDimensions();
   const { profileData } = useProfileQuery(profileURI);
 
   const {
@@ -154,12 +152,14 @@ export function CollectionGallery(props: CollectionGalleryProps) {
   }
 
   return (
-    <div className={'w-full flex flex-wrap justify-center'}>
+    <div className={'grid grid-cols-3 lg:grid-cols-2 md:grid-cols-1 w-full'}>
       {Array.from(collections.keys()).map((key: string) => (
         <div
           key={key}
-          className="flex w-full mb-10 items-center justify-center px-4"
-          style={{ maxWidth: isMobile ? width : width / 3 }}
+          className={tw(
+            'flex mb-10 items-center justify-center px-3',
+            'sm:mb-2'
+          )}
         >
           <NFTCollectionCard
             contract={key}
