@@ -4,19 +4,16 @@ import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const chainId = req.query['chainId'];
-  try {
-    if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId))) {
-      throw new Error('chainId is required');
-    }
-  } catch (e) {
-    res.status(400).json({ message: 'Invalid Chain ID' });
+  let chainId = req.query['chainId'];
+  if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId))) {
+    chainId = process.env.NEXT_PUBLIC_CHAIN_ID;
   }
 
   const alchemyAPIKey = Number(chainId) !== 1 ?
     process.env.ALCHEMY_RINKEBY_KEY :
     process.env.ALCHEMY_MAINNET_KEY;
   const apiUrl = `https://eth-${Number(chainId) !== 1 ? 'rinkeby' : 'mainnet'}.alchemyapi.io/v2/${alchemyAPIKey}`;
+
   try {
     const result = await fetch(apiUrl, {
       method: 'POST',

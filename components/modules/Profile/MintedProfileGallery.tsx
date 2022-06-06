@@ -31,7 +31,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const { profileData } = useProfileQuery(props.profileURI);
   const { totalItems: publicNFTCount } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    { first: PROFILE_GALLERY_PAGE_SIZE }
+    PROFILE_GALLERY_PAGE_SIZE
   );
 
   return (

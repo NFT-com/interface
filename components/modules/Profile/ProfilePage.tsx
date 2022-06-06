@@ -57,7 +57,7 @@ export function ProfilePage(props: ProfilePageProps) {
       </PageWrapper>
     );
   }
-
+  
   return (
     <PageWrapper
       bgColorClasses='dark:bg-pagebg-secondary-dk bg-pagebg'

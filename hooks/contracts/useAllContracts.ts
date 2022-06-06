@@ -20,6 +20,7 @@ import { getNftTokenContract } from 'hooks/contracts/getNftTokenContract';
 import { getProfileAuctionContract } from 'hooks/contracts/getProfileAuctionContract';
 import { getUsdcContract } from 'hooks/contracts/getUsdcContract';
 import { getWethContract } from 'hooks/contracts/getWethContract';
+import { Doppler, getEnv } from 'utils/env';
 import { getAddress } from 'utils/httpHooks';
 
 import { getGenesisKeyDistributorContract } from './getGenesisKeyDistributorContract';
@@ -50,76 +51,79 @@ export interface Contracts {
 
 export function useAllContracts(): Contracts {
   const { activeChain } = useNetwork();
-  const provider = useProvider({ chainId: activeChain?.id ?? 0 });
+
+  const chainId = activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
+  
+  const provider = useProvider({ chainId: Number(chainId) });
 
   const [daiContract, setDaiContract] =
-    useState(getDaiContract(getAddress('weth', activeChain?.id), provider));
+    useState(getDaiContract(getAddress('weth', chainId), provider));
   const [wethContract, setWethContract] =
-    useState(getWethContract(getAddress('weth', activeChain?.id), provider));
+    useState(getWethContract(getAddress('weth', chainId), provider));
   const [usdcContract, setUsdcContract] =
-    useState(getUsdcContract(getAddress('usdc', activeChain?.id), provider));
+    useState(getUsdcContract(getAddress('usdc', chainId), provider));
   const [nftTokenContract, setNftTokenContract] =
-    useState(getNftTokenContract(getAddress('nft', activeChain?.id), provider));
+    useState(getNftTokenContract(getAddress('nft', chainId), provider));
   const [nftProfileContract, setNftProfileContract] =
-    useState(getNftProfileContract(getAddress('nftProfile', activeChain?.id), provider));
+    useState(getNftProfileContract(getAddress('nftProfile', chainId), provider));
   const [profileAuctionContract, setProfileAuctionContract] = useState(getProfileAuctionContract(
-    getAddress('profileAuction', activeChain?.id),
+    getAddress('profileAuction', chainId),
     provider
   ));
   const [genesisKeyContract, setGenesisKeyContract] =
-    useState(getGenesisKeyContract(getAddress('genesisKey', activeChain?.id), provider));
+    useState(getGenesisKeyContract(getAddress('genesisKey', chainId), provider));
   const [marketPlaceContract, setMarketPlaceContract] =
-    useState(getMarketplaceContract(getAddress('marketplace', activeChain?.id), provider));
+    useState(getMarketplaceContract(getAddress('marketplace', chainId), provider));
   const [validationLogicContract, setValidationLogicContract] =
-    useState(getValidationLogicContract(getAddress('validationLogic', activeChain?.id), provider));
+    useState(getValidationLogicContract(getAddress('validationLogic', chainId), provider));
   const [marketplaceEventContract, setMarketplaceEventContract] =
-      useState(getMarketplaceEventContract(getAddress('marketplaceEvent', activeChain?.id), provider));
+      useState(getMarketplaceEventContract(getAddress('marketplaceEvent', chainId), provider));
   const [genesisKeyDistributorContract, setGenesisKeyDistributorContract] = useState(
-    getGenesisKeyDistributorContract(getAddress('genesisKeyDistributor', activeChain?.id), provider)
+    getGenesisKeyDistributorContract(getAddress('genesisKeyDistributor', chainId), provider)
   );
   const [genesisKeyTeamDistributorContract, setGenesisKeyTeamDistributorContract] = useState(
     getGenesisKeyTeamDistributorContract(
-      getAddress('genesisKeyTeamDistributor', activeChain?.id),
+      getAddress('genesisKeyTeamDistributor', chainId),
       provider
     )
   );
   const [genesisKeyTeamClaim, setGenesisKeyTeamClaim] = useState(
-    getGenesisKeyTeamClaimContract(getAddress('genesisKeyTeamClaim', activeChain?.id), provider)
+    getGenesisKeyTeamClaimContract(getAddress('genesisKeyTeamClaim', chainId), provider)
   );
 
   useEffect(() => {
-    setDaiContract(getDaiContract(getAddress('dai', activeChain?.id), provider));
-    setWethContract(getWethContract(getAddress('weth', activeChain?.id), provider));
-    setUsdcContract(getUsdcContract(getAddress('usdc', activeChain?.id), provider));
-    setNftTokenContract(getNftTokenContract(getAddress('nft', activeChain?.id), provider));
-    setNftProfileContract(getNftProfileContract(getAddress('nftProfile', activeChain?.id), provider));
+    setDaiContract(getDaiContract(getAddress('dai', chainId), provider));
+    setWethContract(getWethContract(getAddress('weth', chainId), provider));
+    setUsdcContract(getUsdcContract(getAddress('usdc', chainId), provider));
+    setNftTokenContract(getNftTokenContract(getAddress('nft', chainId), provider));
+    setNftProfileContract(getNftProfileContract(getAddress('nftProfile', chainId), provider));
     setProfileAuctionContract(
-      getProfileAuctionContract(getAddress('profileAuction', activeChain?.id), provider)
+      getProfileAuctionContract(getAddress('profileAuction', chainId), provider)
     );
-    setGenesisKeyContract(getGenesisKeyContract(getAddress('genesisKey', activeChain?.id), provider));
+    setGenesisKeyContract(getGenesisKeyContract(getAddress('genesisKey', chainId), provider));
     setMarketPlaceContract(
-      getMarketplaceContract(getAddress('marketplace', activeChain?.id), provider)
+      getMarketplaceContract(getAddress('marketplace', chainId), provider)
     );
     setValidationLogicContract(
-      getValidationLogicContract(getAddress('validationLogic', activeChain?.id), provider)
+      getValidationLogicContract(getAddress('validationLogic', chainId), provider)
     );
     setMarketplaceEventContract(
-      getMarketplaceEventContract(getAddress('marketplaceEvent', activeChain?.id), provider)
+      getMarketplaceEventContract(getAddress('marketplaceEvent', chainId), provider)
     );
     setGenesisKeyDistributorContract(
-      getGenesisKeyDistributorContract(getAddress('genesisKeyDistributor', activeChain?.id), provider)
+      getGenesisKeyDistributorContract(getAddress('genesisKeyDistributor', chainId), provider)
     );
     setGenesisKeyTeamDistributorContract(
       getGenesisKeyTeamDistributorContract(
-        getAddress('genesisKeyTeamDistributor', activeChain?.id),
+        getAddress('genesisKeyTeamDistributor', chainId),
         provider
       )
     );
     setGenesisKeyTeamClaim(
-      getGenesisKeyTeamClaimContract(getAddress('genesisKeyTeamClaim', activeChain?.id), provider)
+      getGenesisKeyTeamClaimContract(getAddress('genesisKeyTeamClaim', chainId), provider)
     );
-  }, [activeChain, provider]);
-
+  }, [chainId, provider]);
+  
   return {
     dai: daiContract,
     weth: wethContract,

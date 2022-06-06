@@ -1,6 +1,6 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Nft, PageInput } from 'graphql/generated/types';
+import { Nft } from 'graphql/generated/types';
 
 import { useContext, useState } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -14,7 +14,7 @@ export interface NftsData {
   mutate: () => void;
 }
 
-export function useMyNFTsQuery(pageInput: PageInput): NftsData {
+export function useMyNFTsQuery(first: number): NftsData {
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
   const { data: account } = useAccount();
@@ -26,7 +26,7 @@ export function useMyNFTsQuery(pageInput: PageInput): NftsData {
     setLoading(true);
     const result = await sdk.MyNFTs({
       input: {
-        pageInput
+        pageInput: { first: first }
       }
     });
     setLoading(false);

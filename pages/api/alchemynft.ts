@@ -5,14 +5,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const action = req.query['action'];
-  const chainId = req.query['chainId'];
-  try {
-    if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId))) {
-      throw new Error('chainId is required');
-    }
-  } catch (e) {
-    res.status(400).json({ message: 'Invalid Chain ID' });
-    return;
+  let chainId = req.query['chainId'];
+  if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId))) {
+    chainId = '1';
   }
   
   const alchemyAPIKey = Number(chainId) !== 1 ?
