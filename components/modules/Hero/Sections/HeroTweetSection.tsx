@@ -44,7 +44,7 @@ const TWEETS: Tweet[] = [
   },
 ];
 
-const bgGif = 'https://cdn.nft.com/new_slowroll_gif.gif';
+
 
 export default function HeroTweetSection() {
   return (
@@ -70,7 +70,9 @@ export default function HeroTweetSection() {
                 )}
               >
                 <div className='flex flex-col'>
-                  <div className={tw('rounded-full border-2 w-16 h-16 mr-6 object-cover border-[#010101]')}>
+                  <div
+                    className='flex w-16 h-16 mr-6'
+                    key={tweet.author}>
                     {
                       isNullOrEmpty(tweet.image.src) ?
                         <DefaultLogo />
@@ -78,8 +80,9 @@ export default function HeroTweetSection() {
                         <Image
                           src={tweet.image.src}
                           alt={tweet.author}
-                          layout="fill"
-                          objectFit="contain"
+                          width={'64px'}
+                          height={'64px'}
+                          className='border-2 rounded-full object-cover border-[#010101]'
                         />
                     }
                   </div>
@@ -125,13 +128,14 @@ export default function HeroTweetSection() {
         >
           {/* adds overlay transition  */}
         </div>
-        <Image
-          src={bgGif}
-          alt="tweet gif"
-          className='w-full mt-32 block aspect-square bg-cover bg-no-repeat bg-center'
-          layout="fill"
-          objectFit="contain"
-        />
+        <div
+          className={tw(
+            'w-full h-full mt-32 block aspect-square bg-cover bg-no-repeat bg-center',
+            'bg-[url(https://cdn.nft.com/new_slowroll_gif.gif)]',
+          )}
+        >
+        </div>
+
       </div>
     </div>
   );
