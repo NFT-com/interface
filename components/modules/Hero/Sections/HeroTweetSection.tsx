@@ -44,7 +44,7 @@ const TWEETS: Tweet[] = [
   },
 ];
 
-const bgGif = 'https://cdn.nft.com/new_slowroll_gif.gif';
+
 
 export default function HeroTweetSection() {
   return (
@@ -128,13 +128,14 @@ export default function HeroTweetSection() {
         >
           {/* adds overlay transition  */}
         </div>
-        <Image
-          src={bgGif}
-          alt="tweet gif"
-          className='w-full mt-32 block aspect-square bg-cover bg-no-repeat bg-center'
-          layout="fill"
-          objectFit="contain"
-        />
+        <div
+          className={tw(
+            'w-full h-full mt-32 block aspect-square bg-cover bg-no-repeat bg-center',
+            'bg-[url(https://cdn.nft.com/new_slowroll_gif.gif)]',
+          )}
+        >
+        </div>
+
       </div>
     </div>
   );
