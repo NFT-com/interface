@@ -40,12 +40,10 @@ export function CollectionGallery(props: CollectionGalleryProps) {
 
   const { data: collectionData } = useCollectionQuery(selectedCollection);
 
-  const { data: allOwnerNFTs } = useMyNFTsQuery({
-    first: loadedCount
-  });
+  const { data: allOwnerNFTs } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    { first: loadedCount }
+    loadedCount
   );
 
   const [collections, setCollections] = useState<Map<string, Nft[]>>(

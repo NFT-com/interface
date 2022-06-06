@@ -50,7 +50,7 @@ export function MintedProfile(props: MintedProfileProps) {
     profileData?.profile?.id,
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
-    { first: 20 }
+    20
   );
 
   useEffect(() => {
