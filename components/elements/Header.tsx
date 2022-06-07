@@ -128,7 +128,7 @@ export default function Header(props: HeaderProps) {
                     <SearchBar />
                   </div>
                 }
-                <div className="flex items-center h-full flex-shrink-0">
+                <div className="flex items-center h-full flex-shrink-0 z-50">
                   <div className={tw(
                     'flex h-full',
                     'items-center lg:mr-0 mr-20',
