@@ -115,7 +115,6 @@ export default function RoadmapPage() {
           <div className="key-hero-bg"
             style={{
               backgroundImage: `
-                
                 url("${keyBg}")
               `
             }}
@@ -172,10 +171,10 @@ export default function RoadmapPage() {
                 'mb-8')}>Welcome to the NFT.com Community</h3>
               <div className="flex justify-center items-center">
                 <a className="social-icon p-4" href="https://twitter.com/nftcomofficial" target="_blank" rel="noreferrer">
-                  <TwitterIcon className='w-8' />
+                  <TwitterIcon />
                 </a>
                 <a className="ml-4 social-icon p-4" href="https://discord.gg/nftdotcom" target="_blank" rel="noreferrer">
-                  <DiscordIcon className='w-8' />
+                  <DiscordIcon />
                 </a>
               </div>
             </div>
@@ -188,7 +187,6 @@ export default function RoadmapPage() {
   
   return (
     <PageWrapper
-      removePinkSides
       headerOptions={{
         walletOnly: true,
         removeBackground: true,

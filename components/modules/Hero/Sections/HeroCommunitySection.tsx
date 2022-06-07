@@ -1,12 +1,13 @@
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import HeroSocial from './HeroSocial';
 
 import Image from 'next/image';
-import discordIcon from 'public/discord_gray_icon.svg';
-import emailIcon from 'public/email_icon_white.svg';
-import twitterIcon from 'public/twitter_gray_icon.svg';
+import DiscordIcon from 'public/discord_gray_icon.svg';
+import EmailIcon from 'public/email_icon_white.svg';
+import TwitterIcon from 'public/twitter_gray_icon.svg';
 import React from 'react';
 import { isMobile } from 'react-device-detect';
 import { Social } from 'types';
@@ -14,30 +15,30 @@ import { Social } from 'types';
 const SOCIALS: Social[] = [
   {
     source: 'email',
-    icon: emailIcon,
-    number: isNullOrEmpty(process.env.NEXT_PUBLIC_EMAIL_COUNT) ?
+    icon: EmailIcon,
+    number: isNullOrEmpty(getEnv(Doppler.NEXT_PUBLIC_EMAIL_COUNT)) ?
       '100000' :
-      process.env.NEXT_PUBLIC_EMAIL_COUNT,
+      getEnv(Doppler.NEXT_PUBLIC_EMAIL_COUNT),
     subtitle: 'Email Subscribers',
     action: 'SUBSCRIBE NOW',
     destination: 'https://whitelist.nft.com'
   },
   {
     source: 'discord',
-    icon: discordIcon,
-    number: isNullOrEmpty(process.env.NEXT_PUBLIC_DISCORD_COUNT) ?
+    icon: DiscordIcon,
+    number: isNullOrEmpty(getEnv(Doppler.NEXT_PUBLIC_DISCORD_COUNT)) ?
       '20000' :
-      process.env.NEXT_PUBLIC_DISCORD_COUNT,
+      getEnv(Doppler.NEXT_PUBLIC_DISCORD_COUNT),
     subtitle: 'People on Discord',
     action: 'JOIN NOW',
     destination: 'https://discord.gg/nftdotcom'
   },
   {
     source: 'twitter',
-    icon: twitterIcon,
-    number: isNullOrEmpty(process.env.NEXT_PUBLIC_TWITTER_COUNT) ?
+    icon: TwitterIcon,
+    number: isNullOrEmpty(getEnv(Doppler.NEXT_PUBLIC_TWITTER_COUNT)) ?
       '5000' :
-      process.env.NEXT_PUBLIC_TWITTER_COUNT,
+      getEnv(Doppler.NEXT_PUBLIC_TWITTER_COUNT),
     subtitle: 'Followers on Twitter',
     action: 'JOIN NOW',
     destination: 'https://twitter.com/nftcomofficial'

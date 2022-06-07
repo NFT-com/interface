@@ -1,11 +1,10 @@
 import { PageWrapper } from 'components/layouts/PageWrapper';
-import { AuctionType, GenesisKeyAuction } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
+import { GenesisKeyAuction } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
 import { tw } from 'utils/tw';
 
 export default function GenesisKeyAuctionsPage() {
   return (
     <PageWrapper
-      removePinkSides
       headerOptions={{
         walletOnly: true,
         removeBackground: true,
@@ -17,11 +16,7 @@ export default function GenesisKeyAuctionsPage() {
         'relative flex flex-col overflow-y-scroll',
         'overflow-x-hidden bg-black w-screen h-screen',
       )}>
-        <GenesisKeyAuction
-          liveAuctionName={process.env.NEXT_PUBLIC_LIVE_AUCTION_NAME === 'blind'
-            ? AuctionType.Blind
-            : AuctionType.Public}
-        />
+        <GenesisKeyAuction />
       </div>
     </PageWrapper>
   );

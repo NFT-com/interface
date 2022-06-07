@@ -25,16 +25,16 @@ import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useNetwork } from 'wagmi';
 
 const traitIcons = {
-  'Owner': <UserIcon className='h-5 ml-2' />,
-  'Profile Mints Remaining': <UserIcon className='h-5 ml-2' />,
-  'Key Id': <CTAKeyIcon className='h-3' />,
-  'Key Body': <CTAKeyIcon className='h-3' />,
-  'Key Blade': <CTAKeyIcon className='h-3' />,
-  'Key Handle': <CTAKeyIcon className='h-3' />,
-  'Material': <PaintBrush className='h-3 ml-2' />,
-  'Stand': <StandIcon className="h-3 ml-2" />,
-  'Background': <BackgroundTraitIcon className="h-4 ml-1" />,
-  'Glitch': <GlitchIcon className="h-4 ml-1" />,
+  'Owner': <UserIcon />,
+  'Profile Mints Remaining': <UserIcon />,
+  'Key Id': <CTAKeyIcon />,
+  'Key Body': <CTAKeyIcon />,
+  'Key Blade': <CTAKeyIcon />,
+  'Key Handle': <CTAKeyIcon />,
+  'Material': <PaintBrush />,
+  'Stand': <StandIcon />,
+  'Background': <BackgroundTraitIcon />,
+  'Glitch': <GlitchIcon />,
 };
 
 export interface GenesisKeyGalleryDetailViewProps {

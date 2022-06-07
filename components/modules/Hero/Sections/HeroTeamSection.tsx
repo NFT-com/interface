@@ -1,4 +1,3 @@
-import HeroRoadmapSection from 'components/modules/Hero/Sections/HeroRoadmapSection';
 import { tw } from 'utils/tw';
 
 import { Person, PersonTile } from './PersonTile';
@@ -179,7 +178,6 @@ export default function HeroTeamSection() {
             {/* adds overlay transition between bg sections  */}
           </div>
         </div>
-        <HeroRoadmapSection />
       </div>
     </div>
   );

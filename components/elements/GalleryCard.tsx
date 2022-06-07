@@ -15,6 +15,7 @@ function GalleryCard(props: GalleryCardProps) {
   return (
     <div
       className={tw(
+        'relative',
         'drop-shadow-md rounded-xl flex flex-col',
         'w-full aspect-square',
         'justify-between cursor-pointer transform hover:scale-105',
@@ -29,8 +30,8 @@ function GalleryCard(props: GalleryCardProps) {
       <Image
         alt={props.label}
         src={props.imageURL}
-        width={'100%'}
-        height={'100%'}
+        layout="fill"
+        objectFit="contain"
         className={tw(
           'h-full w-full aspect-square rounded-xl absolute z-20',
         )}

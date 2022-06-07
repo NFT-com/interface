@@ -8,10 +8,6 @@ export interface SignOutModalProps {
 }
 
 export function SignOutModal(props: SignOutModalProps) {
-  if (process.env.NEXT_PUBLIC_HERO_ONLY === 'true') {
-    return null;
-  }
-
   return (
     <Modal
       visible={props.visible}

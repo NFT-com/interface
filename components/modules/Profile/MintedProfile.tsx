@@ -1,25 +1,22 @@
-import { Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
-import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
-import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
-import { ProfileEditGalleryContext } from './ProfileEditGalleryContext';
+import { ProfileEditContext } from './ProfileEditContext';
 
 import { PencilIcon } from '@heroicons/react/solid';
 import { getAccountLink } from '@metamask/etherscan-link';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
@@ -34,40 +31,31 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const {
     editMode,
-    setEditMode,
-    clearDrafts,
-    saveProfile,
     saving,
-    draftBio,
     draftProfileImg,
     draftHeaderImg,
     setDraftHeaderImg,
     setDraftProfileImg
-  } = useContext(ProfileEditGalleryContext);
+  } = useContext(ProfileEditContext);
 
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const { profileUris: myOwnedProfileTokenUris } = useMyNftProfileTokens();
   const { profileData } = useProfileQuery(profileURI);
-  const userIsAdmin = (process.env.NEXT_PUBLIC_CUSTOM_PROFILES_ENABLED === 'true')
-    && myOwnedProfileTokenUris
-      .map(fullUri => fullUri.split('/').pop())
-      .includes(profileURI);
-
-  const { mutate: mutateMyNFTs } = useMyNFTsQuery({
-    first: 20
-  });
+  const userIsAdmin = myOwnedProfileTokenUris
+    .map(fullUri => fullUri.split('/').pop())
+    .includes(profileURI);
       
   const { nfts: publiclyVisibleNFTs, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    false /* includeHidden */,
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
-    { first: 20 }
+    20
   );
 
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
-  const hasGks = !isNullOrEmpty(ownedGKTokens);
+  useEffect(() => {
+    mutateProfileNFTs();
+  }, [editMode, mutateProfileNFTs]);
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -93,16 +81,30 @@ export function MintedProfile(props: MintedProfileProps) {
 
   return (
     <div className="relative h-screen">
-      <BannerWrapper
-        imageOverride={
-          editMode ?
-            (isNullOrEmpty(draftHeaderImg?.preview) ?
-              profileData?.profile?.bannerURL :
-              draftHeaderImg?.preview) :
-            profileData?.profile?.bannerURL
-        }
-        loading={saving}
+      <div
+        className={tw(
+          'bg-no-repeat bg-cover bg-center',
+          'relative flex flex-row items-end justify-center bg-[#05080c]',
+        )}
+        style={{
+          height: '240px',
+          backgroundImage:
+            editMode ?
+              (isNullOrEmpty(draftHeaderImg?.preview) ?
+                profileData?.profile?.bannerURL :
+                `url(${draftHeaderImg?.preview})`) :
+              profileData?.profile?.bannerURL
+        }}
       >
+        {saving && <div
+          style={{ zIndex: 102 }}
+          className={tw(
+            'absolute flex bg-white/10',
+            'items-center justify-center w-full h-full'
+          )}
+        >
+          <Loader/>
+        </div>}
         <div className='w-full h-full'>
           <Dropzone
             disabled={!userIsAdmin}
@@ -118,54 +120,6 @@ export function MintedProfile(props: MintedProfileProps) {
                 <div {...getRootProps()} style={{ outline: 'none' }}>
                   <input {...getInputProps()} />
                 </div>
-                {userIsAdmin && hasGks && (
-                  editMode ?
-                    <div
-                      className={tw(
-                        'flex absolute top-24 right-32 sm:right-28'
-                      )}
-                      style={{ zIndex: 49 }}
-                    >
-                      <div className='mr-4'>
-                        <Button
-                          type={ButtonType.PRIMARY}
-                          label={'Save'}
-                          onClick={() => {
-                            analytics.track('Update Profile', {
-                              ethereumAddress: account?.address,
-                              profile: profileURI,
-                              newProfile: draftProfileImg?.preview ? true : false,
-                              newHeader: draftHeaderImg?.preview ? true : false,
-                              newDescription: draftBio,
-                            });
-
-                            saveProfile();
-                            setEditMode(false);
-                            mutateProfileNFTs();
-                            mutateMyNFTs();
-                          }}
-                        />
-                      </div>
-                      <Button
-                        type={ButtonType.SECONDARY}
-                        label={'Cancel'}
-                        onClick={clearDrafts}
-                      />
-                    </div> :
-                    <div
-                      className={tw(
-                        'absolute top-24 right-32 sm:right-28'
-                      )}
-                      style={{ zIndex: 49 }}
-                    >
-                      <Button
-                        type={ButtonType.SECONDARY}
-                        label={'Edit Profile'}
-                        onClick={() => {
-                          setEditMode(true);
-                        }}
-                      />
-                    </div>)}
                 {editMode && <div
                   className={tw(
                     'absolute bottom-5 right-32 sm:right-28'
@@ -179,14 +133,14 @@ export function MintedProfile(props: MintedProfileProps) {
             )}
           </Dropzone>
         </div>
-      </BannerWrapper>
+      </div>
       <div
         className='flex justify-center items-center'
         style={{
           zIndex: 103,
         }}
       >
-        <div className="flex items-center md:flex-col justify-center">
+        <div className="flex items-center md:flex-col justify-center md:items-start md:w-full md:px-8">
           <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px] mr-20 ml-[-4rem] md:ml-0 md:mr-0">
             <Dropzone
               accept={'image/*' ['.*']}
@@ -195,7 +149,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 if (userIsAdmin) onDropProfile(files);
               }}
             >
-              {({ getRootProps, getInputProps, open }) => (
+              {({ getRootProps, getInputProps }) => (
                 <section>
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',
@@ -212,26 +166,31 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <Loader/>
                     </div>}
-                    <Image
-                      src={
-                        !isNullOrEmpty(draftProfileImg?.preview)
-                          ? draftProfileImg?.preview
-                          : profileData?.profile?.photoURL ??
-                          (!(process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true')
-                            ? 'https://cdn.nft.com/profile-image-default.svg' :
-                            cameraIcon)
-                      }
-                      alt="profilePicture"
-                      draggable={false}
+                    <div
                       className={tw(
-                        'object-center rounded-full',
-                        'h-full w-full',
-                        'shrink-0 aspect-square',
+                        'rounded-full h-full w-full shrink-0',
+                        'shrink-0 aspect-square ',
                         userIsAdmin && editMode ? 'cursor-pointer' : '',
                         userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
                       )}
-                      style={{ zIndex: 101, }}
-                    />
+                      style={{ zIndex: 101 }}
+                    >
+                      <Image
+                        src={
+                          !isNullOrEmpty(draftProfileImg?.preview)
+                            ? draftProfileImg?.preview
+                            : profileData?.profile?.photoURL ??
+                          ((!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED))
+                            ? 'https://cdn.nft.com/profile-image-default.svg' :
+                            cameraIcon)
+                        }
+                        alt="profilePicture"
+                        draggable={false}
+                        className="rounded-full scale-95"
+                        layout="fill"
+                        objectFit='cover'
+                      />
+                    </div>
                     {editMode && <div
                       className={tw(
                         'absolute bottom-5 -right-4 md:-right-8'

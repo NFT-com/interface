@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Nft, PageInfo, PageInput } from 'graphql/generated/types';
+import { Nft, PageInfo } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate } from 'swr';
@@ -15,24 +15,23 @@ export interface ProfileNFTsQueryData {
 
 export function useProfileNFTsQuery(
   profileId: string,
-  includeHidden: boolean,
-  pageInput: PageInput
+  first: number
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
   
   const keyString = 'ProfileNFTsQuery' +
     profileId +
-    includeHidden +
-    JSON.stringify(pageInput);
+    first;
 
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(profileId)) {
       return null;
     }
+    
     const result = await sdk.ProfileNFTs({
       input: {
         profileId,
-        pageInput
+        pageInput: { first: first }
       }
     });
     return result;

@@ -46,7 +46,8 @@ export function PersonTile(props: PersonTileProps) {
             <Image
               alt={person.name}
               src={person.pictureUrl}
-              layout='fill'
+              layout="fill"
+              objectFit="contain"
             />
           }
         </div>

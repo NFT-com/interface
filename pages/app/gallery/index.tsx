@@ -1,5 +1,4 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Footer } from 'components/elements/Footer';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { Modal } from 'components/elements/Modal';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
@@ -14,6 +13,7 @@ import { Maybe } from 'graphql/generated/types';
 import { useGallery } from 'hooks/state/useGallery';
 import { useSignedIn } from 'hooks/useSignedIn';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
@@ -69,9 +69,9 @@ export default function GalleryPage() {
   }, [currentFilter, galleryItemType, showMyStuff, signedIn]);
 
   return (
-    <PageWrapper removePinkSides headerOptions={{
+    <PageWrapper headerOptions={{
       walletOnly: true,
-      sidebar: (process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true') ? 'dashboard' : 'hero',
+      sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
       removeSummaryBanner: true,
       walletPopupMenu: true,
     }}>
@@ -96,7 +96,7 @@ export default function GalleryPage() {
         'text-primary-txt-dk absolute'
       )}>
         {/* Desktop Filters - sidebar */}
-        {!isMobile && (process.env.NEXT_PUBLIC_ENABLE_GALLERY_FILTERS === 'true') &&
+        {!isMobile &&
          <div className={tw(
            'flex flex-col w-1/4 shrink-0 h-full min-h-4/5 border-r border-accent-border-dk',
            'border-t px-10 pt-6 md:hidden'
@@ -125,30 +125,28 @@ export default function GalleryPage() {
             <NetworkErrorTile />
           </div>}
           <LoadedContainer loaded={true} fitToParent>
-            <div ref={parentRef} className='w-full h-full flex flex-wrap mt-4'>
+            <div ref={parentRef} className='w-full h-full flex flex-wrap items-start mt-4'>
               {getGalleryContent()}
             </div>
           </LoadedContainer>
         </div>
       </div>
       {/* mobile filters */}
-      {(process.env.NEXT_PUBLIC_ENABLE_GALLERY_FILTERS === 'true') &&
-        <div className={tw(
-          'hidden w-full h-full absolute dark top-0 left-0',
-          !showFilters ? 'md:hidden' : 'md:block',
-          'bg-modal-overlay-dk mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
-          'border-t border-accent-border-dk'
-        )}>
-          <GenesisKeyGalleryFilters
-            showFilters={showFilters}
-            currentFilter={currentFilter}
-            setCurrentFilter={(filter: string) => {
-              setCurrentFilter(filter);
-            }}
-          />
-        </div>
-      }
-      {(process.env.NEXT_PUBLIC_ENABLE_GALLERY_FILTERS === 'true') && <div className={tw(
+      <div className={tw(
+        'hidden w-full h-full absolute dark top-0 left-0',
+        !showFilters ? 'md:hidden' : 'md:block',
+        'bg-modal-overlay-dk mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
+        'border-t border-accent-border-dk'
+      )}>
+        <GenesisKeyGalleryFilters
+          showFilters={showFilters}
+          currentFilter={currentFilter}
+          setCurrentFilter={(filter: string) => {
+            setCurrentFilter(filter);
+          }}
+        />
+      </div>
+      <div className={tw(
         'md:block absolute bottom-0 left-0 hidden w-full mb-8 flex justify-center',
         'drop-shadow-md px-8'
       )}>
@@ -160,8 +158,7 @@ export default function GalleryPage() {
           }}
           type={ButtonType.PRIMARY}
         />
-      </div>}
-      <Footer />
+      </div>
     </PageWrapper>
   );
 }

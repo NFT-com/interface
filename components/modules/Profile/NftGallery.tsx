@@ -1,18 +1,13 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
-import { NFTCard } from 'components/elements/NFTCard';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { shortenAddress } from 'utils/helpers';
-import { tw } from 'utils/tw';
 
-import { ProfileEditGalleryContext } from './ProfileEditGalleryContext';
+import { NftGrid } from './NftGrid';
+import { ProfileEditContext } from './ProfileEditContext';
 
-import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
-import { useThemeColors } from 'styles/theme/useThemeColors';
-import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftGalleryProps {
   profileURI: string;
@@ -27,27 +22,14 @@ export function NftGallery(props: NftGalleryProps) {
   const [loadedCount, setLoadedCount] = useState(PROFILE_GALLERY_PAGE_SIZE);
 
   const { data: account } = useAccount();
-  const router = useRouter();
   const { profileData } = useProfileQuery(profileURI);
   const isAdmin = profileData?.profile?.owner?.address?.toLowerCase() === account?.address?.toLowerCase();
-  const { data: allOwnerNFTs, totalItems: ownerNFTCount } = useMyNFTsQuery({
-    first: loadedCount
-  });
+  const { data: allOwnerNFTs, totalItems: ownerNFTCount } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs, totalItems: publicNFTCount, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    false,
-    { first: loadedCount }
+    loadedCount
   );
-  const {
-    toggleHidden,
-    editMode,
-    draftToHide,
-    draftHideAll,
-    draftToShow,
-    draftShowAll,
-    saving
-  } = useContext(ProfileEditGalleryContext);
-  const { tileBackgroundSecondary } = useThemeColors();
+  const { editMode, saving } = useContext(ProfileEditContext);
 
   useEffect(() => {
     mutateProfileNFTs();
@@ -77,12 +59,12 @@ export function NftGallery(props: NftGalleryProps) {
     if (profileNFTs.find(nft2 => nft2.id === nft.id)) {
       return {
         ...nft,
-        hidden: true
+        hidden: false
       };
     } else {
       return {
         ...nft,
-        hidden: false
+        hidden: true
       };
     }
   });
@@ -93,48 +75,7 @@ export function NftGallery(props: NftGalleryProps) {
 
   return (
     <>
-      <div
-        className={'profile-page-grid w-full'}>
-        {nftsToShow.map((nft: PartialDeep<any>) => (
-          <div
-            key={nft?.id + '-' + nft?.contract?.address}
-            className={tw(
-              'flex mb-10 items-center justify-center px-3',
-              'sm:mb-2'
-            )}
-          >
-            <NFTCard
-              title={nft?.metadata?.name}
-              traits={[{ key: '', value: shortenAddress(nft?.contract?.address) }]}
-              images={[nft?.metadata?.imageURL]}
-              profileURI={profileURI}
-              contractAddress={nft?.contract}
-              tokenId={nft?.tokenId}
-              // only show the eye icons to the owner in edit mode
-              visible={editMode ?
-                nft?.hidden ?
-                  (!draftToHide.has(nft?.id) && !draftHideAll) :
-                  (draftToShow.has(nft?.id) || draftShowAll) :
-                null
-              }
-              onVisibleToggle={() => {
-                toggleHidden(nft?.id, nft?.hidden);
-              }}
-              onClick={() => {
-                if ((process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true')) {
-                  router.push('/app/nft/' + nft?.contract?.address + '/' + nft?.id);
-                } else if (editMode) {
-                  toggleHidden(nft?.id, nft?.hidden);
-                } else {
-                  alert('coming soon');
-                }
-              }}
-              customBackground={tileBackgroundSecondary}
-              customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
-            />
-          </div>
-        ))}
-      </div>
+      <NftGrid nfts={nftsToShow} profileURI={profileURI} />
       {(!isAdmin || editMode) &&
       (editMode ? ownerNFTCount > nftsToShow.length : publicNFTCount > nftsToShow.length) &&
         <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium text-always-white">

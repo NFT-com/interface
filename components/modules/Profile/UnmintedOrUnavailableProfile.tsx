@@ -16,7 +16,7 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
   const { blocked: currentURIBlocked } = useProfileBlocked(profileURI, true);
 
   return (
-    <div className="mt-20 h-screen">
+    <div className="mt-20 h-screen bg-pagebg dark:bg-pagebg-dk">
       <BannerWrapper />
       <div
         className='md:mb-0 mb-8 flex justify-center'
@@ -27,13 +27,15 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
         <div className="flex items-center md:flex-col">
           <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px]">
             <section>
-              <div className='relative outline-none'>
+              <div className='relative outline-none rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60'>
                 <Image
                   src={'https://cdn.nft.com/profile-image-default.svg'}
                   alt="profilePicture"
                   draggable={false}
-                  className="object-center rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60"
-                  style={{ zIndex: 101, }}
+                  className="object-center"
+                  layout="fill"
+                  objectFit="cover"
+                  style={{ zIndex: 49, }}
                 />
               </div>
             </section>
@@ -48,7 +50,7 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
 
         </div>
       </div>
-      <main className='w-full justify-start space-y-4 flex flex-col'>
+      <main className='w-full justify-start space-y-4 flex flex-col bg-pagebg dark:bg-pagebg-dk'>
         <div className='lg:text-sm text-xl text-primary-txt dark:text-primary-txt-dk w-full flex justify-center cursor-pointer flex-col'>
           <div className="text-center font-bold mx-auto w-full">
             {(notAvailable || currentURIBlocked) ? 'This profile is not available.' : 'This profile is available and is ready to be minted!' }

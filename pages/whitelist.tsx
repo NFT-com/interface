@@ -13,7 +13,8 @@ export default function WhitelistPage() {
       {isMobile ?
         <Image
           src='https://cdn.nft.com/NftCityStill.jpg'
-          layout='fill'
+          layout="fill"
+          objectFit="contain"
           className='object-fill absolute'
           alt='NFT City'
         />

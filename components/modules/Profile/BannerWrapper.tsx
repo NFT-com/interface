@@ -1,4 +1,5 @@
 import Loader from 'components/elements/Loader';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { PropsWithChildren } from 'react';
@@ -11,7 +12,7 @@ export interface BannerWrapperProps {
   onMouseLeave?: () => void,
 }
 
-const defaultBanner = (process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true') ?
+const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
   'https://cdn.nft.com/empty_profile_banner.png'
   : 'https://cdn.nft.com/profile-banner-default-logo-key.png';
 

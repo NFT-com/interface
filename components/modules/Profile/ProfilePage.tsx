@@ -1,10 +1,11 @@
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
-import { ProfileEditGalleryContextProvider } from 'components/modules/Profile/ProfileEditGalleryContext';
+import { ProfileEditContextProvider } from 'components/modules/Profile/ProfileEditContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Loader } from 'react-feather';
@@ -56,16 +57,15 @@ export function ProfilePage(props: ProfilePageProps) {
       </PageWrapper>
     );
   }
-
+  
   return (
     <PageWrapper
       bgColorClasses='dark:bg-pagebg-secondary-dk bg-pagebg'
-      removePinkSides
       headerOptions={{
         removeSummaryBanner: true,
         walletOnly: true,
         walletPopupMenu: true,
-        sidebar: (process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === 'true') ? 'dashboard' : 'hero',
+        sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
         hideAnalytics: true,
         profileHeader: true
       }}
@@ -76,7 +76,7 @@ export function ProfilePage(props: ProfilePageProps) {
           profileURI={processedProfileURI}
         /> :
         (
-          <ProfileEditGalleryContextProvider
+          <ProfileEditContextProvider
             key={processedProfileURI}
             profileURI={processedProfileURI}
           >
@@ -85,7 +85,7 @@ export function ProfilePage(props: ProfilePageProps) {
               profileURI={processedProfileURI}
               addressOwner={profileOwner}
             />
-          </ProfileEditGalleryContextProvider>
+          </ProfileEditContextProvider>
         )
       }
     </PageWrapper>

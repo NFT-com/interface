@@ -6,6 +6,7 @@ import { useUser } from 'hooks/state/useUser';
 import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -13,7 +14,6 @@ import { Disclosure } from '@headlessui/react';
 import Link from 'next/link';
 import HeroCorner from 'public/hero_corner.svg';
 import HeroCornerDark from 'public/hero_corner_dark.svg';
-import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -49,28 +49,15 @@ export default function Header(props: HeaderProps) {
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { primaryIcon } = useThemeColors();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
-  const showHeaderNav = (process.env.NEXT_PUBLIC_PREFERENCE_COLLECTION_FLOW_ENABLED === 'true') && !isMobile;
-
-  const headerStyles = useCallback(() => {
-    if(props.removeBackground && !props.heroHeader) {
-      return 'transparent';
-    }
-    else if(props.removeBackground && props.heroHeader) {
-      return `z-50 drop-shadow-md ${props.heroHeaderBlack ? 'bg-black' : 'bg-transparent'}`;
-    }
-    else {
-      return 'bg-headerbg ' + (props.profileHeader ? 'dark:bg-headerbg-profile-dk opacity-90' : 'dark:bg-headerbg-dk');
-    }
-  }, [props.heroHeader, props.heroHeaderBlack, props.profileHeader, props.removeBackground]);
+  const showHeaderNav = !isMobile;
 
   // todo: remove Disclosure in favor of typical wallet slide toggling.
   return (
-    <Disclosure as="nav" className={tw('w-full', `${headerStyles()}`)}>
-      {({ open }) => (
+    <Disclosure as="nav" className={tw('w-full', 'bg-transparent')}>
+      {() => (
         <>
           <div className={tw('w-full mx-auto',
-            ' pl-5',
-            `${props.removeBackground ? '' : 'border-b'}`,
+            'pl-5',
             walletSlideOpen ? 'border-action-primary' : 'border-gray-200 dark:border-gray-800',
           )}>
             <div className="flex justify-between h-20">
@@ -78,26 +65,34 @@ export default function Header(props: HeaderProps) {
                 <div className="flex-shrink-0 flex items-center text-base">
                   <Link href="/">
                     <div className={tw(
+                      'cursor-pointer',
                       'lg:ml-2 ml-20',
                       'text-always-white',
                       'font-hero-heading1 flex items-center')}>
                       <div className='h-10 w-10 mr-2'>
                         { isDarkMode ?
-                          <HeroCorner className='w-full h-full' />
-                          : <HeroCornerDark className='w-full h-full' />
+                          <HeroCorner />
+                          : <HeroCornerDark />
                         }
                       </div>
-                      <span>NFT.COM</span>
+                      <span className="flex md:hidden">NFT.COM</span>
                     </div>
                   </Link>
-                  { showHeaderNav &&
+                </div>
+              </div>
+              <div
+                className={tw(
+                  'flex items-center h-full',
+                  walletSlideOpen ? '' : 'md:pr-5 lg:pr-6 pr-7'
+                )}>
+                { showHeaderNav &&
                     <div
                       style={{
                         textShadow: '0px 2px 4px rgba(0,0,0,0.4)',
                       }}
                       className={tw(
                         'sm:hidden block',
-                        'md:ml-2 ml-20',
+                        'md:mr-5 mr-20',
                         'h-full flex-shrink-0',
                         'space-x-5',
                         'font-rubik text-blue-50 font-bold tracking-wide',
@@ -105,14 +100,14 @@ export default function Header(props: HeaderProps) {
                       )}
                     >
                       <Link href ='/app/gallery'>
-                        <span className='hover:text-link'>Gallery</span>
+                        <span className='hover:text-link cursor-pointer'>Gallery</span>
                       </Link>
                       <span onClick={() => {
                         window.open('https://docs.nft.com', '_open');
                       }} className='hover:text-link cursor-pointer'>Docs</span>
                       {hasGksOrTokens && <Link href ='/app/vault'>
                         <span
-                          className='hover:text-white'
+                          className='hover:text-white cursor-pointer'
                           style={{
                             background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
                             backgroundSize: '200% 200%',
@@ -124,15 +119,8 @@ export default function Header(props: HeaderProps) {
                         </span>
                       </Link>}
                     </div>
-                  }
-                </div>
-              </div>
-              <div
-                className={tw(
-                  'flex items-center h-full',
-                  walletSlideOpen ? '' : 'md:pr-5 lg:pr-6 pr-7'
-                )}>
-                {(process.env.NEXT_PUBLIC_SEARCH_ENABLED === 'true') && !props.heroHeader &&
+                }
+                {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && !props.heroHeader &&
                   <div className={tw(
                     'flex items-center mr-4 md:hidden',
                     'block lg:w-1/2 w-80'
@@ -169,7 +157,7 @@ export default function Header(props: HeaderProps) {
               </div>
             </div>
           </div>
-          {(process.env.NEXT_PUBLIC_SEARCH_ENABLED === 'true') && props.walletOnly !== true &&
+          {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && props.walletOnly !== true &&
           <>
             <div className="my-4 ml-3 flex items-center mr-4 md:mr-3 pb-4 md:block hidden">
               <SearchBar />

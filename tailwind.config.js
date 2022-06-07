@@ -6,34 +6,44 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     screens: {
-      'xxl': { 'max': '10000px' },
-      '2xl': { 'max': '1800px' },
-      'xl': { 'max': '1500px' },
-      'lg': { 'max': '1280px' },
-      'md': { 'max': '960px' },
-      'sm': { 'max': '640px' },
-      'xs': { 'max': '500px' },
-      'minxs': '390px',
+      // if all other sizes below are specified, then the "default" value wil apply to the XL range too.
+      'xl': { 'max': '10000px' },
+      'lg': { 'max': '1199px' },
+      'md': { 'max' : '899px' },
+      'sm': { 'max': '599px' },
+      'xs': { 'max' : '374px' },
+      
+      // maxes
+      'deprecated_xxl': { 'max': '10000px' },
+      'deprecated_2xl': { 'max': '1800px' },
+      'deprecated_xl': { 'max': '1500px' },
+      'deprecated_lg': { 'max': '1280px' },
+      'deprecated_md': { 'max': '960px' },
+      'deprecated_sm': { 'max': '640px' },
+      'deprecated_xs': { 'max': '500px' },
+      
+      // mins
+      'deprecated_minxs': '390px',
       // => @media (min-width: 400px) { ... }
-      'minxs2': '585px',
+      'deprecated_minxs2': '585px',
       // => @media (min-width: 585px) { ... }
-      'minsm': '640px',
+      'deprecated_minsm': '640px',
       // => @media (min-width: 640px) { ... }
-      'minmd': '768px',
+      'deprecated_minmd': '768px',
       // => @media (min-width: 768px) { ... }
-      'minmd2': { 'min': '860px', 'max': '1156px' },
+      'deprecated_minmd2': { 'min': '860px', 'max': '1156px' },
       // => @media (min-width: 860px, max-width: 1156px) { ... }
-      'minlg': '1024px',
+      'deprecated_minlg': '1024px',
       // => @media (min-width: 1024px) { ... }
-      'minxl': '1280px',
+      'deprecated_minxl': '1280px',
       // => @media (min-width: 1280px) { ... }
-      'min2xl': '1536px',
+      'deprecated_min2xl': '1536px',
       // => @media (min-width: 1536px) { ... }
-      'min3xl': '1727px',
+      'deprecated_min3xl': '1727px',
       // => @media (min-width: 1900px) { ... }
-      'min4xl': '1900px',
+      'deprecated_min4xl': '1900px',
       // => @media (min-width: 2200px) { ... }
-      'min5xl': '2301px',
+      'deprecated_min5xl': '2301px',
       // => @media (min-width: 2200px) { ... }
     },
     extend: {
@@ -58,8 +68,10 @@ module.exports = {
         'green-summary':'#4FC853',
         'headerbg':'#FFFFFF',
         'headerbg-dk':'#0C0F17',
+        'headerbg-profile-dk':'#222222',
         'pagebg':'#f4f6fb',
         'pagebg-dk':'#0C0F17',
+        'pagebg-secondary-dk':'#222222',
         'header-txt':'#6B7082',
         'header-pink':'#FF0078',
         'modal-bg':'#FFFFFF',
@@ -73,7 +85,7 @@ module.exports = {
         'red-1':'#FF6871',
         'text-4':'#C3C5CB',
         'footer-txt':'#787E91',
-        'primary-btn-txt-disabled':'#777E91',
+        'primary-btn-txt-disabled':'777E91',
         'transparent-border':'#7A8092',
         'toggle-bg':'#00A4FF',
         'grey-txt':'#d4d4d4',

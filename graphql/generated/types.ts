@@ -740,10 +740,13 @@ export type Profile = {
   bannerURL?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  displayType?: Maybe<ProfileDisplayType>;
   followersCount?: Maybe<Scalars['Int']>;
+  gkIconVisible?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   isFollowedByMe?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
+  nftsDescriptionsVisible?: Maybe<Scalars['Boolean']>;
   owner?: Maybe<Wallet>;
   photoURL?: Maybe<Scalars['String']>;
   status?: Maybe<ProfileStatus>;
@@ -757,6 +760,11 @@ export type ProfileClaimedInput = {
   txHash: Scalars['String'];
   walletId: Scalars['ID'];
 };
+
+export enum ProfileDisplayType {
+  Collection = 'Collection',
+  Nft = 'NFT'
+}
 
 export type ProfilePreferenceInput = {
   urls: Array<Scalars['String']>;
@@ -1055,9 +1063,12 @@ export type UpdateNfTsForProfileInput = {
 export type UpdateProfileInput = {
   bannerURL?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
+  displayType?: InputMaybe<ProfileDisplayType>;
+  gkIconVisible?: InputMaybe<Scalars['Boolean']>;
   hideAllNFTs?: InputMaybe<Scalars['Boolean']>;
   hideNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   id: Scalars['ID'];
+  nftsDescriptionsVisible?: InputMaybe<Scalars['Boolean']>;
   photoURL?: InputMaybe<Scalars['String']>;
   showAllNFTs?: InputMaybe<Scalars['Boolean']>;
   showNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -1423,7 +1434,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, isFollowedByMe?: boolean | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, displayType?: ProfileDisplayType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -2190,7 +2201,8 @@ export const ProfileDocument = gql`
     bannerURL
     photoURL
     description
-    isFollowedByMe
+    gkIconVisible
+    displayType
     owner {
       address
       chainId

@@ -5,6 +5,8 @@ export enum RoundedCornerVariant {
   TopRight = 'topright',
   BottomLeft = 'bottomleft',
   BottomRight = 'bottomright',
+  Left = 'left',
+  Right = 'right',
   All = 'all',
   None = 'none'
 }
@@ -25,6 +27,10 @@ const getRoundedClass = (variant: RoundedCornerVariant): string => {
     return 'rounded-bl-3xl';
   case RoundedCornerVariant.BottomRight:
     return 'rounded-br-3xl';
+  case RoundedCornerVariant.Right:
+    return 'rounded-r-3xl';
+  case RoundedCornerVariant.Left:
+    return 'rounded-l-3xl';
   case RoundedCornerVariant.All:
     return 'rounded-3xl object-cover';
   case RoundedCornerVariant.None:

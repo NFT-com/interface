@@ -2,7 +2,6 @@ import { Footer } from 'components/elements/Footer';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import HeroSplash from 'components/modules/Hero/HeroSplash';
 import HeroAboutSection from 'components/modules/Hero/Sections/HeroAboutSection';
-import { HeroCalendarCTA } from 'components/modules/Hero/Sections/HeroCalendarCTA';
 import HeroCommunitySection from 'components/modules/Hero/Sections/HeroCommunitySection';
 import { HeroCTA } from 'components/modules/Hero/Sections/HeroCTA';
 import HeroTeamSection from 'components/modules/Hero/Sections/HeroTeamSection';
@@ -13,7 +12,6 @@ import { tw } from 'utils/tw';
 import DiscordIcon from 'public/discord_gray_icon.svg';
 import TwitterIcon from 'public/twitter_gray_icon.svg';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 
 export interface HeroPageProps {
   scrollToAbout?: boolean;
@@ -76,7 +74,6 @@ export function HeroPage(props: HeroPageProps) {
         heroHeader: true,
         heroHeaderBlack: headerBlack,
       }}
-      removePinkSides={isMobile}
     >
       {getSides()}
       <div
@@ -106,8 +103,6 @@ export function HeroPage(props: HeroPageProps) {
         </div>
 
         <HeroCTA />
-
-        <HeroCalendarCTA />
 
         <HeroTweetSection />
 

@@ -2,7 +2,7 @@
 package = "@netlify/plugin-nextjs"
 
 [build]
-command = "yarn next build"
+command = "yarn build"
 publish = ".next"
 
 [[redirects]]
@@ -22,18 +22,6 @@ publish = ".next"
   to = "https://discord.gg/nftdotcom"
   status = 200
   force = true
-
-[context.prod.environment]
-  NEXT_PUBLIC_GOOGLE_ANALYTICS_ID = "G-FKHMGFQKR0"
-  NEXT_PUBLIC_ENV = "PRODUCTION"
-
-[context.staging.environment]
-  NEXT_PUBLIC_GOOGLE_ANALYTICS_ID = "G-W1SG7G6BJN"
-  NEXT_PUBLIC_ENV = "STAGING"
-
-[context.stable.environment]
-  NEXT_PUBLIC_GOOGLE_ANALYTICS_ID = "G-W1SG7G6BJN"
-  NEXT_PUBLIC_ENV = "SANDBOX"
 
 [[headers]]
 for = "/*"

@@ -34,8 +34,7 @@ export function useClaimableProfileCount(address: string): ClaimableProfileCount
   const { data } = useSWR(keyString,
     async () => {
       if (
-        isNullOrEmpty(address) ||
-        (!(process.env.NEXT_PUBLIC_GK_BLIND_AUCTION_ALL_BIDS_EXECUTED === 'true'))
+        isNullOrEmpty(address)
       ) {
         return {
           claimableCounts: [],
@@ -58,8 +57,6 @@ export function useClaimableProfileCount(address: string): ClaimableProfileCount
         const total = claimableCounts.reduce((
           previousValue: number,
           currentValue: ClaimableCount,
-          currentIndex: number,
-          array: ClaimableCount[]
         ) => previousValue + currentValue.claimable, 0);
   
         setLoading(false);

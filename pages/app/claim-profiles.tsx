@@ -50,7 +50,6 @@ export default function ProfilePreferencesPage() {
 
   return (
     <PageWrapper
-      removePinkSides
       headerOptions={{
         walletOnly: true,
         removeBackground: true,
@@ -68,7 +67,8 @@ export default function ProfilePreferencesPage() {
           src={keySplash}
           className="h-full"
           alt="key Splash"
-          layout='fill'
+          layout="fill"
+          objectFit="contain"
         />
         <div
           className={tw(

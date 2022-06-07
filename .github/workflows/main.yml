@@ -1,60 +1,92 @@
 name: Deploy NFT.com Frontend
-on: [push]
+on:
+  push:
+
 jobs:
+  deploy-preview:
+    if: ${{ startsWith(github.ref_name, 'feat') || startsWith(github.ref_name, 'fix') }}
+    runs-on: ubuntu-latest
+    environment: sandbox
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.4.2
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+        cache: 'yarn'
+    - name: Install Dependencies
+      run: yarn install --frozen-lockfile --immutable
+      
+    - name: Cypress run
+      uses: cypress-io/github-action@v4
+      with:
+        record: true
+      env:
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Deploy Site Preview
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
+      run: netlify deploy --build --context deploy-preview --message "${{ github.head_ref }}@${{ github.sha }}"
+    
   deploy-sandbox:
     if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [17.5]
     environment: sandbox
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.2
-        
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3.2.0
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Get Yarn cache directory
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
-
-      - name: Use Yarn cache
-        uses: actions/cache@v3.0.3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      
+          node-version: '14'
+          cache: 'yarn'
       - name: Install Dependencies
-        run: yarn install --prefer-offline --frozen-lockfile
+        run: yarn install --frozen-lockfile --immutable
+
+      - name: Deploy Site
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
+        run: netlify deploy --build --prod --message "main@${{ github.sha }}"
+  
+  deploy-staging:
+    if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'staging') }}
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'yarn'
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile --immutable
         
       - name: Deploy Site
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
-        run: netlify deploy --build --prod --message "main@${{github.sha}}"
-#   deploy-staging:
-#     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'staging') }}
-#     runs-on: ubuntu-latest
-#     environment: nftcom_staging
-#     steps:
-#       - uses: actions/checkout@v2
-#       - uses: ./.github/actions/deploy-env
-#         with:
-#           secrets: ${{ toJSON(secrets) }}
-#           stage: staging
-#   deploy-prod:
-#     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'prod') }}
-#     runs-on: ubuntu-latest
-#     environment: nftcom_prod
-#     steps:
-#       - uses: actions/checkout@v2
-#       - uses: ./.github/actions/deploy-env
-#         with:
-#           secrets: ${{ toJSON(secrets) }}
-#           stage: prod
+        run: netlify deploy --build --prod --message "staging@${{ github.sha }}"
+        
+  deploy-prod:
+    if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'prod') }}
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'yarn'
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile --immutable
+      
+      - name: Deploy Site
+        env:
+          NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
+        run: netlify deploy --build --prod --message "prod@${{ github.sha }}"

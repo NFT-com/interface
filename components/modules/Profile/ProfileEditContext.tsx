@@ -1,4 +1,4 @@
-import { Maybe } from 'graphql/generated/types';
+import { Maybe, ProfileDisplayType } from 'graphql/generated/types';
 import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
@@ -6,19 +6,19 @@ import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileIm
 import { isNullOrEmpty } from 'utils/helpers';
 
 import moment from 'moment';
-import React, { PropsWithChildren, useCallback, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 
 export interface DraftImg {
   preview: Maybe<string>,
   raw: Maybe<string | File>
 }
 
-interface ProfileEditGalleryContextType {
+interface ProfileEditContextType {
   draftToHide: Set<string>; // ID is of format collectionAddress:tokenId
   draftToShow: Set<string>;
   toggleHidden: (id: string, currentVisibility: boolean) => void;
-  draftShowAll: boolean;
-  draftHideAll: boolean;
+  hideNftIds: (toHide: string[]) => void;
+  showNftIds: (toShow: string[]) => void;
   onHideAll: () => void;
   onShowAll: () => void;
   draftHeaderImg: DraftImg,
@@ -27,36 +27,48 @@ interface ProfileEditGalleryContextType {
   setDraftProfileImg: (img: DraftImg) => void,
   draftBio: Maybe<string>,
   setDraftBio: (bio: string) => void,
+  draftGkIconVisible: Maybe<boolean>,
+  setDraftGkIconVisible: (val: boolean) => void,
+  draftDisplayType: ProfileDisplayType,
+  setDraftDisplayType: (displayType: ProfileDisplayType) => void,
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   clearDrafts: () => void;
   saveProfile: () => void;
   saving: boolean;
+  selectedCollection: Maybe<string>;
+  setSelectedCollection: (collectionAddress: string) => void;
 }
 
 // initialize with default values
-export const ProfileEditGalleryContext = React.createContext<ProfileEditGalleryContextType>({
+export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   draftToHide: new Set(),
   draftToShow: new Set(),
   toggleHidden: () => null,
-  draftShowAll: false,
-  draftHideAll: false,
+  hideNftIds: () => null,
+  showNftIds: () => null,
   onHideAll: () => null,
   onShowAll: () => null,
   draftHeaderImg: { preview: '', raw: '' },
-  setDraftHeaderImg: (img: DraftImg) => null,
+  setDraftHeaderImg: () => null,
   draftProfileImg: { preview: '', raw: '' },
-  setDraftProfileImg: (img: DraftImg) => null,
+  setDraftProfileImg: () => null,
   draftBio: null,
-  setDraftBio: (bio: string) => null,
+  setDraftBio: () => null,
+  draftGkIconVisible: true,
+  setDraftGkIconVisible: () => null,
+  draftDisplayType: ProfileDisplayType.Nft,
+  setDraftDisplayType: () => null,
   editMode: false,
   setEditMode: () => null,
   clearDrafts: () => null,
   saveProfile: () => null,
   saving: false,
+  selectedCollection: null,
+  setSelectedCollection: () => null,
 });
 
-export interface ProfileEditGalleryContextProviderProps {
+export interface ProfileEditContextProviderProps {
   profileURI: string;
 }
 
@@ -67,8 +79,8 @@ export interface ProfileEditGalleryContextProviderProps {
  * check this context for drafts, and fallback on the server-provided values at the callsite.
  * 
  */
-export function ProfileEditGalleryContextProvider(
-  props: PropsWithChildren<ProfileEditGalleryContextProviderProps>
+export function ProfileEditContextProvider(
+  props: PropsWithChildren<ProfileEditContextProviderProps>
 ) {
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
 
@@ -76,11 +88,12 @@ export function ProfileEditGalleryContextProvider(
   const [saving, setSaving] = useState(false);
   const [draftToHide, setDraftToHide] = useState<Set<string>>(new Set());
   const [draftToShow, setDraftToShow] = useState<Set<string>>(new Set());
-  const [draftShowAll, setDraftShowAll] = useState(false);
-  const [draftHideAll, setDraftHideAll] = useState(false);
   const [draftBio, setDraftBio] = useState<string>(profileData?.profile?.description);
+  const [draftGkIconVisible, setDraftGkIconVisible] = useState<boolean>(profileData?.profile?.gkIconVisible);
   const [draftProfileImg, setDraftProfileImg] = useState({ preview: '', raw: null });
   const [draftHeaderImg, setDraftHeaderImg] = useState({ preview: '', raw: null });
+  const [draftDisplayType, setDraftDisplayType] = useState(null);
+  const [selectedCollection, setSelectedCollection] = useState<string>(null);
 
   const { updateProfile } = useUpdateProfileMutation();
   const { fileUpload } = useFileUploadMutation();
@@ -108,8 +121,6 @@ export function ProfileEditGalleryContextProvider(
         newToShow.add(id);
       }
     }
-    setDraftShowAll(false);
-    setDraftHideAll(false);
     setDraftToHide(newToHide);
     setDraftToShow(newToShow);
   }, [draftToHide, draftToShow]);
@@ -119,12 +130,16 @@ export function ProfileEditGalleryContextProvider(
     setDraftProfileImg({ preview: '', raw: null });
     setDraftHeaderImg({ preview: '', raw: null });
     setDraftBio(draftBio);
+    setDraftGkIconVisible(draftGkIconVisible);
     setEditMode(false);
     setDraftToHide(new Set());
     setDraftToShow(new Set());
-    setDraftShowAll(false);
-    setDraftHideAll(false);
-  }, [draftBio]);
+    setDraftDisplayType(null);
+  }, [draftBio, draftGkIconVisible]);
+
+  useEffect(() => {
+    setSelectedCollection(null);
+  }, [editMode]);
 
   const saveProfile = useCallback(async () => {
     try {
@@ -163,10 +178,10 @@ export function ProfileEditGalleryContextProvider(
         const result = await updateProfile({
           id: profileData?.profile?.id,
           description: draftBio,
+          gkIconVisible: draftGkIconVisible,
           hideNFTIds: Array.from(draftToHide),
           showNFTIds: Array.from(draftToShow),
-          showAllNFTs: draftShowAll,
-          hideAllNFTs: draftHideAll,
+          displayType: draftDisplayType,
           ...(imageUploadResult
             ? {}
             : {
@@ -188,23 +203,23 @@ export function ProfileEditGalleryContextProvider(
       setSaving(false);
     }
   }, [
-    draftHeaderImg,
     draftProfileImg,
-    updateProfile,
+    draftHeaderImg,
+    clearDrafts,
+    uploadProfileImages,
     profileData?.profile?.id,
+    updateProfile,
     draftBio,
+    draftGkIconVisible,
     draftToHide,
     draftToShow,
-    draftShowAll,
-    draftHideAll,
+    draftDisplayType,
     fileUpload,
-    uploadProfileImages,
     props.profileURI,
-    clearDrafts,
     mutateProfileData
   ]);
   
-  return <ProfileEditGalleryContext.Provider value={{
+  return <ProfileEditContext.Provider value={{
     draftToHide,
     draftToShow,
     editMode,
@@ -223,25 +238,69 @@ export function ProfileEditGalleryContextProvider(
     setDraftBio: (bio: string) => {
       setDraftBio(bio);
     },
-    toggleHidden,
-    draftHideAll,
-    draftShowAll,
-    onHideAll: () => {
-      setDraftShowAll(false);
-      setDraftToHide(new Set());
-      setDraftToShow(new Set());
-      setDraftHideAll(true);
+    draftGkIconVisible,
+    setDraftGkIconVisible: (val: boolean) => {
+      setDraftGkIconVisible(val);
     },
-    onShowAll: () => {
-      setDraftHideAll(false);
+    draftDisplayType,
+    setDraftDisplayType,
+    toggleHidden,
+    hideNftIds: (toHide: string[]) => {
+      const newToHide = new Set(draftToHide);
+      const newToShow = new Set(draftToShow);
+      toHide.forEach(id => {
+        newToShow.delete(id);
+        newToHide.add(id);
+      });
+      setDraftToHide(newToHide);
+      setDraftToShow(newToShow);
+    },
+    showNftIds: (toShow: string[]) => {
+      const newToHide = new Set(draftToHide);
+      const newToShow = new Set(draftToShow);
+      toShow.forEach(id => {
+        newToHide.delete(id);
+        newToShow.add(id);
+      });
+      setDraftToHide(newToHide);
+      setDraftToShow(newToShow);
+    },
+    onHideAll: async () => {
       setDraftToHide(new Set());
       setDraftToShow(new Set());
-      setDraftShowAll(true);
+      setSaving(true);
+      const result = await updateProfile({
+        id: profileData?.profile?.id,
+        hideAllNFTs: true,
+      });
+      if (result) {
+        mutateProfileData();
+        clearDrafts();
+      }
+      setEditMode(false);
+      setSaving(false);
+    },
+    onShowAll: async () => {
+      setDraftToHide(new Set());
+      setDraftToShow(new Set());
+      setSaving(true);
+      const result = await updateProfile({
+        id: profileData?.profile?.id,
+        showAllNFTs: true,
+      });
+      if (result) {
+        mutateProfileData();
+        clearDrafts();
+      }
+      setEditMode(false);
+      setSaving(false);
     },
     saveProfile,
     saving,
-    clearDrafts
+    clearDrafts,
+    selectedCollection,
+    setSelectedCollection,
   }}>
     {props.children}
-  </ProfileEditGalleryContext.Provider>;
+  </ProfileEditContext.Provider>;
 }

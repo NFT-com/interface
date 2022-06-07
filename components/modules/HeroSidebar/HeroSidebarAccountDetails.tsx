@@ -33,7 +33,6 @@ export default function HeroSidebarAccountDetails(
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
 
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
-  const showHeaderNav = process.env.NEXT_PUBLIC_PREFERENCE_COLLECTION_FLOW_ENABLED === 'true';
   const isChainAvailable = chains.some((item) => item.id === activeChain?.id);
   return (
     <>
@@ -65,7 +64,6 @@ export default function HeroSidebarAccountDetails(
           'font-rubik font-bold'
         )}
       >
-        {showHeaderNav &&
         <>
           <div
             className={tw(
@@ -104,7 +102,6 @@ export default function HeroSidebarAccountDetails(
             Vault
           </div>}
         </>
-        }
         <div
           className='py-2.5 text-primary-pink cursor-pointer hover:underline'
           onClick={() => {
