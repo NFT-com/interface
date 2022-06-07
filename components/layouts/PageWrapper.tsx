@@ -3,7 +3,6 @@ import { Footer } from 'components/elements/Footer';
 import Header from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
-import { Subscription } from 'components/elements/Subscription';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
@@ -89,10 +88,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
         {props.children}
 
         {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
-          <>
-            <Subscription />
             <Footer />
-          </>
         }
       </main>
     </div>
