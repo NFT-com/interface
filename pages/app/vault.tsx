@@ -6,10 +6,9 @@ import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import DiscordIcon from 'public/discord_black_icon.svg';
-import keyImage from 'public/hero-key--static.png';
-import keyBg from 'public/key-hero.jpg';
 import tokenHeroBg from 'public/token-hero2.jpg';
 import TwitterIcon from 'public/twitter_black_icon.svg';
 import { useRef } from 'react';
@@ -72,10 +71,15 @@ export default function RoadmapPage() {
           {/* HERO */}
           <div className="token-hero-bg" style={{
             backgroundImage: `
-              url("${tokenHeroBg}"),
               radial-gradient(circle at bottom right, rgba(22, 31, 68, 1) 10%, rgba(32, 39, 79, 0), rgba(20, 18, 33, 0) 80%)
             `
           }}>
+            <Image
+              src={tokenHeroBg}
+              alt="Token Hero"
+              layout="fill"
+              objectFit="cover"
+            />
             <div className="relative z-10 min-h-screen flex items-center justify-start px-8 deprecated_minmd:px-12 deprecated_minlg:px-12 mx-auto deprecated_minmd:w-11/12" >
               <div className="w-full text-center deprecated_minlg:w-1/2 deprecated_minlg:text-left">
                 <h1 className="mb-8 text-4xl leading-tight font-medium deprecated_minxl:text-6xl">From all of us at<br />  NFT.com - Thank you. </h1>
@@ -115,8 +119,8 @@ export default function RoadmapPage() {
           <div className="key-hero-bg"
             style={{
               backgroundImage: `
-                url("${keyBg}")
-              `
+              url("/key-hero.jpg")
+            `
             }}
           >
             <div className="relative z-10 min-h-screen flex items-center justify-end px-8 deprecated_minmd:px-12 deprecated_minlg:px-12 mx-auto deprecated_minmd:w-11/12 pb-16">
@@ -161,10 +165,10 @@ export default function RoadmapPage() {
           <div className="relative text-center text-white py-8 pb-8"
             style={{
               backgroundColor: '#020204',
-              backgroundImage: `url("${keyImage}")`,
+              backgroundImage: 'url("/hero-key--static.png")',
               backgroundPosition: 'center',
+              backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
-              backgroundSize: 'contain'
             }}>
             <div className="py-36 px-8 deprecated_minmd:px-12 deprecated_minlg:px-12 mx-auto deprecated_minmd:w-11/12">
               <h3 className={tw('text-4xl font-medium deprecated_minlg:text-5xl text-always-white text-center',
