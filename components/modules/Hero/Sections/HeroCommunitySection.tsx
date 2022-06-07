@@ -97,11 +97,15 @@ export default function HeroCommunitySection() {
         </div>
         <div className="h-[50rem] relative overflow-hidden">
           {isMobile ?
-            <Image
-              src='https://cdn.nft.com/NftCity2Still.jpg'
-              className='block z-0 absolute top-0 left-0 w-full h-full object-cover'
-              alt='NFT City'
-            />
+            <div className='block z-0 absolute top-0 left-0 w-full h-full object-cover'>
+              <Image
+                src='https://cdn.nft.com/NftCity2Still.jpg'
+                alt='NFT City'
+                layout="fill"
+                className="w-full h-full"
+                objectFit='cover'
+              />
+            </div>
             :
             <video
               autoPlay
