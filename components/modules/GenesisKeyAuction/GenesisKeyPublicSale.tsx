@@ -151,7 +151,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
                         }
                         if (!enoughETH) {
                           window.open(
-                            `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${account}`,
+                            `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${account?.address}`,
                             '_blank'
                           );
                         }
