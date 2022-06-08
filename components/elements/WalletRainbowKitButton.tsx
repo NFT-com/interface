@@ -1,4 +1,4 @@
-import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
+import { useSidebar } from 'hooks/state/useSidebar';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -10,7 +10,7 @@ import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect } from 'wagmi';
 
 export const WalletRainbowKitButton = () => {
-  const { toggleHeroSidebar } = useHeroSidebar();
+  const { toggleSidebar } = useSidebar();
   const { data, status } = useAccount();
   const { disconnect } = useDisconnect();
   const { primaryIcon } = useThemeColors();
@@ -49,7 +49,7 @@ export const WalletRainbowKitButton = () => {
                     <div
                       className="sm:block hidden cursor-pointer"
                       onClick={() => {
-                        toggleHeroSidebar();
+                        toggleSidebar();
                       }}
                     >
                       <Menu color={primaryIcon} />
@@ -88,7 +88,7 @@ export const WalletRainbowKitButton = () => {
                   <div
                     className="sm:block hidden cursor-pointer"
                     onClick={() => {
-                      toggleHeroSidebar();
+                      toggleSidebar();
                     }}
                   >
                     <Menu color={primaryIcon} />
@@ -101,7 +101,7 @@ export const WalletRainbowKitButton = () => {
                       'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                       'py-2 px-5'
                     )} onClick={() => {
-                      toggleHeroSidebar();
+                      toggleSidebar();
                     }} type="button">
                       <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
                       {shortenAddress(account?.address)}

@@ -10,11 +10,13 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
   return (
     <div className="flex flex-col h-screen w-screen">
       <Header />
+      <Sidebar />
       <div className='flex-1'>
-        <Sidebar />
         {children}
       </div>
       <Footer />
+
     </div>
+
   );
 }

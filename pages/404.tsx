@@ -14,7 +14,6 @@ export default function NotFoundPage() {
       heroHeader: true,
       walletOnly: !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED),
       walletPopupMenu: !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED),
-      sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
       hideAnalytics: true
     }}
     bgColorClasses={'bg-pagebg dark:bg-pagebg-dk'}

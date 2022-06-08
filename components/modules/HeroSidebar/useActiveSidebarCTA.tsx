@@ -1,6 +1,6 @@
 import Loader from 'components/elements/Loader';
 import { Maybe } from 'graphql/generated/types';
-import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
+import { useSidebar } from 'hooks/state/useSidebar';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
 
@@ -35,7 +35,7 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
   
   const { totalClaimable: totalClaimableForThisAddress } = useClaimableProfileCount(account?.address);
 
-  const { setHeroSidebarOpen } = useHeroSidebar();
+  const { setSidebarOpen } = useSidebar();
 
   const gkRecognizedProfilesToMint: SidebarCTA = useMemo(() => {
     return {
@@ -46,11 +46,11 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
       buttonText: 'Mint Profiles',
       disabled: false,
       onClick: () => {
-        setHeroSidebarOpen(false);
+        setSidebarOpen(false);
         router.push('/app/claim-profiles');
       }
     };
-  }, [router, setHeroSidebarOpen, totalClaimableForThisAddress]);
+  }, [router, setSidebarOpen, totalClaimableForThisAddress]);
 
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
 
@@ -63,11 +63,11 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
       buttonText: 'Buy Keys',
       disabled: false,
       onClick: () => {
-        setHeroSidebarOpen(false);
+        setSidebarOpen(false);
         router.push('/app/auctions');
       }
     };
-  }, [router, setHeroSidebarOpen, totalRemaining]);
+  }, [router, setSidebarOpen, totalRemaining]);
 
   const publicSaleCTAWithMintableProfiles: SidebarCTA = useMemo(() => {
     return {
@@ -76,14 +76,14 @@ export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
         title: `${totalClaimableForThisAddress} Profile${totalClaimableForThisAddress > 1 ? 's' : ''} Ready to Mint`,
         subtitle: 'Click here to mint profiles.',
         onClick: () => {
-          setHeroSidebarOpen(false);
+          setSidebarOpen(false);
           router.push('/app/claim-profiles');
         },
         icon: <div className='h-8 w-8 rounded-full flex items-center justify-center'><UserIcon/></div>,
         iconColor: 'bg-primary-green',
       }
     };
-  }, [publicSaleCTA, router, setHeroSidebarOpen, totalClaimableForThisAddress]);
+  }, [publicSaleCTA, router, setSidebarOpen, totalClaimableForThisAddress]);
 
   /**
    * If there are no remaining GKs in the public sale, don't show a CTA.

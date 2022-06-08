@@ -1,5 +1,5 @@
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
+import { useSidebar } from 'hooks/state/useSidebar';
 import { shortenString } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -15,7 +15,7 @@ export interface HeroSidebarProfileProps {
 
 export function HeroSidebarProfile(props: HeroSidebarProfileProps) {
   const router = useRouter();
-  const { setHeroSidebarOpen } = useHeroSidebar();
+  const { setSidebarOpen } = useSidebar();
 
   const { profileData } = useProfileQuery(props.uri);
 
@@ -41,7 +41,7 @@ export function HeroSidebarProfile(props: HeroSidebarProfileProps) {
       <div
         key={props.uri}
         onClick={() => {
-          setHeroSidebarOpen(false);
+          setSidebarOpen(false);
           router.push('/' + props.uri);
         }}
         className={tw(

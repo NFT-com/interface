@@ -98,7 +98,9 @@ module.exports = {
         'pill-border': '#7D8795',
         'link': '#00A4FF',
         'gray-opacity':'#c4c4c49e',
-        'vault-pink':'#C264B9'
+        'vault-pink':'#C264B9',
+        'dark-overlay': '#303030E5',
+        'dark-type-primary': '#F3F3F3',
       },
       fontSize: {
         'copy-size': '0.825rem',
