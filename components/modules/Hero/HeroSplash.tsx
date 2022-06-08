@@ -124,18 +124,21 @@ export default function HeroSplash(props: HeroSplashProps) {
         <div
           className='absolute z-10 w-full h-full flex justify-center items-center bg-transparent overflow-hidden'
           style={{
-            // eslint-disable-next-line max-len
             background: 'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)'
           }}
         >
           {isMobile ?
-            <Image
-              src={keySplashMobile}
-              className={tw(
-                'absolute h-full w-full top-0 object-cover',
-              )}
-              alt="key Splash"
-            />
+            <div className={tw(
+              'absolute h-full w-full top-0',
+            )}>
+              <Image
+                src={keySplashMobile}
+                alt="key Splash"
+                layout="fill"
+                objectFit="cover"
+                className='h-full w-full'
+              />
+            </div>
             :
             <video
               poster={splashPoster}
@@ -148,7 +151,6 @@ export default function HeroSplash(props: HeroSplashProps) {
           }
           <div
             className="w-full absolute z-18 h-full"
-            // eslint-disable-next-line max-len
             style={{ background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)' }}>
           </div>
         </div>
