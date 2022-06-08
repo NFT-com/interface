@@ -11,7 +11,6 @@ import { useContext, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 export interface NftGalleryProps {
   profileURI: string;
-  nftsDescriptionsVisible?: boolean;
 }
 
 export const PROFILE_GALLERY_PAGE_SIZE = 20;
