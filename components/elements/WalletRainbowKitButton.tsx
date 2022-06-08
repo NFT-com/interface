@@ -1,5 +1,4 @@
 import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
-import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -10,13 +9,8 @@ import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect } from 'wagmi';
 
-interface WalletRainbowKitButtonProps {
-  sidebar?: string
-}
-
-export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
+export const WalletRainbowKitButton = () => {
   const { toggleHeroSidebar } = useHeroSidebar();
-  const { toggleWalletSlide } = useWalletSlide();
   const { data, status } = useAccount();
   const { disconnect } = useDisconnect();
   const { primaryIcon } = useThemeColors();
@@ -55,11 +49,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                     <div
                       className="sm:block hidden cursor-pointer"
                       onClick={() => {
-                        if (props.sidebar === 'dashboard') {
-                          toggleWalletSlide();
-                        } else {
-                          toggleHeroSidebar();
-                        }
+                        toggleHeroSidebar();
                       }}
                     >
                       <Menu color={primaryIcon} />
@@ -98,11 +88,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                   <div
                     className="sm:block hidden cursor-pointer"
                     onClick={() => {
-                      if (props.sidebar === 'dashboard') {
-                        toggleWalletSlide();
-                      } else {
-                        toggleHeroSidebar();
-                      }
+                      toggleHeroSidebar();
                     }}
                   >
                     <Menu color={primaryIcon} />
@@ -115,11 +101,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                       'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                       'py-2 px-5'
                     )} onClick={() => {
-                      if (props.sidebar === 'dashboard') {
-                        toggleWalletSlide();
-                      } else {
-                        toggleHeroSidebar();
-                      }
+                      toggleHeroSidebar();
                     }} type="button">
                       <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
                       {shortenAddress(account?.address)}

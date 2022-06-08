@@ -1,6 +1,7 @@
-import { HeroPage } from 'components/templates/HeroPage';
+import type { NextPage } from 'next';
 
-export default function Main() {
-  return <HeroPage />;
-}
+const HomePage: NextPage = () => {
+  return <div>Content</div>;
+};
 
+export default HomePage;

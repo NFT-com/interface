@@ -1,6 +1,7 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
+import HomeLayout from 'components/layouts/HomeLayout';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv } from 'utils/env';
 
@@ -120,7 +121,9 @@ export default function MyApp({ Component, pageProps, router }: AppProps) {
           chains={chains}>
           <AnimatePresence exitBeforeEnter>
             <GraphQLProvider>
-              <Component {...pageProps} key={router.pathname} />
+              <HomeLayout>
+                <Component {...pageProps} key={router.pathname} />
+              </HomeLayout>
             </GraphQLProvider>
           </AnimatePresence>
         </RainbowKitProvider>
