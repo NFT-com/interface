@@ -11,12 +11,13 @@ import { useContext, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 export interface NftGalleryProps {
   profileURI: string;
+  nftsDescriptionsVisible?: boolean;
 }
 
 export const PROFILE_GALLERY_PAGE_SIZE = 20;
 
 export function NftGallery(props: NftGalleryProps) {
-  const { profileURI } = props;
+  const { profileURI, nftsDescriptionsVisible } = props;
 
   // todo: proper pagination to avoid overfetching here.
   const [loadedCount, setLoadedCount] = useState(PROFILE_GALLERY_PAGE_SIZE);
@@ -75,7 +76,7 @@ export function NftGallery(props: NftGalleryProps) {
 
   return (
     <>
-      <NftGrid nfts={nftsToShow} profileURI={profileURI} />
+      <NftGrid nfts={nftsToShow} profileURI={profileURI} nftsDescriptionsVisible={nftsDescriptionsVisible}/>
       {(!isAdmin || editMode) &&
       (editMode ? ownerNFTCount > nftsToShow.length : publicNFTCount > nftsToShow.length) &&
         <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium text-always-white">

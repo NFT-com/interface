@@ -16,6 +16,7 @@ type DetailedNft = Nft & { hidden?: boolean };
 export interface NftGridProps {
   nfts: PartialDeep<DetailedNft>[];
   profileURI: string;
+  nftsDescriptionsVisible?: boolean;
 }
 
 export function NftGrid(props: NftGridProps) {
@@ -67,6 +68,7 @@ export function NftGrid(props: NftGridProps) {
           }}
           customBackground={tileBackgroundSecondary}
           customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+          nftsDescriptionsVisible={props.nftsDescriptionsVisible}
         />
       </div>
     ))}
