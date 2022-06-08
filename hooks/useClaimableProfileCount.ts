@@ -71,11 +71,6 @@ export function useClaimableProfileCount(address: string): ClaimableProfileCount
           totalClaimable: 0,
         };
       }
-    },
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      refreshInterval: 0,
     });
   
   return {

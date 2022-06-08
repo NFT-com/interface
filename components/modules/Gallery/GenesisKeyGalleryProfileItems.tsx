@@ -78,7 +78,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
                 key={profileToken.id ?? index}
                 className={tw(
                   'flex mb-4 items-center justify-center px-4',
-                  'w-1/5 deprecated_lg:w-1/4 deprecated_md:w-1/3 deprecated_sm:w-2/5'
+                  'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
                 )}
               >
                 <OwnedProfileGalleryCard
@@ -112,8 +112,8 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
                 <div
                   key={profile.id ?? index}
                   className={tw(
-                    'flex mb-4 items-center justify-center px-4',
-                    'w-1/5 deprecated_lg:w-1/4 deprecated_md:w-1/3 deprecated_sm:w-2/5'
+                    'flex mb-4 items-center justify-center ml-6',
+                    'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
                   )}
                 >
                   <GalleryCard
@@ -132,7 +132,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
         { (totalProfileSupply?.toNumber() > PROFILE_LOAD_COUNT
               || (showMyStuff && profileTokens?.length > PROFILE_LOAD_COUNT))
               &&
-              <div className="w-full flex justify-center my-16 pb-8">
+              <div className="w-full flex justify-center pb-32">
                 <Button
                   label={'Load More'}
                   onClick={loadMoreProfiles}

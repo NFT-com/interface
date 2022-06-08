@@ -5,9 +5,10 @@ import { tw } from 'utils/tw';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Wallet } from 'phosphor-react';
+import { useEffect } from 'react';
 import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import { useAccount } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 
 interface WalletRainbowKitButtonProps {
   sidebar?: string
@@ -16,8 +17,16 @@ interface WalletRainbowKitButtonProps {
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   const { toggleHeroSidebar } = useHeroSidebar();
   const { toggleWalletSlide } = useWalletSlide();
-  const { data } = useAccount();
+  const { data, status } = useAccount();
+  const { disconnect } = useDisconnect();
   const { primaryIcon } = useThemeColors();
+
+  useEffect(() => {
+    if (data?.connector == null && status === 'success') {
+      disconnect();
+    }
+  }, [data, data?.connector, disconnect, status]);
+
   return (
     <ConnectButton.Custom>
       {({
