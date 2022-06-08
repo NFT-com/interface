@@ -1,28 +1,4 @@
-const POST_GRAPHQL_FIELDS = `
-  title
-  slug
-  heroImage{
-    url
-  }
-  description
-  body
-  author{
-    name
-    title
-    company
-    shortBio
-    email
-    phone
-    facebook
-    twitter
-    github
-    image{
-      url
-    }
-  }
-  publishDate
-  tags
-`;
+import { POST_GRAPHQL_FIELDS } from './schemas';
 
 async function fetchGraphQL(query, preview = false) {
   return fetch(
@@ -107,4 +83,30 @@ export async function getPost(slug, preview) {
   return {
     post: extractPost(entry),
   };
+}
+
+export async function getItemById(id, preview, type, schema) {
+  const entry = await fetchGraphQL(
+    `query {
+      ${type}(id: "${id}", preview: false) {
+        ${schema}
+      }
+    }`,
+    preview
+  );
+  return entry.data[type];
+}
+
+export async function getCollection(preview, limit, type, schema) {
+  const entries = await fetchGraphQL(
+    `query {
+      ${type}(preview: ${preview ? 'true' : 'false'}, limit: ${limit}) {
+        items {
+          ${schema}
+        }
+      }
+    }`,
+    preview
+  );
+  return entries.data[type].items;
 }
