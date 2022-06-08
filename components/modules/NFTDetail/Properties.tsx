@@ -1,7 +1,7 @@
 import { Nft } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
-import { PropertyCard } from './PropertyCard';
+import { NftDetailCard } from './NftDetailCard';
 
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
@@ -16,7 +16,7 @@ export const Properties = (props: PropertiesProps) => {
 
   const [expanded, setExpanded] = useState(true);
   return (
-    <div className="flex flex-col md:basis-auto basis-1/3 my-8">
+    <div className="flex flex-col w-full my-8">
       <div className={tw(
         'flex items-center justify-between',
         'text-base dark:text-white font-bold tracking-wide mb-2'
@@ -33,9 +33,16 @@ export const Properties = (props: PropertiesProps) => {
             <div className='text-secondary-txt'>
             No Properties Found
             </div> :
-            <div className="grid grid-cols-2 gap-2 overflow-y-scroll overflow-x-hidden h-64">
+            <div className={tw(
+              'grid grid-cols-2 gap-2 overflow-y-scroll overflow-x-hidden',
+              'grid-cols-2 sm:grid-cols-2 md:grid-cols-3'
+            )}>
               {nftTraits?.map((item, index) => {
-                return <PropertyCard key={index} type={item.type} value={item.value} />;
+                return <NftDetailCard
+                  key={index}
+                  type={item.type}
+                  value={item.value}
+                />;
               })}
             </div>
       }

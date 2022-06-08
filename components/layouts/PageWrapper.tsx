@@ -45,7 +45,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
     )}>
       <main
         className={tw(
-          'absolute w-full h-full',
+          'absolute w-full h-full flex flex-col',
           isMobile ? 'overflow-x-hidden' : '',
           bgColorClasses ?? 'bg-black'
         )}
@@ -86,7 +86,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
         />
         
         {props.children}
-
+        <div className="bg-transparent w-full flex grow"></div>
         {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
             <Footer />
         }
