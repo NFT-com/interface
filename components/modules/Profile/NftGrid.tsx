@@ -24,6 +24,7 @@ export function NftGrid(props: NftGridProps) {
     editMode,
     draftToHide,
     draftToShow,
+    draftNftsDescriptionsVisible,
   } = useContext(ProfileEditContext);
   const { tileBackgroundSecondary } = useThemeColors();
   const router = useRouter();
@@ -67,6 +68,7 @@ export function NftGrid(props: NftGridProps) {
           }}
           customBackground={tileBackgroundSecondary}
           customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+          nftsDescriptionsVisible={draftNftsDescriptionsVisible}
         />
       </div>
     ))}

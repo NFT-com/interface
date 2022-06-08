@@ -7,6 +7,7 @@ query Profile($url: String!) {
     photoURL
     description
     gkIconVisible
+    nftsDescriptionsVisible
     displayType
     owner {
       address
