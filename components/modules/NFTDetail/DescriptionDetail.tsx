@@ -15,7 +15,7 @@ export const DescriptionDetail = (props: DescriptionDetailProps) => {
   return (
     <div className="deprecated_minmd:basis-1/3 dark:text-gray-500 mt-8">
       <div className={tw(
-        'flex items-center justify-between',
+        'flex items-center justify-between mb-4',
         'text-black font-bold dark:text-white',
         'tracking-wide deprecated_minmd:text-sm text-base'
       )}>

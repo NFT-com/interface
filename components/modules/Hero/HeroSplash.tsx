@@ -68,17 +68,14 @@ export default function HeroSplash(props: HeroSplashProps) {
     return <div className='flex flex-col items-center h-full justify-between'>
       <div className='flex flex-col items-center grow justify-center'>
         <HeroTitle color="blue" items={['UNLOCK THE NFT BETA WITH YOUR GENESIS KEY']} />
-        <span
-          className={tw(
-            'text-primary-txt-dk text-xl mt-3 font-bold text-center',
-            !account ? 'hidden' : null
-          )}
+        {!account && <span
+          className='text-primary-txt-dk text-xl mt-3 font-bold text-center'
           style={{
             textShadow: '0px 4px 4px rgba(0,0,0,0.9)',
           }}
         >
           Connect with one of our available wallet providers to start minting!
-        </span>
+        </span>}
         <div className="my-8 tracking-widest font-hero-heading2 w-full flex justify-center">
           <Button
             textColor={alwaysBlack}

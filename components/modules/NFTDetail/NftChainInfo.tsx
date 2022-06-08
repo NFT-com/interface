@@ -2,7 +2,7 @@ import { Nft } from 'graphql/generated/types';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { PropertyCard } from './PropertyCard';
+import { NftDetailCard } from './NftDetailCard';
 
 import { BigNumber } from 'ethers';
 import { useState } from 'react';
@@ -21,7 +21,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
     <div className="flex flex-col md:basis-auto basis-1/3 my-8">
       <div className={tw(
         'flex items-center justify-between',
-        'text-base dark:text-white font-bold tracking-wide mb-2'
+        'text-base dark:text-white font-bold tracking-wide mb-4'
       )}>
         <span>Details</span>
         <div className='cursor-pointer' onClick={() => setExpanded(!expanded)}>
@@ -30,26 +30,34 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
       </div>
       {
         expanded &&
-            <div className="grid grid-cols-2 gap-2 overflow-y-scroll overflow-x-hidden">
+            <div className={tw(
+              'grid gap-2 overflow-y-scroll overflow-x-hidden',
+              'grid-cols-2 sm:grid-cols-2 md:grid-cols-3'
+            )}>
               {[
                 {
-                  'type': 'Contract Address',
+                  'type': 'CONTRACT ADDRESS',
                   'value': shortenAddress(nft?.contract)
                 },
                 {
-                  'type': 'Blockchain',
+                  'type': 'BLOCKCHAIN',
                   'value': 'Ethereum'
                 },
                 {
-                  'type': 'Token ID',
-                  'value': BigNumber.from(nft?.tokenId).toString()
+                  'type': 'TOKEN ID',
+                  'value': BigNumber.from(nft?.tokenId ?? 0).toString()
                 },
                 {
-                  'type': 'Token Standard',
+                  'type': 'TOKEN STANDARD',
                   'value': nft?.type
                 }
               ].map((item, index) => {
-                return <PropertyCard key={index} type={item.type} value={item.value} />;
+                return <NftDetailCard
+                  key={index}
+                  type={item.type}
+                  value={item.value}
+                  valueClasses="text-link dark:text-link"
+                />;
               })}
             </div>
       }
