@@ -21,9 +21,7 @@ import { useAccount } from 'wagmi';
 
 export interface MintedProfileGalleryProps {
   profileURI: string;
-  draftGkIconVisible: boolean;
-  setDraftGkIconVisible?: (val: boolean) => void;
-  draftNftsDescriptionsVisible: boolean;
+
   setDraftNftsDescriptionsVisible?: (val: boolean) => void;
   ownedGKTokens?: number[];
 }
@@ -35,7 +33,11 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     onHideAll,
     draftDisplayType,
     setDraftDisplayType,
-    selectedCollection
+    selectedCollection,
+    draftGkIconVisible,
+    setDraftGkIconVisible,
+    draftNftsDescriptionsVisible,
+    setDraftNftsDescriptionsVisible,
   } = useContext(ProfileEditContext);
   
   const { data: account } = useAccount();
@@ -90,14 +92,14 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               selectedIndex={0}
               options={[
                 props.ownedGKTokens.length > 0 && {
-                  label: `${(props.draftNftsDescriptionsVisible ?? profileData?.profile?.nftsDescriptionsVisible) ? 'Hide' : 'Show'} Descriptions`,
-                  onSelect: () => props.setDraftNftsDescriptionsVisible(!props.draftNftsDescriptionsVisible),
-                  icon: NftLabelIcon,
+                  label: `${(draftNftsDescriptionsVisible ?? profileData?.profile?.nftsDescriptionsVisible) ? 'Hide' : 'Show'} Descriptions`,
+                  onSelect: () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible),
+                  icon: <NftLabelIcon className="w-5 h-5" alt="Description label" />,
                 },
                 {
-                  label: `${(props.draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? 'Hide' : 'Show'} GK Badge`,
-                  onSelect: () => props.setDraftGkIconVisible(!props.draftGkIconVisible),
-                  icon: GKBadgeIcon,
+                  label: `${(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? 'Hide' : 'Show'} GK Badge`,
+                  onSelect: () => setDraftGkIconVisible(!draftGkIconVisible),
+                  icon: <GKBadgeIcon className="w-5 h-5" alt="Description label" />,
                 },
                 isMobile && {
                   label: 'Show All',
@@ -108,7 +110,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                       profile: props.profileURI
                     });
                   },
-                  icon: EyeIcon,
+                  icon: <EyeIcon className="w-5 h-5" alt="Show descriptions" />,
                 },
                 isMobile && {
                   label: 'Hide All',
@@ -119,12 +121,12 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                       profile: props.profileURI
                     });
                   },
-                  icon: EyeOffIcon,
+                  icon: <EyeOffIcon className="w-5 h-5" alt="Hide descriptions" />,
                 },
                 {
                   label: 'Edit Layouts',
                   onSelect: () => null,
-                  icon: EditLayoutIcon,
+                  icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
                 },
               ]}/>
           </div>
@@ -138,7 +140,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           <CollectionGallery profileURI={props.profileURI} /> :
           <NftGallery
             profileURI={props.profileURI}
-            nftsDescriptionsVisible={props.draftNftsDescriptionsVisible ?? profileData?.profile?.nftsDescriptionsVisible}/>
+            nftsDescriptionsVisible={draftNftsDescriptionsVisible ?? profileData?.profile?.nftsDescriptionsVisible}/>
       }
     </div>
   );

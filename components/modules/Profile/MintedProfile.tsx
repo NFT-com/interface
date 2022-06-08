@@ -214,8 +214,6 @@ export function MintedProfile(props: MintedProfileProps) {
           <MintedProfileInfo
             userIsAdmin={userIsAdmin}
             profileURI={profileURI}
-            draftGkIconVisible={draftGkIconVisible}
-            setDraftGkIconVisible={setDraftGkIconVisible}
           />
         </div>
       </div>
@@ -227,10 +225,6 @@ export function MintedProfile(props: MintedProfileProps) {
           (userIsAdmin && editMode) || (publiclyVisibleNFTs?.length ?? 0) > 0 ?
             <MintedProfileGallery
               profileURI={profileURI}
-              setDraftGkIconVisible={setDraftGkIconVisible}
-              draftGkIconVisible={draftGkIconVisible}
-              setDraftNftsDescriptionsVisible={setDraftNftsDescriptionsVisible}
-              draftNftsDescriptionsVisible={draftNftsDescriptionsVisible}
               ownedGKTokens={ownedGKTokens}
             /> :
             <>

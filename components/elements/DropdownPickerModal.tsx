@@ -11,7 +11,7 @@ export interface PickerOption {
   label: string;
   onSelect: () => void;
   color?: string;
-  icon?: string;
+  icon?: string | any;
 }
 
 export interface DropdownPickerModalProps {
@@ -49,7 +49,7 @@ export function DropdownPickerModal(props: DropdownPickerModalProps) {
       <div
         key={item.label}
         style={{ height: '10%' }}
-        className={`flex flex-row w-full px-3 py-3 items-center
+        className={`flex flex-row w-full px-3 py-3 items-center justiry-evenly 
         ${ index === optionHoverIndex ? 'dark:text-always-white text-primary-txt font-medium' : 'dark:text-always-white text-secondary-txt'}`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
@@ -57,9 +57,7 @@ export function DropdownPickerModal(props: DropdownPickerModalProps) {
           item.onSelect();
         }}
       >
-        {item.icon &&
-          <img className="h-full mr-2" src={item.icon} alt={item.label} />
-        }
+        {item.icon}&nbsp;
         {item.label}
       </div>
     );
@@ -86,7 +84,7 @@ export function DropdownPickerModal(props: DropdownPickerModalProps) {
             setExpanded(!expanded);
           }}
         >
-          <img src={GearIcon} className="w-8 h-8 shrink-0 aspect-square" alt="Edit menu" />
+          <GearIcon className="w-8 h-8 shrink-0 aspect-square" alt="Edit menu" />
         </div>
 
         {expanded && !isMobile &&

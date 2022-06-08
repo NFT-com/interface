@@ -8,8 +8,7 @@ import { tw } from 'utils/tw';
 
 import { ProfileEditContext } from './ProfileEditContext';
 
-import Image from 'next/image';
-import GKHolderIcon from 'public/gk_badge.svg';
+import GKHolderIcon from 'public/gk-holder.svg';
 import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
@@ -17,12 +16,10 @@ import { useAccount } from 'wagmi';
 export interface MintedProfileInfoProps {
   profileURI: string;
   userIsAdmin: boolean;
-  draftGkIconVisible?: boolean;
-  setDraftGkIconVisible?: (val: boolean) => void;
 }
 
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
-  const { profileURI, userIsAdmin, draftGkIconVisible } = props;
+  const { profileURI, userIsAdmin } = props;
 
   const { data: account } = useAccount();
   
@@ -37,6 +34,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     setDraftBio,
     draftProfileImg,
     draftHeaderImg,
+    draftGkIconVisible,
   } = useContext(ProfileEditContext);
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { mutate: mutateProfileNFTs } = useProfileNFTsQuery(
@@ -60,7 +58,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             @{profileURI}
           </div>
           {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) &&
-            GKHolderIcon && <Image src={GKHolderIcon} className="md:mb-4  w-8 h-8 shrink-0 aspect-square" alt="GK Holder" />}
+            <GKHolderIcon className="md:mb-4  w-8 h-8 shrink-0 aspect-square" alt="GK Holder" />}
         </div>
         {userIsAdmin && hasGks && (
           editMode ?
