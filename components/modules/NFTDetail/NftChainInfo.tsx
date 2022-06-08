@@ -18,13 +18,13 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="flex flex-col md:basis-auto basis-1/3 my-8">
+    <div className="flex flex-col md:basis-auto basis-1/3 my-8" id="NftChainInfoContainer">
       <div className={tw(
         'flex items-center justify-between',
         'text-base dark:text-white font-bold tracking-wide mb-4'
       )}>
         <span>Details</span>
-        <div className='cursor-pointer' onClick={() => setExpanded(!expanded)}>
+        <div className='cursor-pointer nftDetailToggle' onClick={() => setExpanded(!expanded)}>
           {expanded ? <ChevronUp /> : <ChevronDown />}
         </div>
       </div>

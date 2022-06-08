@@ -13,7 +13,7 @@ export interface DescriptionDetailProps {
 export const DescriptionDetail = (props: DescriptionDetailProps) => {
   const [expanded, setExpanded] = useState(true);
   return (
-    <div className="deprecated_minmd:basis-1/3 dark:text-gray-500 mt-8">
+    <div className="deprecated_minmd:basis-1/3 dark:text-gray-500 mt-8" id="NFTDescriptionContainer">
       <div className={tw(
         'flex items-center justify-between mb-4',
         'text-black font-bold dark:text-white',

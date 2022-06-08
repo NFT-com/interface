@@ -16,13 +16,13 @@ export const Properties = (props: PropertiesProps) => {
 
   const [expanded, setExpanded] = useState(true);
   return (
-    <div className="flex flex-col w-full my-8">
+    <div className="flex flex-col w-full my-8" id="NftPropertiesContainer">
       <div className={tw(
         'flex items-center justify-between',
         'text-base dark:text-white font-bold tracking-wide mb-2'
       )}>
         <span>Traits</span>
-        <div className='cursor-pointer' onClick={() => setExpanded(!expanded)}>
+        <div className='cursor-pointer nftDetailToggle' onClick={() => setExpanded(!expanded)}>
           {expanded ? <ChevronUp /> : <ChevronDown />}
         </div>
       </div>
@@ -31,7 +31,7 @@ export const Properties = (props: PropertiesProps) => {
           ? null :
           !nftTraits || nftTraits.length === 0 ?
             <div className='text-secondary-txt'>
-            No Properties Found
+              No Properties Found
             </div> :
             <div className={tw(
               'grid grid-cols-2 gap-2 overflow-y-scroll overflow-x-hidden',
@@ -42,6 +42,7 @@ export const Properties = (props: PropertiesProps) => {
                   key={index}
                   type={item.type}
                   value={item.value}
+                  center
                 />;
               })}
             </div>
