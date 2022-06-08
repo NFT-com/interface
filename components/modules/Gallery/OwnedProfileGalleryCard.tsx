@@ -1,6 +1,6 @@
 import GalleryCard from 'components/elements/GalleryCard';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { OwnedToken } from 'hooks/useMyNftProfileTokens';
+import { OwnedToken } from 'hooks/useNftProfileTokens';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 export interface OwnedProfileGalleryCardProps {
