@@ -10,7 +10,7 @@
     "style:watch": "yarn run style:build --watch",
     "dev": "yarn typechain:gen & doppler run -- next dev",
     "build": "yarn typechain:gen && doppler run -- next build",
-    "build:netlify": "next build",
+    "build:netlify": "yarn typechain:gen && next build",
     "start": "doppler run -- next start",
     "lint": "next lint",
     "typechain:gen": "typechain --target=ethers-v5 ./constants/abis/*.json --out-dir ./constants/typechain",
