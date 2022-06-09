@@ -17,16 +17,15 @@ jobs:
     - run: yarn install --frozen-lockfile --immutable
     
     - name: set env
-      run: echo "$SECRETS_CONTEXT"
-      env:
-        SECRETS_CONTEXT: ${{ toJson(secrets) }}
+
 
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
       with:
-        build: yarn build
-        start: yarn start
+        build: yarn build:ci
+        start: yarn start:ci
       env:
+        SECRETS_CONTEXT: ${{ toJson(secrets) }}
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
