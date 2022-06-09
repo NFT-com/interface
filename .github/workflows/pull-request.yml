@@ -1,5 +1,8 @@
 name: Build and Test
-on: pull_request
+on: 
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-and-test:
@@ -15,7 +18,7 @@ jobs:
         node-version: '14'
         cache: 'yarn'
     - run: yarn install --frozen-lockfile --immutable
-    - run: yarn build --if-present
+    - run: yarn build
       
     - name: Cypress run
       uses: cypress-io/github-action@v4
