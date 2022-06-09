@@ -18,14 +18,12 @@ jobs:
         node-version: '14'
         cache: 'yarn'
     - run: yarn install --frozen-lockfile --immutable
-    
-    - run: echo "NEXT_PUBLIC_GRAPHQL_URL=https://dev-api.nft.com/graphql" >> $GITHUB_ENV
 
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
       with:
         record: true
-        build: yarn build:pr
+        build: yarn build
         start: yarn start
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}

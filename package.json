@@ -10,7 +10,6 @@
     "style:watch": "yarn run style:build --watch",
     "dev": "yarn typechain:gen & doppler run -- next dev",
     "build": "yarn typechain:gen && doppler run -- next build",
-    "build:pr": "yarn typechain:gen && doppler run --preserve-env --next build",
     "build:netlify": "yarn typechain:gen && next build",
     "start": "doppler run -- next start",
     "lint": "next lint",
