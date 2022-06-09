@@ -8,8 +8,8 @@ describe('NftDetailCard', () => {
         value="testValue"
       />
     );
-    cy.contains('testType').should('exist')
-    cy.contains('testValue').should('exist')
+    cy.contains('testType').should('exist');
+    cy.contains('testValue').should('exist');
   });
 
   it('mounts with all props', () => {
@@ -21,9 +21,9 @@ describe('NftDetailCard', () => {
         valueClasses='testValueClasses'
       />
     );
-    cy.contains('testType').should('exist')
-    cy.contains('testValue').should('exist')
-    cy.contains('testSubtitle').should('exist')
-    cy.contains('testValue').should('have.class', 'testValueClasses')
+    cy.contains('testType').should('exist');
+    cy.contains('testValue').should('exist');
+    cy.contains('testSubtitle').should('exist');
+    cy.contains('testValue').should('have.class', 'testValueClasses');
   });
-})
+});

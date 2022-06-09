@@ -27,7 +27,8 @@
   },
   "ignorePatterns": [
     "**/generated/**",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "**/*.cy.*"
   ],
   "rules": {
     "semi": "error",
@@ -104,8 +105,7 @@
       "error",
       {
         "patterns": [
-          "..*",
-          "!../cypress/..*"
+          "..*"
         ]
       }
     ],
