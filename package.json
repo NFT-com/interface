@@ -16,8 +16,8 @@
     "gql:gen": "graphql-codegen --config codegen.json",
     "doppler:pull": "doppler secrets --json >> .env.local",
     "doppler:gen": "echo 'export const dopplerNames = ' > ./scripts/doppler_variable_names.ts && doppler secrets --only-names --json >> ./scripts/doppler_variable_names.ts && ts-node -O '{\"module\":\"commonjs\"}' ./scripts/gen-doppler.ts",
-    "cypress:open-only": "cypress open",
-    "cypress:run-only": "cypress run",
+    "cypress:open-only": "doppler run -- cypress open",
+    "cypress:run-only": "doppler run -- cypress run",
     "cypress:open": "start-server-and-test dev 3000 cypress:open-only",
     "cypress:run": "start-server-and-test dev 3000 cypress:run-only",
     "cypress:record": "cypress run --record"
