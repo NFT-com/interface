@@ -15,6 +15,7 @@ jobs:
         node-version: '14'
         cache: 'yarn'
     - run: yarn install --frozen-lockfile --immutable
+    - run: export SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
     - run: yarn build
       
     - name: Cypress run
