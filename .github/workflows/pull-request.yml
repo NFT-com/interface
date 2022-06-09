@@ -15,9 +15,6 @@ jobs:
         node-version: '14'
         cache: 'yarn'
     - run: yarn install --frozen-lockfile --immutable
-    
-    - name: set env
-
 
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
