@@ -92,7 +92,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               selectedIndex={0}
               options={[
                 props.ownedGKTokens.length > 0 && {
-                  label: `${(draftNftsDescriptionsVisible ?? profileData?.profile?.nftsDescriptionsVisible) ? 'Hide' : 'Show'} Descriptions`,
+                  label: `${(draftNftsDescriptionsVisible) ? 'Hide' : 'Show'} Descriptions`,
                   onSelect: () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible),
                   icon: <NftLabelIcon className="w-5 h-5" alt="Description label" />,
                 },

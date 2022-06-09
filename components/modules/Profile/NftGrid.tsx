@@ -29,7 +29,6 @@ export function NftGrid(props: NftGridProps) {
   } = useContext(ProfileEditContext);
   const { tileBackgroundSecondary } = useThemeColors();
   const router = useRouter();
-
   return <div className={tw(
     'grid gap-y-2.5 w-full',
     'grid-cols-4 sm:grid-cols-2 md:grid-cols-3'
@@ -62,10 +61,10 @@ export function NftGrid(props: NftGridProps) {
             }
           }}
           onClick={() => {
-            if (getEnvBool(Doppler.NEXT_PUBLIC_NFT_DETAILS_ENABLED)) {
-              router.push('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString());
-            } else if (editMode) {
+            if (editMode) {
               toggleHidden(nft?.id, !nft?.hidden);
+            } else if (getEnvBool(Doppler.NEXT_PUBLIC_NFT_DETAILS_ENABLED)) {
+              router.push('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString());
             } else {
               alert('coming soon');
             }

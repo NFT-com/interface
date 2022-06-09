@@ -1,7 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Nft } from 'graphql/generated/types';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
 
@@ -14,7 +14,11 @@ export interface NftData {
 export function useNftQuery(contract: string, id: string): NftData {
   const sdk = useGraphQLSDK();
   const [loading, setLoading] = useState(false);
-  const keyString = 'NftQuery ' + contract;
+  const keyString = 'NftQuery ' + contract + id;
+
+  const mutateThis = useCallback(() => {
+    mutate(keyString);
+  }, [keyString]);
 
   const { data } = useSWR(keyString, async () => {
     setLoading(true);
@@ -25,8 +29,6 @@ export function useNftQuery(contract: string, id: string): NftData {
   return {
     data: data,
     loading: loading,
-    mutate: () => {
-      mutate(keyString);
-    },
+    mutate: mutateThis,
   };
 }

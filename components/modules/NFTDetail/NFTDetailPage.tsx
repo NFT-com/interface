@@ -13,7 +13,7 @@ export interface NFTDetailPageProps {
 }
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
-  const { data: nft } = useNftQuery(props.collection, props.tokenId);
+  const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
   return (
     <PageWrapper
       bgColorClasses='bg-pagebg dark:bg-pagebg-secondary-dk pt-20'
@@ -22,7 +22,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       }}
     >
       <div className="flex flex-col pt-20 items-center w-full lg:px-0 px-48">
-        <NFTDetail nft={nft} />
+        <NFTDetail nft={nft} onRefreshSuccess={mutate}/>
         <div className='w-full flex flex-row md:flex-col px-4'>
           <div className='flex flex-col w-2/4 md:w-full pr-4 md:pr-0'>
             <div className='w-full border-b dark:border-accent-border-dk border-accent-border pb-5'>
