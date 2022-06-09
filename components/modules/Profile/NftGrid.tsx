@@ -6,6 +6,7 @@ import { tw } from 'utils/tw';
 
 import { ProfileEditContext } from './ProfileEditContext';
 
+import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -29,7 +30,10 @@ export function NftGrid(props: NftGridProps) {
   const { tileBackgroundSecondary } = useThemeColors();
   const router = useRouter();
 
-  return <div className={'profile-page-grid w-full'}>
+  return <div className={tw(
+    'grid gap-y-2.5 w-full',
+    'grid-cols-4 sm:grid-cols-2 md:grid-cols-3'
+  )}>
     {props.nfts?.map((nft: PartialDeep<DetailedNft>) => (
       <div
         key={nft?.id + '-' + nft?.contract?.address}
@@ -58,8 +62,8 @@ export function NftGrid(props: NftGridProps) {
             }
           }}
           onClick={() => {
-            if (getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) {
-              router.push('/app/nft/' + nft?.contract?.address + '/' + nft?.tokenId);
+            if (getEnvBool(Doppler.NEXT_PUBLIC_NFT_DETAILS_ENABLED)) {
+              router.push('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString());
             } else if (editMode) {
               toggleHidden(nft?.id, !nft?.hidden);
             } else {

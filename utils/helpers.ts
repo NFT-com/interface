@@ -110,7 +110,7 @@ export function stringToColor(str: string) {
   return colour;
 }
 
-export const joinClasses = (...args: string[]) => args.join(' ');
+export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
 
 export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
 
@@ -154,4 +154,33 @@ export const getCurrentTimestamp = () => new Date().getTime();
 
 export function getAPIURL() {
   return getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL);
+}
+
+const ETHERSCAN_PREFIXES = {
+  1: '',
+  3: 'ropsten.',
+  4: 'rinkeby.',
+  5: 'goerli.',
+  42: 'kovan.',
+};
+
+export function getEtherscanLink(
+  chainId: number,
+  data: string,
+  type: 'transaction' | 'token' | 'address'
+): string {
+  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`;
+
+  switch (type) {
+  case 'transaction': {
+    return `${prefix}/tx/${data}`;
+  }
+  case 'token': {
+    return `${prefix}/token/${data}`;
+  }
+  case 'address':
+  default: {
+    return `${prefix}/address/${data}`;
+  }
+  }
 }

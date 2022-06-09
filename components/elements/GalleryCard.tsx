@@ -5,7 +5,7 @@ import React from 'react';
 
 export interface GalleryCardProps {
   label: string;
-  imageURL?: string;
+  imageURL: string;
   size? : 'small' | 'default'
   onClick: () => void;
   animate?: boolean;

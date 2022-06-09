@@ -3,7 +3,6 @@ import { Footer } from 'components/elements/Footer';
 import Header from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
-import { Subscription } from 'components/elements/Subscription';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
@@ -46,7 +45,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
     )}>
       <main
         className={tw(
-          'absolute w-full h-full',
+          'absolute w-full h-full flex flex-col',
           isMobile ? 'overflow-x-hidden' : '',
           bgColorClasses ?? 'bg-black'
         )}
@@ -87,12 +86,9 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
         />
         
         {props.children}
-
+        <div className="bg-transparent w-full flex grow"></div>
         {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
-          <>
-            <Subscription />
             <Footer />
-          </>
         }
       </main>
     </div>
