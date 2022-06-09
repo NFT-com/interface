@@ -1,3 +1,4 @@
+import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import { tw } from 'utils/tw';
 
 import type { NextPage } from 'next';
@@ -17,11 +18,7 @@ const HomePage: NextPage = () => {
         }}
       >
         <div className="flex flex-row items-center justify-center w-screen h-96 bg-always-black ">
-          <button
-            className='flex justify-center mt-80 mb-20 bg-primary-button-bckg rounded-xl w-[15%] z-10 text-white font-rubik'
-            type="button">
-            Sign In
-          </button>
+          <WalletRainbowKitButton showWhenConnected={false} />
         </div>
         <div className='space-y-6 py-6 ...'>
           <div className='h-full ...'>

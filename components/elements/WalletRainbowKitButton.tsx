@@ -9,7 +9,11 @@ import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect } from 'wagmi';
 
-export const WalletRainbowKitButton = () => {
+export interface WalletRainbowKitButtonProps {
+  showWhenConnected?: boolean;
+}
+
+export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
   const { toggleSidebar } = useSidebar();
   const { data, status } = useAccount();
   const { disconnect } = useDisconnect();
@@ -20,6 +24,10 @@ export const WalletRainbowKitButton = () => {
       disconnect();
     }
   }, [data, data?.connector, disconnect, status]);
+
+  if (!props?.showWhenConnected && (data !== null && data.connector !== null)) {
+    return <></>;
+  }
 
   return (
     <ConnectButton.Custom>

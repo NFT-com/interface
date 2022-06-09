@@ -36,7 +36,7 @@ export const Header = () => {
               <SearchBar />
             </div>
           }
-          <WalletRainbowKitButton />
+          <WalletRainbowKitButton showWhenConnected />
         </div>
       </div>
     </Popover>
