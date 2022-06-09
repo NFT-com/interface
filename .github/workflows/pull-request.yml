@@ -3,7 +3,6 @@ on: pull_request
 
 jobs:
   build-and-test:
-    if: ${{ startsWith(github.ref_name, 'feat') || startsWith(github.ref_name, 'fix') }}
     runs-on: ubuntu-latest
     environment: dev
     steps:
