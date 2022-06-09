@@ -25,7 +25,7 @@ jobs:
       uses: cypress-io/github-action@v4
       with:
         record: true
-        build: yarn build
+        build: yarn typechain:gen && doppler run --preserve-env -- next build
         start: yarn start
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
