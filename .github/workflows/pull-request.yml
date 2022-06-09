@@ -1,0 +1,28 @@
+name: Build and Test
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    if: ${{ startsWith(github.ref_name, 'feat') || startsWith(github.ref_name, 'fix') }}
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.4.2
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+        cache: 'yarn'
+    - run: yarn install --frozen-lockfile --immutable
+    - run: yarn build --if-present
+      
+    - name: Cypress run
+      uses: cypress-io/github-action@v4
+      env:
+        CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
