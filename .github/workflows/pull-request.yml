@@ -8,6 +8,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2.4.2
+      
+    - name: Install Doppler CLI
+      uses: dopplerhq/cli-action@v1
+    
+    - name: Test Doppler Access
+      run: doppler run -- printenv
     
     - name: Use Node.js
       uses: actions/setup-node@v3
@@ -19,11 +25,10 @@ jobs:
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
       with:
-        build: yarn build:ci
-        start: yarn start:ci
+        build: yarn build
+        start: yarn start
       env:
-        SECRETS_CONTEXT: ${{ toJson(secrets) }}
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       
