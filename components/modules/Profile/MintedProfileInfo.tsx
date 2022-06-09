@@ -1,5 +1,4 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Switch } from 'components/elements/Switch';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -33,10 +32,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     editMode,
     draftBio,
     setDraftBio,
-    setDraftGkIconVisible,
-    draftGkIconVisible,
     draftProfileImg,
     draftHeaderImg,
+    draftGkIconVisible,
   } = useContext(ProfileEditContext);
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { mutate: mutateProfileNFTs } = useProfileNFTsQuery(
@@ -52,23 +50,15 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   return (
     <div className="flex items-center my-6 mx-4 md:mx-0 w-full md:flex-col">
       <div className="flex flex-col w-full">
-        <div className={tw('flex w-full items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
+        <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
           <div className={tw(
-            'font-bold lg:text-2xl text-4xl text-primary-txt dark:text-primary-txt-dk md:text-center md:mb-4 mr-4',
+            'font-bold lg:text-2xl text-4xl text-primary-txt',
+            'dark:text-primary-txt-dk md:text-center md:mb-4 mr-3',
           )}>
             @{profileURI}
           </div>
-          {editMode && ownedGenesisKeyTokens.length > 0 && <Switch
-            left="Hide GK Icon"
-            right="Show GK Icon"
-            enabled={draftGkIconVisible ?? profileData?.profile?.gkIconVisible}
-            setEnabled={() => {
-              setDraftGkIconVisible(!(draftGkIconVisible ?? profileData?.profile?.gkIconVisible));
-            }}
-          />}
           {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) &&
-            <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square relative" />
-          }
+            <GKHolderIcon className="md:mb-4  w-8 h-8 shrink-0 aspect-square" alt="GK Holder" />}
         </div>
         {userIsAdmin && hasGks && (
           editMode ?

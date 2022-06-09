@@ -101,6 +101,7 @@ module.exports = {
         'vault-pink':'#C264B9',
         'dark-overlay': '#303030E5',
         'dark-type-primary': '#F3F3F3',
+        'tileBackgroundSecondary': '#303030'
       },
       fontSize: {
         'copy-size': '0.825rem',

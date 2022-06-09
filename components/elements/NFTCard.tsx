@@ -37,6 +37,7 @@ export interface NFTCardProps {
   customBackground?: string;
   customBorderRadius?: string;
   imageLayout?: 'row' | 'grid';
+  nftsDescriptionsVisible?: boolean;
 }
 
 export function NFTCard(props: NFTCardProps) {
@@ -170,7 +171,7 @@ export function NFTCard(props: NFTCardProps) {
               })}
             </div>
       }
-      <div className="p-4 md:p-3 flex flex-col">
+       {props.nftsDescriptionsVisible && <div className="p-4 md:p-3 flex flex-col">
         <span className={tw(
           'text-2xl lg:text-xl md:text-lg sm:text-base font-semibold truncate',
           isNullOrEmpty(props.title) ?
@@ -200,7 +201,7 @@ export function NFTCard(props: NFTCardProps) {
               {props.cta}
             </div>
         }
-      </div>
+      </div>}
     </div>
   );
 }

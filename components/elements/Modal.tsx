@@ -22,6 +22,8 @@ export interface ModalProps {
   pinkTitle?: boolean;
   longModal?: boolean;
   noCancelBtn?: boolean;
+  fullModal?: boolean;
+  bgColor?: string;
 }
 
 export function Modal(props: PropsWithChildren<ModalProps>) {
@@ -62,9 +64,10 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
               'text-left overflow-hidden shadow-xl absolute z-50 overflow-y-scroll',
               'min-w-[600px] sm:min-w-[1px] sm:max-w-screen',
               'sm:overflow-x-hidden sm:overflow-y-scroll',
-              'bg-pagebg dark:bg-pagebg-dk',
+              `${props.bgColor ?? 'bg-pagebg dark:bg-pagebg-dk'}`,
               `${props.pinkTitle && props.longModal ? 'max-h-screen' : '' }`,
-              `${props.pinkTitle && !props.longModal ? 'min4xl:-mt-28 md:h-full' : '' }`
+              `${props.pinkTitle && !props.longModal ? 'min4xl:-mt-28 md:h-full' : '' }`,
+              `${props.fullModal ? 'min-h-screen w-full' : 'min-w-[600px] sm:min-w-[1px] sm:max-w-screen' }`,
             )}
           >
             <div className='items-center'>

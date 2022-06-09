@@ -75,7 +75,7 @@ export function NftGallery(props: NftGalleryProps) {
 
   return (
     <>
-      <NftGrid nfts={nftsToShow} profileURI={profileURI} />
+      <NftGrid nfts={nftsToShow} profileURI={profileURI}/>
       {(!isAdmin || editMode) &&
       (editMode ? ownerNFTCount > nftsToShow.length : publicNFTCount > nftsToShow.length) &&
         <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium text-always-white">

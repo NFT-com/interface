@@ -3,6 +3,7 @@ import Loader from 'components/elements/Loader';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -35,7 +36,11 @@ export function MintedProfile(props: MintedProfileProps) {
     draftProfileImg,
     draftHeaderImg,
     setDraftHeaderImg,
-    setDraftProfileImg
+    setDraftProfileImg,
+    setDraftGkIconVisible,
+    draftGkIconVisible,
+    setDraftNftsDescriptionsVisible,
+    draftNftsDescriptionsVisible
   } = useContext(ProfileEditContext);
 
   const { data: account } = useAccount();
@@ -67,6 +72,8 @@ export function MintedProfile(props: MintedProfileProps) {
       });
     }
   };
+
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
 
   const onDropHeader = (files: Array<any>) => {
     if (files.length > 1) {
@@ -216,7 +223,10 @@ export function MintedProfile(props: MintedProfileProps) {
         'w-full justify-start space-y-4 flex flex-col')}>
         {
           (userIsAdmin && editMode) || (publiclyVisibleNFTs?.length ?? 0) > 0 ?
-            <MintedProfileGallery profileURI={profileURI} /> :
+            <MintedProfileGallery
+              profileURI={profileURI}
+              ownedGKTokens={ownedGKTokens}
+            /> :
             <>
               <div className={tw(
                 'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
