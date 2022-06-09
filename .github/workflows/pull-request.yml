@@ -24,4 +24,5 @@ jobs:
       env:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       
