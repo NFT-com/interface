@@ -27,7 +27,7 @@ export function SignedOutView(props: SignedOutViewProps) {
       <div
         className="rounded-xl items-center p-5 flex flex-col"
         style={{ width: isMobile ? '90%' : '30rem' }}>
-        <WalletRainbowKitButton />
+        <WalletRainbowKitButton signInButton={true} />
       </div>
     </div>
   );

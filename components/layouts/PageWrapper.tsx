@@ -8,7 +8,7 @@ import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
 
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
@@ -36,7 +36,15 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
   
   const { data: account } = useAccount();
 
+  const [clientOnly, setClientOnly] = useState(false);
+
   useMaybeCreateUser();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setClientOnly(true);
+    }
+  }, []);
   
   return (
     <div className={tw(
@@ -65,6 +73,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
                 hideAnalytics={headerOptions?.hideAnalytics}
               />
           )}
+          {clientOnly &&
           <Header
             walletPopup={headerOptions?.walletPopupMenu}
             walletOnly={headerOptions?.walletOnly}
@@ -74,6 +83,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
             heroHeaderBlack={headerOptions?.heroHeaderBlack}
             profileHeader={headerOptions?.profileHeader}
           />
+          }
         </div>}
         
         <Sidebar />
