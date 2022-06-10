@@ -16,7 +16,7 @@ export const Properties = (props: PropertiesProps) => {
 
   const [expanded, setExpanded] = useState(true);
   return (
-    <div className="flex flex-col w-full my-8" id="NftPropertiesContainer">
+    <div className="flex flex-col w-full mt-8" id="NftPropertiesContainer">
       <div className={tw(
         'flex items-center justify-between',
         'text-base dark:text-white font-bold tracking-wide mb-2'
@@ -40,7 +40,7 @@ export const Properties = (props: PropertiesProps) => {
               {nftTraits?.map((item, index) => {
                 return <NftDetailCard
                   key={index}
-                  type={item.type}
+                  type={item.type.toUpperCase()}
                   value={item.value}
                   center
                 />;
