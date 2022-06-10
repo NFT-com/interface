@@ -1,7 +1,6 @@
 import { SearchBar } from 'components/elements/SearchBar';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
-import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -14,7 +13,6 @@ import Link from 'next/link';
 import HeroCorner from 'public/hero_corner.svg';
 import HeroCornerDark from 'public/hero_corner_dark.svg';
 import { isMobile } from 'react-device-detect';
-import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
@@ -30,8 +28,8 @@ export interface HeaderProps {
 
 export default function Header(props: HeaderProps) {
   const { isDarkMode } = useUser();
-  const { toggleHeroSidebar } = useHeroSidebar();
-  const { walletSlideOpen, toggleWalletSlide } = useWalletSlide();
+
+  const { walletSlideOpen } = useWalletSlide();
   const { data: account } = useAccount();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { me } = useMeQuery();
@@ -46,7 +44,6 @@ export default function Header(props: HeaderProps) {
   }
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
-  const { primaryIcon } = useThemeColors();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
   const showHeaderNav = !isMobile;
   const searchEnabled = getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED);
@@ -133,21 +130,7 @@ export default function Header(props: HeaderProps) {
                 'font-rubik text-blue-50 tracking-wide',
                 'font-normal flex items-center'
               )}>
-                <div
-                  className="sm:block hidden cursor-pointer"
-                  onClick={() => {
-                    if (props.sidebar === 'dashboard') {
-                      toggleWalletSlide();
-                    } else {
-                      toggleHeroSidebar();
-                    }
-                  }}
-                >
-                  <Menu color={primaryIcon} />
-                </div>
-                <div className='sm:hidden block'>
-                  <WalletRainbowKitButton sidebar={props.sidebar} />
-                </div>
+                <WalletRainbowKitButton sidebar={props.sidebar} signInButton={false} />
               </div>
             </div>
           </div>

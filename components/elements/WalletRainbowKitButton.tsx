@@ -12,6 +12,7 @@ import { useAccount, useDisconnect } from 'wagmi';
 
 interface WalletRainbowKitButtonProps {
   sidebar?: string
+  signInButton?: boolean;
 }
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
@@ -52,6 +53,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
               if (!mounted || !data || !chain) {
                 return (
                   <>
+                    { !props?.signInButton &&
                     <div
                       className="sm:block hidden cursor-pointer"
                       onClick={() => {
@@ -64,12 +66,14 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                     >
                       <Menu color={primaryIcon} />
                     </div>
+                    }
                     <button
                       onClick={() => {
                         openConnectModal();
                       }}
                       className={tw(
-                        'block sm:hidden font-medium bg-primary-button-bckg rounded-xl text-white',
+                        `${props?.signInButton ? 'block' : 'hidden'}`,
+                        'font-medium bg-primary-button-bckg rounded-xl text-white',
                         'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                         'py-2 px-5'
                       )}
