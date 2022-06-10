@@ -15,7 +15,7 @@ jobs:
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
       with:
-        install-command: yarn --frozen-lockfile --immutable --silent
+        install-command: yarn --silent
         build: yarn build
         start: yarn start
         record: true
