@@ -18,7 +18,6 @@ jobs:
         install-command: yarn --frozen-lockfile --immutable --silent
         build: yarn build
         command: yarn cypress:run
-        wait-on: 'http://localhost:3000'
         record: true
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
