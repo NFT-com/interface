@@ -1,6 +1,5 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
-import './pageScripts';
 
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv } from 'utils/env';
@@ -12,6 +11,7 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { AnimatePresence } from 'framer-motion';
 import type { AppProps } from 'next/app';
+import Script from 'next/script';
 import { rainbowDark } from 'styles/RainbowKitThemes';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
@@ -62,6 +62,7 @@ const wagmiClient = createClient({
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <>
+      <Script src="./pageScripts.js" />
       <noscript dangerouslySetInnerHTML={{ __html: 'https://www.facebook.com/tr?id=1332665313901251&ev=PageView&noscript=1' }} />
         
       <WagmiConfig client={wagmiClient}>
