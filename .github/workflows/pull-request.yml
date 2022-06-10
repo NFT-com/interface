@@ -19,11 +19,15 @@ jobs:
         cache: 'yarn'
     - run: yarn install --frozen-lockfile --immutable
 
+    - name: Build app
+      run: yarn build
+      env:
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
       with:
         record: true
-        build: yarn build
         start: yarn start
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
