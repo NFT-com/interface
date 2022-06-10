@@ -467,8 +467,10 @@ export type Mutation = {
   deleteFromWatchlist?: Maybe<Scalars['Boolean']>;
   followProfile: Profile;
   mintGKProfile: Scalars['String'];
+  orderingUpdates: Profile;
   profileClaimed: Profile;
   refreshMyNFTs: RefreshMyNfTsOutput;
+  refreshNft: Nft;
   removeCuration: Profile;
   resendEmailConfirm: User;
   setCuration: Profile;
@@ -568,8 +570,18 @@ export type MutationMintGkProfileArgs = {
 };
 
 
+export type MutationOrderingUpdatesArgs = {
+  input: OrderingUpdatesInput;
+};
+
+
 export type MutationProfileClaimedArgs = {
   input: ProfileClaimedInput;
+};
+
+
+export type MutationRefreshNftArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -720,6 +732,16 @@ export type NftMetadataAlchemy = {
   description?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+};
+
+export type OrderUpdateInput = {
+  newIndex: Scalars['Int'];
+  nftId: Scalars['ID'];
+};
+
+export type OrderingUpdatesInput = {
+  profileId: Scalars['ID'];
+  updates: Array<OrderUpdateInput>;
 };
 
 export type PageInfo = {
@@ -1247,6 +1269,13 @@ export type ProfileClaimedMutationVariables = Exact<{
 
 export type ProfileClaimedMutation = { __typename?: 'Mutation', profileClaimed: { __typename?: 'Profile', status?: ProfileStatus | null, url: string, id: string } };
 
+export type RefreshNftMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type RefreshNftMutation = { __typename?: 'Mutation', refreshNft: { __typename?: 'NFT', id: string } };
+
 export type RemoveFromWatchlistMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1456,7 +1485,7 @@ export type ProfileNfTsMutationVariables = Exact<{
 }>;
 
 
-export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', contract?: any | null, id: string, tokenId: any, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
+export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', contract?: any | null, id: string, tokenId: any, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
 
 export type RecentProfilesQueryVariables = Exact<{
   input?: InputMaybe<LatestProfilesInput>;
@@ -1614,6 +1643,13 @@ export const ProfileClaimedDocument = gql`
   profileClaimed(input: $input) {
     status
     url
+    id
+  }
+}
+    `;
+export const RefreshNftDocument = gql`
+    mutation RefreshNft($id: ID!) {
+  refreshNft(id: $id) {
     id
   }
 }
@@ -2244,6 +2280,7 @@ export const ProfileNfTsDocument = gql`
       contract
       id
       tokenId
+      type
       metadata {
         imageURL
         description
@@ -2359,6 +2396,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     ProfileClaimed(variables: ProfileClaimedMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileClaimedMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileClaimedMutation>(ProfileClaimedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileClaimed', 'mutation');
+    },
+    RefreshNft(variables: RefreshNftMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RefreshNftMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RefreshNftMutation>(RefreshNftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RefreshNft', 'mutation');
     },
     RemoveFromWatchlist(variables: RemoveFromWatchlistMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RemoveFromWatchlistMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<RemoveFromWatchlistMutation>(RemoveFromWatchlistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RemoveFromWatchlist', 'mutation');
