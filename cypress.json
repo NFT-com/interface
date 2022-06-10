@@ -1,4 +1,3 @@
 {
-  "fixturesFolder": "cypress/e2e/**/*.cy.ts",
-  "projectId": "1gkqo9"
+  "fixturesFolder": "cypress/e2e/**/*.cy.ts"
 }
