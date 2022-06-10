@@ -38,10 +38,6 @@ export function MintedProfile(props: MintedProfileProps) {
     draftHeaderImg,
     setDraftHeaderImg,
     setDraftProfileImg,
-    setDraftGkIconVisible,
-    draftGkIconVisible,
-    setDraftNftsDescriptionsVisible,
-    draftNftsDescriptionsVisible
   } = useContext(ProfileEditContext);
 
   const { data: account } = useAccount();

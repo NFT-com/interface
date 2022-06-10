@@ -62,7 +62,7 @@ const wagmiClient = createClient({
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <>
-      <Script src="./pageScripts.js" />
+      <Script strategy="afterInteractive" src="public/js/pageScripts.js" />
       <noscript dangerouslySetInnerHTML={{ __html: 'https://www.facebook.com/tr?id=1332665313901251&ev=PageView&noscript=1' }} />
         
       <WagmiConfig client={wagmiClient}>
