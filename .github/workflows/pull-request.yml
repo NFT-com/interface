@@ -11,23 +11,12 @@ jobs:
       
     - name: Install Doppler CLI
       uses: dopplerhq/cli-action@v1
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '14'
-        cache: 'yarn'
-    - run: yarn install --frozen-lockfile --immutable
-
-    - name: Build app
-      run: yarn build
-      env:
-        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
       with:
         record: true
+        build: yarn build
         start: yarn start
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
