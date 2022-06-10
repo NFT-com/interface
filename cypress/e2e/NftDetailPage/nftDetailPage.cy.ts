@@ -2,7 +2,9 @@
 
 describe('nft detail page tests', () => {
   beforeEach(() => {
-    cy.visit('/app/nft/0x530E404f51778F38249413264ac7807A16b88603/330');
+    cy.intercept('POST', '/graphql').as('postGQL');
+    cy.visit('/app/nft/0x530E404f51778F38249413264ac7807A16b88603/330')
+      .wait('@postGQL');
   });
   
   it('displays title and owner', () => {
