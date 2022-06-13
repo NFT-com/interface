@@ -5,7 +5,6 @@ import { Person, PersonTile } from './PersonTile';
 import alecHeadshot from 'public/alecNFT.jpg';
 import andrewHeadshot from 'public/andrewNFT.png';
 import gavinHeadshot from 'public/gavinNFT.png';
-import teamBg from 'public/hero-team-bg.png';
 import jordanHeadshot from 'public/jordannft.jpg';
 import kentHeadshot from 'public/kentNFT.png';
 import khurramHeadshot from 'public/KhurramNFT.jpg';
@@ -108,7 +107,7 @@ export default function HeroTeamSection() {
         id="teamSection"
         className="w-full relative pb-36"
         style={{
-          backgroundImage: `url(${teamBg})`,
+          backgroundImage: 'url("/hero-team-bg.png")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed'

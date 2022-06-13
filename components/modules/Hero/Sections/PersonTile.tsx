@@ -48,6 +48,7 @@ export function PersonTile(props: PersonTileProps) {
               src={person.pictureUrl}
               layout="fill"
               objectFit="contain"
+              className='rounded-full'
             />
           }
         </div>
