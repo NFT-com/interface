@@ -19,7 +19,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       bgColorClasses='bg-pagebg dark:bg-pagebg-secondary-dk pt-20'
     >
       <div className="flex flex-col pt-20 items-center w-full lg:px-0 px-48">
-        <NFTDetail nft={nft} onRefreshSuccess={mutate}/>
+        <NFTDetail nft={nft} onRefreshSuccess={mutate} />
         <ExternalListings nft={nft} />
         <div className='w-full flex flex-row md:flex-col px-4'>
           <div className='flex flex-col w-2/4 md:w-full pr-4 md:pr-0'>
@@ -30,7 +30,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
               <NftChainInfo nft={nft} />
             </div>
           </div>
-          <div className="w-2/4 md:w-full">
+          <div className="w-2/4 md:w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
             <Properties nft={nft} />
           </div>
         </div>
