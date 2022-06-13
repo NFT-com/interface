@@ -7,7 +7,6 @@ import andrewHeadshot from 'public/andrewNFT.png';
 import gavinHeadshot from 'public/gavinNFT.png';
 import jordanHeadshot from 'public/jordannft.jpg';
 import kentHeadshot from 'public/kentNFT.png';
-import khurramHeadshot from 'public/KhurramNFT.jpg';
 import kyleHeadshot from 'public/kyleNFT.jpeg';
 
 const PEOPLE_LEFT: Person[] = [
@@ -86,17 +85,6 @@ const PEOPLE_RIGHT: Person[] = [
     pictureUrl: alecHeadshot,
     twitterUrl: 'https://twitter.com/AlecSaysThings',
     linkedInUrl: 'https://www.linkedin.com/in/alecotto/'
-  },
-  {
-    name: 'KHURRAM DARA',
-    bioItems: [
-      'Previous General Counsel at AirSwap/Fluidity',
-      'Advised blockchain/crypto startups at Orrick, Herrington & Sutcliffe LLP',
-      'Does not approve of any of the copy on this website'
-    ],
-    pictureUrl: khurramHeadshot,
-    twitterUrl: 'https://www.twitter.com/khurramdara',
-    linkedInUrl: 'https://www.linkedin.com/in/khurram-dara/'
   },
 ];
 
