@@ -5,7 +5,6 @@ import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/Unminte
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Loader } from 'react-feather';
@@ -65,7 +64,6 @@ export function ProfilePage(props: ProfilePageProps) {
         removeSummaryBanner: true,
         walletOnly: true,
         walletPopupMenu: true,
-        sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
         hideAnalytics: true,
         profileHeader: true
       }}
