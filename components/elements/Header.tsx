@@ -128,7 +128,7 @@ export default function Header(props: HeaderProps) {
                 'font-rubik text-blue-50 tracking-wide',
                 'font-normal flex items-center'
               )}>
-                <WalletRainbowKitButton signInButton={false} />
+                <WalletRainbowKitButton signInButton />
               </div>
             </div>
           </div>
