@@ -5,8 +5,6 @@ import { Person, PersonTile } from './PersonTile';
 import alecHeadshot from 'public/alecNFT.jpg';
 import andrewHeadshot from 'public/andrewNFT.png';
 import gavinHeadshot from 'public/gavinNFT.png';
-import teamBg from 'public/hero-team-bg.png';
-import jeannaHeadshot from 'public/jeannaNFT.png';
 import jordanHeadshot from 'public/jordannft.jpg';
 import kentHeadshot from 'public/kentNFT.png';
 import khurramHeadshot from 'public/KhurramNFT.jpg';
@@ -25,19 +23,6 @@ const PEOPLE_LEFT: Person[] = [
     pictureUrl: jordanHeadshot,
     twitterUrl: 'https://twitter.com/jordanfried',
     linkedInUrl: 'https://linkedin.com/in/jordanfried'
-  },
-  {
-    name: 'JEANNA LIU',
-    bioItems: [
-      'COO of Immutable Holdings',
-      'Reformed Wall Street Banker, advised over $15B' +
-        ' of media/tech deals',
-      'B.S. Economics, MIT',
-      'Spent her bitcoin on bar stools in 2014'
-    ],
-    pictureUrl: jeannaHeadshot,
-    twitterUrl: 'https://twitter.com/JeannaQLiu',
-    linkedInUrl: 'https://www.linkedin.com/in/jeannaqliu/'
   },
   {
     name: 'ANDREW MASANTO',
@@ -122,7 +107,7 @@ export default function HeroTeamSection() {
         id="teamSection"
         className="w-full relative pb-36"
         style={{
-          backgroundImage: `url(${teamBg})`,
+          backgroundImage: 'url("/hero-team-bg.png")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed'

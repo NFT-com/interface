@@ -196,7 +196,6 @@ export default function RoadmapPage() {
         removeBackground: true,
         walletPopupMenu: true,
         removeSummaryBanner: true,
-        sidebar: 'hero',
         heroHeader: true,
         heroHeaderBlack: headerBlack,
       }}>

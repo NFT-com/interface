@@ -13,14 +13,12 @@ import Link from 'next/link';
 import HeroCorner from 'public/hero_corner.svg';
 import HeroCornerDark from 'public/hero_corner_dark.svg';
 import { isMobile } from 'react-device-detect';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
 export interface HeaderProps {
   walletOnly?: boolean;
   walletPopup?: boolean;
   removeBackground?: boolean;
-  sidebar: 'hero' | 'dashboard'
   heroHeader?: boolean;
   heroHeaderBlack?: boolean;
   profileHeader?: boolean;
@@ -130,7 +128,7 @@ export default function Header(props: HeaderProps) {
                 'font-rubik text-blue-50 tracking-wide',
                 'font-normal flex items-center'
               )}>
-                <WalletRainbowKitButton sidebar={props.sidebar} signInButton={false} />
+                <WalletRainbowKitButton signInButton={false} />
               </div>
             </div>
           </div>

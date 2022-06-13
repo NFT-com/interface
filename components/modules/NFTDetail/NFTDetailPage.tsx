@@ -1,6 +1,5 @@
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import { DescriptionDetail } from './DescriptionDetail';
 import { ExternalListings } from './ExternalListings';
@@ -18,9 +17,6 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   return (
     <PageWrapper
       bgColorClasses='bg-pagebg dark:bg-pagebg-secondary-dk pt-20'
-      headerOptions={{
-        sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
-      }}
     >
       <div className="flex flex-col pt-20 items-center w-full lg:px-0 px-48">
         <NFTDetail nft={nft} onRefreshSuccess={mutate}/>
