@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
@@ -182,7 +183,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       )}
                       style={{ zIndex: 101 }}
                     >
-                      <Image
+                      {/* <Image
                         src={
                           !isNullOrEmpty(draftProfileImg?.preview)
                             ? draftProfileImg?.preview
@@ -196,7 +197,28 @@ export function MintedProfile(props: MintedProfileProps) {
                         className="rounded-full scale-95"
                         layout="fill"
                         objectFit='cover'
+                      /> */}
+                      <img
+                        src={
+                          !isNullOrEmpty(draftProfileImg?.preview)
+                            ? draftProfileImg?.preview
+                            : profileData?.profile?.photoURL ??
+                          (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
+                            ? 'https://cdn.nft.com/profile-image-default.svg' :
+                            cameraIcon.src)
+                        }
+                        alt="profilePicture"
+                        draggable={false}
+                        className={tw(
+                          'object-center rounded-full',
+                          'h-full w-full',
+                          'shrink-0 aspect-square',
+                          userIsAdmin && editMode ? 'cursor-pointer' : '',
+                          userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                        )}
+                        style={{ zIndex: 101, }}
                       />
+
                     </div>
                     {editMode && <div
                       className={tw(

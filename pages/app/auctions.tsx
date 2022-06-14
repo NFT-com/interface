@@ -10,7 +10,6 @@ export default function GenesisKeyAuctionsPage() {
         removeBackground: true,
         walletPopupMenu: true,
         removeSummaryBanner: true,
-        sidebar: 'hero'
       }}>
       <div className={tw(
         'relative flex flex-col overflow-y-scroll',

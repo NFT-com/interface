@@ -1,11 +1,5 @@
-import Image from 'next/image';
+/* eslint-disable @next/next/no-img-element */
 import { useRouter } from 'next/router';
-import LinkToGreenKey from 'public/link-to-green-key.png';
-import LinkToKey from 'public/link-to-key.png';
-import LinkToNFTCOM from 'public/link-to-nftcom.png';
-import LinkToOpensea from 'public/link-to-opensea.png';
-// import LinkToWhitePaper from 'assets/images/link-to-whitepaper.png';
-import LinkToYou from 'public/link-to-you.png';
 
 export interface LinksToSectionParams {
   isAddressOwner: boolean;
@@ -17,7 +11,7 @@ export function LinksToSection(props: LinksToSectionParams) {
 
   const ownerlinksContents = [
     {
-      image: LinkToNFTCOM,
+      image: '/link-to-nftcom.png',
       section: 'DOCUMENT',
       title: 'NFT.COM Summary',
       description: 'Learn more about Genesis Keys and Profiles in this PDF.',
@@ -33,21 +27,21 @@ export function LinksToSection(props: LinksToSectionParams) {
     //   }
     // },
     {
-      image: LinkToYou,
+      image: '/link-to-you.png',
       section: 'KNOWLEDGE BASE',
       title: 'NFT.COM Support',
       description: 'Learn about the different ways you can obtain your own NFT.com Profile.',
       linkTo: () => { router.push('/about'); }
     },
     {
-      image: LinkToGreenKey,
+      image: '/link-to-green-key.png',
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
       description: 'Explore all Genesis Keys and existing NFT.com Profiles in our Gallery.',
       linkTo: () => { router.push('/about'); }
     },
     {
-      image: LinkToOpensea,
+      image: '/link-to-opensea.png',
       section: 'MARKET PLACE',
       title: 'Opensea.io',
       description: 'View our Genesis Key and NFT.com Profile Collections on Opensea',
@@ -57,28 +51,28 @@ export function LinksToSection(props: LinksToSectionParams) {
   
   const notOwnerlinksContents = [
     {
-      image: LinkToKey,
+      image: '/link-to-key.png',
       section: 'EVENTS',
       title: 'NFT.COM Public Release',
       description: 'Buy a Genesis Keys and receive four Profiles to make your own.',
       linkTo: () => { router.push('/app/sale'); }
     },
     {
-      image: LinkToYou,
+      image: '/link-to-you.png',
       section: 'KNOWLEDGE BASE',
       title: 'NFT.COM Support',
       description: 'Learn about the different ways you can obtain your own NFT.com Profile.',
       linkTo: () => { router.push('/about'); }
     },
     {
-      image: LinkToGreenKey,
+      image: '/link-to-green-key.png',
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
       description: 'Explore all Genesis Keys and existing NFT.com Profiles in our Gallery.',
       linkTo: () => { router.push('/app/gallery'); }
     },
     {
-      image: LinkToOpensea,
+      image: '/link-to-opensea.png',
       section: 'MARKET PLACE',
       title: 'Opensea.io',
       description: 'View our Genesis Key and NFT.com Profile Collections on Opensea',
@@ -99,12 +93,8 @@ export function LinksToSection(props: LinksToSectionParams) {
                 onClick={item.linkTo}
                 className="bg-modal-overlay-dk rounded-xl lg:w-full w-52 grow cursor-pointer">
                 <div className="lg:text-sm text-lg md:p-2 p-4">{item.section}</div>
-                <div className="w-full relative">
-                  <Image src={item.image}
-                    layout="fill"
-                    objectFit="contain"
-                    className="object-center object-cover w-full"
-                    alt="link to section" />
+                <div className="w-full">
+                  <img src={item.image} className="object-center object-cover w-full" alt="link to section" />
                 </div>
                 <div className="md:p-3 p-4">
                   <div className="mb-1 lg:text-base text-xl">{item.title}</div>
