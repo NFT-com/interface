@@ -65,13 +65,14 @@ export function HeroSidebarProfile(props: HeroSidebarProfileProps) {
             </div> :
             <ProfileGeneric className="ml-4 mr-2.5 h-9 aspect-square rounded-full" />
         } */}
-        profileData?.profile?.photoURL ?
-        <img
-          className="ml-4 mr-2.5 h-9 aspect-square rounded-full"
-          src={profileData?.profile?.photoURL}
-          alt="genesis key generic"
-        /> :
-        <ProfileGeneric className="ml-4 mr-2.5 h-9 aspect-square rounded-full" />
+        {profileData?.profile?.photoURL ?
+          <img
+            className="ml-4 mr-2.5 h-9 aspect-square rounded-full"
+            src={profileData?.profile?.photoURL}
+            alt="genesis key generic"
+          /> :
+          <ProfileGeneric className="ml-4 mr-2.5 h-9 aspect-square rounded-full" />
+        }
         <div className="flex flex-col text-secondary-txt">
           Profile
           <span className='text-lg text-always-white'>
