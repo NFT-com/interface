@@ -3,8 +3,6 @@
 describe('nft detail page tests', () => {
   beforeEach(() => {
     cy.fixture('nft_details').then((json) => {
-      cy.log(json)
-      cy.log(Cypress.env('NETWORK'))
       const contract = json[Cypress.env('NETWORK')]?.['contract'];
       const tokenId = json[Cypress.env('NETWORK')]?.['tokenId'];
       cy.visit('/app/nft/' + contract + '/' + tokenId);
