@@ -16,10 +16,9 @@ jobs:
       uses: cypress-io/github-action@v4
       with:
         install-command: yarn --frozen-lockfile --immutable --silent
-        build: yarn build
         start: yarn start
+        command: yarn cypress:run-only
         record: true
-        command: yarn cypress:run
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
