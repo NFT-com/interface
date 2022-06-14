@@ -12,6 +12,10 @@ jobs:
     - name: Install Doppler CLI
       uses: dopplerhq/cli-action@v1
 
+    - name: Configure Doppler Config
+      run: |
+        doppler setup -p interface -c dev_gh-actions --no-interactive
+
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
       with:
