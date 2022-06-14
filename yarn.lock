@@ -15384,11 +15384,6 @@ reading-time-estimator@^1.5.0:
   resolved "https://registry.yarnpkg.com/reading-time-estimator/-/reading-time-estimator-1.5.0.tgz#1101a9304b9f3f6bac48a8addf8b7829d3ac5c64"
   integrity sha512-Nrww3htddpPmFhXOSZ6nJhZoUaT1lKbzD+gX/MjKhkmiGpgbAELHDx2RnfsQgzBEhdHnMabe9wWrAD2l/nAW+A==
 
-reading-time@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/reading-time/-/reading-time-1.5.0.tgz#d2a7f1b6057cb2e169beaf87113cc3411b5bc5bb"
-  integrity sha512-onYyVhBNr4CmAxFsKS7bz+uTLRakypIe4R+5A824vBSkQy/hB3fZepoVEf8OVAxzLvK+H/jm9TzpI3ETSm64Kg==
-
 redis-commands@1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/redis-commands/-/redis-commands-1.7.0.tgz#15a6fea2d58281e27b1cd1acfb4b293e278c3a89"
