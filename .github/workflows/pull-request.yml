@@ -15,6 +15,7 @@ jobs:
     - name: Configure Doppler Config
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
+        
     - name: Cypress run - e2e
       uses: cypress-io/github-action@v4
       with:
@@ -29,9 +30,9 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v3
-        with:
-          name: code-coverage-report
-          path: coverage/lcov-report/index.html
+        
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage-report
+        path: coverage/lcov-report/index.html
