@@ -22,7 +22,6 @@ export interface PageWrapperProps {
     removeBackground?: boolean;
     removeSummaryBanner?: boolean;
     hideAnalytics?: boolean;
-    sidebar?: 'hero' | 'dashboard'
     heroHeader?: boolean;
     heroHeaderBlack?: boolean;
     profileHeader?: boolean;
@@ -78,7 +77,6 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
             walletPopup={headerOptions?.walletPopupMenu}
             walletOnly={headerOptions?.walletOnly}
             removeBackground={headerOptions?.removeBackground}
-            sidebar={headerOptions?.sidebar ?? 'dashboard'}
             heroHeader={headerOptions?.heroHeader}
             heroHeaderBlack={headerOptions?.heroHeaderBlack}
             profileHeader={headerOptions?.profileHeader}

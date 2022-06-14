@@ -13,7 +13,6 @@ import { Maybe } from 'graphql/generated/types';
 import { useGallery } from 'hooks/state/useGallery';
 import { useSignedIn } from 'hooks/useSignedIn';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
@@ -71,7 +70,6 @@ export default function GalleryPage() {
   return (
     <PageWrapper headerOptions={{
       walletOnly: true,
-      sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
       removeSummaryBanner: true,
       walletPopupMenu: true,
     }}>

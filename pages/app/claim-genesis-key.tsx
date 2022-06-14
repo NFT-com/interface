@@ -71,7 +71,6 @@ export default function ClaimGenesisKeyPage() {
         removeBackground: true,
         walletPopupMenu: true,
         removeSummaryBanner: true,
-        sidebar: 'hero'
       }}>
       {!isMobile &&
             <div

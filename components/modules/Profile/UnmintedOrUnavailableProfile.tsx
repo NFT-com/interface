@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Footer } from 'components/elements/Footer';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
@@ -28,7 +29,7 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
           <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px]">
             <section>
               <div className='relative outline-none rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60'>
-                <Image
+                {/* <Image
                   src={'https://cdn.nft.com/profile-image-default.svg'}
                   alt="profilePicture"
                   draggable={false}
@@ -36,6 +37,13 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
                   layout="fill"
                   objectFit="cover"
                   style={{ zIndex: 49, }}
+                /> */}
+                <img
+                  src={'https://cdn.nft.com/profile-image-default.svg'}
+                  alt="profilePicture"
+                  draggable={false}
+                  className="object-center rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60"
+                  style={{ zIndex: 101, }}
                 />
               </div>
             </section>

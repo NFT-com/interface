@@ -70,7 +70,6 @@ export function HeroPage(props: HeroPageProps) {
         removeBackground: true,
         walletPopupMenu: true,
         removeSummaryBanner: true,
-        sidebar: 'hero',
         heroHeader: true,
         heroHeaderBlack: headerBlack,
       }}

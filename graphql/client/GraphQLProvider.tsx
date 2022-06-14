@@ -1,5 +1,6 @@
 import { SignatureModal } from 'components/elements/SignatureModal';
 import { GraphQLClient } from 'graphql-request';
+import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { Doppler, getEnv } from 'utils/env';
 import { getAPIURL, isNullOrEmpty } from 'utils/helpers';
 
@@ -21,6 +22,7 @@ export const GraphQLProviderProps = {};
  * headers specific to nft.com.
  */
 export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderProps>) {
+  const { isSupported } = useSupportedNetwork();
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const [loading, setLoading] = useState(true);
@@ -100,7 +102,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   }, [account]);
 
   useEffect(() => {
-    if (account?.connector == null) {
+    if((account && !isSupported) || account?.connector == null) {
       return;
     }
     if (isNullOrEmpty(account?.address)) {
@@ -112,7 +114,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       // if there is no connected wallet, it should fail silently.
       setSigRejected(!sigResult && !isNullOrEmpty(account?.address));
     })();
-  }, [account, trySignature]);
+  }, [account, isSupported, trySignature]);
   
   return (
     <GraphQLContext.Provider

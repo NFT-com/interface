@@ -55,7 +55,6 @@ export default function ProfilePreferencesPage() {
         removeBackground: true,
         walletPopupMenu: true,
         removeSummaryBanner: true,
-        sidebar: 'hero'
       }}>
       <div
         className={tw(
