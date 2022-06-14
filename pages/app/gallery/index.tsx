@@ -13,6 +13,7 @@ import { Maybe } from 'graphql/generated/types';
 import { useGallery } from 'hooks/state/useGallery';
 import { useSignedIn } from 'hooks/useSignedIn';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
+import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
@@ -68,33 +69,34 @@ export default function GalleryPage() {
   }, [currentFilter, galleryItemType, showMyStuff, signedIn]);
 
   return (
-    <PageWrapper headerOptions={{
-      walletOnly: true,
-      removeSummaryBanner: true,
-      walletPopupMenu: true,
-    }}>
-      <Modal
-        dark
-        pure
-        visible={detailId != null}
-        loading={false}
-        title={''}
-        onClose={() => {
-          setDetailId(null);
-        }}>
-        <GenesisKeyGalleryDetailView
-          id={detailId}
+    <ClientOnly>
+      <PageWrapper headerOptions={{
+        walletOnly: true,
+        removeSummaryBanner: true,
+        walletPopupMenu: true,
+      }}>
+        <Modal
+          dark
+          pure
+          visible={detailId != null}
+          loading={false}
+          title={''}
           onClose={() => {
             setDetailId(null);
-          }}
-        />
-      </Modal>
-      <div className={tw(
-        'flex h-full w-full overflow-hidden pt-20 bg-modal-overlay-dk',
-        'text-primary-txt-dk absolute'
-      )}>
-        {/* Desktop Filters - sidebar */}
-        {!isMobile &&
+          }}>
+          <GenesisKeyGalleryDetailView
+            id={detailId}
+            onClose={() => {
+              setDetailId(null);
+            }}
+          />
+        </Modal>
+        <div className={tw(
+          'flex h-full w-full overflow-hidden pt-20 bg-modal-overlay-dk',
+          'text-primary-txt-dk absolute'
+        )}>
+          {/* Desktop Filters - sidebar */}
+          {!isMobile &&
          <div className={tw(
            'flex flex-col w-1/4 shrink-0 h-full min-h-4/5 border-r border-accent-border-dk',
            'border-t px-10 pt-6 md:hidden'
@@ -107,56 +109,57 @@ export default function GalleryPage() {
              }}
            />
          </div>
-        }
-        <div className={tw(
-          'flex flex-col flex-grow h-full overflow-auto',
-          'border-t border-accent-border-dk bg-modal-overlay-dk',
-          'px-4 sm:px-0 pt-6'
-        )}>
-          <GalleryPageTitle
-            showMyStuff={showMyStuff}
-            itemType={galleryItemType}
-            currentFilter={currentFilter}
-            totalGKSupply={BigNumber.from(10000)}
-          />
-          {account && !isSupported && <div className='w-full justify-center flex mt-12'>
-            <NetworkErrorTile />
-          </div>}
-          <LoadedContainer loaded={true} fitToParent>
-            <div ref={parentRef} className='w-full h-full flex flex-wrap items-start mt-4'>
-              {getGalleryContent()}
-            </div>
-          </LoadedContainer>
+          }
+          <div className={tw(
+            'flex flex-col flex-grow h-full overflow-auto',
+            'border-t border-accent-border-dk bg-modal-overlay-dk',
+            'px-4 sm:px-0 pt-6'
+          )}>
+            <GalleryPageTitle
+              showMyStuff={showMyStuff}
+              itemType={galleryItemType}
+              currentFilter={currentFilter}
+              totalGKSupply={BigNumber.from(10000)}
+            />
+            {account && !isSupported && <div className='w-full justify-center flex mt-12'>
+              <NetworkErrorTile />
+            </div>}
+            <LoadedContainer loaded={true} fitToParent>
+              <div ref={parentRef} className='w-full h-full flex flex-wrap items-start mt-4'>
+                {getGalleryContent()}
+              </div>
+            </LoadedContainer>
+          </div>
         </div>
-      </div>
-      {/* mobile filters */}
-      <div className={tw(
-        'hidden w-full h-full absolute dark top-0 left-0',
-        !showFilters ? 'md:hidden' : 'md:block',
-        'bg-modal-overlay-dk mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
-        'border-t border-accent-border-dk'
-      )}>
-        <GenesisKeyGalleryFilters
-          showFilters={showFilters}
-          currentFilter={currentFilter}
-          setCurrentFilter={(filter: string) => {
-            setCurrentFilter(filter);
-          }}
-        />
-      </div>
-      <div className={tw(
-        'md:block absolute bottom-0 left-0 hidden w-full mb-8 flex justify-center',
-        'drop-shadow-md px-8'
-      )}>
-        <Button
-          stretch
-          label={showFilters ? 'Close' : 'Filter'}
-          onClick={() => {
-            setShowFilters(!showFilters);
-          }}
-          type={ButtonType.PRIMARY}
-        />
-      </div>
-    </PageWrapper>
+        {/* mobile filters */}
+        <div className={tw(
+          'hidden w-full h-full absolute dark top-0 left-0',
+          !showFilters ? 'md:hidden' : 'md:block',
+          'bg-modal-overlay-dk mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
+          'border-t border-accent-border-dk'
+        )}>
+          <GenesisKeyGalleryFilters
+            showFilters={showFilters}
+            currentFilter={currentFilter}
+            setCurrentFilter={(filter: string) => {
+              setCurrentFilter(filter);
+            }}
+          />
+        </div>
+        <div className={tw(
+          'md:block absolute bottom-0 left-0 hidden w-full mb-8 flex justify-center',
+          'drop-shadow-md px-8'
+        )}>
+          <Button
+            stretch
+            label={showFilters ? 'Close' : 'Filter'}
+            onClick={() => {
+              setShowFilters(!showFilters);
+            }}
+            type={ButtonType.PRIMARY}
+          />
+        </div>
+      </PageWrapper>
+    </ClientOnly>
   );
 }
