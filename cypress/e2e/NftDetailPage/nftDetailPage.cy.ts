@@ -2,7 +2,13 @@
 
 describe('nft detail page tests', () => {
   beforeEach(() => {
-    cy.visit('/app/nft/0x530E404f51778F38249413264ac7807A16b88603/330');
+    cy.fixture('nft_details').then((json) => {
+      cy.log(json)
+      cy.log(Cypress.env('NETWORK'))
+      const contract = json[Cypress.env('NETWORK')]?.['contract'];
+      const tokenId = json[Cypress.env('NETWORK')]?.['tokenId'];
+      cy.visit('/app/nft/' + contract + '/' + tokenId);
+    });
   });
   
   it('displays title and owner', () => {
