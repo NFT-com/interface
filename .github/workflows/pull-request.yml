@@ -16,7 +16,15 @@ jobs:
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
 
-    - name: Cypress run - e2e
+- name: Run Component tests 🧪
+  uses: cypress-io/github-action@v4
+  with:
+    # we have already installed everything
+    install: false
+    # to run component tests we need to use "component: true"
+    component: true
+
+    - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4
       with:
         install-command: yarn --frozen-lockfile --immutable --silent
@@ -30,7 +38,21 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+    
+    - name: Cypress run - component 🧪
+      uses: cypress-io/github-action@v4
+      with:
+        install: false
+        component: true
+        start: yarn start
+        record: true
+      env:
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+        CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
