@@ -10,10 +10,14 @@ describe('nft detail page tests', () => {
   });
   
   it('displays title and owner', () => {
-    cy.get('#NFTDetailContainer').should('exist');
-  
-    cy.get('#NFTDetailContainer').should('exist').should('contain.text', 'NFT.com Genesis Key #00002');
-    cy.get('#NFTDetailContainer').should('exist').should('contain.text', 'View on Etherscan');
+    cy.fixture('nft_details').then((json) => {
+      const expectedName = json[Cypress.env('NETWORK')]?.['expectedName'];
+      
+      cy.get('#NFTDetailContainer').should('exist');
+
+      cy.get('#NFTDetailContainer').should('exist').should('contain.text', expectedName);
+      cy.get('#NFTDetailContainer').should('exist').should('contain.text', 'View on Etherscan');
+    });
   });
   
   it('all sections are visible', () => {
