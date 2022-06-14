@@ -62,8 +62,7 @@ const wagmiClient = createClient({
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <>
-      <Script strategy="afterInteractive" src="public/js/pageScripts.js" />
-      <noscript dangerouslySetInnerHTML={{ __html: 'https://www.facebook.com/tr?id=1332665313901251&ev=PageView&noscript=1' }} />
+      <Script strategy="afterInteractive" src="/js/pageScripts.js" />
         
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider

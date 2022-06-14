@@ -96,7 +96,6 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
 
   useEffect(() => {
     if (!account) {
-      console.log('setting sigRejected false');
       setSigRejected(false);
     }
   }, [account]);
