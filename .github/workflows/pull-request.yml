@@ -20,6 +20,7 @@ jobs:
         start: yarn start
         command: yarn cypress:run-only
         record: true
+        browser: firefox
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
