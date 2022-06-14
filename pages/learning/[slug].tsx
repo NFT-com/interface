@@ -1,3 +1,4 @@
+import Markdown from 'components/elements/Markdown';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { tw } from 'utils/tw';
 
@@ -33,8 +34,8 @@ export default function Post({ post, preview }: PostProps) {
         heroHeader: true,
       }}
     >
-      <div className="bg-white absolute top-20 text-center px-14 w-full">
-        <p className="mt-14 sm:mt-6 md:mt-10 mx-auto text-4xl sm:text-lg md:text-2xl sm:mb-3 max-w-2xl font-medium leading-normal md:leading-6 tracking-wider">
+      <div className="bg-white absolute top-20 text-center px-4 w-full">
+        <p className="mt-14 sm:mt-6 md:mt-10 mx-auto text-4xl sm:text-lg md:text-2xl sm:mb-3 max-w-2xl font-medium leading-normal md:leading-6 tracking-wider px-0 md:px-10">
           {post?.title}
         </p>
         {post?.author && (
@@ -59,6 +60,17 @@ export default function Post({ post, preview }: PostProps) {
             {post?.body && <p>{result.minutes} min read</p>}
           </div>
         )}
+
+        <div className="border-t-2 border-slate-300 pt-5 md:pt-2.5 ">
+          <div
+            className="bg-cover bg-center rounded-md min-w-full h-96 mb-7"
+            style={{ backgroundImage: `url(${post?.heroImage.url})` }}
+          ></div>
+        </div>
+
+        <div className="text-left border-b-2 border-slate-300 mt-12 md:mt-8 mb-5">
+          <Markdown content={post?.body} />
+        </div>
       </div>
     </PageWrapper>
   );
