@@ -20,6 +20,7 @@ jobs:
         start: yarn start
         record: true
         browser: chrome
+        headed: true
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
