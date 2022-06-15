@@ -15,8 +15,8 @@ jobs:
     - name: Configure Doppler Config
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
-
-    - name: Cypress run - e2e
+        
+    - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4
       with:
         install-command: yarn --frozen-lockfile --immutable --silent
@@ -30,3 +30,21 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Cypress run - component 🧪
+      uses: cypress-io/github-action@v4
+      with:
+        install: false
+        component: true
+        record: true
+      env:
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+        CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: ✅ Upload coverage to Codecov
+      uses: codecov/codecov-action@v3.1.0
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
