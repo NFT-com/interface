@@ -1,5 +1,6 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
+import 'react-tippy/dist/tippy.css';
 
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv } from 'utils/env';
