@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 
 export function useSidebar() {
-  const { data, mutate } = useSWR('heroSidebar', { fallbackData: false });
+  const { data, mutate } = useSWR('sidebar', { fallbackData: false });
 
   const loading = !data;
   const useToggleSidebar = () => {

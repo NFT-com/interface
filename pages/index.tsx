@@ -18,7 +18,7 @@ const HomePage: NextPage = () => {
         }}
       >
         <div className="flex flex-row items-center justify-center w-screen h-96 bg-always-black ">
-          <WalletRainbowKitButton showWhenConnected={false} />
+          <WalletRainbowKitButton signInButton showWhenConnected={false} />
         </div>
         <div className='space-y-6 py-6 ...'>
           <div className='h-full ...'>

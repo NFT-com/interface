@@ -6,6 +6,7 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import { Popover } from '@headlessui/react';
 import NavLogo from 'public/hero_corner.svg';
+import { isMobile } from 'react-device-detect';
 
 export const Header = () => {
   return (
@@ -36,7 +37,7 @@ export const Header = () => {
               <SearchBar />
             </div>
           }
-          <WalletRainbowKitButton showWhenConnected />
+          <WalletRainbowKitButton showWhenConnected signInButton={!isMobile} />
         </div>
       </div>
     </Popover>

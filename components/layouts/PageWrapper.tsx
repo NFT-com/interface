@@ -5,7 +5,6 @@ import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
 import { PropsWithChildren } from 'react';
@@ -38,24 +37,24 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
   useMaybeCreateUser();
   
   return (
-    <ClientOnly>
-      <div className={tw(
-        'flex flex-col h-screen',
-        isMobile ? 'overflow-x-hidden' : ''
-      )}>
-        <main
-          className={tw(
-            'absolute w-full h-full flex flex-col',
-            isMobile ? 'overflow-x-hidden' : '',
-            bgColorClasses ?? 'bg-black'
-          )}
-          style={{
-            minHeight: '100vh',
-            overflow: 'scroll',
-          }}
-        >
-          <AddFundsDialog key={account?.address} account={account?.address} />
-          {headerOptions?.omit !== true &&
+
+    <div className={tw(
+      'flex flex-col h-screen',
+      isMobile ? 'overflow-x-hidden' : ''
+    )}>
+      <main
+        className={tw(
+          'absolute w-full h-full flex flex-col',
+          isMobile ? 'overflow-x-hidden' : '',
+          bgColorClasses ?? 'bg-black'
+        )}
+        style={{
+          minHeight: '100vh',
+          overflow: 'scroll',
+        }}
+      >
+        <AddFundsDialog key={account?.address} account={account?.address} />
+        {headerOptions?.omit !== true &&
         <div className="fixed z-[99] top-0 w-full">
           {props.headerOptions?.removeSummaryBanner && ( // TODO: Remove this temporary hidding after fixing proper behavior and zIndex stack for buttons on the left
             props.headerOptions?.removeSummaryBanner !== true &&
@@ -67,22 +66,21 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
           )}
         </div>}
         
-          <Sidebar />
+        <Sidebar />
 
-          <SignOutModal
-            visible={signOutDialogOpen}
-            onClose={() => {
-              setSignOutDialogOpen(false);
-            }}
-          />
+        <SignOutModal
+          visible={signOutDialogOpen}
+          onClose={() => {
+            setSignOutDialogOpen(false);
+          }}
+        />
         
-          {props.children}
-          <div className="bg-transparent w-full flex grow"></div>
-          {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
+        {props.children}
+        <div className="bg-transparent w-full flex grow"></div>
+        {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
             <Footer />
-          }
-        </main>
-      </div>
-    </ClientOnly>
+        }
+      </main>
+    </div>
   );
 };
