@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 const theme = {
@@ -12,6 +13,14 @@ const theme = {
       </p>
     );
   },
+  h1: (props: any) => {
+    const { children } = props;
+    return (
+      <h1 className="mb-4 text-4xl md:text-2xl sm:text-md font-medium">
+        {children}
+      </h1>
+    );
+  },
   h2: (props: any) => {
     const { children } = props;
     return (
@@ -19,6 +28,58 @@ const theme = {
         {children}
       </h2>
     );
+  },
+  h3: (props: any) => {
+    const { children } = props;
+    return (
+      <h3 className="mb-4 text-2xl md:text-lg sm:text-sm font-medium">
+        {children}
+      </h3>
+    );
+  },
+  img: (props: any) => {
+    const { src, alt } = props;
+    return (
+      <div className="h-blogHero-xl lg:h-blogHero-lg w-1/2 md:w-11/12 relative justify-center items-center mx-auto mb-4">
+        <Image src={`https:${src}`} alt={alt} layout="fill" objectFit="cover" />
+      </div>
+    );
+  },
+  a: (props: any) => {
+    const { children } = props;
+    return (
+      <a
+        className="text-2xl md:text-lg sm:text-sm underline"
+        style={{ color: '#727272' }}
+        href={props.href}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {children}
+      </a>
+    );
+  },
+  li: (props: any) => {
+    const { children } = props;
+    return (
+      <li
+        className="text-2xl md:text-lg sm:text-sm"
+        style={{ color: '#727272' }}
+      >
+        {children}
+      </li>
+    );
+  },
+  ul: (props: any) => {
+    const { children } = props;
+    return <ul className="mb-8 pl-4">{children}</ul>;
+  },
+  ol: (props: any) => {
+    const { children } = props;
+    return <ol className="mb-8 pl-4">{children}</ol>;
+  },
+  hr: () => {
+    return <hr className="mb-8" style={{ border: '1px solid #E4E4E4' }} />;
   },
 };
 
