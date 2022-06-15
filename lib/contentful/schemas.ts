@@ -3,6 +3,7 @@ export const POST_GRAPHQL_FIELDS = `
   slug
   heroImage{
     url
+    description
   }
   description
   body
@@ -18,6 +19,7 @@ export const POST_GRAPHQL_FIELDS = `
     github
     image{
       url
+      description
     }
   }
   publishDate

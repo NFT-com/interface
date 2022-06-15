@@ -10,6 +10,7 @@ export type AuthorData = {
   github: string;
   image:{
     url: string;
+    description: string;
   }
 }
 
@@ -18,6 +19,7 @@ export type PostData = {
   slug: string;
   heroImage: {
     url: string;
+    description: string;
   }
   description: string;
   body: string;

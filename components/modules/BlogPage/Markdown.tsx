@@ -15,7 +15,7 @@ const theme = {
   h2: (props: any) => {
     const { children } = props;
     return (
-      <h2 className="mb-4 text-2xl md:text-xl sm:text-sm font-medium">
+      <h2 className="mb-4 text-3xll md:text-xl sm:text-sm font-medium">
         {children}
       </h2>
     );
