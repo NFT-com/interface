@@ -1,3 +1,5 @@
+import SharingIcons from './SharingIcons';
+
 import moment from 'moment';
 import Image from 'next/image';
 import { readingTime } from 'reading-time-estimator';
@@ -32,11 +34,14 @@ export default function BlogHeader({ post }: HeaderProps) {
       {post && (
         <div
           style={{ borderColor: '#E4E4E4' }}
-          className="flex justify-center mt-2 md:mt-0.5 pb-10 mb-5 md:mb-2.5 text-xs md:text-sm text-slate-600 leading-3 tracking-wider border-b-2"
+          className="relative flex justify-center mt-2 md:mt-0.5 pb-7 md:pb-8 mb-5 md:mb-2.5 text-xs md:text-sm text-slate-600 leading-3 tracking-wider border-b-2"
         >
           <p>{moment(post?.publishDate).format('MMM Do, YYYY')}</p>
           <span className="mx-1">.</span>
           {post?.body && <p>{result.minutes} min read</p>}
+          {typeof window !== 'undefined' && (
+            <SharingIcons url={window.location.href} title={post?.title} />
+          )}
         </div>
       )}
     </>
