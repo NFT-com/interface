@@ -1,6 +1,5 @@
 import Loader from 'components/elements/Loader';
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
-import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
@@ -14,6 +13,7 @@ import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
 import { NftGrid } from './NftGrid';
 import { ProfileEditContext } from './ProfileEditContext';
 
+import Image from 'next/image';
 import { CaretLeft } from 'phosphor-react';
 import { useContext, useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
@@ -105,7 +105,6 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           };
         }
       });
-    console.log(editMode);
     
     return <div className={'w-full flex flex-col items-center'}>
       <div className='w-full flex items-center px-8 mb-8 cursor-pointer justify-between'>
@@ -133,20 +132,18 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             }
             return processIPFSURL(nft?.metadata?.imageURL);
           }).map((image: string, index: number, arr: string[]) => {
-            return <RoundedCornerMedia
-              key={image + index}
-              src={image}
-              variant={
-                arr.length === 1
-                  ? RoundedCornerVariant.All :
-                  index === arr.length - 1 ?
-                    RoundedCornerVariant.Right :
-                    index === 0 ?
-                      RoundedCornerVariant.Left :
-                      RoundedCornerVariant.None
-              }
-              extraClasses='h-full w-1/3'
-            />;
+            const roundedClass = arr.length === 1
+              ? 'rounded-3xl' :
+              index === arr.length - 1 ?
+                'rounded-r-3xl' :
+                index === 0 ?
+                  'rounded-l-3xl' :
+                  '';
+            return (
+              <div className={tw('h-full w-1/3 relative', roundedClass)} key={image + index}>
+                <Image src={image} alt="Gallery Cover photo" className={roundedClass} layout="fill" objectFit='cover'/>
+              </div>
+            );
           })
         }
       </div>
