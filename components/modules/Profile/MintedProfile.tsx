@@ -38,10 +38,6 @@ export function MintedProfile(props: MintedProfileProps) {
     draftHeaderImg,
     setDraftHeaderImg,
     setDraftProfileImg,
-    setDraftGkIconVisible,
-    draftGkIconVisible,
-    setDraftNftsDescriptionsVisible,
-    draftNftsDescriptionsVisible
   } = useContext(ProfileEditContext);
 
   const { data: account } = useAccount();
@@ -176,7 +172,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     </div>}
                     <div
                       className={tw(
-                        'rounded-full h-full w-full shrink-0',
+                        'rounded-full h-full w-full shrink-0 relative',
                         'shrink-0 aspect-square ',
                         userIsAdmin && editMode ? 'cursor-pointer' : '',
                         userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
