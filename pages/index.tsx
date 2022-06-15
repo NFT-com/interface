@@ -84,10 +84,10 @@ const HomePage: NextPage = () => {
               />
             </div>
           </div>
-          <div className='h-full bg-always-black ...'>
+          <div className='h-full bg-always-black py-6'>
             <Ticker>
               {({ index }) => (
-                <div className=' text-always-white text-header leading-header font-header justify-center ...'>
+                <div className=' text-always-white text-header leading-header font-header justify-center px-12 ...'>
                   Hello world {index}
                 </div>
               )}
