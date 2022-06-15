@@ -8,6 +8,7 @@ import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
 
+import Head from 'next/head';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
@@ -50,6 +51,9 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
       'flex flex-col h-screen',
       isMobile ? 'overflow-x-hidden' : ''
     )}>
+      <Head>
+        <title>NFT.com</title>
+      </Head>
       <main
         className={tw(
           'absolute w-full h-full flex flex-col',

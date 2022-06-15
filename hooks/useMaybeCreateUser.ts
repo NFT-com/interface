@@ -34,6 +34,11 @@ export function useMaybeCreateUser(): boolean {
   });
 
   useEffect(() => {
+    const cachedUserId = localStorage.getItem('uidForWallet:' + account?.address);
+    if (cachedUserId != null) {
+      setCreatedUser(true);
+      return;
+    }
     if(
       (!createdUser) &&
       (!creating) &&
@@ -44,7 +49,7 @@ export function useMaybeCreateUser(): boolean {
       (async () => {
         const meResult = await fetchMe();
         if (meResult == null) {
-          createUser({
+          const result = await createUser({
             avatarURL: null,
             referredBy: null,
             username: `ethereum-${ethers.utils.getAddress(account.address || '')}`,
@@ -54,6 +59,9 @@ export function useMaybeCreateUser(): boolean {
               network: 'ethereum',
             },
           });
+          localStorage.setItem('uidForWallet:' + account?.address, result?.signUp?.id);
+        } else {
+          localStorage.setItem('uidForWallet:' + account?.address, meResult?.id);
         }
         setCreatedUser(true);
       })();
