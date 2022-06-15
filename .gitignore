@@ -46,3 +46,8 @@ yarn-error.log*
 
 # Sentry
 .sentryclirc
+
+# coverage
+.nyc_output
+coverage
+instrumented
