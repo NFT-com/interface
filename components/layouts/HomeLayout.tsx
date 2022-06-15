@@ -9,17 +9,15 @@ type HomeLayoutProps = {
 
 export default function HomeLayout({ children }: HomeLayoutProps) {
   return (
-    <ClientOnly>
-      <div className="flex flex-col h-screen w-screen">
+    <div className="flex flex-col h-screen w-screen">
+      <ClientOnly>
         <Header />
         <Sidebar />
-        <div className='flex-1'>
-          {children}
-        </div>
-        <Footer />
-
+      </ClientOnly>
+      <div className='flex-1'>
+        {children}
       </div>
-    </ClientOnly>
-
+      <Footer />
+    </div>
   );
 }

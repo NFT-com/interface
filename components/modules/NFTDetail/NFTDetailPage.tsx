@@ -16,7 +16,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
   return (
     <PageWrapper
-      bgColorClasses='bg-pagebg dark:bg-pagebg-secondary-dk pt-20'
+      bgColorClasses='bg-pagebg dark:bg-secondary-dk pt-20'
     >
       <div className="flex flex-col pt-20 items-center w-full lg:px-0 px-48">
         <NFTDetail nft={nft} onRefreshSuccess={mutate} />

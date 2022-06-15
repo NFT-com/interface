@@ -27,6 +27,10 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
     }
   }, [data, data?.connector, disconnect, status]);
 
+  if(props?.showWhenConnected === false && data?.connector != null) {
+    return <></>;
+  }
+
   return (
     <ClientOnly>
       <ConnectButton.Custom>

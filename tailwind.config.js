@@ -68,10 +68,8 @@ module.exports = {
         'green-summary':'#4FC853',
         'headerbg':'#FFFFFF',
         'headerbg-dk':'#0C0F17',
-        'headerbg-profile-dk':'#222222',
         'pagebg':'#f4f6fb',
         'pagebg-dk':'#0C0F17',
-        'pagebg-secondary-dk':'#222222',
         'header-txt':'#6B7082',
         'header-pink':'#FF0078',
         'modal-bg':'#FFFFFF',
@@ -104,19 +102,28 @@ module.exports = {
         'tileBackgroundSecondary': '#303030',
         'detail-bg-dk': '#303030',
         'looksrare-green': '#0CE466',
-        'opensea-blue': '#2081E2'
-      },
-      fontSize: {
-        'copy-size': '0.825rem',
-        '2xll': '1.6rem',
-        'xxs1': '0.4rem',
-        'xxs2': '0.6rem',
+        'opensea-blue': '#2081E2',
+        'secondary-dk': '#222222',
       },
       fontFamily: {
         'rubik': ['Rubik'],
         'hero-heading1': ['Stretch Pro'],
         'hero-heading2': ['Bebas Neue'],
         'dm-mono': ['DM Mono'],
+      },
+      fontSize: {
+        'copy-size': '0.825rem',
+        'xxs2': '0.6rem',
+        'header': '2.25rem',
+        'body': '1rem',
+      },
+      fontWeight: {
+        'header': '500',
+        'body': '400',
+      },
+      lineHeight: {
+        'header': '2.5rem',
+        'body': '1.5rem',
       },
       keyFrames: {
         pulseBorder: {
