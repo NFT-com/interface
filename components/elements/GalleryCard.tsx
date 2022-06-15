@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
@@ -5,7 +6,7 @@ import React from 'react';
 
 export interface GalleryCardProps {
   label: string;
-  imageURL?: string;
+  imageURL: string;
   size? : 'small' | 'default'
   onClick: () => void;
   animate?: boolean;
@@ -27,11 +28,18 @@ function GalleryCard(props: GalleryCardProps) {
         'absolute z-10 animate-pulse',
         'w-full h-full rounded-xl bg-gradient-to-tr from-hero-pink to-hero-blue',
       )} />}
-      <Image
+      {/* <Image
         alt={props.label}
         src={props.imageURL}
         layout="fill"
         objectFit="contain"
+        className={tw(
+          'h-full w-full aspect-square rounded-xl absolute z-20',
+        )}
+      /> */}
+      <img
+        alt=""
+        src={props.imageURL}
         className={tw(
           'h-full w-full aspect-square rounded-xl absolute z-20',
         )}

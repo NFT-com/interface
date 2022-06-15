@@ -44,7 +44,7 @@ export function SignatureErrorTile() {
             <div
               className="rounded-xl p-5 flex flex-col bg-page-bg dark:bg-pagebg-dk"
               style={{ width: isMobile ? '90%' : '30rem' }}>
-              <OptionGrid><WalletRainbowKitButton showWhenConnected /></OptionGrid>
+              <OptionGrid><WalletRainbowKitButton signInButton /></OptionGrid>
             </div>
           </>
         ) :

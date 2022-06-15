@@ -36,6 +36,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     setSelectedCollection,
     hideNftIds,
     showNftIds,
+    draftNftsDescriptionsVisible
   } = useContext(ProfileEditContext);
 
   const { data: collectionData } = useCollectionQuery(selectedCollection);
@@ -178,6 +179,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             onClick={() => {
               setSelectedCollection(key);
             }}
+            draftNftsDescriptionsVisible={draftNftsDescriptionsVisible}
           />
         </div>
       ))}

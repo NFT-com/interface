@@ -234,7 +234,7 @@ export default function HeroSidebar() {
           <motion.div layout key='sidebarOptionGrid'>
             <OptionGrid>
               <motion.div layout key='sidebarWalletOptions'>
-                <WalletRainbowKitButton showWhenConnected />
+                <WalletRainbowKitButton signInButton />
               </motion.div>
             </OptionGrid>
           </motion.div>

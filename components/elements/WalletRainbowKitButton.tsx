@@ -9,11 +9,12 @@ import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect } from 'wagmi';
 
-export interface WalletRainbowKitButtonProps {
+interface WalletRainbowKitButtonProps {
+  signInButton?: boolean;
   showWhenConnected?: boolean;
 }
 
-export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
+export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   const { toggleSidebar } = useSidebar();
   const { data, status } = useAccount();
   const { disconnect } = useDisconnect();
@@ -54,6 +55,7 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
               if (!mounted || !data || !chain) {
                 return (
                   <>
+                    { !props?.signInButton &&
                     <div
                       className="sm:block hidden cursor-pointer"
                       onClick={() => {
@@ -62,12 +64,14 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
                     >
                       <Menu color={primaryIcon} />
                     </div>
+                    }
                     <button
                       onClick={() => {
                         openConnectModal();
                       }}
                       className={tw(
-                        'block sm:hidden font-medium bg-primary-button-bckg rounded-xl text-white',
+                        `${props?.signInButton ? 'block' : 'hidden'}`,
+                        'font-medium bg-primary-button-bckg rounded-xl text-white',
                         'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                         'py-2 px-5'
                       )}

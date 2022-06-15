@@ -1,0 +1,25 @@
+export const POST_GRAPHQL_FIELDS = `
+  title
+  slug
+  heroImage{
+    url
+  }
+  description
+  body
+  author{
+    name
+    title
+    company
+    shortBio
+    email
+    phone
+    facebook
+    twitter
+    github
+    image{
+      url
+    }
+  }
+  publishDate
+  tags
+`;

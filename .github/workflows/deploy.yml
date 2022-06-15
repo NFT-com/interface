@@ -1,36 +1,57 @@
 name: Deploy NFT.com Frontend
-on:
-  push:
+on: push
 
 jobs:
-  deploy-preview:
-    if: ${{ startsWith(github.ref_name, 'feat') || startsWith(github.ref_name, 'fix') }}
+  
+  cypress-tests:
+    if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest
-    environment: sandbox
+    environment: dev
     steps:
     - name: Checkout
       uses: actions/checkout@v2.4.2
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '14'
-        cache: 'yarn'
-    - name: Install Dependencies
-      run: yarn install --frozen-lockfile --immutable
       
-    - name: Cypress run
+    - name: Install Doppler CLI
+      uses: dopplerhq/cli-action@v1
+
+    - name: Configure Doppler Config
+      run: |
+        doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
+        
+    - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4
       with:
+        install-command: yarn --frozen-lockfile --immutable --silent
+        build: yarn build
+        start: yarn start
         record: true
+        browser: chrome
       env:
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+        CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Deploy Site Preview
+    - name: Cypress run - component 🧪
+      uses: cypress-io/github-action@v4
+      with:
+        install: false
+        component: true
+        record: true
       env:
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
-      run: netlify deploy --build --context deploy-preview --message "${{ github.head_ref }}@${{ github.sha }}"
-    
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+        CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: ✅ Upload coverage to Codecov
+      uses: codecov/codecov-action@v3.1.0
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+
   deploy-sandbox:
     if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest

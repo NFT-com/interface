@@ -51,7 +51,7 @@ module.exports = {
         'primary-txt':'#171B27',
         'primary-txt-dk':'#FFFFFF',
         'secondary-txt':'#777E93',
-        'secondary-txt-dk':'#FFFFFF',
+        'secondary-txt-dk':'#CCCCCC',
         'primary-pink':'#F2358E',
         'secondary-pink':'#E369A4',
         'primary-green':'#15C666',
@@ -101,7 +101,10 @@ module.exports = {
         'vault-pink':'#C264B9',
         'dark-overlay': '#303030E5',
         'dark-type-primary': '#F3F3F3',
-        'tileBackgroundSecondary': '#303030'
+        'tileBackgroundSecondary': '#303030',
+        'detail-bg-dk': '#303030',
+        'looksrare-green': '#0CE466',
+        'opensea-blue': '#2081E2'
       },
       fontSize: {
         'copy-size': '0.825rem',

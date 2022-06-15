@@ -9,6 +9,7 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
       contract
       id
       tokenId
+      type
       metadata {
         imageURL
         description

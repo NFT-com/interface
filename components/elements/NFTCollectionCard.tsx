@@ -7,6 +7,7 @@ export interface NFTCollectionCardProps {
   count: number
   images: string[]
   onClick: () => void
+  draftNftsDescriptionsVisible?: boolean
 }
 
 /**
@@ -22,6 +23,7 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
       images={processedImages}
       imageLayout="row"
       onClick={props.onClick}
+      nftsDescriptionsVisible={props.draftNftsDescriptionsVisible}
       contractAddress={collection?.contract}
     />
   );
