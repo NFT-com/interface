@@ -2,9 +2,8 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import searchIcon from 'public/search.svg';
+import SearchIcon from 'public/search.svg';
 import { useRef, useState } from 'react';
 import {
   Configure,
@@ -30,7 +29,7 @@ const Hit = (hit) => {
           router.push(`/app/nft/${hit.hit.contract}/${hit.hit.id}`);
         }
       }}>
-      <Highlight attribute="name" nonHighlightedTagName="span" hit={hit.hit} />
+      <Highlight attribute="nftName" nonHighlightedTagName="span" hit={hit.hit} />
     </div>
   );
 };
@@ -54,14 +53,14 @@ export const SearchBar = () => {
       cacheSearchResultsForSeconds: 2 * 60, // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
     },
     additionalSearchParameters: {
-      query_by: 'name,contract,type',
+      query_by: 'nftName,contractName',
     },
     collectionSpecificSearchParameters: {
       ntfs: {
-        query_by: 'name,contract,type',
+        query_by: 'nftName,contractName',
       },
       collections: {
-        query_by: 'name,contract',
+        query_by: 'contractName',
       },
     },
   });
@@ -105,7 +104,7 @@ export const SearchBar = () => {
 
         <div className="relative w-full">
           <div className="flex border rounded-xl py-2 px-3 w-full dark:text-always-white">
-            <Image src={searchIcon} className="w-4 mr-2" alt="Search" />
+            <SearchIcon className="w-4 mr-2" alt="Search" />
             <SearchBox
               submit={null}
               reset={null}
@@ -114,7 +113,7 @@ export const SearchBar = () => {
                 const target = event.target as HTMLInputElement;
                 if (event.keyCode === 13) {
                   setShowHits(false);
-                  router.push(`/app/results/${target.value}`);
+                  router.push(`/app/results/${target.value !== '' ? target.value : '0' }`);
                 }
               }}/>
           </div>
