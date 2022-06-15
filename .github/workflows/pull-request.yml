@@ -36,7 +36,6 @@ jobs:
       with:
         install: false
         component: true
-        start: yarn start
         record: true
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
