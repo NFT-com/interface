@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Nft } from 'graphql/generated/types';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -5,7 +6,6 @@ import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getEtherscanLink, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
@@ -39,10 +39,8 @@ export const NFTDetail = (props: NFTDetailProps) => {
       {props.nft?.metadata?.imageURL &&
         <div className="w-96 md:w-full px-4 aspect-square">
           <div className="rounded-xl h-full relative">
-            <Image
+            <img
               className="rounded-xl"
-              layout="fill"
-              objectFit="cover"
               src={processIPFSURL(props.nft?.metadata?.imageURL)}
               alt="nft-profile-pic"
             />
@@ -56,7 +54,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className="font-bold text-3xl md:text-2xl tracking-wide dark:text-white mt-8">
           {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : props.nft?.metadata?.name}
         </div>
-        <div className="mt-4 mt-4 text-base tracking-wide">
+        <div className="mt-4 text-base tracking-wide">
           <div className="mt-2 flex items-center justify-between">
             <div className='flex items-center h-full'>
               <span className="font-bold dark:text-white">Owner: </span>
@@ -69,12 +67,10 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     }}
                   >
                     <div className="relative rounded-full h-5 w-5 aspect-square">
-                      <Image
+                      <img
                         className='rounded-full aspect-square'
                         src={profileData?.profile?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
                         alt="owner-profile-pic"
-                        layout="fill"
-                        objectFit='cover'
                       />
                     </div>
                     <span className="text-base text-link ml-1">
