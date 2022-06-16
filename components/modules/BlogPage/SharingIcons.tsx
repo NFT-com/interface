@@ -44,24 +44,24 @@ export default function SharingIcons({ title, url }: SharingProps) {
         arrow={true}
         size="small"
         open={isCopied}
+        className="absolute right-5 md:right-4"
+      />
+      <button
+        className="w-8 h-8 md:w-6 md:h-6 flex justify-center items-center"
+        style={{
+          border: '1px solid #E4E4E4',
+          borderRadius: '100%',
+          backgroundColor: '#FBF9F9',
+        }}
       >
-        <button
-          className="w-8 h-8 md:w-6 md:h-6 flex justify-content-center items-center"
-          style={{
-            border: '1px solid #E4E4E4',
-            borderRadius: '100%',
-            backgroundColor: '#FBF9F9',
+        <Link
+          onClick={() => {
+            setCopied(url);
           }}
-        >
-          <Link
-            onClick={() => {
-              setCopied(url);
-            }}
-            className="flex-shrink-0 aspect-square w-8 h-5 md:w-6 md:h-4"
-            color="#727272"
-          />
-        </button>
-      </Tooltip>
+          className="flex-shrink-0 aspect-square w-8 h-5 md:w-6 md:h-4"
+          color="#727272"
+        />
+      </button>
     </div>
   );
 }
