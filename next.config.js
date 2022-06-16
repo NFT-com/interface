@@ -32,7 +32,7 @@ const moduleExports = {
       default-src 'self';
       script-src 'report-sample' 'self' https://cdn.segment.com/analytics.js/v1/ey8FEiTC7Von8zKLqIe1ju6rGLzeG4A5/analytics.min.js https://connect.facebook.net/en_US/fbevents.js https://edge.fullstory.com/s/fs.js https://s3-us-west-2.amazonaws.com/jsstore/a/5N0HR7E/ge.js https://static.hotjar.com/c/hotjar-2821621.js https://www.google-analytics.com/analytics.js https://www.googletagmanager.com/gtm.js;
       object-src 'none';
-      style-src 'report-sample' 'self' https://fonts.googleapis.com https://cdn.nft.com;
+      style-src 'report-sample' 'self' https://fonts.googleapis.com https://cdn.nft.com *;
       font-src 'self' https://fonts.gstatic.com https://nftcom-prod-assets.s3.amazonaws.com;
       connect-src 'self' https://api.coingecko.com https://eth-mainnet.alchemyapi.io https://prod-api.nft.com https://staging-ap.nft.com https://dev-api.nft.com https://api.etherscan.io https://mainnet.infura.io;
       worker-src 'none';
