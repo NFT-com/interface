@@ -102,7 +102,7 @@ module.exports = {
         'tileBackgroundSecondary': '#303030',
         'detail-bg-dk': '#303030',
         'looksrare-green': '#0CE466',
-        'opensea-blue': '#2081E2'
+        'opensea-blue': '#2081E2',
         'share-icon': '#E4E4E4',
         'share-icon-bg': '#FBF9F9',
         'blog-text': '#727272',
@@ -156,7 +156,7 @@ module.exports = {
       'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)',
         'hero-gradient':
       'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
-      }
+      },
       aspectRatio: {
         '4/3': '4/3',
       },

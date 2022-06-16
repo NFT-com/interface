@@ -5,7 +5,7 @@ const theme = {
   p: (props: any) => {
     const { children } = props;
     return (
-      <p className="mb-8 text-2xl md:text-lg sm:text-sm text-blog-text">
+      <p className="mb-8 text-2xl md:text-lg sm:text-sm text-blog-text dark:text-gray-400">
         {children}
       </p>
     );
@@ -46,7 +46,7 @@ const theme = {
     const { children } = props;
     return (
       <a
-        className="text-2xl md:text-lg sm:text-sm underline text-blog-text"
+        className="text-2xl md:text-lg sm:text-sm underline text-blog-text dark:text-gray-400"
         href={props.href}
         target="_blank"
         rel="noreferrer"

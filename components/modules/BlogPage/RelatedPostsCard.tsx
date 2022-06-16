@@ -25,7 +25,7 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
         <h3 className="dark:text-white text-xl lg:text-lg md:text-base sm:text-sm font-medium mt-2">
           {post.title}
         </h3>
-        <p className="text-base md:text-xs mt-1 leading-5.5 md:leading-4 text-blog-text">
+        <p className="text-base md:text-xs mt-1 leading-5.5 md:leading-4 text-blog-text dark:text-gray-400">
           {post.description.length > 75
             ? post.description.substring(0, 75) + '...'
             : post.description}
@@ -44,15 +44,15 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
             <p className="dark:text-white text-base md:text-xs">
               {post.author.name}
             </p>
-            <div className="flex">
-              <p className="text-sm md:text-xxs3 text-blog-text">
+            <div className="flex text-blog-text dark:text-gray-400">
+              <p className="text-sm md:text-xxs3">
                 {moment(post?.publishDate).format('MMM Do, YYYY')}
               </p>
-              <span className="mx-1 block md:hidden text-sm md:text-xxs3 text-blog-text">
+              <span className="mx-1 block md:hidden text-sm md:text-xxs3 ">
                 .
               </span>
               {post?.body && (
-                <p className="block md:hidden text-sm md:text-xxs3 text-blog-text">
+                <p className="block md:hidden text-sm md:text-xxs3">
                   {result.minutes} min read
                 </p>
               )}

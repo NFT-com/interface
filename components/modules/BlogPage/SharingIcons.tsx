@@ -1,3 +1,4 @@
+import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 
 import { Link } from 'phosphor-react';
@@ -16,6 +17,7 @@ type SharingProps = {
 
 export default function SharingIcons({ title, url }: SharingProps) {
   const [isCopied, setCopied] = useCopyClipboard();
+  const { isDarkMode } = useUser();
   return (
     <div className="absolute right-0 bottom-3.5 md:bottom-1 flex row">
       <FacebookShareButton quote={title} url={url}>
@@ -41,6 +43,7 @@ export default function SharingIcons({ title, url }: SharingProps) {
         size="small"
         open={isCopied}
         className="absolute right-5 md:right-4"
+        theme={isDarkMode ? 'light' : 'dark'}
       />
       <button className="w-8 h-8 md:w-6 md:h-6 flex justify-center items-center border dark:border-0 border-share-icon rounded-full bg-share-icon-bg">
         <Link
