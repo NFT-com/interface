@@ -5,10 +5,7 @@ const theme = {
   p: (props: any) => {
     const { children } = props;
     return (
-      <p
-        className="mb-8 text-2xl md:text-lg sm:text-sm"
-        style={{ color: '#727272' }}
-      >
+      <p className="mb-8 text-2xl md:text-lg sm:text-sm text-blog-text">
         {children}
       </p>
     );
@@ -16,7 +13,7 @@ const theme = {
   h1: (props: any) => {
     const { children } = props;
     return (
-      <h1 className="mb-4 text-4xl md:text-2xl sm:text-md font-medium">
+      <h1 className="dark:text-white mb-4 text-4xl md:text-2xl sm:text-md font-medium">
         {children}
       </h1>
     );
@@ -24,7 +21,7 @@ const theme = {
   h2: (props: any) => {
     const { children } = props;
     return (
-      <h2 className="mb-4 text-3xll md:text-xl sm:text-sm font-medium">
+      <h2 className="dark:text-white mb-4 text-3xll md:text-xl sm:text-sm font-medium">
         {children}
       </h2>
     );
@@ -32,7 +29,7 @@ const theme = {
   h3: (props: any) => {
     const { children } = props;
     return (
-      <h3 className="mb-4 text-2xl md:text-lg sm:text-sm font-medium">
+      <h3 className="dark:text-white mb-4 text-2xl md:text-lg sm:text-sm font-medium">
         {children}
       </h3>
     );
@@ -49,8 +46,7 @@ const theme = {
     const { children } = props;
     return (
       <a
-        className="text-2xl md:text-lg sm:text-sm underline"
-        style={{ color: '#727272' }}
+        className="text-2xl md:text-lg sm:text-sm underline text-blog-text"
         href={props.href}
         target="_blank"
         rel="noreferrer"
@@ -62,10 +58,7 @@ const theme = {
   li: (props: any) => {
     const { children } = props;
     return (
-      <li
-        className="text-2xl md:text-lg sm:text-sm"
-        style={{ color: '#727272' }}
-      >
+      <li className="text-2xl md:text-lg sm:text-sm text-blog-text">
         {children}
       </li>
     );
@@ -79,7 +72,7 @@ const theme = {
     return <ol className="mb-8 pl-4">{children}</ol>;
   },
   hr: () => {
-    return <hr className="mb-8" style={{ border: '1px solid #E4E4E4' }} />;
+    return <hr className="mb-8 border-share-icon" />;
   },
 };
 

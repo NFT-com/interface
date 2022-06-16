@@ -59,17 +59,14 @@ export default function Post({ post }: PostProps) {
           heroHeader: true,
         }}
       >
-        <div className="bg-white relative text-center px-4 w-full">
+        <div className="bg-white dark:bg-black  relative text-center px-4 w-full">
           <BlogHeader post={post} />
 
           <BlogHeroImage
             src={post?.heroImage.url}
             alt={post?.heroImage.description}
           />
-          <div
-            style={{ borderColor: '#E4E4E4' }}
-            className="text-left border-b-2 mt-12 md:mt-8 mb-5"
-          >
+          <div className="text-left border-b-2 mt-12 md:mt-8 mb-5 border-share-icon">
             <Markdown content={post?.body} />
           </div>
           {post.relatedPostsCollection.items.length ? (

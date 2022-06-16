@@ -20,20 +20,16 @@ export default function SharingIcons({ title, url }: SharingProps) {
     <div className="absolute right-0 bottom-3.5 md:bottom-1 flex row">
       <FacebookShareButton quote={title} url={url}>
         <FacebookIcon
-          bgStyle={{ fill: '#FBF9F9', border: '1px solid #E4E4E4' }}
+          bgStyle={{ fill: '#FBF9F9' }}
           iconFillColor="#727272"
-          className="w-8 h-8 md:w-6 md:h-6"
-          round
-          style={{ border: '1px solid #E4E4E4', borderRadius: '100%' }}
+          className="w-8 h-8 md:w-6 md:h-6 p-0 border dark:border-0 border-share-icon rounded-full"
         />
       </FacebookShareButton>
-      <TwitterShareButton className="mx-3" title={title} url={url}>
+      <TwitterShareButton className="mx-3 rounded-full" title={title} url={url}>
         <TwitterIcon
-          bgStyle={{ fill: '#FBF9F9', border: '1px solid #E4E4E4' }}
+          bgStyle={{ fill: '#FBF9F9' }}
           iconFillColor="#727272"
-          className="w-8 h-8 md:w-6 md:h-6"
-          round
-          style={{ border: '1px solid #E4E4E4', borderRadius: '100%' }}
+          className="w-8 h-8 md:w-6 md:h-6 border dark:border-0 border-share-icon  rounded-full"
         />
       </TwitterShareButton>
 
@@ -46,14 +42,7 @@ export default function SharingIcons({ title, url }: SharingProps) {
         open={isCopied}
         className="absolute right-5 md:right-4"
       />
-      <button
-        className="w-8 h-8 md:w-6 md:h-6 flex justify-center items-center"
-        style={{
-          border: '1px solid #E4E4E4',
-          borderRadius: '100%',
-          backgroundColor: '#FBF9F9',
-        }}
-      >
+      <button className="w-8 h-8 md:w-6 md:h-6 flex justify-center items-center border dark:border-0 border-share-icon rounded-full bg-share-icon-bg">
         <Link
           onClick={() => {
             setCopied(url);
