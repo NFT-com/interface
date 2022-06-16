@@ -99,8 +99,7 @@ module.exports = {
         'link': '#00A4FF',
         'gray-opacity':'#c4c4c49e',
         'vault-pink':'#C264B9',
-        'tileBackgroundSecondary': '#303030',
-        'detail-bg-dk': '#303030',
+        'secondary-bg-dk': '#303030',
         'looksrare-green': '#0CE466',
         'opensea-blue': '#2081E2'
       },

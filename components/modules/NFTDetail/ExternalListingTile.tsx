@@ -16,7 +16,7 @@ const Colors = {
 export function ExternalListingTile(props: ExternalListingTileProps) {
   const { listingURL } = props;
 
-  return <div className="flex flex-col bg-white dark:bg-detail-bg-dk rounded-xl p-5 my-6">
+  return <div className="flex flex-col bg-white dark:bg-secondary-bg-dk rounded-xl p-5 my-6">
     <div className='flex items-center mb-4'>
       <div className={tw(
         'aspect-square h-8 w-8 rounded-full',
