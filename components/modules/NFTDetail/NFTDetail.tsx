@@ -6,7 +6,6 @@ import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getEtherscanLink, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import DefaultProfileImage from 'public/profile-image-default.svg';
