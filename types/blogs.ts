@@ -24,7 +24,7 @@ export type PostData = {
   description: string;
   body: string;
   author: AuthorData;
-  publishDate: Date;
+  publishDate: string;
   tags: string[];
   relatedPostsCollection: {
     items: PostData[];

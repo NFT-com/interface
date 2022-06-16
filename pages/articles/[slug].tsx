@@ -9,6 +9,7 @@ import { getPost } from 'lib/contentful/api';
 import ErrorPage from 'next/error';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
 import { useEffect, useState } from 'react';
 import { PostData } from 'types/blogs';
 
@@ -33,19 +34,30 @@ export default function Post({ post }: PostProps) {
 
   return (
     <>
-      <Head>
-        <meta property="og:title" content={post.title} />
-        <meta property="og:type" content="article" />
-        <meta property="og:description" content={post.description} />
-        <meta property="og:image" content={post.heroImage.url} />
-        <meta property="og:site_name" content="NFT.com" />
-        <meta
-          property="og:url"
-          content={`http://nft.com/articles/${post.slug}`}
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image:alt" content={post.heroImage.description} />
-      </Head>
+      <NextSeo
+        title={post.title}
+        description={post.description}
+        openGraph={{
+          url: `https://nft.com/articles/${post.slug}`,
+          title: post.title,
+          description: post.description,
+          type: 'article',
+          article: {
+            publishedTime: post.publishDate,
+            tags: post.tags,
+          },
+          images: [
+            {
+              url: post.heroImage.url,
+              alt: post.heroImage.description,
+            },
+          ],
+          site_name: 'NFT.com',
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
+        }}
+      />
       <PageWrapper
         headerOptions={{
           walletOnly: true,

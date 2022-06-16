@@ -40,7 +40,7 @@ export default function BlogHeader({ post }: HeaderProps) {
           <span className="mx-1">.</span>
           {post?.body && <p>{result.minutes} min read</p>}
           <SharingIcons
-            url={`http://nft.com/articles/${post.slug}`}
+            url={`https://nft.com/articles/${post.slug}`}
             title={post?.title}
           />
         </div>
