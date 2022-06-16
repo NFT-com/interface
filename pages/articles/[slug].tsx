@@ -7,10 +7,8 @@ import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 
 import { getPost } from 'lib/contentful/api';
 import ErrorPage from 'next/error';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import { useEffect, useState } from 'react';
 import { PostData } from 'types/blogs';
 
 type PostProps = {
@@ -19,14 +17,7 @@ type PostProps = {
 };
 
 export default function Post({ post }: PostProps) {
-  const [headerBlack, setHeaderBlack] = useState(false);
   const router = useRouter();
-  const listenScrollEvent = () => {
-    window.scrollY > 10 ? setHeaderBlack(true) : setHeaderBlack(false);
-  };
-  useEffect(() => {
-    window.addEventListener('scroll', listenScrollEvent);
-  });
 
   if (!router.isFallback && !post) {
     return <ErrorPage statusCode={404} />;
@@ -66,17 +57,9 @@ export default function Post({ post }: PostProps) {
           removeSummaryBanner: true,
           sidebar: 'hero',
           heroHeader: true,
-          heroHeaderBlack: headerBlack,
         }}
       >
-        <div
-          className="bg-white relative text-center px-4 w-full"
-          onScroll={(event: React.UIEvent<HTMLDivElement>) => {
-            const containerHeight = event.currentTarget.clientHeight;
-            const scrollTop = event.currentTarget.scrollTop;
-            setHeaderBlack(scrollTop >= containerHeight);
-          }}
-        >
+        <div className="bg-white relative text-center px-4 w-full">
           <BlogHeader post={post} />
 
           <BlogHeroImage
