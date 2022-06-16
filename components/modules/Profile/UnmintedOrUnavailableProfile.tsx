@@ -5,7 +5,7 @@ import { useProfileBlocked } from 'hooks/useProfileBlocked';
 
 import { LinksToSection } from './LinksToSection';
 
-import Image from 'next/image';
+import DefaultProfileImage from 'public/profile-image-default.svg';
 
 export interface UnmintedOrUnavailableProps {
   profileURI: string;
@@ -29,21 +29,8 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
           <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px]">
             <section>
               <div className='relative outline-none rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60'>
-                {/* <Image
-                  src={'https://cdn.nft.com/profile-image-default.svg'}
-                  alt="profilePicture"
-                  draggable={false}
-                  className="object-center"
-                  layout="fill"
-                  objectFit="cover"
-                  style={{ zIndex: 49, }}
-                /> */}
-                <img
-                  src={'https://cdn.nft.com/profile-image-default.svg'}
-                  alt="profilePicture"
-                  draggable={false}
-                  className="object-center rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60"
-                  style={{ zIndex: 101, }}
+                <DefaultProfileImage
+                  className='z-101 object-center rounded-full'
                 />
               </div>
             </section>

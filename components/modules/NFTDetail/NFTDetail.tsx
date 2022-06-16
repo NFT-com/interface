@@ -8,10 +8,10 @@ import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
+import DefaultProfileImage from 'public/profile-image-default.svg';
 import { useCallback } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
-
 export interface NFTDetailProps {
   nft: PartialDeep<Nft>;
   onRefreshSuccess?: () => void;
@@ -67,11 +67,15 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     }}
                   >
                     <div className="relative rounded-full h-5 w-5 aspect-square">
-                      <img
-                        className='rounded-full aspect-square'
-                        src={profileData?.profile?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
-                        alt="owner-profile-pic"
-                      />
+                      {profileData?.profile?.photoURL ?
+                        <img
+                          className='rounded-full aspect-square'
+                          src={profileData?.profile?.photoURL}
+                          alt='owner-profile-pic'
+                        />
+                        :
+                        <DefaultProfileImage className='rounded-full aspect-square' />
+                      }
                     </div>
                     <span className="text-base text-link ml-1">
                     @{profileData?.profile?.url ?? 'unknown'}
