@@ -6,7 +6,7 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { LinksToSection } from './LinksToSection';
@@ -15,7 +15,6 @@ import { MintedProfileInfo } from './MintedProfileInfo';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import { PencilIcon } from '@heroicons/react/solid';
-import { getAccountLink } from '@metamask/etherscan-link';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
 import { useContext, useEffect } from 'react';
@@ -256,7 +255,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     onClick={() => {
                       if (addressOwner !== account?.address) {
                         window.open(
-                          getAccountLink(addressOwner, activeChain?.id.toString()),
+                          getEtherscanLink(activeChain?.id, addressOwner, 'address'),
                           '_blank'
                         );
                       }
