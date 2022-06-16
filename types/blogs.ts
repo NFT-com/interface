@@ -8,11 +8,11 @@ export type AuthorData = {
   facebook: string;
   twitter: string;
   github: string;
-  image:{
+  image: {
     url: string;
     description: string;
-  }
-}
+  };
+};
 
 export type PostData = {
   title: string;
@@ -20,10 +20,13 @@ export type PostData = {
   heroImage: {
     url: string;
     description: string;
-  }
+  };
   description: string;
   body: string;
   author: AuthorData;
   publishDate: Date;
   tags: string[];
-}
+  relatedPostsCollection: {
+    items: PostData[];
+  };
+};

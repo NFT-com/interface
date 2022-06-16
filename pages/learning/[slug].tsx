@@ -2,6 +2,7 @@ import { PageWrapper } from 'components/layouts/PageWrapper';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
+import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 
 import { getPost } from 'lib/contentful/api';
 import ErrorPage from 'next/error';
@@ -43,6 +44,18 @@ export default function Post({ post }: PostProps) {
           className="text-left border-b-2 mt-12 md:mt-8 mb-5"
         >
           <Markdown content={post?.body} />
+          {post.relatedPostsCollection.items.length ? (
+            <>
+              <h2 className="text-left mb-6 sm:mb-3 font-medium mt-8 md:mt-4 sm:mt-1.5 text-3xll md:text-xl sm:text-sm">
+                Related Posts
+              </h2>
+              <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 mb-24 lg:mb-12">
+                {post.relatedPostsCollection.items.map((post) => (
+                  <RelatedPostCard key={post.title} post={post} />
+                ))}
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     </PageWrapper>

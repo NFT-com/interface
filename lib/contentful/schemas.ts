@@ -24,4 +24,24 @@ export const POST_GRAPHQL_FIELDS = `
   }
   publishDate
   tags
+  relatedPostsCollection{
+    items{
+      title
+      slug
+      description
+      publishDate
+      body
+      heroImage{
+        url
+        description
+      }
+      author{
+        name
+        image{
+          url
+          description
+        }
+      }
+    }
+  }
 `;
