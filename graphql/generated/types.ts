@@ -268,6 +268,21 @@ export type CurationsOutput = {
   totalItems?: Maybe<Scalars['Int']>;
 };
 
+export type ExternalListing = {
+  __typename?: 'ExternalListing';
+  creation?: Maybe<Scalars['DateTime']>;
+  exchange?: Maybe<SupportedExternalExchange>;
+  expiration?: Maybe<Scalars['DateTime']>;
+  highestOffer?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type ExternalListingsOutput = {
+  __typename?: 'ExternalListingsOutput';
+  listings: Array<Maybe<ExternalListing>>;
+};
+
 export type FileUploadOutput = {
   __typename?: 'FileUploadOutput';
   accessKey: Scalars['String'];
@@ -817,6 +832,7 @@ export type Query = {
   collectionNFTs: NfTsOutput;
   convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
+  externalListings: ExternalListingsOutput;
   filterAsks: GetMarketAsk;
   getAsks: GetMarketAsk;
   getBids: GetMarketBid;
@@ -870,6 +886,13 @@ export type QueryConvertEnsToEthAddressArgs = {
 
 export type QueryCurationNfTsArgs = {
   input: CurationInput;
+};
+
+
+export type QueryExternalListingsArgs = {
+  chainId: Scalars['String'];
+  contract: Scalars['Address'];
+  tokenId: Scalars['String'];
 };
 
 
@@ -1043,6 +1066,13 @@ export type SignatureInput = {
   s: Scalars['Bytes'];
   v: Scalars['Int'];
 };
+
+export enum SupportedExternalExchange {
+  Looksrare = 'looksrare',
+  Opensea = 'opensea',
+  Rarible = 'rarible',
+  X2y2 = 'x2y2'
+}
 
 export type SwapNftInput = {
   marketAskId: Scalars['ID'];
@@ -1357,6 +1387,15 @@ export type CollectionNfTsQueryVariables = Exact<{
 
 
 export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
+
+export type ExternalListingsQueryVariables = Exact<{
+  contract: Scalars['Address'];
+  tokenId: Scalars['String'];
+  chainId: Scalars['String'];
+}>;
+
+
+export type ExternalListingsQuery = { __typename?: 'Query', externalListings: { __typename?: 'ExternalListingsOutput', listings: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null } | null> } };
 
 export type GetAsksQueryVariables = Exact<{
   input: AsksInput;
@@ -1767,6 +1806,20 @@ export const CollectionNfTsDocument = gql`
       lastCursor
     }
     totalItems
+  }
+}
+    `;
+export const ExternalListingsDocument = gql`
+    query ExternalListings($contract: Address!, $tokenId: String!, $chainId: String!) {
+  externalListings(contract: $contract, tokenId: $tokenId, chainId: $chainId) {
+    listings {
+      url
+      exchange
+      price
+      highestOffer
+      expiration
+      creation
+    }
   }
 }
     `;
@@ -2435,6 +2488,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');
+    },
+    ExternalListings(variables: ExternalListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ExternalListingsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ExternalListingsQuery>(ExternalListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ExternalListings', 'query');
     },
     GetAsks(variables: GetAsksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetAsksQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAsksQuery>(GetAsksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAsks', 'query');

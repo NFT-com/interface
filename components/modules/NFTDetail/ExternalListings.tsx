@@ -1,4 +1,6 @@
 import { Nft } from 'graphql/generated/types';
+import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ExternalListingTile } from './ExternalListingTile';
@@ -10,15 +12,14 @@ export interface ExternalListingsProps {
 }
 
 export function ExternalListings(props: ExternalListingsProps) {
-//   const listings = useExternalListingsQuery(props.nft.id);
-  const listings = ['opensea', 'looksrare', 'opensea', 'looksrare'];
+  const { data: listings } = useExternalListingsQuery(props.nft?.contract, props.nft?.id, props.nft?.wallet.chainId);
   return <div className={tw(
     'flex w-full px-4',
     'md:flex-col flex-row flex-wrap'
   )}>
-    {listings.map((listing, index) => (
+    {listings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
       <div className='md:w-full w-2/4 pr-2' key={index}>
-        <ExternalListingTile listingURL={''} exchange={listing} />
+        <ExternalListingTile listing={listing} />
       </div>
     ))}
   </div>;
