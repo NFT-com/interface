@@ -17,6 +17,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 import { PencilIcon } from '@heroicons/react/solid';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
+import DefaultProfileImage from 'public/profile-image-default.svg';
 import { useContext, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
@@ -178,7 +179,8 @@ export function MintedProfile(props: MintedProfileProps) {
                       )}
                       style={{ zIndex: 101 }}
                     >
-                      {/* <Image
+                      {
+                      /* <Image
                         src={
                           !isNullOrEmpty(draftProfileImg?.preview)
                             ? draftProfileImg?.preview
@@ -193,27 +195,55 @@ export function MintedProfile(props: MintedProfileProps) {
                         layout="fill"
                         objectFit='cover'
                       /> */}
-                      <img
-                        src={
-                          !isNullOrEmpty(draftProfileImg?.preview)
-                            ? draftProfileImg?.preview
-                            : profileData?.profile?.photoURL ??
-                          (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
-                            ? 'https://cdn.nft.com/profile-image-default.svg' :
-                            cameraIcon.src)
-                        }
-                        alt="profilePicture"
-                        draggable={false}
-                        className={tw(
-                          'object-center rounded-full',
-                          'h-full w-full',
-                          'shrink-0 aspect-square',
-                          userIsAdmin && editMode ? 'cursor-pointer' : '',
-                          userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                        )}
-                        style={{ zIndex: 101, }}
-                      />
-
+                      {
+                        !isNullOrEmpty(draftProfileImg?.preview) ?
+                          <img
+                            src={draftProfileImg?.preview}
+                            alt='profilePicture'
+                            draggable={false}
+                            className={tw(
+                              'object-center rounded-full',
+                              'h-full w-full',
+                              'shrink-0 aspect-square',
+                              userIsAdmin && editMode ? 'cursor-pointer' : '',
+                              userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                            )}
+                            style={{ zIndex: 101, }}
+                          /> :
+                          profileData?.profile?.photoURL ?
+                            <img
+                              src={profileData?.profile?.photoURL}
+                              alt='profilePicture'
+                              draggable={false}
+                              className={tw(
+                                'object-center rounded-full',
+                                'h-full w-full',
+                                'shrink-0 aspect-square',
+                                userIsAdmin && editMode ? 'cursor-pointer' : '',
+                                userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                              )}
+                              style={{ zIndex: 101, }}
+                            /> :
+                            !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
+                              <DefaultProfileImage
+                                className={tw(
+                                  'object-center rounded-full',
+                                  'h-full w-full',
+                                  'shrink-0 aspect-square',
+                                  userIsAdmin && editMode ? 'cursor-pointer' : '',
+                                  userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                                )}
+                                style={{ zIndex: 101, }}
+                              /> :
+                              <Image
+                                src={cameraIcon.src}
+                                alt="camerIcon"
+                                draggable={false}
+                                className="rounded-full scale-95"
+                                layout="fill"
+                                objectFit='cover'
+                              />
+                      }
                     </div>
                     {editMode && <div
                       className={tw(
