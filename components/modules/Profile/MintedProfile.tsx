@@ -180,22 +180,6 @@ export function MintedProfile(props: MintedProfileProps) {
                       style={{ zIndex: 101 }}
                     >
                       {
-                      /* <Image
-                        src={
-                          !isNullOrEmpty(draftProfileImg?.preview)
-                            ? draftProfileImg?.preview
-                            : profileData?.profile?.photoURL ??
-                          ((!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED))
-                            ? 'https://cdn.nft.com/profile-image-default.svg' :
-                            cameraIcon)
-                        }
-                        alt="profilePicture"
-                        draggable={false}
-                        className="rounded-full scale-95"
-                        layout="fill"
-                        objectFit='cover'
-                      /> */}
-                      {
                         !isNullOrEmpty(draftProfileImg?.preview) ?
                           <img
                             src={draftProfileImg?.preview}
