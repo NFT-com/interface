@@ -13,7 +13,7 @@ export default function BlogHeader({ post }: HeaderProps) {
   const result = readingTime(post?.body);
   return (
     <>
-      <p className="mt-14 sm:mt-6 md:mt-10 mx-auto text-4xl sm:text-lg md:text-2xl sm:mb-3 max-w-2xl font-medium leading-normal md:leading-6 tracking-wider px-0 md:px-10">
+      <p className="mt-14 sm:mt-6 md:mt-10 mx-auto text-4xl sm:text-lg md:text-2xl sm:mb-3 max-w-2xl font-medium leading-5.5 md:leading-6 tracking-wider px-0 md:px-10">
         {post?.title}
       </p>
       {post?.author && (
@@ -39,9 +39,10 @@ export default function BlogHeader({ post }: HeaderProps) {
           <p>{moment(post?.publishDate).format('MMM Do, YYYY')}</p>
           <span className="mx-1">.</span>
           {post?.body && <p>{result.minutes} min read</p>}
-          {typeof window !== 'undefined' && (
-            <SharingIcons url={window.location.href} title={post?.title} />
-          )}
+          <SharingIcons
+            url={`http://nft.com/articles/${post.slug}`}
+            title={post?.title}
+          />
         </div>
       )}
     </>
