@@ -13,9 +13,9 @@ export default function BlogHeader({ post }: HeaderProps) {
   const result = readingTime(post?.body);
   return (
     <>
-      <p className="dark:text-white mt-14 sm:mt-6 md:mt-10 mx-auto text-4xl sm:text-lg md:text-2xl sm:mb-3 max-w-2xl font-medium leading-5.5 md:leading-6 tracking-wider px-0 md:px-10">
+      <h2 className="dark:text-white mx-auto text-4xl sm:text-lg md:text-2xl sm:mb-3 max-w-2xl font-medium leading-5.5 md:leading-6 tracking-wider px-0 md:px-10">
         {post?.title}
-      </p>
+      </h2>
       {post?.author && (
         <div className="mb-4 mt-4 md:mt-3 mx-auto h-12 md:h-9 w-12 md:w-9">
           <Image
@@ -32,7 +32,7 @@ export default function BlogHeader({ post }: HeaderProps) {
       </p>
 
       {post && (
-        <div className="relative flex justify-center mt-2 md:mt-0.5 pb-7 md:pb-8 mb-5 md:mb-2.5 text-xs md:text-sm dark:text-slate-400 text-slate-600 leading-3 tracking-wider border-b-2 border-share-icon">
+        <div className="relative flex justify-center mt-2 md:mt-0.5 pb-7 md:pb-8 mb-5 md:mb-2.5 text-xs md:text-sm dark:text-gray-400 text-slate-600 leading-3 tracking-wider border-b-2 border-share-icon">
           <p>{moment(post?.publishDate).format('MMM Do, YYYY')}</p>
           <span className="mx-1">.</span>
           {post?.body && <p>{result.minutes} min read</p>}

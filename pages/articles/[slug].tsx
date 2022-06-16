@@ -1,5 +1,4 @@
 import { Footer } from 'components/elements/Footer';
-import { PageWrapper } from 'components/layouts/PageWrapper';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
@@ -49,43 +48,32 @@ export default function Post({ post }: PostProps) {
           cardType: 'summary_large_image',
         }}
       />
-      <PageWrapper
-        headerOptions={{
-          walletOnly: true,
-          removeBackground: true,
-          walletPopupMenu: true,
-          removeSummaryBanner: true,
-          sidebar: 'hero',
-          heroHeader: true,
-        }}
-      >
-        <div className="bg-white dark:bg-modal-overlay-dk  relative text-center px-4 w-full">
-          <BlogHeader post={post} />
+      <div className="bg-white dark:bg-modal-overlay-dk  relative text-center px-4 w-full pt-14 sm:pt-6 md:pt-10">
+        <BlogHeader post={post} />
 
-          <BlogHeroImage
-            src={post?.heroImage.url}
-            alt={post?.heroImage.description}
-          />
-          <div className="text-left border-b-2 mt-12 md:mt-8 mb-5 border-share-icon">
-            <Markdown content={post?.body} />
-          </div>
-          {post.relatedPostsCollection.items.length
-            ? (
-              <>
-                <h2 className="dark:text-white text-left mb-6 sm:mb-3 font-medium mt-8 md:mt-4 sm:mt-1.5 text-3xll md:text-xl sm:text-sm">
-                Related Posts
-                </h2>
-                <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 mb-24 lg:mb-12">
-                  {post.relatedPostsCollection.items.map((post) => (
-                    <RelatedPostCard key={post.title} post={post} />
-                  ))}
-                </div>
-              </>
-            )
-            : null}
+        <BlogHeroImage
+          src={post?.heroImage.url}
+          alt={post?.heroImage.description}
+        />
+        <div className="text-left mt-12 md:mt-8 pb-5 ">
+          <Markdown content={post?.body} />
         </div>
-        <Footer />
-      </PageWrapper>
+        {post.relatedPostsCollection.items.length
+          ? (
+            <div className='border-t-2 border-share-icon'>
+              <h2 className="dark:text-white text-left mb-6 sm:mb-3 font-medium mt-8 md:mt-4 sm:mt-1.5 text-3xll md:text-xl sm:text-sm">
+                Related Posts
+              </h2>
+              <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12">
+                {post.relatedPostsCollection.items.map((post) => (
+                  <RelatedPostCard key={post.title} post={post} />
+                ))}
+              </div>
+            </div>
+          )
+          : null}
+      </div>
+      <Footer />
     </>
   );
 }

@@ -58,7 +58,7 @@ const theme = {
   li: (props: any) => {
     const { children } = props;
     return (
-      <li className="text-2xl md:text-lg sm:text-sm text-blog-text">
+      <li className="text-2xl md:text-lg sm:text-sm text-blog-text dark:text-gray-400">
         {children}
       </li>
     );

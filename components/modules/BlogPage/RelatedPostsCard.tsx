@@ -11,7 +11,7 @@ type RelatedPostProps = {
 export default function RelatedPostCard({ post }: RelatedPostProps) {
   const result = readingTime(post?.body);
   return (
-    <Link className="" scroll href={post.slug}>
+    <Link href={post.slug}>
       <div className="text-left	hover:cursor-pointer">
         <div className="aspect-4/3 w-full relative">
           <Image
