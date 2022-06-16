@@ -2,9 +2,8 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import searchIcon from 'public/search.svg';
+import SearchIcon from 'public/search.svg';
 import { useRef, useState } from 'react';
 import {
   Configure,
@@ -104,8 +103,8 @@ export const SearchBar = () => {
         }}>
 
         <div className="relative w-full">
-          <div className="flex border rounded-xl py-2 px-3 w-full dark:text-always-white">
-            <Image src={searchIcon} className="w-4 mr-2" alt="Search" />
+          <div className="flex items-center border rounded-xl py-2 px-3 w-full dark:text-always-white">
+            <SearchIcon className='mr-2 shrink-0 aspect-square' />
             <SearchBox
               submit={null}
               reset={null}

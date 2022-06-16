@@ -8,6 +8,7 @@ import { tw } from 'utils/tw';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
+import { useCallback } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
@@ -17,24 +18,32 @@ export interface NFTDetailProps {
 }
 
 export const NFTDetail = (props: NFTDetailProps) => {
-  const { nft } = props;
   const router = useRouter();
 
   const { activeChain } = useNetwork();
-  const { profileTokens } = useNftProfileTokens(nft?.wallet?.address);
+  const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
   const { profileData } = useProfileQuery(profileTokens?.at(0)?.uri?.split('/').pop());
   const { refreshNft, loading } = useRefreshNftMutation();
+
+  const refreshNftCallback = useCallback(() => {
+    (async () => {
+      const result = await refreshNft(props.nft?.id);
+      if (result) {
+        props.onRefreshSuccess && props.onRefreshSuccess();
+      }
+    })();
+  }, [props, refreshNft]);
   
   return (
-    <div className="flex flex-row md:flex-col w-full" id="NFTDetailContainer">
-      {nft?.metadata?.imageURL &&
+    <div className="flex flex-row md:flex-col w-full" id="NFTDetailContainer" key={props.nft?.id}>
+      {props.nft?.metadata?.imageURL &&
         <div className="w-96 md:w-full px-4 aspect-square">
           <div className="rounded-xl h-full relative">
             <Image
               className="rounded-xl"
               layout="fill"
               objectFit="cover"
-              src={processIPFSURL(nft?.metadata?.imageURL)}
+              src={processIPFSURL(props.nft?.metadata?.imageURL)}
               alt="nft-profile-pic"
             />
           </div>
@@ -45,7 +54,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         'px-4 justify-end relative'
       )}>
         <div className="font-bold text-3xl md:text-2xl tracking-wide dark:text-white mt-8">
-          {isNullOrEmpty(nft?.metadata?.name) ? 'Unknown Name' : nft?.metadata?.name}
+          {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : props.nft?.metadata?.name}
         </div>
         <div className="mt-4 mt-4 text-base tracking-wide">
           <div className="mt-2 flex items-center justify-between">
@@ -73,17 +82,13 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     </span>
                   </div> :
                   <span className="text-link">
-                    {nft?.wallet?.address ?? 'Unknown'}
+                    {props.nft?.wallet?.address ?? 'Unknown'}
                   </span>
               }
             </div>
             <div
-              onClick={async () => {
-                const result = await refreshNft(nft?.id);
-                if (result) {
-                  props.onRefreshSuccess && props.onRefreshSuccess();
-                }
-              }}
+              id="refreshNftButton"
+              onClick={refreshNftCallback}
               className={tw(
                 'rounded-full bg-white dark:bg-detail-bg-dk h-8 w-8 flex items-center justify-center cursor-pointer',
                 'lg:relative absolute top-0 right-0 mr-4',
@@ -98,7 +103,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
               onClick={() => {
                 window.open(getEtherscanLink(
                   activeChain?.id,
-                  nft?.contract,
+                  props.nft?.contract,
                   'address'
                 ), '_blank');
               }}>
