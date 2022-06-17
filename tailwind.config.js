@@ -9,9 +9,9 @@ module.exports = {
       // if all other sizes below are specified, then the "default" value wil apply to the XL range too.
       'xl': { 'max': '10000px' },
       'lg': { 'max': '1199px' },
-      'md': { 'max' : '899px' },
+      'md': { 'max': '899px' },
       'sm': { 'max': '599px' },
-      'xs': { 'max' : '374px' },
+      'xs': { 'max': '374px' },
       
       // maxes
       'deprecated_xxl': { 'max': '10000px' },
