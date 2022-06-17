@@ -18,7 +18,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="flex flex-col md:basis-auto basis-1/3 my-8" id="NftChainInfoContainer">
+    <div className="flex flex-col md:basis-auto basis-1/3 mt-8" id="NftChainInfoContainer">
       <div className={tw(
         'flex items-center justify-between',
         'text-base dark:text-white font-bold tracking-wide mb-4'

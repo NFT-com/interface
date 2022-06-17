@@ -1,6 +1,5 @@
 import AddFundsDialog from 'components/elements/AddFundsDialog';
 import { Footer } from 'components/elements/Footer';
-import Header from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
@@ -8,7 +7,7 @@ import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
 
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
@@ -22,7 +21,6 @@ export interface PageWrapperProps {
     removeBackground?: boolean;
     removeSummaryBanner?: boolean;
     hideAnalytics?: boolean;
-    sidebar?: 'hero' | 'dashboard'
     heroHeader?: boolean;
     heroHeaderBlack?: boolean;
     profileHeader?: boolean;
@@ -36,17 +34,10 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
   
   const { data: account } = useAccount();
 
-  const [clientOnly, setClientOnly] = useState(false);
-
   useMaybeCreateUser();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setClientOnly(true);
-    }
-  }, []);
   
   return (
+
     <div className={tw(
       'flex flex-col h-screen',
       isMobile ? 'overflow-x-hidden' : ''
@@ -73,17 +64,6 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
                 hideAnalytics={headerOptions?.hideAnalytics}
               />
           )}
-          {clientOnly &&
-          <Header
-            walletPopup={headerOptions?.walletPopupMenu}
-            walletOnly={headerOptions?.walletOnly}
-            removeBackground={headerOptions?.removeBackground}
-            sidebar={headerOptions?.sidebar ?? 'dashboard'}
-            heroHeader={headerOptions?.heroHeader}
-            heroHeaderBlack={headerOptions?.heroHeaderBlack}
-            profileHeader={headerOptions?.profileHeader}
-          />
-          }
         </div>}
         
         <Sidebar />

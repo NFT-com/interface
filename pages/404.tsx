@@ -5,7 +5,6 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { useRouter } from 'next/router';
 
 export default function NotFoundPage() {
-  const whitelistClosed = 1650970800000 <= new Date().getTime();
   const router = useRouter();
 
   return <PageWrapper
@@ -14,7 +13,6 @@ export default function NotFoundPage() {
       heroHeader: true,
       walletOnly: !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED),
       walletPopupMenu: !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED),
-      sidebar: getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ? 'dashboard' : 'hero',
       hideAnalytics: true
     }}
     bgColorClasses={'bg-pagebg dark:bg-pagebg-dk'}
@@ -23,22 +21,11 @@ export default function NotFoundPage() {
       <NullState
         showImage={true}
         primaryMessage='Looking for a NFT.com profile?'
-        secondaryMessage={
-          whitelistClosed ?
-            'Return to NFT.com' :
-            'Join the Whitelist for an opportunity to claim early your unique NFT.com profile NFT'
-        }
-        buttonLabel={whitelistClosed ? 'Go to NFT.com' : 'Join Whitelist'}
-        onClick={ whitelistClosed
-          ? () => {
-            router.replace('/');
-          }
-          : () => {
-            window.open(
-              'https://whitelist.nft.com',
-              '_blank'
-            );
-          }}/>
+        secondaryMessage={'Return to NFT.com'}
+        buttonLabel={'Go to NFT.com'}
+        onClick={() => {
+          router.replace('/');
+        }}/>
     </div>
   </PageWrapper>;
 }

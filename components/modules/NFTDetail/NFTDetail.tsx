@@ -47,7 +47,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className="font-bold text-3xl md:text-2xl tracking-wide dark:text-white mt-8">
           {isNullOrEmpty(nft?.metadata?.name) ? 'Unknown Name' : nft?.metadata?.name}
         </div>
-        <div className="mt-4 mt-4 text-base tracking-wide mb-8 md:mb-0">
+        <div className="mt-4 mt-4 text-base tracking-wide">
           <div className="mt-2 flex items-center justify-between">
             <div className='flex items-center h-full'>
               <span className="font-bold dark:text-white">Owner: </span>

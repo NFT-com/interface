@@ -17,7 +17,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     'md:flex-col flex-row flex-wrap'
   )}>
     {listings.map((listing, index) => (
-      <div className='md:w-full w-2/4 md:px-0 px-2' key={index}>
+      <div className='md:w-full w-2/4 pr-2' key={index}>
         <ExternalListingTile listingURL={''} exchange={listing} />
       </div>
     ))}

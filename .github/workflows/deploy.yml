@@ -2,6 +2,56 @@ name: Deploy NFT.com Frontend
 on: push
 
 jobs:
+  
+  cypress-tests:
+    if: ${{ github.ref_name == 'main' }}
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.4.2
+      
+    - name: Install Doppler CLI
+      uses: dopplerhq/cli-action@v1
+
+    - name: Configure Doppler Config
+      run: |
+        doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
+        
+    - name: Cypress run - e2e 🧪
+      uses: cypress-io/github-action@v4
+      with:
+        install-command: yarn --frozen-lockfile --immutable --silent
+        build: yarn build
+        start: yarn start
+        record: true
+        browser: chrome
+      env:
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+        CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Cypress run - component 🧪
+      uses: cypress-io/github-action@v4
+      with:
+        install: false
+        component: true
+        record: true
+      env:
+        DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+        CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
+        CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: ✅ Upload coverage to Codecov
+      uses: codecov/codecov-action@v3.1.0
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+
+
   deploy-sandbox:
     if: ${{ github.ref_name == 'main' }}
     runs-on: ubuntu-latest
@@ -21,15 +71,6 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
         run: netlify deploy --build --prod --message "main@${{ github.sha }}"
-      
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          record: true
-        env:
-          CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   deploy-staging:
     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'staging') }}
@@ -50,15 +91,6 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
         run: netlify deploy --build --prod --message "staging@${{ github.sha }}"
-    
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-          record: true
-        env:
-          CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
   deploy-prod:
     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'prod') }}
