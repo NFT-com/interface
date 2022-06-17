@@ -125,6 +125,8 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(7);
   } else if (image.indexOf('https://ipfs.io/ipfs/') === 0) {
     return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(21);
+  } else if (image.indexOf('https://gateway.pinata.cloud/ipfs/') === 0) {
+    return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(34);
   }
   return image;
 };
