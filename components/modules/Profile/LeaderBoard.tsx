@@ -69,7 +69,7 @@ export function LeaderBoard() {
               backgroundColor: i === hoverIndex ? rowBackgroundActive : alwaysWhite,
             }}
           >
-            <td className="pr-0 md:pr-1 text-body sm:text-sm leading-body font-medium" >
+            <td className="pr-0 lg:pr-1 text-body sm:text-sm leading-body font-medium" >
               <div className={`${isMobile ? 'flex items-start' : 'flex items-center'}`} >
                 <div>{item.id}</div>
               </div>
