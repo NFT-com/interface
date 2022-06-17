@@ -1,6 +1,6 @@
 import AddFundsDialog from 'components/elements/AddFundsDialog';
 import { Footer } from 'components/elements/Footer';
-import Header from 'components/elements/Header';
+import { Header } from 'components/elements/Header';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
 import HeroSidebar from 'components/modules/HeroSidebar/HeroSidebar';
