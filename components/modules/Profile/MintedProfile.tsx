@@ -6,7 +6,7 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { LinksToSection } from './LinksToSection';
@@ -15,9 +15,9 @@ import { MintedProfileInfo } from './MintedProfileInfo';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import { PencilIcon } from '@heroicons/react/solid';
-import { getAccountLink } from '@metamask/etherscan-link';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
+import DefaultProfileImage from 'public/profile-image-default.svg';
 import { useContext, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
@@ -179,42 +179,55 @@ export function MintedProfile(props: MintedProfileProps) {
                       )}
                       style={{ zIndex: 101 }}
                     >
-                      {/* <Image
-                        src={
-                          !isNullOrEmpty(draftProfileImg?.preview)
-                            ? draftProfileImg?.preview
-                            : profileData?.profile?.photoURL ??
-                          ((!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED))
-                            ? 'https://cdn.nft.com/profile-image-default.svg' :
-                            cameraIcon)
-                        }
-                        alt="profilePicture"
-                        draggable={false}
-                        className="rounded-full scale-95"
-                        layout="fill"
-                        objectFit='cover'
-                      /> */}
-                      <img
-                        src={
-                          !isNullOrEmpty(draftProfileImg?.preview)
-                            ? draftProfileImg?.preview
-                            : profileData?.profile?.photoURL ??
-                          (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
-                            ? 'https://cdn.nft.com/profile-image-default.svg' :
-                            cameraIcon.src)
-                        }
-                        alt="profilePicture"
-                        draggable={false}
-                        className={tw(
-                          'object-center rounded-full',
-                          'h-full w-full',
-                          'shrink-0 aspect-square',
-                          userIsAdmin && editMode ? 'cursor-pointer' : '',
-                          userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                        )}
-                        style={{ zIndex: 101, }}
-                      />
-
+                      {
+                        !isNullOrEmpty(draftProfileImg?.preview) ?
+                          <img
+                            src={draftProfileImg?.preview}
+                            alt='profilePicture'
+                            draggable={false}
+                            className={tw(
+                              'object-center rounded-full',
+                              'h-full w-full',
+                              'shrink-0 aspect-square',
+                              userIsAdmin && editMode ? 'cursor-pointer' : '',
+                              userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                            )}
+                            style={{ zIndex: 101, }}
+                          /> :
+                          profileData?.profile?.photoURL ?
+                            <img
+                              src={profileData?.profile?.photoURL}
+                              alt='profilePicture'
+                              draggable={false}
+                              className={tw(
+                                'object-center rounded-full',
+                                'h-full w-full',
+                                'shrink-0 aspect-square',
+                                userIsAdmin && editMode ? 'cursor-pointer' : '',
+                                userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                              )}
+                              style={{ zIndex: 101, }}
+                            /> :
+                            !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
+                              <DefaultProfileImage
+                                className={tw(
+                                  'object-center rounded-full',
+                                  'h-full w-full',
+                                  'shrink-0 aspect-square',
+                                  userIsAdmin && editMode ? 'cursor-pointer' : '',
+                                  userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                                )}
+                                style={{ zIndex: 101, }}
+                              /> :
+                              <Image
+                                src={cameraIcon.src}
+                                alt="camerIcon"
+                                draggable={false}
+                                className="rounded-full scale-95"
+                                layout="fill"
+                                objectFit='cover'
+                              />
+                      }
                     </div>
                     {editMode && <div
                       className={tw(
@@ -256,7 +269,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     onClick={() => {
                       if (addressOwner !== account?.address) {
                         window.open(
-                          getAccountLink(addressOwner, activeChain?.id.toString()),
+                          getEtherscanLink(activeChain?.id, addressOwner, 'address'),
                           '_blank'
                         );
                       }

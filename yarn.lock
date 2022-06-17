@@ -3440,11 +3440,6 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
-"@metamask/etherscan-link@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@metamask/etherscan-link/-/etherscan-link-2.1.0.tgz#c0be8e68445b7b83cf85bcc03a56cdf8e256c973"
-  integrity sha512-ADuWlTUkFfN2vXlz81Bg/0BA+XRor+CdK1055p6k7H6BLIPoDKn9SBOFld9haQFuR9cKh/JYHcnlSIv5R4fUEw==
-
 "@metamask/jazzicon@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@metamask/jazzicon/-/jazzicon-2.0.0.tgz#5615528e91c0fc5c9d79202d1f0954a7922525a0"
