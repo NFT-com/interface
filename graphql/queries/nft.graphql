@@ -8,6 +8,7 @@ query Nft($contract: Address!, $id: String!) {
     type
     wallet {
       address
+      chainId
     }
     metadata {
       name

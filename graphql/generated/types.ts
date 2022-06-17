@@ -100,6 +100,14 @@ export enum AuctionType {
   FixedPrice = 'FixedPrice'
 }
 
+export type BaseCoin = {
+  __typename?: 'BaseCoin';
+  address?: Maybe<Scalars['String']>;
+  decimals?: Maybe<Scalars['Int']>;
+  logoURI?: Maybe<Scalars['String']>;
+  symbol?: Maybe<Scalars['String']>;
+};
+
 export type Bid = {
   __typename?: 'Bid';
   createdAt: Scalars['DateTime'];
@@ -270,6 +278,7 @@ export type CurationsOutput = {
 
 export type ExternalListing = {
   __typename?: 'ExternalListing';
+  baseCoin?: Maybe<BaseCoin>;
   creation?: Maybe<Scalars['DateTime']>;
   exchange?: Maybe<SupportedExternalExchange>;
   expiration?: Maybe<Scalars['DateTime']>;
@@ -783,6 +792,7 @@ export type Profile = {
   id: Scalars['ID'];
   isFollowedByMe?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
+  layoutType?: Maybe<ProfileLayoutType>;
   nftsDescriptionsVisible?: Maybe<Scalars['Boolean']>;
   owner?: Maybe<Wallet>;
   photoURL?: Maybe<Scalars['String']>;
@@ -801,6 +811,13 @@ export type ProfileClaimedInput = {
 export enum ProfileDisplayType {
   Collection = 'Collection',
   Nft = 'NFT'
+}
+
+export enum ProfileLayoutType {
+  Default = 'Default',
+  Featured = 'Featured',
+  Mosaic = 'Mosaic',
+  Spotlight = 'Spotlight'
 }
 
 export type ProfilePreferenceInput = {
@@ -1120,6 +1137,7 @@ export type UpdateProfileInput = {
   hideAllNFTs?: InputMaybe<Scalars['Boolean']>;
   hideNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   id: Scalars['ID'];
+  layoutType?: InputMaybe<ProfileLayoutType>;
   nftsDescriptionsVisible?: InputMaybe<Scalars['Boolean']>;
   photoURL?: InputMaybe<Scalars['String']>;
   showAllNFTs?: InputMaybe<Scalars['Boolean']>;
@@ -1483,7 +1501,7 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2231,6 +2249,7 @@ export const NftDocument = gql`
     type
     wallet {
       address
+      chainId
     }
     metadata {
       name
