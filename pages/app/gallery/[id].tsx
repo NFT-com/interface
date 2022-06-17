@@ -1,8 +1,8 @@
 import { Footer } from 'components/elements/Footer';
+import { NullState } from 'components/elements/NullState';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { GenesisKeyDetailContent } from 'components/modules/Gallery/GenesisKeyDetailContent';
 
-import { NullState } from 'instrumented/components/elements/NullState';
 import { useRouter } from 'next/router';
 
 /**
