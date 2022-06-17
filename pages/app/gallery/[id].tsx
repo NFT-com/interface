@@ -12,7 +12,7 @@ export default function GalleryDetailPage() {
   const router = useRouter();
   const { id } = router.query;
 
-  if( id === null || id === undefined ) {
+  if (id === null || id === undefined) {
     return <NullState />;
   }
   
