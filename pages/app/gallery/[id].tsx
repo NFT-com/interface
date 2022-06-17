@@ -1,9 +1,8 @@
 import { Footer } from 'components/elements/Footer';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { GenesisKeyDetailContent } from 'components/modules/Gallery/GenesisKeyDetailContent';
-import NotFoundPage from 'pages/404';
 
-import { BigNumber } from 'ethers';
+import { NullState } from 'instrumented/components/elements/NullState';
 import { useRouter } from 'next/router';
 
 /**
@@ -13,8 +12,8 @@ export default function GalleryDetailPage() {
   const router = useRouter();
   const { id } = router.query;
 
-  if (id === null || id === undefined || !BigNumber.isBigNumber(id) || !BigNumber.from(id).isZero || BigNumber.from(id).isNegative || BigNumber.from(id).gt(10000)) {
-    return <NotFoundPage />;
+  if (id === null || id === undefined) {
+    return <NullState />;
   }
   
   return (
