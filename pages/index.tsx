@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
+import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { tw } from 'utils/tw';
 
@@ -93,7 +94,10 @@ const HomePage: NextPage = () => {
             </Ticker>
           </div>
           <div className='h-full ...'>
-        leaderboard
+            <div className='text-header leading-header font-header justify-center mb-6 mt-14 ...'>
+              Profile leaderboard
+            </div>
+            <LeaderBoard />
           </div>
           <div className='h-full ...'>
             <div className='text-header leading-header font-header justify-center ...'>
