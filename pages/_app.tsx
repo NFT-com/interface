@@ -1,6 +1,5 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
-import 'react-tippy/dist/tippy.css';
 
 import HomeLayout from 'components/layouts/HomeLayout';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';

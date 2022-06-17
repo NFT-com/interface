@@ -73,7 +73,6 @@ export default function Post({ post }: PostProps) {
           )
           : null}
       </div>
-      <Footer />
     </>
   );
 }
