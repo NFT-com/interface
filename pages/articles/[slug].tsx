@@ -3,9 +3,9 @@ import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
+import NotFoundPage from 'pages/404';
 
 import { getPost } from 'lib/contentful/api';
-import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { PostData } from 'types/blogs';
@@ -19,7 +19,7 @@ export default function Post({ post }: PostProps) {
   const router = useRouter();
 
   if (!router.isFallback && !post) {
-    return <ErrorPage statusCode={404} />;
+    return <NotFoundPage />;
   }
 
   return (
@@ -66,7 +66,7 @@ export default function Post({ post }: PostProps) {
               </h2>
               <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12">
                 {post.relatedPostsCollection.items.map((post) => (
-                  <RelatedPostCard key={post.title} post={post} />
+                  post && <RelatedPostCard key={post.title} post={post} />
                 ))}
               </div>
             </div>

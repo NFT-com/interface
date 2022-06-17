@@ -37,9 +37,9 @@ const theme = {
   img: (props: any) => {
     const { src, alt } = props;
     return (
-      <div className="h-blogHero-xl lg:h-blogHero-lg w-1/2 md:w-11/12 relative justify-center items-center mx-auto mb-4">
-        <Image src={`https:${src}`} alt={alt} layout="fill" objectFit="cover" />
-      </div>
+      <span className="block h-blogHero-lg lg:h-80 w-3/4 md:w-11/12 relative justify-center items-center mx-auto mb-4">
+        <Image src={`https:${src}`} alt={alt} layout="fill" objectFit="contain" />
+      </span>
     );
   },
   a: (props: any) => {
