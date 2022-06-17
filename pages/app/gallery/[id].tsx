@@ -13,7 +13,7 @@ export default function GalleryDetailPage() {
   const router = useRouter();
   const { id } = router.query;
 
-  if( id === null || id === undefined || BigNumber.from(id).gt(10000) || BigNumber.from(id).lte(0) || BigNumber.from(id)) {
+  if (id === null || id === undefined || !BigNumber.isBigNumber(id) || !BigNumber.from(id).isZero || BigNumber.from(id).isNegative || BigNumber.from(id).gt(10000)) {
     return <NotFoundPage />;
   }
   

@@ -2,11 +2,9 @@ import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Loader from './Loader';
-
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Wallet } from 'phosphor-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect } from 'wagmi';
@@ -36,34 +34,6 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         openConnectModal,
         mounted,
       }) => {
-        const SignedInState = () => {
-          return (
-            <>
-              <div
-                className="sm:block hidden cursor-pointer"
-                onClick={() => {
-                  toggleHeroSidebar();
-                }}
-              >
-                <Menu color={primaryIcon} />
-              </div>
-              <div
-                className="gap-3 sm:hidden block cursor-pointer"
-              >
-                <button className={tw(
-                  'block font-medium bg-primary-button-bckg rounded-xl text-white',
-                  'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
-                  'py-2 px-5'
-                )} onClick={() => {
-                  toggleHeroSidebar();
-                }} type="button">
-                  <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                  {!account ? shortenAddress(JSON.parse(localStorage.getItem('signatureData'))['address']) : shortenAddress(data.address)}
-                </button>
-              </div>
-            </>
-          );
-        };
         return (
           <div
             className="w-max"
@@ -77,12 +47,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
             })}
           >
             {(() => {
-              if (!chain && mounted && status === 'success') {
-                return (
-                  <SignedInState />
-                );
-              }
-              if ((!mounted || !data || !chain)) {
+              if (!mounted || !data || !chain) {
                 return (
                   <>
                     { !props?.signInButton &&
@@ -112,7 +77,8 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                   </>
                 );
               }
-              if (chain && chain.unsupported) {
+
+              if (chain.unsupported) {
                 return (
                   <button className={tw(
                     'block font-medium bg-primary-button-bckg rounded-xl text-white',
@@ -123,8 +89,32 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                   </button>
                 );
               }
+
               return (
-                <SignedInState />
+                <>
+                  <div
+                    className="sm:block hidden cursor-pointer"
+                    onClick={() => {
+                      toggleHeroSidebar();
+                    }}
+                  >
+                    <Menu color={primaryIcon} />
+                  </div>
+                  <div
+                    className="gap-3 sm:hidden block cursor-pointer"
+                  >
+                    <button className={tw(
+                      'block font-medium bg-primary-button-bckg rounded-xl text-white',
+                      'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
+                      'py-2 px-5'
+                    )} onClick={() => {
+                      toggleHeroSidebar();
+                    }} type="button">
+                      <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                      {shortenAddress(account?.address)}
+                    </button>
+                  </div>
+                </>
               );
             })()}
           </div>
