@@ -1,9 +1,14 @@
+import { ProfileLayoutType } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
+
+import { ProfileEditContext } from './ProfileEditContext';
 
 import Image from 'next/image';
 import { X } from 'phosphor-react';
+import { useContext } from 'react';
 
 export interface ProfileLayoutEditorModalContentProps {
+  savedLayoutType: ProfileLayoutType;
   onClose: () => void;
 }
 
@@ -14,6 +19,10 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
     'Featured': '/group_10.png',
     'Spotlight': '/group_11.png',
   };
+  const {
+    draftLayoutType,
+    setDraftLayoutType
+  } = useContext(ProfileEditContext);
   return (
     <div className={tw(
       'absolute top-0 left-0 h-screen w-screen',
@@ -29,9 +38,13 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
         </div>
       </div>
       <div className='w-full flex flex-wrap mt-4'>
-        {['Default', 'Mosaic', 'Featured', 'Spotlight'].map((layout) => {
-          // todo: check local edit context and remote value here
-          const selected = layout === 'Default';
+        {[
+          ProfileLayoutType.Default,
+          ProfileLayoutType.Mosaic,
+          ProfileLayoutType.Featured,
+          ProfileLayoutType.Spotlight
+        ].map((layout) => {
+          const selected = layout === (draftLayoutType ?? props.savedLayoutType);
           return (
             <div
               className={tw(
@@ -39,6 +52,9 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
                 'sm:w-full md:w-1/3 w-1/4 aspect-[3/2]',
                 'mb-4 px-2'
               )}
+              onClick={() => {
+                setDraftLayoutType(layout);
+              }}
               key={layout}
             >
               <div className={tw(

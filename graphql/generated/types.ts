@@ -100,6 +100,14 @@ export enum AuctionType {
   FixedPrice = 'FixedPrice'
 }
 
+export type BaseCoin = {
+  __typename?: 'BaseCoin';
+  address?: Maybe<Scalars['String']>;
+  decimals?: Maybe<Scalars['Int']>;
+  logoURI?: Maybe<Scalars['String']>;
+  symbol?: Maybe<Scalars['String']>;
+};
+
 export type Bid = {
   __typename?: 'Bid';
   createdAt: Scalars['DateTime'];
@@ -266,6 +274,22 @@ export type CurationsOutput = {
   items: Array<Curation>;
   pageInfo?: Maybe<PageInfo>;
   totalItems?: Maybe<Scalars['Int']>;
+};
+
+export type ExternalListing = {
+  __typename?: 'ExternalListing';
+  baseCoin?: Maybe<BaseCoin>;
+  creation?: Maybe<Scalars['DateTime']>;
+  exchange?: Maybe<SupportedExternalExchange>;
+  expiration?: Maybe<Scalars['DateTime']>;
+  highestOffer?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type ExternalListingsOutput = {
+  __typename?: 'ExternalListingsOutput';
+  listings: Array<Maybe<ExternalListing>>;
 };
 
 export type FileUploadOutput = {
@@ -768,6 +792,7 @@ export type Profile = {
   id: Scalars['ID'];
   isFollowedByMe?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
+  layoutType?: Maybe<ProfileLayoutType>;
   nftsDescriptionsVisible?: Maybe<Scalars['Boolean']>;
   owner?: Maybe<Wallet>;
   photoURL?: Maybe<Scalars['String']>;
@@ -786,6 +811,13 @@ export type ProfileClaimedInput = {
 export enum ProfileDisplayType {
   Collection = 'Collection',
   Nft = 'NFT'
+}
+
+export enum ProfileLayoutType {
+  Default = 'Default',
+  Featured = 'Featured',
+  Mosaic = 'Mosaic',
+  Spotlight = 'Spotlight'
 }
 
 export type ProfilePreferenceInput = {
@@ -817,6 +849,7 @@ export type Query = {
   collectionNFTs: NfTsOutput;
   convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
+  externalListings: ExternalListingsOutput;
   filterAsks: GetMarketAsk;
   getAsks: GetMarketAsk;
   getBids: GetMarketBid;
@@ -870,6 +903,13 @@ export type QueryConvertEnsToEthAddressArgs = {
 
 export type QueryCurationNfTsArgs = {
   input: CurationInput;
+};
+
+
+export type QueryExternalListingsArgs = {
+  chainId: Scalars['String'];
+  contract: Scalars['Address'];
+  tokenId: Scalars['String'];
 };
 
 
@@ -1044,6 +1084,13 @@ export type SignatureInput = {
   v: Scalars['Int'];
 };
 
+export enum SupportedExternalExchange {
+  Looksrare = 'looksrare',
+  Opensea = 'opensea',
+  Rarible = 'rarible',
+  X2y2 = 'x2y2'
+}
+
 export type SwapNftInput = {
   marketAskId: Scalars['ID'];
   marketBidId: Scalars['ID'];
@@ -1090,6 +1137,7 @@ export type UpdateProfileInput = {
   hideAllNFTs?: InputMaybe<Scalars['Boolean']>;
   hideNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   id: Scalars['ID'];
+  layoutType?: InputMaybe<ProfileLayoutType>;
   nftsDescriptionsVisible?: InputMaybe<Scalars['Boolean']>;
   photoURL?: InputMaybe<Scalars['String']>;
   showAllNFTs?: InputMaybe<Scalars['Boolean']>;
@@ -1463,7 +1511,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, displayType?: ProfileDisplayType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, displayType?: ProfileDisplayType | null, layoutType?: ProfileLayoutType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -2240,6 +2288,7 @@ export const ProfileDocument = gql`
     gkIconVisible
     nftsDescriptionsVisible
     displayType
+    layoutType
     owner {
       address
       chainId
