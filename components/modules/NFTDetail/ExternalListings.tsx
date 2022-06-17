@@ -13,12 +13,11 @@ export interface ExternalListingsProps {
 
 export function ExternalListings(props: ExternalListingsProps) {
   const { data: listings } = useExternalListingsQuery(props.nft?.contract, props.nft?.tokenId, props.nft?.wallet.chainId);
-  console.log(listings);
   return <div className={tw(
     'flex w-full px-4',
     'md:flex-col flex-row flex-wrap'
   )}>
-    {listings?.filter((l) => isNullOrEmpty(l.url))?.map((listing, index) => (
+    {listings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
       <div className='md:w-full w-2/4 pr-2' key={index}>
         <ExternalListingTile listing={listing} />
       </div>
