@@ -9,10 +9,6 @@ import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
-export interface NftGridProps {
-  profileURI?: string;
-}
-
 const mockData = () => {
   const data = [];
   for (let index = 0; index < 10; index++) {
@@ -32,8 +28,9 @@ const mockData = () => {
   return data;
 };
 
-export function LeaderBoard(props: NftGridProps) {
+export function LeaderBoard() {
   const [hoverIndex,] = useState(-1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [analyticsData, setAnalyticsdata] = useState(mockData());
 
   const {
@@ -51,16 +48,11 @@ export function LeaderBoard(props: NftGridProps) {
     );
   }
 
-  const toggleIsInWatchlist = (i: number): void => {
-    const newAnalyticsData = [...analyticsData];
-    newAnalyticsData[i].isWatchlist = !newAnalyticsData[i].isWatchlist;
-    setAnalyticsdata(newAnalyticsData);
-  };
-  return <div className={tw('overflow-x-auto relative w-full', isMobile ? 'px-4' : '' )}>
+  return <div className="overflow-x-auto relative w-full">
     <table className="min-w-full border-x-0">
       <thead>
         <tr className="text-body leading-body font-body">
-          <th scope="col" className="flex items-center text-body sm:text-sm leading-body font-body minlg:text-base "></th>
+          <th scope="col" className="flex items-center text-body sm:text-sm leading-body font-body"></th>
           <th scope="col" className='text-left text-body sm:text-sm leading-body font-body'>Profile</th>
           <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body'>Number of Genesis Keys</th>
           <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body xs:hidden'>Items Collected</th>
@@ -69,7 +61,7 @@ export function LeaderBoard(props: NftGridProps) {
         </tr>
       </thead>
       <tbody className="bg-always-white">
-        {analyticsData?.map((item, i) => (
+        {mockData().map((item, i) => (
           <tr key={i}
             className={tw('cursor-pointer min-w-[5.5rem] h-20',
               'border-x-0 border-y border-row-border dar:border:transparent')}
@@ -77,7 +69,7 @@ export function LeaderBoard(props: NftGridProps) {
               backgroundColor: i === hoverIndex ? rowBackgroundActive : alwaysWhite,
             }}
           >
-            <td className="pr-0 minmd:pr-3 text-body sm:text-sm leading-body font-medium" >
+            <td className="pr-0 md:pr-1 text-body sm:text-sm leading-body font-medium" >
               <div className={`${isMobile ? 'flex items-start' : 'flex items-center'}`} >
                 <div>{item.id}</div>
               </div>
