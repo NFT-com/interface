@@ -21,7 +21,8 @@
     "cypress:run-only": "doppler run -- cypress run",
     "cypress:open": "start-server-and-test dev 3000 cypress:open-only",
     "cypress:run": "start-server-and-test dev 3000 cypress:run-only",
-    "cypress:record": "cypress run --record"
+    "cypress:record": "cypress run --record",
+    "instrument": "npx nyc instrument --compact=false ./ instrumented"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.2",
