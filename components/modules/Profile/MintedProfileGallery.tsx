@@ -67,9 +67,12 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           setLayoutEditorOpen(false);
         } }
       >
-        <ProfileLayoutEditorModalContent onClose={() => {
-          setLayoutEditorOpen(false);
-        }}/>
+        <ProfileLayoutEditorModalContent
+          savedLayoutType={profileData?.profile?.layoutType}
+          onClose={() => {
+            setLayoutEditorOpen(false);
+          }}
+        />
       </Modal>
       {editMode && selectedCollection == null &&
         <div className='flex items-center w-full mb-12 px-8 justify-between text-white'>
