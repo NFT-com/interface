@@ -103,9 +103,8 @@ export const SearchBar = () => {
         }}>
 
         <div className="relative w-full">
-          <div className="flex border rounded-xl py-2 px-3 w-full dark:text-always-white">
-            <SearchIcon className="h-4 w-4" />
-            {/* <Image src={searchIcon} className="w-4 mr-2" alt="Search" /> */}
+          <div className="flex items-center border rounded-xl py-2 px-3 w-full dark:text-always-white">
+            <SearchIcon className='mr-2 shrink-0 aspect-square' />
             <SearchBox
               submit={null}
               reset={null}

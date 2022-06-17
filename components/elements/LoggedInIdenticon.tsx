@@ -29,14 +29,11 @@ export default function LoggedInIdenticon({ large, round, border }: LoggedInIden
     }
   }, [account]);
 
-  if (account == null) {
-    return null;
-  }
-
   if (myPhoto && !loading) {
     return (
       <Image
         className={joinClasses(
+          account == null ? 'hidden' : '',
           round === true ? 'rounded-full' : '',
           large === true ? 'h-32 w-32' : 'h-10 w-10',
           border === true ? 'border-4' : ''

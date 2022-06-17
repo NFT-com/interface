@@ -1,4 +1,5 @@
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
+import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
@@ -15,7 +16,7 @@ import EyeIcon from 'public/eye.svg';
 import EyeOffIcon from 'public/eye_off.svg';
 import GKBadgeIcon from 'public/gk_badge.svg';
 import NftLabelIcon from 'public/label.svg';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
@@ -39,6 +40,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     draftNftsDescriptionsVisible,
     setDraftNftsDescriptionsVisible,
   } = useContext(ProfileEditContext);
+
+  const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
   
   const { data: account } = useAccount();
   const { profileData } = useProfileQuery(props.profileURI);
@@ -52,6 +55,18 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
       'flex flex-col mt-8 align-items',
       isMobile ? 'px-2' : 'sm:px-2 md:px-8 lg:px-16 px-20'
     )}>
+      <Modal
+        title={''}
+        visible={layoutEditorOpen}
+        loading={false}
+        onClose={function (): void {
+          setLayoutEditorOpen(false);
+        } }
+      >
+        <div className='absolute top-0 left-0 h-screen w-screen bg-white'>
+
+        </div>
+      </Modal>
       {editMode && selectedCollection == null &&
         <div className='flex items-center w-full mb-12 px-8 justify-between text-white'>
           <div>
@@ -125,7 +140,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 },
                 {
                   label: 'Edit Layouts',
-                  onSelect: () => null,
+                  onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
                   icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
                 },
               ]}/>

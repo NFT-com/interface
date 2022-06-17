@@ -74,16 +74,18 @@ export function ProfilePage(props: ProfilePageProps) {
         profileURI={processedProfileURI}
       />;
     } else {
-      return <ProfileEditContextProvider
-        key={processedProfileURI}
-        profileURI={processedProfileURI}
-      >
-        <MintedProfile
+      return (
+        <ProfileEditContextProvider
           key={processedProfileURI}
           profileURI={processedProfileURI}
-          addressOwner={profileOwner}
-        />
-      </ProfileEditContextProvider>;
+        >
+          <MintedProfile
+            key={processedProfileURI}
+            profileURI={processedProfileURI}
+            addressOwner={profileOwner}
+          />
+        </ProfileEditContextProvider>
+      );
     }
   }, [
     currentURIBlocked,
