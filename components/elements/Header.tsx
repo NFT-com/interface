@@ -35,9 +35,9 @@ export default function Header(props: HeaderProps) {
   // only identify once per user session to not overwhelm segment.io
   const cachedId = account && localStorage.getItem(me?.id);
   if (account && !cachedId) {
-    // analytics.identify(me?.id, {
-    //   ethereumAddress: account,
-    // });
+    analytics.identify(me?.id, {
+      ethereumAddress: account,
+    });
     localStorage.setItem(me?.id, me?.id);
   }
 
@@ -128,7 +128,7 @@ export default function Header(props: HeaderProps) {
                 'font-rubik text-blue-50 tracking-wide',
                 'font-normal flex items-center'
               )}>
-                <WalletRainbowKitButton signInButton />
+                <WalletRainbowKitButton signInButton={!isMobile} />
               </div>
             </div>
           </div>

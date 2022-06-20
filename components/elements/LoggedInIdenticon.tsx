@@ -46,5 +46,5 @@ export default function LoggedInIdenticon({ large, round, border }: LoggedInIden
   }
 
   // 'polkadot', 'substrate', 'beachball' or 'jdenticon'
-  return <Identicon1 size={large === true ? 120 : 32} string={ethers.utils.getAddress(account?.address)} />;
+  return <Identicon1 size={large === true ? 120 : 32} string={account?.address} />;
 }

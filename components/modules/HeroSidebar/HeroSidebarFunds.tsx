@@ -1,16 +1,12 @@
 import Loader from 'components/elements/Loader';
-import { Maybe } from 'graphql/generated/types';
-import { useEthBalance } from 'hooks/balances/useEthBalance';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
-import { filterNulls, prettify } from 'utils/helpers';
+import { prettify } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ethers } from 'ethers';
+import { utils } from 'ethers';
 import ETH_LOGO from 'public/eth.svg';
-import { useCallback } from 'react';
-import { ExternalLink as LinkIcon } from 'react-feather';
-import { BalanceData } from 'types';
+import { useBalance } from 'wagmi';
 import { useAccount } from 'wagmi';
 
 /**
@@ -19,46 +15,11 @@ import { useAccount } from 'wagmi';
 
 export default function HeroSidebarFunds() {
   const { data: account } = useAccount();
+  const { data: balanceData } = useBalance({ addressOrName: account?.address, watch: true });
 
-  const userEthBalance = useEthBalance(account?.address);
   const { setAddFundsDialogOpen } = useAddFundsDialog();
+
   const ethPriceUSD = useEthPriceUSD();
-
-  // const chainId = initChainId || 1;
-
-  type CoinData = {
-    name: string;
-    symbol: string;
-    logo: any;
-    balance: string;
-    usd: string;
-    address: string;
-  };
-
-  const formatBalance = (item: Maybe<BalanceData>) => {
-    if (item == null) {
-      return '0';
-    }
-    return ethers.utils.formatUnits(item.balance, item.decimals);
-  };
-
-  const coins: () => Array<CoinData> = useCallback(() => {
-    return filterNulls(
-      [
-        {
-          name: 'Ethereum',
-          symbol: 'ETH',
-          logo: ETH_LOGO,
-          balance: formatBalance(userEthBalance?.balance),
-          usd: ethPriceUSD,
-          address: null,
-        },
-      ]
-    );
-  }, [
-    ethPriceUSD,
-    userEthBalance,
-  ]);
 
   return (
     <>
@@ -66,58 +27,42 @@ export default function HeroSidebarFunds() {
           Tokens
       </div>
       <div className="mx-5">
-        {coins().map((item, i) => {
-          return (
-            <div
-              key={i}
-              className={tw(
-                'flex items-center justify-center px-4',
-                'py-3 h-18 rounded-xl mb-3.5 border',
-                'bg-accent-dk',
-                'border-accent-border-dk',
-              )}
-            >
-              <div className="flex items-center">
-                <ETH_LOGO className='h-8 mr-4' />
+        <div
+          className={tw(
+            'flex items-center justify-center px-4',
+            'py-3 h-18 rounded-xl mb-3.5 border',
+            'bg-accent-dk',
+            'border-accent-border-dk',
+          )}
+        >
+          <div className="flex items-center">
+            <ETH_LOGO className='h-8 mr-4' />
+          </div>
+          <div className="w-full">
+            <div className="flex items-center justify-between font-bold text-base mb-1">
+              <div
+                className={'flex items-start text-primary-txt-dk'}>
+                {balanceData?.symbol}
               </div>
-              <div className="w-full">
-                <div className="flex items-center justify-between font-bold text-base mb-1">
-                  <div
-                    className={`${item.address && 'cursor-pointer'} flex items-start text-primary-txt-dk`}
-                    onClick={() => {
-                      item.address &&
-                        window.open(
-                          `https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${item.address}`
-                        );
-                    }}
-                  >
-                    {item.symbol}
-                    {item.address && (
-                      <div className="inline ml-1.5">
-                        <LinkIcon size={16} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-primary-txt-dk">
-                    {prettify(item.balance)}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-sm text-secondary-txt">
-                  <div>{item.name}</div>
-                  <div>
-                    {!item.usd
-                      ? (
-                        <Loader />
-                      )
-                      : (
-                        '$' + prettify(Number(item.balance) * Number(item.usd))
-                      )}
-                  </div>
-                </div>
+              <div className="text-primary-txt-dk">
+                {(+utils.formatEther(balanceData?.value)).toFixed(4)}
               </div>
             </div>
+            <div className="flex items-center justify-between text-sm text-secondary-txt">
+                  Ethereum
+              <div>
+                {!ethPriceUSD
+                  ? (
+                    <Loader />
+                  )
+                  : (
+                    '$' + prettify(Number(balanceData?.formatted) * Number(ethPriceUSD))
+                  )}
+              </div>
+            </div>
+          </div>
+        </div>
           );
-        })}
       </div>
       <div
         className={tw(

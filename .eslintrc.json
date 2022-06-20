@@ -150,6 +150,9 @@
           "\\.svg?url"
         ]
       }
-    ]
+    ],
+    "no-namespace": {
+      "allowDeclarations": true
+    }
   }
 }
