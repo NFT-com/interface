@@ -12,6 +12,7 @@ import GKHolderIcon from 'public/gk-holder.svg';
 import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
+import { Switch } from 'components/elements/Switch';
 
 export interface MintedProfileInfoProps {
   profileURI: string;
@@ -32,6 +33,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     editMode,
     draftBio,
     setDraftBio,
+    setDraftGkIconVisible,
     draftProfileImg,
     draftHeaderImg,
     draftGkIconVisible,
@@ -57,6 +59,14 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           )}>
             @{profileURI}
           </div>
+          {editMode && ownedGenesisKeyTokens.length > 0 && <Switch
+            left="Hide GK Icon"
+            right="Show GK Icon"
+            enabled={draftGkIconVisible ?? profileData?.profile?.gkIconVisible}
+            setEnabled={() => {
+              setDraftGkIconVisible(!(draftGkIconVisible ?? profileData?.profile?.gkIconVisible));
+            }}
+          />}
           {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) &&
             <GKHolderIcon className="md:mb-4  w-8 h-8 shrink-0 aspect-square" alt="GK Holder" />}
         </div>
