@@ -41,7 +41,7 @@ if (GOOGLE_ANALYTICS_ID != null) {
   ReactGA.initialize('test', { testMode: true, debug: true });
 }
 
-const { chains, provider } = configureChains(
+export const { chains, provider } = configureChains(
   getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
     [chain.mainnet, chain.rinkeby] :
     [chain.mainnet],
@@ -78,7 +78,7 @@ const connectors = connectorsForWallets([
   },
 ]);
 
-const wagmiClient = createClient({
+export const wagmiClient = createClient({
   autoConnect: true,
   connectors,
   provider
