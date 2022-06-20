@@ -11,11 +11,15 @@ import {
 
 type SharingProps = {
   title: string;
-  url: string;
 };
 
-export default function SharingIcons({ title, url }: SharingProps) {
+export default function SharingIcons({ title }: SharingProps) {
   const [, setCopied] = useCopyClipboard();
+
+  let url;
+  if(typeof window !== 'undefined') {
+    url = window.location.href;
+  }
   return (
     <div className="absolute right-0 bottom-3.5 md:bottom-1 flex row">
       <FacebookShareButton quote={title} url={url}>

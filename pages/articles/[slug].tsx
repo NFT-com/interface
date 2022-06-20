@@ -48,7 +48,7 @@ export default function Post({ post }: PostProps) {
           cardType: 'summary_large_image',
         }}
       />
-      <div className="bg-white dark:bg-modal-overlay-dk  relative text-center px-4 w-full pt-14 sm:pt-6 md:pt-10">
+      <div className="bg-white dark:bg-modal-overlay-dk  relative text-center px-4 w-full pt-28">
         <BlogHeader post={post} />
 
         <BlogHeroImage
@@ -58,7 +58,7 @@ export default function Post({ post }: PostProps) {
         <div className="text-left mt-12 md:mt-8 pb-5 ">
           <Markdown content={post?.body} />
         </div>
-        {post.relatedPostsCollection.items.length
+        {post?.relatedPostsCollection?.items.length
           ? (
             <div className='border-t-2 border-share-icon'>
               <h2 className="dark:text-white text-left mb-6 sm:mb-3 font-medium mt-8 md:mt-4 sm:mt-1.5 text-3xll md:text-xl sm:text-sm">
