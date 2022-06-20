@@ -18,7 +18,6 @@ function ErrorPage({ statusCode, hasGetInitialPropsRun, err }: ErrorPageProps) {
   if (!hasGetInitialPropsRun && err) {
     Sentry.captureException(err);
   }
-
   return <NextErrorComponent statusCode={statusCode} />;
 }
 
@@ -33,17 +32,14 @@ ErrorPage.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
   if (res?.statusCode === 404) {
     return errorInitialProps;
   }
-
+  
   if (err) {
     Sentry.captureException(err);
-
     await Sentry.flush(2000);
-
     return errorInitialProps;
   }
 
   Sentry.captureException(new Error(`_error.tsx getInitialProps missing data at path: ${asPath}`));
-
   await Sentry.flush(2000);
 
   return errorInitialProps;
