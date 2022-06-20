@@ -1,10 +1,11 @@
 import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
-import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
+
+import Loader from './Loader';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Wallet } from 'phosphor-react';
-import { useEffect } from 'react';
+import { useCallback } from 'react';
 import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect } from 'wagmi';
@@ -15,15 +16,15 @@ interface WalletRainbowKitButtonProps {
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   const { toggleHeroSidebar } = useHeroSidebar();
-  const { data, status } = useAccount();
+  const { data: account, status } = useAccount();
   const { disconnect } = useDisconnect();
   const { primaryIcon } = useThemeColors();
 
-  useEffect(() => {
-    if (data?.connector == null && status === 'success') {
+  useCallback(() => {
+    if (account?.connector == null && status === 'success') {
       disconnect();
     }
-  }, [data, data?.connector, disconnect, status]);
+  }, [account, disconnect, status]);
 
   return (
     <ConnectButton.Custom>
@@ -47,7 +48,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
             })}
           >
             {(() => {
-              if (!mounted || !data || !chain) {
+              if (!mounted || !account || !chain) {
                 return (
                   <>
                     { !props?.signInButton &&
@@ -111,7 +112,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                       toggleHeroSidebar();
                     }} type="button">
                       <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                      {shortenAddress(account?.address)}
+                      {account?.displayName}
                     </button>
                   </div>
                 </>

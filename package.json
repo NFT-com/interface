@@ -33,7 +33,7 @@
     "@graphql-codegen/typescript-operations": "^2.4.0",
     "@headlessui/react": "^1.6.1",
     "@heroicons/react": "^1.0.6",
-    "@rainbow-me/rainbowkit": "^0.2.2",
+    "@rainbow-me/rainbowkit": "0.3.2",
     "@sentry/nextjs": "^7.0.0",
     "@types/tailwindcss": "^3.0.10",
     "email-validator": "^2.0.4",

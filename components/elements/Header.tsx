@@ -35,9 +35,9 @@ export default function Header(props: HeaderProps) {
   // only identify once per user session to not overwhelm segment.io
   const cachedId = account && localStorage.getItem(me?.id);
   if (account && !cachedId) {
-    // analytics.identify(me?.id, {
-    //   ethereumAddress: account,
-    // });
+    analytics.identify(me?.id, {
+      ethereumAddress: account,
+    });
     localStorage.setItem(me?.id, me?.id);
   }
 
