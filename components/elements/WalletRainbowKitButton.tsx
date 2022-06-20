@@ -1,8 +1,6 @@
 import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
 import { tw } from 'utils/tw';
 
-import Loader from './Loader';
-
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Wallet } from 'phosphor-react';
 import { useCallback } from 'react';
