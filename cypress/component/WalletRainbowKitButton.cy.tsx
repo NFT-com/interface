@@ -1,6 +1,5 @@
 import { WalletRainbowKitButton } from '../../components/elements/WalletRainbowKitButton';
 import { ComponentWrapper } from '../support/ComponentWrapper';
-import { isMobile } from 'react-device-detect';
 
 describe('WalletRainbowKitButton', () => {
   it('mounts with signInButton', () => {
@@ -13,13 +12,13 @@ describe('WalletRainbowKitButton', () => {
   });
 
   it('mounts without signInButton on mobile', () => {
-    cy.viewport('iphone-xr');
-    cy.mount(
+    cy.viewport('iphone-x');
+      cy.mount(
       <ComponentWrapper>
-        <WalletRainbowKitButton signInButton={isMobile} />
+        <WalletRainbowKitButton signInButton={false} />
       </ComponentWrapper>
     );
-    cy.contains('Sign In').should('not.be.visible');
+    cy.contains('Sign In').should('exist');
     cy.get('.sm\\:block > svg').should('be.visible');
   });
 

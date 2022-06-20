@@ -1,10 +1,7 @@
-import './commands'
+import './commands';
 
 
-import { mount } from 'cypress/react'
-
-import 'styles/globals.css';
-import '@rainbow-me/rainbowkit/styles.css';
+import { mount } from 'cypress/react';
 
 declare global {
   namespace Cypress {
@@ -14,7 +11,7 @@ declare global {
   }
 }
 
-Cypress.Commands.add('mount', mount)
+Cypress.Commands.add('mount', mount);
 
 // Example use:
 // cy.mount(<MyComponent />)
