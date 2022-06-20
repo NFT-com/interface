@@ -100,6 +100,14 @@ export enum AuctionType {
   FixedPrice = 'FixedPrice'
 }
 
+export type BaseCoin = {
+  __typename?: 'BaseCoin';
+  address?: Maybe<Scalars['String']>;
+  decimals?: Maybe<Scalars['Int']>;
+  logoURI?: Maybe<Scalars['String']>;
+  symbol?: Maybe<Scalars['String']>;
+};
+
 export type Bid = {
   __typename?: 'Bid';
   createdAt: Scalars['DateTime'];
@@ -266,6 +274,22 @@ export type CurationsOutput = {
   items: Array<Curation>;
   pageInfo?: Maybe<PageInfo>;
   totalItems?: Maybe<Scalars['Int']>;
+};
+
+export type ExternalListing = {
+  __typename?: 'ExternalListing';
+  baseCoin?: Maybe<BaseCoin>;
+  creation?: Maybe<Scalars['DateTime']>;
+  exchange?: Maybe<SupportedExternalExchange>;
+  expiration?: Maybe<Scalars['DateTime']>;
+  highestOffer?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type ExternalListingsOutput = {
+  __typename?: 'ExternalListingsOutput';
+  listings: Array<Maybe<ExternalListing>>;
 };
 
 export type FileUploadOutput = {
@@ -768,6 +792,7 @@ export type Profile = {
   id: Scalars['ID'];
   isFollowedByMe?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
+  layoutType?: Maybe<ProfileLayoutType>;
   nftsDescriptionsVisible?: Maybe<Scalars['Boolean']>;
   owner?: Maybe<Wallet>;
   photoURL?: Maybe<Scalars['String']>;
@@ -786,6 +811,13 @@ export type ProfileClaimedInput = {
 export enum ProfileDisplayType {
   Collection = 'Collection',
   Nft = 'NFT'
+}
+
+export enum ProfileLayoutType {
+  Default = 'Default',
+  Featured = 'Featured',
+  Mosaic = 'Mosaic',
+  Spotlight = 'Spotlight'
 }
 
 export type ProfilePreferenceInput = {
@@ -817,6 +849,7 @@ export type Query = {
   collectionNFTs: NfTsOutput;
   convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
+  externalListings: ExternalListingsOutput;
   filterAsks: GetMarketAsk;
   getAsks: GetMarketAsk;
   getBids: GetMarketBid;
@@ -870,6 +903,13 @@ export type QueryConvertEnsToEthAddressArgs = {
 
 export type QueryCurationNfTsArgs = {
   input: CurationInput;
+};
+
+
+export type QueryExternalListingsArgs = {
+  chainId: Scalars['String'];
+  contract: Scalars['Address'];
+  tokenId: Scalars['String'];
 };
 
 
@@ -1044,6 +1084,13 @@ export type SignatureInput = {
   v: Scalars['Int'];
 };
 
+export enum SupportedExternalExchange {
+  Looksrare = 'looksrare',
+  Opensea = 'opensea',
+  Rarible = 'rarible',
+  X2y2 = 'x2y2'
+}
+
 export type SwapNftInput = {
   marketAskId: Scalars['ID'];
   marketBidId: Scalars['ID'];
@@ -1090,6 +1137,7 @@ export type UpdateProfileInput = {
   hideAllNFTs?: InputMaybe<Scalars['Boolean']>;
   hideNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   id: Scalars['ID'];
+  layoutType?: InputMaybe<ProfileLayoutType>;
   nftsDescriptionsVisible?: InputMaybe<Scalars['Boolean']>;
   photoURL?: InputMaybe<Scalars['String']>;
   showAllNFTs?: InputMaybe<Scalars['Boolean']>;
@@ -1358,6 +1406,15 @@ export type CollectionNfTsQueryVariables = Exact<{
 
 export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
+export type ExternalListingsQueryVariables = Exact<{
+  contract: Scalars['Address'];
+  tokenId: Scalars['String'];
+  chainId: Scalars['String'];
+}>;
+
+
+export type ExternalListingsQuery = { __typename?: 'Query', externalListings: { __typename?: 'ExternalListingsOutput', listings: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null } | null> } };
+
 export type GetAsksQueryVariables = Exact<{
   input: AsksInput;
 }>;
@@ -1444,7 +1501,7 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -1767,6 +1824,20 @@ export const CollectionNfTsDocument = gql`
       lastCursor
     }
     totalItems
+  }
+}
+    `;
+export const ExternalListingsDocument = gql`
+    query ExternalListings($contract: Address!, $tokenId: String!, $chainId: String!) {
+  externalListings(contract: $contract, tokenId: $tokenId, chainId: $chainId) {
+    listings {
+      url
+      exchange
+      price
+      highestOffer
+      expiration
+      creation
+    }
   }
 }
     `;
@@ -2178,6 +2249,7 @@ export const NftDocument = gql`
     type
     wallet {
       address
+      chainId
     }
     metadata {
       name
@@ -2435,6 +2507,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');
+    },
+    ExternalListings(variables: ExternalListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ExternalListingsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ExternalListingsQuery>(ExternalListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ExternalListings', 'query');
     },
     GetAsks(variables: GetAsksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetAsksQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAsksQuery>(GetAsksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAsks', 'query');

@@ -69,12 +69,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     <div className="relative rounded-full h-5 w-5 aspect-square">
                       {profileData?.profile?.photoURL ?
                         <img
-                          className='rounded-full aspect-square'
+                          className='rounded-full aspect-square h-full w-full'
                           src={profileData?.profile?.photoURL}
                           alt='owner-profile-pic'
                         />
                         :
-                        <DefaultProfileImage className='rounded-full aspect-square' />
+                        <DefaultProfileImage className='rounded-full aspect-square h-full w-full' />
                       }
                     </div>
                     <span className="text-base text-link ml-1">
