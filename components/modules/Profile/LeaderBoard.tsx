@@ -1,37 +1,20 @@
 
 import Loader from 'components/elements/Loader';
-// import { usePaginator } from 'hooks/usePaginator';
 import { tw } from 'utils/tw';
 
+// import { usePaginator } from 'hooks/usePaginator';
+// eslint-disable-next-line no-restricted-imports
+import leaderboardFixtureMockData from '../../../cypress/fixtures/leaderboard.json';
+
 import Image from 'next/image';
-import ProfileImage from 'public/rectangle6.png';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
-const mockData = () => {
-  const data = [];
-  for (let index = 0; index < 10; index++) {
-    data.push(
-      {
-        id: index + 1,
-        name: 'worldofwomen',
-        image_name: ProfileImage,
-        numberOfGKs: '4',
-        itemsCollected: '24',
-        numberOfCommunities: '18',
-        transactions: '20',
-      }
-    );
-  }
-
-  return data;
-};
-
 export function LeaderBoard() {
   const [hoverIndex,] = useState(-1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [analyticsData, setAnalyticsdata] = useState(mockData());
+  const [analyticsData, setAnalyticsdata] = useState(leaderboardFixtureMockData);
 
   const {
     rowBackgroundActive,
@@ -61,7 +44,7 @@ export function LeaderBoard() {
         </tr>
       </thead>
       <tbody className="bg-always-white">
-        {mockData().map((item, i) => (
+        {leaderboardFixtureMockData.map((item, i) => (
           <tr key={i}
             className={tw('cursor-pointer min-w-[5.5rem] h-20',
               'border-x-0 border-y border-row-border dar:border:transparent')}
