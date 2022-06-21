@@ -140,7 +140,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
                   '';
             return (
               <div className={tw('h-full w-1/3 relative', roundedClass)} key={image + index}>
-                <Image src={image} alt="Gallery Cover photo" className={roundedClass} layout="fill" objectFit='cover'/>
+                <img src={image} alt="Gallery Cover photo" className={roundedClass} />
               </div>
             );
           })
