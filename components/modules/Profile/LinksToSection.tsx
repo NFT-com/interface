@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 export interface LinksToSectionParams {
   isAddressOwner: boolean;
@@ -8,7 +7,6 @@ export interface LinksToSectionParams {
 
 export function LinksToSection(props: LinksToSectionParams) {
   const { isAddressOwner } = props;
-  const router = useRouter();
 
   const ownerlinksContents = [
     {
@@ -87,7 +85,9 @@ export function LinksToSection(props: LinksToSectionParams) {
         (isAddressOwner ? ownerlinksContents : notOwnerlinksContents)
           .map((item) =>
             (
-              <Link href={item.linkTo}>
+              <Link href={item.linkTo}
+                key={item.section}
+              >
               <a
                 target='_blank'
                 key={item.section}
