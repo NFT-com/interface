@@ -50,7 +50,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-preview:
-    if: ${{ startsWith(github.ref_name, 'feat') }}
+    if: ${{ startsWith(github.base_ref, 'feat') }}
     runs-on: ubuntu-latest
     environment: sandbox
     steps:
