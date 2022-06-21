@@ -50,21 +50,12 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-preview:
-    # if: ${{ startsWith(github.ref_name, 'fix') || startsWith(github.ref_name, 'feat') }}
+    if: ${{ startsWith(github.base_ref, 'fix') || startsWith(github.base_ref 'feat') }}
     runs-on: ubuntu-latest
     environment: sandbox
     steps:
       - name: Checkout
         uses: actions/checkout@v2.4.2
-
-      - name: Branch name2
-        run: echo running on branch ${{ github.ref_name }}
-
-      - name: Branch name3
-        run: echo running on branch ${{ github.ref }}
-
-      - name: Branch name4
-        run: echo running on branch ${{ github.base_ref }}
         
       - name: Install Doppler CLI
         uses: dopplerhq/cli-action@v1
