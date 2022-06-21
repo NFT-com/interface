@@ -59,7 +59,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 'text-left px-3 py-2 w-full rounded-xl font-medium',
               )}
               placeholder="Enter bio (optional)"
-              value={draftBio}
+              defaultValue={draftBio}
               onChange={e => {
                 setDraftBio(e.target.value);
               }}

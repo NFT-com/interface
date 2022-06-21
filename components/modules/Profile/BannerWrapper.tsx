@@ -24,7 +24,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       onMouseLeave={props.onMouseLeave}
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
-        'xs:h-28 sm:h-32 lg:h-60 h-72',
+        'h-72',
       )}
     >
       <Image

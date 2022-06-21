@@ -1,12 +1,14 @@
-/* eslint-disable @next/next/no-img-element */
+import cameraIcon from 'public/camera.png';
+import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+import { Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
+import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEnvBool, Doppler } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { LinksToSection } from './LinksToSection';
@@ -16,15 +18,12 @@ import { ProfileEditContext } from './ProfileEditContext';
 
 import { PencilIcon } from '@heroicons/react/solid';
 import Image from 'next/image';
-import cameraIcon from 'public/camera.png';
-import DefaultProfileImage from 'public/profile-image-default.svg';
 import { useContext, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
-import { BannerWrapper } from './BannerWrapper';
-import { Button, ButtonType } from 'components/elements/Button';
-import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
+import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import DefaultProfileImage from 'public/profile-image-default.svg';
 
 export interface MintedProfileProps {
   profileURI: string;
@@ -51,9 +50,10 @@ export function MintedProfile(props: MintedProfileProps) {
   const { activeChain } = useNetwork();
   const { profileUris: myOwnedProfileTokenUris } = useMyNftProfileTokens();
   const { profileData } = useProfileQuery(profileURI);
-  const userIsAdmin = myOwnedProfileTokenUris
-    .map(fullUri => fullUri.split('/').pop())
-    .includes(profileURI);
+  const userIsAdmin = getEnvBool(Doppler.NEXT_PUBLIC_CUSTOM_PROFILES_ENABLED)
+    && myOwnedProfileTokenUris
+      .map(fullUri => fullUri.split('/').pop())
+      .includes(profileURI);
 
   const { mutate: mutateMyNFTs } = useMyNFTsQuery(20);
       
@@ -69,7 +69,7 @@ export function MintedProfile(props: MintedProfileProps) {
   }, [editMode, mutateProfileNFTs]);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
-  const hasGks = isNullOrEmpty(ownedGKTokens);
+  const hasGks = !isNullOrEmpty(ownedGKTokens);
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -98,15 +98,15 @@ export function MintedProfile(props: MintedProfileProps) {
       <BannerWrapper
         imageOverride={
           editMode ?
-          (isNullOrEmpty(draftHeaderImg?.preview) ?
-            profileData?.profile?.bannerURL :
-            draftHeaderImg?.preview) :
-          profileData?.profile?.bannerURL
+            (isNullOrEmpty(draftHeaderImg?.preview) ?
+              profileData?.profile?.bannerURL :
+              draftHeaderImg?.preview) :
+            profileData?.profile?.bannerURL
         }
         loading={saving}
       >
         <div className='w-full h-full'>
-        <Dropzone
+          <Dropzone
             disabled={!userIsAdmin}
             accept={'image/*' ['.*']}
             onDrop={files => {
@@ -156,7 +156,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     </div> :
                     <div
                       className={tw(
-                        'absolute top-24 right-32 sm:right-28'
+                        'absolute top-24 right-32 sm:right-11'
                       )}
                       style={{ zIndex: 49 }}
                     >
@@ -181,30 +181,28 @@ export function MintedProfile(props: MintedProfileProps) {
             )}
           </Dropzone>
         </div>
-        </BannerWrapper>
-        <div
-          className='flex justify-center items-center'
-          style={{
-            zIndex: 103,
-          }}
-        >
-                  <div className="flex items-center md:flex-col justify-center">
+      </BannerWrapper>
+      <div
+        className='flex justify-center items-center'
+        style={{
+          zIndex: 103,
+        }}
+      >
+        <div className="flex items-center md:flex-col justify-center">
           <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px] mr-20 ml-[-4rem] md:ml-0 md:mr-0">
-        <Dropzone
-            disabled={!userIsAdmin || !editMode}
-            accept={'image/*' ['.*']}
-            onDrop={files => {
-              if (userIsAdmin) {
-                onDropProfile(files);
-              }
-            }}
-          >
+            <Dropzone
+              accept={'image/*' ['.*']}
+              disabled={!userIsAdmin || !editMode}
+              onDrop={files => {
+                if (userIsAdmin) onDropProfile(files);
+              }}
+            >
               {({ getRootProps, getInputProps, open }) => (
                 <section>
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',
                     userIsAdmin ? '' : 'cursor-default',
-                    'md:h-[72px] md:w-[72px] lg:h-40 lg:w-40 h-60 w-60',
+                    'h-60 w-60',
                   )}>
                     <input {...getInputProps()} />
                     {saving && <div
@@ -216,7 +214,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <Loader/>
                     </div>}
-                      <Image
+                    <Image
                         src={
                           !isNullOrEmpty(draftProfileImg?.preview)
                             ? draftProfileImg?.preview
@@ -256,8 +254,8 @@ export function MintedProfile(props: MintedProfileProps) {
             profileURI={profileURI}
           />
         </div>
-        </div>
-        <main className={tw(
+      </div>
+      <main className={tw(
         'h-full',
         userIsAdmin ? 'justify-between' : 'justify-start space-y-4',
         'w-full justify-start space-y-4 flex flex-col')}>
@@ -310,6 +308,6 @@ export function MintedProfile(props: MintedProfileProps) {
           <Footer />
         </div>
       </main>
-      </div>
+    </div>
   );
 }
