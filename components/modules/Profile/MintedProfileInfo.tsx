@@ -117,7 +117,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           </div>
         }
         {editMode && userIsAdmin &&
-          <div className="max-w-2xl mt-2.5 md:max-w-xl sm:max-w-full flex items-center">
+          <div
+            className="max-w-2xl mt-2.5 md:max-w-xl sm:max-w-full flex items-center">
             <input
               type="text"
               className={tw(
@@ -125,7 +126,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 'text-left px-3 py-2 w-full rounded-xl font-medium',
               )}
               placeholder="Enter bio (optional)"
-              value={draftBio}
+              defaultValue={draftBio}
               onChange={e => {
                 setDraftBio(e.target.value);
               }}
