@@ -50,7 +50,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-preview:
-    if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.ref_name == ‘fix/*’ || github.ref_name == ‘feat/*’ }}
     runs-on: ubuntu-latest
     environment: sandbox
     steps:
@@ -63,7 +63,7 @@ jobs:
       - name: Configure Doppler Config
         run: |
           doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
-
+        
       - name: Checkout
         uses: actions/checkout@v2.4.2
       - uses: actions/setup-node@v3
