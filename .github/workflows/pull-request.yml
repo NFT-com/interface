@@ -6,6 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
+    - name: Branch name
+        run: echo running on branch ${github.ref_name}
+    - name: Branch name 2
+        run: echo running on branch ${github.ref}
+
+    - name: Branch name 3
+        run: echo running on branch ${github.head_ref}
     - name: Checkout
       uses: actions/checkout@v2.4.2
       
