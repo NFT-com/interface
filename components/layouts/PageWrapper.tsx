@@ -12,6 +12,7 @@ import Head from 'next/head';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
+import { Subscription } from 'components/elements/Subscription';
 
 export interface PageWrapperProps {
   bgColorClasses?: string;
@@ -98,9 +99,12 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
         />
         
         {props.children}
-        <div className="bg-transparent w-full flex grow"></div>
+        
         {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
-            <Footer />
+          <>
+          <Subscription />
+          <Footer />
+          </>
         }
       </main>
     </div>

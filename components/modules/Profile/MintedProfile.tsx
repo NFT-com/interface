@@ -216,9 +216,6 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <Loader/>
                     </div>}
-                    <div
-                      style={{ zIndex: 101, }}
-                    >
                       <Image
                         src={
                           !isNullOrEmpty(draftProfileImg?.preview)
@@ -241,7 +238,6 @@ export function MintedProfile(props: MintedProfileProps) {
                         )}
                         style={{ zIndex: 101, }}
                       />
-                    </div>
                     {editMode && <div
                       className={tw(
                         'absolute bottom-5 -right-4 md:-right-8'
