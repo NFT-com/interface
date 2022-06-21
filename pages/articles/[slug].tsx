@@ -1,4 +1,4 @@
-import { Footer } from 'components/elements/Footer';
+import PreviewBanner from 'components/elements/PreviewBanner';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
@@ -15,7 +15,7 @@ type PostProps = {
   preview: boolean;
 };
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, preview }: PostProps) {
   const router = useRouter();
 
   if (!router.isFallback && !post) {
@@ -73,6 +73,7 @@ export default function Post({ post }: PostProps) {
           )
           : null}
       </div>
+      {preview && <PreviewBanner />}
     </>
   );
 }
@@ -82,6 +83,7 @@ export async function getServerSideProps({ params, preview = false }) {
   return {
     props: {
       post: data?.post ?? null,
+      preview
     },
   };
 }
