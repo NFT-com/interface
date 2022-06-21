@@ -22,16 +22,13 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
     <div
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
+      style={{ backgroundImage: `url(${props.imageOverride ?? defaultBanner})` }}
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
-        'h-72',
+        'bg-no-repeat bg-cover bg-center',
+        'xs:h-28 sm:h-32 lg:h-60 h-72',
       )}
     >
-      <Image
-        src={props?.imageOverride ?? defaultBanner}
-        layout='fill'
-        objectFit='cover'
-      />
       {props.loading && <div
         style={{ zIndex: 102 }}
         className={tw(

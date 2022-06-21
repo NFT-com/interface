@@ -74,7 +74,7 @@ export function NFTCard(props: NFTCardProps) {
           'md:w-2/5 w-[23%]' :
           'w-full',
         'justify-between cursor-pointer transform hover:scale-105',
-        'overflow-hidden mb-4',
+        'overflow-hidden',
       )}
       style={{
         backgroundColor: props.customBackground ?? tileBackground

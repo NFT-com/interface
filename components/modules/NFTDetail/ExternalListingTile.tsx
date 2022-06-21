@@ -44,7 +44,9 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         </span>
         <div className='flex items-center'>
           <span className='text-base font-medium'>
-            {ethers.utils.formatUnits(listing?.price ?? listing?.highestOffer ?? 0, listing?.baseCoin?.decimals ?? 18)}{listing?.baseCoin?.symbol ?? 'ETH'}
+            {ethers.utils.formatUnits(
+              (listing?.price.split('.')[0] ?? listing?.highestOffer ?? 0),
+              listing?.baseCoin?.decimals ?? 18)}{listing?.baseCoin?.symbol ?? 'ETH'}
           </span>
         </div>
       </div>

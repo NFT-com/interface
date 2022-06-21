@@ -49,8 +49,8 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
   
   return (
     <div className={tw(
-      'flex flex-col h-screen-ios',
-      'min-h-screen-ios',
+      'flex flex-col h-screen',
+      'min-h-screen',
       isMobile ? 'overflow-x-hidden' : ''
     )}>
       <Head>

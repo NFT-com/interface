@@ -140,7 +140,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
                   '';
             return (
               <div className={tw('h-full w-1/3 relative', roundedClass)} key={image + index}>
-                <Image src={image} alt="Gallery Cover photo" className={roundedClass} layout="fill" objectFit='cover'/>
+                <img src={image} alt="Gallery Cover photo" className={roundedClass} />
               </div>
             );
           })
@@ -159,8 +159,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         <div
           key={key}
           className={tw(
-            'flex mb-10 items-center justify-center px-3',
-            'sm:mb-2'
+            'flex mb-10 items-center justify-center p-3',
           )}
         >
           <NFTCollectionCard

@@ -71,7 +71,7 @@ export default function Header(props: HeaderProps) {
               <Link href="/">
                 <div className={tw(
                   'cursor-pointer',
-                  'lg:ml-2 ml-20',
+                  'ml-5',
                   'text-always-white',
                   'font-hero-heading1 flex items-center')}>
                   <div className='h-10 w-10 mr-2'>
@@ -80,7 +80,6 @@ export default function Header(props: HeaderProps) {
                       : <HeroCornerDark />
                     }
                   </div>
-                  <span className="flex md:hidden">NFT.COM</span>
                 </div>
               </Link>
             </div>

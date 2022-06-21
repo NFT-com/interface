@@ -24,6 +24,7 @@ import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import DefaultProfileImage from 'public/profile-image-default.svg';
+import { url } from 'inspector';
 
 export interface MintedProfileProps {
   profileURI: string;
@@ -214,28 +215,26 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <Loader/>
                     </div>}
-                    <Image
-                        src={
-                          !isNullOrEmpty(draftProfileImg?.preview)
-                            ? draftProfileImg?.preview
-                            : profileData?.profile?.photoURL ??
-                            (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
-                              ? DefaultProfileImage :
-                              cameraIcon)
-                        }
-                        alt="profilePicture"
-                        draggable={false}
-                        layout='fill'
-                        objectFit='cover'
-                        className={tw(
-                          'object-center rounded-full',
-                          'h-full w-full',
-                          'shrink-0 aspect-square',
-                          userIsAdmin && editMode ? 'cursor-pointer' : '',
-                          userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                        )}
-                        style={{ zIndex: 101, }}
-                      />
+                    <img
+                      src={
+                        !isNullOrEmpty(draftProfileImg?.preview)
+                          ? draftProfileImg?.preview
+                          : profileData?.profile?.photoURL ??
+                          (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
+                            ? 'https://cdn.nft.com/profile-image-default.svg' :
+                            cameraIcon.src)
+                      }
+                      alt="profilePicture"
+                      draggable={false}
+                      className={tw(
+                        'object-center rounded-full',
+                        'h-full w-full',
+                        'shrink-0 aspect-square',
+                        userIsAdmin && editMode ? 'cursor-pointer' : '',
+                        userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                      )}
+                      style={{ zIndex: 101, }}
+                    />
                     {editMode && <div
                       className={tw(
                         'absolute bottom-5 -right-4 md:-right-8'
