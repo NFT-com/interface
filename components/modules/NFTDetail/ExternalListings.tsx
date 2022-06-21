@@ -12,7 +12,7 @@ export interface ExternalListingsProps {
 }
 
 export function ExternalListings(props: ExternalListingsProps) {
-  const { data: listings } = useExternalListingsQuery(props.nft?.contract, props.nft?.tokenId, props.nft?.wallet.chainId);
+  const { data: listings } = useExternalListingsQuery(props?.nft?.contract, props?.nft?.tokenId, props.nft?.wallet.chainId);
   return <div className={tw(
     'flex w-full px-4',
     'md:flex-col flex-row flex-wrap'
