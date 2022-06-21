@@ -1,5 +1,4 @@
 import { NullState } from 'components/elements/NullState';
-import { PageWrapper } from 'components/layouts/PageWrapper';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
 import { ProfileEditContextProvider } from 'components/modules/Profile/ProfileEditContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
@@ -97,18 +96,5 @@ export function ProfilePage(props: ProfilePageProps) {
     router
   ]);
   
-  return (
-    <PageWrapper
-      bgColorClasses='dark:bg-pagebg-secondary-dk bg-pagebg'
-      headerOptions={{
-        removeSummaryBanner: true,
-        walletOnly: true,
-        walletPopupMenu: true,
-        hideAnalytics: true,
-        profileHeader: true
-      }}
-    >
-      {getPageContent()}
-    </PageWrapper>
-  );
+  return getPageContent();
 }
