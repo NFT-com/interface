@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 export interface LinksToSectionParams {
@@ -15,7 +16,7 @@ export function LinksToSection(props: LinksToSectionParams) {
       section: 'DOCUMENT',
       title: 'NFT.COM Summary',
       description: 'Learn more about Genesis Keys and Profiles in this PDF.',
-      linkTo: () => { router.push('/about'); }
+      linkTo: '/about'
     },
     // {
     //   image: LinkToWhitePaper,
@@ -31,21 +32,21 @@ export function LinksToSection(props: LinksToSectionParams) {
       section: 'KNOWLEDGE BASE',
       title: 'NFT.COM Support',
       description: 'Learn about the different ways you can obtain your own NFT.com Profile.',
-      linkTo: () => { router.push('/about'); }
+      linkTo: '/about'
     },
     {
       image: '/link-to-green-key.png',
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
       description: 'Explore all Genesis Keys and existing NFT.com Profiles in our Gallery.',
-      linkTo: () => { router.push('/about'); }
+      linkTo: '/app/gallery'
     },
     {
       image: '/link-to-opensea.png',
       section: 'MARKET PLACE',
       title: 'Opensea.io',
       description: 'View our Genesis Key and NFT.com Profile Collections on Opensea',
-      linkTo: () => { window.open('https://opensea.io/collection/genesiskey', '_open'); }
+      linkTo: 'https://opensea.io/collection/genesiskey'
     }
   ];
   
@@ -55,31 +56,29 @@ export function LinksToSection(props: LinksToSectionParams) {
       section: 'EVENTS',
       title: 'NFT.COM Public Release',
       description: 'Buy a Genesis Keys and receive four Profiles to make your own.',
-      linkTo: () => { router.push('/app/sale'); }
+      linkTo: '/app/sale'
     },
     {
       image: '/link-to-you.png',
       section: 'KNOWLEDGE BASE',
       title: 'NFT.COM Support',
       description: 'Learn about the different ways you can obtain your own NFT.com Profile.',
-      linkTo: () => { router.push('/about'); }
+      linkTo: '/about'
     },
     {
       image: '/link-to-green-key.png',
       section: 'GALLERY',
       title: 'NFT.COM Gallery',
       description: 'Explore all Genesis Keys and existing NFT.com Profiles in our Gallery.',
-      linkTo: () => { router.push('/app/gallery'); }
+      linkTo: '/app/gallery'
     },
     {
       image: '/link-to-opensea.png',
       section: 'MARKET PLACE',
       title: 'Opensea.io',
       description: 'View our Genesis Key and NFT.com Profile Collections on Opensea',
-      linkTo: () => {
-        window.open('https://opensea.io', '_blank');
+      linkTo: 'https://opensea.io/collection/genesiskey'
       }
-    }
   ];
 
   return (
@@ -88,9 +87,10 @@ export function LinksToSection(props: LinksToSectionParams) {
         (isAddressOwner ? ownerlinksContents : notOwnerlinksContents)
           .map((item) =>
             (
-              <div
+              <Link href={item.linkTo}>
+              <a
+                target='_blank'
                 key={item.section}
-                onClick={item.linkTo}
                 className="bg-modal-overlay-dk rounded-xl lg:w-full w-52 grow cursor-pointer">
                 <div className="lg:text-sm text-lg md:p-2 p-4">{item.section}</div>
                 <div className="w-full">
@@ -100,7 +100,8 @@ export function LinksToSection(props: LinksToSectionParams) {
                   <div className="mb-1 lg:text-base text-xl">{item.title}</div>
                   <div className="lg:text-xs text-base">{item.description}</div>
                 </div>
-              </div>
+              </a>
+              </Link>
             )
           )
       }
