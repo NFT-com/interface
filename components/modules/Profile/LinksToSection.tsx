@@ -45,7 +45,7 @@ export function LinksToSection(props: LinksToSectionParams) {
       section: 'MARKET PLACE',
       title: 'Opensea.io',
       description: 'View our Genesis Key and NFT.com Profile Collections on Opensea',
-      linkTo: () => { router.push('/about'); }
+      linkTo: () => { window.open('https://opensea.io/collection/genesiskey', '_open'); }
     }
   ];
   
