@@ -39,7 +39,12 @@ export function CustomTooltip(props: PropsWithChildren<CustomTooltipProps>) {
         setTooltipVisible(true);
       }}
       onMouseLeave={() => {
-        if (isMobile || props.mode === 'click') {
+        if (isMobile ) {
+          return;
+        } else if (props.mode === 'click'){
+          setTimeout(() => {
+            setTooltipVisible(false);
+          }, 500);
           return;
         }
         setTooltipVisible(false);
