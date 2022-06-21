@@ -57,9 +57,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.2
 
-      - name: Branch name
-        run: echo running on branch ${{ GITHUB_REF##*/ }}
-
       - name: Branch name2
         run: echo running on branch ${{ github.ref_name }}
 
