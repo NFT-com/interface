@@ -7,7 +7,7 @@ import { tw } from 'utils/tw';
 
 import { ProfileEditContext } from './ProfileEditContext';
 
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { useAccount } from 'wagmi';
 
 export interface MintedProfileInfoProps {
@@ -23,6 +23,14 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { alwaysBlack } = useThemeColors();
   const { editMode, draftBio, setDraftBio, setDraftGkIconVisible, draftGkIconVisible } = useContext(ProfileEditContext);
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
+
+  const handleBioChange = (event) => {
+    let bioValue = event.target.value;
+    if(bioValue.length === 0) {
+      bioValue = '';
+    }
+    setDraftBio(bioValue);
+  }
 
   return (
     <div className="flex items-center my-6 mx-4 w-full md:flex-col">
@@ -59,9 +67,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 'text-left px-3 py-2 w-full rounded-xl font-medium',
               )}
               placeholder="Enter bio (optional)"
-              defaultValue={draftBio}
+              value={draftBio}
               onChange={e => {
-                setDraftBio(e.target.value);
+                handleBioChange(e);
               }}
               style={{
                 color: alwaysBlack,

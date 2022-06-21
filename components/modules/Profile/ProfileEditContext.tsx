@@ -183,7 +183,7 @@ export function ProfileEditContextProvider(
   
         const result = await updateProfile({
           id: profileData?.profile?.id,
-          description: draftBio,
+          description: isNullOrEmpty(draftBio) ? ' ' : draftBio,
           gkIconVisible: draftGkIconVisible,
           nftsDescriptionsVisible: draftNftsDescriptionsVisible,
           hideNFTIds: Array.from(draftToHide),
