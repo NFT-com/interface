@@ -50,7 +50,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-preview:
-    if: ${{ github.ref_name == ‘fix/*’ || github.ref_name == ‘feat/*’ }}
+    if: ${{ github.ref_name == 'fix/*' || github.ref_name == 'feat/*' }}
     runs-on: ubuntu-latest
     environment: sandbox
     steps:
