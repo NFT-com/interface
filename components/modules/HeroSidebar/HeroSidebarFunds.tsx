@@ -45,7 +45,7 @@ export default function HeroSidebarFunds() {
                 {balanceData?.symbol}
               </div>
               <div className="text-primary-txt-dk">
-                {(+utils.formatEther(balanceData?.value)).toFixed(4)}
+                {(+utils.formatEther(balanceData?.value ?? 0)).toFixed(4)}
               </div>
             </div>
             <div className="flex items-center justify-between text-sm text-secondary-txt">

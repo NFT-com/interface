@@ -14,6 +14,7 @@ import HeroCorner from 'public/hero_corner.svg';
 import HeroCornerDark from 'public/hero_corner_dark.svg';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
+import { useCallback } from 'react';
 
 export interface HeaderProps {
   walletOnly?: boolean;
@@ -46,8 +47,20 @@ export default function Header(props: HeaderProps) {
   const showHeaderNav = !isMobile;
   const searchEnabled = getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED);
 
+  const headerStyles = useCallback(() => {
+    if(props.removeBackground && !props.heroHeader) {
+      return 'transparent';
+    }
+    else if(props.removeBackground && props.heroHeader) {
+      return `z-50 drop-shadow-md ${props.heroHeaderBlack ? 'bg-black' : 'bg-transparent'}`;
+    }
+    else {
+      return 'bg-headerbg ' + (props.profileHeader ? 'dark:bg-headerbg-profile-dk opacity-90' : 'dark:bg-headerbg-dk');
+    }
+  }, [props.heroHeader, props.heroHeaderBlack, props.profileHeader, props.removeBackground]);
+
   return (
-    <nav className={tw('w-full', 'bg-transparent')}>
+    <nav className={tw('w-full', headerStyles())}>
       <div className={tw('w-full mx-auto',
         'pl-5',
         walletSlideOpen ? 'border-action-primary' : 'border-gray-200 dark:border-gray-800',

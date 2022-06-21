@@ -3,10 +3,10 @@ import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
-import { isNullOrEmpty } from 'utils/helpers';
 
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { isNullOrEmpty } from 'utils/helpers';
 
 export interface DraftImg {
   preview: Maybe<string>,
@@ -30,8 +30,6 @@ interface ProfileEditContextType {
   draftGkIconVisible: Maybe<boolean>,
   setDraftGkIconVisible: (val: boolean) => void,
   draftDisplayType: ProfileDisplayType,
-  draftNftsDescriptionsVisible: Maybe<boolean>,
-  setDraftNftsDescriptionsVisible: (val: boolean) => void,
   setDraftDisplayType: (displayType: ProfileDisplayType) => void,
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
@@ -47,20 +45,18 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   draftToHide: new Set(),
   draftToShow: new Set(),
   toggleHidden: () => null,
-  hideNftIds: () => null,
-  showNftIds: () => null,
+  hideNftIds: (toHide: string[]) => null,
+  showNftIds: (toShow: string[]) => null,
   onHideAll: () => null,
   onShowAll: () => null,
   draftHeaderImg: { preview: '', raw: '' },
-  setDraftHeaderImg: () => null,
+  setDraftHeaderImg: (img: DraftImg) => null,
   draftProfileImg: { preview: '', raw: '' },
-  setDraftProfileImg: () => null,
-  draftBio: null,
-  setDraftBio: () => null,
+  setDraftProfileImg: (img: DraftImg) => null,
+  draftBio: '',
+  setDraftBio: (bio: string) => '',
   draftGkIconVisible: true,
-  setDraftGkIconVisible: () => null,
-  draftNftsDescriptionsVisible: true,
-  setDraftNftsDescriptionsVisible: () => null,
+  setDraftGkIconVisible: (val: boolean) => null,
   draftDisplayType: ProfileDisplayType.Nft,
   setDraftDisplayType: () => null,
   editMode: false,
@@ -69,7 +65,7 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   saveProfile: () => null,
   saving: false,
   selectedCollection: null,
-  setSelectedCollection: () => null,
+  setSelectedCollection: (collectionAddress: string) => null,
 });
 
 export interface ProfileEditContextProviderProps {
@@ -94,7 +90,6 @@ export function ProfileEditContextProvider(
   const [draftToShow, setDraftToShow] = useState<Set<string>>(new Set());
   const [draftBio, setDraftBio] = useState<string>(profileData?.profile?.description);
   const [draftGkIconVisible, setDraftGkIconVisible] = useState<boolean>(profileData?.profile?.gkIconVisible);
-  const [draftNftsDescriptionsVisible, setDraftNftsDescriptionsVisible] = useState<boolean>(profileData?.profile?.nftsDescriptionsVisible);
   const [draftProfileImg, setDraftProfileImg] = useState({ preview: '', raw: null });
   const [draftHeaderImg, setDraftHeaderImg] = useState({ preview: '', raw: null });
   const [draftDisplayType, setDraftDisplayType] = useState(null);
@@ -136,12 +131,11 @@ export function ProfileEditContextProvider(
     setDraftHeaderImg({ preview: '', raw: null });
     setDraftBio(draftBio);
     setDraftGkIconVisible(draftGkIconVisible);
-    setDraftNftsDescriptionsVisible(draftNftsDescriptionsVisible);
     setEditMode(false);
     setDraftToHide(new Set());
     setDraftToShow(new Set());
     setDraftDisplayType(null);
-  }, [draftBio, draftGkIconVisible, draftNftsDescriptionsVisible]);
+  }, [draftBio, draftGkIconVisible]);
 
   useEffect(() => {
     setSelectedCollection(null);
@@ -185,7 +179,6 @@ export function ProfileEditContextProvider(
           id: profileData?.profile?.id,
           description: draftBio,
           gkIconVisible: draftGkIconVisible,
-          nftsDescriptionsVisible: draftNftsDescriptionsVisible,
           hideNFTIds: Array.from(draftToHide),
           showNFTIds: Array.from(draftToShow),
           displayType: draftDisplayType,
@@ -218,7 +211,6 @@ export function ProfileEditContextProvider(
     updateProfile,
     draftBio,
     draftGkIconVisible,
-    draftNftsDescriptionsVisible,
     draftToHide,
     draftToShow,
     draftDisplayType,
@@ -249,10 +241,6 @@ export function ProfileEditContextProvider(
     draftGkIconVisible,
     setDraftGkIconVisible: (val: boolean) => {
       setDraftGkIconVisible(val);
-    },
-    draftNftsDescriptionsVisible,
-    setDraftNftsDescriptionsVisible: (val: boolean) => {
-      setDraftNftsDescriptionsVisible(val);
     },
     draftDisplayType,
     setDraftDisplayType,

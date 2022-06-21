@@ -1,12 +1,14 @@
-/* eslint-disable @next/next/no-img-element */
+import cameraIcon from 'public/camera.png';
+import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+import { Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
+import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnvBool } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEnvBool, Doppler } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { LinksToSection } from './LinksToSection';
@@ -16,12 +18,12 @@ import { ProfileEditContext } from './ProfileEditContext';
 
 import { PencilIcon } from '@heroicons/react/solid';
 import Image from 'next/image';
-import cameraIcon from 'public/camera.png';
-import DefaultProfileImage from 'public/profile-image-default.svg';
 import { useContext, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
+import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import DefaultProfileImage from 'public/profile-image-default.svg';
 
 export interface MintedProfileProps {
   profileURI: string;
@@ -33,7 +35,11 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const {
     editMode,
+    setEditMode,
+    clearDrafts,
+    saveProfile,
     saving,
+    draftBio,
     draftProfileImg,
     draftHeaderImg,
     setDraftHeaderImg,
@@ -44,9 +50,12 @@ export function MintedProfile(props: MintedProfileProps) {
   const { activeChain } = useNetwork();
   const { profileUris: myOwnedProfileTokenUris } = useMyNftProfileTokens();
   const { profileData } = useProfileQuery(profileURI);
-  const userIsAdmin = myOwnedProfileTokenUris
-    .map(fullUri => fullUri.split('/').pop())
-    .includes(profileURI);
+  const userIsAdmin = getEnvBool(Doppler.NEXT_PUBLIC_CUSTOM_PROFILES_ENABLED)
+    && myOwnedProfileTokenUris
+      .map(fullUri => fullUri.split('/').pop())
+      .includes(profileURI);
+
+  const { mutate: mutateMyNFTs } = useMyNFTsQuery(20);
       
   const { nfts: publiclyVisibleNFTs, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
@@ -58,6 +67,9 @@ export function MintedProfile(props: MintedProfileProps) {
   useEffect(() => {
     mutateProfileNFTs();
   }, [editMode, mutateProfileNFTs]);
+
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const hasGks = !isNullOrEmpty(ownedGKTokens);
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -69,8 +81,6 @@ export function MintedProfile(props: MintedProfileProps) {
       });
     }
   };
-
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
 
   const onDropHeader = (files: Array<any>) => {
     if (files.length > 1) {
@@ -85,30 +95,16 @@ export function MintedProfile(props: MintedProfileProps) {
 
   return (
     <div className="relative h-screen">
-      <div
-        className={tw(
-          'bg-no-repeat bg-cover bg-center',
-          'relative flex flex-row items-end justify-center bg-[#05080c]',
-        )}
-        style={{
-          height: '240px',
-          backgroundImage:
-            editMode ?
-              (isNullOrEmpty(draftHeaderImg?.preview) ?
-                profileData?.profile?.bannerURL :
-                `url(${draftHeaderImg?.preview})`) :
-              profileData?.profile?.bannerURL
-        }}
+      <BannerWrapper
+        imageOverride={
+          editMode ?
+            (isNullOrEmpty(draftHeaderImg?.preview) ?
+              profileData?.profile?.bannerURL :
+              draftHeaderImg?.preview) :
+            profileData?.profile?.bannerURL
+        }
+        loading={saving}
       >
-        {saving && <div
-          style={{ zIndex: 102 }}
-          className={tw(
-            'absolute flex bg-white/10',
-            'items-center justify-center w-full h-full'
-          )}
-        >
-          <Loader/>
-        </div>}
         <div className='w-full h-full'>
           <Dropzone
             disabled={!userIsAdmin}
@@ -124,6 +120,54 @@ export function MintedProfile(props: MintedProfileProps) {
                 <div {...getRootProps()} style={{ outline: 'none' }}>
                   <input {...getInputProps()} />
                 </div>
+                {userIsAdmin && hasGks && (
+                  editMode ?
+                    <div
+                      className={tw(
+                        'flex absolute top-24 right-32 sm:right-28'
+                      )}
+                      style={{ zIndex: 49 }}
+                    >
+                      <div className='mr-4'>
+                        <Button
+                          type={ButtonType.PRIMARY}
+                          label={'Save'}
+                          onClick={() => {
+                            analytics.track('Update Profile', {
+                              ethereumAddress: account?.address,
+                              profile: profileURI,
+                              newProfile: draftProfileImg?.preview ? true : false,
+                              newHeader: draftHeaderImg?.preview ? true : false,
+                              newDescription: draftBio,
+                            });
+
+                            saveProfile();
+                            setEditMode(false);
+                            mutateProfileNFTs();
+                            mutateMyNFTs();
+                          }}
+                        />
+                      </div>
+                      <Button
+                        type={ButtonType.SECONDARY}
+                        label={'Cancel'}
+                        onClick={clearDrafts}
+                      />
+                    </div> :
+                    <div
+                      className={tw(
+                        'absolute top-24 right-32 sm:right-11'
+                      )}
+                      style={{ zIndex: 49 }}
+                    >
+                      <Button
+                        type={ButtonType.SECONDARY}
+                        label={'Edit Profile'}
+                        onClick={() => {
+                          setEditMode(true);
+                        }}
+                      />
+                    </div>)}
                 {editMode && <div
                   className={tw(
                     'absolute bottom-5 right-32 sm:right-28'
@@ -137,14 +181,14 @@ export function MintedProfile(props: MintedProfileProps) {
             )}
           </Dropzone>
         </div>
-      </div>
+      </BannerWrapper>
       <div
         className='flex justify-center items-center'
         style={{
           zIndex: 103,
         }}
       >
-        <div className="flex items-center md:flex-col justify-center md:items-start md:w-full md:px-8">
+        <div className="flex items-center md:flex-col justify-center">
           <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px] mr-20 ml-[-4rem] md:ml-0 md:mr-0">
             <Dropzone
               accept={'image/*' ['.*']}
@@ -153,12 +197,12 @@ export function MintedProfile(props: MintedProfileProps) {
                 if (userIsAdmin) onDropProfile(files);
               }}
             >
-              {({ getRootProps, getInputProps }) => (
+              {({ getRootProps, getInputProps, open }) => (
                 <section>
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',
                     userIsAdmin ? '' : 'cursor-default',
-                    'md:h-[72px] md:w-[72px] lg:h-40 lg:w-40 h-60 w-60',
+                    'h-60 w-60',
                   )}>
                     <input {...getInputProps()} />
                     {saving && <div
@@ -170,65 +214,28 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <Loader/>
                     </div>}
-                    <div
-                      className={tw(
-                        'rounded-full h-full w-full shrink-0 relative',
-                        'shrink-0 aspect-square ',
-                        userIsAdmin && editMode ? 'cursor-pointer' : '',
-                        userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                      )}
-                      style={{ zIndex: 101 }}
-                    >
-                      {
-                        !isNullOrEmpty(draftProfileImg?.preview) ?
-                          <img
-                            src={draftProfileImg?.preview}
-                            alt='profilePicture'
-                            draggable={false}
-                            className={tw(
-                              'object-center rounded-full',
-                              'h-full w-full',
-                              'shrink-0 aspect-square',
-                              userIsAdmin && editMode ? 'cursor-pointer' : '',
-                              userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                            )}
-                            style={{ zIndex: 101, }}
-                          /> :
-                          profileData?.profile?.photoURL ?
-                            <img
-                              src={profileData?.profile?.photoURL}
-                              alt='profilePicture'
-                              draggable={false}
-                              className={tw(
-                                'object-center rounded-full',
-                                'h-full w-full',
-                                'shrink-0 aspect-square',
-                                userIsAdmin && editMode ? 'cursor-pointer' : '',
-                                userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                              )}
-                              style={{ zIndex: 101, }}
-                            /> :
-                            !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
-                              <DefaultProfileImage
-                                className={tw(
-                                  'object-center rounded-full',
-                                  'h-full w-full',
-                                  'shrink-0 aspect-square',
-                                  userIsAdmin && editMode ? 'cursor-pointer' : '',
-                                  userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                                )}
-                                style={{ zIndex: 101, }}
-                              /> :
-                              <Image
-                                src={cameraIcon.src}
-                                alt="camerIcon"
-                                draggable={false}
-                                className="rounded-full scale-95"
-                                layout="fill"
-                                objectFit='cover'
-                              />
-                      }
-                    </div>
+                    <Image
+                        src={
+                          !isNullOrEmpty(draftProfileImg?.preview)
+                            ? draftProfileImg?.preview
+                            : profileData?.profile?.photoURL ??
+                            (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
+                              ? DefaultProfileImage :
+                              cameraIcon)
+                        }
+                        alt="profilePicture"
+                        draggable={false}
+                        layout='fill'
+                        objectFit='cover'
+                        className={tw(
+                          'object-center rounded-full',
+                          'h-full w-full',
+                          'shrink-0 aspect-square',
+                          userIsAdmin && editMode ? 'cursor-pointer' : '',
+                          userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                        )}
+                        style={{ zIndex: 101, }}
+                      />
                     {editMode && <div
                       className={tw(
                         'absolute bottom-5 -right-4 md:-right-8'
@@ -254,10 +261,7 @@ export function MintedProfile(props: MintedProfileProps) {
         'w-full justify-start space-y-4 flex flex-col')}>
         {
           (userIsAdmin && editMode) || (publiclyVisibleNFTs?.length ?? 0) > 0 ?
-            <MintedProfileGallery
-              profileURI={profileURI}
-              ownedGKTokens={ownedGKTokens}
-            /> :
+            <MintedProfileGallery profileURI={profileURI} /> :
             <>
               <div className={tw(
                 'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
