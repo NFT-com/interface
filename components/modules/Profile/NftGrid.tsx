@@ -30,14 +30,14 @@ export function NftGrid(props: NftGridProps) {
   const { tileBackgroundSecondary } = useThemeColors();
   const router = useRouter();
   return <div className={tw(
-    'grid gap-y-2.5 w-full',
-    'grid-cols-4 sm:grid-cols-2 md:grid-cols-3'
+    'grid grid-cols-4 gap-4',
+    'sm:grid-cols-2 md:grid-cols-3'
   )}>
     {props.nfts?.map((nft: PartialDeep<DetailedNft>) => (
       <div
         key={nft?.id + '-' + nft?.contract?.address}
         className={tw(
-          'flex mb-10 items-center justify-center px-3',
+          'flex p-5 items-center',
           'sm:mb-2'
         )}
       >
