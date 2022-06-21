@@ -261,7 +261,10 @@ export function MintedProfile(props: MintedProfileProps) {
         'w-full justify-start space-y-4 flex flex-col')}>
         {
           (userIsAdmin && editMode) || (publiclyVisibleNFTs?.length ?? 0) > 0 ?
-            <MintedProfileGallery profileURI={profileURI} /> :
+            <MintedProfileGallery 
+            profileURI={profileURI}
+            ownedGKTokens={ownedGKTokens}
+             /> :
             <>
               <div className={tw(
                 'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',

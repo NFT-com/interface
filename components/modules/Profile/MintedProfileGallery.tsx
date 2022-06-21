@@ -44,7 +44,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   } = useContext(ProfileEditContext);
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
-
+  
   const { data: account } = useAccount();
   const { profileData } = useProfileQuery(props.profileURI);
   const { totalItems: publicNFTCount } = useProfileNFTsQuery(
