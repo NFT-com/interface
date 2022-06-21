@@ -159,8 +159,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         <div
           key={key}
           className={tw(
-            'flex mb-10 items-center justify-center px-3',
-            'sm:mb-2'
+            'flex mb-10 items-center justify-center p-3',
           )}
         >
           <NFTCollectionCard
