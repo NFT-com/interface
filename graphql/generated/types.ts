@@ -166,14 +166,22 @@ export type CancelBidInput = {
 
 export type Collection = {
   __typename?: 'Collection';
-  contract: Scalars['Address'];
-  id: Scalars['ID'];
+  contract?: Maybe<Scalars['Address']>;
+  id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
 };
 
+export type CollectionInfo = {
+  __typename?: 'CollectionInfo';
+  collection?: Maybe<Collection>;
+  openseaInfo?: Maybe<OpenseaContract>;
+  openseaStats?: Maybe<OpenseaStats>;
+};
+
 export type CollectionInput = {
-  contract?: InputMaybe<Scalars['Address']>;
-  network?: InputMaybe<Scalars['String']>;
+  chainId: Scalars['String'];
+  contract: Scalars['Address'];
+  network: Scalars['String'];
 };
 
 export type CollectionNfTsInput = {
@@ -758,6 +766,72 @@ export type NftMetadataAlchemy = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type OpenseaCollectionV1 = {
+  __typename?: 'OpenseaCollectionV1';
+  banner_image_url?: Maybe<Scalars['String']>;
+  created_date?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  discord_url?: Maybe<Scalars['String']>;
+  external_url?: Maybe<Scalars['String']>;
+  featured?: Maybe<Scalars['Boolean']>;
+  featured_image_url?: Maybe<Scalars['String']>;
+  image_url?: Maybe<Scalars['String']>;
+  instagram_username?: Maybe<Scalars['String']>;
+  large_image_url?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  opensea_buyer_fee_basis_points?: Maybe<Scalars['String']>;
+  opensea_seller_fee_basis_points?: Maybe<Scalars['String']>;
+  safelist_request_status?: Maybe<Scalars['String']>;
+  short_description?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  telegram_url?: Maybe<Scalars['String']>;
+  twitter_username?: Maybe<Scalars['String']>;
+  wiki_url?: Maybe<Scalars['String']>;
+};
+
+export type OpenseaContract = {
+  __typename?: 'OpenseaContract';
+  address?: Maybe<Scalars['String']>;
+  collection?: Maybe<OpenseaCollectionV1>;
+  created_date?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  external_link?: Maybe<Scalars['String']>;
+  image_url?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  symbol?: Maybe<Scalars['String']>;
+  total_supply?: Maybe<Scalars['String']>;
+};
+
+export type OpenseaStats = {
+  __typename?: 'OpenseaStats';
+  stats?: Maybe<OpenseaStatsV1>;
+};
+
+export type OpenseaStatsV1 = {
+  __typename?: 'OpenseaStatsV1';
+  average_price?: Maybe<Scalars['String']>;
+  count?: Maybe<Scalars['String']>;
+  floor_price?: Maybe<Scalars['String']>;
+  market_cap?: Maybe<Scalars['String']>;
+  num_owners?: Maybe<Scalars['String']>;
+  num_reports?: Maybe<Scalars['String']>;
+  one_day_average_price?: Maybe<Scalars['String']>;
+  one_day_change?: Maybe<Scalars['String']>;
+  one_day_sales?: Maybe<Scalars['String']>;
+  one_day_volume?: Maybe<Scalars['String']>;
+  seven_day_average_price?: Maybe<Scalars['String']>;
+  seven_day_change?: Maybe<Scalars['String']>;
+  seven_day_sales?: Maybe<Scalars['String']>;
+  seven_day_volume?: Maybe<Scalars['String']>;
+  thirty_day_average_price?: Maybe<Scalars['String']>;
+  thirty_day_change?: Maybe<Scalars['String']>;
+  thirty_day_sales?: Maybe<Scalars['String']>;
+  thirty_day_volume?: Maybe<Scalars['String']>;
+  total_sales?: Maybe<Scalars['String']>;
+  total_supply?: Maybe<Scalars['String']>;
+  total_volume?: Maybe<Scalars['String']>;
+};
+
 export type OrderUpdateInput = {
   newIndex: Scalars['Int'];
   nftId: Scalars['ID'];
@@ -845,7 +919,7 @@ export type ProfilesOutput = {
 export type Query = {
   __typename?: 'Query';
   blockedProfileURI: Scalars['Boolean'];
-  collection?: Maybe<Collection>;
+  collection?: Maybe<CollectionInfo>;
   collectionNFTs: NfTsOutput;
   convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
@@ -1397,7 +1471,7 @@ export type CollectionQueryVariables = Exact<{
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'Collection', id: string, contract: any, name?: string | null } | null };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null, openseaInfo?: { __typename?: 'OpenseaContract', collection?: { __typename?: 'OpenseaCollectionV1', banner_image_url?: string | null, created_date?: string | null, description?: string | null, discord_url?: string | null, external_url?: string | null, featured?: boolean | null, featured_image_url?: string | null, safelist_request_status?: string | null } | null } | null } | null };
 
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
@@ -1795,9 +1869,23 @@ export const UploadProfileImagesDocument = gql`
 export const CollectionDocument = gql`
     query Collection($input: CollectionInput!) {
   collection(input: $input) {
-    id
-    contract
-    name
+    collection {
+      id
+      contract
+      name
+    }
+    openseaInfo {
+      collection {
+        banner_image_url
+        created_date
+        description
+        discord_url
+        external_url
+        featured
+        featured_image_url
+        safelist_request_status
+      }
+    }
   }
 }
     `;

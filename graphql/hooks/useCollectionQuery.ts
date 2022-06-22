@@ -1,22 +1,24 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Collection } from 'graphql/generated/types';
+import { CollectionInfo } from 'graphql/generated/types';
 
 import useSWR, { mutate } from 'swr';
 
 export interface CollectionData {
-  data: Collection;
+  data: CollectionInfo;
   loading: boolean;
   mutate: () => void;
 }
 
-export function useCollectionQuery(contract: string): CollectionData {
+export function useCollectionQuery(chainId: string, contract: string, network: string): CollectionData {
   const sdk = useGraphQLSDK();
   const keyString = 'CollectionQuery ' + contract;
 
   const { data } = useSWR(keyString, async () => {
     const result = await sdk.Collection({
       input: {
-        contract
+        chainId,
+        contract,
+        network
       },
     });
     return result?.collection;
