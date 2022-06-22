@@ -1,3 +1,5 @@
+import BlurImage from 'components/elements/BlurImage';
+
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,12 +16,12 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
     <Link href={post?.slug}>
       <div className="text-left	hover:cursor-pointer">
         <div className="aspect-4/3 w-full relative">
-          <Image
+          <BlurImage
+            className='rounded-md'
+            objectFit="cover"
+            layout="fill"
             src={post?.heroImage.url}
             alt={post?.heroImage.description}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-md"
           />
         </div>
         <h3 className="dark:text-white text-xl lg:text-lg md:text-base sm:text-sm font-medium mt-2">
