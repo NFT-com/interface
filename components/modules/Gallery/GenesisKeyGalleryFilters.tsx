@@ -47,7 +47,7 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
         </span>
       </div>
       {galleryItemType === 'gk' &&
-        <div className='flex w-full dark py-4 items-center border-b border-accent-border-dk ...'>
+        <div className='flex w-full dark py-4 items-center border-b border-accent-border-dk'>
           <SearchIcon className='w-6 h-6 mr-2 shrink-0 aspect-square' />
           <input
             className={tw(
