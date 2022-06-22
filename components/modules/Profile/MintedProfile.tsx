@@ -17,14 +17,13 @@ import { MintedProfileInfo } from './MintedProfileInfo';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import { PencilIcon } from '@heroicons/react/solid';
-import Image from 'next/image';
 import { useContext, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
-import DefaultProfileImage from 'public/profile-image-default.svg';
-import { url } from 'inspector';
+import PencilIconRounded from 'public/pencil-icon-rounded.svg';
+
 
 export interface MintedProfileProps {
   profileURI: string;
@@ -241,7 +240,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       )}
                       style={{ zIndex: 100 }}
                     >
-                      <PencilIcon color="white" className='h-6 w-6 cursor-pointer'/>
+                      <PencilIconRounded alt="Edit mode" color="white" className=' rounded-full h-10 w-10 cursor-pointer'/>
                     </div>}
                   </div>
                 </section>
