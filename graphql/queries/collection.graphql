@@ -1,7 +1,21 @@
 query Collection($input: CollectionInput!) {
   collection(input: $input) {
-    id
-    contract
-    name
+    collection {
+      id
+      contract
+      name
+    }
+    openseaInfo {
+      collection {
+        banner_image_url
+        created_date
+        description
+        discord_url
+        external_url
+        featured
+        featured_image_url
+        safelist_request_status
+      }
+  }
   }
 }

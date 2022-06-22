@@ -6,7 +6,7 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { getGenesisKeyThumbnail, processIPFSURL, sameAddress } from 'utils/helpers';
+import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
@@ -38,7 +38,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     showNftIds,
   } = useContext(ProfileEditContext);
 
-  const { data: collectionData } = useCollectionQuery(selectedCollection);
+  const { data: collectionData } = useCollectionQuery(String(activeChain?.id), selectedCollection, '');
 
   const { data: allOwnerNFTs } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs } = useProfileNFTsQuery(
@@ -123,31 +123,17 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           />
         </div>}
       </div>
-      <div className='w-full flex items-center mb-8 justify-center h-40'>
-        {
-          detailedCollectionNFTs?.slice(0, 3).map(nft => {
-            if (sameAddress(nft?.contract, getAddress('genesisKey', activeChain?.id ?? 1))) {
-              return getGenesisKeyThumbnail(nft?.tokenId);
-            }
-            return processIPFSURL(nft?.metadata?.imageURL);
-          }).map((image: string, index: number, arr: string[]) => {
-            const roundedClass = arr.length === 1
-              ? 'rounded-3xl' :
-              index === arr.length - 1 ?
-                'rounded-r-3xl' :
-                index === 0 ?
-                  'rounded-l-3xl' :
-                  '';
-            return (
-              <div className={tw('h-full w-1/3 relative', roundedClass)} key={image + index}>
-                <img src={image} alt="Gallery Cover photo" className={roundedClass} />
-              </div>
-            );
-          })
-        }
+      <div
+        className='w-full flex items-center mb-8 justify-center h-40'
+        style={{
+          backgroundImage: `url(${isNullOrEmpty(collectionData?.openseaInfo?.image_url)
+            ? processIPFSURL(collectionData?.openseaInfo?.image_url)
+            : 'https://cdn.nft.com/empty_profile_banner.png'})`
+        }}
+      >
       </div>
       <span className='w-full text-center text-2xl text-primary-txt dark:text-primary-txt-dk mb-12 font-medium'>
-        {collectionData?.name}
+        {collectionData?.collection?.name}
       </span>
       <NftGrid profileURI={profileURI} nfts={detailedCollectionNFTs} />
     </div>;
