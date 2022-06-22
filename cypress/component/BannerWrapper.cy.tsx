@@ -1,6 +1,6 @@
 import { BannerWrapper } from '../../components/modules/Profile/BannerWrapper';
 
-describe("MintedProfile",  () => {
+describe("BannerWrapper",  () => {
   it('mounts with required props', () => {
     cy.mount(
       <BannerWrapper>

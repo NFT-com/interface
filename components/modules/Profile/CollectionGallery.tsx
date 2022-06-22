@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Loader from 'components/elements/Loader';
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
 import { Nft } from 'graphql/generated/types';
@@ -13,7 +14,6 @@ import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
 import { NftGrid } from './NftGrid';
 import { ProfileEditContext } from './ProfileEditContext';
 
-import Image from 'next/image';
 import { CaretLeft } from 'phosphor-react';
 import { useContext, useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';

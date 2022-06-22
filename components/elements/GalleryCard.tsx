@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import React from 'react';
 
 export interface GalleryCardProps {

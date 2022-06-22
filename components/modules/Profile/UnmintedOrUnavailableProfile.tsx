@@ -1,5 +1,6 @@
-import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+/* eslint-disable @next/next/no-img-element */
 import { Footer } from 'components/elements/Footer';
+import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 
 import { LinksToSection } from './LinksToSection';
@@ -53,7 +54,7 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
           </div>
         </div>
         <div className='text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col'>
-          <div className="lg:text-sm text-xl sm:mb-8 md:mx-0 lg:mx-auto mx-0 lg:mx-0 mx-auto mb-10 text-center">
+          <div className="lg:text-sm text-xl sm:mb-8 md:mx-0 lg:mx-0 mx-auto mb-10 text-center">
             <p>
               {`Learn how to claim ${(notAvailable || currentURIBlocked) ? 'a' : 'this'} profile for your own by visiting either NFT.com or our Support knowledge base.`}
             </p>

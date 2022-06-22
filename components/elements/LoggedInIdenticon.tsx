@@ -2,7 +2,6 @@ import { useMyPhotoQuery } from 'graphql/hooks/useMyPhotoQuery';
 import { joinClasses } from 'utils/helpers';
 
 import Jazzicon from '@metamask/jazzicon';
-import { ethers } from 'ethers';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import Identicon1 from 'react-identicons';

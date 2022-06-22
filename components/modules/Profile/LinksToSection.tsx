@@ -76,7 +76,7 @@ export function LinksToSection(props: LinksToSectionParams) {
       title: 'Opensea.io',
       description: 'View our Genesis Key and NFT.com Profile Collections on Opensea',
       linkTo: 'https://opensea.io/collection/genesiskey'
-      }
+    }
   ];
 
   return (
@@ -88,19 +88,19 @@ export function LinksToSection(props: LinksToSectionParams) {
               <Link href={item.linkTo}
                 key={item.section}
               >
-              <a
-                target='_blank'
-                key={item.section}
-                className="bg-modal-overlay-dk rounded-xl lg:w-full w-52 grow cursor-pointer">
-                <div className="lg:text-sm text-lg md:p-2 p-4">{item.section}</div>
-                <div className="w-full">
-                  <img src={item.image} className="object-center object-cover w-full" alt="link to section" />
-                </div>
-                <div className="md:p-3 p-4">
-                  <div className="mb-1 lg:text-base text-xl">{item.title}</div>
-                  <div className="lg:text-xs text-base">{item.description}</div>
-                </div>
-              </a>
+                <a
+                  target='_blank'
+                  key={item.section}
+                  className="bg-modal-overlay-dk rounded-xl lg:w-full w-52 grow cursor-pointer">
+                  <div className="lg:text-sm text-lg md:p-2 p-4">{item.section}</div>
+                  <div className="w-full">
+                    <img src={item.image} className="object-center object-cover w-full" alt="link to section" />
+                  </div>
+                  <div className="md:p-3 p-4">
+                    <div className="mb-1 lg:text-base text-xl">{item.title}</div>
+                    <div className="lg:text-xs text-base">{item.description}</div>
+                  </div>
+                </a>
               </Link>
             )
           )

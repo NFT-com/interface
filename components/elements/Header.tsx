@@ -12,9 +12,9 @@ import { tw } from 'utils/tw';
 import Link from 'next/link';
 import HeroCorner from 'public/hero_corner.svg';
 import HeroCornerDark from 'public/hero_corner_dark.svg';
+import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
-import { useCallback } from 'react';
 
 export interface HeaderProps {
   walletOnly?: boolean;

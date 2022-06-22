@@ -3,10 +3,10 @@ import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
-import { isNullOrEmpty } from 'utils/helpers';
 
 export interface DraftImg {
   preview: Maybe<string>,
@@ -47,18 +47,18 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   draftToHide: new Set(),
   draftToShow: new Set(),
   toggleHidden: () => null,
-  hideNftIds: (toHide: string[]) => null,
-  showNftIds: (toShow: string[]) => null,
+  hideNftIds: () => null,
+  showNftIds: () => null,
   onHideAll: () => null,
   onShowAll: () => null,
   draftHeaderImg: { preview: '', raw: '' },
-  setDraftHeaderImg: (img: DraftImg) => null,
+  setDraftHeaderImg: () => null,
   draftProfileImg: { preview: '', raw: '' },
-  setDraftProfileImg: (img: DraftImg) => null,
+  setDraftProfileImg: () => null,
   draftBio: '',
-  setDraftBio: (bio: string) => '',
+  setDraftBio: () => '',
   draftGkIconVisible: true,
-  setDraftGkIconVisible: (val: boolean) => null,
+  setDraftGkIconVisible: () => null,
   draftDisplayType: ProfileDisplayType.Nft,
   setDraftDisplayType: () => null,
   editMode: false,
@@ -67,7 +67,7 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   saveProfile: () => null,
   saving: false,
   selectedCollection: null,
-  setSelectedCollection: (collectionAddress: string) => null,
+  setSelectedCollection: () => null,
   draftNftsDescriptionsVisible: true,
   setDraftNftsDescriptionsVisible: () => null,
 });

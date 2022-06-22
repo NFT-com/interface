@@ -1,14 +1,15 @@
-import cameraIcon from 'public/camera.png';
-import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+/* eslint-disable @next/next/no-img-element */
 import { Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
+import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { getEnvBool, Doppler } from 'utils/env';
+import { Doppler,getEnvBool } from 'utils/env';
+import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { LinksToSection } from './LinksToSection';
@@ -17,13 +18,12 @@ import { MintedProfileInfo } from './MintedProfileInfo';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import { PencilIcon } from '@heroicons/react/solid';
+import cameraIcon from 'public/camera.png';
+import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useContext, useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
-import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
-import PencilIconRounded from 'public/pencil-icon-rounded.svg';
-
 
 export interface MintedProfileProps {
   profileURI: string;
@@ -197,7 +197,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 if (userIsAdmin) onDropProfile(files);
               }}
             >
-              {({ getRootProps, getInputProps, open }) => (
+              {({ getRootProps, getInputProps }) => (
                 <section>
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',
@@ -259,10 +259,10 @@ export function MintedProfile(props: MintedProfileProps) {
         'w-full justify-start space-y-4 flex flex-col')}>
         {
           (userIsAdmin && editMode) || (publiclyVisibleNFTs?.length ?? 0) > 0 ?
-            <MintedProfileGallery 
-            profileURI={profileURI}
-            ownedGKTokens={ownedGKTokens}
-             /> :
+            <MintedProfileGallery
+              profileURI={profileURI}
+              ownedGKTokens={ownedGKTokens}
+            /> :
             <>
               <div className={tw(
                 'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
