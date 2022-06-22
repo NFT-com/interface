@@ -114,19 +114,15 @@ module.exports = {
         'xxs1': '0.4rem',
         'xxs2': '0.6rem',
         '3xll': '1.75rem',
-        xxs3: '0.688rem',
+        'xxs3': '0.688rem',
+        'header': '2.25rem',
+        'body': '1rem',
       },
       fontFamily: {
         'rubik': ['Rubik'],
         'hero-heading1': ['Stretch Pro'],
         'hero-heading2': ['Bebas Neue'],
         'dm-mono': ['DM Mono'],
-      },
-      fontSize: {
-        'copy-size': '0.825rem',
-        'xxs2': '0.6rem',
-        'header': '2.25rem',
-        'body': '1rem',
       },
       fontWeight: {
         'header': '500',

@@ -5,7 +5,7 @@ const theme = {
   p: (props: any) => {
     const { children } = props;
     return (
-      <p className="mb-8 text-2xl md:text-lg sm:text-sm text-blog-text dark:text-gray-400">
+      <p className="mb-8 text-2xl md:text-lg sm:text-base text-blog-text dark:text-gray-400">
         {children}
       </p>
     );
@@ -21,7 +21,7 @@ const theme = {
   h2: (props: any) => {
     const { children } = props;
     return (
-      <h2 className="dark:text-white mb-4 text-3xll md:text-xl sm:text-sm font-medium">
+      <h2 className="dark:text-white mb-4 text-3xll md:text-xl sm:text-base font-medium">
         {children}
       </h2>
     );
@@ -29,7 +29,7 @@ const theme = {
   h3: (props: any) => {
     const { children } = props;
     return (
-      <h3 className="dark:text-white mb-4 text-2xl md:text-lg sm:text-sm font-medium">
+      <h3 className="dark:text-white mb-4 text-2xl md:text-lg sm:text-base font-medium">
         {children}
       </h3>
     );
@@ -46,7 +46,7 @@ const theme = {
     const { children } = props;
     return (
       <a
-        className="text-2xl md:text-lg sm:text-sm underline text-blog-text dark:text-gray-400"
+        className="text-2xl md:text-lg sm:text-base underline text-blog-text dark:text-gray-400"
         href={props.href}
         target="_blank"
         rel="noreferrer"
@@ -58,7 +58,7 @@ const theme = {
   li: (props: any) => {
     const { children } = props;
     return (
-      <li className="text-2xl md:text-lg sm:text-sm text-blog-text dark:text-gray-400">
+      <li className="text-2xl md:text-lg sm:text-base text-blog-text dark:text-gray-400">
         {children}
       </li>
     );
