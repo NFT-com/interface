@@ -47,12 +47,12 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
         </span>
       </div>
       {galleryItemType === 'gk' &&
-        <div className='w-full dark border-b border-accent-border-dk py-4 flex items-center'>
+        <div className='flex w-full dark py-4 items-center border-b border-accent-border-dk ...'>
           <SearchIcon className='w-6 h-6 mr-2 shrink-0 aspect-square' />
           <input
             className={tw(
               'text-lg deprecated_md:text-lg min-w-0 block',
-              'text-left px-3 py-3 w-full rounded-lg font-medium',
+              'text-left px-3 py-3 w-[70%] rounded-lg font-medium',
               'text-white bg-transparent shrink-0'
             )}
             placeholder="Filter by ID number"
@@ -67,6 +67,9 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
               }
             }}
           />
+            {Number(props?.currentFilter) > 10000 &&
+              <span className="min-w-0 block text-left w-[30%] text-red-1">Invalid ID.</span>
+            }
         </div>
       }
     </>
