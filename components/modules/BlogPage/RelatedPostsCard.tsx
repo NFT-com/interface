@@ -15,7 +15,7 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
   return (
     <Link href={post?.slug}>
       <div className="text-left	hover:cursor-pointer">
-        <div className="aspect-4/3 w-full relative bg-gray-300 dark:bg-gray-700">
+        <div className="aspect-4/3 w-full relative bg-gray-300 dark:bg-gray-700 rounded-md">
           <BlurImage
             className='rounded-md'
             objectFit="cover"
