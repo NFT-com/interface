@@ -49,3 +49,33 @@ jobs:
       uses: codecov/codecov-action@v3.1.0
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+
+  deploy-preview:
+    if: startsWith(github.base_ref, 'feat') || startsWith(github.base_ref, 'fix')
+    runs-on: ubuntu-latest
+    environment: sandbox
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.2
+        
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@v1
+
+      - name: Configure Doppler Config
+        run: |
+          doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
+        
+      - name: Checkout
+        uses: actions/checkout@v2.4.2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+          cache: 'yarn'
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile --immutable
+
+      - name: Deploy Site
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
+        run: netlify deploy --build --message "main@${{ github.sha }}"
