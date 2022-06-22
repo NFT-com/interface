@@ -151,8 +151,11 @@
         ]
       }
     ],
-    "no-namespace": {
-      "allowDeclarations": true
-    }
+    "no-namespace": [
+      "off",
+      {
+        "allowDeclarations": true
+      }
+    ]
   }
 }

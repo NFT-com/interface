@@ -1,9 +1,9 @@
 import Loader from 'components/elements/Loader';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { ProfilePage } from 'components/modules/Profile/ProfilePage';
+import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
-import { tw } from 'utils/tw';
 
 /**
  * Shows a public profile e.g. nft.com/satoshi
@@ -19,24 +19,21 @@ export default function ProfileURI() {
     )}>
       <div className="mb-2">Loading...</div>
       <Loader />
-    </div>
-
+    </div>;
   } else {
     return (
       <PageWrapper
-      bgColorClasses='dark:bg-pagebg-secondary-dk bg-pagebg'
-      headerOptions={{
-        removeSummaryBanner: true,
-        walletOnly: true,
-        walletPopupMenu: true,
-        hideAnalytics: true,
-        profileHeader: true
-      }}
-    >
-    <ProfilePage uri={profileURI} />
-    </PageWrapper>
+        bgColorClasses='dark:bg-pagebg-secondary-dk bg-pagebg'
+        headerOptions={{
+          removeSummaryBanner: true,
+          walletOnly: true,
+          walletPopupMenu: true,
+          hideAnalytics: true,
+          profileHeader: true
+        }}
+      >
+        <ProfilePage uri={profileURI} />
+      </PageWrapper>
     );
   }
-  
-
 }

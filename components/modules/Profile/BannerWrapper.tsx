@@ -4,7 +4,6 @@ import { tw } from 'utils/tw';
 
 import { PropsWithChildren } from 'react';
 import { isMobile } from 'react-device-detect';
-import Image from 'next/image';
 
 export interface BannerWrapperProps {
   imageOverride?: string

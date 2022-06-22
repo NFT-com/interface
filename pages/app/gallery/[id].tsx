@@ -2,9 +2,9 @@ import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { GenesisKeyDetailContent } from 'components/modules/Gallery/GenesisKeyDetailContent';
+import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
-import { tw } from 'utils/tw';
 
 /**
  * Renders a detailed view of a single Genesis Key
@@ -20,7 +20,7 @@ export default function GalleryDetailPage() {
     )}>
       <div className="mb-2">Loading...</div>
       <Loader />
-    </div>
+    </div>;
   }
   
   return (

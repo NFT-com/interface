@@ -1,13 +1,13 @@
-import GKHolderIcon from 'public/gk-holder.svg';
 import { Switch } from 'components/elements/Switch';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { useThemeColors } from 'styles/theme//useThemeColors';
 import { tw } from 'utils/tw';
 
 import { ProfileEditContext } from './ProfileEditContext';
 
-import { useCallback, useContext } from 'react';
+import GKHolderIcon from 'public/gk-holder.svg';
+import { useContext } from 'react';
+import { useThemeColors } from 'styles/theme//useThemeColors';
 import { useAccount } from 'wagmi';
 
 export interface MintedProfileInfoProps {
@@ -30,7 +30,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       bioValue = '';
     }
     setDraftBio(bioValue);
-  }
+  };
 
   return (
     <div className="flex items-center my-6 mx-4 w-full md:flex-col">

@@ -67,9 +67,9 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
               }
             }}
           />
-            {Number(props?.currentFilter) > 10000 &&
+          {Number(props?.currentFilter) > 10000 &&
               <span className="min-w-0 block text-left w-[30%] text-red-1">Invalid ID.</span>
-            }
+          }
         </div>
       }
     </>
