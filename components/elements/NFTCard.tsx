@@ -51,6 +51,8 @@ export function NFTCard(props: NFTCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
+  console.log('nftsDescriptionsVisible: ', props.nftsDescriptionsVisible);
+
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-sm sm:text-xs' style={{ color: pink }}>
@@ -171,7 +173,7 @@ export function NFTCard(props: NFTCardProps) {
               })}
             </div>
       }
-      {props.nftsDescriptionsVisible && <div className="p-4 md:p-3 flex flex-col">
+      {props.nftsDescriptionsVisible != false && <div className="p-4 md:p-3 flex flex-col">
         <span className={tw(
           'text-2xl lg:text-xl md:text-lg sm:text-base font-semibold truncate',
           isNullOrEmpty(props.title) ?
