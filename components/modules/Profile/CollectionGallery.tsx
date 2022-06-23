@@ -124,14 +124,13 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         </div>}
       </div>
       <div
-        className='w-full flex items-center mb-8 justify-center h-40'
+        className='w-screen flex items-center text-center text-2xl text-primary-txt dark:text-primary-txt-dk font-medium mb-8 justify-center h-40'
         style={{
-          backgroundImage: `url(${isNullOrEmpty(collectionData?.openseaInfo?.image_url)
+          backgroundImage: `url(${!isNullOrEmpty(collectionData?.openseaInfo?.image_url)
             ? processIPFSURL(collectionData?.openseaInfo?.image_url)
             : 'https://cdn.nft.com/empty_profile_banner.png'})`
         }}
-      >
-      </div>
+      />
       <span className='w-full text-center text-2xl text-primary-txt dark:text-primary-txt-dk mb-12 font-medium'>
         {collectionData?.collection?.name}
       </span>
