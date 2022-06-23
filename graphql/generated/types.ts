@@ -1487,7 +1487,7 @@ export type ExternalListingsQueryVariables = Exact<{
 }>;
 
 
-export type ExternalListingsQuery = { __typename?: 'Query', externalListings: { __typename?: 'ExternalListingsOutput', listings: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null } | null> } };
+export type ExternalListingsQuery = { __typename?: 'Query', externalListings: { __typename?: 'ExternalListingsOutput', listings: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null, baseCoin?: { __typename?: 'BaseCoin', symbol?: string | null, logoURI?: string | null, address?: string | null, decimals?: number | null } | null } | null> } };
 
 export type GetAsksQueryVariables = Exact<{
   input: AsksInput;
@@ -1925,6 +1925,12 @@ export const ExternalListingsDocument = gql`
       highestOffer
       expiration
       creation
+      baseCoin {
+        symbol
+        logoURI
+        address
+        decimals
+      }
     }
   }
 }
