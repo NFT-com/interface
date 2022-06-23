@@ -1,9 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from 'next/image';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 const theme = {
   p: (props: any) => {
-    const { children } = props;
+    const { children } = props;/* eslint-disable @next/next/no-img-element */
     return (
       <p className="mb-8 text-2xl md:text-lg sm:text-base text-blog-text dark:text-gray-400">
         {children}
@@ -37,9 +38,7 @@ const theme = {
   img: (props: any) => {
     const { src, alt } = props;
     return (
-      <span className="block h-blogHero-lg lg:h-80 w-3/4 md:w-11/12 relative justify-center items-center mx-auto mb-4">
-        <Image src={`https:${src}`} alt={alt} layout="fill" objectFit="contain" />
-      </span>
+      <img className="block h-max max-h-96 w-auto relative justify-center items-center mx-auto mb-4" src={`https:${src}`} alt={alt} />
     );
   },
   a: (props: any) => {

@@ -131,6 +131,7 @@ module.exports = {
       lineHeight: {
         'header': '2.5rem',
         'body': '1.5rem',
+        5.5: '1.4',
       },
       keyFrames: {
         pulseBorder: {
@@ -170,9 +171,6 @@ module.exports = {
       },
       aspectRatio: {
         '4/3': '4/3',
-      },
-      lineHeight: {
-        5.5: '1.4',
       },
     },
   },
