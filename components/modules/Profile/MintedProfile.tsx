@@ -17,7 +17,6 @@ import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
 import { ProfileEditContext } from './ProfileEditContext';
 
-import { PencilIcon } from '@heroicons/react/solid';
 import cameraIcon from 'public/camera.png';
 import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useContext, useEffect } from 'react';
