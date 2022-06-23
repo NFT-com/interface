@@ -175,7 +175,7 @@ export function MintedProfile(props: MintedProfileProps) {
                   style={{ zIndex: 100 }}
                   onClick={open}
                 >
-                  <PencilIcon color="white" className='h-6 w-6 cursor-pointer'/>
+                  <PencilIconRounded alt="Edit banner" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
                 </div>}
               </section>
             )}
@@ -240,7 +240,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       )}
                       style={{ zIndex: 100 }}
                     >
-                      <PencilIconRounded alt="Edit mode" color="white" className=' rounded-full h-10 w-10 cursor-pointer'/>
+                      <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
                     </div>}
                   </div>
                 </section>

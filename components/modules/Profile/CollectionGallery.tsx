@@ -6,7 +6,7 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
+import { getGenesisKeyThumbnail, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
@@ -126,9 +126,10 @@ export function CollectionGallery(props: CollectionGalleryProps) {
       <div
         className='w-screen flex items-center text-center text-2xl text-primary-txt dark:text-primary-txt-dk font-medium mb-8 justify-center h-40'
         style={{
-          backgroundImage: `url(${!isNullOrEmpty(collectionData?.openseaInfo?.image_url)
-            ? processIPFSURL(collectionData?.openseaInfo?.image_url)
-            : 'https://cdn.nft.com/empty_profile_banner.png'})`
+          backgroundImage: `url(${
+            !isNullOrEmpty(collectionData?.openseaInfo?.collection?.banner_image_url)
+              ? collectionData?.openseaInfo?.collection?.banner_image_url
+              : 'https://cdn.nft.com/empty_profile_banner.png'})`
         }}
       />
       <span className='w-full text-center text-2xl text-primary-txt dark:text-primary-txt-dk mb-12 font-medium'>
