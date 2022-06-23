@@ -3,9 +3,9 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 const theme = {
   p: (props: any) => {
-    const { children } = props;/* eslint-disable @next/next/no-img-element */
+    const { children } = props;
     return (
-      <p className="mb-8 text-2xl md:text-lg sm:text-base text-blog-text dark:text-gray-400">
+      <p className="mb-8 text-xll md:text-lg sm:text-base text-blog-text dark:text-gray-400">
         {children}
       </p>
     );
