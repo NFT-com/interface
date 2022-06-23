@@ -15,7 +15,7 @@ import { NftGrid } from './NftGrid';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import { CaretLeft } from 'phosphor-react';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionGalleryProps {
@@ -38,7 +38,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     showNftIds,
   } = useContext(ProfileEditContext);
 
-  const { data: collectionData, loading: collectionDataLoading } = useCollectionQuery(String(activeChain?.id), selectedCollection, '');
+  const { data: collectionData } = useCollectionQuery(String(activeChain?.id), selectedCollection, '');
 
   const { data: allOwnerNFTs } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs } = useProfileNFTsQuery(
