@@ -69,7 +69,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     setCollections(newCollections);
   }, [allOwnerNFTs, editMode, profileNFTs]);
 
-  if (profileNFTs == null || profileData == null ) {
+  if (profileNFTs == null || profileData == null) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-white">
