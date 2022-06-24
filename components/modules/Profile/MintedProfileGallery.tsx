@@ -162,7 +162,9 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           draftDisplayType !== ProfileDisplayType.Nft
         ) || draftDisplayType === ProfileDisplayType.Collection ?
           <CollectionGallery profileURI={props.profileURI} /> :
-          <NftGallery profileURI={props.profileURI}/>
+          <NftGallery
+            profileURI={props.profileURI}
+            savedLayoutType={profileData?.profile?.layoutType}/>
       }
     </div>
   );
