@@ -1,9 +1,14 @@
+import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
+import Link from 'next/link';
+import LooksrareIcon from 'public/looksrare-icon.svg';
+import OpenseaIcon from 'public/opensea-icon.svg';
 import { MouseEvent, useCallback, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -28,6 +33,7 @@ export interface NFTCardProps {
   onSelectToggle?: (selected: boolean) => void;
   visible?: boolean;
   onVisibleToggle?: (visible: boolean) => void;
+  listings?: any;
 
   // By default this component takes the full width of its container.
   // If you need this component to constrain its own width, use this prop.
@@ -50,6 +56,9 @@ export function NFTCard(props: NFTCardProps) {
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', activeChain?.id ?? 1)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
+
+  const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
+  const { data: listings } = useExternalListingsQuery(nft?.contract, nft?.tokenId, nft?.wallet.chainId);
 
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
@@ -192,6 +201,23 @@ export function NFTCard(props: NFTCardProps) {
             {props.description}
           </div>
         )}
+        {listings && (
+          <div className='mt-4 flex justify-between items-center'>
+            {listings[0].price
+              ? <Link href={listings[0].url}>
+                <div className='relative shrink-0 hover:opacity-70'>
+                  <OpenseaIcon alt="exchange logo" layout="fill"/>
+                </div>
+              </Link>
+              : <div className="h-9"></div>}
+            {listings[1].price && <Link href={listings[1].url}>
+              <div className='relative shrink-0 hover:opacity-70'>
+                <LooksrareIcon alt="exchange logo" layout="fill"/>
+              </div>
+            </Link>}
+          </div>)
+        //)
+        }
         {
           props.cta &&
             <div

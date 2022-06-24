@@ -18,7 +18,7 @@ type DetailedNft = Nft & { hidden?: boolean };
 export interface NftGridProps {
   nfts: PartialDeep<DetailedNft>[];
   profileURI: string;
-  savedLayoutType: ProfileLayoutType;
+  savedLayoutType?: ProfileLayoutType;
 }
 
 export function NftGrid(props: NftGridProps) {
@@ -35,7 +35,7 @@ export function NftGrid(props: NftGridProps) {
   const { draftLayoutType } = useContext(ProfileEditContext);
 
   useEffect(() => {
-    console.log(draftLayoutType, 'draftLayoutType  fdo');
+    console.log(draftLayoutType, 'LayoutType');
   }, [draftLayoutType, props.nfts, props.savedLayoutType, screenWidth]);
 
   const mosaicArray = [0];
@@ -53,19 +53,17 @@ export function NftGrid(props: NftGridProps) {
   }
 
   return (props.savedLayoutType && <div className={tw(
-    'grid w-full',
-    'sm:grid-cols-2 md:grid-cols-3 gap-y-2.5',
+    'grid w-full sm:grid-cols-2 md:grid-cols-3 gap-y-2.5 sm:grid-cols-1',
     (draftLayoutType ?? props.savedLayoutType) === 'Default' ? 'grid-cols-4' : '',
-    (draftLayoutType ?? props.savedLayoutType) === 'Featured' ? 'grid-cols-6 md:grid-cols-4 sm:grid-cols-1' : '',
-    (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' ? 'grid-cols-6 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1' : '',
-    (draftLayoutType ?? props.savedLayoutType) === 'Spotlight' ? 'grid-cols-3 sm:grid-cols-1' : '',
+    (draftLayoutType ?? props.savedLayoutType) === 'Featured' ? 'grid-cols-6 md:grid-cols-4' : '',
+    (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' ? 'grid-cols-6 lg:grid-cols-4 md:grid-cols-3' : '',
+    (draftLayoutType ?? props.savedLayoutType) === 'Spotlight' ? 'grid-cols-3' : '',
   )}>
     {props.nfts?.map((nft: PartialDeep<DetailedNft>, index) => (
       <div
         key={nft?.id + '-' + nft?.contract?.address}
         className={tw(
-          'flex justify-center px-3',
-          'sm:mb-2',
+          'flex justify-center px-3 sm:mb-2',
           (draftLayoutType ?? props.savedLayoutType) === 'Default' ? 'mb-10' : '',
           (draftLayoutType ?? props.savedLayoutType) === 'Featured' ? `${[1,2,3].includes((index+10)%9) ? [0,1].includes(index%10) ? 'col-span-2 md:col-span-2 ':'col-span-2 md:col-span-1': [0,1].includes(index%10) ? 'md:col-span-2' :''} mb-10` : '',
           (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' && screenWidth > 1199 ? `${index % 7 === 0 ? 'row-span-3 col-span-3' : '' } ${(index-4) % 7 === 0? 'row-span-2 col-span-2' : '' }` : '',
