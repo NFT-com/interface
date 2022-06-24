@@ -33,7 +33,6 @@ export interface NFTCardProps {
   onSelectToggle?: (selected: boolean) => void;
   visible?: boolean;
   onVisibleToggle?: (visible: boolean) => void;
-  listings?: any;
 
   // By default this component takes the full width of its container.
   // If you need this component to constrain its own width, use this prop.
@@ -58,7 +57,7 @@ export function NFTCard(props: NFTCardProps) {
     : props.images?.map(processIPFSURL);
 
   const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
-  const { data: listings } = useExternalListingsQuery(nft?.contract, nft?.tokenId, nft?.wallet.chainId);
+  const { data: listings } = useExternalListingsQuery(props.contractAddress, props.tokenId, nft?.wallet.chainId);
 
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
