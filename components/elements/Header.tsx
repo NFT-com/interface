@@ -12,6 +12,7 @@ import { tw } from 'utils/tw';
 import Link from 'next/link';
 import HeroCorner from 'public/hero_corner.svg';
 import HeroCornerDark from 'public/hero_corner_dark.svg';
+import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
@@ -35,9 +36,9 @@ export default function Header(props: HeaderProps) {
   // only identify once per user session to not overwhelm segment.io
   const cachedId = account && localStorage.getItem(me?.id);
   if (account && !cachedId) {
-    // analytics.identify(me?.id, {
-    //   ethereumAddress: account,
-    // });
+    analytics.identify(me?.id, {
+      ethereumAddress: account,
+    });
     localStorage.setItem(me?.id, me?.id);
   }
 
@@ -46,8 +47,20 @@ export default function Header(props: HeaderProps) {
   const showHeaderNav = !isMobile;
   const searchEnabled = getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED);
 
+  const headerStyles = useCallback(() => {
+    if(props.removeBackground && !props.heroHeader) {
+      return 'transparent';
+    }
+    else if(props.removeBackground && props.heroHeader) {
+      return `z-50 drop-shadow-md ${props.heroHeaderBlack ? 'bg-black' : 'bg-transparent'}`;
+    }
+    else {
+      return 'bg-headerbg ' + (props.profileHeader ? 'dark:bg-headerbg-profile-dk opacity-90' : 'dark:bg-headerbg-dk');
+    }
+  }, [props.heroHeader, props.heroHeaderBlack, props.profileHeader, props.removeBackground]);
+
   return (
-    <nav className={tw('w-full', 'bg-transparent')}>
+    <nav className={tw('w-full', headerStyles())}>
       <div className={tw('w-full mx-auto',
         'pl-5',
         walletSlideOpen ? 'border-action-primary' : 'border-gray-200 dark:border-gray-800',
@@ -58,7 +71,7 @@ export default function Header(props: HeaderProps) {
               <Link href="/">
                 <div className={tw(
                   'cursor-pointer',
-                  'lg:ml-2 ml-20',
+                  'ml-5',
                   'text-always-white',
                   'font-hero-heading1 flex items-center')}>
                   <div className='h-10 w-10 mr-2'>
@@ -67,7 +80,6 @@ export default function Header(props: HeaderProps) {
                       : <HeroCornerDark />
                     }
                   </div>
-                  <span className="flex md:hidden">NFT.COM</span>
                 </div>
               </Link>
             </div>
@@ -128,7 +140,7 @@ export default function Header(props: HeaderProps) {
                 'font-rubik text-blue-50 tracking-wide',
                 'font-normal flex items-center'
               )}>
-                <WalletRainbowKitButton signInButton />
+                <WalletRainbowKitButton signInButton={!isMobile} />
               </div>
             </div>
           </div>

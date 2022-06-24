@@ -33,8 +33,6 @@ interface ProfileEditContextType {
   setDraftDisplayType: (displayType: ProfileDisplayType) => void,
   draftLayoutType: ProfileLayoutType,
   setDraftLayoutType: (layoutType: ProfileLayoutType) => void,
-  draftNftsDescriptionsVisible: Maybe<boolean>,
-  setDraftNftsDescriptionsVisible: (val: boolean) => void,
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   clearDrafts: () => void;
@@ -42,6 +40,8 @@ interface ProfileEditContextType {
   saving: boolean;
   selectedCollection: Maybe<string>;
   setSelectedCollection: (collectionAddress: string) => void;
+  draftNftsDescriptionsVisible: Maybe<boolean>;
+  setDraftNftsDescriptionsVisible: (val: boolean) => void;
 }
 
 // initialize with default values
@@ -57,12 +57,10 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   setDraftHeaderImg: () => null,
   draftProfileImg: { preview: '', raw: '' },
   setDraftProfileImg: () => null,
-  draftBio: null,
-  setDraftBio: () => null,
+  draftBio: '',
+  setDraftBio: () => '',
   draftGkIconVisible: true,
   setDraftGkIconVisible: () => null,
-  draftNftsDescriptionsVisible: true,
-  setDraftNftsDescriptionsVisible: () => null,
   draftDisplayType: ProfileDisplayType.Nft,
   setDraftDisplayType: () => null,
   draftLayoutType: ProfileLayoutType.Default,
@@ -74,6 +72,8 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   saving: false,
   selectedCollection: null,
   setSelectedCollection: () => null,
+  draftNftsDescriptionsVisible: true,
+  setDraftNftsDescriptionsVisible: () => null,
 });
 
 export interface ProfileEditContextProviderProps {
@@ -189,7 +189,7 @@ export function ProfileEditContextProvider(
   
         const result = await updateProfile({
           id: profileData?.profile?.id,
-          description: draftBio,
+          description: isNullOrEmpty(draftBio) ? ' ' : draftBio,
           gkIconVisible: draftGkIconVisible,
           nftsDescriptionsVisible: draftNftsDescriptionsVisible,
           hideNFTIds: Array.from(draftToHide),

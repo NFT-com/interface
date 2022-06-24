@@ -52,7 +52,6 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     profileData?.profile?.id,
     PROFILE_GALLERY_PAGE_SIZE
   );
-
   return (
     <div className={tw(
       'flex flex-col mt-8 align-items',

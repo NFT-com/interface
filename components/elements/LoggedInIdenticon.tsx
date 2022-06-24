@@ -2,7 +2,6 @@ import { useMyPhotoQuery } from 'graphql/hooks/useMyPhotoQuery';
 import { joinClasses } from 'utils/helpers';
 
 import Jazzicon from '@metamask/jazzicon';
-import { ethers } from 'ethers';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import Identicon1 from 'react-identicons';
@@ -46,5 +45,5 @@ export default function LoggedInIdenticon({ large, round, border }: LoggedInIden
   }
 
   // 'polkadot', 'substrate', 'beachball' or 'jdenticon'
-  return <Identicon1 size={large === true ? 120 : 32} string={ethers.utils.getAddress(account?.address)} />;
+  return <Identicon1 size={large === true ? 120 : 32} string={account?.address} />;
 }

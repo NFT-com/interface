@@ -74,7 +74,7 @@ export function NFTCard(props: NFTCardProps) {
           'md:w-2/5 w-[23%]' :
           'w-full',
         'justify-between cursor-pointer transform hover:scale-105',
-        'overflow-hidden mb-4',
+        'overflow-hidden',
       )}
       style={{
         backgroundColor: props.customBackground ?? tileBackground
@@ -171,7 +171,7 @@ export function NFTCard(props: NFTCardProps) {
               })}
             </div>
       }
-      {props.nftsDescriptionsVisible && <div className="p-4 md:p-3 flex flex-col">
+      {props.nftsDescriptionsVisible != false && <div className="p-4 md:p-3 flex flex-col">
         <span className={tw(
           'text-2xl lg:text-xl md:text-lg sm:text-base font-semibold truncate',
           isNullOrEmpty(props.title) ?
