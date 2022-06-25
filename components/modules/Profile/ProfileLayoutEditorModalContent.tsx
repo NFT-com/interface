@@ -57,16 +57,20 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
               }}
               key={layout}
             >
-              <div className={tw(
-                'relative flex items-center justify-center',
-                'rounded-lg border h-full w-full',
-                selected ? 'border-link': 'border-white'
-              )}>
-                <span className='text-2xl'>{layout}</span>
+              <div
+                className={tw(
+                  'relative flex items-center justify-center',
+                  'rounded-lg border h-full w-full',
+                  selected ? 'border-link': 'border-white'
+                )}
+                data-testid={layout+'-layout-option2'}
+              >
+                <span className='text-2xl' data-testid={layout+'-layout-option1'}>{layout}</span>
                 <div className='absolute top-0 left-0 h-full w-full rounded-lg'>
                   <div className="w-full h-full p-4">
                     <div className='relative w-full h-full'>
                       <Image
+                        data-testid={layout+'-layout-option3'}
                         alt="layout type"
                         src={layoutImages[layout]}
                         layout="fill"

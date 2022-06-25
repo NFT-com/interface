@@ -203,14 +203,10 @@ export function NFTCard(props: NFTCardProps) {
         {listings && (
           <div className='mt-4 flex justify-start items-center'>
             {listings[0].price && <Link href={listings[0].url}>
-              <div className='relative shrink-0 hover:opacity-70'>
-                <OpenseaIcon alt="exchange logo" layout="fill"/>
-              </div>
+              <OpenseaIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Opensea logo redirect" layout="fill"/>
             </Link>}
             {listings[1].price && <Link href={listings[1].url}>
-              <div className='relative shrink-0 hover:opacity-70'>
-                <LooksrareIcon alt="exchange logo" layout="fill"/>
-              </div>
+              <LooksrareIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Looksrare logo redirect" layout="fill"/>
             </Link>}
             {(!listings[0].price && !listings[1].price) && <div className="h-9"></div>}
           </div>)

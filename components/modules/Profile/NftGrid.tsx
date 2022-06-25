@@ -58,7 +58,8 @@ export function NftGrid(props: NftGridProps) {
     (draftLayoutType ?? props.savedLayoutType) === 'Featured' ? 'grid-cols-6 md:grid-cols-4' : '',
     (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' ? 'grid-cols-6 lg:grid-cols-4 md:grid-cols-3' : '',
     (draftLayoutType ?? props.savedLayoutType) === 'Spotlight' ? 'grid-cols-3' : '',
-  )}>
+  )}
+  data-testid={props.savedLayoutType+'-layout-option'}>
     {props.nfts?.map((nft: PartialDeep<DetailedNft>, index) => (
       <div
         key={nft?.id + '-' + nft?.contract?.address}
