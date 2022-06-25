@@ -9,7 +9,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 
 import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
 
@@ -33,10 +33,6 @@ export function NftGrid(props: NftGridProps) {
   const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
   const { draftLayoutType } = useContext(ProfileEditContext);
-
-  useEffect(() => {
-    console.log(draftLayoutType, 'LayoutType');
-  }, [draftLayoutType, props.nfts, props.savedLayoutType, screenWidth]);
 
   const mosaicArray = [0];
   let seq = 0;
