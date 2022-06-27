@@ -41,7 +41,7 @@ export default function BlogSlider({ posts }:BlogSliderProps) {
   }, [embla, setScrollSnaps, onSelect]);
 
   return (
-    <div className="mx-auto px-5 bg-[#DCF2FF] p-3 rounded-2xl">
+    <div className="mx-auto px-2.5 bg-blog-slider-blue dark:bg-dark-overlay p-3 rounded-2xl">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {posts?.map((post) => (
@@ -51,7 +51,7 @@ export default function BlogSlider({ posts }:BlogSliderProps) {
       </div>
       <div className="flex items-center justify-center mt-5 space-x-2">
         {scrollSnaps.map((_, idx) => (
-          <div className={`w-3 h-3 bg-[#DCF2FF] border rounded-full flex justify-center items-center ${
+          <div className={`w-3 h-3 bg-blog-slider-blue border rounded-full flex justify-center items-center ${
             idx === selectedIndex ? 'border-[#0077BA]' : 'none'
           }`} key={idx} >
             <button

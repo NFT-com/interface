@@ -1,4 +1,4 @@
-import { POST_GRAPHQL_FIELDS } from './schemas';
+import { POST_GRAPHQL_FIELDS, POST_LIST_GRAPHQL_FIELDS } from './schemas';
 
 async function fetchGraphQL(query, preview = false) {
   return fetch(
@@ -45,7 +45,7 @@ export async function getAllPostsWithSlug() {
     `query {
       blogPostCollection(where: { slug_exists: true }, order: date_DESC) {
         items {
-          ${POST_GRAPHQL_FIELDS}
+          ${POST_LIST_GRAPHQL_FIELDS}
         }
       }
     }`
@@ -58,7 +58,7 @@ export async function getAllPosts(preview) {
     `query {
       blogPostCollection(order: publishDate_DESC, preview: false) {
         items {
-          ${POST_GRAPHQL_FIELDS}
+          ${POST_LIST_GRAPHQL_FIELDS}
         }
       }
     }`,

@@ -29,6 +29,9 @@ export const POST_GRAPHQL_FIELDS = `
   tags
   relatedPostsCollection{
     items{
+      sys{
+        id
+      }
       title
       slug
       description

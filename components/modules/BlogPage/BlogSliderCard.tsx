@@ -13,7 +13,7 @@ type BlogSliderPostProps = {
 export default function BlogSliderPost({ post }: BlogSliderPostProps) {
   return (
     <div
-      className="relative flex flex-row md:flex-col flex-none flex-nowrap w-full mx-10 p-3 bg-white rounded-2xl"
+      className="relative flex flex-row md:flex-col flex-none flex-nowrap w-full mx-10 p-3 bg-white dark:bg-modal-overlay-dk rounded-2xl"
       key={post.title}
     >
       <div className="relative overflow-hidden cursor-pointer w-2/5 md:w-full aspect-square md:aspect-video sm:aspect-square object-cover object-center">
@@ -34,18 +34,17 @@ export default function BlogSliderPost({ post }: BlogSliderPostProps) {
       <div className="flex flex-col w-3/5 md:w-full ml-8 md:ml-0 pt-12 lg:pt-2 md:pt-4 px-1">
         <Link href={`/articles/${post.slug}`}>
           <a className="cursor-pointer">
-            <h2 className="font-bold text-black text-4xl lg:text-3xl md:text-lg md:w-4/5 sm:w-full">
+            <h2 className="font-bold text-black dark:text-white text-4xl lg:text-3xl md:text-lg md:w-4/5 sm:w-full">
               {post.title}
             </h2>
           </a>
         </Link>
         <Link href={`/articles/${post.slug}`}>
           <a className="cursor-pointer">
-            <p className="text-blog-text text-justify text-xl lg:text-lg md:text-sm w-11/12 md:w-10/12 sm:w-full leading-8 mt-3 md:mt-2">
+            <p className="text-blog-text dark:text-gray-400 text-justify text-xl lg:text-lg md:text-sm w-11/12 md:w-10/12 sm:w-full leading-8 mt-3 md:mt-2">
               {post?.description.length > 230
                 ? post.description.substring(0, 230) + '...'
                 : post.description}
-                        Webhooks notify you, another person or system when resources have changed by calling a given HTTP endpoint.
             </p>
           </a>
         </Link>
@@ -60,7 +59,7 @@ export default function BlogSliderPost({ post }: BlogSliderPostProps) {
             />
           </div>
           <div className='pt-0.5'>
-            <p className="text-xl lg:text-lg md:text-sm">
+            <p className="text-xl lg:text-lg md:text-sm dark:text-white">
               {post?.author.name}
             </p>
             <div className="flex text-blog-text dark:text-gray-400">

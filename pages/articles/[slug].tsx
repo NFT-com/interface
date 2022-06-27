@@ -66,7 +66,7 @@ export default function Post({ post, preview }: PostProps) {
               </h2>
               <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12">
                 {post.relatedPostsCollection.items.map((post) => (
-                  post && <RelatedPostCard key={post.title} post={post} />
+                  post && <RelatedPostCard key={post?.sys.id} post={post} />
                 ))}
               </div>
             </div>

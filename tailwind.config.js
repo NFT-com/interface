@@ -107,6 +107,7 @@ module.exports = {
         'share-icon-bg': '#FBF9F9',
         'blog-text': '#727272',
         'secondary-dk': '#222222',
+        'blog-slider-blue': '#DCF2FF'
       },
       fontSize: {
         'copy-size': '0.825rem',
