@@ -1,12 +1,10 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { FeaturedProfile } from 'components/elements/FeaturedProfile';
 import { LearnCards } from 'components/elements/LearnCards';
-import { NFTCard } from 'components/elements/NFTCard';
 import { ProfileFeed } from 'components/elements/ProfileFeed';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
-import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { tw } from 'utils/tw';
 
@@ -14,9 +12,6 @@ import type { NextPage } from 'next';
 import Ticker from 'react-ticker';
 
 const HomePage: NextPage = () => {
-  const { data: nft } = useNftQuery(
-    '0xa5a9a6576303a1e3608fabeb0f64872e0bfbd9f4',
-    '1');
   {/*TODO: @anthony use contentful for this */}
   const { profileData: featuredProfile } = useProfileQuery('anthony');
 
