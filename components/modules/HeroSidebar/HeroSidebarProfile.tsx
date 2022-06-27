@@ -4,7 +4,6 @@ import { useSidebar } from 'hooks/state/useSidebar';
 import { shortenString } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import ProfileGeneric from 'public/generic_profile_item.svg';
 import { useState } from 'react';

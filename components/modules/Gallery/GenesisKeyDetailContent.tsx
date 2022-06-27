@@ -19,7 +19,7 @@ export function GenesisKeyDetailContent(props: { id: string | string[] }) {
     </div>;
   }
 
-  if(BigNumber.from(props?.id).gt(10000)) {
+  if((!props?.id.toString().match(/^[\d+]+$/)) || BigNumber.from(props?.id).gt(10000) || BigNumber.from(props?.id).lte(0)) {
     return (
       <NullState
         showImage

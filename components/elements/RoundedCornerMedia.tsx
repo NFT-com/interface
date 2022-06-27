@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { tw } from 'utils/tw';
 
 export enum RoundedCornerVariant {
@@ -8,13 +9,18 @@ export enum RoundedCornerVariant {
   Left = 'left',
   Right = 'right',
   All = 'all',
-  None = 'none'
+  None = 'none',
 }
 
 export interface RoundedCornerMediaProps {
   src: string;
   variant: RoundedCornerVariant;
   extraClasses?: string;
+  overlayOptions?: {
+    profileOwner: string;
+    gkId: number;
+    pfp: string;
+  }
 }
 
 const getRoundedClass = (variant: RoundedCornerVariant): string => {
@@ -41,18 +47,42 @@ const getRoundedClass = (variant: RoundedCornerVariant): string => {
 
 export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   return (
-    <video
-      autoPlay
-      muted
-      loop
-      key={props.src}
-      src={props.src}
-      poster={props.src}
-      className={tw(
-        'flex aspect-square object-cover',
-        getRoundedClass(props.variant),
-        props.extraClasses
-      )}
-    />
+    <div>
+      <video
+        autoPlay
+        muted
+        loop
+        key={props.src}
+        src={props.src}
+        poster={props.src}
+        className={tw(
+          'flex object-cover w-full aspect-square',
+          getRoundedClass(props.variant),
+          props.extraClasses
+        )}
+      />
+      {props?.overlayOptions &&
+        <div className='relative h-[5%] w-full'>
+          <div className={tw('absolute inset-x-0 bottom-0 h-12',
+            'bg-always-white/30 rounded-b-3xl backdrop-blur-sm',
+            'flex items-center'
+          )}>
+            <div className='flex p-4 w-full items-center'>
+              <img
+                className='flex rounded-full h-10 w-10 object-cover aspect-square'
+                src={props?.overlayOptions?.pfp}
+                alt='featuredProfilePfp'
+              />
+              <span className='flex pl-2 items-center'>
+                {props?.overlayOptions?.profileOwner}
+              </span>
+            </div>
+            <div className='justify-end pr-4'>
+              {props?.overlayOptions?.gkId}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
   );
 }

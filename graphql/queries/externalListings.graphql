@@ -1,0 +1,18 @@
+query ExternalListings($contract: Address!, $tokenId: String!, $chainId: String!) {
+  externalListings(contract: $contract, tokenId: $tokenId, chainId: $chainId) {
+    listings {
+        url
+        exchange
+        price
+        highestOffer
+        expiration
+        creation
+        baseCoin {
+          symbol
+          logoURI
+          address
+          decimals
+        }
+    }
+  }
+}
