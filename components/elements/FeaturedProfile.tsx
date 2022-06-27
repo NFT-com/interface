@@ -1,5 +1,4 @@
-import { Profile, ProfileQuery } from 'graphql/generated/types';
-import { ProfileData, useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { ProfileQuery } from 'graphql/generated/types';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 

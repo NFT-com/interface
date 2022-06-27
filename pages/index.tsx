@@ -1,7 +1,9 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { FeaturedProfile } from 'components/elements/FeaturedProfile';
+import { LearnCards } from 'components/elements/LearnCards';
 import { NFTCard } from 'components/elements/NFTCard';
 import { ProfileFeed } from 'components/elements/ProfileFeed';
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -15,7 +17,7 @@ const HomePage: NextPage = () => {
   const { data: nft } = useNftQuery(
     '0xa5a9a6576303a1e3608fabeb0f64872e0bfbd9f4',
     '1');
-
+  {/*TODO: @anthony use contentful for this */}
   const { profileData: featuredProfile } = useProfileQuery('anthony');
 
   return (
@@ -67,7 +69,7 @@ const HomePage: NextPage = () => {
             Do more with your NFT
             </div>
           </div>
-          <div className="w-full h-full inline-flex grow space-x-6 ...">
+          <div className="w-full h-full inline-flex grow space-x-6 whitespace-nowrap ...">
             <Button
               bgColor={'#222222'}
               color={'#ffffff'}
@@ -97,6 +99,7 @@ const HomePage: NextPage = () => {
             <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </div>
+            {/*TODO: @anthony use contentful for these images */}
             <ProfileFeed
               profiles={[
                 'https://cdn.nft.com/profiles/1653690187501-ghoool.webp',
@@ -108,7 +111,7 @@ const HomePage: NextPage = () => {
               label='Discover'
               stretch
               onClick={() => {
-                console.log('hello');
+                console.log('Discover clicked');
               }}
               type={ButtonType.SECONDARY}
             />
@@ -135,12 +138,9 @@ const HomePage: NextPage = () => {
             <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </div>
-            <NFTCard
-              title={'NFT Card'}
-              images={[nft?.metadata?.imageURL]}
-              imageLayout="row"
-              onClick={() => console.log('clicked')}
-              contractAddress={nft?.contract}
+            <RoundedCornerMedia
+              src={'/checker.svg'}
+              variant={RoundedCornerVariant.All}
             />
           </div>
         </div>
@@ -150,12 +150,9 @@ const HomePage: NextPage = () => {
             <div className='text-body leading-body font-body py-2 ...'>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </div>
-            <NFTCard
-              title={'NFT Card'}
-              images={[nft?.metadata?.imageURL]}
-              imageLayout="row"
-              onClick={() => console.log('clicked')}
-              contractAddress={nft?.contract}
+            <RoundedCornerMedia
+              src={'/checker.svg'}
+              variant={RoundedCornerVariant.All}
             />
           </div>
         </div>
@@ -165,12 +162,9 @@ const HomePage: NextPage = () => {
             <div className='text-body leading-body font-body py-2 ...'>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </div>
-            <NFTCard
-              title={'NFT Card'}
-              images={[nft?.metadata?.imageURL]}
-              imageLayout="row"
-              onClick={() => console.log('clicked')}
-              contractAddress={nft?.contract}
+            <RoundedCornerMedia
+              src={'/checker.svg'}
+              variant={RoundedCornerVariant.All}
             />
           </div>
         </div>
@@ -182,18 +176,14 @@ const HomePage: NextPage = () => {
             </div>
           </div>
         </div>
-        <div className='h-full ...'>
+        <div className='h-full w-full'>
           <div className='text-header leading-header font-header justify-center ...'>
             Learn
             <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </div>
-            <NFTCard
-              title={'NFT Card'}
-              images={[nft?.metadata?.imageURL]}
-              imageLayout="row"
-              onClick={() => console.log('clicked')}
-              contractAddress={nft?.contract}
+            <LearnCards
+              cardTitles={['What is an NFT?', 'What is a Blockchain?']}
             />
           </div>
         </div>
