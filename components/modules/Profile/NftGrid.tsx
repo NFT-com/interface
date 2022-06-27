@@ -66,7 +66,7 @@ export function NftGrid(props: NftGridProps) {
           (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' && screenWidth > 1199 ? `${index % 7 === 0 ? 'row-span-3 col-span-3' : '' } ${(index-4) % 7 === 0? 'row-span-2 col-span-2' : '' }` : '',
           (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' && screenWidth > 900 && screenWidth <= 1199 ? `${mosaicArray2.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
           (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' && screenWidth > 600 && screenWidth <= 899 ? `${ mosaicArray.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
-          (draftLayoutType ?? props.savedLayoutType) === 'Spotlight' ? 'col-start-2 col-span-1 sm:col-start-2' : '',
+          (draftLayoutType ?? props.savedLayoutType) === 'Spotlight' ? 'col-start-2 col-span-1 sm:col-start-2 mb-4' : '',
         )}
       >
         <NFTCard
