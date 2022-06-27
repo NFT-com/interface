@@ -1,5 +1,6 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
+import { ProfileLayoutType } from 'graphql/generated/types';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -11,6 +12,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 export interface NftGalleryProps {
   profileURI: string;
+  savedLayoutType: ProfileLayoutType;
 }
 
 export const PROFILE_GALLERY_PAGE_SIZE = 20;
@@ -75,7 +77,7 @@ export function NftGallery(props: NftGalleryProps) {
 
   return (
     <>
-      <NftGrid nfts={nftsToShow} profileURI={profileURI}/>
+      <NftGrid nfts={nftsToShow} profileURI={profileURI} savedLayoutType={profileData?.profile?.layoutType}/>
       {(!isAdmin || editMode) &&
       (editMode ? ownerNFTCount > nftsToShow.length : publicNFTCount > nftsToShow.length) &&
         <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium text-always-white">

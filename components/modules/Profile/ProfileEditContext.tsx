@@ -1,4 +1,4 @@
-import { Maybe, ProfileDisplayType } from 'graphql/generated/types';
+import { Maybe, ProfileDisplayType, ProfileLayoutType } from 'graphql/generated/types';
 import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
@@ -30,9 +30,9 @@ interface ProfileEditContextType {
   draftGkIconVisible: Maybe<boolean>,
   setDraftGkIconVisible: (val: boolean) => void,
   draftDisplayType: ProfileDisplayType,
-  draftNftsDescriptionsVisible: Maybe<boolean>,
-  setDraftNftsDescriptionsVisible: (val: boolean) => void,
   setDraftDisplayType: (displayType: ProfileDisplayType) => void,
+  draftLayoutType: ProfileLayoutType,
+  setDraftLayoutType: (layoutType: ProfileLayoutType) => void,
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
   clearDrafts: () => void;
@@ -40,6 +40,8 @@ interface ProfileEditContextType {
   saving: boolean;
   selectedCollection: Maybe<string>;
   setSelectedCollection: (collectionAddress: string) => void;
+  draftNftsDescriptionsVisible: Maybe<boolean>;
+  setDraftNftsDescriptionsVisible: (val: boolean) => void;
 }
 
 // initialize with default values
@@ -55,14 +57,14 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   setDraftHeaderImg: () => null,
   draftProfileImg: { preview: '', raw: '' },
   setDraftProfileImg: () => null,
-  draftBio: null,
-  setDraftBio: () => null,
+  draftBio: '',
+  setDraftBio: () => '',
   draftGkIconVisible: true,
   setDraftGkIconVisible: () => null,
-  draftNftsDescriptionsVisible: true,
-  setDraftNftsDescriptionsVisible: () => null,
   draftDisplayType: ProfileDisplayType.Nft,
   setDraftDisplayType: () => null,
+  draftLayoutType: ProfileLayoutType.Default,
+  setDraftLayoutType: () => null,
   editMode: false,
   setEditMode: () => null,
   clearDrafts: () => null,
@@ -70,6 +72,8 @@ export const ProfileEditContext = React.createContext<ProfileEditContextType>({
   saving: false,
   selectedCollection: null,
   setSelectedCollection: () => null,
+  draftNftsDescriptionsVisible: true,
+  setDraftNftsDescriptionsVisible: () => null,
 });
 
 export interface ProfileEditContextProviderProps {
@@ -99,6 +103,7 @@ export function ProfileEditContextProvider(
   const [draftHeaderImg, setDraftHeaderImg] = useState({ preview: '', raw: null });
   const [draftDisplayType, setDraftDisplayType] = useState(null);
   const [selectedCollection, setSelectedCollection] = useState<string>(null);
+  const [draftLayoutType , setDraftLayoutType] = useState<ProfileLayoutType>(null);
 
   const { updateProfile } = useUpdateProfileMutation();
   const { fileUpload } = useFileUploadMutation();
@@ -141,6 +146,7 @@ export function ProfileEditContextProvider(
     setDraftToHide(new Set());
     setDraftToShow(new Set());
     setDraftDisplayType(null);
+    setDraftLayoutType(null);
   }, [draftBio, draftGkIconVisible, draftNftsDescriptionsVisible]);
 
   useEffect(() => {
@@ -183,12 +189,13 @@ export function ProfileEditContextProvider(
   
         const result = await updateProfile({
           id: profileData?.profile?.id,
-          description: draftBio,
+          description: isNullOrEmpty(draftBio) ? ' ' : draftBio,
           gkIconVisible: draftGkIconVisible,
           nftsDescriptionsVisible: draftNftsDescriptionsVisible,
           hideNFTIds: Array.from(draftToHide),
           showNFTIds: Array.from(draftToShow),
           displayType: draftDisplayType,
+          layoutType: draftLayoutType,
           ...(imageUploadResult
             ? {}
             : {
@@ -222,6 +229,7 @@ export function ProfileEditContextProvider(
     draftToHide,
     draftToShow,
     draftDisplayType,
+    draftLayoutType,
     fileUpload,
     props.profileURI,
     mutateProfileData
@@ -256,6 +264,8 @@ export function ProfileEditContextProvider(
     },
     draftDisplayType,
     setDraftDisplayType,
+    draftLayoutType,
+    setDraftLayoutType,
     toggleHidden,
     hideNftIds: (toHide: string[]) => {
       const newToHide = new Set(draftToHide);

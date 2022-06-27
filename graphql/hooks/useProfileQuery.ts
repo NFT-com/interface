@@ -2,7 +2,6 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
-import { useState } from 'react';
 import useSWR, { mutate,SWRConfiguration } from 'swr';
 
 export interface ProfileData {
@@ -16,7 +15,6 @@ export function useProfileQuery(
   url: string, options?: SWRConfiguration
 ): ProfileData {
   const sdk = useGraphQLSDK();
-  const [loading, setLoading] = useState(false);
 
   const keyString = 'ProfileQuery ' + url;
 
@@ -25,19 +23,17 @@ export function useProfileQuery(
       return null;
     }
     try {
-      setLoading(true);
       const result = await sdk.Profile({ url });
-      setLoading(false);
       return result;
     } catch (error) {
-      setLoading(false);
       console.log('Failed to fetch profile. It might be unminted.');
+      return 'error';
     }
   }, options);
 
   return {
     profileData: data,
-    loading: loading,
+    loading: data == null,
     error: error,
     mutate: () => {
       mutate(keyString);

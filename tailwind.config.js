@@ -100,21 +100,13 @@ module.exports = {
         'dark-overlay': '#303030E5',
         'dark-type-primary': '#F3F3F3',
         'tileBackgroundSecondary': '#303030',
-        'detail-bg-dk': '#303030',
+        'secondary-bg-dk': '#303030',
         'looksrare-green': '#0CE466',
         'opensea-blue': '#2081E2',
         'share-icon': '#E4E4E4',
         'share-icon-bg': '#FBF9F9',
         'blog-text': '#727272',
         'secondary-dk': '#222222',
-      },
-      fontSize: {
-        'copy-size': '0.825rem',
-        '2xll': '1.6rem',
-        'xxs1': '0.4rem',
-        'xxs2': '0.6rem',
-        '3xll': '1.75rem',
-        xxs3: '0.688rem',
       },
       fontFamily: {
         'rubik': ['Rubik'],
@@ -135,6 +127,7 @@ module.exports = {
       lineHeight: {
         'header': '2.5rem',
         'body': '1.5rem',
+        5.5: '1.4',
       },
       keyFrames: {
         pulseBorder: {
@@ -174,9 +167,6 @@ module.exports = {
       },
       aspectRatio: {
         '4/3': '4/3',
-      },
-      lineHeight: {
-        5.5: '1.4',
       },
     },
   },

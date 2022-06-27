@@ -31,7 +31,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
       {
         expanded &&
             <div className={tw(
-              'grid gap-2 overflow-y-scroll overflow-x-hidden',
+              'grid gap-2 overflow-y-scroll overflow-x-auto',
               'grid-cols-2 sm:grid-cols-2 md:grid-cols-3'
             )}>
               {[
@@ -56,7 +56,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
                   key={index}
                   type={item.type}
                   value={item.value}
-                  valueClasses="text-link dark:text-link"
+                  valueClasses="text-link dark:text-link overflow-x-auto"
                 />;
               })}
             </div>

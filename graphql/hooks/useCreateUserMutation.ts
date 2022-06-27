@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Maybe, SignUpInput } from 'graphql/generated/types';
+import { Maybe, SignUpInput, SignUpMutation } from 'graphql/generated/types';
 import { logCreateUserFailure, logCreateUserSuccess, logEmailSubmitted } from 'utils/gaLogger';
 
 import { ethers } from 'ethers';
@@ -13,7 +13,7 @@ export interface CreateUserMutationProps {
 export interface CreateUserMutationResult {
   creating: boolean;
   error: string | null;
-  createUser: (input: SignUpInput) => void;
+  createUser: (input: SignUpInput) => Promise<Maybe<SignUpMutation>>;
 }
 
 /**
@@ -35,7 +35,7 @@ export function useCreateUserMutation({
     logEmailSubmitted();
     setLoading(true);
     try {
-      await sdk.SignUp({
+      const result = await sdk.SignUp({
         input: {
           avatarURL: input.avatarURL ?? undefined,
           email: input.email?.toLowerCase(),
@@ -54,6 +54,7 @@ export function useCreateUserMutation({
       logCreateUserSuccess();
       onCreateSuccess();
       setLoading(false);
+      return result;
     } catch (err) {
       // invalid inputs, or user creation failed.
       onCreateFailure();
@@ -68,12 +69,13 @@ export function useCreateUserMutation({
       // log here because this is a failure unexpected by Apollo, so we
       // may not have an Apollo error.
       logCreateUserFailure();
+      return null;
     }
   }, [onCreateFailure, onCreateSuccess, sdk]);
 
   return {
     creating: loading,
-    error: error,
-    createUser: createUser,
+    error,
+    createUser,
   };
 }
