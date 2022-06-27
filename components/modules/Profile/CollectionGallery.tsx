@@ -1,12 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 import Loader from 'components/elements/Loader';
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
-import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { getGenesisKeyThumbnail, processIPFSURL, sameAddress } from 'utils/helpers';
+import { getGenesisKeyThumbnail, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
@@ -36,10 +36,9 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     setSelectedCollection,
     hideNftIds,
     showNftIds,
-    draftNftsDescriptionsVisible
   } = useContext(ProfileEditContext);
 
-  const { data: collectionData } = useCollectionQuery(selectedCollection);
+  const { data: collectionData } = useCollectionQuery(String(activeChain?.id), selectedCollection, '');
 
   const { data: allOwnerNFTs } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs } = useProfileNFTsQuery(
@@ -105,7 +104,6 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           };
         }
       });
-    console.log(editMode);
     
     return <div className={'w-full flex flex-col items-center'}>
       <div className='w-full flex items-center px-8 mb-8 cursor-pointer justify-between'>
@@ -125,33 +123,17 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           />
         </div>}
       </div>
-      <div className='w-full flex items-center mb-8 justify-center h-40'>
-        {
-          detailedCollectionNFTs?.slice(0, 3).map(nft => {
-            if (sameAddress(nft?.contract, getAddress('genesisKey', activeChain?.id ?? 1))) {
-              return getGenesisKeyThumbnail(nft?.tokenId);
-            }
-            return processIPFSURL(nft?.metadata?.imageURL);
-          }).map((image: string, index: number, arr: string[]) => {
-            return <RoundedCornerMedia
-              key={image + index}
-              src={image}
-              variant={
-                arr.length === 1
-                  ? RoundedCornerVariant.All :
-                  index === arr.length - 1 ?
-                    RoundedCornerVariant.Right :
-                    index === 0 ?
-                      RoundedCornerVariant.Left :
-                      RoundedCornerVariant.None
-              }
-              extraClasses='h-full w-1/3'
-            />;
-          })
-        }
-      </div>
+      <div
+        className='w-screen flex items-center text-center text-2xl text-primary-txt dark:text-primary-txt-dk font-medium mb-8 justify-center h-40'
+        style={{
+          backgroundImage: `url(${
+            !isNullOrEmpty(collectionData?.openseaInfo?.collection?.banner_image_url)
+              ? collectionData?.openseaInfo?.collection?.banner_image_url
+              : 'https://cdn.nft.com/empty_profile_banner.png'})`
+        }}
+      />
       <span className='w-full text-center text-2xl text-primary-txt dark:text-primary-txt-dk mb-12 font-medium'>
-        {collectionData?.name}
+        {collectionData?.collection?.name}
       </span>
       <NftGrid profileURI={profileURI} nfts={detailedCollectionNFTs} />
     </div>;
@@ -163,8 +145,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         <div
           key={key}
           className={tw(
-            'flex mb-10 items-center justify-center px-3',
-            'sm:mb-2'
+            'flex mb-10 items-center justify-center p-3',
           )}
         >
           <NFTCollectionCard
@@ -179,7 +160,6 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             onClick={() => {
               setSelectedCollection(key);
             }}
-            draftNftsDescriptionsVisible={draftNftsDescriptionsVisible}
           />
         </div>
       ))}

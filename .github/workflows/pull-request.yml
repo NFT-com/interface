@@ -16,14 +16,15 @@ jobs:
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
         
-    - name: Cypress run - e2e 🧪
+    - name: Cypress run - component 🧪
       uses: cypress-io/github-action@v4
       with:
         install-command: yarn --frozen-lockfile --immutable --silent
         build: yarn build
         start: yarn start
+        component: true
         record: true
-        browser: chrome
+        tag: ${{ github.ref_name }}
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -31,12 +32,14 @@ jobs:
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Cypress run - component 🧪
+    - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4
       with:
         install: false
-        component: true
+        component: false
+        browser: chrome
         record: true
+        tag: ${{ github.ref_name }}
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -50,7 +53,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
 
   deploy-preview:
-    if: startsWith(github.base_ref, 'feat') || startsWith(github.base_ref, 'fix')
+    if: startsWith(github.base_ref, 'feat') || startsWith(github.base_ref, 'fix') || startsWith(github.base_ref, 'main')
     runs-on: ubuntu-latest
     environment: sandbox
     steps:
@@ -78,4 +81,3 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
         run: netlify deploy --build --message "main@${{ github.sha }}"
-  

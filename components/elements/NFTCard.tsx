@@ -1,9 +1,14 @@
+import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
+import Link from 'next/link';
+import LooksrareIcon from 'public/looksrare-icon.svg';
+import OpenseaIcon from 'public/opensea-icon.svg';
 import { MouseEvent, useCallback, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -51,6 +56,9 @@ export function NFTCard(props: NFTCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
+  const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
+  const { data: listings } = useExternalListingsQuery(props.contractAddress, props.tokenId, nft?.wallet.chainId);
+
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-sm sm:text-xs' style={{ color: pink }}>
@@ -74,7 +82,7 @@ export function NFTCard(props: NFTCardProps) {
           'md:w-2/5 w-[23%]' :
           'w-full',
         'justify-between cursor-pointer transform hover:scale-105',
-        'overflow-hidden mb-4',
+        'overflow-hidden',
       )}
       style={{
         backgroundColor: props.customBackground ?? tileBackground
@@ -171,7 +179,7 @@ export function NFTCard(props: NFTCardProps) {
               })}
             </div>
       }
-      {props.nftsDescriptionsVisible && <div className="p-4 md:p-3 flex flex-col">
+      {props.nftsDescriptionsVisible != false && <div className="p-4 md:p-3 flex flex-col">
         <span className={tw(
           'text-2xl lg:text-xl md:text-lg sm:text-base font-semibold truncate',
           isNullOrEmpty(props.title) ?
@@ -192,6 +200,17 @@ export function NFTCard(props: NFTCardProps) {
             {props.description}
           </div>
         )}
+        {listings && (
+          <div className='mt-4 flex justify-start items-center'>
+            {listings[0].price && <Link href={listings[0].url}>
+              <OpenseaIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Opensea logo redirect" layout="fill"/>
+            </Link>}
+            {listings[1].price && <Link href={listings[1].url}>
+              <LooksrareIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Looksrare logo redirect" layout="fill"/>
+            </Link>}
+            {(!listings[0].price && !listings[1].price) && <div className="h-9"></div>}
+          </div>)
+        }
         {
           props.cta &&
             <div

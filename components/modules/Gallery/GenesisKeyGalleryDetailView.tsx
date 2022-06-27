@@ -3,11 +3,10 @@ import { PropertyCard } from 'components/modules/NFTDetail/PropertyCard';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
 import { useGenesisKeyOwner } from 'hooks/useGenesisKeyOwner';
-import { formatID, getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress, shortenAddress } from 'utils/helpers';
+import { formatID, getEtherscanLink, getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { XIcon } from '@heroicons/react/solid';
-import { getAccountLink } from '@metamask/etherscan-link';
 import { BigNumber, BigNumberish } from 'ethers';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
@@ -188,7 +187,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
                   shortenAddress(owner, isMobile ? 3 : 4),
               onClick: () => {
                 window.open(
-                  getAccountLink(owner, activeChain?.id.toString())
+                  getEtherscanLink(activeChain?.id, owner, 'address')
                   , '_blank'
                 );
               }

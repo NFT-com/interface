@@ -26,6 +26,7 @@ jobs:
         start: yarn start
         record: true
         browser: chrome
+        tag: ${{ github.ref_name }}
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -39,6 +40,7 @@ jobs:
         install: false
         component: true
         record: true
+        tag: ${{ github.ref_name }}
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
