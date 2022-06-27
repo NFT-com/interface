@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { FeaturedProfile } from 'components/elements/FeaturedProfile';
 import { NFTCard } from 'components/elements/NFTCard';
+import { ProfileFeed } from 'components/elements/ProfileFeed';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -96,12 +97,10 @@ const HomePage: NextPage = () => {
             <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </div>
-            <NFTCard
-              title={'NFT Card'}
-              images={[nft?.metadata?.imageURL]}
-              imageLayout="row"
-              onClick={() => console.log('clicked')}
-              contractAddress={nft?.contract}
+            <ProfileFeed
+              profiles={[
+                'https://cdn.nft.com/profiles/1653690187501-ghoool.webp',
+                'https://cdn.nft.com/profiles/1656228209273-1.PNG']}
             />
             <Button
               bgColor={'#222222'}
