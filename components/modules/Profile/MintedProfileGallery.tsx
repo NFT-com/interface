@@ -12,6 +12,7 @@ import { CollectionGallery } from './CollectionGallery';
 import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
 import { NftGallery, PROFILE_GALLERY_PAGE_SIZE } from './NftGallery';
 import { ProfileEditContext } from './ProfileEditContext';
+import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
 import EditLayoutIcon from 'public/edit_layout.svg';
 import EyeIcon from 'public/eye.svg';
@@ -57,6 +58,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
       isMobile ? 'px-2' : 'sm:px-2 md:px-8 lg:px-16 px-20'
     )}>
       <Modal
+        fullModal
         title={''}
         visible={layoutEditorOpen}
         loading={false}
@@ -64,9 +66,12 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           setLayoutEditorOpen(false);
         } }
       >
-        <div className='absolute top-0 left-0 h-screen w-screen bg-white'>
-
-        </div>
+        <ProfileLayoutEditorModalContent
+          savedLayoutType={profileData?.profile?.layoutType}
+          onClose={() => {
+            setLayoutEditorOpen(false);
+          }}
+        />
       </Modal>
       {editMode && selectedCollection == null &&
         <div className='flex items-center w-full mb-12 px-8 justify-between text-white'>
@@ -156,7 +161,9 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           draftDisplayType !== ProfileDisplayType.Nft
         ) || draftDisplayType === ProfileDisplayType.Collection ?
           <CollectionGallery profileURI={props.profileURI} /> :
-          <NftGallery profileURI={props.profileURI}/>
+          <NftGallery
+            profileURI={props.profileURI}
+            savedLayoutType={profileData?.profile?.layoutType}/>
       }
     </div>
   );

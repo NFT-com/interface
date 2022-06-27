@@ -1594,7 +1594,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, displayType?: ProfileDisplayType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, displayType?: ProfileDisplayType | null, layoutType?: ProfileLayoutType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -2406,6 +2406,7 @@ export const ProfileDocument = gql`
     gkIconVisible
     nftsDescriptionsVisible
     displayType
+    layoutType
     owner {
       address
       chainId

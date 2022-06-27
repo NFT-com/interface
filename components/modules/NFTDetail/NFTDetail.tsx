@@ -61,7 +61,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
               {
                 profileTokens?.length > 0 ?
                   <div
-                    className="flex rounded-full ml-2 py-0.5 px-2 bg-white dark:bg-detail-bg-dk items-center cursor-pointer"
+                    className="flex rounded-full ml-2 py-0.5 px-2 bg-white dark:bg-secondary-bg-dk items-center cursor-pointer"
                     onClick={() => {
                       router.push('/' + profileData?.profile?.url);
                     }}
@@ -90,7 +90,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
               id="refreshNftButton"
               onClick={refreshNftCallback}
               className={tw(
-                'rounded-full bg-white dark:bg-detail-bg-dk h-8 w-8 flex items-center justify-center cursor-pointer',
+                'rounded-full bg-white dark:bg-secondary-bg-dk h-8 w-8 flex items-center justify-center cursor-pointer',
                 'lg:relative absolute top-0 right-0 mr-4',
                 loading ? 'animate-spin' : null
               )}
