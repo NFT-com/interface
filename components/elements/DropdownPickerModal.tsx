@@ -94,7 +94,7 @@ export function DropdownPickerModal(props: DropdownPickerModalProps) {
           }}
           className={tw(
             'rounded-xl mt-14',
-            'bg-white dark:bg-tileBackgroundSecondary',
+            'bg-white dark:bg-secondary-bg-dk',
             'w-full absolute z-50',
             'min-w-[14rem]'
           )}
@@ -113,7 +113,7 @@ export function DropdownPickerModal(props: DropdownPickerModalProps) {
         onClose={() => {
           setExpanded(false);
         }}
-        bgColor={'bg-pagebg dark:bg-tileBackgroundSecondary'}
+        bgColor={'bg-pagebg dark:bg-secondary-bg-dk'}
       >
         {props.options?.map((item, index) => {
           return getOptionRow(item, index);

@@ -51,6 +51,7 @@ module.exports = {
         'primary-txt':'#171B27',
         'primary-txt-dk':'#FFFFFF',
         'secondary-txt':'#777E93',
+        'secondary-txt-light': '#F8F8F8',
         'secondary-txt-dk':'#CCCCCC',
         'primary-pink':'#F2358E',
         'secondary-pink':'#E369A4',
@@ -60,7 +61,8 @@ module.exports = {
         'accent-border':'transparent',
         'accent-border-dk':'#384260',
         'primary-button-txt':'#FFFFFF',
-        'primary-button-bckg':'#00A4FF',
+        'primary-button-bckg':'#111111',
+        'primary-button-border': '#7D8795',
         'always-white':'#FFFFFF',
         'always-black':'#000000',
         'primary-1':'#0164d0',
@@ -76,6 +78,7 @@ module.exports = {
         'modal-bg-dk':'#22293B',
         'modal-overlay': '#f0f5ff', // use with opacity 50, i.e. modal-overlay/50
         'modal-overlay-dk': '#171b27', // use with opacity 50, i.e. modal-overlay-dk/50
+        'feature-overlay': '#B0AFAF',
         'row-border':'#E6ECFF',
         'green1':'#27AE60',
         'gkWalletOptionBgHover':'#2C3448',
@@ -100,21 +103,14 @@ module.exports = {
         'dark-overlay': '#303030E5',
         'dark-type-primary': '#F3F3F3',
         'tileBackgroundSecondary': '#303030',
-        'detail-bg-dk': '#303030',
+        'secondary-bg-dk': '#303030',
         'looksrare-green': '#0CE466',
         'opensea-blue': '#2081E2',
         'share-icon': '#E4E4E4',
         'share-icon-bg': '#FBF9F9',
         'blog-text': '#727272',
         'secondary-dk': '#222222',
-      },
-      fontSize: {
-        'copy-size': '0.825rem',
-        '2xll': '1.6rem',
-        'xxs1': '0.4rem',
-        'xxs2': '0.6rem',
-        '3xll': '1.75rem',
-        xxs3: '0.688rem',
+
       },
       fontFamily: {
         'rubik': ['Rubik'],
@@ -135,6 +131,7 @@ module.exports = {
       lineHeight: {
         'header': '2.5rem',
         'body': '1.5rem',
+        5.5: '1.4',
       },
       keyFrames: {
         pulseBorder: {
@@ -174,9 +171,6 @@ module.exports = {
       },
       aspectRatio: {
         '4/3': '4/3',
-      },
-      lineHeight: {
-        5.5: '1.4',
       },
     },
   },

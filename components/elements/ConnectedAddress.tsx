@@ -1,8 +1,7 @@
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { Maybe } from 'graphql/generated/types';
-import { shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
-import { getAccountLink } from '@metamask/etherscan-link';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { ExternalLink } from 'styles/theme';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -32,7 +31,7 @@ export function ConnectedAddress(props: ConnectedAddressProps) {
           }}
         >
           <ExternalLink
-            href={getAccountLink(ensName ?? account?.address, activeChain?.id.toString())}
+            href={getEtherscanLink(activeChain?.id, ensName ?? account?.address, 'address')}
           >
             {account?.address &&
             <div

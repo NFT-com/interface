@@ -3,7 +3,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 import HomeLayout from 'components/layouts/HomeLayout';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
-import { Doppler,getEnv } from 'utils/env';
+import { Doppler,getEnv, getEnvBool } from 'utils/env';
 
 import {
   connectorsForWallets,
@@ -12,10 +12,36 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { AnimatePresence } from 'framer-motion';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import Script from 'next/script';
+import { isMobile } from 'react-device-detect';
+import ReactGA from 'react-ga';
 import { rainbowDark } from 'styles/RainbowKitThemes';
+import { v4 as uuid } from 'uuid';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+
+const GOOGLE_ANALYTICS_ID: string | undefined = getEnv(Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
+if (GOOGLE_ANALYTICS_ID != null) {
+  const debugLogging = getEnvBool(Doppler.NEXT_PUBLIC_DEBUG_LOGGING);
+  ReactGA.initialize(GOOGLE_ANALYTICS_ID, {
+    gaOptions: {
+      userId: uuid(), // this is used as the sessionId
+    },
+    testMode: debugLogging,
+    debug: debugLogging,
+    titleCase: false,
+  });
+  ReactGA.set({
+    customBrowserType: !isMobile
+      ? 'desktop'
+      : 'web3' in window || 'ethereum' in window
+        ? 'mobileWeb3'
+        : 'mobileRegular',
+  });
+} else {
+  ReactGA.initialize('test', { testMode: true, debug: true });
+}
 
 const { chains, provider } = configureChains(
   getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
@@ -63,6 +89,9 @@ const wagmiClient = createClient({
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <>
+      <Head>
+        <title>NFT.com</title>
+      </Head>
       <Script strategy="afterInteractive" src="/js/pageScripts.js" />
         
       <WagmiConfig client={wagmiClient}>
