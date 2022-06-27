@@ -12,6 +12,7 @@ import {
 } from '@rainbow-me/rainbowkit';
 import { AnimatePresence } from 'framer-motion';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import Script from 'next/script';
 import { isMobile } from 'react-device-detect';
 import ReactGA from 'react-ga';
@@ -88,6 +89,9 @@ const wagmiClient = createClient({
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <>
+      <Head>
+        <title>NFT.com</title>
+      </Head>
       <Script strategy="afterInteractive" src="/js/pageScripts.js" />
         
       <WagmiConfig client={wagmiClient}>

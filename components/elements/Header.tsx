@@ -10,7 +10,7 @@ import { isMobile } from 'react-device-detect';
 
 export const Header = () => {
   return (
-    <Popover as="nav" className='fixed z-[99] top-0 w-screen h-20 bg-dark-overlay'>
+    <Popover as="nav" className='fixed z-[99] top-0 w-screen h-20 bg-secondary-dk'>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
@@ -21,7 +21,7 @@ export const Header = () => {
               <div className="ml-10 flex items-baseline space-x-4">
                 <a
                   href="#"
-                  className=" hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium"
+                  className="hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
                     Test
                 </a>

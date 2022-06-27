@@ -71,12 +71,14 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                         className={tw(
                           `${props?.signInButton ? 'block' : 'hidden'}`,
                           'font-medium bg-primary-button-bckg rounded-xl text-white',
+                          'border',
+                          'border-primary-button-border',
                           'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                           'py-2 px-5'
                         )}
                         type="button">
                         <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="white" alt={'Logged out wallet'}/>
-                  Sign In
+                      Sign In
                       </button>
                     }
                   </div>
@@ -88,13 +90,14 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                   <button className={tw(
                     'block font-medium bg-primary-button-bckg rounded-xl text-white',
                     'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
+                    'border',
+                    'border-primary-button-border',
                     'py-2 px-5'
                   )} onClick={openChainModal} type="button">
                     Unsupported network
                   </button>
                 );
               }
-
               return (
                 <>
                   <div
