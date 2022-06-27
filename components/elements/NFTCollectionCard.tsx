@@ -1,7 +1,9 @@
+import { ProfileEditContext } from 'components/modules/Profile/ProfileEditContext';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 
 import { NFTCard } from './NFTCard';
 
+import { useContext } from 'react';
 import { useNetwork } from 'wagmi';
 
 export interface NFTCollectionCardProps {
@@ -9,7 +11,6 @@ export interface NFTCollectionCardProps {
   count: number
   images: string[]
   onClick: () => void
-  draftNftsDescriptionsVisible?: boolean
 }
 
 /**
@@ -17,6 +18,10 @@ export interface NFTCollectionCardProps {
  */
 export function NFTCollectionCard(props: NFTCollectionCardProps) {
   const { activeChain } = useNetwork();
+
+  const {
+    draftNftsDescriptionsVisible
+  } = useContext(ProfileEditContext);
 
   const { data: collection } = useCollectionQuery(String(activeChain?.id), props?.contract, '');
   const processedImages = props.images.filter(i => i != null);
@@ -28,7 +33,7 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
       images={processedImages}
       imageLayout="row"
       onClick={props.onClick}
-      nftsDescriptionsVisible={props.draftNftsDescriptionsVisible}
+      nftsDescriptionsVisible={draftNftsDescriptionsVisible}
       contractAddress={collection?.collection?.contract}
     />
   );
