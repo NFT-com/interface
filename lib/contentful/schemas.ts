@@ -101,3 +101,17 @@ export const BLOG_LIST_HOME_FIELDS = `
     }
   }
 `;
+
+export const HOME_PAGE_FIELDS = `
+{
+  subheroTitle
+  subheroDescription
+  feedTitle
+  feedDescription
+  leaderboardTitle
+  leaderboardDescription
+  threeCardTitle
+  learnDescription
+  entryTitle
+}
+`;

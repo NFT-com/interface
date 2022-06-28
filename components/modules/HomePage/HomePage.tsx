@@ -8,10 +8,27 @@ import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { tw } from 'utils/tw';
 
+import { getCollection } from 'lib/contentful/api';
+import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
 import type { NextPage } from 'next';
 import Ticker from 'react-ticker';
 
-const HomePage: NextPage = () => {
+type HomePageProps = {
+  preview: boolean;
+  data?: {
+    subHeroTitle: string;
+    subheroDescription: string;
+    feedTitle: string;
+    feedDescription: string;
+    leaderboardTitle: string;
+    leaderboardDescription: string;
+    threeCardTitle: string;
+    learnDescription: string;
+    entryTitle: string;
+  }
+}
+
+const HomePage: NextPage = ({ preview, data }: HomePageProps) => {
   {/*TODO: @anthony use contentful for this */}
   const { profileData: featuredProfile } = useProfileQuery('anthony');
 
@@ -24,10 +41,10 @@ const HomePage: NextPage = () => {
             'break-after-all space-y-2'
           )}>
             <div>
-              OWNERSHIP,
+              {data?.subHeroTitle}
             </div>
             <div>
-              FOR EVERYONE
+              {data?.subheroDescription}
             </div>
           </div>
           <div className='w-full h-full inline-flex grow space-x-2 ...'>
@@ -185,5 +202,15 @@ const HomePage: NextPage = () => {
       </div>
     </main>);
 };
+
+export async function getServerSideProps({ preview = false }) {
+  const homeData = await getCollection(preview, 1, 'homePageCollection', HOME_PAGE_FIELDS);
+  return {
+    props: {
+      preview,
+      data: homeData[0] ?? null,
+    }
+  };
+}
 
 export default HomePage;
