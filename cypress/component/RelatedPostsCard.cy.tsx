@@ -19,7 +19,7 @@ describe('RelatedPostCard', () => {
 
     cy.get('p').contains("John Doe")
 
-    cy.get('p.text-sm').should('have.text', 'Sep 1st, 2003')
+    cy.get('p.text-sm').should('contain.text', 'Sep 1st, 2003')
 
     cy.get('img').should('have.attr', 'src')
     cy.get('img').should('have.attr', 'alt')
