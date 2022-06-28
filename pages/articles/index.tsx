@@ -1,8 +1,12 @@
 import { Button, ButtonType } from 'components/elements/Button';
+import { Footer } from 'components/elements/Footer';
+import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
+import HomeLayout from 'components/layouts/HomeLayout';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
+import ClientOnly from 'utils/ClientOnly';
 import { getPaginatedPosts } from 'utils/contentful';
 import { Doppler, getEnvBool } from 'utils/env';
 
@@ -10,6 +14,7 @@ import { getCollection } from 'lib/contentful/api';
 import { BLOG_LIST_HOME_FIELDS } from 'lib/contentful/schemas';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { Sidebar } from 'react-feather';
 import { PostData } from 'types/blogs';
 
 type PostListProps = {
@@ -34,6 +39,10 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
   }
   return (
     <>
+      <ClientOnly>
+        <Header />
+        <Sidebar />
+      </ClientOnly>
       <div className='px-6 md:px-4 sm:px-2.5 bg-white dark:bg-modal-overlay-dk pt-28'>
         <h2 className='font-medium text-4xl md:text-lg mb-6 md:mb-4 dark:text-white'>{data?.heroTitle}</h2>
         {posts && <BlogSlider posts={data?.blogSlidesCollection.items} />}
@@ -57,11 +66,15 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
           />
         </div>
       )}
-      
+      <Footer />
       {preview && <PreviewBanner />}
     </>
   );
 }
+
+BlogListPage.getLayout = function getLayout(page) {
+  return ( <HomeLayout> { page } </HomeLayout> );
+};
 
 export async function getServerSideProps({ preview = false }) {
   const homeData = await getCollection(preview, 1, 'blogHomePageCollection', BLOG_LIST_HOME_FIELDS);
