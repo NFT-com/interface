@@ -15,21 +15,16 @@ type SharingProps = {
 
 export default function SharingIcons({ title }: SharingProps) {
   const [, setCopied] = useCopyClipboard();
-
-  let url;
-  if(typeof window !== 'undefined') {
-    url = window.location.href;
-  }
   return (
     <div className="absolute right-0 bottom-3.5 md:bottom-1 flex row">
-      <FacebookShareButton quote={title} url={url}>
+      <FacebookShareButton quote={title} url={window.location.href}>
         <FacebookIcon
           bgStyle={{ fill: '#FBF9F9' }}
           iconFillColor="#727272"
           className="w-8 h-8 md:w-6 md:h-6 p-0 border dark:border-0 border-share-icon rounded-full"
         />
       </FacebookShareButton>
-      <TwitterShareButton className="mx-3 rounded-full" title={title} url={url}>
+      <TwitterShareButton className="mx-3 rounded-full" title={title} url={window.location.href}>
         <TwitterIcon
           bgStyle={{ fill: '#FBF9F9' }}
           iconFillColor="#727272"
@@ -53,7 +48,7 @@ export default function SharingIcons({ title }: SharingProps) {
         <button className="w-8 h-8 md:w-6 md:h-6 flex justify-center items-center border dark:border-0 border-share-icon rounded-full bg-share-icon-bg">
           <Link
             onClick={() => {
-              setCopied(url);
+              setCopied(window.location.href);
             }}
             className="flex-shrink-0 aspect-square w-8 h-5 md:w-6 md:h-4"
             color="#727272"
