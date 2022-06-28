@@ -129,12 +129,6 @@ module.exports = {
         'body': '1rem',
         'xll': '1.375rem'
       },
-      fontFamily: {
-        'rubik': ['Rubik'],
-        'hero-heading1': ['Stretch Pro'],
-        'hero-heading2': ['Bebas Neue'],
-        'dm-mono': ['DM Mono'],
-      },
       fontWeight: {
         'header': '500',
         'body': '400',
