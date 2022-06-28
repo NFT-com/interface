@@ -1,4 +1,7 @@
 export const POST_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
   title
   slug
   heroImage{
@@ -26,6 +29,9 @@ export const POST_GRAPHQL_FIELDS = `
   tags
   relatedPostsCollection{
     items{
+      sys{
+        id
+      }
       title
       slug
       description
@@ -41,6 +47,56 @@ export const POST_GRAPHQL_FIELDS = `
           url
           description
         }
+      }
+    }
+  }
+`;
+
+export const POST_LIST_GRAPHQL_FIELDS = `
+  title
+  slug
+  body
+  heroImage{
+    url
+    description
+  }
+  description
+  author{
+    name
+    image{
+      url
+      description
+    }
+  }
+  publishDate
+  sys {
+    id
+  }
+`;
+
+export const BLOG_LIST_HOME_FIELDS = `
+  heroTitle
+  listTitle
+  blogSlidesCollection{
+    items{
+      title
+      slug
+      description
+      body
+      publishDate
+      heroImage{
+        url
+        description
+      }
+      author{
+        name
+        image{
+          url
+          description
+        }
+      }
+      sys{
+        id
       }
     }
   }

@@ -110,6 +110,13 @@ module.exports = {
         'share-icon-bg': '#FBF9F9',
         'blog-text': '#727272',
         'secondary-dk': '#222222',
+        'blog-slider-blue': '#DCF2FF'
+      },
+      fontFamily: {
+        'rubik': ['Rubik'],
+        'hero-heading1': ['Stretch Pro'],
+        'hero-heading2': ['Bebas Neue'],
+        'dm-mono': ['DM Mono'],
       },
       fontSize: {
         'copy-size': '0.825rem',

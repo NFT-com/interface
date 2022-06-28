@@ -29,4 +29,7 @@ export type PostData = {
   relatedPostsCollection: {
     items: PostData[];
   };
+  sys: {
+    id: string
+  }
 };
