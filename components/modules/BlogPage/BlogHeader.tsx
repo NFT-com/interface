@@ -1,3 +1,5 @@
+import ClientOnly from 'utils/ClientOnly';
+
 import SharingIcons from './SharingIcons';
 
 import moment from 'moment';
@@ -36,9 +38,11 @@ export default function BlogHeader({ post }: HeaderProps) {
           <p>{moment(post?.publishDate).format('MMM Do, YYYY')}</p>
           <span className="mx-1">.</span>
           {post?.body && <p>{result.minutes} min read</p>}
-          <SharingIcons
-            title={post?.title}
-          />
+          <ClientOnly>
+            <SharingIcons
+              title={post?.title}
+            />
+          </ClientOnly>
         </div>
       )}
     </>
