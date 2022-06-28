@@ -1,7 +1,8 @@
 import { Footer } from 'components/elements/Footer';
-import { NullState } from 'components/elements/NullState';
+import Loader from 'components/elements/Loader';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { GenesisKeyDetailContent } from 'components/modules/Gallery/GenesisKeyDetailContent';
+import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 
@@ -12,8 +13,14 @@ export default function GalleryDetailPage() {
   const router = useRouter();
   const { id } = router.query;
 
-  if( id === null || id === undefined ) {
-    return <NullState />;
+  if (id === null || id === undefined) {
+    return <div className={tw(
+      'text-primary-txt dark:text-primary-txt-dk flex flex-col',
+      'items-center justify-center h-screen'
+    )}>
+      <div className="mb-2">Loading...</div>
+      <Loader />
+    </div>;
   }
   
   return (

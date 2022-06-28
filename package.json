@@ -21,7 +21,8 @@
     "cypress:run-only": "doppler run -- cypress run",
     "cypress:open": "start-server-and-test dev 3000 cypress:open-only",
     "cypress:run": "start-server-and-test dev 3000 cypress:run-only",
-    "cypress:record": "cypress run --record"
+    "cypress:record": "cypress run --record",
+    "instrument": "npx nyc instrument --compact=false ./ instrumented"
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.2",
@@ -32,8 +33,7 @@
     "@graphql-codegen/typescript-operations": "^2.4.0",
     "@headlessui/react": "^1.6.1",
     "@heroicons/react": "^1.0.6",
-    "@metamask/etherscan-link": "^2.1.0",
-    "@rainbow-me/rainbowkit": "^0.2.2",
+    "@rainbow-me/rainbowkit": "0.3.2",
     "@sentry/nextjs": "^7.0.0",
     "@types/tailwindcss": "^3.0.10",
     "email-validator": "^2.0.4",
@@ -67,6 +67,7 @@
     "type-fest": "^2.12.2",
     "typesense": "^1.2.2",
     "typesense-instantsearch-adapter": "^2.4.0",
+    "uuid": "^8.3.2",
     "wagmi": "^0.4.2"
   },
   "devDependencies": {

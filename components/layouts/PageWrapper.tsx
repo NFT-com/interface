@@ -1,13 +1,14 @@
 import AddFundsDialog from 'components/elements/AddFundsDialog';
 import { Footer } from 'components/elements/Footer';
 import Header from 'components/elements/Header';
-import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
+import HeroSidebar from 'components/modules/HeroSidebar/HeroSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
 
+import Head from 'next/head';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
@@ -48,8 +49,12 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
   return (
     <div className={tw(
       'flex flex-col h-screen',
+      'min-h-screen',
       isMobile ? 'overflow-x-hidden' : ''
     )}>
+      <Head>
+        <title>NFT.com</title>
+      </Head>
       <main
         className={tw(
           'absolute w-full h-full flex flex-col',
@@ -84,7 +89,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
           }
         </div>}
         
-        <Sidebar />
+        <HeroSidebar />
 
         <SignOutModal
           visible={signOutDialogOpen}
@@ -94,9 +99,11 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
         />
         
         {props.children}
-        <div className="bg-transparent w-full flex grow"></div>
+        
         {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
+          <>
             <Footer />
+          </>
         }
       </main>
     </div>

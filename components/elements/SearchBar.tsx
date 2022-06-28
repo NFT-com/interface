@@ -17,19 +17,20 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
 const Hit = (hit) => {
   const router = useRouter();
+  console.log(hit);
   return (
     <div
       className={tw(
         'flex flex-row text-base my-3',
         'font-medium dark:text-always-white hover:cursor-pointer')}
       onClick={() => {
-        if (!hit.hit.tokentId && !hit.hit.type) {
-          router.push(`/app/collection/${hit.hit.contract}/`);
+        if (!hit.hit.nftName) {
+          router.push(`/app/collection/${hit.hit.contractAddr}/`);
         } else {
-          router.push(`/app/nft/${hit.hit.contract}/${hit.hit.id}`);
+          router.push(`/app/nft/${hit.hit.contractAddr}/${hit.hit.id}`);
         }
       }}>
-      <Highlight attribute="nftName" nonHighlightedTagName="span" hit={hit.hit} />
+      <Highlight attribute={!hit.hit.nftName ? 'contractName' : 'nftName'} nonHighlightedTagName="span" hit={hit.hit} />
     </div>
   );
 };
@@ -103,8 +104,8 @@ export const SearchBar = () => {
         }}>
 
         <div className="relative w-full">
-          <div className="flex border rounded-xl py-2 px-3 w-full dark:text-always-white">
-            <SearchIcon className="w-4 mr-2" alt="Search" />
+          <div className="flex items-center border rounded-xl py-2 px-3 w-full dark:text-always-white">
+            <SearchIcon className='mr-2 shrink-0 aspect-square' />
             <SearchBox
               submit={null}
               reset={null}

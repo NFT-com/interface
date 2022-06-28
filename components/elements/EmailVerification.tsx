@@ -224,7 +224,7 @@ export function EmailVerification(props) {
               }}
               className={joinClasses(
                 'py-3.5 h-15 w-full font-medium text-lg flex-1 min-w-0 block',
-                'text-left w-full px-3 py-2 w-full rounded-md focus:ring-indigo-500',
+                'text-left w-full px-3 py-2 rounded-md focus:ring-indigo-500',
                 'focus:border-indigo-500 deprecated_sm:text-sm border-gray-300'
               )}
               style={{

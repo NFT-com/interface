@@ -7,8 +7,16 @@ import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { isMobile } from 'react-device-detect';
-import { InfiniteHits } from 'react-instantsearch-dom';
-import { ClearRefinements, Configure, connectStateResults, InstantSearch, SearchBox, SortBy, Stats } from 'react-instantsearch-dom';
+import {
+  ClearRefinements,
+  Configure,
+  connectStateResults,
+  InfiniteHits,
+  InstantSearch,
+  SearchBox,
+  SortBy,
+  Stats,
+} from 'react-instantsearch-dom';
 // import Typesense from 'typesense';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
@@ -79,15 +87,17 @@ const sortByDefaultRefinement = 'nfts';//sorts[0].value;
 
 const Hit = (hit: { hit: { nftName: string; id: string; imageURL: string; contractAddr: string; contractName: string; nftDescription: string; price: number}; }) => {
   return (
-    <NFTCard
-      header={{ value: hit.hit.nftName, key: '' }}
-      traits={[{ value: shortenAddress(hit.hit.contractAddr), key: '' }]}
-      title={'Price: ' + (hit.hit.price ? (hit.hit.price + 'ETH') : 'Not estimated')}
-      subtitle={hit.hit.contractName}
-      images={[hit.hit.imageURL]}
-      onClick={() => null}
-      description={hit.hit.nftDescription ? hit.hit.nftDescription.slice(0,50) + '...': '' }
-    />
+    <div data-testid={'NFTCard-'+hit.hit.contractAddr}>
+      <NFTCard
+        header={{ value: hit.hit.nftName, key: '' }}
+        traits={[{ value: shortenAddress(hit.hit.contractAddr), key: '' }]}
+        title={'Price: ' + (hit.hit.price ? (hit.hit.price + 'ETH') : 'Not estimated')}
+        subtitle={hit.hit.contractName}
+        images={[hit.hit.imageURL]}
+        onClick={() => null}
+        description={hit.hit.nftDescription ? hit.hit.nftDescription.slice(0,50) + '...': '' }
+      />
+    </div>
   );
 };
 
@@ -96,7 +106,7 @@ const Results = connectStateResults(
     return searchResults && searchResults.nbHits !== 0
       ? (
         <>
-          <InfiniteHits hitComponent={Hit}/>
+          <InfiniteHits hitComponent={Hit} />
         </>
       )
       : (
@@ -118,9 +128,9 @@ export default function ResultsPage() {
         removeSummaryBanner: true,
       }}>
       <div
+        id="ResultsPageContainer"
         className="pb-16"
         style={{
-          margin: '0 auto',
           paddingTop: !isMobile && '8rem',
           maxWidth: isMobile ? '100%' : '100%'
         }}>
@@ -152,7 +162,7 @@ export default function ResultsPage() {
                     <Stats
                       translations={{
                         stats(nbHits) {
-                          return nbHits === 0 ? 'No Results' : `${nbHits.toLocaleString()} Result${nbHits > 1 && 's'}`;
+                          return nbHits === 0 ? 'No Results' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
                         },
                       }}/>
                   </div>

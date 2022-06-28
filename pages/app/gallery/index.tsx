@@ -147,7 +147,7 @@ export default function GalleryPage() {
           />
         </div>
         <div className={tw(
-          'md:block absolute bottom-0 left-0 hidden w-full mb-8 flex justify-center',
+          'md:block absolute bottom-20 mb-2 left-0 hidden w-full flex justify-center',
           'drop-shadow-md px-8'
         )}>
           <Button

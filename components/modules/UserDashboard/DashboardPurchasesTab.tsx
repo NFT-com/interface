@@ -5,11 +5,10 @@ import { MarketSwap } from 'graphql/generated/types';
 import { useFetchSwaps } from 'graphql/hooks/useFetchSwaps';
 import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import useLazyLoad from 'hooks/useLazyLoad';
-import { shorten } from 'utils/helpers';
+import { getEtherscanLink, shorten } from 'utils/helpers';
 
 import { DashboardTabTitle } from './DashboardTabTitle';
 
-import { createExplorerLink } from '@metamask/etherscan-link';
 import { useCallback, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { PartialDeep } from 'type-fest';
@@ -72,7 +71,11 @@ export function DashboardPurchasesTab() {
         {(swaps ?? []).map((swap: PartialDeep<MarketSwap>) => {
           return (
             <a target="_blank" rel="noreferrer"
-              href={createExplorerLink(swap.txHash, activeChain?.id.toString())}
+              href={getEtherscanLink(
+                activeChain?.id,
+                swap.txHash,
+                'transaction'
+              )}
               key={swap?.txHash} className="flex w-1/5 mx-1 shrink-0 deprecated_sm:w-full deprecated_sm:px-8 deprecated_sm:mb-2">
               
               <MarketplaceMultiAssetCard

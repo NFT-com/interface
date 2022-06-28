@@ -57,15 +57,21 @@ export function shortenString(value: string | null | number, limit: number, leng
 }
 
 export function prettify(num: number | string, dec?: number) {
-  if (num === 0) {
+  if (num === 0 || Number(num) < 0.001) {
     return '0';
   }
+
+  if (Number(num) < 0.1) {
+    return Number(num).toFixed(3);
+  }
+
   let extra = 0;
   let formatted;
+  
   while (formatted === '0' || formatted == null) {
     formatted = numberWithCommas(parseFloat(Number(num).toFixed(dec + extra)));
     extra++;
-    if (extra > 6) {
+    if (extra > 5) {
       return numberWithCommas(parseFloat(Number(num).toFixed(dec)));
     }
   }
@@ -125,6 +131,8 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(7);
   } else if (image.indexOf('https://ipfs.io/ipfs/') === 0) {
     return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(21);
+  } else if (image.indexOf('https://gateway.pinata.cloud/ipfs/') === 0) {
+    return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(34);
   }
   return image;
 };
