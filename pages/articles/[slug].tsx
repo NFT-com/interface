@@ -1,14 +1,18 @@
+import { Footer } from 'components/elements/Footer';
+import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
+import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { getPost } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
+import { Sidebar } from 'react-feather';
 import { PostData } from 'types/blogs';
 
 type PostProps = {
@@ -49,6 +53,10 @@ export default function Post({ post, preview }: PostProps) {
           cardType: 'summary_large_image',
         }}
       />
+      <ClientOnly>
+        <Header />
+        <Sidebar />
+      </ClientOnly>
       <div className="bg-white dark:bg-modal-overlay-dk  relative text-center px-4 w-full pt-28">
         <BlogHeader post={post} />
 
@@ -74,6 +82,7 @@ export default function Post({ post, preview }: PostProps) {
           )
           : null}
       </div>
+      <Footer />
       {preview && <PreviewBanner />}
     </>
   );
