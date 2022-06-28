@@ -4,6 +4,7 @@ import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
 import { getPaginatedPosts } from 'utils/contentful';
+import { Doppler, getEnvBool } from 'utils/env';
 
 import { getCollection } from 'lib/contentful/api';
 import { BLOG_LIST_HOME_FIELDS } from 'lib/contentful/schemas';
@@ -28,7 +29,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
   const [posts, setPosts] = useState(postData);
   const router = useRouter();
 
-  if (!router.isFallback && !posts) {
+  if (!router.isFallback && !posts || !getEnvBool(Doppler.NEXT_PUBLIC_BLOG_PAGES_ENABLED)) {
     return <NotFoundPage />;
   }
   return (
