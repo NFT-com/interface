@@ -110,19 +110,23 @@ module.exports = {
         'share-icon-bg': '#FBF9F9',
         'blog-text': '#727272',
         'secondary-dk': '#222222',
-
+      },
+      fontSize: {
+        'copy-size': '0.825rem',
+        '2xll': '1.6rem',
+        'xxs1': '0.4rem',
+        'xxs2': '0.6rem',
+        '3xll': '1.75rem',
+        'xxs3': '0.688rem',
+        'header': '2.25rem',
+        'body': '1rem',
+        'xll': '1.375rem'
       },
       fontFamily: {
         'rubik': ['Rubik'],
         'hero-heading1': ['Stretch Pro'],
         'hero-heading2': ['Bebas Neue'],
         'dm-mono': ['DM Mono'],
-      },
-      fontSize: {
-        'copy-size': '0.825rem',
-        'xxs2': '0.6rem',
-        'header': '2.25rem',
-        'body': '1rem',
       },
       fontWeight: {
         'header': '500',
