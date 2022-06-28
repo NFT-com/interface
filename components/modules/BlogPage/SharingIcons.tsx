@@ -11,7 +11,6 @@ import {
 
 type SharingProps = {
   title: string;
-  url?: string
 };
 
 export default function SharingIcons({ title }: SharingProps) {
