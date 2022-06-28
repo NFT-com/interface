@@ -55,7 +55,7 @@ export default function Post({ post, preview }: PostProps) {
           src={post?.heroImage.url}
           alt={post?.heroImage.description}
         />
-        <div className="text-left mt-12 md:mt-8 pb-5 ">
+        <div className="text-left mt-12 md:mt-8 mx-auto pb-5 w-8/12 lg:w-3/4 md:w-full">
           <Markdown content={post?.body} />
         </div>
         {post?.relatedPostsCollection?.items.length

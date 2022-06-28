@@ -127,6 +127,13 @@ module.exports = {
         'xxs3': '0.688rem',
         'header': '2.25rem',
         'body': '1rem',
+        'xll': '1.375rem'
+      },
+      fontFamily: {
+        'rubik': ['Rubik'],
+        'hero-heading1': ['Stretch Pro'],
+        'hero-heading2': ['Bebas Neue'],
+        'dm-mono': ['DM Mono'],
       },
       fontWeight: {
         'header': '500',
