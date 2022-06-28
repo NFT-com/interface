@@ -62,6 +62,7 @@ module.exports = {
         'accent-border-dk':'#384260',
         'primary-button-txt':'#FFFFFF',
         'primary-button-bckg':'#111111',
+        'deprecated_primary-button-bckg':'#00A4FF',
         'primary-button-border': '#7D8795',
         'always-white':'#FFFFFF',
         'always-black':'#000000',

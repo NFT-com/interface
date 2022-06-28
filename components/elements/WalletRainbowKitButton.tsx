@@ -1,4 +1,5 @@
 import { useSidebar } from 'hooks/state/useSidebar';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -70,9 +71,12 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                         }}
                         className={tw(
                           `${props?.signInButton ? 'block' : 'hidden'}`,
-                          'font-medium bg-primary-button-bckg rounded-xl text-white',
-                          'border',
-                          'border-primary-button-border',
+                          'font-medium',
+                          `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
+                            ? 'bg-primary-button-bckg'
+                            : 'bg-deprecated_primary-button-bckg'}`,
+                          'rounded-xl text-white',
+                          'border border-primary-button-border',
                           'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                           'py-2 px-5'
                         )}
@@ -88,7 +92,10 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
               if (chain.unsupported) {
                 return (
                   <button className={tw(
-                    'block font-medium bg-primary-button-bckg rounded-xl text-white',
+                    'block font-medium rounded-xl text-white',
+                    `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
+                      ? 'bg-primary-button-bckg'
+                      : 'bg-deprecated_primary-button-bckg'}`,
                     'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                     'border',
                     'border-primary-button-border',
@@ -112,7 +119,10 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                     className="gap-3 sm:hidden block cursor-pointer"
                   >
                     <button className={tw(
-                      'block font-medium bg-primary-button-bckg rounded-xl text-white',
+                      'block font-medium rounded-xl text-white',
+                      `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
+                        ? 'bg-primary-button-bckg'
+                        : 'bg-deprecated_primary-button-bckg'}`,
                       'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                       'py-2 px-5'
                     )} onClick={() => {

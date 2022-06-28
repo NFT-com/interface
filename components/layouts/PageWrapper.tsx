@@ -2,13 +2,14 @@ import AddFundsDialog from 'components/elements/AddFundsDialog';
 import { Footer } from 'components/elements/Footer';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
+import HeroHeader from 'components/modules/Hero/HeroHeader';
 import HeroSidebar from 'components/modules/HeroSidebar/HeroSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
 
 import Head from 'next/head';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
@@ -35,10 +36,17 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
   
   const { data: account } = useAccount();
 
+  const [clientOnly, setClientOnly] = useState(false);
+
   useMaybeCreateUser();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setClientOnly(true);
+    }
+  }, []);
   
   return (
-
     <div className={tw(
       'flex flex-col h-screen',
       'min-h-screen',
@@ -69,6 +77,16 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
                 hideAnalytics={headerOptions?.hideAnalytics}
               />
           )}
+          {clientOnly &&
+          <HeroHeader
+            walletPopup={headerOptions?.walletPopupMenu}
+            walletOnly={headerOptions?.walletOnly}
+            removeBackground={headerOptions?.removeBackground}
+            heroHeader={headerOptions?.heroHeader}
+            heroHeaderBlack={headerOptions?.heroHeaderBlack}
+            profileHeader={headerOptions?.profileHeader}
+          />
+          }
         </div>}
         
         <HeroSidebar />

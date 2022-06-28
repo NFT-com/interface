@@ -1,7 +1,6 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import HomeLayout from 'components/layouts/HomeLayout';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
 
@@ -11,9 +10,11 @@ import {
   wallet
 } from '@rainbow-me/rainbowkit';
 import { AnimatePresence } from 'framer-motion';
+import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
+import type { ReactElement, ReactNode } from 'react';
 import { isMobile } from 'react-device-detect';
 import ReactGA from 'react-ga';
 import { rainbowDark } from 'styles/RainbowKitThemes';
@@ -86,31 +87,41 @@ const wagmiClient = createClient({
   provider
 });
 
-export default function MyApp({ Component, pageProps, router }: AppProps) {
+export type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+export default function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
+  // Use the layout defined at the page level, if available
+  const getLayout = Component.getLayout ?? ((page) => page);
   return (
-    <>
-      <Head>
-        <title>NFT.com</title>
-      </Head>
-      <Script strategy="afterInteractive" src="/js/pageScripts.js" />
+    getLayout(
+      <>
+        <Head>
+          <title>NFT.com</title>
+        </Head>
+        <Script strategy="afterInteractive" src="/js/pageScripts.js" />
         
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          appInfo={{
-            appName: 'NFT.com',
-            learnMoreUrl: 'https://docs.nft.com/',
-          }}
-          theme={rainbowDark}
-          chains={chains}>
-          <AnimatePresence exitBeforeEnter>
-            <GraphQLProvider>
-              <HomeLayout>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider
+            appInfo={{
+              appName: 'NFT.com',
+              learnMoreUrl: 'https://docs.nft.com/',
+            }}
+            theme={rainbowDark}
+            chains={chains}>
+            <AnimatePresence exitBeforeEnter>
+              <GraphQLProvider>
                 <Component {...pageProps} key={router.pathname} />
-              </HomeLayout>
-            </GraphQLProvider>
-          </AnimatePresence>
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </>
+              </GraphQLProvider>
+            </AnimatePresence>
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </>
+    )
   );
 }
