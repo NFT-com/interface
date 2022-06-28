@@ -51,6 +51,7 @@ module.exports = {
         'primary-txt':'#171B27',
         'primary-txt-dk':'#FFFFFF',
         'secondary-txt':'#777E93',
+        'secondary-txt-light': '#F8F8F8',
         'secondary-txt-dk':'#CCCCCC',
         'primary-pink':'#F2358E',
         'secondary-pink':'#E369A4',
@@ -60,7 +61,9 @@ module.exports = {
         'accent-border':'transparent',
         'accent-border-dk':'#384260',
         'primary-button-txt':'#FFFFFF',
-        'primary-button-bckg':'#00A4FF',
+        'primary-button-bckg':'#111111',
+        'deprecated_primary-button-bckg':'#00A4FF',
+        'primary-button-border': '#7D8795',
         'always-white':'#FFFFFF',
         'always-black':'#000000',
         'primary-1':'#0164d0',
@@ -68,16 +71,15 @@ module.exports = {
         'green-summary':'#4FC853',
         'headerbg':'#FFFFFF',
         'headerbg-dk':'#0C0F17',
-        'headerbg-profile-dk':'#222222',
         'pagebg':'#f4f6fb',
         'pagebg-dk':'#0C0F17',
-        'pagebg-secondary-dk':'#222222',
         'header-txt':'#6B7082',
         'header-pink':'#FF0078',
         'modal-bg':'#FFFFFF',
         'modal-bg-dk':'#22293B',
         'modal-overlay': '#f0f5ff', // use with opacity 50, i.e. modal-overlay/50
         'modal-overlay-dk': '#171b27', // use with opacity 50, i.e. modal-overlay-dk/50
+        'feature-overlay': '#B0AFAF',
         'row-border':'#E6ECFF',
         'green1':'#27AE60',
         'gkWalletOptionBgHover':'#2C3448',
@@ -99,21 +101,43 @@ module.exports = {
         'link': '#00A4FF',
         'gray-opacity':'#c4c4c49e',
         'vault-pink':'#C264B9',
+        'dark-overlay': '#303030E5',
+        'dark-type-primary': '#F3F3F3',
+        'tileBackgroundSecondary': '#303030',
         'secondary-bg-dk': '#303030',
         'looksrare-green': '#0CE466',
-        'opensea-blue': '#2081E2'
-      },
-      fontSize: {
-        'copy-size': '0.825rem',
-        '2xll': '1.6rem',
-        'xxs1': '0.4rem',
-        'xxs2': '0.6rem',
+        'opensea-blue': '#2081E2',
+        'share-icon': '#E4E4E4',
+        'share-icon-bg': '#FBF9F9',
+        'blog-text': '#727272',
+        'secondary-dk': '#222222',
+        'blog-slider-blue': '#DCF2FF'
       },
       fontFamily: {
         'rubik': ['Rubik'],
         'hero-heading1': ['Stretch Pro'],
         'hero-heading2': ['Bebas Neue'],
         'dm-mono': ['DM Mono'],
+      },
+      fontSize: {
+        'copy-size': '0.825rem',
+        '2xll': '1.6rem',
+        'xxs1': '0.4rem',
+        'xxs2': '0.6rem',
+        '3xll': '1.75rem',
+        'xxs3': '0.688rem',
+        'header': '2.25rem',
+        'body': '1rem',
+        'xll': '1.375rem'
+      },
+      fontWeight: {
+        'header': '500',
+        'body': '400',
+      },
+      lineHeight: {
+        'header': '2.5rem',
+        'body': '1.5rem',
+        5.5: '1.4',
       },
       keyFrames: {
         pulseBorder: {
@@ -141,6 +165,8 @@ module.exports = {
       height: {
         'slider-button': '2.1875rem',
         'sumBanner':'2.875rem',
+        'blogHero-lg': '29rem',
+        'blogHero-xl': '37rem',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -148,7 +174,10 @@ module.exports = {
       'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)',
         'hero-gradient':
       'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
-      }
+      },
+      aspectRatio: {
+        '4/3': '4/3',
+      },
     },
   },
   variants: {

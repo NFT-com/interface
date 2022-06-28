@@ -5,6 +5,9 @@ export interface ModalButtonProps {
   text: string;
   onClick: () => void;
   loading: boolean;
+  bgColor?: string;
+  textColor?: string;
+  outline?: string;
 }
 
 export function ModalButton(props: ModalButtonProps) {
@@ -12,8 +15,9 @@ export function ModalButton(props: ModalButtonProps) {
     <div className="flex items-center justify-center">
       <div
         style={{
-          backgroundColor: props.loading ? '#6B7280' : '#05C0FC',
-          color: '#FFFFFF',
+          backgroundColor: props.loading ? '#6B7280' : props?.bgColor ?? '#05C0FC',
+          color: props?.textColor ?? '#FFFFFF',
+          outline: props?.outline ?? 'none',
         }}
         onClick={props.onClick}
         className={joinClasses(

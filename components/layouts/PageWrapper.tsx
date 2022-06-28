@@ -1,9 +1,9 @@
 import AddFundsDialog from 'components/elements/AddFundsDialog';
 import { Footer } from 'components/elements/Footer';
-import Header from 'components/elements/Header';
+import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
-import HeroSidebar from 'components/modules/HeroSidebar/HeroSidebar';
+import HeroHeader from 'components/modules/Hero/HeroHeader';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { tw } from 'utils/tw';
@@ -78,7 +78,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
               />
           )}
           {clientOnly &&
-          <Header
+          <HeroHeader
             walletPopup={headerOptions?.walletPopupMenu}
             walletOnly={headerOptions?.walletOnly}
             removeBackground={headerOptions?.removeBackground}
@@ -89,7 +89,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
           }
         </div>}
         
-        <HeroSidebar />
+        <Sidebar />
 
         <SignOutModal
           visible={signOutDialogOpen}

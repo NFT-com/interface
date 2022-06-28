@@ -1,8 +1,12 @@
 export const POST_GRAPHQL_FIELDS = `
+  sys {
+    id
+  }
   title
   slug
   heroImage{
     url
+    description
   }
   description
   body
@@ -18,8 +22,82 @@ export const POST_GRAPHQL_FIELDS = `
     github
     image{
       url
+      description
     }
   }
   publishDate
   tags
+  relatedPostsCollection{
+    items{
+      sys{
+        id
+      }
+      title
+      slug
+      description
+      publishDate
+      body
+      heroImage{
+        url
+        description
+      }
+      author{
+        name
+        image{
+          url
+          description
+        }
+      }
+    }
+  }
+`;
+
+export const POST_LIST_GRAPHQL_FIELDS = `
+  title
+  slug
+  body
+  heroImage{
+    url
+    description
+  }
+  description
+  author{
+    name
+    image{
+      url
+      description
+    }
+  }
+  publishDate
+  sys {
+    id
+  }
+`;
+
+export const BLOG_LIST_HOME_FIELDS = `
+  heroTitle
+  listTitle
+  blogSlidesCollection{
+    items{
+      title
+      slug
+      description
+      body
+      publishDate
+      heroImage{
+        url
+        description
+      }
+      author{
+        name
+        image{
+          url
+          description
+        }
+      }
+      sys{
+        id
+      }
+    }
+  }
 `;

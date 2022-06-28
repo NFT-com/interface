@@ -6,7 +6,7 @@ import HeroSidebarFunds from 'components/modules/HeroSidebar/HeroSidebarFunds';
 import { HeroSidebarProfiles } from 'components/modules/HeroSidebar/HeroSidebarProfiles';
 import { SidebarCTA, useActiveSidebarCTA } from 'components/modules/HeroSidebar/useActiveSidebarCTA';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
-import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
+import { useSidebar } from 'hooks/state/useSidebar';
 import useENSName from 'hooks/useENSName';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -20,9 +20,9 @@ import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
-export default function HeroSidebar() {
+export const Sidebar = () => {
   const [showWalletOptions, setShowWalletOptions] = useState(false);
-  const { heroSidebarOpen, setHeroSidebarOpen } = useHeroSidebar();
+  const { sidebarOpen, setSidebarOpen } = useSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
   const { data: account } = useAccount();
   const { ENSName } = useENSName(account?.address);
@@ -31,11 +31,11 @@ export default function HeroSidebar() {
   const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
 
   useEffect(() => {
-    heroSidebarOpen && promoteZIndex('heroSideBar');
+    sidebarOpen && promoteZIndex('heroSideBar');
     return () => {
       restoreZIndex();
     };
-  }, [promoteZIndex, heroSidebarOpen, restoreZIndex]);
+  }, [promoteZIndex, sidebarOpen, restoreZIndex]);
   
   const activeCTA: SidebarCTA = useActiveSidebarCTA();
 
@@ -56,7 +56,7 @@ export default function HeroSidebar() {
               className="block h-8 w-8 mb-8"
               aria-hidden="true"
               onClick={() => {
-                setHeroSidebarOpen(false);
+                setSidebarOpen(false);
               }}
             />
           </motion.div>
@@ -152,7 +152,7 @@ export default function HeroSidebar() {
         </motion.div>
       </motion.div>
     );
-  }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setHeroSidebarOpen]);
+  }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setSidebarOpen]);
 
   const getSidebarPanel = useCallback(() => {
     if(!showWalletOptions && !isNullOrEmpty(account?.address)) {
@@ -209,7 +209,7 @@ export default function HeroSidebar() {
                 className="block h-8 w-8"
                 aria-hidden="true"
                 onClick={() => {
-                  setHeroSidebarOpen(false);
+                  setSidebarOpen(false);
                 }}
               />
             </motion.div>
@@ -241,20 +241,20 @@ export default function HeroSidebar() {
         </motion.div>
       );
     }
-  }, [account?.address, getSidebarContent, primaryIcon, setHeroSidebarOpen, showWalletOptions]);
+  }, [account?.address, getSidebarContent, primaryIcon, setSidebarOpen, showWalletOptions]);
 
   return (
     <AnimatePresence>
-      {heroSidebarOpen && (
+      {sidebarOpen && (
         <Dialog
           layout
           key='sidebarDialog'
           static
           as={motion.div}
-          open={heroSidebarOpen}
+          open={sidebarOpen}
           className="fixed inset-0 overflow-hidden"
           onClose={() => {
-            !addFundsDialogOpen && setHeroSidebarOpen(false);
+            !addFundsDialogOpen && setSidebarOpen(false);
           }}
           style={{ zIndex: getZIndex('heroSideBar') }}
         >
@@ -298,4 +298,4 @@ export default function HeroSidebar() {
       )}
     </AnimatePresence>
   );
-}
+};

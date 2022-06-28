@@ -124,7 +124,7 @@ export const Footer = () => {
   ];
 
   return (
-    <div className="flex md:flex-col md:content-between py-12 bg-[#010101]">
+    <div className="flex md:flex-col relative md:content-between py-12 bg-[#010101]">
       <div className={tw(
         'w-2/5 md:w-full flex-shrink-0 flex',
         'items-start justify-between flex-col text-base pl-24 md:pl-0 md:items-center'
