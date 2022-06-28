@@ -2,7 +2,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import PreviewBanner from 'components/elements/PreviewBanner';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
-import NotFoundPage from 'pages/404';
+import { NotFoundPage } from 'pages/404';
 import { getPaginatedPosts } from 'utils/contentful';
 import { Doppler, getEnvBool } from 'utils/env';
 

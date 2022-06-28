@@ -103,7 +103,6 @@ export const BLOG_LIST_HOME_FIELDS = `
 `;
 
 export const HOME_PAGE_FIELDS = `
-{
   subheroTitle
   subheroDescription
   feedTitle
@@ -113,5 +112,4 @@ export const HOME_PAGE_FIELDS = `
   threeCardTitle
   learnDescription
   entryTitle
-}
 `;

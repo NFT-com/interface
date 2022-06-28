@@ -3,11 +3,30 @@ import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { HeroPage } from 'components/modules/Hero/HeroPage';
-import HomePage from 'components/modules/HomePage/HomePage';
+import { HomePage } from 'components/modules/HomePage';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 
-export default function Index() {
+import { NextPageWithLayout } from './_app';
+
+import { getCollection } from 'lib/contentful/api';
+import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
+
+type IndexProps = {
+  props: ({ preview }: { preview?: boolean; }) => Promise<{ props: { preview: boolean; data: any; }; }>
+}
+const Index: NextPageWithLayout = () => {
+  async function getServerSideProps({ preview = false }) {
+    const homeData = await getCollection(preview, 1, 'homePageCollection', HOME_PAGE_FIELDS);
+    console.log('homeData', homeData);
+    return {
+      props: {
+        preview,
+        data: homeData ?? null,
+      }
+    };
+  }
+
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
       <>
@@ -15,14 +34,14 @@ export default function Index() {
           <Header />
           <Sidebar />
         </ClientOnly>
-        <HomePage />
+        <HomePage {...getServerSideProps} />
         <Footer />
       </>
     );
   } else {
     return <HeroPage />;
   }
-}
+};
 
 Index.getLayout = function getLayout(page) {
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
@@ -35,3 +54,5 @@ Index.getLayout = function getLayout(page) {
     return page;
   }
 };
+
+export default Index;

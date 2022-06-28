@@ -8,8 +8,6 @@ import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { tw } from 'utils/tw';
 
-import { getCollection } from 'lib/contentful/api';
-import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
 import type { NextPage } from 'next';
 import Ticker from 'react-ticker';
 
@@ -28,9 +26,10 @@ type HomePageProps = {
   }
 }
 
-const HomePage: NextPage = ({ preview, data }: HomePageProps) => {
-  {/*TODO: @anthony use contentful for this */}
+export const HomePage: NextPage = ({ preview, data }: HomePageProps) => {
   const { profileData: featuredProfile } = useProfileQuery('anthony');
+
+  console.log(data?.subHeroTitle);
 
   return (
     <main className='flex flex-col'>
@@ -202,15 +201,3 @@ const HomePage: NextPage = ({ preview, data }: HomePageProps) => {
       </div>
     </main>);
 };
-
-export async function getServerSideProps({ preview = false }) {
-  const homeData = await getCollection(preview, 1, 'homePageCollection', HOME_PAGE_FIELDS);
-  return {
-    props: {
-      preview,
-      data: homeData[0] ?? null,
-    }
-  };
-}
-
-export default HomePage;

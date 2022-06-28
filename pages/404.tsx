@@ -2,9 +2,10 @@ import { NullState } from 'components/elements/NullState';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { Doppler, getEnvBool } from 'utils/env';
 
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
-export default function NotFoundPage() {
+export const NotFoundPage: NextPage = () => {
   const router = useRouter();
 
   return <PageWrapper
@@ -28,4 +29,6 @@ export default function NotFoundPage() {
         }}/>
     </div>
   </PageWrapper>;
-}
+};
+
+export default NotFoundPage;
