@@ -64,6 +64,7 @@ export function NftGrid(props: NftGridProps) {
       <div
         key={nft?.id + '-' + nft?.contract?.address}
         className={tw(
+          'NFTCardContainer',
           'flex justify-center px-3 sm:mb-2',
           (draftLayoutType ?? savedLayoutType) === 'Default' ? 'mb-10' : '',
           (draftLayoutType ?? savedLayoutType) === 'Featured' ? `${[1,2,3].includes((index+10)%9) ? [0,1].includes(index%10) ? 'col-span-2 md:col-span-2 ':'col-span-2 md:col-span-1': [0,1].includes(index%10) ? 'md:col-span-2' :''} mb-10` : '',

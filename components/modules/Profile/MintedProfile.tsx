@@ -154,6 +154,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       />
                     </div> :
                     <div
+                      id="MintedProfileEditButtonContainer"
                       className={tw(
                         'absolute top-24 right-32 sm:right-11'
                       )}
@@ -171,7 +172,6 @@ export function MintedProfile(props: MintedProfileProps) {
                   className={tw(
                     'absolute bottom-5 right-32 sm:right-28'
                   )}
-                  style={{ zIndex: 100 }}
                   onClick={open}
                 >
                   <PencilIconRounded alt="Edit banner" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
@@ -237,7 +237,6 @@ export function MintedProfile(props: MintedProfileProps) {
                       className={tw(
                         'absolute bottom-5 -right-4 md:-right-8'
                       )}
-                      style={{ zIndex: 100 }}
                     >
                       <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
                     </div>}
