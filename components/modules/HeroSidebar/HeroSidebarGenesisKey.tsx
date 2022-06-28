@@ -1,4 +1,4 @@
-import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
+import { useSidebar } from 'hooks/state/useSidebar';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
 import { isNullOrEmpty, processIPFSURL, shortenString } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -16,7 +16,7 @@ export interface HeroSidebarGenesisKeyProps {
 
 export const HeroSidebarGenesisKey = (props: HeroSidebarGenesisKeyProps) => {
   const router = useRouter();
-  const { setHeroSidebarOpen } = useHeroSidebar();
+  const { setSidebarOpen } = useSidebar();
   const genesisKeyMetadata = useGenesisKeyMetadata(
     props.tokenId != null ? BigNumber.from(props.tokenId) : null
   );
@@ -42,7 +42,7 @@ export const HeroSidebarGenesisKey = (props: HeroSidebarGenesisKeyProps) => {
     >
       <div
         onClick={() => {
-          setHeroSidebarOpen(false);
+          setSidebarOpen(false);
           router.push('/app/gallery/' + props.tokenId);
         }}
         className={tw(

@@ -1,6 +1,6 @@
-import { useAccount } from 'wagmi';
 import { ProfileTokenResults, useNftProfileTokens } from './useNftProfileTokens';
 
+import { useAccount } from 'wagmi';
 
 export function useMyNftProfileTokens(): ProfileTokenResults {
   const { data: account } = useAccount();

@@ -77,7 +77,7 @@ export function DropdownPickerModal(props: DropdownPickerModalProps) {
       >
         <div
           className={tw('flex flex-row items-end px-2.5',
-            'bg-white dark:bg-pagebg-secondary-dk py-2 h-full',
+            'bg-white dark:bg-secondary-dk py-2 h-full',
             'justify-between rounded-xl w-full')}
           key={props.options[props.selectedIndex].label}
           onClick={() => {

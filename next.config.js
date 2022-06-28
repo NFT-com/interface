@@ -24,7 +24,7 @@ const moduleExports = {
     return config;
   },
   images: {
-    domains: ['cdn.nft.com', 'nft-llc.mypinata.cloud', 'cdn.nft.com/_ipx'],
+    domains: ['cdn.nft.com', 'nft-llc.mypinata.cloud', 'cdn.nft.com/_ipx', 'images.ctfassets.net'],
   },
 };
 

@@ -1,5 +1,5 @@
 import { ConnectedAddress } from 'components/elements/ConnectedAddress';
-import { useHeroSidebar } from 'hooks/state/useHeroSidebar';
+import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -26,7 +26,7 @@ export default function HeroSidebarAccountDetails(
   const { secondaryIcon } = useThemeColors();
   const [isCopied, setCopied] = useCopyClipboard();
   const router = useRouter();
-  const { setHeroSidebarOpen, toggleHeroSidebar } = useHeroSidebar();
+  const { setSidebarOpen, toggleSidebar } = useSidebar();
   const { setSignOutDialogOpen } = useSignOutDialog();
 
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
@@ -71,7 +71,7 @@ export default function HeroSidebarAccountDetails(
               'pt-2.5 text-link cursor-pointer hover:underline'
             )}
             onClick={() => {
-              setHeroSidebarOpen(false);
+              setSidebarOpen(false);
               router.push('/app/gallery');
             }}
           >
@@ -83,7 +83,7 @@ export default function HeroSidebarAccountDetails(
               'pt-2.5 text-link cursor-pointer hover:underline'
             )}
             onClick={() => {
-              setHeroSidebarOpen(false);
+              setSidebarOpen(false);
               window.open('https://docs.nft.com', '_open');
             }}
           >
@@ -95,7 +95,7 @@ export default function HeroSidebarAccountDetails(
               'pt-2.5 text-link cursor-pointer hover:underline'
             )}
             onClick={() => {
-              setHeroSidebarOpen(false);
+              setSidebarOpen(false);
               router.push('/app/vault');
             }}
           >
@@ -107,7 +107,7 @@ export default function HeroSidebarAccountDetails(
           onClick={() => {
             disconnect();
             setSignOutDialogOpen(true);
-            toggleHeroSidebar();
+            toggleSidebar();
           }}
         >
           Sign Out
