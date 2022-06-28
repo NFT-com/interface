@@ -17,7 +17,6 @@ import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
 const Hit = (hit) => {
   const router = useRouter();
-  console.log(hit);
   return (
     <div
       className={tw(

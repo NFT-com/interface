@@ -60,7 +60,7 @@ export function NFTCard(props: NFTCardProps) {
   const { data: listings } = useExternalListingsQuery(props.contractAddress, props.tokenId, nft?.wallet.chainId);
 
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
-    return <div key={key} className="flex mt-2" >
+    return <div key={key} className="flex mt-2">
       <span className='text-sm sm:text-xs' style={{ color: pink }}>
         {pair.key}{isNullOrEmpty(pair.key) ? '' : ' '}
       </span>
