@@ -12,7 +12,7 @@ export interface CollectionData {
 
 export function useCollectionQuery(chainId: string, contract: string): CollectionData {
   const sdk = useGraphQLSDK();
-  const keyString = 'CollectionQuery ' + contract;
+  const keyString = 'CollectionQuery ' + contract + chainId;
 
   const { data } = useSWR(keyString, async () => {
     if(!chainId || !contract) {

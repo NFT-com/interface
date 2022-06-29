@@ -22,16 +22,19 @@ export function useMyNFTsQuery(first: number): NftsData {
   const keyString = 'MyNFTsQuery ' + account?.address + activeChain?.id + signed;
 
   const { data } = useSWR(keyString, async () => {
+    if (!account) {
+      return [];
+    }
     const result = await sdk.MyNFTs({
       input: {
         pageInput: { first: first }
       }
     });
-    return result;
+    return result?.myNFTs?.items;
   });
   return {
-    data: data?.myNFTs.items ?? [],
-    totalItems: data?.myNFTs?.totalItems ?? 0,
+    data: data ?? [],
+    totalItems: data?.length ?? 0,
     loading: data == null,
     mutate: () => {
       mutate(keyString);
