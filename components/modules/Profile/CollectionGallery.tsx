@@ -146,6 +146,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           key={key}
           className={tw(
             'flex mb-10 items-center justify-center p-3',
+            'NFTCollectionCardContainer'
           )}
         >
           <NFTCollectionCard

@@ -36,9 +36,11 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     <div className="flex items-center my-6 mx-4 w-full md:flex-col">
       <div className="flex flex-col w-full">
         <div className={tw('flex w-full justify-around items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
-          <div className={tw(
-            'font-bold lg:text-2xl text-4xl text-primary-txt dark:text-primary-txt-dk md:text-center md:mb-4 mr-4',
-          )}>
+          <div
+            id="MintedProfileNameContainer"
+            className={tw(
+              'font-bold lg:text-2xl text-4xl text-primary-txt dark:text-primary-txt-dk md:text-center md:mb-4 mr-4',
+            )}>
             @{profileURI}
           </div>
           {editMode && ownedGenesisKeyTokens.length > 0 && <Switch
