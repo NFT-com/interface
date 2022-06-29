@@ -182,74 +182,72 @@ export function MintedProfile(props: MintedProfileProps) {
         </div>
       </BannerWrapper>
       <div
-        className='flex justify-center items-center'
+        className='flex justify-start items-center'
         style={{
           zIndex: 103,
         }}
       >
-        <div className="flex items-center md:flex-col justify-center">
-          <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px] mr-20 ml-[-4rem] md:ml-0 md:mr-0">
-            <Dropzone
-              accept={'image/*' ['.*']}
-              disabled={!userIsAdmin || !editMode}
-              onDrop={files => {
-                if (userIsAdmin) onDropProfile(files);
-              }}
-            >
-              {({ getRootProps, getInputProps }) => (
-                <section>
-                  <div {...getRootProps()} className={tw(
-                    'relative outline-none',
-                    userIsAdmin ? '' : 'cursor-default',
-                    'h-60 w-60',
-                  )}>
-                    <input {...getInputProps()} />
-                    {saving && <div
-                      style={{ zIndex: 102 }}
-                      className={tw(
-                        'rounded-full absolute flex border bg-white/10',
-                        'items-center justify-center h-full w-full'
-                      )}
-                    >
-                      <Loader/>
-                    </div>}
-                    <img
-                      src={
-                        !isNullOrEmpty(draftProfileImg?.preview)
-                          ? draftProfileImg?.preview
-                          : profileData?.profile?.photoURL ??
+        <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px] mr-20 md:mr-0">
+          <Dropzone
+            accept={'image/*' ['.*']}
+            disabled={!userIsAdmin || !editMode}
+            onDrop={files => {
+              if (userIsAdmin) onDropProfile(files);
+            }}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <div {...getRootProps()} className={tw(
+                  'relative outline-none',
+                  userIsAdmin ? '' : 'cursor-default',
+                  'h-60 w-60',
+                )}>
+                  <input {...getInputProps()} />
+                  {saving && <div
+                    style={{ zIndex: 102 }}
+                    className={tw(
+                      'rounded-full absolute flex border bg-white/10',
+                      'items-center justify-center h-full w-full'
+                    )}
+                  >
+                    <Loader/>
+                  </div>}
+                  <img
+                    src={
+                      !isNullOrEmpty(draftProfileImg?.preview)
+                        ? draftProfileImg?.preview
+                        : profileData?.profile?.photoURL ??
                           (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
                             ? 'https://cdn.nft.com/profile-image-default.svg' :
                             cameraIcon.src)
-                      }
-                      alt="profilePicture"
-                      draggable={false}
-                      className={tw(
-                        'object-center rounded-full',
-                        'h-full w-full',
-                        'shrink-0 aspect-square',
-                        userIsAdmin && editMode ? 'cursor-pointer' : '',
-                        userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                      )}
-                      style={{ zIndex: 101, }}
-                    />
-                    {editMode && <div
-                      className={tw(
-                        'absolute bottom-5 -right-4 md:-right-8'
-                      )}
-                    >
-                      <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
-                    </div>}
-                  </div>
-                </section>
-              )}
-            </Dropzone>
-          </div>
-          <MintedProfileInfo
-            userIsAdmin={userIsAdmin}
-            profileURI={profileURI}
-          />
+                    }
+                    alt="profilePicture"
+                    draggable={false}
+                    className={tw(
+                      'object-center rounded-full',
+                      'h-full w-full',
+                      'shrink-0 aspect-square',
+                      userIsAdmin && editMode ? 'cursor-pointer' : '',
+                      userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
+                    )}
+                    style={{ zIndex: 101, }}
+                  />
+                  {editMode && <div
+                    className={tw(
+                      'absolute bottom-5 -right-4 md:-right-8'
+                    )}
+                  >
+                    <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
+                  </div>}
+                </div>
+              </section>
+            )}
+          </Dropzone>
         </div>
+        <MintedProfileInfo
+          userIsAdmin={userIsAdmin}
+          profileURI={profileURI}
+        />
       </div>
       <main className={tw(
         'h-full',
