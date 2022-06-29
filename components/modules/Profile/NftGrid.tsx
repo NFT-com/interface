@@ -1,5 +1,6 @@
 import { NFTCard } from 'components/elements/NFTCard';
-import { Nft, ProfileLayoutType } from 'graphql/generated/types';
+import { Nft } from 'graphql/generated/types';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
@@ -18,7 +19,6 @@ type DetailedNft = Nft & { hidden?: boolean };
 export interface NftGridProps {
   nfts: PartialDeep<DetailedNft>[];
   profileURI: string;
-  savedLayoutType?: ProfileLayoutType;
 }
 
 export function NftGrid(props: NftGridProps) {
@@ -29,6 +29,8 @@ export function NftGrid(props: NftGridProps) {
     draftToShow,
     draftNftsDescriptionsVisible,
   } = useContext(ProfileEditContext);
+  const { profileData } = useProfileQuery(props.profileURI);
+
   const { tileBackgroundSecondary } = useThemeColors();
   const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
@@ -48,25 +50,28 @@ export function NftGrid(props: NftGridProps) {
     mosaicArray2.push(seq2);
   }
 
-  return (props.savedLayoutType && <div className={tw(
+  const savedLayoutType = profileData?.profile?.layoutType;
+
+  return <div className={tw(
     'grid w-full sm:grid-cols-2 md:grid-cols-3 gap-y-2.5 sm:grid-cols-1',
-    (draftLayoutType ?? props.savedLayoutType) === 'Default' ? 'grid-cols-4' : '',
-    (draftLayoutType ?? props.savedLayoutType) === 'Featured' ? 'grid-cols-6 md:grid-cols-4' : '',
-    (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' ? 'grid-cols-6 lg:grid-cols-4 md:grid-cols-3' : '',
-    (draftLayoutType ?? props.savedLayoutType) === 'Spotlight' ? 'grid-cols-3' : '',
+    (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-4' : '',
+    (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-6 md:grid-cols-4' : '',
+    (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-6 lg:grid-cols-4 md:grid-cols-3' : '',
+    (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-3' : '',
   )}
-  data-testid={props.savedLayoutType+'-layout-option'}>
+  data-testid={savedLayoutType+'-layout-option'}>
     {props.nfts?.map((nft: PartialDeep<DetailedNft>, index) => (
       <div
         key={nft?.id + '-' + nft?.contract?.address}
         className={tw(
+          'NFTCardContainer',
           'flex justify-center px-3 sm:mb-2',
-          (draftLayoutType ?? props.savedLayoutType) === 'Default' ? 'mb-10' : '',
-          (draftLayoutType ?? props.savedLayoutType) === 'Featured' ? `${[1,2,3].includes((index+10)%9) ? [0,1].includes(index%10) ? 'col-span-2 md:col-span-2 ':'col-span-2 md:col-span-1': [0,1].includes(index%10) ? 'md:col-span-2' :''} mb-10` : '',
-          (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' && screenWidth > 1199 ? `${index % 7 === 0 ? 'row-span-3 col-span-3' : '' } ${(index-4) % 7 === 0? 'row-span-2 col-span-2' : '' }` : '',
-          (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' && screenWidth > 900 && screenWidth <= 1199 ? `${mosaicArray2.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
-          (draftLayoutType ?? props.savedLayoutType) === 'Mosaic' && screenWidth > 600 && screenWidth <= 899 ? `${ mosaicArray.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
-          (draftLayoutType ?? props.savedLayoutType) === 'Spotlight' ? 'col-start-2 col-span-1 sm:col-start-2' : '',
+          (draftLayoutType ?? savedLayoutType) === 'Default' ? 'mb-10' : '',
+          (draftLayoutType ?? savedLayoutType) === 'Featured' ? `${[1,2,3].includes((index+10)%9) ? [0,1].includes(index%10) ? 'col-span-2 md:col-span-2 ':'col-span-2 md:col-span-1': [0,1].includes(index%10) ? 'md:col-span-2' :''} mb-10` : '',
+          (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 1199 ? `${index % 7 === 0 ? 'row-span-3 col-span-3' : '' } ${(index-4) % 7 === 0? 'row-span-2 col-span-2' : '' }` : '',
+          (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 900 && screenWidth <= 1199 ? `${mosaicArray2.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
+          (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 600 && screenWidth <= 899 ? `${ mosaicArray.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
+          (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'col-start-2 col-span-1 sm:col-start-2 mb-4' : '',
         )}
       >
         <NFTCard
@@ -103,5 +108,5 @@ export function NftGrid(props: NftGridProps) {
         />
       </div>
     ))}
-  </div>);
+  </div>;
 }

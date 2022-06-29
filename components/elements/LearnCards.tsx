@@ -21,7 +21,8 @@ interface LearnCardsProps {
 export const LearnCards = (props: LearnCardsProps) => {
   const getCardTitle = useCallback((item: string, index: number) => {
     return (item &&
-        <SwiperSlide>
+        <SwiperSlide
+          key={item}>
           <div
             className={tw(
               'drop-shadow-md rounded-xl flex flex-col',

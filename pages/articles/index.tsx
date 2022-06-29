@@ -5,7 +5,7 @@ import PreviewBanner from 'components/elements/PreviewBanner';
 import HomeLayout from 'components/layouts/HomeLayout';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
-import NotFoundPage from 'pages/404';
+import { NotFoundPage } from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
 import { getPaginatedPosts } from 'utils/contentful';
 import { Doppler, getEnvBool } from 'utils/env';

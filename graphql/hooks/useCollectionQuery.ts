@@ -2,9 +2,10 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { CollectionInfo } from 'graphql/generated/types';
 
 import useSWR, { mutate } from 'swr';
+import { PartialDeep } from 'type-fest';
 
 export interface CollectionData {
-  data: CollectionInfo;
+  data: PartialDeep<CollectionInfo>;
   loading: boolean;
   mutate: () => void;
 }
@@ -15,7 +16,7 @@ export function useCollectionQuery(chainId: string, contract: string, network: s
 
   const { data } = useSWR(keyString, async () => {
     if(!chainId || !contract) {
-      return null;
+      return {};
     }
     const result = await sdk.Collection({
       input: {
@@ -24,7 +25,7 @@ export function useCollectionQuery(chainId: string, contract: string, network: s
         network
       },
     });
-    return result?.collection;
+    return result?.collection ?? {};
   });
   return {
     data: data,
