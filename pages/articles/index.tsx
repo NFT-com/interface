@@ -2,10 +2,11 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
+import { Sidebar } from 'components/elements/Sidebar';
 import HomeLayout from 'components/layouts/HomeLayout';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
-import { NotFoundPage } from 'pages/404';
+import NotFoundPage from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
 import { getPaginatedPosts } from 'utils/contentful';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -14,7 +15,6 @@ import { getCollection } from 'lib/contentful/api';
 import { BLOG_LIST_HOME_FIELDS } from 'lib/contentful/schemas';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Sidebar } from 'react-feather';
 import { PostData } from 'types/blogs';
 
 type PostListProps = {
