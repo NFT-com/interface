@@ -80,7 +80,7 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
           );
         })}
       </div>
-      <div className='flex w-full items-center justify-end mt-8' onClick={props.onClose}>
+      <div data-testid="ConfirmButton" className='flex w-full items-center justify-end mt-8' onClick={props.onClose}>
         <Button
           label={'Confirm'}
           onClick={props.onClose}
