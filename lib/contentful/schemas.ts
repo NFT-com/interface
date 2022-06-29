@@ -101,3 +101,25 @@ export const BLOG_LIST_HOME_FIELDS = `
     }
   }
 `;
+
+export const HOME_PAGE_FIELDS = `
+  subheroTitle
+  subheroDescription
+  feedTitle
+  feedDescription
+  tickerStats
+  leaderboardTitle
+  leaderboardDescription
+  threeCardTitle
+  threeCardDescription
+  threeCardTitle2
+  threeCardDescription2
+  threeCardTitle3
+  threeCardDescription3
+  learnTitle
+  learnDescription
+  communityCtaTitle
+  communityCtaDescription
+  featuredProfile
+  entryTitle
+`;

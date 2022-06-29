@@ -1,6 +1,6 @@
 import Loader from 'components/elements/Loader';
 import { NFTDetailPage } from 'components/modules/NFTDetail/NFTDetailPage';
-import NotFoundPage from 'pages/404';
+import { NotFoundPage } from 'pages/404';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
