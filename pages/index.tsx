@@ -2,6 +2,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { FeaturedProfile } from 'components/elements/FeaturedProfile';
 import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
+import HomePageTicker from 'components/elements/HomePageTicker';
 import { LearnCards } from 'components/elements/LearnCards';
 import PreviewBanner from 'components/elements/PreviewBanner';
 import { ProfileFeed } from 'components/elements/ProfileFeed';
@@ -20,14 +21,9 @@ import { NextPageWithLayout } from './_app';
 
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
-import Ticker from 'react-ticker';
-
-type TickerStat = {
-  stat: {
-    value: string;
-    sub: string;
-  }
-};
+import { useEffect, useState } from 'react';
+import { isMobile } from 'react-device-detect';
+import { TickerStat } from 'types';
 
 type HomePageProps = {
   preview: boolean;
@@ -55,7 +51,14 @@ type HomePageProps = {
 };
 
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
-  const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile);
+  const [tickerStats, setTickerStats] = useState<TickerStat[]>([]);
+  const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile['profileURI']);
+
+  useEffect(() => {
+    if (data?.tickerStats) {
+      setTickerStats(data?.tickerStats);
+    }
+  }, [data?.tickerStats]);
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
@@ -64,12 +67,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Header />
           <Sidebar />
         </ClientOnly>
-        <main className='flex flex-col'>
-          <div className={tw('flex flex-row items-center justify-left mt-20 p-6 w-screen h-full bg-secondary-dk break-after-all')}>
-            <div className='break-after-all space-y-2'>
+        <main className='flex flex-col mt-20'>
+          <div className={tw('flex flex-row items-center justify-left sm:p-6 px-6 py-12 w-screen h-full bg-secondary-dk break-after-all')}>
+            <div className='break-after-all space-y-2 sm:w-full'>
               <div className={tw(
                 'font-rubik text-always-white text-header leading-header font-header',
-                'break-after-all space-y-2'
+                'break-after-all space-y-2',
+                'md: mb-6'
               )}>
                 <p>
                   {data?.subheroTitle}
@@ -77,8 +81,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <p>
                   {data?.subheroDescription}
                 </p>
+                <p className='sm:hidden text-body leading-body font-body w-[44%]'>
+                Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
+                </p>
               </div>
-              <div className='w-full h-full inline-flex grow space-x-2 ...'>
+              <div className='w-full h-full inline-flex grow space-x-2'>
                 <WalletRainbowKitButton signInButton showWhenConnected={false} />
                 <button
                   onClick={() => {
@@ -96,6 +103,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   Learn More
                 </button>
               </div>
+            </div>
+            <div className='sm:w-full h-full flex sm:flex-row flex-col-reverse justfiy-center space-x-2'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
@@ -116,27 +125,24 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'https://cdn.nft.com/profiles/1653690187501-ghoool.webp',
                     'https://cdn.nft.com/profiles/1656228209273-1.PNG']}
                 />
-                <Button
-                  bgColor={'#222222'}
-                  color={'#ffffff'}
-                  label='Discover'
-                  stretch
-                  onClick={() => {
-                    console.log('Discover clicked');
-                  }}
-                  type={ButtonType.SECONDARY}
-                />
+                <div className='flex flex-row justify-center sm:w-full ...'>
+                  <Button
+                    bgColor={'#222222'}
+                    color={'#ffffff'}
+                    label='Discover'
+                    stretch={isMobile}
+                    onClick={() => {
+                      console.log('Discover clicked');
+                    }}
+                    type={ButtonType.SECONDARY}
+                  />
+                </div>
+
               </div>
             </div>
-            <div className='h-full w-screen -ml-6 bg-always-black py-6 ...'>
-              {data?.tickerStats && (
-                <Ticker offset="run-in">
-                  {({ index }) => (
-                    <div className=' text-always-white text-header leading-header font-header justify-center px-12 ...'>
-                      Hello world {index}
-                    </div>
-                  )}
-                </Ticker>
+            <div className='h-full w-screen -ml-6 bg-always-black py-6 drop-shadow-lg ...'>
+              {tickerStats && (
+                <HomePageTicker tickerStats={data.tickerStats} />
               )}
             </div>
             <div className='h-full ...'>
