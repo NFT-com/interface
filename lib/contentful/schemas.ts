@@ -107,9 +107,19 @@ export const HOME_PAGE_FIELDS = `
   subheroDescription
   feedTitle
   feedDescription
+  tickerStats
   leaderboardTitle
   leaderboardDescription
   threeCardTitle
+  threeCardDescription
+  threeCardTitle2
+  threeCardDescription2
+  threeCardTitle3
+  threeCardDescription3
+  learnTitle
   learnDescription
+  communityCtaTitle
+  communityCtaDescription
+  featuredProfile
   entryTitle
 `;
