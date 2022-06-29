@@ -24,6 +24,7 @@ export interface ModalProps {
   noCancelBtn?: boolean;
   fullModal?: boolean;
   bgColor?: string;
+  transparentOverlay?: boolean;
 }
 
 export function Modal(props: PropsWithChildren<ModalProps>) {
@@ -54,7 +55,7 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
           <Dialog.Overlay
             className={tw(
               'inset-0 absolute w-full h-full transition-opacity',
-              'bg-modal-overlay/80 dark:bg-modal-overlay-dk/80'
+              props.transparentOverlay ? 'bg-transparent' : 'bg-modal-overlay/80 dark:bg-modal-overlay-dk/80'
             )}
           />
           <div

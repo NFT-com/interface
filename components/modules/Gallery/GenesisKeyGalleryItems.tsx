@@ -93,7 +93,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
 
   if (!isNullOrEmpty(props.currentFilter) && !props.showMyStuff) {
     const filterID = parseInt(props.currentFilter, 10);
-    if (BigNumber.from(filterID).gt(10000)) {
+    if (BigNumber.from(filterID).gt(10000) || BigNumber.from(filterID).lte(0)) {
       return null;
     }
     return (

@@ -55,7 +55,7 @@ export default function HeroHeader(props: HeroHeaderProps) {
       return `z-50 drop-shadow-md ${props.heroHeaderBlack ? 'bg-black' : 'bg-transparent'}`;
     }
     else {
-      return 'bg-headerbg ' + (props.profileHeader ? 'dark:bg-headerbg-profile-dk opacity-90' : 'dark:bg-headerbg-dk');
+      return 'bg-headerbg ' + (props.profileHeader ? 'dark:bg-secondary-dk opacity-90' : 'dark:bg-headerbg-dk');
     }
   }, [props.heroHeader, props.heroHeaderBlack, props.profileHeader, props.removeBackground]);
 
@@ -100,7 +100,7 @@ export default function HeroHeader(props: HeroHeaderProps) {
                   'md:mr-5 mr-20',
                   'h-full flex-shrink-0',
                   'space-x-5',
-                  'font-rubik text-blue-50 font-bold tracking-wide',
+                  'font-rubik text-primary-txt dark:text-primary-txt-dk font-bold tracking-wide',
                   'flex items-center'
                 )}
               >

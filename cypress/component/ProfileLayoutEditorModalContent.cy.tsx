@@ -5,5 +5,6 @@ describe('ProfileLayoutEditorModalContent', () => {
     cy.mount( <ProfileLayoutEditorModalContent savedLayoutType={'Default'} onClose={() => null } />);
 
     cy.get('[data-testid=Default-layout-option2]').should('have.class', 'border-link');
+    cy.get('[data-testid=ConfirmButton]').should('contain.text', 'Confirm');
   });
 });
