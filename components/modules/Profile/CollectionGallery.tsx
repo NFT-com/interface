@@ -124,7 +124,12 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         </div>}
       </div>
       <div
-        className='w-screen flex items-center text-center text-2xl text-primary-txt dark:text-primary-txt-dk font-medium mb-8 justify-center h-40'
+        className={tw('w-screen h-80',
+          'flex items-center justify-center',
+          'text-center text-2xl text-primary-txt dark:text-primary-txt-dk font-medium',
+          'mb-8',
+          'bg-auto bg-center'
+        )}
         style={{
           backgroundImage: `url(${
             !isNullOrEmpty(collectionData?.openseaInfo?.collection?.banner_image_url)
