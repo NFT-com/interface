@@ -24,6 +24,12 @@
     "cypress:record": "cypress run --record",
     "instrument": "npx nyc instrument --compact=false ./ instrumented"
   },
+  "resolutions": {
+    "glob-parent": "^6.0.1",
+    "undici": "^5.5.1",
+    "color-string": "^1.5.5",
+    "got": "^11.8.5"
+  },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.4",
     "@aws-sdk/client-s3": "^3.83.0",
