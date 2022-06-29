@@ -10,7 +10,7 @@ export interface CollectionData {
   mutate: () => void;
 }
 
-export function useCollectionQuery(chainId: string, contract: string, network: string): CollectionData {
+export function useCollectionQuery(chainId: string, contract: string): CollectionData {
   const sdk = useGraphQLSDK();
   const keyString = 'CollectionQuery ' + contract;
 
@@ -22,7 +22,7 @@ export function useCollectionQuery(chainId: string, contract: string, network: s
       input: {
         chainId,
         contract,
-        network
+        network: 'ethereum'
       },
     });
     return result?.collection ?? {};

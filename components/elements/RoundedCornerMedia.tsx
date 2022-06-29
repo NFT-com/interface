@@ -47,7 +47,10 @@ const getRoundedClass = (variant: RoundedCornerVariant): string => {
 
 export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   return (
-    <div>
+    <div className={tw(
+      'flex object-cover w-full aspect-square',
+      getRoundedClass(props.variant),
+    )}>
       <video
         autoPlay
         muted

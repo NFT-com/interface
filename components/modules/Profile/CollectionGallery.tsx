@@ -38,7 +38,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     showNftIds,
   } = useContext(ProfileEditContext);
 
-  const { data: collectionData } = useCollectionQuery(String(activeChain?.id), selectedCollection, '');
+  const { data: collectionData } = useCollectionQuery(String(activeChain?.id), selectedCollection);
 
   const { data: allOwnerNFTs } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs } = useProfileNFTsQuery(

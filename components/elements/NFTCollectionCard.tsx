@@ -23,8 +23,10 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
     draftNftsDescriptionsVisible
   } = useContext(ProfileEditContext);
 
-  const { data: collection } = useCollectionQuery(String(activeChain?.id), props?.contract, '');
+  const { data: collection } = useCollectionQuery(String(activeChain?.id), props?.contract);
   const processedImages = props.images.filter(i => i != null);
+
+  console.log(collection);
 
   return (
     <NFTCard

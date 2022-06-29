@@ -1,10 +1,10 @@
+import { Button, ButtonType } from 'components/elements/Button';
 import { ProfileLayoutType } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
 import { ProfileEditContext } from './ProfileEditContext';
 
 import Image from 'next/image';
-import { X } from 'phosphor-react';
 import { useContext } from 'react';
 
 export interface ProfileLayoutEditorModalContentProps {
@@ -25,17 +25,13 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
   } = useContext(ProfileEditContext);
   return (
     <div className={tw(
-      'absolute top-0 left-0 h-screen w-screen',
+      'absolute top-0 left-0 h-screen overflow-scroll w-screen',
       'dark:bg-secondary-bg-dk bg-white',
       'text-primary-txt dark:text-primary-txt-dk',
       'p-5'
     )}>
       <div className='flex items-center justify-between w-full'>
         <span className='text-4xl'>Select Layout</span>
-        <div className='flex items-center cursor-pointer' onClick={props.onClose}>
-          <span className='mr-4 text-2xl'>Close</span>
-          <X size={20} />
-        </div>
       </div>
       <div className='w-full flex flex-wrap mt-4'>
         {[
@@ -83,6 +79,13 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
             </div>
           );
         })}
+      </div>
+      <div className='flex w-full items-center justify-end mt-8' onClick={props.onClose}>
+        <Button
+          label={'Confirm'}
+          onClick={props.onClose}
+          type={ButtonType.PRIMARY}
+        />
       </div>
     </div>
   );

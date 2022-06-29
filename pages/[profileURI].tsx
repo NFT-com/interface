@@ -23,7 +23,7 @@ export default function ProfileURI() {
   } else {
     return (
       <PageWrapper
-        bgColorClasses='dark:bg-pagebg-secondary-dk bg-pagebg'
+        bgColorClasses='dark:bg-secondary-dk bg-pagebg'
         headerOptions={{
           removeSummaryBanner: true,
           walletOnly: true,
