@@ -1,5 +1,5 @@
-
 import Loader from 'components/elements/Loader';
+import { LeaderboardQuery } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
 // import { usePaginator } from 'hooks/usePaginator';
@@ -11,7 +11,11 @@ import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
-export function LeaderBoard() {
+type LeaderBoardProps= {
+  data: LeaderboardQuery
+}
+
+export function LeaderBoard({ data } : LeaderBoardProps) {
   const [hoverIndex,] = useState(-1);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [analyticsData, setAnalyticsdata] = useState(leaderboardFixtureMockData);
@@ -44,7 +48,7 @@ export function LeaderBoard() {
         </tr>
       </thead>
       <tbody className="bg-always-white">
-        {leaderboardFixtureMockData.map((item, i) => (
+        {data?.leaderboard?.items.map((item, i) => (
           <tr key={i}
             className={tw('cursor-pointer min-w-[5.5rem] h-20',
               'border-x-0 border-y border-row-border dar:border:transparent')}
@@ -62,33 +66,34 @@ export function LeaderBoard() {
                 'justify-start whitespace-nowrap',
                 'text-body sm:text-sm leading-body font-medium')}>
                 <div className="w-14 h-14 xs:w-8 xs:h-8 mr-3">
-                  <Image src={item.image_name} alt="svgImage" className="m-0 object-center rounded-full" />
+                  <Image src={item.photoURL} alt="svgImage" className="m-0 object-center rounded-full" />
                 </div>
-                <div>{item.name}</div>
+                <div>{item.url}</div>
               </div>
             </td>
             <td>
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
                 'whitespace-nowrap text-right mr-3')}>
-                {item.numberOfGKs}
+                {item.numberOfGenesisKeys}
               </div>
             </td>
             <td className="xs:hidden">
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
                 'whitespace-nowrap text-right mr-3')}>
-                {item.itemsCollected}
+                {item.itemsVisible}
               </div>
             </td>
             <td className="sm:hidden">
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
                 'whitespace-nowrap text-right')}>
-                {item.numberOfCommunities}
+                {item.numberOfCollections}
               </div>
             </td>
             <td className="md:hidden">
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
                 'whitespace-nowrap text-right')}>
-                {item.transactions}
+                {/* // TODO: get transactions to pull from the BE */}
+                20
               </div>
             </td>
           </tr>

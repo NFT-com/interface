@@ -11,6 +11,7 @@ import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButt
 import HomeLayout from 'components/layouts/HomeLayout';
 import { HeroPage } from 'components/modules/Hero/HeroPage';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
+import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -56,6 +57,7 @@ type HomePageProps = {
 
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile?.['profileURI']);
+  const { data: leaderboardData } = useLeaderboardQuery({ count: 10 });
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
@@ -143,7 +145,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               <p className='text-header leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </p>
-              <LeaderBoard />
+              <LeaderBoard data={leaderboardData} />
             </div>
             <div className='h-full ...'>
               <div className='text-header leading-header font-header justify-center ...'>
