@@ -187,7 +187,7 @@ export function MintedProfile(props: MintedProfileProps) {
           zIndex: 103,
         }}
       >
-        <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px] mr-20 md:mr-0">
+        <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-190px] mr-20 md:mr-0">
           <Dropzone
             accept={'image/*' ['.*']}
             disabled={!userIsAdmin || !editMode}
@@ -200,7 +200,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 <div {...getRootProps()} className={tw(
                   'relative outline-none',
                   userIsAdmin ? '' : 'cursor-default',
-                  'h-60 w-60',
+                  'h-52 w-52',
                 )}>
                   <input {...getInputProps()} />
                   {saving && <div
