@@ -49,7 +49,7 @@ type HomePageProps = {
     learnDescription: string;
     communityCtaTitle: string;
     communityCtaDescription: string;
-    featuredProfile: string;
+    featuredProfile: any;
     entryTitle: string;
   }
 };
