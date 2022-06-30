@@ -27,7 +27,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
     account.address,
     TransferProxyTarget.LooksRare
   );
-
+  
   return <div className="w-full flex items-center justify-around text-primary-text dark:text-primary-txt-dk">
     <div>
         looksrare:
