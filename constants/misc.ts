@@ -19,7 +19,7 @@ export const CHAIN_ID_TO_NETWORK : CHAIN_ID_TO_NETWORK_TYPE = {
   1: 'MAINNET',
   3: 'ROPSTEN',
   4: 'RINKEBY',
-  5: 'GÖRLI',
+  5: 'GOERLI',
   42: 'KOVAN',
 };
 
