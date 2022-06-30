@@ -27,13 +27,17 @@ export function useNftCollectionAllowance(
   const keyString = `${activeChain?.id}_${collectionAddress}_allowance_${account}_${target}`;
 
   const { data, mutate } = useSWR(keyString, async () => {
+    if (collection == null) {
+      return false;
+    }
     try {
       const allowed = await collection.isApprovedForAll(account, target);
       return allowed ?? false;
     } catch (e) {
       console.log(
         'Failed to call isApprovedForAll on NFT collection contract. ',
-        collectionAddress
+        collectionAddress,
+        e
       );
       return false;
     }
@@ -47,12 +51,14 @@ export function useNftCollectionAllowance(
     const tx = await collection
       .connect(signer)
       .setApprovalForAll(target, true);
-    await tx.wait(1);
-  }, [acctData, collection, target, signer]);
+    await tx.wait(1).then(() => {
+      mutate();
+    });
+  }, [acctData, collection, target, signer, mutate]);
 
   return {
     allowedAll: data ?? false,
     requestAllowance,
-    mutate: mutate,
+    mutate,
   };
 }
