@@ -17,21 +17,18 @@ import {
   genesisKeyDistributor,
   genesisKeyTeamClaim,
   genesisKeyTeamDistributor,
-  marketplace,
-  marketplaceEvent,
   nftProfile,
   nftToken,
-  profileAuction,
-  validationLogic
+  profileAuction
 } from 'constants/contracts';
 import { DeployedContract } from 'constants/contracts';
 import {
   DAI,
-  DAI_RINKEBY,
+  DAI_GOERLI,
   USDC,
-  USDC_RINKEBY,
+  USDC_GOERLI,
   WETH,
-  WETH_RINKEBY
+  WETH_GOERLI
 } from 'constants/tokens';
 
 import { Doppler, getEnv } from './env';
@@ -52,7 +49,7 @@ export const isProduction = (chainId: number | string) => {
 };
 
 const deployedContractAddressResolver = (chainId: number | string, tokenContract: DeployedContract) => {
-  return ethers.utils.getAddress(isSandbox(chainId) ? tokenContract.rinkeby : tokenContract.mainnet);
+  return ethers.utils.getAddress(isSandbox(chainId) ? tokenContract.goerli : tokenContract.mainnet);
 };
 
 export type SupportedTokenContract =
@@ -67,8 +64,6 @@ export type SupportedTokenContract =
   | 'eip2612'
   | 'genesisKey'
   | 'genesisKeyDistributor'
-  | 'validationLogic'
-  | 'marketplaceEvent'
   | 'genesisKeyTeamDistributor'
   | 'genesisKeyTeamClaim';
 
@@ -77,12 +72,6 @@ export const getAddress = (token: SupportedTokenContract, chainId: number | stri
     chainId = 1;
   }
   switch (token) {
-  case 'marketplace':
-    return deployedContractAddressResolver(chainId, marketplace);
-  case 'validationLogic':
-    return deployedContractAddressResolver(chainId, validationLogic);
-  case 'marketplaceEvent':
-    return deployedContractAddressResolver(chainId, marketplaceEvent);
   case 'genesisKey':
     return deployedContractAddressResolver(chainId, genesisKey);
   case 'genesisKeyDistributor':
@@ -98,11 +87,11 @@ export const getAddress = (token: SupportedTokenContract, chainId: number | stri
   case 'profileAuction':
     return deployedContractAddressResolver(chainId, profileAuction);
   case 'usdc':
-    return ethers.utils.getAddress(isSandbox(chainId) ? USDC_RINKEBY.address : USDC.address);
+    return ethers.utils.getAddress(isSandbox(chainId) ? USDC_GOERLI.address : USDC.address);
   case 'dai':
-    return ethers.utils.getAddress(isSandbox(chainId) ? DAI_RINKEBY.address : DAI.address);
+    return ethers.utils.getAddress(isSandbox(chainId) ? DAI_GOERLI.address : DAI.address);
   case 'weth':
-    return ethers.utils.getAddress(isSandbox(chainId) ? WETH_RINKEBY.address : WETH.address);
+    return ethers.utils.getAddress(isSandbox(chainId) ? WETH_GOERLI.address : WETH.address);
   default:
     return '';
   }

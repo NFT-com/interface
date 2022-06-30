@@ -11,9 +11,9 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   
   const alchemyAPIKey = Number(chainId) !== 1 ?
-    process.env.ALCHEMY_RINKEBY_KEY :
+    process.env.ALCHEMY_GOERLI_KEY :
     process.env.ALCHEMY_MAINNET_KEY;
-  const apiUrl = `https://eth-${Number(chainId) !== 1 ? 'rinkeby' : 'mainnet'}.alchemyapi.io/v2/${alchemyAPIKey}`;
+  const apiUrl = `https://eth-${Number(chainId) !== 1 ? 'goerli' : 'mainnet'}.alchemyapi.io/v2/${alchemyAPIKey}`;
   
   switch (action) {
   case 'getNftMetadata': {

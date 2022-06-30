@@ -1,5 +1,3 @@
-import { nftToken } from 'constants/contracts';
-
 import { Token } from '@uniswap/sdk-core';
 import { chainId } from 'wagmi';
 
@@ -11,9 +9,9 @@ export const DAI = new Token(
   'Dai Stablecoin'
 );
 
-export const DAI_RINKEBY = new Token(
-  chainId.rinkeby,
-  '0x6f5390a8cd02d83b23c5f1d594bffb9050eb4ca3',
+export const DAI_GOERLI = new Token(
+  chainId.goerli,
+  '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60',
   18,
   'DAI',
   'Mock DAI'
@@ -27,9 +25,9 @@ export const USDC = new Token(
   'USD//C'
 );
 
-export const USDC_RINKEBY = new Token(
-  chainId.rinkeby,
-  '0x7338fe8001a27b63ecdfe4e7a8b226475022edae',
+export const USDC_GOERLI = new Token(
+  chainId.goerli,
+  '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
   6,
   'USDC',
   'USDC'
@@ -43,26 +41,10 @@ export const WETH = new Token(
   'Wrapped Ether'
 );
 
-export const WETH_RINKEBY = new Token(
-  chainId.rinkeby,
-  '0xc778417e063141139fce010982780140aa0cd5ab',
+export const WETH_GOERLI = new Token(
+  chainId.goerli,
+  '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
   6,
   'WETH',
   'Wrapped Ether'
 );
-
-// export const NFT_TOKEN = new Token(
-//   chainId.mainnet,
-//   nftToken[chainId.mainnet],
-//   18,
-//   'NFT',
-//   'NFT.com'
-// );
-
-// export const NFT_TOKEN_RINKEBY = new Token(
-//   chainId.rinkeby,
-//   nftToken[chainId.rinkeby],
-//   18,
-//   'NFT',
-//   'NFT.com'
-// );
