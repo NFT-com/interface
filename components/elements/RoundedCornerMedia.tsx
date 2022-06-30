@@ -16,6 +16,7 @@ export interface RoundedCornerMediaProps {
   src: string;
   variant: RoundedCornerVariant;
   extraClasses?: string;
+  containerClasses?: string;
   overlayOptions?: {
     profileOwner: string;
     gkId: number;
@@ -50,6 +51,7 @@ export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
     <div className={tw(
       'flex object-cover w-full aspect-square',
       getRoundedClass(props.variant),
+      props.containerClasses
     )}>
       <video
         autoPlay

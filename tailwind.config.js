@@ -124,6 +124,7 @@ module.exports = {
         '2xll': '1.6rem',
         'xxs1': '0.4rem',
         'xxs2': '0.6rem',
+        'xxs4': '0.5rem',
         '3xll': '1.75rem',
         'xxs3': '0.688rem',
         'header': '2.25rem',
@@ -178,6 +179,9 @@ module.exports = {
       aspectRatio: {
         '4/3': '4/3',
       },
+      gridTemplateColumns: {
+        '1.3': '1.3fr 1fr'
+      }
     },
   },
   variants: {
