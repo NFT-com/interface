@@ -3,6 +3,7 @@ import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 
 import { DescriptionDetail } from './DescriptionDetail';
 import { ExternalListings } from './ExternalListings';
+import { NftApprovals } from './NftApprovals';
 import { NftChainInfo } from './NftChainInfo';
 import { NFTDetail } from './NFTDetail';
 import { Properties } from './Properties';
@@ -21,6 +22,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     >
       <div className="flex flex-col pt-20 items-center w-full lg:px-0 px-48">
         <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
+        <NftApprovals nft={nft} />
         <ExternalListings nft={nft} />
         <div className='w-full flex flex-row md:flex-col p-4'>
           <div className='flex flex-col w-2/4 md:w-full pr-4 md:pr-0'>
