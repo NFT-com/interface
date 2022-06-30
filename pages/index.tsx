@@ -49,13 +49,13 @@ type HomePageProps = {
     learnDescription: string;
     communityCtaTitle: string;
     communityCtaDescription: string;
-    featuredProfile: string;
+    featuredProfile: any;
     entryTitle: string;
   }
 };
 
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
-  const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile);
+  const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile?.['profileURI']);
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
