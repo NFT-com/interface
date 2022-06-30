@@ -55,7 +55,7 @@ type HomePageProps = {
 };
 
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
-  const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile?.['profileURL']);
+  const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile?.['profileURI']);
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
