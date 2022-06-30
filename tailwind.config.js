@@ -48,7 +48,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        'primary-txt':'#171B27',
+        'primary-txt':'#111111',
         'primary-txt-dk':'#FFFFFF',
         'secondary-txt':'#777E93',
         'secondary-txt-light': '#F8F8F8',
@@ -133,6 +133,7 @@ module.exports = {
       },
       fontWeight: {
         'header': '500',
+        'header-bold': '700',
         'body': '400',
       },
       lineHeight: {

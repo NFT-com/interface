@@ -2,6 +2,7 @@ import { ProfileQuery } from 'graphql/generated/types';
 import { useGenesisKeyMetadata } from 'hooks/useGenesisKeyMetadata';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
+import Loader from './Loader';
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import Image from 'next/image';
@@ -21,24 +22,27 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
     processIPFSURL(genesisKeyMetadata?.metadata?.image) :
     gkThumbnail;
 
-  const image = processIPFSURL(props.profileOwner?.profile?.photoURL);
-
   return (
     <div className='pt-6 text-body text-secondary-txt-light leading-body font-header justify-center ... w-[430px] md:w-full'>
       <p className='mb-2 md:mb-4'>Featured Profile</p>
       <div className='flex flex-col bg-[#B0AFAF26] px-4 py-6 rounded-md'>
         <div className='flex flex-row items-center mb-5'>
           <div className="h-10 w-10 mr-2 mt-0.5">
-            <Image
-              src={gkImage}
-              alt='featured profile main image'
-              className="rounded-full"
-              width="100%"
-              height="100%"
-            />
+            {
+              props.profileOwner ?
+                <Image
+                  src={props.profileOwner.profile.photoURL}
+                  alt='featured profile main image'
+                  className="rounded-full"
+                  width="100%"
+                  height="100%"
+                />
+                :
+                <Loader />
+            }
           </div>
           <p className="dark:text-white text-xl leading-7">
-            KentMakishima
+            {props?.profileOwner?.profile?.url}
           </p>
         </div>
 

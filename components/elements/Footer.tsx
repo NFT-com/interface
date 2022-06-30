@@ -124,22 +124,19 @@ export const Footer = () => {
   ];
 
   return (
-    <div className="flex md:flex-col relative md:content-between py-12 bg-[#010101]">
+    <div className="flex md:flex-col relative md:content-between py-12 bg-[#F8F8F8]">
       <div className={tw(
         'w-2/5 md:w-full flex-shrink-0 flex',
         'items-start justify-between flex-col text-base pl-24 md:pl-0 md:items-center'
       )}>
         <Link href="/">
           <div className={tw(
-            'dark:text-always-white text-always-black',
+            'text-primary-txt',
             'font-hero-heading1 flex items-center md:mb-0 mb-8',
           )}>
             <div className={tw('h-10 w-10 mr-1 relative')}>
               <Image
-                src={
-                  isDarkMode
-                    ? 'https://cdn.nft.com/hero_corner.svg'
-                    : 'https://cdn.nft.com/hero_corner_dark.svg' }
+                src={ 'https://cdn.nft.com/hero_corner_dark.svg' }
                 alt="nft.com"
                 layout='fill'
                 objectFit='cover'
@@ -148,7 +145,7 @@ export const Footer = () => {
             <span>NFT.COM</span>
           </div>
         </Link>
-        <div className="md:hidden block text-grey-txt h-1/5 sm:mt-3">
+        <div className="md:hidden block text-primary-txt h-1/5 sm:mt-3">
           © {new Date().getFullYear()} NFT.com. All rights reserved
         </div>
       </div>
@@ -156,7 +153,7 @@ export const Footer = () => {
         {filterNulls(footerData).map((item, index) => {
           return (
             <div className="text-base md:mt-12 sm:pl-[30%] md:pl-[35%]" key={index}>
-              <span className="font-medium text-always-white">
+              <span className="font-medium text-primary-txt">
                 <b>{item.title}</b>
               </span>
               <div className='flex flex-col'>
@@ -164,7 +161,7 @@ export const Footer = () => {
                   return (
                     <span
                       key={index}
-                      className="mt-4 text-grey-txt font-normal list-none cursor-pointer hover:font-bold"
+                      className="mt-4 text-primary-txt font-normal list-none cursor-pointer hover:font-bold"
                       onClick={item.onClick}
                       style={item?.stylize
                         ? {

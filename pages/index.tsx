@@ -45,7 +45,7 @@ type HomePageProps = {
     learnDescription: string;
     communityCtaTitle: string;
     communityCtaDescription: string;
-    featuredProfile: string;
+    featuredProfile: any;
     entryTitle: string;
   }
 };
@@ -68,10 +68,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20'>
-          <div className={tw('flex flex-row items-center justify-left sm:p-6 px-6 py-12 w-screen h-full bg-secondary-dk break-after-all')}>
+          <div className={tw('flex flex-row flex-wrap items-center justify-left sm:p-6 px-6 py-12 w-screen h-full bg-secondary-dk break-after-all')}>
             <div className='break-after-all space-y-2 md:w-full'>
               <div className={tw(
-                'font-rubik text-always-white text-header leading-header font-header',
+                'font-rubik text-always-white text-header leading-header sm:font-header md:font-header-bold ',
                 'break-after-all space-y-2',
                 'md: mb-6'
               )}>
@@ -81,7 +81,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <p>
                   {data?.subheroDescription}
                 </p>
-                <p className='sm:hidden text-body leading-body font-body w-[44%]'>
+                <p className='sm:hidden md:block text-body leading-body font-body w-[44%]'>
                 Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
                 </p>
               </div>
@@ -151,47 +151,80 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </p>
               <LeaderBoard />
             </div>
-            <div className='h-full ...'>
-              <div className='text-header leading-header font-header justify-center ...'>
-                {data?.threeCardTitle}
-                <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
-                  {data?.threeCardDescription}
+            <div className='flex flex-row flex-wrap w-full h-full justify-center ...'>
+              <div className='h-full w-full p-2 ...'>
+                <p className='px-6 text-header leading-header font-header justify-center ...'>
+                  {data?.threeCardTitle}
+                  <p className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
+                    {data?.threeCardDescription}
+                  </p>
+                </p>
+              </div>
+              <div className='h-full w-[33%] sm:w-full ...'>
+                <div
+                  className={tw(
+                    'drop-shadow-md rounded-xl flex flex-col',
+                    'w-full h-full',
+                    'justify-center',
+                    'cursor-pointer',
+                    'overflow-hidden',
+                    'my-6',
+                    'p-6'
+                  )}>
+                  <RoundedCornerMedia
+                    src={'/checker.svg'}
+                    variant={RoundedCornerVariant.All}
+                  />
                 </div>
-                <RoundedCornerMedia
-                  src={'/checker.svg'}
-                  variant={RoundedCornerVariant.All}
-                />
-              </div>
-            </div>
-            <div className='h-full ...'>
-              <div className='text-header leading-header font-header justify-center ...'>
-                {data?.threeCardTitle2}
-                <p className='text-body leading-body font-body py-2 ...'>
-                  {data?.threeCardDescription2}
+                <p className='px-6 text-header leading-header font-header justify-center ...'>
+                  {data?.threeCardTitle2}
+                  <p className='text-body leading-body font-body py-2 ...'>
+                    {data?.threeCardDescription2}
+                  </p>
                 </p>
-                <RoundedCornerMedia
-                  src={'/checker.svg'}
-                  variant={RoundedCornerVariant.All}
-                />
               </div>
-            </div>
-            <div className='h-full ...'>
-              <div className='text-header leading-header font-header justify-center ...'>
-                {data?.threeCardTitle3}
-                <p className='text-body leading-body font-body py-2 ...'>
-                  {data?.threeCardDescription3}
+              <div className='h-full w-[33%] sm:w-full ...'>
+                <div
+                  className={tw(
+                    'drop-shadow-md rounded-xl flex flex-col',
+                    'w-full h-full',
+                    'cursor-pointer',
+                    'overflow-hidden',
+                    'my-6',
+                    'p-6'
+                  )}>
+                  <RoundedCornerMedia
+                    src={'/checker.svg'}
+                    variant={RoundedCornerVariant.All}
+                  />
+                </div>
+                <p className='px-6 text-header leading-header font-header justify-center ...'>
+                  {data?.threeCardTitle3}
+                  <p className='text-body leading-body font-body py-2 ...'>
+                    {data?.threeCardDescription3}
+                  </p>
                 </p>
-                <RoundedCornerMedia
-                  src={'/checker.svg'}
-                  variant={RoundedCornerVariant.All}
-                />
               </div>
-            </div>
-            <div className='h-full ...'>
-              <div className='text-header leading-header font-header justify-center ...'>
-                {data?.communityCtaTitle}
-                <p className='text-body leading-body font-body py-2 ...'>
-                  {data?.communityCtaDescription}
+              <div className='h-full w-[33%] sm:w-full ...'>
+                <div
+                  className={tw(
+                    'drop-shadow-md rounded-xl flex flex-col',
+                    'w-full h-full',
+                    'cursor-pointer',
+                    'overflow-hidden',
+                    'my-6',
+                    'p-6'
+                  )}>
+                  <RoundedCornerMedia
+                    src={'/checker.svg'}
+                    variant={RoundedCornerVariant.All}
+                  />
+                </div>
+                <p className='px-6 text-header leading-header font-header justify-center ...'>
+                  {data?.communityCtaTitle}
+                  <p className='text-body leading-body font-body py-2 ...'>
+                    {data?.communityCtaDescription}
+                  </p>
                 </p>
               </div>
             </div>
