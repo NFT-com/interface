@@ -182,6 +182,7 @@ export type CollectionInput = {
   chainId: Scalars['String'];
   contract: Scalars['Address'];
   network: Scalars['String'];
+  withOpensea?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CollectionNfTsInput = {
