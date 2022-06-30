@@ -59,6 +59,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     )}>
       <Modal
         fullModal
+        bgColor='transparent'
+        transparentOverlay
         title={''}
         visible={layoutEditorOpen}
         loading={false}

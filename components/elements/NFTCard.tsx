@@ -164,7 +164,7 @@ export function NFTCard(props: NFTCardProps) {
                   key={image + index}
                   src={image}
                   variant={RoundedCornerVariant.None}
-                  extraClasses='h-full w-1/3'
+                  extraClasses='h-full'
                 />;
               })}
             </div> :

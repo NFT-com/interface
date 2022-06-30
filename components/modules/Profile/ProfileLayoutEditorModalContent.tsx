@@ -1,3 +1,4 @@
+import { Button, ButtonType } from 'components/elements/Button';
 import { ProfileLayoutType } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
@@ -5,7 +6,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 
 import Image from 'next/image';
 import { X } from 'phosphor-react';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 export interface ProfileLayoutEditorModalContentProps {
   savedLayoutType: ProfileLayoutType;
@@ -23,16 +24,28 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
     draftLayoutType,
     setDraftLayoutType
   } = useContext(ProfileEditContext);
+
+  const [originalLayout, setOriginalLayout] = useState(null);
+
+  useEffect(() => {
+    if (originalLayout == null) {
+      setOriginalLayout(draftLayoutType);
+    }
+  }, [draftLayoutType, originalLayout]);
+
   return (
     <div className={tw(
-      'absolute top-0 left-0 h-screen w-screen',
+      'absolute top-0 left-0 h-[60%] md:h-screen overflow-scroll w-screen',
       'dark:bg-secondary-bg-dk bg-white',
       'text-primary-txt dark:text-primary-txt-dk',
       'p-5'
     )}>
       <div className='flex items-center justify-between w-full'>
         <span className='text-4xl'>Select Layout</span>
-        <div className='flex items-center cursor-pointer' onClick={props.onClose}>
+        <div className='flex items-center cursor-pointer' onClick={() => {
+          setDraftLayoutType(originalLayout);
+          props.onClose();
+        }}>
           <span className='mr-4 text-2xl'>Close</span>
           <X size={20} />
         </div>
@@ -83,6 +96,24 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
             </div>
           );
         })}
+      </div>
+      <div data-testid="ConfirmButton" className='flex flex-col w-full items-center mt-4' onClick={props.onClose}>
+        <Button
+          label={'Confirm'}
+          onClick={() => {
+            props.onClose();
+          }}
+          type={ButtonType.PRIMARY}
+        />
+        <div
+          className='mt-4 text-link hover:underline cursor-pointer'
+          onClick={() => {
+            setDraftLayoutType(originalLayout);
+            props.onClose();
+          }}
+        >
+          Cancel
+        </div>
       </div>
     </div>
   );

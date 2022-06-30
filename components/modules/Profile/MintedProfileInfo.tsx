@@ -59,11 +59,10 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     }
     setDraftBio(bioValue);
   };
-
   return (
-    <div className="flex items-center my-6 mx-4 w-full md:flex-col">
-      <div className="flex flex-col w-full">
-        <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
+    <div className="flex items-center my-6 mx-4 w-full md:flex-col sm:px-4">
+      <div className="flex flex-col w-full text-primary-txt dark:text-primary-txt-dk">
+        <div className={tw('flex w-full justify-around items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
           <div
             id="MintedProfileNameContainer"
             className={tw(

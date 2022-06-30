@@ -100,7 +100,7 @@ export default function HeroHeader(props: HeroHeaderProps) {
                   'md:mr-5 mr-20',
                   'h-full flex-shrink-0',
                   'space-x-5',
-                  'font-rubik text-blue-50 font-bold tracking-wide',
+                  'font-rubik text-primary-txt dark:text-primary-txt-dk font-bold tracking-wide',
                   'flex items-center'
                 )}
               >
