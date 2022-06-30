@@ -66,7 +66,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         </ClientOnly>
         <main className='flex flex-col'>
           <div className={tw('flex flex-row items-center justify-left mt-20 p-6 w-screen h-full bg-secondary-dk break-after-all')}>
-            <div className='break-after-all space-y-2'>
+            <div className='break-after-all space-y-2 md:w-full'>
               <div className={tw(
                 'font-rubik text-always-white text-header leading-header font-header',
                 'break-after-all space-y-2'
