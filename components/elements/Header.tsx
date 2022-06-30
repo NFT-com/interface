@@ -11,7 +11,7 @@ import { isMobile } from 'react-device-detect';
 export const Header = () => {
   return (
     <Popover as="nav" className='fixed z-[99] top-0 w-screen h-20 bg-secondary-dk'>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
             <div className="flex-shrink-0">

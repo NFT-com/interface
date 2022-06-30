@@ -23,7 +23,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
     gkThumbnail;
 
   return (
-    <div className='pt-6 text-body text-secondary-txt-light leading-body font-header justify-center ... w-[430px] md:w-full'>
+    <div className='p-6 text-body text-secondary-txt-light leading-body font-header w-[430px] md:w-full'>
       <p className='mb-2 md:mb-4'>Featured Profile</p>
       <div className='flex flex-col bg-[#B0AFAF26] px-4 py-6 rounded-md'>
         <div className='flex flex-row items-center mb-5'>

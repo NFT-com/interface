@@ -27,31 +27,21 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
         'w-full h-full',
         'justify-between cursor-pointer',
         'overflow-hidden',
+        'm-auto',
         'my-6',
+        'p-auto',
       )}>
       <Swiper slidesPerView={3} spaceBetween={30} slidesPerGroup={2} loop={true} loopFillGroupWithBlank pagination={{
         'clickable': true
       }} navigation={true}>
         <SwiperSlide
         >
-          <div className='flex flex-col w-full row-auto aspect-square h-full transform hover:scale-105'>
-            <RoundedCornerMedia src={props?.profiles[0]} variant={RoundedCornerVariant.All} extraClasses='relative rounded-t-md' containerClasses='h-full' />
-            <div className='bg-white rounded-b-md px-3 py-2'>
-              <p className='text-xxs2 text-[#727272] '>Azuki</p>
-              <p className='text-black text-sm -mt-1'>Azuki #5552</p>
-            </div>
-          </div>
+          <RoundedCornerMedia src={props?.profiles[0]} variant={RoundedCornerVariant.All} containerClasses='h-full' />
         </SwiperSlide>
         <SwiperSlide
           style={{ width: '100%' }}
         >
-          <div className='flex flex-col w-full row-auto aspect-square h-full transform hover:scale-105'>
-            <RoundedCornerMedia src={props?.profiles[1]} variant={RoundedCornerVariant.All} extraClasses='relative rounded-t-md' containerClasses='h-full' />
-            <div className='bg-white rounded-b-md px-3 py-2'>
-              <p className='text-xxs2 text-[#727272] '>Azuki</p>
-              <p className='text-black text-sm -mt-1'>Azuki #5552</p>
-            </div>
-          </div>
+          <RoundedCornerMedia src={props?.profiles[1]} variant={RoundedCornerVariant.All} containerClasses='h-full' />
         </SwiperSlide>
       </Swiper>
     </div>
