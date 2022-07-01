@@ -45,6 +45,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           'p-auto',
         )}>
         <SwiperSlide
+          key={1}
           style={{ width: '100%', height: '' }}
         >
           <RoundedCornerMedia src={props?.profiles[0]} variant={RoundedCornerVariant.All} containerClasses='h-full' />
@@ -60,6 +61,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           'p-auto',
         )}>
         <SwiperSlide
+          key={2}
           style={{ width: '100%', height: 'auto' }}
         >
           <RoundedCornerMedia src={props?.profiles[1]} variant={RoundedCornerVariant.All} containerClasses='h-full' />
