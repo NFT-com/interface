@@ -62,7 +62,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   return (
     <div className={tw(
       'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
-      'xs:my-0 xs:mx-0 xs:mb-16 xs:-mt-10 sm:-mt-14 my-4 sm:mx-0 lg:mx-8 sm:px-4',
+      'xs:my-0 xs:mx-0 xs:mb-16 xs:-mt-10 sm:-mt-14 my-4 sm:mx-0 lg:mx-8 px-4',
       'xs:w-full sm:w-4/5 lg:w-3/5 w-full xs:h-32 h-52')}>
       <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
         <div
