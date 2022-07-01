@@ -107,15 +107,28 @@ export const HOME_PAGE_FIELDS = `
   subheroDescription
   feedTitle
   feedDescription
+  feedCollections
   tickerStats
   leaderboardTitle
   leaderboardDescription
   threeCardTitle
   threeCardDescription
+  threeCardImage1{
+    url
+    description
+  }
   threeCardTitle2
   threeCardDescription2
+  threeCardImage2{
+    url
+    description
+  }
   threeCardTitle3
   threeCardDescription3
+  threeCardImage3{
+    url
+    description
+  }
   learnTitle
   learnDescription
   communityCtaTitle

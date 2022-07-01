@@ -10,7 +10,6 @@ import Image from 'next/image';
 interface FeaturedProfileProps {
   profileOwner: ProfileQuery;
   gkId: number;
-  pfpUrl: string;
 }
 
 export const FeaturedProfile = (props: FeaturedProfileProps) => {
