@@ -12,6 +12,7 @@ import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButt
 import HomeLayout from 'components/layouts/HomeLayout';
 import { HeroPage } from 'components/modules/Hero/HeroPage';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
+import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -53,6 +54,7 @@ type HomePageProps = {
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   const [tickerStats, setTickerStats] = useState<TickerStat[]>([]);
   const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile['profileURI']);
+  const { data: leaderboardData } = useLeaderboardQuery({ count: 10 });
 
   useEffect(() => {
     if (data?.tickerStats) {
@@ -149,7 +151,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               <p className='text-header leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </p>
-              <LeaderBoard />
+              <LeaderBoard data={leaderboardData} />
             </div>
             <div className='flex flex-row flex-wrap w-full h-full justify-center ...'>
               <div className='h-full w-full p-2 ...'>
