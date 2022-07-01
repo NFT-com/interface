@@ -65,8 +65,8 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
               <div className={tw('h-full flex items-center',
                 'justify-start whitespace-nowrap',
                 'text-body sm:text-sm leading-body font-medium')}>
-                <div className="w-14 h-14 xs:w-8 xs:h-8 mr-3">
-                  <Image src={item.photoURL} alt="svgImage" className="m-0 object-center rounded-full" />
+                <div className="w-14 h-14 xs:w-8 xs:h-8 mr-3 relative">
+                  <Image src={item.photoURL} alt="svgImage" className="m-0 object-center rounded-full" layout='fill' />
                 </div>
                 <div>{item.url}</div>
               </div>
