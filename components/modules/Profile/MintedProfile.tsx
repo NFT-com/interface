@@ -1,9 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
-import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -34,11 +32,7 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const {
     editMode,
-    setEditMode,
-    clearDrafts,
-    saveProfile,
     saving,
-    draftBio,
     draftProfileImg,
     draftHeaderImg,
     setDraftHeaderImg,
@@ -53,8 +47,6 @@ export function MintedProfile(props: MintedProfileProps) {
     .map(fullUri => fullUri.split('/').pop())
     .includes(profileURI);
 
-  const { mutate: mutateMyNFTs } = useMyNFTsQuery(20);
-      
   const { nfts: publiclyVisibleNFTs, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
@@ -67,7 +59,6 @@ export function MintedProfile(props: MintedProfileProps) {
   }, [editMode, mutateProfileNFTs]);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
-  const hasGks = !isNullOrEmpty(ownedGKTokens);
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -118,58 +109,9 @@ export function MintedProfile(props: MintedProfileProps) {
                 <div {...getRootProps()} style={{ outline: 'none' }}>
                   <input {...getInputProps()} />
                 </div>
-                {userIsAdmin && hasGks && (
-                  editMode ?
-                    <div
-                      className={tw(
-                        'flex absolute top-24 right-32 sm:right-28'
-                      )}
-                      style={{ zIndex: 49 }}
-                    >
-                      <div className='mr-4'>
-                        <Button
-                          type={ButtonType.PRIMARY}
-                          label={'Save'}
-                          onClick={() => {
-                            analytics.track('Update Profile', {
-                              ethereumAddress: account?.address,
-                              profile: profileURI,
-                              newProfile: draftProfileImg?.preview ? true : false,
-                              newHeader: draftHeaderImg?.preview ? true : false,
-                              newDescription: draftBio,
-                            });
-
-                            saveProfile();
-                            setEditMode(false);
-                            mutateProfileNFTs();
-                            mutateMyNFTs();
-                          }}
-                        />
-                      </div>
-                      <Button
-                        type={ButtonType.SECONDARY}
-                        label={'Cancel'}
-                        onClick={clearDrafts}
-                      />
-                    </div> :
-                    <div
-                      id="MintedProfileEditButtonContainer"
-                      className={tw(
-                        'absolute top-24 right-32 sm:right-11'
-                      )}
-                      style={{ zIndex: 49 }}
-                    >
-                      <Button
-                        type={ButtonType.SECONDARY}
-                        label={'Edit Profile'}
-                        onClick={() => {
-                          setEditMode(true);
-                        }}
-                      />
-                    </div>)}
                 {editMode && <div
                   className={tw(
-                    'absolute bottom-5 right-32 sm:right-28'
+                    'absolute bottom-5 xs:right-6 sm:right-3 md:right-4 right-4'
                   )}
                   onClick={open}
                 >
@@ -181,78 +123,82 @@ export function MintedProfile(props: MintedProfileProps) {
         </div>
       </BannerWrapper>
       <div
-        className='flex justify-center items-center'
+        className={tw(
+          'flex justify-start items-center sm:flex-col sm:items-start',
+          isMobile ? 'px-2' : 'sm:px-2 px-8')}
         style={{
           zIndex: 103,
         }}
       >
-        <div className="flex items-center md:flex-col justify-center">
-          <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px] mr-20 ml-[-4rem] md:ml-0 md:mr-0">
-            <Dropzone
-              accept={'image/*' ['.*']}
-              disabled={!userIsAdmin || !editMode}
-              onDrop={files => {
-                if (userIsAdmin) onDropProfile(files);
-              }}
-            >
-              {({ getRootProps, getInputProps }) => (
-                <section>
-                  <div {...getRootProps()} className={tw(
-                    'relative outline-none',
-                    userIsAdmin ? '' : 'cursor-default',
-                    'h-60 w-60',
-                  )}>
-                    <input {...getInputProps()} />
-                    {saving && <div
-                      style={{ zIndex: 102 }}
-                      className={tw(
-                        'rounded-full absolute flex border bg-white/10',
-                        'items-center justify-center h-full w-full'
-                      )}
-                    >
-                      <Loader/>
-                    </div>}
-                    <img
-                      src={
-                        !isNullOrEmpty(draftProfileImg?.preview)
-                          ? draftProfileImg?.preview
-                          : profileData?.profile?.photoURL ??
+        <div className="sm:block flex items-end">
+          <Dropzone
+            accept={'image/*' ['.*']}
+            disabled={!userIsAdmin || !editMode}
+            onDrop={files => {
+              if (userIsAdmin) onDropProfile(files);
+            }}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps()} className={tw(
+                'relative outline-none',
+                userIsAdmin ? '' : 'cursor-default',
+                'h-52 w-52 md:h-32 md:w-32',
+              )}>
+                <input {...getInputProps()} />
+                {saving && <div
+                  style={{ zIndex: 102 }}
+                  className={tw(
+                    'rounded-full absolute flex border bg-white/10',
+                    'items-center justify-center h-full w-full',
+                    'xs:mt-[-60px] sm:mt-[-67px] md:mt-[-120px] lg:mt-[-86px] mt-[-115px] absolute'
+                  )}
+                >
+                  <Loader/>
+                </div>}
+                {editMode && <div
+                  style={{ zIndex: 102, }}
+                  className={tw(
+                    'absolute opacity-30 hover:opacity-100',
+                    'xs:right-5 sm:right-4 md:right-4 lg:right-9 right-6',
+                    'xs:bottom-[5.5rem] sm:bottom-24 md:bottom-[9.5rem] lg:bottom-[9.5rem] bottom-40'
+                  )}
+                >
+                  <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-10 w-10 md:h-6 md:w-6 cursor-pointer'/>
+                </div>}
+                <img
+                  src={
+                    !isNullOrEmpty(draftProfileImg?.preview)
+                      ? draftProfileImg?.preview
+                      : profileData?.profile?.photoURL ??
                           (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
                             ? 'https://cdn.nft.com/profile-image-default.svg' :
                             cameraIcon.src)
-                      }
-                      alt="profilePicture"
-                      draggable={false}
-                      className={tw(
-                        'object-center rounded-full',
-                        'h-full w-full',
-                        'shrink-0 aspect-square',
-                        userIsAdmin && editMode ? 'cursor-pointer' : '',
-                        userIsAdmin && !isMobile && editMode ? 'hoverBlue' : ''
-                      )}
-                      style={{ zIndex: 101, }}
-                    />
-                    {editMode && <div
-                      className={tw(
-                        'absolute bottom-5 -right-4 md:-right-8'
-                      )}
-                    >
-                      <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
-                    </div>}
-                  </div>
-                </section>
-              )}
-            </Dropzone>
-          </div>
-          <MintedProfileInfo
-            userIsAdmin={userIsAdmin}
-            profileURI={profileURI}
-          />
+                  }
+                  alt="profilePicture"
+                  draggable={false}
+                  className={tw(
+                    'object-center rounded-full',
+                    'h-full w-full',
+                    'shrink-0 aspect-square',
+                    userIsAdmin && editMode ? 'cursor-pointer' : '',
+                    userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
+                    'xs:mt-[-60px] sm:mt-[-67px] md:mt-[-120px]  mt-[-115px] absolute'
+                  )}
+                  style={{ zIndex: 101, }}
+                />
+              </div>
+            )}
+          </Dropzone>
         </div>
+        <MintedProfileInfo
+          userIsAdmin={userIsAdmin}
+          profileURI={profileURI}
+        />
       </div>
       <main className={tw(
         'h-full',
         userIsAdmin ? 'justify-between' : 'justify-start space-y-4',
+        editMode ? 'sm:mt-28 md:mt-12 lg:mt-8 mt-12' : 'sm:mt-5',
         'w-full justify-start space-y-4 flex flex-col')}>
         {
           (userIsAdmin && editMode) || (publiclyVisibleNFTs?.length ?? 0) > 0 ?

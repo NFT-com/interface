@@ -1,7 +1,6 @@
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
-import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -35,8 +34,6 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     editMode,
     onShowAll,
     onHideAll,
-    draftDisplayType,
-    setDraftDisplayType,
     selectedCollection,
     draftGkIconVisible,
     setDraftGkIconVisible,
@@ -52,10 +49,11 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     profileData?.profile?.id,
     PROFILE_GALLERY_PAGE_SIZE
   );
+  const [groupByCollection, setGroupByCollection] = useState(false);
   return (
     <div className={tw(
-      'flex flex-col mt-8 align-items',
-      isMobile ? 'px-2' : 'sm:px-2 md:px-8 lg:px-16 px-20'
+      'flex flex-col mt-8 md:mt-0 align-items',//
+      isMobile ? 'px-2' : 'sm:px-2 px-8'
     )}>
       <Modal
         fullModal
@@ -75,23 +73,21 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           }}
         />
       </Modal>
-      {editMode && selectedCollection == null &&
-        <div className='flex items-center w-full mb-12 px-8 justify-between text-white'>
+      {selectedCollection == null &&
+        <div className={tw(
+          'flex items-center w-full justify-between text-white',
+          editMode ? '' : 'mb-3')}>
           <div>
             <Switch
               left=""
               right="Group by Collection"
-              enabled={
-                (
-                  profileData?.profile?.displayType === ProfileDisplayType.Collection &&
-                  draftDisplayType !== ProfileDisplayType.Nft
-                ) || draftDisplayType === ProfileDisplayType.Collection
-              }
+              enabled={groupByCollection}
               setEnabled={(enabled: boolean) => {
-                setDraftDisplayType(enabled ? ProfileDisplayType.Collection : ProfileDisplayType.Nft);
+                setGroupByCollection(enabled);
               }}
             />
           </div>
+          {editMode &&
           <div className="flex flex-row justify-end">
             {!isMobile && <GalleryToggleAllButtons
               publicNFTCount={publicNFTCount}
@@ -154,14 +150,11 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   }
                   : null,
               ])}/>
-          </div>
+          </div>}
         </div>
       }
       {
-        (
-          profileData?.profile?.displayType === ProfileDisplayType.Collection &&
-          draftDisplayType !== ProfileDisplayType.Nft
-        ) || draftDisplayType === ProfileDisplayType.Collection ?
+        groupByCollection ?
           <CollectionGallery profileURI={props.profileURI} /> :
           <NftGallery
             profileURI={props.profileURI}
