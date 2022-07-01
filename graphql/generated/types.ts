@@ -182,6 +182,7 @@ export type CollectionInput = {
   chainId: Scalars['String'];
   contract: Scalars['Address'];
   network: Scalars['String'];
+  withOpensea?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CollectionNfTsInput = {
@@ -388,6 +389,29 @@ export type LatestProfilesInput = {
   pageInput?: InputMaybe<PageInput>;
 };
 
+export type LeaderboardInput = {
+  count?: InputMaybe<Scalars['Int']>;
+  pageInput?: InputMaybe<PageInput>;
+};
+
+export type LeaderboardOutput = {
+  __typename?: 'LeaderboardOutput';
+  items: Array<LeaderboardProfile>;
+  pageInfo?: Maybe<PageInfo>;
+  totalItems?: Maybe<Scalars['Int']>;
+};
+
+export type LeaderboardProfile = {
+  __typename?: 'LeaderboardProfile';
+  id: Scalars['ID'];
+  index?: Maybe<Scalars['Int']>;
+  itemsVisible?: Maybe<Scalars['Int']>;
+  numberOfCollections?: Maybe<Scalars['Int']>;
+  numberOfGenesisKeys?: Maybe<Scalars['Int']>;
+  photoURL?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
+};
+
 export type MarketAsk = {
   __typename?: 'MarketAsk';
   approvalTxHash?: Maybe<Scalars['String']>;
@@ -505,6 +529,7 @@ export type Mutation = {
   refreshNft: Nft;
   removeCuration: Profile;
   resendEmailConfirm: User;
+  saveScoreForProfiles: SaveScoreForProfilesOutput;
   setCuration: Profile;
   setProfilePreferences: Array<Bid>;
   signHash: SignHashOutput;
@@ -619,6 +644,11 @@ export type MutationRefreshNftArgs = {
 
 export type MutationRemoveCurationArgs = {
   input: RemoveCurationInput;
+};
+
+
+export type MutationSaveScoreForProfilesArgs = {
+  input: SaveScoreForProfilesInput;
 };
 
 
@@ -937,6 +967,7 @@ export type Query = {
   insiderReservedProfiles: Array<Scalars['String']>;
   isAddressWhitelisted: Scalars['Boolean'];
   latestProfiles: ProfilesOutput;
+  leaderboard: LeaderboardOutput;
   me: User;
   myBids: BidsOutput;
   myCurations?: Maybe<CurationsOutput>;
@@ -1047,6 +1078,11 @@ export type QueryLatestProfilesArgs = {
 };
 
 
+export type QueryLeaderboardArgs = {
+  input?: InputMaybe<LeaderboardInput>;
+};
+
+
 export type QueryMyBidsArgs = {
   input?: InputMaybe<BidsInput>;
 };
@@ -1120,6 +1156,15 @@ export type RefreshMyNfTsOutput = {
 
 export type RemoveCurationInput = {
   profileId: Scalars['ID'];
+};
+
+export type SaveScoreForProfilesInput = {
+  count?: InputMaybe<Scalars['Int']>;
+};
+
+export type SaveScoreForProfilesOutput = {
+  __typename?: 'SaveScoreForProfilesOutput';
+  message?: Maybe<Scalars['String']>;
 };
 
 export type SetCurationInput = {
@@ -1537,6 +1582,13 @@ export type IsAddressWhitelistedQueryVariables = Exact<{
 
 
 export type IsAddressWhitelistedQuery = { __typename?: 'Query', isAddressWhitelisted: boolean };
+
+export type LeaderboardQueryVariables = Exact<{
+  input?: InputMaybe<LeaderboardInput>;
+}>;
+
+
+export type LeaderboardQuery = { __typename?: 'Query', leaderboard: { __typename?: 'LeaderboardOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'LeaderboardProfile', index?: number | null, id: string, url: string, photoURL?: string | null, numberOfGenesisKeys?: number | null, numberOfCollections?: number | null, itemsVisible?: number | null }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2229,6 +2281,26 @@ export const IsAddressWhitelistedDocument = gql`
   isAddressWhitelisted(input: $input)
 }
     `;
+export const LeaderboardDocument = gql`
+    query Leaderboard($input: LeaderboardInput) {
+  leaderboard(input: $input) {
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+    items {
+      index
+      id
+      url
+      photoURL
+      numberOfGenesisKeys
+      numberOfCollections
+      itemsVisible
+    }
+  }
+}
+    `;
 export const MeDocument = gql`
     query Me {
   me {
@@ -2626,6 +2698,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     IsAddressWhitelisted(variables?: IsAddressWhitelistedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IsAddressWhitelistedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<IsAddressWhitelistedQuery>(IsAddressWhitelistedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IsAddressWhitelisted', 'query');
+    },
+    Leaderboard(variables?: LeaderboardQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LeaderboardQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<LeaderboardQuery>(LeaderboardDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Leaderboard', 'query');
     },
     Me(variables?: MeQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MeQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MeQuery>(MeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Me', 'query');
