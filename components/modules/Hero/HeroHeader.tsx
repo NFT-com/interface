@@ -55,7 +55,7 @@ export default function HeroHeader(props: HeroHeaderProps) {
       return `z-50 drop-shadow-md ${props.heroHeaderBlack ? 'bg-black' : 'bg-transparent'}`;
     }
     else {
-      return 'bg-headerbg ' + (props.profileHeader ? 'dark:bg-secondary-dk opacity-90' : 'dark:bg-headerbg-dk');
+      return (props.profileHeader ? 'z-50 drop-shadow-md bg-transparent' : 'bg-headerbg dark:bg-headerbg-dk');
     }
   }, [props.heroHeader, props.heroHeaderBlack, props.profileHeader, props.removeBackground]);
 

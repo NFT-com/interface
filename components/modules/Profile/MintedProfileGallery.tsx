@@ -54,8 +54,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   );
   return (
     <div className={tw(
-      'flex flex-col mt-8 align-items',
-      isMobile ? 'px-2' : 'sm:px-2 px-8 '
+      'flex flex-col mt-8 md:mt-0 align-items',
+      isMobile ? 'px-2' : 'sm:px-2 px-8'
     )}>
       <Modal
         fullModal
@@ -75,8 +75,10 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           }}
         />
       </Modal>
-      {editMode && selectedCollection == null &&
-        <div className='flex items-center w-full mb-12 px-8 justify-between text-white'>
+      {selectedCollection == null &&
+        <div className={tw(
+          'flex items-center w-full justify-between text-white',
+          editMode ? '' : 'mb-3')}>
           <div>
             <Switch
               left=""
@@ -92,6 +94,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               }}
             />
           </div>
+          {editMode &&
           <div className="flex flex-row justify-end">
             {!isMobile && <GalleryToggleAllButtons
               publicNFTCount={publicNFTCount}
@@ -154,7 +157,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   }
                   : null,
               ])}/>
-          </div>
+          </div>}
         </div>
       }
       {
