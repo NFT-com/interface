@@ -1,7 +1,6 @@
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
-import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -35,8 +34,6 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     editMode,
     onShowAll,
     onHideAll,
-    draftDisplayType,
-    setDraftDisplayType,
     selectedCollection,
     draftGkIconVisible,
     setDraftGkIconVisible,
@@ -52,6 +49,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     profileData?.profile?.id,
     PROFILE_GALLERY_PAGE_SIZE
   );
+  const [groupByCollection, setGroupByCollection] = useState(false);
   return (
     <div className={tw(
       'flex flex-col mt-8 md:mt-0 align-items',
@@ -83,14 +81,9 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
             <Switch
               left=""
               right="Group by Collection"
-              enabled={
-                (
-                  profileData?.profile?.displayType === ProfileDisplayType.Collection &&
-                  draftDisplayType !== ProfileDisplayType.Nft
-                ) || draftDisplayType === ProfileDisplayType.Collection
-              }
+              enabled={groupByCollection}
               setEnabled={(enabled: boolean) => {
-                setDraftDisplayType(enabled ? ProfileDisplayType.Collection : ProfileDisplayType.Nft);
+                setGroupByCollection(enabled);
               }}
             />
           </div>
@@ -161,10 +154,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
         </div>
       }
       {
-        (
-          profileData?.profile?.displayType === ProfileDisplayType.Collection &&
-          draftDisplayType !== ProfileDisplayType.Nft
-        ) || draftDisplayType === ProfileDisplayType.Collection ?
+        groupByCollection ?
           <CollectionGallery profileURI={props.profileURI} /> :
           <NftGallery
             profileURI={props.profileURI}
