@@ -33,15 +33,19 @@ type HomePageProps = {
     subheroDescription: string;
     feedTitle: string;
     feedDescription: string;
+    feedCollections: any;
     tickerStats: TickerStat[];
     leaderboardTitle: string;
     leaderboardDescription: string;
     threeCardTitle: string;
     threeCardDescription: string;
+    threeCardImage1: any;
     threeCardTitle2: string;
     threeCardDescription2: string;
+    threeCardImage2: any;
     threeCardTitle3: string;
     threeCardDescription3: string;
+    threeCardImage3: any;
     learnTitle: string;
     learnDescription: string;
     communityCtaTitle: string;
@@ -54,6 +58,10 @@ type HomePageProps = {
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   const [tickerStats, setTickerStats] = useState<TickerStat[]>([]);
   const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile['profileURI']);
+  const { profileData: profileFeed1 } = useProfileQuery(data?.feedCollections['profile1']['url']);
+  const { profileData: profileFeed2 } = useProfileQuery(data?.feedCollections['profile2']['url']);
+  const { profileData: profileFeed3 } = useProfileQuery(data?.feedCollections['profile3']['url']);
+  const { profileData: profileFeed4 } = useProfileQuery(data?.feedCollections['profile4']['url']);
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
 
   useEffect(() => {
@@ -70,22 +78,22 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 px-80 w-screen h-full bg-secondary-dk break-after-all')}>
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 md:px-20 lg:px-40 xl:px-80 w-screen h-full bg-secondary-dk break-after-all')}>
             <div className='break-after-all space-y-2 md:w-full'>
               <div className={tw(
                 'font-rubik text-always-white text-header leading-header sm:font-header md:font-header-bold ',
                 'break-after-all space-y-2',
-                'md: mb-6'
+                'md:mb-6'
               )}>
-                <p>
+                <div>
                   {data?.subheroTitle}
-                </p>
-                <p>
+                </div>
+                <div>
                   {data?.subheroDescription}
-                </p>
-                <p className='sm:hidden md:block text-body leading-body font-body w-[44%]'>
+                </div>
+                <div className='sm:hidden md:block text-body leading-body font-body w-[44%]'>
                 Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
-                </p>
+                </div>
               </div>
               <div className='w-full h-full inline-flex grow space-x-2'>
                 <WalletRainbowKitButton signInButton showWhenConnected={false} />
@@ -106,26 +114,24 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </button>
               </div>
             </div>
-            <div className='h-full w-full flex sm:flex-row sm:justify-center justify-end'>
-              <FeaturedProfile
-                profileOwner={featuredProfile}
-                gkId={1}
-                pfpUrl={'https://cdn.nft.com/profiles/1653690187501-ghoool.webp'}
-              />
+            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20'>
+              <FeaturedProfile profileOwner={featuredProfile} gkId={1} />
             </div>
           </div>
           <div className='space-y-6 p-6 ...'>
             <div className='h-full ...'>
               <div className='text-header leading-header font-header justify-center ...'>
                 {data?.feedTitle}
-                <p className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
+                <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.feedDescription}
-                </p>
-                {/*TODO: @anthony use contentful for these images */}
+                </div>
                 <ProfileFeed
                   profiles={[
-                    'https://cdn.nft.com/profiles/1653690187501-ghoool.webp',
-                    'https://cdn.nft.com/profiles/1656228209273-1.PNG']}
+                     profileFeed1,
+                     profileFeed2,
+                     profileFeed3,
+                     profileFeed4
+                  ]}
                 />
                 <div className='flex flex-row justify-center sm:w-full items-center pt-6 ...'>
                   <Button
@@ -139,7 +145,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     type={ButtonType.SECONDARY}
                   />
                 </div>
-
               </div>
             </div>
             <div className='h-full w-screen -ml-6 bg-always-black py-6 drop-shadow-lg ...'>
@@ -148,19 +153,19 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               )}
             </div>
             <div className='h-full ...'>
-              <p className='text-header leading-header font-header justify-center mb-6 mt-14 ...'>
+              <div className='text-header leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
-              </p>
+              </div>
               <LeaderBoard data={leaderboardData} />
             </div>
             <div className='flex flex-row flex-wrap w-full h-full justify-center ...'>
               <div className='h-full w-full p-2 ...'>
-                <p className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-header leading-header font-header justify-center ...'>
                   {data?.threeCardTitle}
-                  <p className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
+                  <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                     {data?.threeCardDescription}
-                  </p>
-                </p>
+                  </div>
+                </div>
               </div>
               <div className='h-full w-[33%] sm:w-full ...'>
                 <div
@@ -174,16 +179,17 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'p-6'
                   )}>
                   <RoundedCornerMedia
-                    src={'/checker.svg'}
+                    loading={!data?.threeCardImage1}
+                    src={data?.threeCardImage1['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <p className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-header leading-header font-header justify-center ...'>
                   {data?.threeCardTitle2}
-                  <p className='text-body leading-body font-body py-2 ...'>
+                  <div className='text-body leading-body font-body py-2 ...'>
                     {data?.threeCardDescription2}
-                  </p>
-                </p>
+                  </div>
+                </div>
               </div>
               <div className='h-full w-[33%] sm:w-full ...'>
                 <div
@@ -196,16 +202,17 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'p-6'
                   )}>
                   <RoundedCornerMedia
-                    src={'/checker.svg'}
+                    loading={!data?.threeCardImage2}
+                    src={data?.threeCardImage2['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <p className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-header leading-header font-header justify-center ...'>
                   {data?.threeCardTitle3}
-                  <p className='text-body leading-body font-body py-2 ...'>
+                  <div className='text-body leading-body font-body py-2 ...'>
                     {data?.threeCardDescription3}
-                  </p>
-                </p>
+                  </div>
+                </div>
               </div>
               <div className='h-full w-[33%] sm:w-full ...'>
                 <div
@@ -218,24 +225,25 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'p-6'
                   )}>
                   <RoundedCornerMedia
-                    src={'/checker.svg'}
+                    loading={!data?.threeCardImage3}
+                    src={data?.threeCardImage3['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <p className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-header leading-header font-header justify-center ...'>
                   {data?.communityCtaTitle}
-                  <p className='text-body leading-body font-body py-2 ...'>
+                  <div className='text-body leading-body font-body py-2 ...'>
                     {data?.communityCtaDescription}
-                  </p>
-                </p>
+                  </div>
+                </div>
               </div>
             </div>
             <div className='h-full w-full'>
               <div className='text-header leading-header font-header justify-center ...'>
                 {data?.learnTitle}
-                <p className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
+                <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.learnDescription}
-                </p>
+                </div>
                 <LearnCards
                   cardTitles={['What is an NFT?', 'What is a Blockchain?']}
                 />

@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
+import Link from 'next/link';
 
 type LeaderBoardProps= {
   data: LeaderboardQuery
@@ -62,6 +63,7 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
               </div>
             </td>
             <td>
+            <Link href={item.url}>
               <div className={tw('h-full flex items-center',
                 'justify-start whitespace-nowrap',
                 'text-body sm:text-sm leading-body font-medium')}>
@@ -70,6 +72,7 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
                 </div>
                 <div>{item.url}</div>
               </div>
+              </Link>
             </td>
             <td>
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
