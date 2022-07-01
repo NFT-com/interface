@@ -127,10 +127,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
                 <ProfileFeed
                   profiles={[
-                     profileFeed1,
-                     profileFeed2,
-                     profileFeed3,
-                     profileFeed4
+                    profileFeed1,
+                    profileFeed2,
+                    profileFeed3,
+                    profileFeed4
                   ]}
                 />
                 <div className='flex flex-row justify-center sm:w-full items-center pt-6 ...'>

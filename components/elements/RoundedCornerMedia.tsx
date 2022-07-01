@@ -56,22 +56,22 @@ export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
     )}>
       { props?.loading ?
         <div className={tw(`w-full h-full bg-gray-300 animate-pulse ${getRoundedClass(props.variant)}  backdrop-blur-sm`)}></div>
-      :
-      <div>
-        <video
-          autoPlay
-          muted
-          loop
-          key={props.src}
-          src={props.src}
-          poster={props.src}
-          className={tw(
-            'flex object-cover w-full h-full aspect-square',
-            getRoundedClass(props.variant),
-            props.extraClasses
-          )}
-        />
-        {props?.overlayOptions &&
+        :
+        <div>
+          <video
+            autoPlay
+            muted
+            loop
+            key={props.src}
+            src={props.src}
+            poster={props.src}
+            className={tw(
+              'flex object-cover w-full h-full aspect-square',
+              getRoundedClass(props.variant),
+              props.extraClasses
+            )}
+          />
+          {props?.overlayOptions &&
           <div className='relative h-[5%] w-full'>
             <div className={tw('absolute inset-x-0 bottom-0 h-12',
               'bg-always-white/30 rounded-b-3xl backdrop-blur-sm',
@@ -92,9 +92,9 @@ export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
               </div>
             </div>
           </div>
-        }
+          }
         </div>
-    }
+      }
     </div>
   );
 }

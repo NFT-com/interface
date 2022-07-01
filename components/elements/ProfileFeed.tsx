@@ -3,8 +3,10 @@ import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 
+import { ProfileQuery } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
+import Loader from './Loader';
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import { isMobile } from 'react-device-detect';
@@ -13,8 +15,6 @@ import SwiperCore, {
   Autoplay,
   Navigation, Pagination } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import Loader from './Loader';
-import { ProfileQuery } from 'graphql/generated/types';
 
 SwiperCore.use([Autoplay,Pagination,Navigation]);
 
@@ -52,7 +52,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
         >
           {
             props.profiles ?
-              <RoundedCornerMedia src={props?.profiles[0]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' />
+              <RoundedCornerMedia src={props?.profiles[0]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses={'h-full'} />
               :
               <Loader />
           }
@@ -73,12 +73,12 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
         >
           {
             props.profiles ?
-            <RoundedCornerMedia src={props?.profiles[1]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' />              :
+              <RoundedCornerMedia src={props?.profiles[1]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' /> :
               <Loader />
           }
         </SwiperSlide>
-        </div>
-        <div
+      </div>
+      <div
         className={tw(
           'drop-shadow-md rounded-xl flex flex-col',
           'w-full h-full',
@@ -93,12 +93,12 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
         >
           {
             props.profiles ?
-            <RoundedCornerMedia src={props?.profiles[2]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' />              :
+              <RoundedCornerMedia src={props?.profiles[2]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' /> :
               <Loader />
           }
         </SwiperSlide>
-        </div>
-        <div
+      </div>
+      <div
         className={tw(
           'drop-shadow-md rounded-xl flex flex-col',
           'w-full h-full',
@@ -113,7 +113,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
         >
           {
             props.profiles ?
-            <RoundedCornerMedia src={props?.profiles[3]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' />              :
+              <RoundedCornerMedia src={props?.profiles[3]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' /> :
               <Loader />
           }
         </SwiperSlide>
