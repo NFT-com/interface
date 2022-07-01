@@ -54,7 +54,7 @@ type HomePageProps = {
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   const [tickerStats, setTickerStats] = useState<TickerStat[]>([]);
   const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile['profileURI']);
-  const { data: leaderboardData } = useLeaderboardQuery({ count: 10 });
+  const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
 
   useEffect(() => {
     if (data?.tickerStats) {
