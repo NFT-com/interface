@@ -1,6 +1,7 @@
 export * from './alchemy';
 export * from './balanceData';
 export * from './blogs';
+export * from './seaport';
 export * from './tabs';
 
 export type Social = {
