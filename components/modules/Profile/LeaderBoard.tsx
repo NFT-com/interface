@@ -58,7 +58,7 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
           >
             <td className="pr-0 md:pr-1 text-body sm:text-sm leading-body font-medium" >
               <div className={`${isMobile ? 'flex items-start' : 'flex items-center'}`} >
-                <div>{item.id}</div>
+                <div>{i + 1}</div>
               </div>
             </td>
             <td>
