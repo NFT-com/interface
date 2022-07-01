@@ -15,7 +15,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
     requestAllowance: requestOpensea
   } = useNftCollectionAllowance(
     props.nft?.contract,
-    account.address,
+    account?.address,
     TransferProxyTarget.Opensea
   );
 
@@ -24,7 +24,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
     requestAllowance: requestLooksrare
   } = useNftCollectionAllowance(
     props.nft?.contract,
-    account.address,
+    account?.address,
     TransferProxyTarget.LooksRare
   );
   
