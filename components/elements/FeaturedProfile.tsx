@@ -31,7 +31,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
             {
               props.profileOwner ?
                 <Image
-                  src={props.profileOwner.profile.photoURL}
+                  src={props.profileOwner?.profile?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
                   alt='featured profile main image'
                   className="rounded-full"
                   width="100%"
