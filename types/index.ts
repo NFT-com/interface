@@ -11,3 +11,10 @@ export type Social = {
   action: string,
   destination: string
 };
+
+export type TickerStat = {
+  stat: {
+    value: string;
+    sub: string;
+  }
+};
