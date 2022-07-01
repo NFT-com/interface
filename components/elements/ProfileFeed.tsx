@@ -6,7 +6,6 @@ import 'swiper/components/navigation/navigation.min.css';
 import { ProfileQuery } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
-import Loader from './Loader';
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import { isMobile } from 'react-device-detect';
@@ -50,12 +49,11 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           key={1}
           style={{ width: '100%', height: '' }}
         >
-          {
-            props.profiles ?
-              <RoundedCornerMedia src={props?.profiles[0]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses={'h-full'} />
-              :
-              <Loader />
-          }
+          <RoundedCornerMedia 
+            src={props?.profiles[0]?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+            loading={!props?.profiles} />
         </SwiperSlide>
       </div>
       <div
@@ -71,11 +69,11 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           key={2}
           style={{ width: '100%', height: 'auto' }}
         >
-          {
-            props.profiles ?
-              <RoundedCornerMedia src={props?.profiles[1]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' /> :
-              <Loader />
-          }
+          <RoundedCornerMedia
+            src={props?.profiles[1]?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+            loading={!props?.profiles} />
         </SwiperSlide>
       </div>
       <div
@@ -91,11 +89,11 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           key={3}
           style={{ width: '100%', height: 'auto' }}
         >
-          {
-            props.profiles ?
-              <RoundedCornerMedia src={props?.profiles[2]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' /> :
-              <Loader />
-          }
+          <RoundedCornerMedia
+            src={props?.profiles[2]?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+            loading={!props?.profiles} />
         </SwiperSlide>
       </div>
       <div
@@ -111,11 +109,11 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           key={4}
           style={{ width: '100%', height: 'auto' }}
         >
-          {
-            props.profiles ?
-              <RoundedCornerMedia src={props?.profiles[3]?.profile?.photoURL} variant={RoundedCornerVariant.All} containerClasses='h-full' /> :
-              <Loader />
-          }
+          <RoundedCornerMedia
+            src={props?.profiles[3]?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+            loading={!props?.profiles} />
         </SwiperSlide>
       </div>
     </Swiper>
