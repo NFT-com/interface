@@ -125,7 +125,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'https://cdn.nft.com/profiles/1653690187501-ghoool.webp',
                     'https://cdn.nft.com/profiles/1656228209273-1.PNG']}
                 />
-                <div className='flex flex-row justify-center sm:w-full ...'>
+                <div className='flex flex-row justify-center sm:w-full items-center pt-6 ...'>
                   <Button
                     bgColor={'#222222'}
                     color={'#ffffff'}

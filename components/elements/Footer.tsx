@@ -1,4 +1,3 @@
-import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
@@ -11,7 +10,6 @@ import { useAccount } from 'wagmi';
 
 export const Footer = () => {
   const router = useRouter();
-  const { isDarkMode } = useUser();
   const { data: account } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { profileTokens } = useMyNftProfileTokens();
