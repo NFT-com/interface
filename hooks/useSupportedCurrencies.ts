@@ -1,16 +1,13 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Dai, Usdc, Weth } from 'constants/typechain';
-import { AssetClass } from 'graphql/generated/types';
 import { useBalances } from 'hooks/balances/useBalances';
-import { useDaiAllowance } from 'hooks/balances/useDaiAllowance';
-import { useUsdcAllowance } from 'hooks/balances/useUsdcAllowance';
-import { useWethAllowance } from 'hooks/balances/useWethAllowance';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { useTransferProxy } from 'hooks/contracts/useTransferProxy';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { MAX_UINT_256 } from 'utils/marketplaceUtils';
 
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { TransferProxyTarget } from './balances/useNftCollectionAllowance';
+
+import { BigNumberish } from '@ethersproject/bignumber';
 import DAI_LOGO from 'public/dai.svg';
 import ETH_LOGO from 'public/eth.svg';
 import USDC_LOGO from 'public/usdc.svg';
@@ -23,11 +20,9 @@ export type NFTSupportedCurrency = {
   logo: string;
   contract: string;
   usd: (val: number) => number;
-  allowance: (address: string) => Promise<BigNumberish>;
-  setAllowance: (address: string) => Promise<boolean>;
+  allowance: (address: string, proxy: TransferProxyTarget) => Promise<BigNumberish>;
+  setAllowance: (address: string, proxy: TransferProxyTarget) => Promise<boolean>;
   balance: BigNumberish;
-  loggedInAllowance: BigNumber;
-  mutateLoggedInAllowance: () => void
 }
 
 export type SupportedCurrency = 'WETH' | 'ETH' | 'DAI' | 'USDC';
@@ -48,36 +43,24 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
     dai,
     usdc,
   } = useAllContracts();
-  const erc20TransferProxy = useTransferProxy(AssetClass.Erc20);
   const { data: acctData } = useAccount();
   const balances = useBalances(acctData?.address);
-  const {
-    allowance: wethAllowance,
-    mutate: mutateWethAllowance
-  } = useWethAllowance(acctData?.address, erc20TransferProxy);
-  const {
-    allowance: daiAllowance,
-    mutate: mutateDaiAllowance
-  } = useDaiAllowance(acctData?.address, erc20TransferProxy);
-  const {
-    allowance: usdcAllowance,
-    mutate: mutateUsdcAllowance
-  } = useUsdcAllowance(acctData?.address, erc20TransferProxy);
 
   const setAllowanceForContract = useCallback(async (
     contract: Dai | Weth | Usdc,
-    account: string
+    account: string,
+    proxy: TransferProxyTarget
   ): Promise<boolean> => {
     return contract
       .connect(await acctData?.connector?.getSigner() ?? account)
-      .approve(erc20TransferProxy, MAX_UINT_256)
+      .approve(proxy, MAX_UINT_256)
       .then((tx) => tx.wait(1))
       .then(() => true)
       .catch(() => {
         console.log('Failed to get currency approval. Please connect wallet.');
         return false;
       });
-  }, [erc20TransferProxy, acctData]);
+  }, [acctData]);
 
   const data: NFTSupportedCurrencies = useMemo(() => {
     return {
@@ -86,77 +69,55 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         logo: WETH_LOGO,
         contract: weth.address,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
-        allowance: async (account: string) => {
-          const wethAllowance = await weth.allowance(account, erc20TransferProxy ?? NULL_ADDRESS);
+        allowance: async (account: string, proxy: TransferProxyTarget) => {
+          const wethAllowance = await weth.allowance(account, proxy ?? NULL_ADDRESS);
           return wethAllowance;
         },
-        setAllowance: (account: string) => setAllowanceForContract(weth, account),
+        setAllowance: (account: string, proxy: TransferProxyTarget) => setAllowanceForContract(weth, account, proxy),
         // balance: balances.weth?.balance ?? 0,
         balance: 0,
-        loggedInAllowance: BigNumber.from(wethAllowance?.balance ?? 0),
-        mutateLoggedInAllowance: mutateWethAllowance
       },
       'ETH': {
         name: 'ETH',
         logo: ETH_LOGO,
         contract: NULL_ADDRESS,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
-        allowance: async (account: string) => {
+        allowance: async () => {
           // ETH doesn't have allowances - just need to include ETH
           // in amount field as payable transaction.
           return 0;
         },
         setAllowance: async () => true,
         balance: balances.eth?.balance ?? 0,
-        loggedInAllowance: BigNumber.from(0),
-        mutateLoggedInAllowance: () => null
       },
       'DAI': {
         name: 'DAI',
         logo: DAI_LOGO,
         contract: dai.address,
         usd: (val: number) => val,
-        allowance: async (account: string) => {
-          const daiAllowance = await dai.allowance(account, erc20TransferProxy ?? NULL_ADDRESS);
+        allowance: async (account: string, proxy: TransferProxyTarget) => {
+          const daiAllowance = await dai.allowance(account, proxy ?? NULL_ADDRESS);
           return daiAllowance;
         },
-        setAllowance: (account: string) => setAllowanceForContract(dai, account),
+        setAllowance: (account: string, proxy: TransferProxyTarget) => setAllowanceForContract(dai, account, proxy),
         // balance: balances.dai?.balance ?? 0,
         balance: 0,
-        loggedInAllowance: BigNumber.from(daiAllowance?.balance ?? 0),
-        mutateLoggedInAllowance: mutateDaiAllowance
       },
       'USDC': {
         name: 'USDC',
         logo: USDC_LOGO,
         contract: usdc.address,
         usd: (val: number) => val,
-        allowance: async (account: string) => {
-          const usdcAllowance = await usdc.allowance(account, erc20TransferProxy ?? NULL_ADDRESS);
+        allowance: async (account: string, proxy: TransferProxyTarget) => {
+          const usdcAllowance = await usdc.allowance(account, proxy ?? NULL_ADDRESS);
           return usdcAllowance;
         },
-        setAllowance: (account: string) => setAllowanceForContract(usdc, account),
+        setAllowance: (account: string, proxy: TransferProxyTarget) => setAllowanceForContract(usdc, account, proxy),
         // balance: balances.usdc?.balance ?? 0,
         balance: 0,
-        loggedInAllowance: BigNumber.from(usdcAllowance?.balance ?? 0),
-        mutateLoggedInAllowance: mutateUsdcAllowance
       }
     };
-  }, [
-    balances.eth?.balance,
-    dai,
-    daiAllowance?.balance,
-    erc20TransferProxy,
-    ethPriceUSD,
-    mutateDaiAllowance,
-    mutateUsdcAllowance,
-    mutateWethAllowance,
-    setAllowanceForContract,
-    usdc,
-    usdcAllowance?.balance,
-    weth,
-    wethAllowance?.balance
-  ]);
+  }, [balances.eth?.balance, dai, ethPriceUSD, setAllowanceForContract, usdc, weth]);
 
   const getByContractAddress = useCallback((
     contractAddress: string

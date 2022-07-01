@@ -1,6 +1,7 @@
 import { NFTCard } from 'components/elements/NFTCard';
 import { MarketplaceAsset } from 'graphql/generated/types';
 import { useFetchNFT } from 'graphql/hooks/useFetchNft';
+import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterNulls, processIPFSURL } from 'utils/helpers';
 import { isNFT } from 'utils/marketplaceUtils';
