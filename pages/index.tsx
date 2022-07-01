@@ -68,7 +68,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20'>
-          <div className={tw('flex flex-row flex-wrap items-center justify-center sm:p-6 px-6 py-12 w-screen h-full bg-secondary-dk break-after-all')}>
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 px-80 w-screen h-full bg-secondary-dk break-after-all')}>
             <div className='break-after-all space-y-2 md:w-full'>
               <div className={tw(
                 'font-rubik text-always-white text-header leading-header sm:font-header md:font-header-bold ',
@@ -104,7 +104,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </button>
               </div>
             </div>
-            <div className='sm:w-full h-full flex sm:flex-row flex-col-reverse justify-right space-x-2'>
+            <div className='h-full w-full flex sm:flex-row sm:justify-center justify-end'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
