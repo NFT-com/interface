@@ -1,9 +1,10 @@
 import { LeaderBoard } from '../../components/modules/Profile/LeaderBoard';
+import * as data from '../fixtures/leaderboard.json'
 
-describe('NftDetailCard', () => {
+describe('NftDetailCard', () => {  
   it('mounts rendering column headers and profile name', () => {
     cy.mount(
-      <LeaderBoard />
+      <LeaderBoard data={data} />
     );
     cy.contains('Profile').should('exist');
     cy.contains('Number of Genesis Keys').should('exist');
@@ -11,5 +12,5 @@ describe('NftDetailCard', () => {
     cy.contains('Number of Communities').should('exist');
     cy.contains('Transactions').should('exist');
     cy.contains('worldofwomen').should('exist');
-  });
+  });  
 });
