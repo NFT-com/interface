@@ -2,7 +2,6 @@ import { NFTCard } from 'components/elements/NFTCard';
 import { Nft } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -96,10 +95,8 @@ export function NftGrid(props: NftGridProps) {
           onClick={() => {
             if (editMode) {
               toggleHidden(nft?.id, !nft?.hidden);
-            } else if (getEnvBool(Doppler.NEXT_PUBLIC_NFT_DETAILS_ENABLED)) {
-              router.push('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString());
             } else {
-              alert('coming soon');
+              router.push('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString());
             }
           }}
           customBackground={tileBackgroundSecondary}

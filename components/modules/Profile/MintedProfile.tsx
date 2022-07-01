@@ -49,10 +49,9 @@ export function MintedProfile(props: MintedProfileProps) {
   const { activeChain } = useNetwork();
   const { profileUris: myOwnedProfileTokenUris } = useMyNftProfileTokens();
   const { profileData } = useProfileQuery(profileURI);
-  const userIsAdmin = getEnvBool(Doppler.NEXT_PUBLIC_CUSTOM_PROFILES_ENABLED)
-    && myOwnedProfileTokenUris
-      .map(fullUri => fullUri.split('/').pop())
-      .includes(profileURI);
+  const userIsAdmin = myOwnedProfileTokenUris
+    .map(fullUri => fullUri.split('/').pop())
+    .includes(profileURI);
 
   const { mutate: mutateMyNFTs } = useMyNFTsQuery(20);
       
