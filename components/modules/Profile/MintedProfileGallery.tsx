@@ -52,7 +52,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const [groupByCollection, setGroupByCollection] = useState(false);
   return (
     <div className={tw(
-      'flex flex-col mt-8 md:mt-0 align-items',
+      'flex flex-col mt-8 md:mt-0 align-items',//
       isMobile ? 'px-2' : 'sm:px-2 px-8'
     )}>
       <Modal
