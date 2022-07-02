@@ -1,6 +1,7 @@
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
+import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -34,6 +35,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     editMode,
     onShowAll,
     onHideAll,
+    draftDisplayType,
+    setDraftDisplayType,
     selectedCollection,
     draftGkIconVisible,
     setDraftGkIconVisible,
@@ -49,10 +52,17 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     profileData?.profile?.id,
     PROFILE_GALLERY_PAGE_SIZE
   );
-  const [groupByCollection, setGroupByCollection] = useState(false);
+
+  const isGroupedByCollection = (
+    profileData?.profile?.displayType === ProfileDisplayType.Collection &&
+    draftDisplayType !== ProfileDisplayType.Nft
+  ) || draftDisplayType === ProfileDisplayType.Collection;
+
+  const [groupByCollectionNotOwner, setGroupByCollectionNotOwner] = useState(isGroupedByCollection);
+
   return (
     <div className={tw(
-      'flex flex-col mt-8 md:mt-0 align-items',//
+      'flex flex-col mt-8 md:mt-0 align-items',
       isMobile ? 'px-2' : 'sm:px-2 px-8'
     )}>
       <Modal
@@ -81,9 +91,10 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
             <Switch
               left=""
               right="Group by Collection"
-              enabled={groupByCollection}
+              enabled={ editMode ? isGroupedByCollection : groupByCollectionNotOwner }
               setEnabled={(enabled: boolean) => {
-                setGroupByCollection(enabled);
+                setGroupByCollectionNotOwner(!groupByCollectionNotOwner);
+                editMode && setDraftDisplayType(enabled ? ProfileDisplayType.Collection : ProfileDisplayType.Nft);
               }}
             />
           </div>
@@ -154,7 +165,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
         </div>
       }
       {
-        groupByCollection ?
+        (editMode ? isGroupedByCollection : groupByCollectionNotOwner) ?
           <CollectionGallery profileURI={props.profileURI} /> :
           <NftGallery
             profileURI={props.profileURI}

@@ -19,6 +19,11 @@ describe('minted profile page tests', () => {
     it('should show the profile name, metadata, and photos', () => {
       cy.get("#MintedProfileNameContainer").should("contain.text", "@nextjs")
     });
-
+  
+    it('should show a collection if visible, in collection mode', () => {
+        cy.get('.NFTCollectionCardContainer').should('exist').click()
+        cy.wait(500)
+        cy.get('.NFTCardContainer').should('exist')
+    });
   });
     
