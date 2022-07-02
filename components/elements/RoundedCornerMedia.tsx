@@ -67,26 +67,26 @@ export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
         )}
       />
       {props?.overlayOptions &&
-        <div className='relative h-[5%] w-full'>
-          <div className={tw('absolute inset-x-0 bottom-0 h-12',
-            'bg-always-white/30 rounded-b-3xl backdrop-blur-sm',
-            'flex items-center'
-          )}>
-            <div className='flex p-4 w-full items-center'>
-              <img
-                className='flex rounded-full h-10 w-10 object-cover aspect-square'
-                src={props?.overlayOptions?.pfp}
-                alt='featuredProfilePfp'
-              />
-              <span className='flex pl-2 items-center'>
-                {props?.overlayOptions?.profileOwner}
-              </span>
-            </div>
-            <div className='justify-end pr-4'>
-              {props?.overlayOptions?.gkId}
+          <div className='relative h-[5%] w-full'>
+            <div className={tw('absolute inset-x-0 bottom-0 h-12',
+              'bg-always-white/30 rounded-b-3xl backdrop-blur-sm',
+              'flex items-center'
+            )}>
+              <div className='flex p-4 w-full items-center'>
+                <img
+                  className='flex rounded-full h-10 w-10 object-cover aspect-square'
+                  src={props?.overlayOptions?.pfp}
+                  alt='featuredProfilePfp'
+                />
+                <span className='flex pl-2 items-center'>
+                  {props?.overlayOptions?.profileOwner}
+                </span>
+              </div>
+              <div className='justify-end pr-4'>
+                {props?.overlayOptions?.gkId}
+              </div>
             </div>
           </div>
-        </div>
       }
     </div>
   );

@@ -7,6 +7,7 @@ import { tw } from 'utils/tw';
 import leaderboardFixtureMockData from '../../../cypress/fixtures/leaderboard.json';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -62,14 +63,16 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
               </div>
             </td>
             <td>
-              <div className={tw('h-full flex items-center',
-                'justify-start whitespace-nowrap',
-                'text-body sm:text-sm leading-body font-medium')}>
-                <div className="w-14 h-14 xs:w-8 xs:h-8 mr-3 relative">
-                  <Image src={item.photoURL} alt="svgImage" className="m-0 object-center rounded-full" layout='fill' />
+              <Link href={item.url}>
+                <div className={tw('h-full flex items-center',
+                  'justify-start whitespace-nowrap',
+                  'text-body sm:text-sm leading-body font-medium')}>
+                  <div className="w-14 h-14 xs:w-8 xs:h-8 mr-3 relative">
+                    <Image src={item.photoURL} alt="svgImage" className="m-0 object-center rounded-full" layout='fill' />
+                  </div>
+                  <div>{item.url}</div>
                 </div>
-                <div>{item.url}</div>
-              </div>
+              </Link>
             </td>
             <td>
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',

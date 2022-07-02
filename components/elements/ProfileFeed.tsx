@@ -3,6 +3,7 @@ import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 
+import { ProfileQuery } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
@@ -17,7 +18,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 SwiperCore.use([Autoplay,Pagination,Navigation]);
 
 interface ProfileFeedProps {
-  profiles: string[];
+  profiles: ProfileQuery[];
 }
 
 export const ProfileFeed = (props: ProfileFeedProps) => {
@@ -48,7 +49,11 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           key={1}
           style={{ width: '100%', height: '' }}
         >
-          <RoundedCornerMedia src={props?.profiles[0]} variant={RoundedCornerVariant.All} containerClasses='h-full' />
+          <RoundedCornerMedia
+            src={props?.profiles[0]?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+          />
         </SwiperSlide>
       </div>
       <div
@@ -64,7 +69,51 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           key={2}
           style={{ width: '100%', height: 'auto' }}
         >
-          <RoundedCornerMedia src={props?.profiles[1]} variant={RoundedCornerVariant.All} containerClasses='h-full' />
+          <RoundedCornerMedia
+            src={props?.profiles[1]?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+          />
+        </SwiperSlide>
+      </div>
+      <div
+        className={tw(
+          'drop-shadow-md rounded-xl flex flex-col',
+          'w-full h-full',
+          'justify-between cursor-pointer',
+          'm-auto',
+          'my-6',
+          'p-auto',
+        )}>
+        <SwiperSlide
+          key={3}
+          style={{ width: '100%', height: 'auto' }}
+        >
+          <RoundedCornerMedia
+            src={props?.profiles[2]?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+          />
+        </SwiperSlide>
+      </div>
+      <div
+        className={tw(
+          'drop-shadow-md rounded-xl flex flex-col',
+          'w-full h-full',
+          'justify-between cursor-pointer',
+          'm-auto',
+          'my-6',
+          'p-auto',
+        )}>
+        <SwiperSlide
+          key={4}
+          style={{ width: '100%', height: 'auto' }}
+        >
+          <RoundedCornerMedia
+            src={props?.profiles[3]?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+          />
         </SwiperSlide>
       </div>
     </Swiper>

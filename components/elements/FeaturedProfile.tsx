@@ -10,7 +10,6 @@ import Image from 'next/image';
 interface FeaturedProfileProps {
   profileOwner: ProfileQuery;
   gkId: number;
-  pfpUrl: string;
 }
 
 export const FeaturedProfile = (props: FeaturedProfileProps) => {
@@ -46,7 +45,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
           </p>
         </div>
 
-        <div className='grid grid-cols-1.3 grid-rows-2 gap-x-2 gap-y-2 sm:gap-4 sm:grid-flow-col sm:auto-cols-[90%] sm:overflow-x-auto sm:overscroll-contain sm:grid-cols-none sm:grid-rows-1 sm:min-h-[410px]'>
+        <div className='grid grid-cols-1.3 grid-rows-2 gap-x-2 gap-y-2 sm:gap-4 sm:grid-flow-col sm:auto-cols-[90%] sm:overflow-x-auto sm:grid-cols-none sm:grid-rows-1 sm:min-h-[410px] sm:overscroll-x-contain'>
           <div className='flex flex-col w-full row-span-2 sm:row-auto sm:aspect-square sm:h-full'>
             <RoundedCornerMedia src={gkImage} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md' containerClasses='h-full' />
             <div className='bg-white rounded-b-md px-3 py-2'>
