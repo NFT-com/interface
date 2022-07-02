@@ -61,7 +61,7 @@ export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
         src={props.src}
         poster={props.src}
         className={tw(
-          'flex object-cover w-full h-full aspect-square',
+          'flex object-cover w-full aspect-square',
           getRoundedClass(props.variant),
           props.extraClasses
         )}
