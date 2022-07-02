@@ -179,7 +179,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'p-6'
                   )}>
                   <RoundedCornerMedia
-                    loading={!data?.threeCardImage1}
                     src={data?.threeCardImage1['url']}
                     variant={RoundedCornerVariant.All}
                   />
@@ -202,7 +201,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'p-6'
                   )}>
                   <RoundedCornerMedia
-                    loading={!data?.threeCardImage2}
                     src={data?.threeCardImage2['url']}
                     variant={RoundedCornerVariant.All}
                   />
@@ -225,7 +223,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'p-6'
                   )}>
                   <RoundedCornerMedia
-                    loading={!data?.threeCardImage3}
                     src={data?.threeCardImage3['url']}
                     variant={RoundedCornerVariant.All}
                   />

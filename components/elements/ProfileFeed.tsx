@@ -49,11 +49,11 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
           key={1}
           style={{ width: '100%', height: '' }}
         >
-          <RoundedCornerMedia 
+          <RoundedCornerMedia
             src={props?.profiles[0]?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
             containerClasses={'h-full'}
-            loading={!props?.profiles} />
+          />
         </SwiperSlide>
       </div>
       <div
@@ -73,7 +73,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
             src={props?.profiles[1]?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
             containerClasses={'h-full'}
-            loading={!props?.profiles} />
+          />
         </SwiperSlide>
       </div>
       <div
@@ -93,7 +93,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
             src={props?.profiles[2]?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
             containerClasses={'h-full'}
-            loading={!props?.profiles} />
+          />
         </SwiperSlide>
       </div>
       <div
@@ -113,7 +113,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
             src={props?.profiles[3]?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
             containerClasses={'h-full'}
-            loading={!props?.profiles} />
+          />
         </SwiperSlide>
       </div>
     </Swiper>
