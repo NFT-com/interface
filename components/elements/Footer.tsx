@@ -1,5 +1,6 @@
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -39,6 +40,14 @@ export const Footer = () => {
             window.open('https://docs.nft.com', '_open');
           },
         },
+        getEnvBool(Doppler.NEXT_PUBLIC_BLOG_PAGES_ENABLED) ?
+          {
+            name: 'Blog',
+            onClick: () => {
+              router.push('/articles');
+            },
+          }
+          : null
       ])
     },
     {

@@ -3,7 +3,6 @@ import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
 import { Sidebar } from 'components/elements/Sidebar';
-import HomeLayout from 'components/layouts/HomeLayout';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
@@ -73,10 +72,6 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
     </>
   );
 }
-
-BlogListPage.getLayout = function getLayout(page) {
-  return ( <HomeLayout> { page } </HomeLayout> );
-};
 
 export async function getServerSideProps({ preview = false }) {
   const homeData = await getCollection(preview, 1, 'blogHomePageCollection', BLOG_LIST_HOME_FIELDS);
