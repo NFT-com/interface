@@ -76,7 +76,6 @@
     "reading-time-estimator": "^1.5.0",
     "siwe": "^1.1.6",
     "start-server-and-test": "^1.14.0",
-    "swiper": "6",
     "swr": "^1.3.0",
     "type-fest": "^2.12.2",
     "typesense": "^1.2.2",
