@@ -21,7 +21,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     <PageWrapper
       bgColorClasses='bg-pagebg dark:bg-secondary-dk pt-20'
     >
-      <div className="flex flex-col pt-20 items-center w-full lg:px-0 px-48">
+      <div className="flex flex-col pt-20 items-center w-full max-w-7xl mx-auto">
         <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
         {getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) && <NftApprovals nft={nft} />}
         <ExternalListings nft={nft} />
