@@ -9641,6 +9641,11 @@ fn.name@1.x.x:
   resolved "https://registry.npmjs.org/fn.name/-/fn.name-1.1.0.tgz"
   integrity sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==
 
+focus-options-polyfill@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/focus-options-polyfill/-/focus-options-polyfill-1.5.1.tgz#0f422580d9d1fb65651f2968b547032eb17dab3c"
+  integrity sha512-7yH20IePROHJLLbJvqqtsG420jE6DuukccapiB/WagtUpnc98r9NzHbX5rnjCDgdZqLgcqlzGjn+8l0Zb8Zf9w==
+
 folder-walker@^3.2.0:
   version "3.2.0"
   resolved "https://registry.npmjs.org/folder-walker/-/folder-walker-3.2.0.tgz"
@@ -15247,6 +15252,14 @@ react-markdown@^8.0.3:
     unified "^10.0.0"
     unist-util-visit "^4.0.0"
     vfile "^5.0.0"
+
+react-medium-image-zoom@^4.4.3:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/react-medium-image-zoom/-/react-medium-image-zoom-4.4.3.tgz#d5e3074becef7be4bfe35ebcd291eac462093bf5"
+  integrity sha512-I928Z6mEMRUup4CPa+XtASiSuFzdVb1ecztXpF7xAJddXv4XZSE4n5gleZNYCn5wEU1LQY5LiN4aNW4KgrOVIA==
+  dependencies:
+    focus-options-polyfill "1.5.1"
+    tslib "^2.4.0"
 
 react-query@4.0.0-beta.12:
   version "4.0.0-beta.12"
