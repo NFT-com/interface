@@ -17,7 +17,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 
 import cameraIcon from 'public/camera.png';
 import PencilIconRounded from 'public/pencil-icon-rounded.svg';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
@@ -29,6 +29,7 @@ export interface MintedProfileProps {
 
 export function MintedProfile(props: MintedProfileProps) {
   const { profileURI, addressOwner } = props;
+  const [isPicturedHovered, setIsPicturedHovered] = useState(false);
 
   const {
     editMode,
@@ -130,7 +131,10 @@ export function MintedProfile(props: MintedProfileProps) {
           zIndex: 103,
         }}
       >
-        <div className="sm:block flex items-end">
+        <div
+          onMouseEnter={() => setIsPicturedHovered(true)}
+          onMouseLeave={() => setIsPicturedHovered(false)}
+          className="sm:block flex items-end">
           <Dropzone
             accept={'image/*' ['.*']}
             disabled={!userIsAdmin || !editMode}
@@ -158,8 +162,8 @@ export function MintedProfile(props: MintedProfileProps) {
                 {editMode && <div
                   style={{ zIndex: 102, }}
                   className={tw(
-                    'absolute opacity-30 hover:opacity-100',
-                    'xs:right-5 sm:right-4 md:right-4 lg:right-9 right-6',
+                    isPicturedHovered ? 'opacity-100' : 'opacity-30',
+                    'absolute xs:right-5 sm:right-4 md:right-4 lg:right-9 right-6',
                     'xs:bottom-[5.5rem] sm:bottom-24 md:bottom-[9.5rem] lg:bottom-[9.5rem] bottom-40'
                   )}
                 >
