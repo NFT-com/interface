@@ -1,5 +1,4 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Switch } from 'components/elements/Switch';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -29,7 +28,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     editMode,
     draftBio,
     setDraftBio,
-    setDraftGkIconVisible,
     draftGkIconVisible,
     draftProfileImg,
     draftHeaderImg,
@@ -72,17 +70,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             @{profileURI}
         </div>
         {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
-
-      </div>
-      <div className="hidden sm:block mt-2">
-        {editMode && ownedGenesisKeyTokens.length > 0 && <Switch
-          left="Hide GK Icon"
-          right="Show GK Icon"
-          enabled={draftGkIconVisible ?? profileData?.profile?.gkIconVisible}
-          setEnabled={() => {
-            setDraftGkIconVisible(!(draftGkIconVisible ?? profileData?.profile?.gkIconVisible));
-          }}
-        />}
       </div>
       {userIsAdmin && hasGks && (
         editMode ?
