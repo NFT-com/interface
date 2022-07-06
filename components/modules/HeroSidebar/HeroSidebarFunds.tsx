@@ -1,3 +1,5 @@
+import AddFundsDialog from 'components/elements/AddFundsDialog';
+import { Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -6,6 +8,7 @@ import { tw } from 'utils/tw';
 
 import { utils } from 'ethers';
 import ETH_LOGO from 'public/eth.svg';
+import { isMobile } from 'react-device-detect';
 import { useBalance } from 'wagmi';
 import { useAccount } from 'wagmi';
 
@@ -23,8 +26,9 @@ export default function HeroSidebarFunds() {
 
   return (
     <>
+      <AddFundsDialog key={account?.address} account={account?.address} />
       <div className='mx-5 text-secondary-txt text-lg mb-4 mt-2.5'>
-          Tokens
+        Tokens
       </div>
       <div className="mx-5">
         <div
@@ -62,17 +66,23 @@ export default function HeroSidebarFunds() {
             </div>
           </div>
         </div>
-          );
       </div>
-      <div
-        className={tw(
-          'cursor-pointer flex items-center justify-center',
-          'mt-5 mx-5 mb-7 rounded-xl h-10 text-lg shrink-0',
-          'hover:opacity-80 text-always-black bg-primary-button-bckg'
-        )}
-        onClick={() => setAddFundsDialogOpen(true)}
-      >
-          Add Funds
+      <div className='w-full px-4'>
+        <Button
+          label="Add Funds"
+          stretch
+          onClick={() => {
+            if (isMobile) {
+              window.open(
+                `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${account?.address}`,
+                '_blank'
+              );
+            } else {
+              setAddFundsDialogOpen(true);
+            }
+          } }
+          type={ButtonType.PRIMARY}
+        />
       </div>
     </>
   );
