@@ -44,9 +44,9 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   return (
     <div className="overflow-hidden" ref={emblaRef}>
       <div className="flex">
-        {props.profiles.map((profile) => (
+        {props.profiles.map((profile, index) => (
           <RoundedCornerMedia
-            key={profile?.profile?.id}
+            key={profile?.profile?.id ?? index}
             src={profile?.profile.photoURL}
             variant={RoundedCornerVariant.All}
             containerClasses={'h-full'}

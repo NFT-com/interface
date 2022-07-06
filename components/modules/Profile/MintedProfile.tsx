@@ -15,6 +15,7 @@ import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
 import { ProfileEditContext } from './ProfileEditContext';
 
+import { BigNumber } from 'ethers';
 import cameraIcon from 'public/camera.png';
 import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useContext, useEffect, useState } from 'react';
@@ -42,10 +43,10 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
-  const { profileUris: myOwnedProfileTokenUris } = useMyNftProfileTokens();
+  const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { profileData } = useProfileQuery(profileURI);
-  const userIsAdmin = myOwnedProfileTokenUris
-    .map(fullUri => fullUri.split('/').pop())
+  const userIsAdmin = ownedProfileTokens
+    .map(token => token?.tokenUri?.raw?.split('/').pop())
     .includes(profileURI);
 
   const { nfts: publiclyVisibleNFTs, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
@@ -216,7 +217,7 @@ export function MintedProfile(props: MintedProfileProps) {
               (userIsAdmin && editMode) || (publiclyVisibleNFTs?.length ?? 0) > 0 ?
                 <MintedProfileGallery
                   profileURI={profileURI}
-                  ownedGKTokens={ownedGKTokens}
+                  ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
                 /> :
                 <>
                   <div className={tw(

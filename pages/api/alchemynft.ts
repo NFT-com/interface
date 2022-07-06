@@ -50,7 +50,7 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   case 'getNfts': {
     const owner = req.query['owner'];
     const contractAddress = req.query['contractAddress'];
-  
+    const pageKey = req.query['pageKey'];
     if (isNullOrEmpty(contractAddress) || isNullOrEmpty(owner)) {
       res.status(400).json(JSON.stringify({ message: 'getNfts: Invalid Arguments' }));
       return;
@@ -59,6 +59,9 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     const requestUrl = new URL(apiUrl + '/getNFTs/');
     requestUrl.searchParams.append('contractAddresses[]', contractAddress as string);
     requestUrl.searchParams.set('owner', owner as string);
+    if (!isNullOrEmpty(pageKey as string) && pageKey !== 'null') {
+      requestUrl.searchParams.set('pageKey', pageKey as string);
+    }
     try {
       const result = await fetch(requestUrl.toString(), {
         method: 'GET',

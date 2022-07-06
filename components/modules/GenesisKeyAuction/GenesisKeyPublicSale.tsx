@@ -49,7 +49,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
     .gte(props.currentPrice);
   const { data: ownedGenesisKeyTokens, mutate: mutateOwnedGKs } = useOwnedGenesisKeyTokens(account?.address);
   const latestGKMinted = ownedGenesisKeyTokens?.length > 0 ?
-    Math.max(...ownedGenesisKeyTokens) : // returns -Infinity if array is empty.
+    Math.max(...(ownedGenesisKeyTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber()) as number[])) : // returns -Infinity if array is empty.
     null;
 
   const genesisKeyMetadata = useGenesisKeyMetadata(

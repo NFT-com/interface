@@ -5,6 +5,13 @@ export interface AlchemyOwnedNFT {
   id: {
     tokenId: string
   }
+  tokenUri: {
+    raw: string
+    gateway: string
+  }
+  title: string
+  metadata: any
+  media: Array<any>
 }
 
 export interface AlchemyAlternateMedia {
