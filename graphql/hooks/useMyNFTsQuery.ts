@@ -1,6 +1,6 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Nft } from 'graphql/generated/types';
+import { MyNfTsQuery, Nft } from 'graphql/generated/types';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -19,22 +19,22 @@ export function useMyNFTsQuery(first: number): NftsData {
   const { signed } = useContext(GraphQLContext);
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
-  const keyString = 'MyNFTsQuery ' + account?.address + activeChain?.id + signed;
+  const keyString = 'MyNFTsQuery ' + account?.address + activeChain?.id + signed + first;
 
   const { data } = useSWR(keyString, async () => {
     if (!account) {
-      return [];
+      return { myNFTs: null };
     }
-    const result = await sdk.MyNFTs({
+    const result: MyNfTsQuery = await sdk.MyNFTs({
       input: {
         pageInput: { first: first }
       }
     });
-    return result?.myNFTs?.items;
+    return result;
   });
   return {
-    data: data ?? [],
-    totalItems: data?.length ?? 0,
+    data: data?.myNFTs?.items ?? [],
+    totalItems: data?.myNFTs?.totalItems ?? 0,
     loading: data == null,
     mutate: () => {
       mutate(keyString);

@@ -49,7 +49,7 @@ const getRoundedClass = (variant: RoundedCornerVariant): string => {
 export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   return (
     <div className={tw(
-      'flex object-cover w-full aspect-square',
+      'flex object-cover aspect-square',
       getRoundedClass(props.variant),
       props.containerClasses
     )}>
@@ -61,7 +61,7 @@ export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
         src={props.src}
         poster={props.src}
         className={tw(
-          'flex object-cover w-full aspect-square',
+          'flex object-fit w-full justify-center',
           getRoundedClass(props.variant),
           props.extraClasses
         )}
