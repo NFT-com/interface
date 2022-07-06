@@ -1,10 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-import 'swiper/swiper.min.css';
-import 'swiper/components/pagination/pagination.min.css';
-import 'swiper/components/navigation/navigation.min.css';
-
 import { ProfileQuery } from 'graphql/generated/types';
-import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
@@ -48,26 +42,16 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   }, [embla, setScrollSnaps, onSelect]);
 
   return (
-    <div
-      className={tw(
-        'drop-shadow-md rounded-xl flex flex-col',
-        'w-full h-full',
-        'justify-between cursor-pointer',
-        'm-auto',
-        'my-6',
-        'p-auto',
-      )}>
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {props.profiles.map((profile) => (
-            <RoundedCornerMedia
-              key={profile?.profile?.id}
-              src={profile?.profile.photoURL}
-              variant={RoundedCornerVariant.All}
-              containerClasses={'h-full'}
-            />
-          ))}
-        </div>
+    <div className="overflow-hidden" ref={emblaRef}>
+      <div className="flex">
+        {props.profiles.map((profile) => (
+          <RoundedCornerMedia
+            key={profile?.profile?.id}
+            src={profile?.profile.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={'h-full'}
+          />
+        ))}
       </div>
       <div className="flex items-center justify-center mt-5 space-x-2">
         {scrollSnaps.map((_, idx) => (
