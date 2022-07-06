@@ -12,7 +12,7 @@ export interface CollectionData {
 
 export function useCollectionQuery(chainId: string, contract: string, withOpensea: boolean): CollectionData {
   const sdk = useGraphQLSDK();
-  const keyString = 'CollectionQuery ' + contract + chainId + withOpensea ? 'true' : 'false';
+  const keyString = 'CollectionQuery ' + contract + chainId + withOpensea;
 
   const { data } = useSWR(keyString, async () => {
     if(!chainId || !contract) {
