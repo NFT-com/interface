@@ -47,7 +47,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
         {props.profiles.map((profile, index) => (
           <RoundedCornerMedia
             key={profile?.profile?.id ?? index}
-            src={profile?.profile.photoURL}
+            src={profile?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
             containerClasses={'h-full'}
           />

@@ -96,7 +96,7 @@ export function DropdownPickerModal(props: DropdownPickerModalProps) {
             'rounded-xl mt-14',
             'bg-white dark:bg-secondary-bg-dk',
             'w-full absolute z-50',
-            'min-w-[14rem]'
+            'min-w-[14rem] drop-shadow-md',
           )}
         >
           {props.options?.map((item, index) => {

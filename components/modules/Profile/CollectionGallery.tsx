@@ -15,7 +15,8 @@ import { NftGrid } from './NftGrid';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import { CaretLeft } from 'phosphor-react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
+import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionGalleryProps {
@@ -46,11 +47,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     loadedCount
   );
 
-  const [collections, setCollections] = useState<Map<string, Nft[]>>(
-    new Map<string, Nft[]>()
-  );
-
-  useEffect(() => {
+  const { data: collections } = useSWR('' + editMode + profileNFTs?.length + allOwnerNFTs?.length, () => {
     const nftsToShow = editMode ?
       (allOwnerNFTs ?? []) :
       (profileNFTs ?? []);
@@ -66,8 +63,8 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         return previousValue;
       }
     }, new Map<string, Nft[]>()) ?? new Map();
-    setCollections(newCollections);
-  }, [allOwnerNFTs, editMode, profileNFTs]);
+    return newCollections;
+  });
 
   if (profileNFTs == null || profileData == null) {
     return (
@@ -90,7 +87,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
   }
 
   if (selectedCollection) {
-    const detailedCollectionNFTs = (collections.get(selectedCollection) ?? [])
+    const detailedCollectionNFTs = (collections?.get(selectedCollection) ?? [])
       .map(nft => {
         if (profileNFTs.find(nft2 => nft2.id === nft.id)) {
           return {
@@ -148,7 +145,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
 
   return (
     <div className={'grid grid-cols-3 lg:grid-cols-2 md:grid-cols-1 w-full'}>
-      {Array.from(collections.keys()).map((key: string) => (
+      {Array.from(collections?.keys() ?? []).map((key: string) => (
         <div
           key={key}
           className={tw(
@@ -158,8 +155,8 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         >
           <NFTCollectionCard
             contract={key}
-            count={collections.get(key)?.length}
-            images={collections.get(key).map((nft) => {
+            count={collections?.get(key)?.length}
+            images={collections?.get(key)?.map((nft) => {
               if (sameAddress(nft?.contract, getAddress('genesisKey', activeChain?.id ?? 1))) {
                 return getGenesisKeyThumbnail(nft?.tokenId);
               }

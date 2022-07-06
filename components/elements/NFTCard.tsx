@@ -192,12 +192,12 @@ export function NFTCard(props: NFTCardProps) {
         </span>}
         {(props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
  
-        {props.description && (
+        {!isNullOrEmpty(props.description) && (
           <div className='mt-4 text-secondary-txt text-sm sm:text-xs'>
             {props.description}
           </div>
         )}
-        {listings && (
+        {(listings?.find(listing => listing.price != null) != null) && (
           <div className='mt-4 flex justify-start items-center'>
             {listings[0].price && <Link href={listings[0].url}>
               <OpenseaIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Opensea logo redirect" layout="fill"/>
