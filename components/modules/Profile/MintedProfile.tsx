@@ -85,7 +85,7 @@ export function MintedProfile(props: MintedProfileProps) {
 
   return (
     <div className="relative h-screen w-full">
-      <div className="w-full flex flex-col h-full">
+      <div className="w-full flex flex-col">
         <BannerWrapper
           imageOverride={
             editMode ?

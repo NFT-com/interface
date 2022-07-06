@@ -80,7 +80,7 @@ export function LinksToSection(props: LinksToSectionParams) {
   ];
 
   return (
-    <div className="flex flex-row lg:flex-col lg:space-y-4 space-y-0 lg:space-x-0 space-x-4 lg:w-auto w-[70%]">
+    <div className="flex flex-row lg:flex-col lg:space-y-4 space-y-0 lg:space-x-0 space-x-4 lg:w-auto w-full">
       {
         (isAddressOwner ? ownerlinksContents : notOwnerlinksContents)
           .map((item) =>
