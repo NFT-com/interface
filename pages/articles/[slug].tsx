@@ -11,8 +11,10 @@ import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { getPost } from 'lib/contentful/api';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
+import { CaretLeft } from 'phosphor-react';
 import { PostData } from 'types/blogs';
 
 type PostProps = {
@@ -58,7 +60,14 @@ export default function Post({ post, preview }: PostProps) {
         <Sidebar />
       </ClientOnly>
       <div className='bg-white dark:bg-modal-overlay-dk'>
-        <div className="relative text-center px-4 w-full pt-28  max-w-7xl mx-auto">
+        <div className="relative text-center px-4 w-full pt-28 sm:pt-24 max-w-7xl mx-auto">
+          <Link href="/articles">
+            <div className='flex content-center items-center hover:cursor-pointer sm:mb-4'>
+              <CaretLeft className='mr-1 text-black dark:text-white' />
+              <p className='text-black dark:text-white sm:text-sm'>Back to Blog</p>
+            </div>
+          </Link>
+          
           <BlogHeader post={post} />
 
           <BlogHeroImage
