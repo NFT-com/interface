@@ -99,7 +99,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
         />
         
         {props.children}
-        
+        <div className='flex grow' />
         {headerOptions?.omit !== true && props.headerOptions?.removeSummaryBanner !== true &&
           <>
             <Footer />

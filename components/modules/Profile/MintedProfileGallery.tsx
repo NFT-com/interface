@@ -87,7 +87,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
         <div className={tw(
           'flex items-center w-full justify-between text-white',
           editMode ? '' : 'mb-3')}>
-          <div>
+          <div className='mb-8'>
             <Switch
               left=""
               right="Group by Collection"

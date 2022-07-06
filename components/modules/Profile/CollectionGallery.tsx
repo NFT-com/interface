@@ -107,7 +107,9 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     
     return <div className={'w-full flex flex-col items-center'}>
       <div className='w-full flex items-center px-8 mb-8 cursor-pointer justify-between'>
-        <div className='flex items-center' onClick={() => setSelectedCollection(null)}>
+        <div className='flex items-center' onClick={() => {
+          setSelectedCollection(null);
+        }}>
           <CaretLeft className='mr-4' color="white" />
           <span className='text-primary-txt dark:text-primary-txt-dk'>Back to Collections</span>
         </div>

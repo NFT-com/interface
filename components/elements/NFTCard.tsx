@@ -141,30 +141,27 @@ export function NFTCard(props: NFTCardProps) {
         props.images.length <= 1 && props.imageLayout !== 'row' ?
           <div
             className={tw(
-              'w-full overflow-hidden',
+              'w-full overflow-hidden aspect-square',
               props.customBorderRadius ?? 'rounded-3xl',
               props.images[0] == null ? 'aspect-square' : '',
             )}
-            style={{
-              background: 'linear-gradient(135deg, #ED3492 0%, #09BEFB 100%)',
-            }}
           >
             { props.images.length === 0 || props.images[0] == null ?
               null :
               <RoundedCornerMedia
-                extraClasses='w-full'
+                containerClasses='w-full h-full'
                 variant={RoundedCornerVariant.None}
                 src={processedImageURLs[0]}
               />}
           </div> :
           props.imageLayout === 'row' ?
-            <div className='flex h-full justify-center'>
+            <div className='flex justify-center w-full justify-center'>
               {processedImageURLs.slice(0,3).map((image: string, index: number) => {
                 return <RoundedCornerMedia
                   key={image + index}
                   src={image}
                   variant={RoundedCornerVariant.None}
-                  extraClasses='h-full'
+                  containerClasses='w-1/3'
                 />;
               })}
             </div> :
