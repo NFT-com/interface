@@ -41,7 +41,7 @@ export function InsiderProfileClaim() {
       try {
         const tx = await (await profileAuctionSigner).genesisKeyClaimProfile(
           profileURIToMint,
-          ownedGKTokens?.[0],
+          ownedGKTokens?.[0]?.id?.tokenId,
           account?.address,
           profileClaimHash?.hash,
           profileClaimHash?.signature

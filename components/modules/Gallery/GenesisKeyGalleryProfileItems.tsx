@@ -75,7 +75,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
           .map((profileToken, index) => {
             return (
               <div
-                key={profileToken.id ?? index}
+                key={profileToken.id.tokenId ?? index}
                 className={tw(
                   'flex mb-4 items-center justify-center px-4',
                   'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'

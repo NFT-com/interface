@@ -6,6 +6,7 @@ import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
 import { useCallback } from 'react';
+import { AlchemyOwnedNFT } from 'types/alchemy';
 import { useAccount } from 'wagmi';
 
 export interface GalleryPageTitleProps {
@@ -20,11 +21,11 @@ export function GalleryPageTitle(props: GalleryPageTitleProps) {
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
 
-  const gkIDFilter: (id: number) => boolean = useCallback((id: number) => {
+  const gkIDFilter: (token: AlchemyOwnedNFT) => boolean = useCallback((token: AlchemyOwnedNFT) => {
     if (isNullOrEmpty(props.currentFilter)) {
       return true;
     }
-    return String(id) === props.currentFilter;
+    return BigNumber.from(token?.id?.tokenId).toString() === props.currentFilter;
   }, [props.currentFilter]);
 
   return (

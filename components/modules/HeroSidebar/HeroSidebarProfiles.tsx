@@ -5,13 +5,14 @@ import { tw } from 'utils/tw';
 import { HeroSidebarGenesisKey } from './HeroSidebarGenesisKey';
 import { HeroSidebarProfile } from './HeroSidebarProfile';
 
+import { BigNumber } from 'ethers';
 import { motion } from 'framer-motion';
 import { useCallback, useMemo, useState } from 'react';
 import { ChevronsUp } from 'react-feather';
 import { useAccount } from 'wagmi';
 
 export function HeroSidebarProfiles() {
-  const { profileUris: myOwnedProfileTokenUris } = useMyNftProfileTokens();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { data: account } = useAccount();
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
 
@@ -26,9 +27,9 @@ export function HeroSidebarProfiles() {
   }, [ownedGenesisKeyTokens, showMoreGKs]);
   const profilesToShow = useMemo(() => {
     return showMoreProfiles ?
-      myOwnedProfileTokenUris :
-      myOwnedProfileTokenUris?.slice(0, 3) ?? [];
-  }, [myOwnedProfileTokenUris, showMoreProfiles]);
+      myOwnedProfileTokens :
+      myOwnedProfileTokens?.slice(0, 3) ?? [];
+  }, [myOwnedProfileTokens, showMoreProfiles]);
 
   const getAssets = useCallback(() => {
     if (collapsed) {
@@ -41,7 +42,7 @@ export function HeroSidebarProfiles() {
           return (
             <HeroSidebarGenesisKey
               key={index}
-              tokenId={ownedGKToken}
+              tokenId={BigNumber.from(ownedGKToken?.id?.tokenId).toNumber()}
               onShowMore={
                 genesisKeysToShow?.length < ownedGenesisKeyTokens?.length &&
                 !showMoreGKs &&
@@ -54,14 +55,14 @@ export function HeroSidebarProfiles() {
         })
       }
       {
-        profilesToShow?.map((profileUri, index) => {
-          const shortURI = profileUri.split('/').pop();
+        profilesToShow?.map((profileToken, index) => {
+          const shortURI = profileToken?.tokenUri?.raw?.split('/').pop();
           return (
             <HeroSidebarProfile
               uri={shortURI}
-              key={profileUri}
+              key={profileToken?.tokenUri?.raw ?? 1000 + index}
               onShowMore={
-                profilesToShow?.length < myOwnedProfileTokenUris?.length &&
+                profilesToShow?.length < myOwnedProfileTokens?.length &&
                 !showMoreProfiles &&
                 index === 2 ?
                   () => setShowMoreProfiles(true) :
@@ -75,7 +76,7 @@ export function HeroSidebarProfiles() {
   }, [
     collapsed,
     genesisKeysToShow,
-    myOwnedProfileTokenUris?.length,
+    myOwnedProfileTokens?.length,
     ownedGenesisKeyTokens?.length,
     profilesToShow,
     showMoreGKs,
@@ -84,7 +85,7 @@ export function HeroSidebarProfiles() {
 
   return (
     <>
-      {((myOwnedProfileTokenUris ?? []).length > 0 ||
+      {((myOwnedProfileTokens ?? []).length > 0 ||
       (ownedGenesisKeyTokens ?? []).length > 0) &&
       <>
         <div className='mx-5 text-primary-txt-dk text-2xl mb-4 mt-2.5'>
@@ -104,7 +105,7 @@ export function HeroSidebarProfiles() {
       </>}
       <motion.div
         animate={{
-          height: showMoreGKs || showMoreProfiles || (myOwnedProfileTokenUris?.length ?? []) < 3
+          height: showMoreGKs || showMoreProfiles || (ownedGenesisKeyTokens?.length ?? []) < 3
             ? 'auto' :
             collapsed ?
               0 :

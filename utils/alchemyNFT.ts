@@ -21,12 +21,14 @@ export async function getNftsByContract(
   owner: string,
   contract: string,
   chainId: string | number,
+  pageKey: string | null,
 ) {
   const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('contractAddress', contract);
   url.searchParams.set('owner', owner);
   url.searchParams.set('action', 'getNfts');
   url.searchParams.set('chainId', String(chainId));
+  url.searchParams.set('pageKey', pageKey);
   const result = await fetch(url.toString()).then(res => res.json());
   return result;
 }
