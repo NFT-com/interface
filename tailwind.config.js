@@ -111,7 +111,9 @@ module.exports = {
         'share-icon-bg': '#FBF9F9',
         'blog-text': '#727272',
         'secondary-dk': '#222222',
-        'blog-slider-blue': '#DCF2FF'
+        'blog-slider-blue': '#DCF2FF',
+        'footer-bg': '#F8F8F8',
+        'footer-bg-dk': '#0C0F17',
       },
       fontFamily: {
         'rubik': ['Rubik'],

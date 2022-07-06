@@ -1,3 +1,4 @@
+import { Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import { Nft } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -9,7 +10,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 
 import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
 
@@ -35,6 +36,8 @@ export function NftGrid(props: NftGridProps) {
   const { width: screenWidth } = useWindowDimensions();
   const { draftLayoutType } = useContext(ProfileEditContext);
 
+  const [spotlightIndex, setSpotLightIndex] = useState<number>(0);
+
   const mosaicArray = [0];
   let seq = 0;
   for(let i = 0; i < props.nfts.length; i++) {
@@ -50,6 +53,9 @@ export function NftGrid(props: NftGridProps) {
   }
 
   const savedLayoutType = profileData?.profile?.layoutType;
+  const displayNFTs = (draftLayoutType ?? savedLayoutType) !== 'Spotlight' ?
+    props.nfts :
+    [props.nfts[spotlightIndex]];
 
   return <div className={tw(
     'grid w-full sm:grid-cols-2 md:grid-cols-3 gap-y-2.5 sm:grid-cols-1',
@@ -59,7 +65,7 @@ export function NftGrid(props: NftGridProps) {
     (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-3' : '',
   )}
   data-testid={savedLayoutType+'-layout-option'}>
-    {props.nfts?.map((nft: PartialDeep<DetailedNft>, index) => (
+    {displayNFTs?.map((nft: PartialDeep<DetailedNft>, index) => (
       <div
         key={nft?.id + '-' + nft?.contract?.address}
         className={tw(
@@ -105,5 +111,33 @@ export function NftGrid(props: NftGridProps) {
         />
       </div>
     ))}
+    {
+      (draftLayoutType ?? savedLayoutType) === 'Spotlight' && <div className={tw(
+        'w-full flex items-center col-start-2 justify-around'
+      )}>
+        <div className='pr-2 w-1/2'>
+          <Button
+            stretch
+            color="white"
+            label={'Back'}
+            onClick={() => {
+              setSpotLightIndex(spotlightIndex === 0 ? props.nfts.length - 1 : spotlightIndex - 1);
+            }}
+            type={ButtonType.PRIMARY}
+          />
+        </div>
+        <div className="pl-2 w-1/2">
+          <Button
+            stretch
+            color="white"
+            label={'Next'}
+            onClick={() => {
+              setSpotLightIndex(spotlightIndex + 1 > props.nfts.length - 1 ? 0 : spotlightIndex + 1);
+            }}
+            type={ButtonType.PRIMARY}
+          />
+        </div>
+      </div>
+    }
   </div>;
 }

@@ -33,7 +33,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     draftHeaderImg,
     saveProfile,
     setEditMode,
-    clearDrafts } = useContext(ProfileEditContext);
+    clearDrafts
+  } = useContext(ProfileEditContext);
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
