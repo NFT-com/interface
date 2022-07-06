@@ -1,12 +1,9 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Footer } from 'components/elements/Footer';
-import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
-import { Sidebar } from 'components/elements/Sidebar';
+import { PageWrapper } from 'components/layouts/PageWrapper';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
-import ClientOnly from 'utils/ClientOnly';
 import { getPaginatedPosts } from 'utils/contentful';
 import { Doppler, getEnvBool } from 'utils/env';
 
@@ -37,11 +34,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
     return <NotFoundPage />;
   }
   return (
-    <>
-      <ClientOnly>
-        <Header />
-        <Sidebar />
-      </ClientOnly>
+    <PageWrapper>
       <div className='bg-white dark:bg-modal-overlay-dk'>
         <div className='px-6 md:px-4 sm:px-2.5 pt-28 max-w-7xl mx-auto'>
           <h2 className='font-medium text-4xl md:text-lg mb-6 md:mb-4 dark:text-white'>{data?.heroTitle}</h2>
@@ -67,9 +60,8 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
           </div>
         )}
       </div>
-      <Footer />
       {preview && <PreviewBanner />}
-    </>
+    </PageWrapper>
   );
 }
 
