@@ -84,7 +84,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
                 <OwnedProfileGalleryCard
                   token={profileToken}
                   onClick={() => {
-                    router.push('/' + profileToken.uri.split('/').pop());
+                    router.push('/' + profileToken?.tokenUri?.raw?.split('/').pop());
                   }}
                 />
               </div>
