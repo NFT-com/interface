@@ -39,25 +39,29 @@ export default function BlogSliderPost({ post }: BlogSliderPostProps) {
             </h2>
           </a>
         </Link>
-        <Link href={`/articles/${post.slug}`}>
-          <a className="cursor-pointer">
-            <p className="text-blog-text dark:text-gray-400 text-justify text-xl lg:text-lg md:text-sm w-11/12 md:w-10/12 sm:w-full leading-8 mt-3 md:mt-2">
-              {post?.description.length > 230
-                ? post.description.substring(0, 230) + '...'
-                : post.description}
-            </p>
-          </a>
-        </Link>
+        {post?.description && (
+          <Link href={`/articles/${post.slug}`}>
+            <a className="cursor-pointer">
+              <p className="text-blog-text dark:text-gray-400 text-justify text-xl lg:text-lg md:text-sm w-11/12 md:w-10/12 sm:w-full leading-8 mt-3 md:mt-2">
+                {post?.description.length > 230
+                  ? post.description.substring(0, 230) + '...'
+                  : post.description}
+              </p>
+            </a>
+          </Link>
+        )}
         <div className="flex mt-4 md:mt-2">
-          <div className="h-12 md:h-7 w-12 md:w-7 mr-2 mt-0.5">
-            <Image
-              src={post?.author.image.url}
-              alt={post?.author.image.description}
-              className="rounded-full"
-              width="100%"
-              height="100%"
-            />
-          </div>
+          {post?.author?.image?.url && (
+            <div className="h-12 md:h-7 w-12 md:w-7 mr-2 mt-0.5">
+              <Image
+                src={post?.author?.image?.url}
+                alt={post?.author?.image?.description || 'Author Image'}
+                className="rounded-full"
+                width="100%"
+                height="100%"
+              />
+            </div>)
+          }
           <div className='pt-0.5'>
             <p className="text-xl lg:text-lg md:text-sm dark:text-white">
               {post?.author.name}
@@ -76,7 +80,6 @@ export default function BlogSliderPost({ post }: BlogSliderPostProps) {
               )}
             </div>
           </div>
-                  
         </div>
         <Link href={`/articles/${post.slug}`}>
           <button

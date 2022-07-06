@@ -18,11 +18,11 @@ export default function BlogHeader({ post }: HeaderProps) {
       <h2 className="dark:text-white mx-auto text-4xl sm:text-lg md:text-2xl sm:mb-3 max-w-2xl font-medium leading-5.5 md:leading-6 tracking-wider px-0 md:px-10">
         {post?.title}
       </h2>
-      {post?.author && (
+      {post?.author?.image?.url && (
         <div className="mb-4 mt-4 md:mt-3 mx-auto h-12 md:h-9 w-12 md:w-9">
           <Image
             src={post.author.image.url}
-            alt={post.author.image.description}
+            alt={post.author.image.description || 'Author Image'}
             className="rounded-full"
             width="100%"
             height="100%"
