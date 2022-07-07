@@ -5,6 +5,8 @@ describe('minted profile page tests', () => {
       cy.intercept('POST', '*graphql*', req => {
         if (req.body.operationName === 'Profile') {
           req.alias = 'ProfileQuery';
+        } else if (req.body.operationName === 'Nft') {
+          req.alias = 'NftQuery'
         }
       });
       cy.fixture('minted_profile').then((json) => {
@@ -21,9 +23,22 @@ describe('minted profile page tests', () => {
     });
   
     it('should show a collection if visible, in collection mode', () => {
-        cy.get('.NFTCollectionCardContainer').should('exist').click()
-        cy.wait(500)
-        cy.get('.NFTCardContainer').should('exist')
+      cy.get('.NFTCollectionCardContainer').should('exist').click()
+      cy.wait(500)
+      cy.get('.NFTCardContainer').should('exist')
+    });
+
+    it('should allow toggling between collection and nft mode', () => {
+      cy.get('.NFTCollectionCardContainer').should('exist');
+      cy.get('#MintedProfileGalleryCollectionToggle').click();
+      cy.get('#NFTCollectionCardContainer').should('not.exist');
+    });
+
+    it('should allow navigation from profile to NFT detail page', () => {
+      cy.get('.NFTCollectionCardContainer').should('exist').click();
+      cy.wait(500);
+      cy.get('.NFTCardContainer').first().click();
+      cy.wait('@NftQuery').its('response.statusCode').should('eq', 200);
     });
   });
     

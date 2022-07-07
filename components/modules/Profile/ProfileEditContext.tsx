@@ -139,7 +139,7 @@ export function ProfileEditContextProvider(
     // reset
     setDraftProfileImg({ preview: '', raw: null });
     setDraftHeaderImg({ preview: '', raw: null });
-    setDraftBio(draftBio);
+    setDraftBio(profileData?.profile?.description);
     setDraftGkIconVisible(draftGkIconVisible);
     setDraftNftsDescriptionsVisible(draftNftsDescriptionsVisible);
     setEditMode(false);
@@ -147,7 +147,7 @@ export function ProfileEditContextProvider(
     setDraftToShow(new Set());
     setDraftDisplayType(null);
     setDraftLayoutType(null);
-  }, [draftBio, draftGkIconVisible, draftNftsDescriptionsVisible]);
+  }, [draftGkIconVisible, draftNftsDescriptionsVisible, profileData?.profile?.description]);
 
   useEffect(() => {
     setSelectedCollection(null);
