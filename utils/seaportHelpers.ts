@@ -8,10 +8,6 @@ import {
   SEAPORT_CONTRACT_VERSION,
   SeaportConsiderationItem, SeaportOrderComponents } from 'types/seaport';
 
-export async function createOrder() {
-  // todo:
-}
-
 export function getTypedDataDomain(chainId: string | number) {
   return {
     name: SEAPORT_CONTRACT_NAME,
