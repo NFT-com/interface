@@ -6,7 +6,7 @@ describe('nft detail page tests', () => {
       if (req.body.operationName === 'RefreshNft') {
         req.alias = 'refreshNftMutation';
       } else if (req.body.operationName === 'Nft') {
-        req.alias = 'NftQuery'
+        req.alias = 'NftQuery';
       } else if (req.body.operationName === 'ExternalListings') {
         req.alias = 'externalListings';
       }
@@ -67,7 +67,6 @@ describe('nft detail page tests', () => {
     cy.wait('@refreshNftMutation').its('response.body.errors').should('not.exist');
     cy.wait(500);
 
-
     cy.get('#refreshNftButton').click();
     cy.wait('@refreshNftMutation').its('response.body.errors').should('have.length', 1);
 
@@ -78,6 +77,6 @@ describe('nft detail page tests', () => {
 
   it('should query for external marketplace listings', () => {
     cy.wait('@externalListings').its('response.statusCode').should('eq', 200);
-  })
+  });
 });
   
