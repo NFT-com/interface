@@ -32,6 +32,7 @@ const seaPortHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           parameters
         })
       };
+      console.log(options);
       const result = await fetch(
         'https://api.opensea.io/v2/orders/ethereum/seaport/listings',
         options
