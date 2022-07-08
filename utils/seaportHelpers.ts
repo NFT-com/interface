@@ -4,9 +4,13 @@ import {
   CROSS_CHAIN_SEAPORT_ADDRESS,
   EIP_712_ORDER_TYPE,
   Fee,
-  ItemType, ONE_HUNDRED_PERCENT_BP, SEAPORT_CONTRACT_NAME,
+  ItemType,
+  ONE_HUNDRED_PERCENT_BP,
+  SEAPORT_CONTRACT_NAME,
   SEAPORT_CONTRACT_VERSION,
-  SeaportConsiderationItem, SeaportOrderComponents } from 'types/seaport';
+  SeaportConsiderationItem,
+  SeaportOrderComponents
+} from 'types/seaport';
 
 export function getTypedDataDomain(chainId: string | number) {
   return {
@@ -32,7 +36,7 @@ export const generateRandomSalt: () => string = () => {
   return `0x${Buffer.from(ethers.utils.randomBytes(16)).toString('hex')}`;
 };
 
-const multiplyBasisPoints = (amount: BigNumberish, basisPoints: BigNumberish) =>
+export const multiplyBasisPoints = (amount: BigNumberish, basisPoints: BigNumberish) =>
   BigNumber.from(amount)
     .mul(BigNumber.from(basisPoints))
     .div(ONE_HUNDRED_PERCENT_BP);
