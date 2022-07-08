@@ -25,15 +25,11 @@ export function NftGallery(props: NftGalleryProps) {
 
   const { profileData } = useProfileQuery(profileURI);
   const { data: allOwnerNFTs, totalItems: ownerNFTCount } = useMyNFTsQuery(loadedCount);
-  const { nfts: profileNFTs, totalItems: publicNFTCount, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
+  const { nfts: profileNFTs, totalItems: publicNFTCount } = useProfileNFTsQuery(
     profileData?.profile?.id,
     loadedCount
   );
   const { editMode, saving } = useContext(ProfileEditContext);
-
-  useEffect(() => {
-    mutateProfileNFTs();
-  }, [editMode, mutateProfileNFTs, saving]);
 
   if (allOwnerNFTs == null || profileNFTs == null || profileData == null || saving) {
     return (
