@@ -17,7 +17,7 @@ export async function listSeaport(
 export async function listLooksrare(
   // todo: https://github.com/LooksRare/looksrare-sdk/blob/master/doc/guide.md#how-to-create-and-sign-an-order
 ) {
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/looksrare');
   //   url.searchParams.set('contractAddress', contract);
   //   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
   //   url.searchParams.set('tokenType', 'erc721');
