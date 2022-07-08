@@ -26,7 +26,7 @@ export interface NFTApprovalsProps {
 
 export function NftApprovals(props: NFTApprovalsProps) {
   const { data: account } = useAccount();
-  const counter = useSeaportCounter(account.address);
+  const counter = useSeaportCounter(account?.address);
   const signOrder = useSignSeaportOrder();
   const { mutate: mutateListings } = useExternalListingsQuery(props?.nft?.contract, props?.nft?.tokenId, props.nft?.wallet.chainId);
 
