@@ -1,5 +1,7 @@
 import { Doppler, getEnv } from './env';
 
+import { MakerOrderWithSignature } from '@looksrare/sdk';
+import { BigNumber } from 'ethers';
 import { SeaportOrderComponents } from 'types';
 
 export async function listSeaport(
@@ -14,15 +16,20 @@ export async function listSeaport(
   return result;
 }
 
+export async function getLooksrareNonce(address: string): Promise<number> {
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/looksrare');
+  url.searchParams.set('action', 'getNonce');
+  url.searchParams.set('address', address);
+  const result = await fetch(url.toString()).then(res => res.json());
+  return BigNumber.from(result?.['data'] ?? 0).toNumber();
+}
+
 export async function listLooksrare(
-  // todo: https://github.com/LooksRare/looksrare-sdk/blob/master/doc/guide.md#how-to-create-and-sign-an-order
+  parameters: MakerOrderWithSignature
 ) {
   const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/looksrare');
-  //   url.searchParams.set('contractAddress', contract);
-  //   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
-  //   url.searchParams.set('tokenType', 'erc721');
-  //   url.searchParams.set('action', 'getNftMetadata');
-  //   url.searchParams.set('chainId', String(chainId));
+  url.searchParams.set('order', JSON.stringify(parameters));
+  url.searchParams.set('action', 'listNFT');
   const result = await fetch(url.toString()).then(res => res.json());
   return result;
 }
