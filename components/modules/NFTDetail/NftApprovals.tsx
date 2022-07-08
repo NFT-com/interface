@@ -9,7 +9,15 @@ import { deductFees, feeToConsiderationItem, generateRandomSalt } from 'utils/se
 
 import { BigNumber, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
-import { Fee,ItemType, OPENSEA_CONDUIT_KEY, OrderType,SEAPORT_FEE_COLLLECTION_ADDRESS,SEAPORT_ZONE,SEAPORT_ZONE_HASH,SeaportOrderComponents } from 'types';
+import {
+  Fee,
+  ItemType,
+  OPENSEA_CONDUIT_KEY,
+  OrderType,
+  SEAPORT_FEE_COLLLECTION_ADDRESS,
+  SEAPORT_ZONE,SEAPORT_ZONE_HASH,
+  SeaportOrderParameters
+} from 'types';
 import { useAccount } from 'wagmi';
 
 export interface NFTApprovalsProps {
@@ -88,7 +96,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
                 basisPoints: 250,
               };
               
-              const parameters: SeaportOrderComponents = {
+              const parameters: SeaportOrderParameters = {
                 offerer: account?.address ?? NULL_ADDRESS,
                 zone: SEAPORT_ZONE,
                 offer: [{
@@ -110,13 +118,13 @@ export function NftApprovals(props: NFTApprovalsProps) {
                 startTime: BigNumber.from(Date.now()).div(1000).toString(),
                 endTime: BigNumber.from(Date.now()).div(1000).add(604800 /* 1 week in seconds */).toString(),
                 zoneHash: SEAPORT_ZONE_HASH,
-                totalOriginalConsiderationItems: 3,
+                totalOriginalConsiderationItems: '2',
                 salt: generateRandomSalt(),
                 conduitKey: OPENSEA_CONDUIT_KEY,
-                counter: BigNumber.from(counter).toString(),
               };
-              const signature = await signOrder(parameters);
-              const result = await listSeaport(signature , parameters);
+              console.log(parameters);
+              const signature = await signOrder(parameters, counter);
+              const result = await listSeaport(signature , { ...parameters, counter });
               if (result) {
                 mutateListings();
               }

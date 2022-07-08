@@ -6,7 +6,7 @@ import { BigNumber } from 'ethers';
 import useSWR from 'swr';
 import { useProvider } from 'wagmi';
 
-export function useSeaportCounter(address: string): number {
+export function useSeaportCounter(address: string): string {
   const provider = useProvider();
   const seaport = useSeaportContract(provider);
   const { data } = useSWR('seaportCounter' + address, async () => {
@@ -15,5 +15,5 @@ export function useSeaportCounter(address: string): number {
     }
     return await seaport.getCounter(address);
   });
-  return data?.toNumber();
+  return data?.toString();
 }

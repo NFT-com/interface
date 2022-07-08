@@ -20,7 +20,7 @@ export const KNOWN_CONDUIT_KEYS_TO_CONDUIT = {
 export const CROSS_CHAIN_SEAPORT_ADDRESS = '0x00000000006c3852cbef3e08e8df289169ede581';
 export const SEAPORT_ZONE = '0x004c00500000ad104d7dbd00e3ae0a5c00560c00';
 export const SEAPORT_ZONE_HASH = '0x3000000000000000000000000000000000000000000000000000000000000000';
-export const SEAPORT_FEE_COLLLECTION_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
+export const SEAPORT_FEE_COLLLECTION_ADDRESS = '0x8De9C5A032463C561423387a9648c5C7BCC5BC90';
 
 export enum OrderType {
   FULL_OPEN = 0, // No partial fills, anyone can execute
@@ -89,20 +89,21 @@ export const EIP_712_ORDER_TYPE = {
   ],
 };
 
-export interface SeaportOrderComponents {
-  offerer: string // address
-  zone: string // address
-  offer: SeaportOfferItem[]
-  consideration: SeaportConsiderationItem[]
-  orderType: OrderType // number
-  startTime: string // BigNumber / uint256
-  endTime: string // BigNumber / uint256
-  zoneHash: string
-  salt: string // BigNumber / uint256
-  conduitKey: string
-  counter: string // BigNumber / uint256
-  totalOriginalConsiderationItems: number
-}
+export type SeaportOrderParameters = {
+  offerer: string;
+  zone: string;
+  orderType: OrderType;
+  startTime: string; // BigNumber
+  endTime: string; // BigNumber
+  zoneHash: string;
+  salt: string;
+  offer: SeaportOfferItem[];
+  consideration: SeaportConsiderationItem[];
+  totalOriginalConsiderationItems: string; // BigNumber
+  conduitKey: string;
+};
+
+export type SeaportOrderComponents = SeaportOrderParameters & { counter: string /* BigNumber */ };
 
 export interface SeaportOfferItem {
   itemType: number
