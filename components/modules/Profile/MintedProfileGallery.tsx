@@ -4,7 +4,6 @@ import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -153,13 +152,11 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   },
                   icon: <EyeOffIcon className="w-5 h-5" alt="Hide descriptions" />,
                 },
-                getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_LAYOUTS_ENABLED)
-                  ? {
-                    label: 'Edit Layouts',
-                    onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
-                    icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
-                  }
-                  : null,
+                {
+                  label: 'Edit Layouts',
+                  onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
+                  icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
+                },
               ])}/>
           </div>}
         </div>
