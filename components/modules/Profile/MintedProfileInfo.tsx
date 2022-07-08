@@ -9,7 +9,7 @@ import { tw } from 'utils/tw';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import GKHolderIcon from 'public/gk-holder.svg';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
 import { useAccount } from 'wagmi';
 
@@ -46,10 +46,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     // however, we should still fetch the full first page for caching purposes.
     20
   );
-
-  useEffect(() => {
-    mutateProfileNFTs();
-  }, [editMode, mutateProfileNFTs]);
   
   const handleBioChange = (event) => {
     let bioValue = event.target.value;
