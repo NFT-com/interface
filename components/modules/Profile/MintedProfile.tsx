@@ -18,7 +18,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 import { BigNumber } from 'ethers';
 import cameraIcon from 'public/camera.png';
 import PencilIconRounded from 'public/pencil-icon-rounded.svg';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';

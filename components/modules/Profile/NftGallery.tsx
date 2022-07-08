@@ -8,7 +8,7 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { NftGrid } from './NftGrid';
 import { ProfileEditContext } from './ProfileEditContext';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 export interface NftGalleryProps {
   profileURI: string;
