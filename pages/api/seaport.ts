@@ -11,12 +11,14 @@ const seaPortHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   case 'listNFT':
     try {
       const signature = req.query['signature'];
-      const parameters = req.query['parameters'];
+      const parameters = JSON.parse(req.query['parameters'] as string);
       if (isNullOrEmpty(signature)) {
-        throw new Error('Invalid signature');
+        res.status(400).json({ message: 'listNFT: Invalid Signature' });
+        return;
       }
       if (isNullOrEmpty(parameters)) {
-        throw new Error('Invalid parameters');
+        res.status(400).json({ message: 'listNFT: Invalid Parameters' });
+        return;
       }
       const options = {
         method: 'POST',
@@ -30,6 +32,7 @@ const seaPortHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           parameters
         })
       };
+      console.log(options);
       const result = await fetch(
         'https://api.opensea.io/v2/orders/ethereum/seaport/listings',
         options
@@ -39,6 +42,9 @@ const seaPortHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(500).json({ message: 'Failed to list NFT on Seaport', error: e });
     }
     break;
+  default:
+    res.status(400).json({ message: 'Invalid action' });
+    return;
   }
 };
 

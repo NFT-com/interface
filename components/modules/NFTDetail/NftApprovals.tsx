@@ -1,11 +1,15 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Nft } from 'graphql/generated/types';
+import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
+import { useSeaportCounter } from 'hooks/useSeaportCounter';
+import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { listSeaport } from 'utils/listings';
+import { deductFees, feeToConsiderationItem, generateRandomSalt } from 'utils/seaportHelpers';
 
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
-import { SEAPORT_CONDUIT_KEY,SEAPORT_ZONE, SEAPORT_ZONE_HASH,SeaportItemType, SeaportOrderParameters } from 'types';
+import { Fee,ItemType, OPENSEA_CONDUIT_KEY, OrderType,SEAPORT_FEE_COLLLECTION_ADDRESS,SEAPORT_ZONE,SEAPORT_ZONE_HASH,SeaportOrderComponents } from 'types';
 import { useAccount } from 'wagmi';
 
 export interface NFTApprovalsProps {
@@ -14,6 +18,10 @@ export interface NFTApprovalsProps {
 
 export function NftApprovals(props: NFTApprovalsProps) {
   const { data: account } = useAccount();
+  const counter = useSeaportCounter(account.address);
+  const signOrder = useSignSeaportOrder();
+  const { mutate: mutateListings } = useExternalListingsQuery(props?.nft?.contract, props?.nft?.tokenId, props.nft?.wallet.chainId);
+
   const {
     allowedAll: openseaAllowed,
     requestAllowance: requestOpensea
@@ -32,7 +40,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
     TransferProxyTarget.LooksRare
   );
   
-  return <div className="w-full flex items-center justify-around text-primary-text dark:text-primary-txt-dk">
+  return <div className="w-full flex sm:flex-col items-center justify-around text-primary-text dark:text-primary-txt-dk">
     <div>
         looksrare:
       {
@@ -62,55 +70,56 @@ export function NftApprovals(props: NFTApprovalsProps) {
         openseaAllowed ?
           <span
             className='text-link hover:underline cursor-pointer ml-2'
-            onClick={() => {
-              const parameters: SeaportOrderParameters = {
-                offerer: account?.address,
-                zone: SEAPORT_ZONE,
-                zone_hash: SEAPORT_ZONE_HASH,
-                start_time: 0,
-                end_time: 0, // todo: set expiration time
-                order_type: 0,
-                salt: String(Date.now()),
-                conduitKey: SEAPORT_CONDUIT_KEY,
-                nonce: '0',
-                totalOriginalConsiderationItems: 2,
-                offer: [{
-                  item_type: SeaportItemType.ERC721,
-                  token: props.nft?.contract,
-                  identifier_or_criteria: '1',
-                  startAmount: 1, // todo: support amount input for ERC1155
-                  endAmount: 1,
-                }],
-                consideration: [{
-                  // offerer fee (i.e. the price)
-                  item_type: 0,
-                  token: NULL_ADDRESS, // todo: support non-ETH currencies
-                  identifier_or_criteria: '0',
-                  startAmount: ethers.utils.parseEther('10'),
-                  endAmount: ethers.utils.parseEther('10'),
-                  recipient: account?.address,
-                },
-                {
-                  // opensea fee
-                  item_type: 0,
-                  token: NULL_ADDRESS,
-                  identifier_or_criteria: '0',
-                  startAmount: ethers.utils.parseEther('1'),
-                  endAmount: ethers.utils.parseEther('1'),
-                  recipient: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-                },
-                {
-                  // (optional) collection fee
-                  item_type: 0,
-                  token: NULL_ADDRESS,
-                  identifier_or_criteria: '0',
-                  startAmount: ethers.utils.parseEther('1'),
-                  endAmount: ethers.utils.parseEther('1'),
-                  recipient: '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e',
-                }],
+            onClick={async () => {
+              const salePriceWei: BigNumber = ethers.utils.parseEther('10');
+              const saleCurrencyAddress = NULL_ADDRESS;
+              // This is what the seller will accept for their NFT.
+              // For now, we support a single currency.
+              const considerationItems = [{
+                itemType: ItemType.NATIVE,
+                token: saleCurrencyAddress,
+                identifierOrCriteria: BigNumber.from(0).toString(),
+                startAmount: salePriceWei.toString(),
+                endAmount: salePriceWei.toString(),
+                recipient: account?.address,
+              }];
+              const openseaFee: Fee = {
+                recipient: SEAPORT_FEE_COLLLECTION_ADDRESS,
+                basisPoints: 250,
               };
-              // todo: get signature
-              listSeaport('' , parameters);
+              
+              const parameters: SeaportOrderComponents = {
+                offerer: account?.address ?? NULL_ADDRESS,
+                zone: SEAPORT_ZONE,
+                offer: [{
+                  itemType: ItemType.ERC721,
+                  token: props.nft?.contract,
+                  identifierOrCriteria: BigNumber.from(props.nft?.tokenId).toString(),
+                  startAmount: BigNumber.from(1).toString(),
+                  endAmount: BigNumber.from(1).toString(),
+                }],
+                consideration: [
+                  ...deductFees(considerationItems, [openseaFee]),
+                  feeToConsiderationItem({
+                    fee: openseaFee,
+                    token: saleCurrencyAddress,
+                    baseAmount: salePriceWei,
+                  })
+                ],
+                orderType: OrderType.FULL_RESTRICTED,
+                startTime: BigNumber.from(Date.now()).div(1000).toString(),
+                endTime: BigNumber.from(Date.now()).div(1000).add(604800 /* 1 week in seconds */).toString(),
+                zoneHash: SEAPORT_ZONE_HASH,
+                totalOriginalConsiderationItems: 3,
+                salt: generateRandomSalt(),
+                conduitKey: OPENSEA_CONDUIT_KEY,
+                counter: BigNumber.from(counter).toString(),
+              };
+              const signature = await signOrder(parameters);
+              const result = await listSeaport(signature , parameters);
+              if (result) {
+                mutateListings();
+              }
             }}
           >
             List Now

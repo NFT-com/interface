@@ -1,14 +1,15 @@
 import { Doppler, getEnv } from './env';
 
-import { SeaportOrderParameters } from 'types';
+import { SeaportOrderComponents } from 'types';
 
 export async function listSeaport(
   signature: string,
-  parameters: SeaportOrderParameters
+  parameters: SeaportOrderComponents
 ) {
   const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/seaport');
   url.searchParams.set('signature', signature);
   url.searchParams.set('parameters', JSON.stringify(parameters));
+  url.searchParams.set('action', 'listNFT');
   const result = await fetch(url.toString()).then(res => res.json());
   return result;
 }
