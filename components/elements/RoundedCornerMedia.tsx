@@ -22,6 +22,7 @@ export interface RoundedCornerMediaProps {
     gkId: number;
     pfp: string;
   }
+  onClick?: () => void;
 }
 
 const getRoundedClass = (variant: RoundedCornerVariant): string => {
@@ -52,7 +53,9 @@ export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
       'flex object-cover aspect-square',
       getRoundedClass(props.variant),
       props.containerClasses
-    )}>
+    )}
+    onClick={props?.onClick}
+    >
       <video
         autoPlay
         muted
