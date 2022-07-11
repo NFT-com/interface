@@ -8,20 +8,12 @@ import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { getLooksrareNonce, listLooksrare, listSeaport } from 'utils/listings';
-import { deductFees, feeToConsiderationItem, generateRandomSalt } from 'utils/seaportHelpers';
+import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 
 import { Addresses,addressesByNetwork, MakerOrder } from '@looksrare/sdk';
 import { BigNumber, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
-import {
-  Fee,
-  ItemType,
-  OPENSEA_CONDUIT_KEY,
-  OrderType,
-  SEAPORT_FEE_COLLLECTION_ADDRESS,
-  SEAPORT_ZONE,SEAPORT_ZONE_HASH,
-  SeaportOrderParameters
-} from 'types';
+import { SeaportOrderParameters } from 'types';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
 
 export interface NFTApprovalsProps {
@@ -121,49 +113,12 @@ export function NftApprovals(props: NFTApprovalsProps) {
           <span
             className='text-link hover:underline cursor-pointer ml-2'
             onClick={async () => {
-              const salePriceWei: BigNumber = ethers.utils.parseEther('10');
-              const saleCurrencyAddress = NULL_ADDRESS;
-              // This is what the seller will accept for their NFT.
-              // For now, we support a single currency.
-              const considerationItems = [{
-                itemType: ItemType.NATIVE,
-                token: saleCurrencyAddress,
-                identifierOrCriteria: BigNumber.from(0).toString(),
-                startAmount: salePriceWei.toString(),
-                endAmount: salePriceWei.toString(),
-                recipient: account?.address,
-              }];
-              const openseaFee: Fee = {
-                recipient: SEAPORT_FEE_COLLLECTION_ADDRESS,
-                basisPoints: 250,
-              };
-              
-              const parameters: SeaportOrderParameters = {
-                offerer: account?.address ?? NULL_ADDRESS,
-                zone: SEAPORT_ZONE,
-                offer: [{
-                  itemType: ItemType.ERC721,
-                  token: props.nft?.contract,
-                  identifierOrCriteria: BigNumber.from(props.nft?.tokenId).toString(),
-                  startAmount: BigNumber.from(1).toString(),
-                  endAmount: BigNumber.from(1).toString(),
-                }],
-                consideration: [
-                  ...deductFees(considerationItems, [openseaFee]),
-                  feeToConsiderationItem({
-                    fee: openseaFee,
-                    token: saleCurrencyAddress,
-                    baseAmount: salePriceWei,
-                  })
-                ],
-                orderType: OrderType.FULL_RESTRICTED,
-                startTime: BigNumber.from(Date.now()).div(1000).toString(),
-                endTime: BigNumber.from(Date.now()).div(1000).add(604800 /* 1 week in seconds */).toString(),
-                zoneHash: SEAPORT_ZONE_HASH,
-                totalOriginalConsiderationItems: '2',
-                salt: generateRandomSalt(),
-                conduitKey: OPENSEA_CONDUIT_KEY,
-              };
+              const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
+                account?.address,
+                props.nft,
+                ethers.utils.parseEther('10'),
+                NULL_ADDRESS, // currency
+              );
               const signature = await signOrderForSeaport(parameters, seaportCounter);
               const result = await listSeaport(signature , { ...parameters, counter: seaportCounter });
               if (result) {

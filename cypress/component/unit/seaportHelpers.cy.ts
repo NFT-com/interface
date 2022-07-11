@@ -1,10 +1,28 @@
 /// <reference types="cypress" />
 
 import { NULL_ADDRESS } from '../../../constants/addresses';
-import { Fee,ItemType,OPENSEA_CONDUIT_KEY,OrderType,SEAPORT_FEE_COLLLECTION_ADDRESS,SEAPORT_ZONE,SEAPORT_ZONE_HASH, SeaportOrderComponents } from '../../../types/seaport';
-import { deductFees, feeToConsiderationItem, getMessageToSign, getTypedDataDomain, isCurrencyItem, multiplyBasisPoints } from '../../../utils/seaportHelpers';
+import { Nft } from '../../../graphql/generated/types';
+import { Fee,
+  ItemType,
+  OPENSEA_CONDUIT_KEY,
+  OrderType,
+  SEAPORT_FEE_COLLLECTION_ADDRESS,
+  SEAPORT_ZONE,
+  SEAPORT_ZONE_HASH,
+  SeaportOrderComponents
+} from '../../../types/seaport';
+import {
+  createSeaportParametersForNFTListing,
+  deductFees,
+  feeToConsiderationItem,
+  getMessageToSign,
+  getTypedDataDomain,
+  isCurrencyItem,
+  multiplyBasisPoints
+} from '../../../utils/seaportHelpers';
 
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
+import { PartialDeep } from 'type-fest';
 
 describe('Unit test our seaport functions', () => {
   context('getTypedDataDomain', () => {
@@ -264,6 +282,56 @@ describe('Unit test our seaport functions', () => {
         startAmount: '1',
         endAmount: '1',
         recipient: SEAPORT_FEE_COLLLECTION_ADDRESS
+      });
+    });
+  });
+  
+  context('createSeaportParametersForNFTListing', () => {
+    it('should build the correct object', () => {
+      cy.stub(Date, 'now').returns(0);
+      cy.stub(Buffer, 'from').returns('123');
+      const params = createSeaportParametersForNFTListing(
+        'test_offerer',
+        {
+          tokenId: '1',
+          contract: 'test_collection'
+        } as PartialDeep<Nft>,
+        ethers.utils.parseEther('10'),
+        NULL_ADDRESS,
+      );
+
+      expect(params).to.deep.eq({
+        conduitKey: '0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000',
+        consideration: [{
+          endAmount: '9750000000000000000',
+          identifierOrCriteria: '0',
+          itemType: 0,
+          recipient: 'test_offerer',
+          startAmount: '9750000000000000000',
+          token: '0x0000000000000000000000000000000000000000'
+        }, {
+          endAmount: '250000000000000000',
+          identifierOrCriteria: '0',
+          itemType: 0,
+          recipient: '0x8De9C5A032463C561423387a9648c5C7BCC5BC90',
+          startAmount: '250000000000000000',
+          token: '0x0000000000000000000000000000000000000000'
+        }],
+        endTime: '604800',
+        offer: [{
+          endAmount: '1',
+          identifierOrCriteria: '1',
+          itemType: 2,
+          startAmount: '1',
+          token: 'test_collection'
+        }],
+        offerer: 'test_offerer',
+        orderType: 2,
+        salt: '0x123',
+        startTime: '0',
+        totalOriginalConsiderationItems: '2',
+        zone: '0x004c00500000ad104d7dbd00e3ae0a5c00560c00',
+        zoneHash: '0x3000000000000000000000000000000000000000000000000000000000000000'
       });
     });
   });

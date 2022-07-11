@@ -22,6 +22,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const { activeChain } = useNetwork();
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
+  
   const { profileData } = useProfileQuery(profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop());
   const { refreshNft, loading } = useRefreshNftMutation();
 
