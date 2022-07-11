@@ -7,6 +7,8 @@ const sentryWebpackPluginOptions = {
 
 const moduleExports = {
   reactStrictMode: true,
+  sentry: { hideSourceMaps: true },
+  productionBrowserSourceMaps: false,
   webpack(config) {
     // This allows you to import SVG files as strings/urls
     // but doesn't work with typescript yet.
