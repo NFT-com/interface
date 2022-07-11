@@ -18,18 +18,6 @@ export const GenesisFooter = (props: GenesisFooterProps) => {
         className='cursor-pointer hover:underline mx-4'
         onClick={() => {
           window.open(
-            'https://announcements.nft.com',
-            '_blank'
-          );
-        }}
-      >
-        Announcements
-      </span>
-      |
-      <span
-        className='cursor-pointer hover:underline mx-4'
-        onClick={() => {
-          window.open(
             'https://cdn.nft.com/nft_com_terms_of_service.pdf',
             '_open'
           );

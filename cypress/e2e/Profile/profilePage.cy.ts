@@ -40,5 +40,9 @@ describe('minted profile page tests', () => {
       cy.get('.NFTCardContainer').first().click();
       cy.wait('@NftQuery').its('response.statusCode').should('eq', 200);
     });
+
+    it('should not have an announcements link', () => {
+      cy.get('#FooterContainer').should('not.contain.text', 'Announcements');
+    })
   });
     

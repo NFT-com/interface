@@ -32,11 +32,6 @@ export default function HeroFooter() {
           © {moment().year()} NFT.com. All rights reserved &nbsp;
         </span>
         <div className="">
-          <a href='https://announcements.nft.com'>
-            <span className='cursor-pointer decoration-white underline-nonee'>
-              Announcements
-            </span>
-          </a>
           <a href='https://support.nft.com'>
             <span className='cursor-pointer decoration-white underline-nonee'>
               &nbsp;|&nbsp; FAQ
