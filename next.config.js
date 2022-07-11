@@ -26,7 +26,8 @@ const moduleExports = {
   async headers() {
     const securityHeaders = [
       {
-        'X-Frame-Options': 'DENY',
+        key: 'X-Frame-Options',
+        value: 'DENY'
       },
       {
         key: 'X-XSS-Protection',
@@ -47,7 +48,7 @@ const moduleExports = {
     ];
     return [
       {
-        source: '*',
+        source: '/:path',
         headers: securityHeaders
       }
     ];
