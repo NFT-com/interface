@@ -97,7 +97,8 @@ export function createSeaportParametersForNFTListing(
   offerer: string,
   nft: PartialDeep<Nft>,
   price: BigNumberish,
-  currency: string
+  currency: string,
+  // todo: specify start/end times, currency, and order types
 ): SeaportOrderParameters {
   // This is what the seller will accept for their NFT.
   // For now, we support a single currency.
