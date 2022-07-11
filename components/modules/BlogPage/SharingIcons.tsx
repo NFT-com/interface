@@ -21,14 +21,14 @@ export default function SharingIcons({ title }: SharingProps) {
         <FacebookIcon
           bgStyle={{ fill: '#FBF9F9' }}
           iconFillColor="#727272"
-          className="w-8 h-8 md:w-6 md:h-6 p-0 border dark:border-0 border-share-icon rounded-full"
+          className="w-8 h-8 md:w-6 md:h-6 p-0 border border-share-icon rounded-full"
         />
       </FacebookShareButton>
       <TwitterShareButton className="mx-3 rounded-full" title={title} url={window.location.href}>
         <TwitterIcon
           bgStyle={{ fill: '#FBF9F9' }}
           iconFillColor="#727272"
-          className="w-8 h-8 md:w-6 md:h-6 border dark:border-0 border-share-icon  rounded-full"
+          className="w-8 h-8 md:w-6 md:h-6 border border-share-icon  rounded-full"
         />
       </TwitterShareButton>
       
@@ -36,7 +36,7 @@ export default function SharingIcons({ title }: SharingProps) {
         mode="click"
         tooltipComponent={
           <div
-            className="rounded-xl p-3 dark:bg-modal-bg bg-modal-bg-dk text-white dark:text-black"
+            className="rounded-xl p-3 bg-modal-bg-dk text-white"
             style={{
               minWidth: '7rem',
             }}
@@ -45,7 +45,7 @@ export default function SharingIcons({ title }: SharingProps) {
           </div>
         }
       >
-        <button className="w-8 h-8 md:w-6 md:h-6 flex justify-center items-center border dark:border-0 border-share-icon rounded-full bg-share-icon-bg">
+        <button className="w-8 h-8 md:w-6 md:h-6 flex justify-center items-center border border-share-icon rounded-full bg-share-icon-bg">
           <Link
             onClick={() => {
               setCopied(window.location.href);

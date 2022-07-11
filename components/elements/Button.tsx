@@ -48,7 +48,8 @@ export function Button(props: ButtonProps) {
     secondaryButtonBackgroundDisabled,
     secondaryButtonTextDisabled,
     red,
-    alwaysBlack
+    alwaysBlack,
+    primaryButtonText
   } = useThemeColors();
 
   const bgColor = useCallback(() => {
@@ -89,7 +90,7 @@ export function Button(props: ButtonProps) {
       'ERROR': red
     };
     const enabledTextColors = {
-      'PRIMARY': alwaysBlack,
+      'PRIMARY': primaryButtonText,
       'SECONDARY': alwaysBlack
     };
     if (props?.disabled ?? false) {
@@ -103,7 +104,8 @@ export function Button(props: ButtonProps) {
     primaryButtonTextDisabled,
     secondaryButtonTextDisabled,
     red,
-    alwaysBlack]);
+    alwaysBlack,
+    primaryButtonText]);
 
   const accent = useCallback(() => {
     if(isNullOrEmpty(props?.accent) && !props?.loading) {
@@ -118,7 +120,7 @@ export function Button(props: ButtonProps) {
   return (
     <div
       className={tw(
-        'flex items-center',
+        'flex items-center font-grotesk font-bold',
         'justify-center rounded-xl',
         'no-underline',
         !props?.loading && 'cursor-pointer',
