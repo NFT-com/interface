@@ -118,8 +118,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               <FeaturedProfile profileOwner={featuredProfile} gkId={1} />
             </div>
           </div>
-          <div className='space-y-6 p-6 ...'>
-            <div className='h-full ...'>
+          <div className='space-y-12 ...'>
+            <div className='h-full p-12 ...'>
               <div className='text-header leading-header font-header justify-center ...'>
                 {data?.feedTitle}
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
@@ -133,7 +133,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     profileFeed4
                   ]}
                 />
-                <div className='flex flex-row justify-center sm:w-full items-center pt-6 ...'>
+                <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
                   <Button
                     bgColor={'#222222'}
                     color={'#ffffff'}
@@ -152,15 +152,15 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
             </div>
-            <div className='h-full ...'>
+            <div className='h-full px-12 py-10 ...'>
               <div className='text-header leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </div>
               <LeaderBoard data={leaderboardData} />
             </div>
-            <div className='flex flex-row flex-wrap w-full h-full justify-center ...'>
-              <div className='h-full w-full p-2 ...'>
-                <div className='px-6 text-header leading-header font-header justify-center ...'>
+            <div className='flex flex-row flex-wrap w-full h-full justify-center px-12 py-10 ...'>
+              <div className='h-full w-full ...'>
+                <div className='text-header leading-header font-header justify-center ...'>
                   {data?.threeCardTitle}
                   <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                     {data?.threeCardDescription}
@@ -235,7 +235,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full w-full'>
+            <div className='h-full w-full px-12 py-10'>
               <div className='text-header leading-header font-header justify-center ...'>
                 {data?.learnTitle}
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
