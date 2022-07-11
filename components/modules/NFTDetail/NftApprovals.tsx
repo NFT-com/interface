@@ -8,10 +8,11 @@ import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { getLooksrareNonce, listLooksrare, listSeaport } from 'utils/listings';
+import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 
-import { Addresses,addressesByNetwork, MakerOrder } from '@looksrare/sdk';
-import { BigNumber, ethers } from 'ethers';
+import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
+import { ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
 import { SeaportOrderParameters } from 'types';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
@@ -62,32 +63,17 @@ export function NftApprovals(props: NFTApprovalsProps) {
               className='text-link hover:underline cursor-pointer ml-2'
               onClick={async () => {
                 const addresses: Addresses = addressesByNetwork[activeChain?.id];
-                const protocolFees = await looksrareStrategy.viewProtocolFee();
-                const [
-                  , // setter
-                  , // receiver
-                  fee
-                ]: [string, string, BigNumber] = await looksrareRoyaltyFeeRegistry.royaltyFeeInfoCollection(props.nft?.contract);
                 const nonce: number = await getLooksrareNonce(account?.address);
-                // Get protocolFees and creatorFees from the contracts
-                const netPriceRatio = BigNumber.from(10000).sub(protocolFees.add(fee)).toNumber();
-                // This variable is used to enforce a max slippage of 25% on all orders, if a collection change the fees to be >25%, the order will become invalid
-                const minNetPriceRatio = 7500;
-                const order: MakerOrder = {
+                const order: MakerOrder = await createLooksrareParametersForNFTListing(
+                  account?.address, // offerer
+                  props.nft,
+                  ethers.utils.parseEther('10'), // price
+                  addresses.WETH,
+                  activeChain?.id,
                   nonce,
-                  tokenId: BigNumber.from(props.nft?.tokenId).toString(),
-                  collection: props.nft?.contract,
-                  strategy: addresses.STRATEGY_STANDARD_SALE,
-                  currency: addresses.WETH,
-                  signer: account?.address,
-                  isOrderAsk: true,
-                  amount: '1',
-                  price:  ethers.utils.parseEther('10').toString(),
-                  startTime: BigNumber.from(Date.now()).div(1000).toString(),
-                  endTime: BigNumber.from(Date.now()).div(1000).add(604800 /* 1 week in seconds */).toString(),
-                  minPercentageToAsk: Math.max(netPriceRatio, minNetPriceRatio),
-                  params: []
-                };
+                  looksrareStrategy,
+                  looksrareRoyaltyFeeRegistry,
+                );
                 const signature = await signOrderForLooksrare(order);
                 const result = await listLooksrare({ ...order, signature });
                 if (result) {
@@ -117,7 +103,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
                 account?.address,
                 props.nft,
                 ethers.utils.parseEther('10'),
-                NULL_ADDRESS, // currency
+                NULL_ADDRESS, // currency (ETH)
               );
               const signature = await signOrderForSeaport(parameters, seaportCounter);
               const result = await listSeaport(signature , { ...parameters, counter: seaportCounter });
