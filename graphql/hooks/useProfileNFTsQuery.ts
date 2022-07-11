@@ -35,7 +35,7 @@ export function useProfileNFTsQuery(
       }
     });
     return result;
-  });
+  }, { revalidateOnFocus: false, revalidateOnReconnect: false });
   return {
     nfts: data?.updateNFTsForProfile.items,
     pageInfo: data?.updateNFTsForProfile.pageInfo,

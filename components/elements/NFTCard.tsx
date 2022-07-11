@@ -1,5 +1,4 @@
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
-import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -56,9 +55,7 @@ export function NFTCard(props: NFTCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
-  const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
-  const { data: listings } = useExternalListingsQuery(props.contractAddress, props.tokenId, nft?.wallet.chainId);
-
+  const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, String(activeChain?.id));
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-sm sm:text-xs' style={{ color: pink }}>
@@ -155,7 +152,7 @@ export function NFTCard(props: NFTCardProps) {
               />}
           </div> :
           props.imageLayout === 'row' ?
-            <div className='flex justify-center w-full justify-center'>
+            <div className='flex justify-center w-full'>
               {processedImageURLs.slice(0,3).map((image: string, index: number) => {
                 return <RoundedCornerMedia
                   key={image + index}

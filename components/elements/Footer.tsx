@@ -63,12 +63,6 @@ export const Footer = () => {
           },
         },
         {
-          name: 'Announcements',
-          onClick: () => {
-            window.open('https://announcements.nft.com', '_open');
-          },
-        },
-        {
           name: 'Careers',
           onClick: () => {
             window.open(
@@ -134,7 +128,7 @@ export const Footer = () => {
   ];
 
   return (
-    <div className={tw(
+    <div id="FooterContainer" className={tw(
       'flex md:flex-col relative md:content-between py-12 bg-footer-bg dark:bg-footer-bg-dk',
       'text-primary-txt dark:text-primary-txt-dk'
     )}>

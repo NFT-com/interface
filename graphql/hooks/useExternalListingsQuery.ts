@@ -3,8 +3,8 @@ import { ExternalListing } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { BigNumber } from 'ethers';
-import { useCallback } from 'react';
-import useSWR, { mutate } from 'swr';
+import { mutate } from 'swr';
+import useSWRImmutable from 'swr/immutable';
 import { PartialDeep } from 'type-fest';
 
 export interface ExternalListingsData {
@@ -13,24 +13,22 @@ export interface ExternalListingsData {
   mutate: () => void;
 }
 
-export function useExternalListingsQuery(contract: string, tokenId: string, chainId: string|number): ExternalListingsData {
+export function useExternalListingsQuery(contract: string, tokenId: string, chainId: string): ExternalListingsData {
   const sdk = useGraphQLSDK();
   const keyString = 'ExternalListingsQuery ' + contract + tokenId + chainId;
 
-  const mutateThis = useCallback(() => {
-    mutate(keyString);
-  }, [keyString]);
-
-  const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(contract) || isNullOrEmpty(tokenId) || isNullOrEmpty(String(chainId))) {
+  const { data } = useSWRImmutable(keyString, async () => {
+    if (isNullOrEmpty(contract) || isNullOrEmpty(tokenId) || isNullOrEmpty(chainId)) {
       return null;
     }
-    const result = await sdk.ExternalListings({ contract, tokenId: BigNumber.from(tokenId).toString(), chainId: String(chainId) });
-    return result?.externalListings?.listings ?? [];
+    const result = await sdk.ExternalListings({ contract, tokenId: BigNumber.from(tokenId).toString(), chainId: chainId });
+    return result.externalListings.listings;
   });
   return {
-    data: data,
+    data: data ?? [],
     loading: data == null,
-    mutate: mutateThis,
+    mutate: () => {
+      mutate(keyString);
+    },
   };
 }

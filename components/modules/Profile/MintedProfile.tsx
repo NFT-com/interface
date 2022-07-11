@@ -18,7 +18,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 import { BigNumber } from 'ethers';
 import cameraIcon from 'public/camera.png';
 import PencilIconRounded from 'public/pencil-icon-rounded.svg';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import { useAccount, useNetwork } from 'wagmi';
@@ -49,16 +49,12 @@ export function MintedProfile(props: MintedProfileProps) {
     .map(token => token?.tokenUri?.raw?.split('/').pop())
     .includes(profileURI);
 
-  const { nfts: publiclyVisibleNFTs, mutate: mutateProfileNFTs } = useProfileNFTsQuery(
+  const { nfts: publiclyVisibleNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
     20
   );
-
-  useEffect(() => {
-    mutateProfileNFTs();
-  }, [editMode, mutateProfileNFTs]);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
       
