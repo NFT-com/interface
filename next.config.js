@@ -50,7 +50,19 @@ const moduleExports = {
     ];
     return [
       {
+        source: '/',
+        headers: securityHeaders
+      },
+      {
         source: '/:path',
+        headers: securityHeaders
+      },
+      {
+        source: '/app/:path',
+        headers: securityHeaders
+      },
+      {
+        source: '/articles/:path',
         headers: securityHeaders
       }
     ];
