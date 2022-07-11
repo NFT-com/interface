@@ -2,6 +2,7 @@
 import { tw } from 'utils/tw';
 
 export enum RoundedCornerVariant {
+  TopOnly = 'topOnly',
   TopLeft = 'topleft',
   TopRight = 'topright',
   BottomLeft = 'bottomleft',
@@ -27,6 +28,8 @@ export interface RoundedCornerMediaProps {
 
 const getRoundedClass = (variant: RoundedCornerVariant): string => {
   switch (variant) {
+  case RoundedCornerVariant.TopOnly:
+    return 'rounded-t-3xl object-cover';
   case RoundedCornerVariant.TopLeft:
     return 'rounded-tl-3xl';
   case RoundedCornerVariant.TopRight:
