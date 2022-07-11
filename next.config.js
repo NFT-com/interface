@@ -60,6 +60,10 @@ const moduleExports = {
       {
         source: '/app/:path',
         headers: securityHeaders
+      },
+      {
+        source: '/articles/:path',
+        headers: securityHeaders
       }
     ];
   },
