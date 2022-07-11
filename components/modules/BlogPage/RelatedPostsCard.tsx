@@ -14,7 +14,7 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
   const result = readingTime(post?.body || '');
   return (
     <Link href={`/articles/${post?.slug}`}>
-      <div className="text-left	hover:cursor-pointer">
+      <div data-cy="blogPostCard" className="text-left	hover:cursor-pointer">
         {post?.heroImage?.url &&
         <div className="aspect-4/3 w-full relative bg-gray-200 rounded-md">
           <BlurImage
