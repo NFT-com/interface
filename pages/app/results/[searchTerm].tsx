@@ -158,7 +158,7 @@ export default function ResultsPage() {
                         stats(nbHits) {
                           return (
                             <>
-                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''} for `}</span><br/>
+                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} RESULTS${nbHits > 1? 'S' : ''} FOR `}</span><br/>
                               <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
                             </>);
                         },
@@ -203,7 +203,7 @@ export default function ResultsPage() {
                         stats(nbHits) {
                           return (
                             <>
-                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''} for `}</span><br/>
+                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} RESULT${nbHits > 1? 'S' : ''} FOR `}</span><br/>
                               <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
                             </>);
                         },
@@ -249,7 +249,7 @@ export default function ResultsPage() {
                         stats(nbHits) {
                           return (
                             <>
-                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''} for `}</span><br/>
+                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} RESULT${nbHits > 1? 'S' : ''} FOR `}</span><br/>
                               <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
                             </>);
                         },
