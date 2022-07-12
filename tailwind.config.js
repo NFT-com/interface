@@ -87,7 +87,7 @@ module.exports = {
         'red-1':'#FF6871',
         'text-4':'#C3C5CB',
         'footer-txt':'#787E91',
-        'primary-btn-txt-disabled':'777E91',
+        'primary-btn-txt-disabled':'#777E91',
         'transparent-border':'#7A8092',
         'toggle-bg':'#00A4FF',
         'grey-txt':'#d4d4d4',

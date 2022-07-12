@@ -22,7 +22,7 @@ export function useProfileNFTsQuery(
   const keyString = 'ProfileNFTsQuery' +
     profileId +
     first;
-
+  
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(profileId)) {
       return null;
@@ -35,7 +35,7 @@ export function useProfileNFTsQuery(
       }
     });
     return result;
-  });
+  }, { revalidateOnFocus: false, revalidateOnReconnect: false });
   return {
     nfts: data?.updateNFTsForProfile.items,
     pageInfo: data?.updateNFTsForProfile.pageInfo,

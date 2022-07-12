@@ -39,7 +39,7 @@ export function ProfilePreferencesSearch() {
     mutate: mutateTokenId,
     loading: loadingTokenId
   } = useProfileTokenQuery(currentURI);
-  const { profileUris, mutate: mutateMyProfileTokens } = useMyNftProfileTokens();
+  const { profileTokens, mutate: mutateMyProfileTokens } = useMyNftProfileTokens();
   const {
     claimable,
     totalClaimable,
@@ -286,7 +286,7 @@ export function ProfilePreferencesSearch() {
                   : <BidStatusIcon
                     whiteBackgroundOverride
                     status={getProfileStatus()}
-                    isOwner={profileUris.includes(currentURI)}
+                    isOwner={profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(currentURI)}
                   />}
               </div>
             </div>

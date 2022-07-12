@@ -11,6 +11,8 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { filterNulls, prettify } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { Button, ButtonType } from './Button';
+
 import { ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -42,7 +44,7 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
   const { secondaryIcon } = useThemeColors();
   const [isCopied, setCopied] = useCopyClipboard();
 
-  const { profileUris: myOwnedProfileTokenUris } = useMyNftProfileTokens();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
 
   type CoinData = {
     name: string;
@@ -221,16 +223,16 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
           }
         </div>
       ))}
-      {(myOwnedProfileTokenUris ?? []).length > 0 &&
+      {(myOwnedProfileTokens ?? []).length > 0 &&
       <div className='mx-5 text-secondary-txt text-lg mb-2.5 mt-2.5'>
           Profiles
       </div>}
       {
-        (myOwnedProfileTokenUris ?? [])?.map(profileUri => {
-          const shortURI = profileUri.split('/').pop();
+        (myOwnedProfileTokens ?? [])?.map(profileToken => {
+          const shortURI = profileToken?.tokenUri?.raw?.split('/').pop();
           return (
             <div
-              key={profileUri}
+              key={profileToken?.tokenUri?.raw}
               onClick={() => {
                 toggleWalletSlide();
                 router.push('/' + shortURI);
@@ -306,12 +308,9 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
           );
         })}
       </div>
-      <div
-        className={tw(
-          'cursor-pointer flex items-center justify-center',
-          'mt-5 mx-5 mb-7 rounded-xl h-10 text-lg shrink-0',
-          'hover:opacity-80 text-primary-button-txt bg-primary-button-bckg'
-        )}
+      <Button
+        label="Add Funds"
+        stretch
         onClick={() => {
           if (isMobile) {
             window.open(
@@ -321,10 +320,9 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
           } else {
             setAddFundsDialogOpen(true);
           }
-        }}
-      >
-          Add Funds
-      </div>
+        } }
+        type={ButtonType.PRIMARY}
+      />
     </>
   );
 }

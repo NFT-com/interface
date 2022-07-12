@@ -1,18 +1,17 @@
-import { Footer } from 'components/elements/Footer';
-import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
-import { Sidebar } from 'components/elements/Sidebar';
+import { PageWrapper } from 'components/layouts/PageWrapper';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
-import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { getPost } from 'lib/contentful/api';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
+import { CaretLeft } from 'phosphor-react';
 import { PostData } from 'types/blogs';
 
 type PostProps = {
@@ -28,7 +27,7 @@ export default function Post({ post, preview }: PostProps) {
   }
 
   return (
-    <>
+    <PageWrapper>
       <NextSeo
         title={post.title}
         description={post.description}
@@ -53,12 +52,15 @@ export default function Post({ post, preview }: PostProps) {
           cardType: 'summary_large_image',
         }}
       />
-      <ClientOnly>
-        <Header />
-        <Sidebar />
-      </ClientOnly>
       <div className='bg-white dark:bg-modal-overlay-dk'>
-        <div className="relative text-center px-4 w-full pt-28  max-w-7xl mx-auto">
+        <div className="relative text-center px-4 w-full pt-28 sm:pt-24 max-w-7xl mx-auto">
+          <Link href="/articles">
+            <div className='flex content-center items-center hover:cursor-pointer sm:mb-4'>
+              <CaretLeft className='mr-1 text-black dark:text-white' />
+              <p className='text-black dark:text-white sm:text-sm'>Back to Blog</p>
+            </div>
+          </Link>
+          
           <BlogHeader post={post} />
 
           <BlogHeroImage
@@ -84,9 +86,8 @@ export default function Post({ post, preview }: PostProps) {
             : null}
         </div>
       </div>
-      <Footer />
       {preview && <PreviewBanner />}
-    </>
+    </PageWrapper>
   );
 }
 

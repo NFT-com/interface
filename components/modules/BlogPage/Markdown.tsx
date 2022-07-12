@@ -1,4 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
+import ImageWithZoom from 'components/modules/BlogPage/ImageWithZoom';
+
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 
 const theme = {
@@ -37,7 +38,7 @@ const theme = {
   img: (props: any) => {
     const { src, alt } = props;
     return (
-      <img className="block h-max max-h-96 w-auto relative justify-center items-center mx-auto mb-4" src={`https:${src}`} alt={alt} />
+      <ImageWithZoom src={src} alt={alt} />
     );
   },
   a: (props: any) => {

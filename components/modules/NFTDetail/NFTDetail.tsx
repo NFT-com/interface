@@ -22,7 +22,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const { activeChain } = useNetwork();
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
-  const { profileData } = useProfileQuery(profileTokens?.at(0)?.uri?.split('/').pop());
+  const { profileData } = useProfileQuery(profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop());
   const { refreshNft, loading } = useRefreshNftMutation();
 
   const refreshNftCallback = useCallback(() => {
@@ -39,10 +39,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
       {props.nft?.metadata?.imageURL &&
         <div className="w-96 md:w-full px-4 aspect-square">
           <div className="rounded-xl h-full object-contain relative">
-            <img
+            <video
+              autoPlay
+              muted
+              loop
+              poster={processIPFSURL(props.nft?.metadata?.imageURL)}
               className="rounded-xl"
               src={processIPFSURL(props.nft?.metadata?.imageURL)}
-              alt="nft-profile-pic"
+              key={props.nft?.id}
             />
           </div>
         </div>

@@ -4,18 +4,20 @@ import { tw } from 'utils/tw';
 import { SearchBar } from './SearchBar';
 import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
-import { Popover } from '@headlessui/react';
+import Link from 'next/link';
 import NavLogo from 'public/hero_corner.svg';
 import { isMobile } from 'react-device-detect';
 
 export const Header = () => {
   return (
-    <Popover as="nav" className='fixed z-[99] top-0 w-screen h-20 bg-secondary-dk'>
-      <div className="max-w-7xl mx-auto px-6">
+    <nav className='fixed z-[99] top-0 w-screen h-20 bg-secondary-dk drop-shadow-md'>
+      <div className="w-full mx-auto px-5">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <NavLogo className='h-8 w-8 justify-start' />
+            <div className="flex-shrink-0 hover:cursor-pointer">
+              <Link href='/'>
+                <NavLogo className='h-8 w-8 justify-start' />
+              </Link>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
@@ -39,6 +41,6 @@ export const Header = () => {
           <WalletRainbowKitButton showWhenConnected signInButton={!isMobile} />
         </div>
       </div>
-    </Popover>
+    </nav>
   );
 };

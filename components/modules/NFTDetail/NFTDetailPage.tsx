@@ -9,12 +9,15 @@ import { NftChainInfo } from './NftChainInfo';
 import { NFTDetail } from './NFTDetail';
 import { Properties } from './Properties';
 
+import { useAccount } from 'wagmi';
+
 export interface NFTDetailPageProps {
   collection: string;
   tokenId: string;
 }
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
+  const { data: account } = useAccount();
   const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
 
   return (
@@ -23,7 +26,11 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     >
       <div className="flex flex-col pt-20 items-center w-full max-w-7xl mx-auto">
         <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
-        {getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) && <NftApprovals nft={nft} />}
+        {
+          getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
+          account?.address === nft?.wallet?.address &&
+          <NftApprovals nft={nft} />
+        }
         <ExternalListings nft={nft} />
         <div className='w-full flex flex-row md:flex-col p-4'>
           <div className='flex flex-col w-2/4 md:w-full pr-4 md:pr-0'>

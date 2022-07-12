@@ -139,7 +139,7 @@ export function ProfileEditContextProvider(
     // reset
     setDraftProfileImg({ preview: '', raw: null });
     setDraftHeaderImg({ preview: '', raw: null });
-    setDraftBio(draftBio);
+    setDraftBio(profileData?.profile?.description);
     setDraftGkIconVisible(draftGkIconVisible);
     setDraftNftsDescriptionsVisible(draftNftsDescriptionsVisible);
     setEditMode(false);
@@ -147,7 +147,7 @@ export function ProfileEditContextProvider(
     setDraftToShow(new Set());
     setDraftDisplayType(null);
     setDraftLayoutType(null);
-  }, [draftBio, draftGkIconVisible, draftNftsDescriptionsVisible]);
+  }, [draftGkIconVisible, draftNftsDescriptionsVisible, profileData?.profile?.description]);
 
   useEffect(() => {
     setSelectedCollection(null);
@@ -189,7 +189,7 @@ export function ProfileEditContextProvider(
   
         const result = await updateProfile({
           id: profileData?.profile?.id,
-          description: isNullOrEmpty(draftBio) ? ' ' : draftBio,
+          description: isNullOrEmpty(draftBio) ? profileData?.profile?.description : draftBio,
           gkIconVisible: draftGkIconVisible,
           nftsDescriptionsVisible: draftNftsDescriptionsVisible,
           hideNFTIds: Array.from(draftToHide),
@@ -222,6 +222,7 @@ export function ProfileEditContextProvider(
     clearDrafts,
     uploadProfileImages,
     profileData?.profile?.id,
+    profileData?.profile?.description,
     updateProfile,
     draftBio,
     draftGkIconVisible,

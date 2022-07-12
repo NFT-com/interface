@@ -12,6 +12,7 @@ import { memo, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { areEqual, FixedSizeGrid } from 'react-window';
+import { AlchemyOwnedNFT } from 'types';
 import { useAccount } from 'wagmi';
 
 export interface GenesisKeyGalleryItemsProps {
@@ -84,11 +85,11 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
   );
   GKGridCell.displayName = 'GKGridCell';
 
-  const gkIDFilter: (id: number) => boolean = useCallback((id: number) => {
+  const gkIDFilter: (token: AlchemyOwnedNFT) => boolean = useCallback((token: AlchemyOwnedNFT) => {
     if (isNullOrEmpty(props.currentFilter)) {
       return true;
     }
-    return String(id) === props.currentFilter;
+    return BigNumber.from(token?.id?.tokenId).toString() === props.currentFilter;
   }, [props.currentFilter]);
 
   if (!isNullOrEmpty(props.currentFilter) && !props.showMyStuff) {
@@ -120,23 +121,23 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
   } else if (props.showMyStuff) {
     return (
       <>
-        {(ownedGKTokens?.filter(gkIDFilter) ?? []).map((genesisKeyTokenId) => {
+        {(ownedGKTokens?.filter(gkIDFilter) ?? []).map((genesisKeyToken) => {
           return (
             <div
-              key={genesisKeyTokenId}
+              key={genesisKeyToken?.id?.tokenId}
               className={tw(
                 'flex mb-4 items-center justify-center px-4',
                 'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
               )}
             >
               <GenesisKeyGalleryCard
-                key={genesisKeyTokenId}
-                id={genesisKeyTokenId}
+                key={BigNumber.from(genesisKeyToken?.id?.tokenId).toNumber()}
+                id={BigNumber.from(genesisKeyToken?.id?.tokenId).toNumber()}
                 onClick={() => {
                   if (isMobile) {
-                    router.push('/app/gallery/' + genesisKeyTokenId);
+                    router.push('/app/gallery/' + BigNumber.from(genesisKeyToken?.id?.tokenId).toNumber());
                   } else {
-                    props.setDetailId(genesisKeyTokenId);
+                    props.setDetailId(BigNumber.from(genesisKeyToken?.id?.tokenId).toNumber());
                   }
                 }}
               />

@@ -12,6 +12,7 @@ describe('gk gallery detail page tests', () => {
     cy.get('.text-primary-txt').should('exist').and('include.text', 'This Genesis Key');
     cy.contains('Back to Gallery').should('exist');
     cy.get('.drop-shadow-md > .flex').should('exist').click();
+    cy.wait(2000)
     cy.url().should('not.include', '100001');
   });
 
@@ -20,6 +21,7 @@ describe('gk gallery detail page tests', () => {
     cy.get('.text-primary-txt').should('exist').and('include.text', 'This Genesis Key');
     cy.contains('Back to Gallery').should('exist');
     cy.get('.drop-shadow-md > .flex').should('exist').click();
+    cy.wait(2000)
     cy.url().should('not.include', '/0');
   });
 
@@ -28,6 +30,7 @@ describe('gk gallery detail page tests', () => {
     cy.get('.text-primary-txt').should('exist').and('include.text', 'This Genesis Key');
     cy.contains('Back to Gallery').should('exist');
     cy.get('.drop-shadow-md > .flex').should('exist').click();
+    cy.wait(2000)
     cy.url().should('not.include', '-1');
   });
 
@@ -36,6 +39,7 @@ describe('gk gallery detail page tests', () => {
     cy.get('.text-primary-txt').should('exist').and('include.text', 'This Genesis Key');
     cy.contains('Back to Gallery').should('exist');
     cy.get('.drop-shadow-md > .flex').should('exist').click();
+    cy.wait(2000)
     cy.url().should('not.include', 'notanumber');
   })
 

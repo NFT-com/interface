@@ -1,15 +1,16 @@
 import GalleryCard from 'components/elements/GalleryCard';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { OwnedToken } from 'hooks/useNftProfileTokens';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
+import { AlchemyOwnedNFT } from 'types';
+
 export interface OwnedProfileGalleryCardProps {
-  token: OwnedToken;
+  token: AlchemyOwnedNFT;
   onClick: () => void;
 }
 
 export function OwnedProfileGalleryCard(props: OwnedProfileGalleryCardProps) {
-  const { profileData } = useProfileQuery(props.token.uri.split('/').pop());
+  const { profileData } = useProfileQuery(props.token?.tokenUri?.raw?.split('/').pop());
   const image = isNullOrEmpty(profileData?.profile?.photoURL)
     ? 'https://cdn.nft.com/nullPhoto.png'
     : processIPFSURL(profileData?.profile?.photoURL);

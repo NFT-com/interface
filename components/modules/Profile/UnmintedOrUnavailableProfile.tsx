@@ -48,7 +48,7 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
         </div>
       </div>
       <main className='justify-start space-y-4 w-full flex flex-col'>
-        <div className='lg:text-sm text-xl text-primary-txt dark:text-primary-txt-dk w-full flex justify-center cursor-pointer flex-col'>
+        <div className='lg:text-sm text-xl text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col'>
           <div className="text-center font-bold mx-auto w-full">
             {(notAvailable || currentURIBlocked) ? 'This profile is not available.' : 'This profile is available and is ready to be minted!' }
           </div>

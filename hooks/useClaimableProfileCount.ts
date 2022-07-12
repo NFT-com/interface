@@ -5,6 +5,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { useAllContracts } from './contracts/useAllContracts';
 import { useOwnedGenesisKeyTokens } from './useOwnedGenesisKeyTokens';
 
+import { BigNumber } from 'ethers';
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 
@@ -45,10 +46,10 @@ export function useClaimableProfileCount(address: string): ClaimableProfileCount
       try {
         const isWhitelistPhaseOnly: boolean = await profileAuction.genKeyWhitelistOnly();
   
-        const promises: Promise<ClaimableCount>[] = (ownedGKTokens ?? []).map(async (tokenId) => {
-          const claimedByThisTokenId = await profileAuction.genesisKeyClaimNumber(tokenId);
+        const promises: Promise<ClaimableCount>[] = (ownedGKTokens ?? []).map(async (token) => {
+          const claimedByThisTokenId = await profileAuction.genesisKeyClaimNumber(BigNumber.from(token?.id?.tokenId).toNumber());
           return {
-            tokenId,
+            tokenId: BigNumber.from(token?.id?.tokenId).toNumber(),
             claimable: (isWhitelistPhaseOnly ? 4 : 7) - claimedByThisTokenId.toNumber()
           } as ClaimableCount;
         });
