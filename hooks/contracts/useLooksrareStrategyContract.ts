@@ -9,5 +9,5 @@ export function useLooksrareStrategyContract(provider: Provider): IExecutionStra
   const { activeChain } = useNetwork();
   const addresses: Addresses = addressesByNetwork[activeChain?.id];
   // todo: generalize this hook to different strategies.
-  return IExecutionStrategy__factory.connect(addresses.STRATEGY_STANDARD_SALE, provider);
+  return IExecutionStrategy__factory.connect(addresses?.STRATEGY_STANDARD_SALE, provider);
 }
