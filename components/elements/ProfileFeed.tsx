@@ -4,6 +4,7 @@ import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect,useState } from 'react';
 
 interface ProfileFeedProps {
@@ -11,6 +12,7 @@ interface ProfileFeedProps {
 }
 
 export const ProfileFeed = (props: ProfileFeedProps) => {
+  const router = useRouter();
   const options = { delay: 5000 };
   const autoplayRoot = (emblaRoot) => emblaRoot.parentElement;
   const autoplay = Autoplay(options, autoplayRoot);
@@ -49,7 +51,8 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
             key={profile?.profile?.id ?? index}
             src={profile?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
-            containerClasses={'h-full'}
+            containerClasses={'h-full w-full'}
+            onClick={() => router.push(`/${profile?.profile?.url}`)}
           />
         ))}
       </div>

@@ -73,15 +73,16 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                           `${props?.signInButton ? 'block' : 'hidden'}`,
                           'font-medium',
                           `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
-                            ? 'bg-primary-button-bckg'
+                            ? 'bg-[#F9D963]'
                             : 'bg-deprecated_primary-button-bckg'}`,
-                          'rounded-xl text-white',
+                          'rounded-xl',
+                          `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? 'text-[#4D4412]' : 'text-white'}`,
                           'border border-primary-button-border',
                           'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
                           'py-2 px-5'
                         )}
                         type="button">
-                        <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="white" alt={'Logged out wallet'}/>
+                        <Wallet className="h-5 w-5 mr-2 fill-[#4d4412]" weight='fill' color="white" alt={'Logged out wallet'}/>
                       Sign In
                       </button>
                     }
