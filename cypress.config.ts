@@ -8,6 +8,9 @@ export default defineConfig({
       framework: 'next',
       bundler: 'webpack',
     },
+    env: {
+      NEXT_PUBLIC_HOMEPAGE_V2_ENABLED: false
+    },
   },
 
   e2e: {
