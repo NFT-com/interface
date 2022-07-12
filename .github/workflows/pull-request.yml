@@ -31,6 +31,7 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NEXT_PUBLIC_HOMEPAGE_V2_ENABLED: ${{ secrets.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED }}
     
     - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4
@@ -46,6 +47,7 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NEXT_PUBLIC_HOMEPAGE_V2_ENABLED: ${{ secrets.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED }}
         
     - name: ✅ Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.0
