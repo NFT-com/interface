@@ -11,8 +11,8 @@ const TestComponent = () => {
   </div>;
 };
 
-describe('useCopyClipboard', () => {
-  it('should copy text to clipboard', () => {
+describe('useWindowDimensions', () => {
+  it('should get the correct window dimensions', () => {
     cy.viewport(550, 750);
     cy.mount(
       <TestComponent />

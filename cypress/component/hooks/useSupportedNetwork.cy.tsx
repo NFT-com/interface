@@ -14,8 +14,8 @@ const TestComponent = () => {
   </div>;
 };
 
-xdescribe('useCopyClipboard', () => {
-  xit('should copy text to clipboard', () => {
+xdescribe('useSupportedNetwork', () => {
+  xit('should have the correct networks', () => {
     // todo: set up the infrastructure to mock the react-query QueryClient and the WagmiClient APIs
     const client = new TestWagmiClient(
       cy.stub(),
