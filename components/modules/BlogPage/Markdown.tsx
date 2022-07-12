@@ -6,7 +6,7 @@ const theme = {
   p: (props: any) => {
     const { children } = props;
     return (
-      <p className="mb-8 text-xll md:text-lg sm:text-base text-blog-text dark:text-gray-400">
+      <p className="font-grotesk mb-8 text-xll md:text-lg sm:text-base text-blog-text">
         {children}
       </p>
     );
@@ -14,7 +14,7 @@ const theme = {
   h1: (props: any) => {
     const { children } = props;
     return (
-      <h1 className="dark:text-white mb-4 text-4xl md:text-2xl sm:text-md font-medium">
+      <h1 className="font-grotesk font-bold mb-4 text-4xl md:text-2xl sm:text-md">
         {children}
       </h1>
     );
@@ -22,7 +22,7 @@ const theme = {
   h2: (props: any) => {
     const { children } = props;
     return (
-      <h2 className="dark:text-white mb-4 text-3xll md:text-xl sm:text-base font-medium">
+      <h2 className="font-grotesk font-bold mb-4 text-3xll md:text-xl sm:text-base">
         {children}
       </h2>
     );
@@ -30,7 +30,7 @@ const theme = {
   h3: (props: any) => {
     const { children } = props;
     return (
-      <h3 className="dark:text-white mb-4 text-2xl md:text-lg sm:text-base font-medium">
+      <h3 className="font-grotesk mb-4 text-2xl md:text-lg sm:text-base font-bold">
         {children}
       </h3>
     );
@@ -45,7 +45,7 @@ const theme = {
     const { children } = props;
     return (
       <a
-        className="text-xll md:text-lg sm:text-base underline text-blog-text dark:text-gray-400"
+        className="font-grotesk text-xll md:text-lg sm:text-base underline text-blog-text"
         href={props.href}
         target="_blank"
         rel="noreferrer"
@@ -57,7 +57,7 @@ const theme = {
   li: (props: any) => {
     const { children } = props;
     return (
-      <li className="text-xll md:text-lg sm:text-base text-blog-text dark:text-gray-400">
+      <li className="font-grotesk text-xll md:text-lg sm:text-base text-blog-text">
         {children}
       </li>
     );
