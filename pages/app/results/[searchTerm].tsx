@@ -23,12 +23,15 @@ import {
 // import Typesense from 'typesense';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
-export interface InstantSearchComponentProps {
-  searchTerm: string | string[];
-  typesenseInstantsearchAdapter: string;
-  indexName: string;
-  hitsPerPage: number;
-  filters: string[];
+export interface HitInnerProps {
+  nftName: string;
+  url: string;
+  id: string;
+  imageURL: string;
+  contractAddr: string;
+  contractName: string;
+  nftDescription: string;
+  price: number
 }
 
 const getTypesenseInstantsearchAdapter = (QUERY_BY) => {
@@ -46,7 +49,6 @@ const getTypesenseInstantsearchAdapter = (QUERY_BY) => {
     },
     additionalSearchParameters: { query_by: QUERY_BY, },
   });
-
   return typesenseInstantsearchAdapter.searchClient;
 };
 
@@ -63,11 +65,13 @@ const sorts = [
 
 const sortByDefaultRefinement = 'nfts';//sorts[0].value;
 
-const Hit = (hit: { hit: { nftName: string; id: string; imageURL: string; contractAddr: string; contractName: string; nftDescription: string; price: number}; }) => {
+const Hit = (hit: { hit: HitInnerProps }) => {
+  console.log(hit.hit, 'hit hit fdo');
+
   return (
     <div data-testid={'NFTCard-' + hit.hit.contractAddr}>
       <NFTCard
-        header={{ value: hit.hit.nftName, key: '' }}
+        header={{ value: hit.hit.nftName ?? hit.hit.url, key: '' }}
         traits={[{ value: shortenAddress(hit.hit.contractAddr), key: '' }]}
         title={'Price: ' + (hit.hit.price ? (hit.hit.price + 'ETH') : 'Not estimated')}
         subtitle={hit.hit.contractName}
@@ -79,17 +83,8 @@ const Hit = (hit: { hit: { nftName: string; id: string; imageURL: string; contra
   );
 };
 
-const CollectionsHit = (hit: {
-  hit: {
-    nftName: string;
-    id: string;
-    imageURL: string;
-    contractAddr: string;
-    contractName: string;
-    nftDescription: string;
-    price: number
-  }; }) => {
-  const { fetchCollectionsNFTs, /* loading */ } = useFetchCollectionNFTs();
+const CollectionsHit = (hit: { hit: HitInnerProps }) => {
+  const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const [imageArray, setImageArray] = useState([]);
 
   useEffect(() => {
@@ -121,70 +116,10 @@ const CollectionsHit = (hit: {
 const Results = connectStateResults(
   ({ props, searchResults/*, children */ }) => {
     return searchResults && searchResults.nbHits !== 0
-      ? (
-        <>
-          <InfiniteHits hitComponent={props.hitComponent} />
-        </>
-      )
-      : (
-        <div className="dark:text-always-white text-sm p-3 text-gray-500">
-          No results found
-        </div>
-      );
+      ? <InfiniteHits hitComponent={props.hitComponent} /> :
+      <div className="dark:text-always-white text-sm p-3 text-gray-500">No results found</div>;
   }
 );
-
-const InstantSearchComponent = (props: InstantSearchComponentProps) => {
-  return (
-    <InstantSearch
-      searchClient={props.typesenseInstantsearchAdapter}
-      indexName={indexName}>
-      <Configure hitsPerPage={props.hitsPerPage} />
-      <div className="hidden">
-        <SearchBox
-          submit={null}
-          reset={null}
-          defaultRefinement={props.searchTerm === '0' ? '' : props.searchTerm}
-        />
-      </div>
-      <div className="flex">
-        {props.filters && props.filters.length > 0 && <div className="w-1/4 flex flex-col px-5 md:hidden">
-          <div className="w-full pl-5 pb-3 text-gray-400 dark:text-always-white font-bold text-lg">Filters</div>
-          <div className="h-40 w-full">
-            <ClearRefinements className="py-3 px-5 mt-1"/>
-            <SearchUIFilter filter="contractName" title="Collections" searchable={true} />
-            <SearchUIFilter filter="status" title="Status" searchable={false} />
-            <SearchUIFilter filter="nftType" title="Type" searchable={false} isLastFilter/>
-          </div>
-        </div>}
-        <div className="w-3/4 md:w-full md:mt-36">
-          <div className="flex flex-col">
-            <div className="flex justify-between items-center md:mb-0 mb-3">
-              <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
-                <Stats
-                  translations={{
-                    stats(nbHits) {
-                      return nbHits === 0 ? 'No Results' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
-                    },
-                  }}/>
-              </div>
-              <div className={tw(
-                'results-page-select w-1/3 mr-2 cursor-pointer',
-                'bg-always-white dark:bg-pagebg-dk text-always-black dark:text-always-white')}>
-                <SortBy
-                  items={sorts}
-                  defaultRefinement={sortByDefaultRefinement} />
-              </div>
-            </div>
-            <div className="results-grid">
-              <Results hitComponent={props.indexName !== 'collections' ? Hit : CollectionsHit}/>
-            </div>
-          </div>
-        </div>
-      </div>
-    </InstantSearch>
-  );
-};
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -214,18 +149,19 @@ export default function ResultsPage() {
               defaultRefinement={searchTerm === '0' ? '' : searchTerm}
             />
           </div>
-          <div className="flex">
+          <div className="flex mb-10">
             <div className="w-1/4 flex flex-col px-5 md:hidden">
 
             </div>
             <div className="w-3/4 md:w-full md:mt-36">
               <div className="flex flex-col">
+                <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Collections</div>
                 <div className="flex justify-start items-center md:mb-0 mb-3">
                   <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
                     <Stats
                       translations={{
                         stats(nbHits) {
-                          return nbHits === 0 ? 'No Results' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
+                          return nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
                         },
                       }}/>
                   </div>
@@ -248,7 +184,7 @@ export default function ResultsPage() {
               defaultRefinement={searchTerm === '0' ? '' : searchTerm}
             />
           </div>
-          <div className="flex">
+          <div className="flex mb-10">
             <div className="w-1/4 flex flex-col px-5 md:hidden">
               <div className="w-full pl-5 pb-3 text-gray-400 dark:text-always-white font-bold text-lg">Filters</div>
               <div className="h-40 w-full">
@@ -260,12 +196,13 @@ export default function ResultsPage() {
             </div>
             <div className="w-3/4 md:w-full md:mt-36">
               <div className="flex flex-col">
+                <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">NFTs</div>
                 <div className="flex justify-between items-center md:mb-0 mb-3">
                   <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
                     <Stats
                       translations={{
                         stats(nbHits) {
-                          return nbHits === 0 ? 'No Results' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
+                          return nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
                         },
                       }}/>
                   </div>
@@ -277,6 +214,42 @@ export default function ResultsPage() {
                       defaultRefinement={sortByDefaultRefinement} />
                   </div>
                 </div>
+                <div className="results-grid min-h-[17rem]">
+                  <Results hitComponent={Hit}/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </InstantSearch>}
+        {searchTerm !== '' && <InstantSearch
+          searchClient={getTypesenseInstantsearchAdapter('url')}
+          indexName="profiles">
+          <Configure hitsPerPage={12} />
+          <div className="hidden">
+            <SearchBox
+              submit={null}
+              reset={null}
+              defaultRefinement={searchTerm === '0' ? '' : searchTerm}
+            />
+          </div>
+          <div className="flex mb-10">
+            <div className="w-1/4 flex flex-col px-5 md:hidden">
+
+            </div>
+            <div className="w-3/4 md:w-full md:mt-36">
+              <div className="flex flex-col">
+                <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Profiless</div>
+                <div className="flex justify-between items-center md:mb-0 mb-3">
+                  <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
+                    <Stats
+                      translations={{
+                        stats(nbHits) {
+                          return nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
+                        },
+                      }}/>
+                  </div>
+
+                </div>
                 <div className="results-grid">
                   <Results hitComponent={Hit}/>
                 </div>
@@ -284,13 +257,6 @@ export default function ResultsPage() {
             </div>
           </div>
         </InstantSearch>}
-        <InstantSearchComponent
-          searchTerm={searchTerm}
-          typesenseInstantsearchAdapter={getTypesenseInstantsearchAdapter('nftName,contractName,contractAddr,tokenId,listingType,chain,status,nftType,ownerAddr,traits')}
-          indexName={'nfts'}
-          hitsPerPage={12}
-          filters={[]}
-        />
       </div>}
     </PageWrapper>
   );
