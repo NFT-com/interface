@@ -1,3 +1,5 @@
+import { Doppler, getEnv } from 'utils/env';
+
 import * as Sentry from '@sentry/nextjs';
 import { NextPageContext } from 'next';
 import NextErrorComponent, { ErrorProps as NextErrorProps } from 'next/error';
@@ -15,7 +17,7 @@ type ErrorProps = {
 } & NextErrorProps;
 
 function ErrorPage({ statusCode, hasGetInitialPropsRun, err }: ErrorPageProps) {
-  if (!hasGetInitialPropsRun && err) {
+  if (!hasGetInitialPropsRun && err && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'DEBUG') {
     Sentry.captureException(err);
   }
   return <NextErrorComponent statusCode={statusCode} />;
@@ -33,7 +35,7 @@ ErrorPage.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
     return errorInitialProps;
   }
   
-  if (err) {
+  if (err && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'DEBUG') {
     Sentry.captureException(err);
     await Sentry.flush(2000);
     return errorInitialProps;
