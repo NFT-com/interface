@@ -27,7 +27,10 @@ export const SearchUIFilter = (props: { filter: string; title: string; searchabl
       >
         {
           props.title === 'Price' ?
-            <RangeInput attribute="listedPx" /> :
+            <RangeInput attribute="listedPx" translations={{
+              submit: 'APPLY',
+              separator: 'to',
+            }} /> :
           
             <RefinementList
               className="search-collections-filter pb-4"
