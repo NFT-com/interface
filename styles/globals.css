@@ -158,6 +158,11 @@
   src: url("https://nftcom-prod-assets.s3.amazonaws.com/BEBAS___.ttf"), url("./fonts/BEBAS___.ttf");
 }
 
+@font-face {
+  font-family: "Grotesk";
+  src: url("./fonts/HKGrotesk-Regular.ttf");
+}
+
 html,
 input,
 textarea,

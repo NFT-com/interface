@@ -38,8 +38,8 @@ export const LearnCards = (props: LearnCardsProps) => {
   }, [embla, setScrollSnaps, onSelect]);
 
   return (
-    <div className="overflow-hidden" ref={emblaRef}>
-      <div className="flex">
+    <div className="overflow-hidden w-full" ref={emblaRef}>
+      <div className="flex w-full">
         {props.cardTitles.map((cardTitle) => (
           <div
             key={cardTitle}
