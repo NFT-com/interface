@@ -27,67 +27,132 @@ export default function Post({ post, preview }: PostProps) {
   }
 
   return (
-    <PageWrapper>
-      <NextSeo
-        title={post.title}
-        description={post.description}
-        openGraph={{
-          url: `https://nft.com/articles/${post.slug}`,
-          title: post.title,
-          description: post.description,
-          type: 'article',
-          article: {
-            publishedTime: post.publishDate,
-            tags: post.tags,
-          },
-          images: [
-            {
-              url: post.heroImage.url,
-              alt: post.heroImage.description,
-            },
-          ],
-          site_name: 'NFT.com',
-        }}
-        twitter={{
-          cardType: 'summary_large_image',
-        }}
-      />
-      <div className='bg-white'>
-        <div className="relative text-center px-4 w-full pt-28 sm:pt-24 max-w-7xl mx-auto">
-          <Link href="/articles">
-            <div className='flex content-center items-center hover:cursor-pointer sm:mb-4'>
-              <CaretLeft className='mr-1 text-black' />
-              <p className='font-grotesk text-black sm:text-sm'>Back to Blog</p>
-            </div>
-          </Link>
-          
-          <BlogHeader post={post} />
-
-          <BlogHeroImage
-            src={post?.heroImage.url}
-            alt={post?.heroImage.description}
+    getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
+      ? (
+        <PageWrapper>
+          <NextSeo
+            title={post.title}
+            description={post.description}
+            openGraph={{
+              url: `https://nft.com/articles/${post.slug}`,
+              title: post.title,
+              description: post.description,
+              type: 'article',
+              article: {
+                publishedTime: post.publishDate,
+                tags: post.tags,
+              },
+              images: [
+                {
+                  url: post.heroImage.url,
+                  alt: post.heroImage.description,
+                },
+              ],
+              site_name: 'NFT.com',
+            }}
+            twitter={{
+              cardType: 'summary_large_image',
+            }}
           />
-          <div className="text-left mt-12 md:mt-8 mx-auto pb-5 w-8/12 lg:w-3/4 md:w-full">
-            <Markdown content={post?.body} />
-          </div>
-          {post?.relatedPostsCollection?.items.length
-            ? (
-              <div className='border-t-2 border-share-icon'>
-                <h2 className="text-left mb-6 sm:mb-3 font-medium mt-8 md:mt-4 sm:mt-1.5 text-3xll md:text-xl sm:text-sm">
-                Related Posts
-                </h2>
-                <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12">
-                  {post.relatedPostsCollection.items.map((post) => (
-                    post && <RelatedPostCard key={post?.sys.id} post={post} />
-                  ))}
+          <div className='bg-white'>
+            <div className="relative text-center px-4 w-full pt-28 sm:pt-24 max-w-7xl mx-auto">
+              <Link href="/articles">
+                <div className='flex content-center items-center hover:cursor-pointer sm:mb-4'>
+                  <CaretLeft className='mr-1 text-black' />
+                  <p className='font-grotesk text-black sm:text-sm'>Back to Blog</p>
                 </div>
+              </Link>
+          
+              <BlogHeader post={post} />
+
+              <BlogHeroImage
+                src={post?.heroImage.url}
+                alt={post?.heroImage.description}
+              />
+              <div className="text-left mt-12 md:mt-8 mx-auto pb-5 w-8/12 lg:w-3/4 md:w-full">
+                <Markdown content={post?.body} />
               </div>
-            )
-            : null}
-        </div>
-      </div>
-      {preview && <PreviewBanner />}
-    </PageWrapper>
+              {post?.relatedPostsCollection?.items.length
+                ? (
+                  <div className='border-t-2 border-share-icon'>
+                    <h2 className="text-left mb-6 sm:mb-3 font-medium mt-8 md:mt-4 sm:mt-1.5 text-3xll md:text-xl sm:text-sm">
+                Related Posts
+                    </h2>
+                    <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12">
+                      {post.relatedPostsCollection.items.map((post) => (
+                        post && <RelatedPostCard key={post?.sys.id} post={post} />
+                      ))}
+                    </div>
+                  </div>
+                )
+                : null}
+            </div>
+          </div>
+          {preview && <PreviewBanner />}
+        </PageWrapper> )
+      : (
+        <PageWrapper>
+          <NextSeo
+            title={post.title}
+            description={post.description}
+            openGraph={{
+              url: `https://nft.com/articles/${post.slug}`,
+              title: post.title,
+              description: post.description,
+              type: 'article',
+              article: {
+                publishedTime: post.publishDate,
+                tags: post.tags,
+              },
+              images: [
+                {
+                  url: post.heroImage.url,
+                  alt: post.heroImage.description,
+                },
+              ],
+              site_name: 'NFT.com',
+            }}
+            twitter={{
+              cardType: 'summary_large_image',
+            }}
+          />
+          <div className='bg-white dark:bg-modal-overlay-dk'>
+            <div className="relative text-center px-4 w-full pt-28 sm:pt-24 max-w-7xl mx-auto">
+              <Link href="/articles">
+                <div className='flex content-center items-center hover:cursor-pointer sm:mb-4'>
+                  <CaretLeft className='mr-1 text-black dark:text-white' />
+                  <p className='text-black dark:text-white sm:text-sm'>Back to Blog</p>
+                </div>
+              </Link>
+          
+              <BlogHeader post={post} />
+
+              <BlogHeroImage
+                src={post?.heroImage.url}
+                alt={post?.heroImage.description}
+              />
+              <div className="text-left mt-12 md:mt-8 mx-auto pb-5 w-8/12 lg:w-3/4 md:w-full">
+                <Markdown content={post?.body} />
+              </div>
+              {post?.relatedPostsCollection?.items.length
+                ? (
+                  <div className='border-t-2 border-share-icon'>
+                    <h2 className="dark:text-white text-left mb-6 sm:mb-3 font-medium mt-8 md:mt-4 sm:mt-1.5 text-3xll md:text-xl sm:text-sm">
+                Related Posts
+                    </h2>
+                    <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12">
+                      {post.relatedPostsCollection.items.map((post) => (
+                        post && <RelatedPostCard key={post?.sys.id} post={post} />
+                      ))}
+                    </div>
+                  </div>
+                )
+                : null}
+            </div>
+          </div>
+          {preview && <PreviewBanner />}
+        </PageWrapper>
+      )
   );
 }
 

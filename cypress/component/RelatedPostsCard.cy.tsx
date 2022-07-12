@@ -9,7 +9,6 @@ describe('RelatedPostCard', () => {
       <RelatedPostCard post={testPost} />
     );
     cy.get('h3').should('have.text', 'test blog post');
-    cy.get('h3').should('have.css', 'font-family').and('match', /Grotesk/);
 
     cy.get('p').should('have.css', 'font-weight').and('match', /400/);
 
