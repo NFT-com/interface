@@ -78,10 +78,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 md:px-20 lg:px-40 xl:px-80 w-screen h-full bg-secondary-dk break-after-all')}>
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 md:px-20 lg:px-40 xl:px-80 w-screen h-full bg-white break-after-all')}>
             <div className='break-after-all space-y-2 md:w-full'>
               <div className={tw(
-                'font-rubik text-always-white text-header leading-header sm:font-header md:font-header-bold ',
+                'font-rubik text-[#4D4412] text-header leading-header sm:font-header md:font-header-bold ',
                 'break-after-all space-y-2',
                 'md:mb-6'
               )}>
@@ -104,7 +104,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   className={tw(
                     'w-max',
                     'block',
-                    'font-medium bg-transparent rounded-xl text-secondary-txt-light',
+                    'font-medium bg-transparent rounded-xl text-[#4D4412]',
                     'flex flex-row items-center cursor-pointer opacity-80 hover:opacity-100',
                     'font-rubik font-body',
                     'py-2 px-5'
@@ -135,8 +135,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 />
                 <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
                   <Button
-                    bgColor={'#222222'}
-                    color={'#ffffff'}
+                    bgColor={'#F9D963'}
+                    color={'#4D4412'}
                     label='Discover'
                     stretch={isMobile}
                     onClick={() => {
