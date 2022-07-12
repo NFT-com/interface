@@ -20,7 +20,7 @@ const Hit = (hit) => {
   return (
     <div
       className={tw(
-        'flex flex-row text-base my-3',
+        'flex flex-col text-sm my-1',
         'font-medium dark:text-always-white hover:cursor-pointer')}
       onClick={() => {
         if (!hit.hit.nftName) {
@@ -29,7 +29,9 @@ const Hit = (hit) => {
           router.push(`/app/nft/${hit.hit.contractAddr}/${hit.hit.id}`);
         }
       }}>
-      <Highlight attribute={!hit.hit.nftName ? 'contractName' : 'nftName'} nonHighlightedTagName="span" hit={hit.hit} />
+      <Highlight attribute={!hit.hit.nftName ? hit.hit.url ? 'url' : 'contractName' : 'nftName'} nonHighlightedTagName="span" hit={hit.hit} />
+      {hit.hit.contractAddr && <span className="text-[0.7rem]"><Highlight attribute={'contractAddr'} nonHighlightedTagName="span" hit={hit.hit} /></span>}
+      {hit.hit._highlightResult.tokenId && hit.hit._highlightResult.tokenId.matchLevel === 'full' && <span className="text-[0.7rem]"><Highlight attribute={'tokenId'} nonHighlightedTagName="span" hit={hit.hit} /></span>}
     </div>
   );
 };
@@ -53,14 +55,17 @@ export const SearchBar = () => {
       cacheSearchResultsForSeconds: 2 * 60, // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
     },
     additionalSearchParameters: {
-      query_by: 'nftName,contractName',
+      query_by: 'nftName,contractName,contractAddr,tokenId,listingType,chain,status,nftType,ownerAddr,traits',
     },
     collectionSpecificSearchParameters: {
       ntfs: {
-        query_by: 'nftName,contractName',
+        query_by: 'nftName,contractName,contractAddr,tokenId,listingType,chain,status,listedPx,nftType,ownerAddr,traits',
       },
       collections: {
-        query_by: 'contractName',
+        query_by: 'contractName,contractAddr,chain',
+      },
+      profiles: {
+        query_by: 'url',
       },
     },
   });
@@ -81,7 +86,7 @@ export const SearchBar = () => {
       return searchResults && searchResults.nbHits !== 0
         ? (
           <>
-            <Configure hitsPerPage={8} />
+            <Configure hitsPerPage={5} />
             <Hits hitComponent={Hit}/>
           </>
         )
@@ -132,6 +137,11 @@ export const SearchBar = () => {
 
               <Index indexName="nfts">
                 <span className="text-xs text-gray-400">NFTs</span>
+                <Results/>
+              </Index>
+
+              <Index indexName="profiles">
+                <span className="text-xs text-gray-400">Profiles</span>
                 <Results/>
               </Index>
               <span className="text-xs text-gray-400">Press enter for all results</span>
