@@ -241,7 +241,7 @@ export default function ResultsPage() {
             </div>
             <div className="w-3/4 md:w-full md:mt-36">
               <div className="flex flex-col">
-                <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Profiless</div>
+                <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Profiles</div>
                 <div className="flex justify-between items-center md:mb-0 mb-3">
                   <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
                     <Stats
