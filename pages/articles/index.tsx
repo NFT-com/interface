@@ -34,34 +34,66 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
     return <NotFoundPage />;
   }
   return (
-    <PageWrapper>
-      <div className='bg-white'>
-        <div className='px-6 md:px-4 sm:px-2.5 pt-28 max-w-7xl mx-auto'>
-          <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
-          {posts && <BlogSlider posts={data?.blogSlidesCollection.items} />}
+    getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
+      ? (
+        <PageWrapper>
+          <div className='bg-white'>
+            <div className='px-6 md:px-4 sm:px-2.5 pt-28 max-w-7xl mx-auto'>
+              <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
+              {posts && <BlogSlider posts={data?.blogSlidesCollection.items} />}
       
-          <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 mt-10 '>{data?.listTitle}</h2>
-          <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12 ">
-            {posts && posts.map((post) => (
-              <RelatedPostCard key={post.sys.id} post={post} />
-            ))}
+              <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 mt-10 '>{data?.listTitle}</h2>
+              <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12 ">
+                {posts && posts.map((post) => (
+                  <RelatedPostCard key={post.sys.id} post={post} />
+                ))}
+              </div>
+            </div>
+            {posts?.length < totalPosts && (
+              <div className="w-full flex justify-center pb-32 bg-white">
+                <Button
+                  label={'Load More'}
+                  type={ButtonType.PRIMARY}
+                  onClick={async () => {
+                    const nextPosts = await getPaginatedPosts(posts?.length, 12, preview);
+                    setPosts([...posts, ...nextPosts.items]);
+                  }}
+                />
+              </div>
+            )}
           </div>
-        </div>
-        {posts?.length < totalPosts && (
-          <div className="w-full flex justify-center pb-32 bg-white">
-            <Button
-              label={'Load More'}
-              type={ButtonType.PRIMARY}
-              onClick={async () => {
-                const nextPosts = await getPaginatedPosts(posts?.length, 12, preview);
-                setPosts([...posts, ...nextPosts.items]);
-              }}
-            />
+          {preview && <PreviewBanner />}
+        </PageWrapper>)
+      :(
+        <PageWrapper>
+          <div className='bg-white dark:bg-modal-overlay-dk'>
+            <div className='px-6 md:px-4 sm:px-2.5 pt-28 max-w-7xl mx-auto'>
+              <h2 className='font-medium text-4xl md:text-lg mb-6 md:mb-4 dark:text-white'>{data?.heroTitle}</h2>
+              {posts && <BlogSlider posts={data?.blogSlidesCollection.items} />}
+      
+              <h2 className='font-medium text-4xl md:text-lg mb-6 md:mb-4 mt-10 dark:text-white'>{data?.listTitle}</h2>
+              <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12 ">
+                {posts && posts.map((post) => (
+                  <RelatedPostCard key={post.sys.id} post={post} />
+                ))}
+              </div>
+            </div>
+            {posts?.length < totalPosts && (
+              <div className="w-full flex justify-center pb-32 bg-white dark:bg-modal-overlay-dk">
+                <Button
+                  label={'Load More'}
+                  type={ButtonType.PRIMARY}
+                  onClick={async () => {
+                    const nextPosts = await getPaginatedPosts(posts?.length, 12, preview);
+                    setPosts([...posts, ...nextPosts.items]);
+                  }}
+                />
+              </div>
+            )}
           </div>
-        )}
-      </div>
-      {preview && <PreviewBanner />}
-    </PageWrapper>
+          {preview && <PreviewBanner />}
+        </PageWrapper>
+      )
   );
 }
 
