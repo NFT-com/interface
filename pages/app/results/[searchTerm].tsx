@@ -31,7 +31,7 @@ export interface HitInnerProps {
   contractAddr: string;
   contractName: string;
   nftDescription: string;
-  price: number
+  listedPx: number;
 }
 
 const getTypesenseInstantsearchAdapter = (QUERY_BY) => {
@@ -55,25 +55,20 @@ const getTypesenseInstantsearchAdapter = (QUERY_BY) => {
 const indexName = 'nfts';
 const sorts = [
   { value: indexName, label: 'Sort by' },
-  { value: 'nfts/sort/listedPx:asc', label: 'Listed Price - asc' },
-  { value: 'nfts/sort/listedPx:desc', label: 'Listed Price - desc' },
-  { value: 'nfts/sort/lastSoldPx:asc', label: 'Last Sold At - asc' },
-  { value: 'nfts/sort/lastSoldPx:desc', label: 'Last Sold At - desc' },
-  { value: 'nfts/sort/lastListPx:asc', label: 'Last Listed Price at - asc' },
-  { value: 'nfts/sort/lastListPx:desc', label: 'Last Listed Price at - desc' },
+  { value: 'nfts/sort/listedPx:asc', label: 'Price: Low to High' },
+  { value: 'nfts/sort/listedPx:desc', label: 'Price: High to Low' },
 ];
 
 const sortByDefaultRefinement = 'nfts';//sorts[0].value;
 
 const Hit = (hit: { hit: HitInnerProps }) => {
   console.log(hit.hit, 'hit hit fdo');
-
   return (
     <div data-testid={'NFTCard-' + hit.hit.contractAddr}>
       <NFTCard
         header={{ value: hit.hit.nftName ?? hit.hit.url, key: '' }}
         traits={[{ value: shortenAddress(hit.hit.contractAddr), key: '' }]}
-        title={'Price: ' + (hit.hit.price ? (hit.hit.price + 'ETH') : 'Not estimated')}
+        title={'Price: ' + (hit.hit.listedPx ? (hit.hit.listedPx + 'ETH') : 'Not estimated')}
         subtitle={hit.hit.contractName}
         images={[hit.hit.imageURL]}
         onClick={() => null}
@@ -161,7 +156,11 @@ export default function ResultsPage() {
                     <Stats
                       translations={{
                         stats(nbHits) {
-                          return nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
+                          return (
+                            <>
+                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''} for `}</span><br/>
+                              <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
+                            </>);
                         },
                       }}/>
                   </div>
@@ -188,10 +187,10 @@ export default function ResultsPage() {
             <div className="w-1/4 flex flex-col px-5 md:hidden">
               <div className="w-full pl-5 pb-3 text-gray-400 dark:text-always-white font-bold text-lg">Filters</div>
               <div className="h-40 w-full">
+                <SearchUIFilter filter="listingType" title="Listing Type" searchable={false} />
+                <SearchUIFilter filter="listedPx" title="Price" searchable={true} />
+                <SearchUIFilter filter="contractName" title="Collections" searchable={true} isLastFilter/>
                 <ClearRefinements className="py-3 px-5 mt-1"/>
-                <SearchUIFilter filter="contractName" title="Collections" searchable={true} />
-                <SearchUIFilter filter="status" title="Status" searchable={false} />
-                <SearchUIFilter filter="nftType" title="Type" searchable={false} isLastFilter/>
               </div>
             </div>
             <div className="w-3/4 md:w-full md:mt-36">
@@ -202,7 +201,11 @@ export default function ResultsPage() {
                     <Stats
                       translations={{
                         stats(nbHits) {
-                          return nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
+                          return (
+                            <>
+                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''} for `}</span><br/>
+                              <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
+                            </>);
                         },
                       }}/>
                   </div>
@@ -244,7 +247,11 @@ export default function ResultsPage() {
                     <Stats
                       translations={{
                         stats(nbHits) {
-                          return nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''}`;
+                          return (
+                            <>
+                              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} Result${nbHits > 1? 's' : ''} for `}</span><br/>
+                              <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
+                            </>);
                         },
                       }}/>
                   </div>
