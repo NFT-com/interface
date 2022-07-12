@@ -46,7 +46,7 @@ describe('looksrareHelpers', () => {
         price: ethers.utils.parseEther('10').toString(),
         signer: 'test_offerer',
         startTime: '0',
-        strategy: addressesByNetwork[1].STRATEGY_STANDARD_SALE,
+        strategy: addressesByNetwork[1]?.STRATEGY_STANDARD_SALE,
         tokenId: '1'
       });
     });

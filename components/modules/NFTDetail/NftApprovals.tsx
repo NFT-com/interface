@@ -68,7 +68,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
                   account?.address, // offerer
                   props.nft,
                   ethers.utils.parseEther('10'), // price
-                  addresses.WETH,
+                  addresses?.WETH,
                   activeChain?.id,
                   nonce,
                   looksrareStrategy,

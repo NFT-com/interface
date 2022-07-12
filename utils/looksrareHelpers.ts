@@ -32,7 +32,7 @@ export async function createLooksrareParametersForNFTListing(
     nonce,
     tokenId: BigNumber.from(nft.tokenId).toString(),
     collection: nft.contract,
-    strategy: addresses.STRATEGY_STANDARD_SALE,
+    strategy: addresses?.STRATEGY_STANDARD_SALE,
     currency: currency,
     signer: offerer,
     isOrderAsk: true,
