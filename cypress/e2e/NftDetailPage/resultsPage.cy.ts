@@ -7,13 +7,12 @@ describe('results page tests', () => {
       cy.visit('/app/results/bayc/');
 
       cy.wait('@sercharResults').its('response.statusCode').should('eq', 200);
-      cy.wait(1000); 
+      cy.wait(1000);
     });
   });
 
   it('renders results page', () => {
     cy.fixture('results').then((json) => {
-     
       cy.visit('/app/results/bayc');
       
       cy.get('#ResultsPageContainer').should('exist');
@@ -21,9 +20,8 @@ describe('results page tests', () => {
       cy.contains('Filters').should('exist');
       cy.contains('Collections').should('exist');
 
-      cy.contains('Results').should('exist');
+      cy.contains('RESULTS').should('exist');
     });
   });
-  
 });
   
