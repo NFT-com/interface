@@ -321,6 +321,14 @@ input[disabled] {
   animation: 15s ease 0s infinite normal none running gradient;
 }
 
+.ais-RangeInput-submit {
+  width: 96%;
+  padding: 14px 20px;
+  background-color: gray;
+  margin: 15px 0px;
+  border-radius: 6px;
+}
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;

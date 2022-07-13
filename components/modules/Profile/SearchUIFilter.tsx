@@ -3,7 +3,7 @@ import { tw } from 'utils/tw';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { ChevronsUp } from 'react-feather';
-import { RefinementList } from 'react-instantsearch-dom';
+import { RangeInput,RefinementList } from 'react-instantsearch-dom';
 
 export const SearchUIFilter = (props: { filter: string; title: string; searchable: boolean, isLastFilter?: boolean }) => {
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
@@ -25,16 +25,24 @@ export const SearchUIFilter = (props: { filter: string; title: string; searchabl
         transition={{ duration: 0.2 }}
         className={tw('overflow-hidden mx-5')}
       >
-        <RefinementList
-          className="search-collections-filter pb-4"
-          attribute={props.filter}
-          limit={10}
-          showMoreLimit={50}
-          searchable={props.searchable}
-          transformItems={items =>
-            items.sort((a, b) => a.label > b.label ? 1 : -1)
-          }
-        />
+        {
+          props.title === 'Price' ?
+            <RangeInput attribute="listedPx" translations={{
+              submit: 'APPLY',
+              separator: 'to',
+            }} /> :
+          
+            <RefinementList
+              className="search-collections-filter pb-4"
+              attribute={props.filter}
+              limit={10}
+              showMoreLimit={50}
+              searchable={props.searchable}
+              transformItems={items =>
+                items.sort((a, b) => a.label > b.label ? 1 : -1)
+              }
+            />
+        }
       </motion.div>
     </div>);
 };
