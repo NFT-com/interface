@@ -79,9 +79,9 @@ export function NFTListingsContextProvider(
   }, []);
 
   const listAll = useCallback(async () => {
+    let nonce: number = await getLooksrareNonce(account?.address);
     toList.forEach(async (listing) => {
       if (listing.type === 'looksrare') {
-        const nonce: number = await getLooksrareNonce(account?.address);
         const order: MakerOrder = await createLooksrareParametersForNFTListing(
           account?.address, // offerer
           listing.nft,
@@ -92,6 +92,7 @@ export function NFTListingsContextProvider(
           looksrareStrategy,
           looksrareRoyaltyFeeRegistry,
         );
+        nonce++;
         const signature = await signOrderForLooksrare(order);
         await listLooksrare({ ...order, signature });
         // todo: check success/failure and maybe mutate external listings query.
@@ -107,6 +108,7 @@ export function NFTListingsContextProvider(
         // todo: check success/failure and maybe mutate external listings query.
       }
     });
+    clear();
   }, [
     account?.address,
     activeChain?.id,
@@ -115,7 +117,8 @@ export function NFTListingsContextProvider(
     seaportCounter,
     signOrderForLooksrare,
     signOrderForSeaport,
-    toList
+    toList,
+    clear
   ]);
   
   return <NFTListingsContext.Provider value={{
@@ -154,6 +157,14 @@ export function NFTListingsContextProvider(
             stretch
             label={'List All'}
             onClick={listAll}
+            type={ButtonType.PRIMARY}
+          />
+        </div>
+        <div className="mx-2 mt-4 flex">
+          <Button
+            stretch
+            label={'Clear'}
+            onClick={clear}
             type={ButtonType.PRIMARY}
           />
         </div>
