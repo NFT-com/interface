@@ -1,4 +1,5 @@
 import Loader from 'components/elements/Loader';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -42,13 +43,17 @@ export interface ButtonProps {
 export function Button(props: ButtonProps) {
   const {
     primaryButtonBackground,
+    primaryButtonBackground_rebrand,
     primaryButtonBackgroundDisabled,
+    primaryButtonTextDisabled_rebrand,
     primaryButtonTextDisabled,
     secondaryButtonBackground,
     secondaryButtonBackgroundDisabled,
     secondaryButtonTextDisabled,
     red,
-    alwaysBlack
+    alwaysBlack,
+    primaryButtonText,
+    primaryButtonText_rebrand
   } = useThemeColors();
 
   const bgColor = useCallback(() => {
@@ -61,7 +66,7 @@ export function Button(props: ButtonProps) {
       'ERROR': red
     };
     const enabledBgColors = {
-      'PRIMARY': primaryButtonBackground,
+      'PRIMARY': getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? primaryButtonBackground_rebrand : primaryButtonBackground,
       'SECONDARY': secondaryButtonBackground,
       'ERROR': red
     };
@@ -70,26 +75,19 @@ export function Button(props: ButtonProps) {
     } else {
       return enabledBgColors[props?.type];
     }
-  }, [primaryButtonBackground,
-    primaryButtonBackgroundDisabled,
-    props?.bgColor,
-    props?.disabled,
-    props?.type,
-    secondaryButtonBackground,
-    secondaryButtonBackgroundDisabled,
-    red]);
+  }, [props?.bgColor, props?.disabled, props?.type, primaryButtonBackgroundDisabled, secondaryButtonBackgroundDisabled, red, primaryButtonBackground_rebrand, primaryButtonBackground, secondaryButtonBackground]);
 
   const textColor = useCallback(() => {
     if(!isNullOrEmpty(props?.color)) {
       return props?.color;
     }
     const disabledTextColors = {
-      'PRIMARY': primaryButtonTextDisabled,
+      'PRIMARY': getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? primaryButtonTextDisabled_rebrand : primaryButtonTextDisabled,
       'SECONDARY': secondaryButtonTextDisabled,
       'ERROR': red
     };
     const enabledTextColors = {
-      'PRIMARY': alwaysBlack,
+      'PRIMARY': getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? primaryButtonText_rebrand : primaryButtonText,
       'SECONDARY': alwaysBlack
     };
     if (props?.disabled ?? false) {
@@ -97,13 +95,7 @@ export function Button(props: ButtonProps) {
     } else {
       return enabledTextColors[props?.type];
     }
-  }, [props?.color,
-    props?.disabled,
-    props?.type,
-    primaryButtonTextDisabled,
-    secondaryButtonTextDisabled,
-    red,
-    alwaysBlack]);
+  }, [props?.color, props?.disabled, props?.type, primaryButtonTextDisabled_rebrand, primaryButtonTextDisabled, secondaryButtonTextDisabled, red, primaryButtonText_rebrand, primaryButtonText, alwaysBlack]);
 
   const accent = useCallback(() => {
     if(isNullOrEmpty(props?.accent) && !props?.loading) {
@@ -118,7 +110,7 @@ export function Button(props: ButtonProps) {
   return (
     <div
       className={tw(
-        'flex items-center',
+        'flex items-center font-grotesk font-bold',
         'justify-center rounded-xl',
         'no-underline',
         !props?.loading && 'cursor-pointer',

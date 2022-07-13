@@ -20,8 +20,11 @@ export interface ThemeColors {
   inputBackground: string;
   inputBorder: string;
   primaryButtonText: string;
+  primaryButtonText_rebrand: string;
   primaryButtonTextDisabled: string;
+  primaryButtonTextDisabled_rebrand: string;
   primaryButtonBackground: string;
+  primaryButtonBackground_rebrand: string;
   primaryButtonBackgroundDisabled: string;
   secondaryButtonBackgroundEnabled: string;
   secondaryButtonBorderEnabled: string;
@@ -68,6 +71,7 @@ export function useThemeColors(): ThemeColors {
     inputBackground: isDarkMode ? '#111520' : rgba(202, 210, 234, 0.2),
     inputBorder: isDarkMode ? '#37425C' : '#CAD2EA',
     primaryButtonBackground: '#00A4FF',
+    primaryButtonBackground_rebrand: '#F9D963',
     primaryButtonBackgroundDisabled: rgba(52, 58, 80, 0.5),
     secondaryButtonBackgroundDisabled: '#000000',
     secondaryButtonBackgroundEnabled: '#F2358E',
@@ -78,7 +82,9 @@ export function useThemeColors(): ThemeColors {
     secondaryButtonBackground: '#FFFFFF',
     link: '#00A4FF',
     primaryButtonText: '#FFFFFF',
+    primaryButtonText_rebrand: '#4D4412',
     primaryButtonTextDisabled: '#777E91',
+    primaryButtonTextDisabled_rebrand: '#4D4412',
     errorButtonBackground: '#E8006F',
     disabledButtonBackground: '#6B7280',
     modalOverlay: isDarkMode ? rgba(23, 27, 39, 0.5) : rgba(240, 245, 255, 0.5),
