@@ -110,6 +110,7 @@ module.exports = {
         'share-icon': '#E4E4E4',
         'share-icon-bg': '#FBF9F9',
         'blog-text': '#727272',
+        'blog-text-reskin': '#6F6F6F',
         'secondary-dk': '#222222',
         'blog-slider-blue': '#DCF2FF',
         'footer-bg': '#F8F8F8',
