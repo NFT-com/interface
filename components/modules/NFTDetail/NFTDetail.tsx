@@ -35,10 +35,10 @@ export const NFTDetail = (props: NFTDetailProps) => {
   }, [props, refreshNft]);
   
   return (
-    <div className="flex flex-row md:flex-col w-full pb-10" id="NFTDetailContainer" key={props.nft?.id}>
+    <div className="flex flex-row md:flex-col w-full" id="NFTDetailContainer" key={props.nft?.id}>
       {props.nft?.metadata?.imageURL &&
         <div className="w-96 md:w-full px-4 aspect-square">
-          <div className="rounded-xl h-full object-contain relative">
+          <div className="flex rounded-xl h-full object-contain">
             <video
               autoPlay
               muted

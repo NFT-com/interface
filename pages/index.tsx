@@ -13,6 +13,7 @@ import HomeLayout from 'components/layouts/HomeLayout';
 import { HeroPage } from 'components/modules/Hero/HeroPage';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -57,7 +58,21 @@ type HomePageProps = {
 
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   const [tickerStats, setTickerStats] = useState<TickerStat[]>([]);
+  const [featuredProfileNfts, setFeaturedProfileNfts] = useState<any[]>([]);
+
   const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile['profileURI']);
+  const { data: featuredProfileNFT1 } = useNftQuery(
+    data?.featuredProfile['featuredProfileNft1'].collection,
+    data?.featuredProfile['featuredProfileNft1'].tokenId
+  );
+  const { data: featuredProfileNFT2 } = useNftQuery(
+    data?.featuredProfile['featuredProfileNft2'].collection,
+    data?.featuredProfile['featuredProfileNft2'].tokenId
+  );
+  const { data: featuredProfileNFT3 } = useNftQuery(
+    data?.featuredProfile['featuredProfileNft3'].collection,
+    data?.featuredProfile['featuredProfileNft3'].tokenId
+  );
   const { profileData: profileFeed1 } = useProfileQuery(data?.feedCollections['profile1']['url']);
   const { profileData: profileFeed2 } = useProfileQuery(data?.feedCollections['profile2']['url']);
   const { profileData: profileFeed3 } = useProfileQuery(data?.feedCollections['profile3']['url']);
@@ -68,7 +83,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
     if (data?.tickerStats) {
       setTickerStats(data?.tickerStats);
     }
-  }, [data?.tickerStats]);
+    if (data?.featuredProfile) {
+      setFeaturedProfileNfts([featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3]);
+    }
+  }, [data?.featuredProfile, data?.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3]);
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
@@ -115,7 +133,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </div>
             </div>
             <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20'>
-              <FeaturedProfile profileOwner={featuredProfile} gkId={1} />
+              <FeaturedProfile
+                profileOwner={featuredProfile}
+                gkId={1}
+                featuredNfts={featuredProfileNfts}
+              />
             </div>
           </div>
           <div className='space-y-12 ...'>
@@ -147,7 +169,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full w-screen -ml-6 bg-always-black py-6 drop-shadow-lg ...'>
+            <div className='h-full w-screen bg-always-black py-6 drop-shadow-lg ...'>
               {tickerStats && (
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
