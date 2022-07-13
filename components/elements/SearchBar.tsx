@@ -23,10 +23,14 @@ const Hit = (hit) => {
         'flex flex-col text-sm my-1',
         'font-medium dark:text-always-white hover:cursor-pointer')}
       onClick={() => {
+        if (hit.hit.url) {
+          router.push(`/${hit.hit.url}`);
+        }
+
         if (!hit.hit.nftName) {
           router.push(`/app/collection/${hit.hit.contractAddr}/`);
         } else {
-          router.push(`/app/nft/${hit.hit.contractAddr}/${hit.hit.id}`);
+          router.push(`/app/nft/${hit.hit.contractAddr}/${hit.hit.tokenId}`);
         }
       }}>
       <Highlight attribute={!hit.hit.nftName ? hit.hit.url ? 'url' : 'contractName' : 'nftName'} nonHighlightedTagName="span" hit={hit.hit} />
