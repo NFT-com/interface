@@ -147,7 +147,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full w-screen -ml-6 bg-always-black py-6 drop-shadow-lg ...'>
+            <div className='h-full w-screen bg-always-black py-6 drop-shadow-lg ...'>
               {tickerStats && (
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
