@@ -8,6 +8,7 @@
     ],
     "types": [
       "cypress",
+      "@testing-library/cypress",
       "node"
     ],
     "resolveJsonModule": true,
@@ -16,6 +17,7 @@
     "**/*.ts",
     "**/*.tsx",
     "../../**/*.ts",
-    "../../components/**/*.tsx",
+    "../../component/**/*.tsx",
+    "../../component/**/*.ts",
   ]
 }

@@ -13,7 +13,7 @@ export interface DraftImg {
   raw: Maybe<string | File>
 }
 
-interface ProfileEditContextType {
+export interface ProfileEditContextType {
   draftToHide: Set<string>; // ID is of format collectionAddress:tokenId
   draftToShow: Set<string>;
   toggleHidden: (id: string, currentVisibility: boolean) => void;
@@ -235,7 +235,7 @@ export function ProfileEditContextProvider(
     props.profileURI,
     mutateProfileData
   ]);
-  
+
   return <ProfileEditContext.Provider value={{
     draftToHide,
     draftToShow,
