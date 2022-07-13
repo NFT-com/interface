@@ -8,7 +8,7 @@ const theme = getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
     p: (props: any) => {
       const { children } = props;
       return (
-        <p className="font-grotesk mb-8 text-xll md:text-lg sm:text-base text-blog-text">
+        <p className="font-grotesk mb-8 text-xll md:text-lg sm:text-base text-blog-text-reskin">
           {children}
         </p>
       );
@@ -47,7 +47,7 @@ const theme = getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
       const { children } = props;
       return (
         <a
-          className="font-grotesk text-xll md:text-lg sm:text-base underline text-blog-text"
+          className="font-grotesk text-xll md:text-lg sm:text-base underline text-blog-text-reskin"
           href={props.href}
           target="_blank"
           rel="noreferrer"
@@ -59,7 +59,7 @@ const theme = getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
     li: (props: any) => {
       const { children } = props;
       return (
-        <li className="font-grotesk text-xll md:text-lg sm:text-base text-blog-text">
+        <li className="font-grotesk text-xll md:text-lg sm:text-base text-blog-text-reskin">
           {children}
         </li>
       );

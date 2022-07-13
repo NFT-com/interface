@@ -37,7 +37,7 @@ export default function BlogHeader({ post }: HeaderProps) {
           </p>
 
           {post && (
-            <div className="font-grotesk relative flex justify-center mt-2 md:mt-0.5 pb-7 md:pb-8 mb-5 md:mb-2.5 text-xs md:text-sm text-blog-text leading-3 tracking-wider border-b-2 border-share-icon">
+            <div className="font-grotesk relative flex justify-center mt-2 md:mt-0.5 pb-7 md:pb-8 mb-5 md:mb-2.5 text-xs md:text-sm text-[#7F7F7F] leading-3 tracking-wider border-b-2 border-share-icon">
               <p>{moment(post?.publishDate).format('MMM Do, YYYY')}</p>
               <span className="mx-1">.</span>
               {post?.body && <p>{result.minutes} min read</p>}
