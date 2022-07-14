@@ -1,10 +1,10 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
+import { typesenseInstantsearchAdapter } from 'utils/typseSenseAdapter';
 
 import { useRouter } from 'next/router';
 import SearchIcon from 'public/search.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Configure,
   connectStateResults,
@@ -13,58 +13,45 @@ import {
   Index,
   InstantSearch,
   SearchBox } from 'react-instantsearch-dom';
-import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
 const Hit = (hit) => {
   const router = useRouter();
   return (
     <div
       className={tw(
-        'flex flex-row text-base my-3',
+        'flex flex-col text-sm my-1',
         'font-medium dark:text-always-white hover:cursor-pointer')}
       onClick={() => {
+        if (hit.hit.url) {
+          router.push(`/${hit.hit.url}`);
+        }
+
         if (!hit.hit.nftName) {
           router.push(`/app/collection/${hit.hit.contractAddr}/`);
         } else {
-          router.push(`/app/nft/${hit.hit.contractAddr}/${hit.hit.id}`);
+          router.push(`/app/nft/${hit.hit.contractAddr}/${hit.hit.tokenId}`);
         }
       }}>
-      <Highlight attribute={!hit.hit.nftName ? 'contractName' : 'nftName'} nonHighlightedTagName="span" hit={hit.hit} />
+      <Highlight attribute={!hit.hit.nftName ? hit.hit.url ? 'url' : 'contractName' : 'nftName'} nonHighlightedTagName="span" hit={hit.hit} />
+      {hit.hit.contractAddr && <span className="text-[0.7rem]"><Highlight attribute={'contractAddr'} nonHighlightedTagName="span" hit={hit.hit} /></span>}
+      {hit.hit._highlightResult.tokenId && hit.hit._highlightResult.tokenId.matchLevel === 'full' && <span className="text-[0.7rem]"><Highlight attribute={'tokenId'} nonHighlightedTagName="span" hit={hit.hit} /></span>}
     </div>
   );
 };
 
 export const SearchBar = () => {
   const [showHits, setShowHits] = useState(false);
+  const [displaySearchBar, setDisplaySearchBar] = useState(false);
   const router = useRouter();
 
   const resultsRef = useRef();
 
-  const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
-    server: {
-      apiKey: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_APIKEY),
-      nodes: [
-        {
-          host: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_HOST),
-          port: 443,
-          protocol: 'https',
-        },
-      ],
-      cacheSearchResultsForSeconds: 2 * 60, // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
-    },
-    additionalSearchParameters: {
-      query_by: 'nftName,contractName',
-    },
-    collectionSpecificSearchParameters: {
-      ntfs: {
-        query_by: 'nftName,contractName',
-      },
-      collections: {
-        query_by: 'contractName',
-      },
-    },
-  });
-  
+  useEffect(() => {
+    setTimeout(() => {
+      setDisplaySearchBar(true);
+    }, 1000);
+  },[]);
+
   const searchClient = typesenseInstantsearchAdapter.searchClient;
 
   useOutsideClickAlerter(resultsRef, () => {
@@ -81,7 +68,7 @@ export const SearchBar = () => {
       return searchResults && searchResults.nbHits !== 0
         ? (
           <>
-            <Configure hitsPerPage={8} />
+            <Configure hitsPerPage={5} />
             <Hits hitComponent={Hit}/>
           </>
         )
@@ -95,7 +82,7 @@ export const SearchBar = () => {
 
   return (
     <>
-      <InstantSearch
+      {displaySearchBar && <InstantSearch
         searchClient={searchClient}
         indexName="collections"
         onSearchStateChange={() => {
@@ -134,11 +121,16 @@ export const SearchBar = () => {
                 <span className="text-xs text-gray-400">NFTs</span>
                 <Results/>
               </Index>
+
+              <Index indexName="profiles">
+                <span className="text-xs text-gray-400">Profiles</span>
+                <Results/>
+              </Index>
               <span className="text-xs text-gray-400">Press enter for all results</span>
             </div>
           )}
         </div>
       </InstantSearch>
-
+      }
     </>);
 };

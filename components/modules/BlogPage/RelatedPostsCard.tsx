@@ -18,7 +18,7 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
       ? ( <Link href={`/articles/${post?.slug}`}>
         <div data-cy="blogPostCard" className="text-left	hover:cursor-pointer">
           {post?.heroImage?.url &&
-      <div className="aspect-4/3 w-full relative bg-gray-200 rounded-md">
+      <div style={{ boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)' }} className="aspect-4/3 w-full relative rounded-md">
         <BlurImage
           className='rounded-md'
           objectFit="cover"
