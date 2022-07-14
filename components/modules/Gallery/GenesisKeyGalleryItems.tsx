@@ -154,7 +154,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
             <FixedSizeGrid
               width={width}
               layout="vertical"
-              height={screenHeight}
+              height={screenHeight ?? 1000}
               columnCount={itemsPerRow()}
               columnWidth={getRowHeight(width)}
               rowHeight={getRowHeight(width)}
