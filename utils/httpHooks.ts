@@ -48,8 +48,10 @@ export const isProduction = (chainId: number | string) => {
   return !isSandbox(chainId);
 };
 
-const deployedContractAddressResolver = (chainId: number | string, tokenContract: DeployedContract) => {
-  return ethers.utils.getAddress(isSandbox(chainId) ? tokenContract.goerli : tokenContract.mainnet);
+const deployedContractAddressResolver = (chainId: number | string | undefined, tokenContract: DeployedContract) => {
+  return ethers.utils.getAddress(isSandbox(chainId) ?
+    (Number(chainId ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))) === 4 ? tokenContract.rinkeby : tokenContract.goerli :
+    tokenContract.mainnet);
 };
 
 export type SupportedTokenContract =
