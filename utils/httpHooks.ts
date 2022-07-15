@@ -18,9 +18,10 @@ import {
   genesisKeyTeamClaim,
   genesisKeyTeamDistributor,
   nftProfile,
+  nftResolver,
   nftToken,
-  profileAuction
-} from 'constants/contracts';
+  profileAuction,
+  validationLogic } from 'constants/contracts';
 import { DeployedContract } from 'constants/contracts';
 import {
   DAI,
@@ -67,7 +68,8 @@ export type SupportedTokenContract =
   | 'genesisKey'
   | 'genesisKeyDistributor'
   | 'genesisKeyTeamDistributor'
-  | 'genesisKeyTeamClaim';
+  | 'genesisKeyTeamClaim'
+  | 'nftResolver';
 
 export const getAddress = (token: SupportedTokenContract, chainId: number | string | undefined) => {
   if (getEnv(Doppler.NEXT_PUBLIC_ENV) === 'PRODUCTION') {
@@ -88,6 +90,8 @@ export const getAddress = (token: SupportedTokenContract, chainId: number | stri
     return deployedContractAddressResolver(chainId, nftProfile);
   case 'profileAuction':
     return deployedContractAddressResolver(chainId, profileAuction);
+  case 'nftResolver' :
+    return deployedContractAddressResolver(chainId, nftResolver);
   case 'usdc':
     return ethers.utils.getAddress(isSandbox(chainId) ? USDC_GOERLI.address : USDC.address);
   case 'dai':
