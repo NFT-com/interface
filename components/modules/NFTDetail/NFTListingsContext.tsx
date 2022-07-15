@@ -15,7 +15,7 @@ import { MakerOrder } from '@looksrare/sdk';
 import { BigNumber, BigNumberish } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import React, { PropsWithChildren, useCallback, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { SeaportOrderParameters } from 'types';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
@@ -54,6 +54,12 @@ export function NFTListingsContextProvider(
 ) {
   const [toList, setToList] = useState<Array<StagedListing>>([]);
 
+  useEffect(() => {
+    if (window != null) {
+      setToList(JSON.parse(localStorage.getItem('stagedNftListings')) ?? []);
+    }
+  }, []);
+
   const { data: account } = useAccount();
   const { activeChain } = useNetwork();
   const provider = useProvider();
@@ -72,6 +78,7 @@ export function NFTListingsContextProvider(
       return;
     }
     setToList([...toList, listing]);
+    localStorage.setItem('stagedNftListings', JSON.stringify([...toList, listing]));
   }, [toList]);
 
   const clear = useCallback(() => {
@@ -106,6 +113,7 @@ export function NFTListingsContextProvider(
         const signature = await signOrderForSeaport(parameters, seaportCounter);
         await listSeaport(signature , { ...parameters, counter: seaportCounter });
         // todo: check success/failure and maybe mutate external listings query.
+        localStorage.setItem('stagedNftListings', null);
       }
     });
     clear();
