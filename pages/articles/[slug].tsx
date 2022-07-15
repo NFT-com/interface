@@ -74,7 +74,7 @@ export default function Post({ post, preview }: PostProps) {
               </div>
               {post?.relatedPostsCollection?.items.length
                 ? (
-                  <div className='border-t-2 border-share-icon'>
+                  <div>
                     <h2 className="text-left mb-6 sm:mb-3 font-medium mt-8 md:mt-4 sm:mt-1.5 text-3xll md:text-xl sm:text-sm">
                 Related Posts
                     </h2>
