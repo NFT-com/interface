@@ -298,7 +298,7 @@ export type ExternalListing = {
 
 export type ExternalListingsOutput = {
   __typename?: 'ExternalListingsOutput';
-  listings: Array<Maybe<ExternalListing>>;
+  listings?: Maybe<Array<Maybe<ExternalListing>>>;
 };
 
 export type FileUploadOutput = {
@@ -307,6 +307,16 @@ export type FileUploadOutput = {
   bucket: Scalars['String'];
   secretKey: Scalars['String'];
   sessionToken: Scalars['String'];
+};
+
+export type FillChainIdsInput = {
+  chainId: Scalars['String'];
+  entity: Scalars['String'];
+};
+
+export type FillChainIdsOutput = {
+  __typename?: 'FillChainIdsOutput';
+  message?: Maybe<Scalars['String']>;
 };
 
 export type FilterAskInput = {
@@ -507,42 +517,74 @@ export type MintGkProfileInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** AUTHENTICATED */
   addAddress: Wallet;
   addToWatchlist?: Maybe<Scalars['Boolean']>;
+  /** AUTHENTICATED */
   approveAmount: Approval;
   bid: Bid;
+  /** AUTHENTICATED */
   buyNow: MarketSwap;
+  /** AUTHENTICATED */
   cancelAsk: Scalars['Boolean'];
+  /** AUTHENTICATED */
   cancelBid: Scalars['Boolean'];
+  /** AUTHENTICATED */
   cancelMarketBid: Scalars['Boolean'];
   confirmEmail: Scalars['Boolean'];
+  /** AUTHENTICATED */
   createAsk: MarketAsk;
+  /** AUTHENTICATED */
   createBid: MarketBid;
+  /** AUTHENTICATED */
   createCompositeImage: Profile;
+  /** AUTHENTICATED - create by curation owner only */
   createCuration: Curation;
   deleteFromWatchlist?: Maybe<Scalars['Boolean']>;
+  fillChainIds: FillChainIdsOutput;
+  /** AUTHENTICATED */
   followProfile: Profile;
   mintGKProfile: Scalars['String'];
+  /** AUTHENTICATED */
   orderingUpdates: Profile;
+  /** AUTHENTICATED */
   profileClaimed: Profile;
+  /** AUTHETICATED */
   refreshMyNFTs: RefreshMyNfTsOutput;
   refreshNft: Nft;
+  /** AUTHENTICATED */
   removeCuration: Profile;
+  removeDuplicates: RemoveDuplicatesOutput;
+  /** AUTHENTICATED */
   resendEmailConfirm: User;
+  saveCollectionForContract: SaveCollectionForContractOutput;
+  /** AUTHENTICATED */
   saveScoreForProfiles: SaveScoreForProfilesOutput;
+  /** AUTHETICATED - set by curation + profile owner */
   setCuration: Profile;
+  /** AUTHENTICATED */
   setProfilePreferences: Array<Bid>;
+  /** AUTHENTICATED */
   signHash: SignHashOutput;
+  /** AUTHENTICATED */
   signHashProfile: SignHashOutput;
   signUp: User;
+  /** AUTHENTICATED */
   swapNFT: MarketSwap;
+  syncCollectionsWithNFTs: SyncCollectionsWithNfTsOutput;
+  /** AUTHENTICATED */
   unfollowProfile: Profile;
+  /** AUTHENTICATED */
   updateCuration: Curation;
   updateEmail: User;
+  /** AUTHENTICATED */
   updateMe: User;
   updateNFTsForProfile: NfTsOutput;
+  /** AUTHENTICATED */
   updateProfile: Profile;
+  /** AUTHENTICATED */
   uploadFileSession: FileUploadOutput;
+  /** AUTHENTICATED */
   uploadProfileImages: Profile;
 };
 
@@ -617,6 +659,11 @@ export type MutationDeleteFromWatchlistArgs = {
 };
 
 
+export type MutationFillChainIdsArgs = {
+  input: FillChainIdsInput;
+};
+
+
 export type MutationFollowProfileArgs = {
   url?: InputMaybe<Scalars['String']>;
 };
@@ -644,6 +691,16 @@ export type MutationRefreshNftArgs = {
 
 export type MutationRemoveCurationArgs = {
   input: RemoveCurationInput;
+};
+
+
+export type MutationRemoveDuplicatesArgs = {
+  contracts: Array<Scalars['Address']>;
+};
+
+
+export type MutationSaveCollectionForContractArgs = {
+  contract: Scalars['Address'];
 };
 
 
@@ -679,6 +736,11 @@ export type MutationSignUpArgs = {
 
 export type MutationSwapNftArgs = {
   input: SwapNftInput;
+};
+
+
+export type MutationSyncCollectionsWithNfTsArgs = {
+  count: Scalars['Int'];
 };
 
 
@@ -885,6 +947,12 @@ export type PageInput = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
+export type PendingAssociationOutput = {
+  __typename?: 'PendingAssociationOutput';
+  owner: Scalars['String'];
+  url: Scalars['String'];
+};
+
 export type Profile = {
   __typename?: 'Profile';
   bannerURL?: Maybe<Scalars['String']>;
@@ -953,25 +1021,37 @@ export type Query = {
   collectionNFTs: NfTsOutput;
   convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
-  externalListings: ExternalListingsOutput;
+  externalListings?: Maybe<ExternalListingsOutput>;
   filterAsks: GetMarketAsk;
+  getActivitiesByType?: Maybe<Array<Maybe<TxActivity>>>;
+  getActivitiesByUserId?: Maybe<Array<Maybe<TxActivity>>>;
+  getActivitiesByUserIdAndType?: Maybe<Array<Maybe<TxActivity>>>;
   getAsks: GetMarketAsk;
   getBids: GetMarketBid;
   getContracts: GetContracts;
+  /** AUTHENTICATED */
   getMyGenesisKeys: Array<Maybe<GkOutput>>;
+  /** AUTHENTICATED */
+  getMyPendingAssociations: Array<Maybe<PendingAssociationOutput>>;
   getNFTAsks: Array<MarketAsk>;
   getNFTOffers: Array<MarketAsk>;
   getSwaps: GetMarketSwap;
   getUserSwaps: GetMarketSwap;
   gkNFTs: GetGkNftsOutput;
+  /** AUTHENTICATED */
   insiderReservedProfiles: Array<Scalars['String']>;
   isAddressWhitelisted: Scalars['Boolean'];
   latestProfiles: ProfilesOutput;
   leaderboard: LeaderboardOutput;
+  /** AUTHENTICATED */
   me: User;
+  /** AUTHENTICATED */
   myBids: BidsOutput;
+  /** AUTHENTICATED */
   myCurations?: Maybe<CurationsOutput>;
+  /** AUTHETICATED */
   myNFTs: NfTsOutput;
+  /** AUTHENTICATED */
   myProfiles: ProfilesOutput;
   nft: Nft;
   nftById: Nft;
@@ -979,6 +1059,7 @@ export type Query = {
   profile: Profile;
   profileFollowers: FollowersOutput;
   profilePassive: Profile;
+  /** AUTHENTICATED */
   profilesFollowedByMe: ProfilesOutput;
   topBids: BidsOutput;
   watchlist: Watchlist;
@@ -1020,6 +1101,21 @@ export type QueryExternalListingsArgs = {
 
 export type QueryFilterAsksArgs = {
   input: FilterAskInput;
+};
+
+
+export type QueryGetActivitiesByTypeArgs = {
+  activityType?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryGetActivitiesByUserIdArgs = {
+  userId?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryGetActivitiesByUserIdAndTypeArgs = {
+  input?: InputMaybe<TxUserIdAndTypeInput>;
 };
 
 
@@ -1120,6 +1216,7 @@ export type QueryNftsArgs = {
 
 
 export type QueryProfileArgs = {
+  chainId: Scalars['String'];
   url: Scalars['String'];
 };
 
@@ -1158,8 +1255,14 @@ export type RemoveCurationInput = {
   profileId: Scalars['ID'];
 };
 
+export type RemoveDuplicatesOutput = {
+  __typename?: 'RemoveDuplicatesOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type SaveScoreForProfilesInput = {
   count?: InputMaybe<Scalars['Int']>;
+  nullOnly?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type SaveScoreForProfilesOutput = {
@@ -1222,6 +1325,11 @@ export type SwapsInput = {
   pageInput?: InputMaybe<PageInput>;
 };
 
+export type SyncCollectionsWithNfTsOutput = {
+  __typename?: 'SyncCollectionsWithNFTsOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type TokenUri = {
   __typename?: 'TokenUri';
   gateway: Scalars['String'];
@@ -1232,6 +1340,96 @@ export type TopBidsInput = {
   pageInput?: InputMaybe<PageInput>;
   profileId?: InputMaybe<Scalars['ID']>;
   status?: InputMaybe<BidStatus>;
+};
+
+export type TxActivity = {
+  __typename?: 'TxActivity';
+  activityType: Scalars['String'];
+  bid?: Maybe<TxBid>;
+  cancel?: Maybe<TxCancel>;
+  id: Scalars['ID'];
+  listing?: Maybe<TxList>;
+  read: Scalars['String'];
+  sale?: Maybe<TxSale>;
+  timestamp: Scalars['String'];
+  transfer?: Maybe<TxTransfer>;
+  userId: Scalars['String'];
+};
+
+export type TxBid = {
+  __typename?: 'TxBid';
+  consideration?: Maybe<Array<Maybe<TxConsideration>>>;
+  exchange: Scalars['String'];
+  id: Scalars['ID'];
+  makerAddress: Scalars['String'];
+  offer?: Maybe<Array<Maybe<TxOffer>>>;
+  orderHash: Scalars['String'];
+  takerAddresss?: Maybe<Scalars['String']>;
+};
+
+export type TxCancel = {
+  __typename?: 'TxCancel';
+  exchange: Scalars['String'];
+  foreignKeyId: Scalars['String'];
+  foreignType: Scalars['String'];
+  id: Scalars['ID'];
+  transactionHash: Scalars['String'];
+};
+
+export type TxConsideration = {
+  __typename?: 'TxConsideration';
+  endAmount?: Maybe<Scalars['String']>;
+  recipient?: Maybe<Scalars['String']>;
+  startAmount: Scalars['String'];
+  token: Scalars['String'];
+};
+
+export type TxList = {
+  __typename?: 'TxList';
+  consideration?: Maybe<Array<Maybe<TxConsideration>>>;
+  exchange: Scalars['String'];
+  id: Scalars['ID'];
+  makerAddress: Scalars['String'];
+  offer?: Maybe<Array<Maybe<TxOffer>>>;
+  orderHash: Scalars['String'];
+  takerAddresss?: Maybe<Scalars['String']>;
+};
+
+export type TxOffer = {
+  __typename?: 'TxOffer';
+  endAmount?: Maybe<Scalars['String']>;
+  startAmount: Scalars['String'];
+  token: Scalars['String'];
+};
+
+export type TxSale = {
+  __typename?: 'TxSale';
+  blockNumber: Scalars['String'];
+  currency: Scalars['String'];
+  exchange: Scalars['String'];
+  id: Scalars['ID'];
+  nftContractAddress: Scalars['String'];
+  nftContractTokenId: Scalars['String'];
+  price: Scalars['String'];
+  receiver: Scalars['String'];
+  sender: Scalars['String'];
+  transactionHash: Scalars['String'];
+};
+
+export type TxTransfer = {
+  __typename?: 'TxTransfer';
+  blockNumber: Scalars['String'];
+  id: Scalars['ID'];
+  nftContractAddress: Scalars['String'];
+  nftContractTokenId: Scalars['String'];
+  receiver: Scalars['String'];
+  sender: Scalars['String'];
+  transactionHash: Scalars['String'];
+};
+
+export type TxUserIdAndTypeInput = {
+  activityType: Scalars['String'];
+  userId: Scalars['ID'];
 };
 
 export type UpdateCurationInput = {
@@ -1359,6 +1557,11 @@ export type ConvertEnsToEthAddressInput = {
 
 export type GetContractsInput = {
   chainId: Scalars['String'];
+};
+
+export type SaveCollectionForContractOutput = {
+  __typename?: 'saveCollectionForContractOutput';
+  message?: Maybe<Scalars['String']>;
 };
 
 export type AddToWatchlistMutationVariables = Exact<{
@@ -1532,7 +1735,7 @@ export type ExternalListingsQueryVariables = Exact<{
 }>;
 
 
-export type ExternalListingsQuery = { __typename?: 'Query', externalListings: { __typename?: 'ExternalListingsOutput', listings: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null, baseCoin?: { __typename?: 'BaseCoin', symbol?: string | null, logoURI?: string | null, address?: string | null, decimals?: number | null } | null } | null> } };
+export type ExternalListingsQuery = { __typename?: 'Query', externalListings?: { __typename?: 'ExternalListingsOutput', listings?: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null, baseCoin?: { __typename?: 'BaseCoin', symbol?: string | null, logoURI?: string | null, address?: string | null, decimals?: number | null } | null } | null> | null } | null };
 
 export type GetAsksQueryVariables = Exact<{
   input: AsksInput;
@@ -1643,6 +1846,7 @@ export type MyPreferencesQuery = { __typename?: 'Query', me: { __typename?: 'Use
 
 export type ProfileQueryVariables = Exact<{
   url: Scalars['String'];
+  chainId: Scalars['String'];
 }>;
 
 
@@ -2467,8 +2671,8 @@ export const MyPreferencesDocument = gql`
 }
     `;
 export const ProfileDocument = gql`
-    query Profile($url: String!) {
-  profile(url: $url) {
+    query Profile($url: String!, $chainId: String!) {
+  profile(url: $url, chainId: $chainId) {
     id
     url
     status

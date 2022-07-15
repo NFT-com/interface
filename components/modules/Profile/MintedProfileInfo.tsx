@@ -122,7 +122,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           <div className="max-w-2xl md:max-w-xl sm:max-w-full flex items-end flex flex-col">
             <textarea
               className={tw(
-                'text-base w-full resize-none',
+                'text-base w-full resize-none mt-4',
                 'text-left px-3 py-2 w-full rounded-xl font-medium h-32',
               )}
               maxLength={300}

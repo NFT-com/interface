@@ -70,7 +70,7 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(200).json(result);
       return;
     } catch (e) {
-      res.status(500).json(JSON.stringify({ message: 'getNfts: error processing Alchemy result' }));
+      res.status(500).json(JSON.stringify({ message: 'getNfts: error processing Alchemy result', e }));
       return;
     }
   }

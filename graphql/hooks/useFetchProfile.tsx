@@ -1,8 +1,10 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
+import { getFallbackChainIdFromSupportedNetwork, isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback,useState } from 'react';
+import { useNetwork } from 'wagmi';
 
 export interface FetchProfile {
   fetchProfile: (url: string) => Promise<ProfileQuery>;
@@ -11,6 +13,9 @@ export interface FetchProfile {
 
 export function useFetchProfile(): FetchProfile {
   const sdk = useGraphQLSDK();
+  const { activeChain } = useNetwork();
+  const { supportedNetworks } = useSupportedNetwork();
+
   const [loading, setLoading] = useState(false);
 
   const fetchProfile = useCallback(async (url: string) => {
@@ -19,7 +24,10 @@ export function useFetchProfile(): FetchProfile {
     }
     try {
       setLoading(true);
-      const result = await sdk.Profile({ url: url });
+      const result = await sdk.Profile({
+        url,
+        chainId: String(activeChain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0])),
+      });
       setLoading(false);
       return result;
     } catch (error) {
@@ -27,7 +35,7 @@ export function useFetchProfile(): FetchProfile {
       console.log('Failed to fetch profile. It might be unminted.');
       return null;
     }
-  }, [sdk]);
+  }, [activeChain?.id, sdk, supportedNetworks]);
 
   return {
     fetchProfile,
