@@ -29,7 +29,7 @@ export function useProfileQuery(
       return result;
     } catch (error) {
       console.log('Failed to fetch profile. It might be unminted.');
-      return 'error';
+      return null;
     }
   }, options);
 
