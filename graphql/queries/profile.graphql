@@ -1,5 +1,5 @@
-query Profile($url: String!) {
-  profile(url: $url) {
+query Profile($url: String!, $chainId: String!) {
+  profile(url: $url, chainId: $chainId) {
     id
     url
     status
