@@ -10,7 +10,7 @@ describe('GenesisKeyGalleryFilters', () => {
         setCurrentFilter={(filter: string) => {
           currentFilter=filter;
         }}
-    />
+      />
     );
     cy.get('input').invoke('attr', 'placeholder')
       .should('contain', 'Filter by ID number');
@@ -28,7 +28,7 @@ describe('GenesisKeyGalleryFilters', () => {
       />
     );
     cy.contains('Invalid ID.').should('not.exist');
-  })
+  });
 
   it('invalid entry shows error', () => {
     let currentFilter='20000';
@@ -42,6 +42,5 @@ describe('GenesisKeyGalleryFilters', () => {
       />
     );
     cy.contains('Invalid ID.').should('be.visible');
-  })
-
+  });
 });

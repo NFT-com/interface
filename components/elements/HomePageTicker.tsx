@@ -1,3 +1,4 @@
+import React from 'react';
 import Ticker from 'react-ticker';
 import { TickerStat } from 'types';
 
