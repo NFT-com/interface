@@ -260,7 +260,7 @@ export function MintedProfile(props: MintedProfileProps) {
         </div>
       </div>
       <div className="flex grow" />
-      <div className='w-full '>
+      <div className='w-full mt-20'>
         <Footer />
       </div>
     </div>
