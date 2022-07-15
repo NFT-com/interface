@@ -47,7 +47,7 @@ if (GOOGLE_ANALYTICS_ID != null) {
 
 const { chains, provider } = configureChains(
   getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
-    [chain.mainnet, chain.rinkeby] :
+    [chain.mainnet, chain.goerli, chain.rinkeby] :
     [chain.mainnet],
   [
     jsonRpcProvider({

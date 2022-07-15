@@ -4,13 +4,10 @@ import {
   Genesis_key_distributor,
   Genesis_key_team_claim,
   Genesis_key_team_distributor,
-  Marketplace,
-  Marketplace_event,
   Nft_profile,
   Nft_token,
   Profile_auction,
   Usdc,
-  Validation_logic,
   Weth
 } from 'constants/typechain';
 import { getDaiContract } from 'hooks/contracts/getDaiContract';
@@ -26,9 +23,6 @@ import { getAddress } from 'utils/httpHooks';
 import { getGenesisKeyDistributorContract } from './getGenesisKeyDistributorContract';
 import { getGenesisKeyTeamClaimContract } from './getGenesisKeyTeamClaimContract';
 import { getGenesisKeyTeamDistributorContract } from './getGenesisKeyTeamDistributorContract';
-import { getMarketplaceContract } from './getMarketplaceContract';
-import { getMarketplaceEventContract } from './getMarketplaceEventContract';
-import { getValidationLogicContract } from './getValidationLogicContract';
 
 import { useEffect, useState } from 'react';
 import { useNetwork, useProvider } from 'wagmi';
@@ -42,9 +36,6 @@ export interface Contracts {
   profileAuction: Profile_auction;
   genesisKey: Genesis_key;
   genesisKeyDistributor: Genesis_key_distributor;
-  marketplace: Marketplace;
-  marketplaceEvent: Marketplace_event;
-  marketplaceValidator: Validation_logic;
   genesisKeyTeamDistributor: Genesis_key_team_distributor;
   genesisKeyTeamClaim: Genesis_key_team_claim;
 }
@@ -72,12 +63,6 @@ export function useAllContracts(): Contracts {
   ));
   const [genesisKeyContract, setGenesisKeyContract] =
     useState(getGenesisKeyContract(getAddress('genesisKey', chainId), provider));
-  const [marketPlaceContract, setMarketPlaceContract] =
-    useState(getMarketplaceContract(getAddress('marketplace', chainId), provider));
-  const [validationLogicContract, setValidationLogicContract] =
-    useState(getValidationLogicContract(getAddress('validationLogic', chainId), provider));
-  const [marketplaceEventContract, setMarketplaceEventContract] =
-      useState(getMarketplaceEventContract(getAddress('marketplaceEvent', chainId), provider));
   const [genesisKeyDistributorContract, setGenesisKeyDistributorContract] = useState(
     getGenesisKeyDistributorContract(getAddress('genesisKeyDistributor', chainId), provider)
   );
@@ -101,15 +86,6 @@ export function useAllContracts(): Contracts {
       getProfileAuctionContract(getAddress('profileAuction', chainId), provider)
     );
     setGenesisKeyContract(getGenesisKeyContract(getAddress('genesisKey', chainId), provider));
-    setMarketPlaceContract(
-      getMarketplaceContract(getAddress('marketplace', chainId), provider)
-    );
-    setValidationLogicContract(
-      getValidationLogicContract(getAddress('validationLogic', chainId), provider)
-    );
-    setMarketplaceEventContract(
-      getMarketplaceEventContract(getAddress('marketplaceEvent', chainId), provider)
-    );
     setGenesisKeyDistributorContract(
       getGenesisKeyDistributorContract(getAddress('genesisKeyDistributor', chainId), provider)
     );
@@ -133,9 +109,6 @@ export function useAllContracts(): Contracts {
     profileAuction: profileAuctionContract,
     genesisKey: genesisKeyContract,
     genesisKeyDistributor: genesisKeyDistributorContract,
-    marketplace: marketPlaceContract,
-    marketplaceEvent: marketplaceEventContract,
-    marketplaceValidator: validationLogicContract,
     genesisKeyTeamDistributor: genesisKeyTeamDistributorContract,
     genesisKeyTeamClaim: genesisKeyTeamClaim,
   };
