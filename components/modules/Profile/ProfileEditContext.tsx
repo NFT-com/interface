@@ -186,7 +186,6 @@ export function ProfileEditContextProvider(
             );
           }
         }
-  
         const result = await updateProfile({
           id: profileData?.profile?.id,
           description: isNullOrEmpty(draftBio) ? profileData?.profile?.description : draftBio,

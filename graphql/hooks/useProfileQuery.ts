@@ -1,8 +1,10 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
-import { isNullOrEmpty } from 'utils/helpers';
+import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
+import { getFallbackChainIdFromSupportedNetwork, isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
+import { useNetwork } from 'wagmi';
 
 export interface ProfileData {
   profileData: ProfileQuery;
@@ -15,6 +17,8 @@ export function useProfileQuery(
   url: string, options?: SWRConfiguration
 ): ProfileData {
   const sdk = useGraphQLSDK();
+  const { activeChain } = useNetwork();
+  const { supportedNetworks } = useSupportedNetwork();
 
   const keyString = 'ProfileQuery ' + url;
 
@@ -23,11 +27,14 @@ export function useProfileQuery(
       return null;
     }
     try {
-      const result = await sdk.Profile({ url });
+      const result = await sdk.Profile({
+        url,
+        chainId: String(activeChain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0]))
+      });
       return result;
     } catch (error) {
       console.log('Failed to fetch profile. It might be unminted.');
-      return 'error';
+      return null;
     }
   }, options);
 

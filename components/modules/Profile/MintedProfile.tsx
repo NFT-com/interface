@@ -48,7 +48,6 @@ export function MintedProfile(props: MintedProfileProps) {
   const userIsAdmin = ownedProfileTokens
     .map(token => token?.tokenUri?.raw?.split('/').pop())
     .includes(profileURI);
-
   const { nfts: publiclyVisibleNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.

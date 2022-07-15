@@ -192,3 +192,13 @@ export function getEtherscanLink(
   }
   }
 }
+
+export function getFallbackChainIdFromSupportedNetwork(network: string): string {
+  if (network.includes('rinkeby')) {
+    return '5';
+  } else if (network.includes('goerli')) {
+    return '4';
+  } else {
+    return '1';
+  }
+}

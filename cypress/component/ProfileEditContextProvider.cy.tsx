@@ -96,7 +96,7 @@ const TestComponent = () => {
   </div>;
 };
 
-describe('ProfileEditContextProvider', () => {
+xdescribe('ProfileEditContextProvider', () => {
   beforeEach(() => {
     cy.mount(
       <ProfileEditContextProvider profileURI='test'>
