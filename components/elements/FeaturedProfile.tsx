@@ -58,8 +58,8 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
           <div className='flex flex-col w-full sm:row-auto sm:aspect-square sm:h-full'>
             <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[2]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md' containerClasses='sm:h-full' />
             <div className='bg-white rounded-b-md px-3 py-1 sm:px-3 sm:py-2'>
-              <p className='text-xxs4 text-[#727272] sm:text-xxs2'>{props.featuredNfts[1]?.metadata?.name}</p>
-              <p className='text-black text-xs -mt-1 sm:text-sm'>{props.featuredNfts[1]?.metadata?.name}</p>
+              <p className='text-xxs4 text-[#727272] sm:text-xxs2'>{props.featuredNfts[2]?.metadata?.name}</p>
+              <p className='text-black text-xs -mt-1 sm:text-sm'>{props.featuredNfts[2]?.metadata?.name}</p>
             </div>
           </div>
         </div>
