@@ -49,7 +49,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
 
   const marketplaceSupportedCurrencies: SupportedCurrency[] = filterNulls([
     'WETH',
-    'ETH',
+    props.type === 'seaport' ? 'ETH' : null,
     props.type === 'seaport' ? 'DAI' : null,
     props.type === 'seaport' ? 'USDC' : null,
   ]);
