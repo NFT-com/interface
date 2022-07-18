@@ -18,7 +18,7 @@ export const ALCHEMY_PREFIXES = {
 const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const action = req.query['action'];
   let chainId = req.query['chainId'];
-  if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId))) {
+  if (isNullOrEmpty(chainId) || Number.isNaN(Number(chainId)) || !(String(chainId) in ALCHEMY_KEYS)) {
     chainId = '1';
   }
   
