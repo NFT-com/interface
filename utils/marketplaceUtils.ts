@@ -159,14 +159,14 @@ export const gqlAuctionTypeToOnchainAuctionType = (
 
 export type SaleDuration = '1 Day' | '3 Days' | '1 Week' | 'Forever';
 
-export const getDurationToMs = (d: SaleDuration) => {
+export const convertDurationToSec = (d: SaleDuration) => {
   const durationDays: {[s in SaleDuration]: number} = {
     '1 Day' : 1,
     '3 Days': 3,
     '1 Week': 7,
-    'Forever': 0
+    'Forever': 365 * 10
   };
-  return 1000 * 60 * 60 * 24 * durationDays[d];
+  return 60 * 60 * 24 * durationDays[d];
 };
 
 export type UnhashedAsset = {

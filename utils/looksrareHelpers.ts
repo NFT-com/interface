@@ -14,7 +14,8 @@ export async function createLooksrareParametersForNFTListing(
   nonce: number,
   looksrareStrategy: IExecutionStrategy,
   looksrareRoyaltyFeeRegistry: RoyaltyFeeRegistry,
-  // todo: specify start/end times, currency, and order types
+  duration: BigNumberish,
+  // takerAddress: string,
 ): Promise<MakerOrder> {
   const addresses: Addresses = addressesByNetwork[chainId];
   const protocolFees = await looksrareStrategy.viewProtocolFee();
@@ -39,7 +40,7 @@ export async function createLooksrareParametersForNFTListing(
     amount: '1',
     price:  BigNumber.from(price).toString(),
     startTime: BigNumber.from(Date.now()).div(1000).toString(),
-    endTime: BigNumber.from(Date.now()).div(1000).add(604800 /* 1 week in seconds */).toString(),
+    endTime: BigNumber.from(Date.now()).div(1000).add(duration).toString(),
     minPercentageToAsk: Math.max(netPriceRatio, minNetPriceRatio),
     params: []
   };
