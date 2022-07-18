@@ -15,7 +15,7 @@ interface FeaturedProfileProps {
 
 export const FeaturedProfile = (props: FeaturedProfileProps) => {
   return (
-    <div className='sm:w-full sm:h-full w-3/4 h-1/3 text-body text-[#4D4412] leading-body font-header py-6'>
+    <div className='sm:w-full sm:h-full w-3/4 h-1/3 text-body text-[#4D4412] leading-body font-header py-6 drop-shadow-2xl'>
       <p className='mb-2 md:mb-4'>Featured Profile</p>
       <div className='flex flex-col bg-[#B0AFAF26]/20 rounded-md backdrop-blur-xl px-4 py-6'>
         <div className='flex flex-row items-center mb-5'>
