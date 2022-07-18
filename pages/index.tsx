@@ -79,6 +79,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   const { profileData: profileFeed2 } = useProfileQuery(data?.feedCollections['profile2']['url']);
   const { profileData: profileFeed3 } = useProfileQuery(data?.feedCollections['profile3']['url']);
   const { profileData: profileFeed4 } = useProfileQuery(data?.feedCollections['profile4']['url']);
+  const { profileData: profileFeed5 } = useProfileQuery(data?.feedCollections['profile5']['url']);
+  const { profileData: profileFeed6 } = useProfileQuery(data?.feedCollections['profile6']['url']);
+  const { profileData: profileFeed7 } = useProfileQuery(data?.feedCollections['profile7']['url']);
+  const { profileData: profileFeed8 } = useProfileQuery(data?.feedCollections['profile8']['url']);
+
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
 
   useEffect(() => {
@@ -161,7 +166,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     profileFeed1,
                     profileFeed2,
                     profileFeed3,
-                    profileFeed4
+                    profileFeed4,
+                    profileFeed5,
+                    profileFeed6,
+                    profileFeed7,
+                    profileFeed8,
                   ]}
                 />
                 <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
