@@ -1,4 +1,3 @@
-import { AddressInput } from 'components/elements/AddressInput';
 import { Button, ButtonType } from 'components/elements/Button';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
@@ -6,6 +5,7 @@ import { Maybe, Nft } from 'graphql/generated/types';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import {
+  convertDurationToSec,
   SaleDuration,
 } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
@@ -27,8 +27,8 @@ export interface ListingBuilderProps {
 }
 
 export function ListingBuilder(props: ListingBuilderProps) {
-  const [saleType, setSaleType] = useState<SaleType>('auction');
-  const [auctionType, setAuctionType] = useState<LocalAuctionType>('highest');
+  const [saleType, setSaleType] = useState<SaleType>('fixed');
+  const [auctionType,] = useState<LocalAuctionType>('declining');
 
   const [startingPrice, setStartingPrice] = useState<Maybe<BigNumber>>(null);
   const [buyNowPrice, setBuyNowPrice] = useState<Maybe<BigNumber>>(null);
@@ -39,13 +39,20 @@ export function ListingBuilder(props: ListingBuilderProps) {
   const [reservePrice, setReservePrice] = useState<Maybe<BigNumber>>(null);
   const [reservePriceError, setReservePriceError] = useState(false);
   const [duration, setDuration] = useState<SaleDuration>('1 Week');
-  const [takerAddress, setTakerAddress] = useState(null);
+  const [takerAddress,] = useState(null);
   const [takerAddressError, setTakerAddressError] = useState(false);
   const [saleCurrency, setSaleCurrency] = useState<SupportedCurrency>('WETH');
   const [validConfiguration, setValidConfiguration] = useState(false);
 
   const { stageListing, submitting } = useContext(NFTListingsContext);
   const { data: supportedCurrencyData } = useSupportedCurrencies();
+
+  const marketplaceSupportedCurrencies: SupportedCurrency[] = filterNulls([
+    'WETH',
+    'ETH',
+    props.type === 'seaport' ? 'DAI' : null,
+    props.type === 'seaport' ? 'USDC' : null,
+  ]);
 
   useEffect(() => {
     // all sales needs a valid non-zero price
@@ -98,10 +105,11 @@ export function ListingBuilder(props: ListingBuilderProps) {
   const getListingOptions = useCallback((type: SaleType) => {
     if (type === 'auction') {
       return <div className='mt-4 flex flex-col'>
-        <span className="font-bold my-4">
+        {/* TODO: re-add support for highest-bid auctions */}
+        {/* <span className="font-bold my-4">
           Style
-        </span>
-        <div className='flex mb-4'>
+        </span> */}
+        {/* <div className='flex mb-4'>
           <div
             className={tw(
               'font-bold text-base bg-white dark:bg-primary-txt rounded-xl',
@@ -126,7 +134,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
           >
           Declining Price
           </div>
-        </div>
+        </div> */}
         {
           auctionType === 'highest' ?
             <>
@@ -134,6 +142,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
                 Starting Price
               </span>
               <PriceInput
+                currencyOptions={marketplaceSupportedCurrencies}
                 currency={saleCurrency}
                 error={startingPriceError}
                 onPriceChange={(price: BigNumber) => {
@@ -148,6 +157,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
                 Reserve Price <span className='text-secondary-txt ml-2'>(optional)</span>
               </span>
               <PriceInput
+                currencyOptions={marketplaceSupportedCurrencies}
                 currency={saleCurrency}
                 error={reservePriceError}
                 onPriceChange={(price: BigNumber) => {
@@ -161,6 +171,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
                 Buy Now Price <span className='text-secondary-txt ml-2'>(optional)</span>
               </span>
               <PriceInput
+                currencyOptions={marketplaceSupportedCurrencies}
                 currency={saleCurrency}
                 error={buyNowPriceError}
                 onPriceChange={(price: BigNumber) => {
@@ -177,6 +188,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
                 Starting Price
               </span>
               <PriceInput
+                currencyOptions={marketplaceSupportedCurrencies}
                 error={startingPriceError}
                 currency={saleCurrency}
                 onPriceChange={(price: BigNumber) => {
@@ -190,6 +202,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
                 Ending Price
               </span>
               <PriceInput
+                currencyOptions={marketplaceSupportedCurrencies}
                 currency={saleCurrency}
                 error={endingPriceError}
                 onPriceChange={(price: BigNumber) => {
@@ -235,6 +248,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
           Price
         </span>
         <PriceInput
+          currencyOptions={marketplaceSupportedCurrencies}
           error={startingPriceError}
           currency={saleCurrency}
           onPriceChange={(price: BigNumber) => {
@@ -269,60 +283,65 @@ export function ListingBuilder(props: ListingBuilderProps) {
           selectedIndex={['1 Week', '3 Days', '1 Day', 'Forever'].indexOf(duration)}
           />
         </div>
-        <span className="font-bold my-4">
+        {/* TODO: allow owner to specify taker address */}
+        {/* <span className="font-bold my-4">
           Reserve for buyer <span className='text-secondary-txt ml-2'>(optional)</span>
         </span>
         <AddressInput
           error={takerAddressError}
           value={takerAddress}
           onChange={(val) => setTakerAddress(val)}
-        />
+        /> */}
       </div>;
     }
   }, [
     auctionType,
+    marketplaceSupportedCurrencies,
     saleCurrency,
-    reservePriceError,
-    saleType,
-    buyNowPriceError,
     startingPriceError,
+    reservePriceError,
+    buyNowPriceError,
     endingPriceError,
-    duration,
-    takerAddressError,
-    takerAddress
+    saleType,
+    duration
   ]);
 
   return (
     <div className='text-primary-txt dark:text-primary-txt-dk flex flex-col'>
-      <span className="font-bold my-4">
-          Type of Sale
-      </span>
-      <div className='flex'>
-        <div
-          className={tw(
-            'font-bold text-base bg-white dark:bg-primary-txt rounded-xl',
-            'py-8 flex-grow flex justify-center cursor-pointer mr-2',
-            saleType === 'fixed' ? 'border border-blue-500' : ''
-          )}
-          onClick={() => {
-            setSaleType('fixed');
-          }}
-        >
-          Fixed Price
-        </div>
-        <div
-          className={tw(
-            'font-bold text-base bg-white dark:bg-primary-txt rounded-xl',
-            'py-8 flex-grow flex justify-center cursor-pointer ml-2',
-            saleType === 'auction' ? 'border border-blue-500' : ''
-          )}
-          onClick={() => {
-            setSaleType('auction');
-          }}
-        >
-          Timed Auction
-        </div>
-      </div>
+      {props.type === 'seaport' ?
+        <>
+          <span className="font-bold my-4">
+            Type of Sale
+          </span>
+          <div className='flex'>
+            <div
+              className={tw(
+                'font-bold text-base bg-white dark:bg-primary-txt rounded-xl',
+                'py-8 flex-grow flex justify-center cursor-pointer mr-2',
+                saleType === 'fixed' ? 'border border-blue-500' : ''
+              )}
+              onClick={() => {
+                setSaleType('fixed');
+              }}
+            >
+              Fixed Price
+            </div>
+            <div
+              className={tw(
+                'font-bold text-base bg-white dark:bg-primary-txt rounded-xl',
+                'py-8 flex-grow flex justify-center cursor-pointer ml-2',
+                saleType === 'auction' ? 'border border-blue-500' : ''
+              )}
+              onClick={() => {
+                setSaleType('auction');
+              }}
+            >
+              Timed Auction
+            </div>
+          </div>
+        </>
+        : null
+      }
       {getListingOptions(saleType)}
       <div className='flex'>
         <div className='flex basis-2/4 mr-4'>
@@ -341,8 +360,11 @@ export function ListingBuilder(props: ListingBuilderProps) {
               stageListing({
                 type: props.type,
                 nft: props.nft,
-                price: startingPrice,
+                startingPrice,
+                endingPrice,
                 currency: currencyAddress,
+                duration: convertDurationToSec(duration),
+                // takerAddress
               });
               props.onSuccessfulCreate();
             }}

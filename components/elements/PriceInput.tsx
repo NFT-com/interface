@@ -12,6 +12,7 @@ import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export interface PriceInputProps {
   currency: SupportedCurrency,
+  currencyOptions: SupportedCurrency[],
   onPriceChange: (val: Maybe<BigNumber>) => void,
   onCurrencyChange: (currency: SupportedCurrency) => void,
   error: boolean,
@@ -22,35 +23,13 @@ export function PriceInput(props: PriceInputProps) {
 
   const { alwaysBlack } = useThemeColors();
   const currencies = useMemo(() => (
-    [
-      {
-        label: 'WETH',
-        onSelect: () => {
-          props.onCurrencyChange('WETH');
-          setSelectedCurrencyIndex(0);
-        }
-      },
-      {
-        label: 'ETH',
-        onSelect: () => {
-          props.onCurrencyChange('ETH');
-          setSelectedCurrencyIndex(1);
-        }
-      },
-      {
-        label: 'DAI',
-        onSelect: () => {
-          props.onCurrencyChange('DAI');
-          setSelectedCurrencyIndex(2);
-        }
-      },
-      {
-        label: 'USDC',
-        onSelect: () => {
-          props.onCurrencyChange('USDC');
-          setSelectedCurrencyIndex(3);
-        }
-      }]
+    props.currencyOptions.map((currency, index) => ({
+      label: currency,
+      onSelect: () => {
+        props.onCurrencyChange(currency);
+        setSelectedCurrencyIndex(index);
+      }
+    }))
   ), [props]);
 
   const [

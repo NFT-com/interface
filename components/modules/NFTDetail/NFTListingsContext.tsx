@@ -28,8 +28,11 @@ export type ListingType = 'looksrare' | 'seaport';
 export type StagedListing = {
   type: ListingType;
   nft: PartialDeep<Nft>;
-  price: BigNumberish;
+  startingPrice: BigNumberish;
+  endingPrice: BigNumberish;
   currency: string;
+  duration: BigNumberish;
+  // takerAddress: string;
 }
 
 interface NFTListingsContextType {
@@ -109,12 +112,14 @@ export function NFTListingsContextProvider(
         const order: MakerOrder = await createLooksrareParametersForNFTListing(
           account?.address, // offerer
           listing.nft,
-          listing.price,
+          listing.startingPrice,
           listing.currency,
           activeChain?.id,
           nonce,
           looksrareStrategy,
           looksrareRoyaltyFeeRegistry,
+          listing.duration,
+          // listing.takerAddress
         );
         nonce++;
         const signature = await signOrderForLooksrare(order);
@@ -124,8 +129,11 @@ export function NFTListingsContextProvider(
         const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
           account?.address,
           listing.nft,
-          listing.price,
+          listing.startingPrice,
+          listing.endingPrice,
           listing.currency,
+          listing.duration,
+          // listing.takerAddress
         );
         const signature = await signOrderForSeaport(parameters, seaportCounter);
         await listSeaport(signature , { ...parameters, counter: seaportCounter });
