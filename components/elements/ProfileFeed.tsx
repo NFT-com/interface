@@ -1,4 +1,5 @@
 import { ProfileQuery } from 'graphql/generated/types';
+import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
@@ -45,13 +46,13 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   return (
     <div className='relative overflow-hidden'>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 py-4">
           {props.profiles.map((profile, index) => (
             <RoundedCornerMedia
               key={profile?.profile?.id ?? index}
               src={profile?.profile?.photoURL}
               variant={RoundedCornerVariant.All}
-              containerClasses={'h-full w-full'}
+              containerClasses={'h-full w-full drop-shadow-xl'}
               onClick={() => router.push(`/${profile?.profile?.url}`)}
             />
           ))}

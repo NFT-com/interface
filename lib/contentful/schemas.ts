@@ -131,6 +131,7 @@ export const HOME_PAGE_FIELDS = `
   }
   learnTitle
   learnDescription
+  learnCards
   communityCtaTitle
   communityCtaDescription
   featuredProfile
