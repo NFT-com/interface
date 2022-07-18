@@ -21,6 +21,7 @@ import { tw } from 'utils/tw';
 
 import { NextPageWithLayout } from './_app';
 
+import { BigNumber } from 'ethers';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
 import { useEffect, useState } from 'react';
@@ -64,20 +65,25 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile['profileURI']);
   const { data: featuredProfileNFT1 } = useNftQuery(
     data?.featuredProfile['featuredProfileNft1'].collection,
-    data?.featuredProfile['featuredProfileNft1'].tokenId
+    BigNumber.from(data?.featuredProfile['featuredProfileNft1'].tokenId)
   );
   const { data: featuredProfileNFT2 } = useNftQuery(
     data?.featuredProfile['featuredProfileNft2'].collection,
-    data?.featuredProfile['featuredProfileNft2'].tokenId
+    BigNumber.from(data?.featuredProfile['featuredProfileNft2'].tokenId)
   );
   const { data: featuredProfileNFT3 } = useNftQuery(
     data?.featuredProfile['featuredProfileNft3'].collection,
-    data?.featuredProfile['featuredProfileNft3'].tokenId
+    BigNumber.from(data?.featuredProfile['featuredProfileNft3'].tokenId)
   );
   const { profileData: profileFeed1 } = useProfileQuery(data?.feedCollections['profile1']['url']);
   const { profileData: profileFeed2 } = useProfileQuery(data?.feedCollections['profile2']['url']);
   const { profileData: profileFeed3 } = useProfileQuery(data?.feedCollections['profile3']['url']);
   const { profileData: profileFeed4 } = useProfileQuery(data?.feedCollections['profile4']['url']);
+  const { profileData: profileFeed5 } = useProfileQuery(data?.feedCollections['profile5']['url']);
+  const { profileData: profileFeed6 } = useProfileQuery(data?.feedCollections['profile6']['url']);
+  const { profileData: profileFeed7 } = useProfileQuery(data?.feedCollections['profile7']['url']);
+  const { profileData: profileFeed8 } = useProfileQuery(data?.feedCollections['profile8']['url']);
+
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
 
   useEffect(() => {
@@ -97,15 +103,15 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 md:px-20 lg:px-40 xl:px-80 w-screen h-full',
-            'break-after-all',
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 space-x-10 px-20 w-screen h-full',
+            'break-after-all ',
           )}
           style={{
             backgroundImage: 'url(\'/home-banner-bg.png\')',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
           }}>
-            <div className='break-after-all space-y-2 md:w-full'>
+            <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
                 'font-grotesk font-header-bold text-[#4D4412] text-header leading-header sm:font-header md:font-header-bold ',
                 'break-after-all space-y-2',
@@ -140,7 +146,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </button>
               </div>
             </div>
-            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20'>
+            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20 w-[70%]'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
@@ -160,7 +166,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     profileFeed1,
                     profileFeed2,
                     profileFeed3,
-                    profileFeed4
+                    profileFeed4,
+                    profileFeed5,
+                    profileFeed6,
+                    profileFeed7,
+                    profileFeed8,
                   ]}
                 />
                 <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
