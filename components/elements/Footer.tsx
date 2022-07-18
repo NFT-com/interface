@@ -129,8 +129,8 @@ export const Footer = () => {
 
   return (
     <div id="FooterContainer" className={tw(
-      'flex md:flex-col relative md:content-between py-12 bg-footer-bg dark:bg-footer-bg-dk',
-      'text-primary-txt dark:text-primary-txt-dk'
+      'flex md:flex-col relative md:content-between py-12 bg-[#222222]',
+      'dark:text-primary-txt-dk'
     )}>
       <div className={tw(
         'w-2/5 md:w-full flex-shrink-0 flex',
@@ -142,13 +142,12 @@ export const Footer = () => {
           )}>
             <div className={tw('h-10 w-10 mr-1 relative')}>
               <Image
-                src={isDarkMode ? 'https://cdn.nft.com/hero_corner.svg' : 'https://cdn.nft.com/hero_corner_dark.svg' }
+                src={'https://cdn.nft.com/hero_corner.svg'}
                 alt="nft.com"
                 layout='fill'
                 objectFit='cover'
               />
             </div>
-            <span>NFT.COM</span>
           </div>
         </Link>
         <div className="md:hidden block h-1/5 sm:mt-3">
