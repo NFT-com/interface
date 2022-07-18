@@ -20,6 +20,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
     align: 'start',
     loop: true,
     skipSnaps: false,
+    inViewThreshold: 1.0
   }, [autoplay]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -43,7 +44,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   }, [embla, setScrollSnaps, onSelect]);
 
   return (
-    <div className='relative overflow-hidden'>
+    <div className='relative overflow-hidden w-full'>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex space-x-4 py-4">
           {props.profiles.map((profile, index) => (
@@ -51,7 +52,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
               key={profile?.profile?.id ?? index}
               src={profile?.profile?.photoURL}
               variant={RoundedCornerVariant.All}
-              containerClasses={'h-full w-full drop-shadow-xl p-4'}
+              containerClasses={'h-full w-[25%] flex-none relative drop-shadow-xl p-4'}
               onClick={() => router.push(`/${profile?.profile?.url}`)}
             />
           ))}
