@@ -103,7 +103,7 @@ export function createSeaportParametersForNFTListing(
   // This is what the seller will accept for their NFT.
   // For now, we support a single currency.
   const considerationItems = [{
-    itemType: ItemType.NATIVE,
+    itemType: currency === NULL_ADDRESS ? ItemType.NATIVE : ItemType.ERC20,
     token: currency,
     identifierOrCriteria: BigNumber.from(0).toString(),
     startAmount: BigNumber.from(price).toString(),
