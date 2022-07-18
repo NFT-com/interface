@@ -1,4 +1,3 @@
-import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -15,8 +14,6 @@ export const Footer = () => {
   const { data: account } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { profileTokens } = useMyNftProfileTokens();
-
-  const { isDarkMode } = useUser();
 
   const footerData = [
     {
