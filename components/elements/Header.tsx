@@ -5,12 +5,12 @@ import { SearchBar } from './SearchBar';
 import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import Link from 'next/link';
-import NavLogo from 'public/hero_corner.svg';
+import NavLogo from 'public/hero_corner_dark.svg';
 import { isMobile } from 'react-device-detect';
 
 export const Header = () => {
   return (
-    <nav className='fixed z-[99] top-0 w-screen h-20 bg-secondary-dk drop-shadow-md'>
+    <nav className='fixed z-[99] top-0 w-screen h-20 bg-always-white drop-shadow-md'>
       <div className="w-full mx-auto px-5">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
