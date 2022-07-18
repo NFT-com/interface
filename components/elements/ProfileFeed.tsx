@@ -52,7 +52,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
               key={profile?.profile?.id ?? index}
               src={profile?.profile?.photoURL}
               variant={RoundedCornerVariant.All}
-              containerClasses={'h-full w-full drop-shadow-xl'}
+              containerClasses={'h-full w-full drop-shadow-xl p-4'}
               onClick={() => router.push(`/${profile?.profile?.url}`)}
             />
           ))}
