@@ -1,5 +1,4 @@
 import { ProfileQuery } from 'graphql/generated/types';
-import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 

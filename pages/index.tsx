@@ -23,7 +23,6 @@ import { NextPageWithLayout } from './_app';
 
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
-import HomeBannerbg from 'public/HomeBannerbg.svg';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { TickerStat } from 'types';
@@ -102,7 +101,9 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             'break-after-all',
           )}
           style={{
-            backgroundImage: `url(${HomeBannerbg.img})`,
+            backgroundImage: 'url(\'/home-banner-bg.png\')',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
           }}>
             <div className='break-after-all space-y-2 md:w-full'>
               <div className={tw(

@@ -37,7 +37,6 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
             {props?.profileOwner?.profile?.url}
           </p>
         </div>
-
         <div className='grid grid-cols-1.3 grid-rows-2 gap-x-2 gap-y-2 sm:gap-4 sm:grid-flow-col sm:auto-cols-[90%] sm:overflow-x-auto sm:grid-cols-none sm:grid-rows-1 sm:min-h-[410px] sm:overscroll-x-contain'>
           <div className='flex flex-col w-full row-span-2 sm:row-auto sm:aspect-square sm:h-full'>
             <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[0]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full' />
