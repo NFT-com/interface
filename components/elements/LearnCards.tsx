@@ -39,7 +39,7 @@ export const LearnCards = (props: LearnCardsProps) => {
 
   return (
     <div className="overflow-hidden w-full" ref={emblaRef}>
-      <div className="flex w-full">
+      <div className="flex w-full space-x-4">
         {props.cardTitles.map((cardTitle) => (
           <div
             key={cardTitle}
