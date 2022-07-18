@@ -102,7 +102,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Header />
           <Sidebar />
         </ClientOnly>
-        <main className='flex flex-col mt-20'>
+        <main className='flex flex-col mt-20 font-grotesk not-italic'>
           <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 space-x-10 px-20 w-screen h-full',
             'break-after-all ',
           )}
@@ -113,7 +113,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           }}>
             <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
-                'font-grotesk font-header-bold text-[#4D4412] text-header leading-header sm:font-header md:font-header-bold ',
+                'font-header text-black text-header leading-header',
                 'break-after-all space-y-2',
                 'md:mb-6'
               )}>
@@ -127,7 +127,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
                 </div>
               </div>
-              <div className='w-full h-full inline-flex grow space-x-2'>
+              <div className='w-full h-full inline-flex grow space-x-4'>
                 <WalletRainbowKitButton signInButton showWhenConnected={false} />
                 <button
                   onClick={() => {
@@ -139,7 +139,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'font-medium bg-transparent rounded-xl text-[#4D4412]',
                     'flex flex-row items-center cursor-pointer opacity-80 hover:opacity-100',
                     'font-grotesk font-body',
-                    'py-2 px-5'
+                    'py-2'
                   )}
                   type="button">
                   Learn More
@@ -156,7 +156,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
           <div className='space-y-12 ...'>
             <div className='h-full p-12 ...'>
-              <div className='text-header leading-header font-header justify-center ...'>
+              <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.feedDescription}
@@ -193,14 +193,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               )}
             </div>
             <div className='h-full px-12 py-10 ...'>
-              <div className='text-header leading-header font-header justify-center mb-6 mt-14 ...'>
+              <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </div>
               <LeaderBoard data={leaderboardData} />
             </div>
             <div className='flex flex-row flex-wrap w-full h-full justify-center px-12 py-10 ...'>
               <div className='h-full w-full ...'>
-                <div className='text-header leading-header font-header justify-center ...'>
+                <div className='text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle}
                   <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                     {data?.threeCardDescription}
@@ -223,7 +223,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle2}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.threeCardDescription2}
@@ -245,7 +245,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle3}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.threeCardDescription3}
@@ -267,7 +267,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-section leading-header font-header justify-center ...'>
                   {data?.communityCtaTitle}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.communityCtaDescription}
@@ -276,7 +276,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </div>
             </div>
             <div className='h-full w-full px-12 py-10'>
-              <div className='text-header leading-header font-header justify-center ...'>
+              <div className='text-section leading-header font-header justify-center ...'>
                 {data?.learnTitle}
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.learnDescription}
