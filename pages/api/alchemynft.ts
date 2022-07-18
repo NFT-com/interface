@@ -3,6 +3,18 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+export const ALCHEMY_KEYS = {
+  '1': process.env.ALCHEMY_MAINNET_KEY,
+  '4': process.env.ALCHEMY_RINKEBY_KEY,
+  '5': process.env.ALCHEMY_GOERLI_KEY,
+};
+
+export const ALCHEMY_PREFIXES = {
+  '1': 'mainnet',
+  '4': 'rinkeby',
+  '5': 'goerli',
+};
+
 const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const action = req.query['action'];
   let chainId = req.query['chainId'];
@@ -10,10 +22,9 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     chainId = '1';
   }
   
-  const alchemyAPIKey = Number(chainId) !== 1 ?
-    process.env.ALCHEMY_RINKEBY_KEY :
-    process.env.ALCHEMY_MAINNET_KEY;
-  const apiUrl = `https://eth-${Number(chainId) !== 1 ? 'rinkeby' : 'mainnet'}.alchemyapi.io/v2/${alchemyAPIKey}`;
+  const alchemyAPIKey = ALCHEMY_KEYS[chainId as string];
+  
+  const apiUrl = `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/v2/${alchemyAPIKey}`;
   
   switch (action) {
   case 'getNftMetadata': {
@@ -70,7 +81,7 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(200).json(result);
       return;
     } catch (e) {
-      res.status(500).json(JSON.stringify({ message: 'getNfts: error processing Alchemy result' }));
+      res.status(500).json(JSON.stringify({ message: 'getNfts: error processing Alchemy result', e }));
       return;
     }
   }

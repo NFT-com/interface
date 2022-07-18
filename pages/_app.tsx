@@ -1,6 +1,7 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
+import { NFTListingsContextProvider } from 'components/modules/NFTDetail/NFTListingsContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
 
@@ -46,7 +47,7 @@ if (GOOGLE_ANALYTICS_ID != null) {
 
 const { chains, provider } = configureChains(
   getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
-    [chain.mainnet, chain.rinkeby] :
+    [chain.mainnet, chain.goerli, chain.rinkeby] :
     [chain.mainnet],
   [
     jsonRpcProvider({
@@ -116,7 +117,9 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
             chains={chains}>
             <AnimatePresence exitBeforeEnter>
               <GraphQLProvider>
-                <Component {...pageProps} key={router.pathname} />
+                <NFTListingsContextProvider>
+                  <Component {...pageProps} key={router.pathname} />
+                </NFTListingsContextProvider>
               </GraphQLProvider>
             </AnimatePresence>
           </RainbowKitProvider>

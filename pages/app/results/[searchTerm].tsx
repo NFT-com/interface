@@ -35,6 +35,10 @@ export interface HitInnerProps {
   tokenId: string;
 }
 
+export interface StatsComponentProps {
+  searchTerm: string | string[];
+}
+
 const getTypesenseInstantsearchAdapter = (QUERY_BY) => {
   const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
     server: {
@@ -128,6 +132,23 @@ const Results = connectStateResults(
   }
 );
 
+const StatsComponent = ((props: StatsComponentProps) => {
+  return (<Stats
+    translations={{
+      stats(nbHits) {
+        return (
+          <>
+            {props.searchTerm === '0' ?
+              <span>{`${nbHits.toLocaleString()} TOTAL RESULTS`}</span> :
+              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} RESULT${nbHits > 1? 'S' : ''} FOR `}</span>
+            }
+            <br/>
+            {props.searchTerm !== '0' && <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{props.searchTerm}</span>}
+          </>);
+      },
+    }}/>);
+});
+
 export default function ResultsPage() {
   const router = useRouter();
   const { searchTerm } = router.query;
@@ -154,7 +175,7 @@ export default function ResultsPage() {
               <SearchBox
                 submit={null}
                 reset={null}
-                defaultRefinement={searchTerm}
+                defaultRefinement={searchTerm === '0' ? '' : searchTerm}
               />
             </div>
             <div className="flex mb-10">
@@ -166,16 +187,7 @@ export default function ResultsPage() {
                   <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Collections</div>
                   <div className="flex justify-start items-center md:mb-0 mb-3">
                     <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
-                      <Stats
-                        translations={{
-                          stats(nbHits) {
-                            return (
-                              <>
-                                <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} RESULT${nbHits > 1? 'S' : ''} FOR `}</span><br/>
-                                <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
-                              </>);
-                          },
-                        }}/>
+                      <StatsComponent searchTerm={searchTerm} />
                     </div>
                   </div>
                   <div className="results-grid  mb-16">
@@ -186,14 +198,14 @@ export default function ResultsPage() {
             </div>
           </InstantSearch>}
           {<InstantSearch
-            searchClient={getTypesenseInstantsearchAdapter('nftName,contractName,contractAddr,tokenId,listingType,chain,status,nftType,ownerAddr,traits')}
+            searchClient={getTypesenseInstantsearchAdapter('nftName,contractName,contractAddr,tokenId,listingType,chain,status,nftType,traits')}
             indexName="nfts">
             <Configure hitsPerPage={12} />
             <div className="hidden">
               <SearchBox
                 submit={null}
                 reset={null}
-                defaultRefinement={searchTerm}
+                defaultRefinement={searchTerm === '0' ? '' : searchTerm}
               />
             </div>
             <div className="flex mb-10">
@@ -211,16 +223,7 @@ export default function ResultsPage() {
                   <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">NFTs</div>
                   <div className="flex justify-between items-center md:mb-0 mb-3">
                     <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
-                      <Stats
-                        translations={{
-                          stats(nbHits) {
-                            return (
-                              <>
-                                <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} RESULT${nbHits > 1? 'S' : ''} FOR `}</span><br/>
-                                <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
-                              </>);
-                          },
-                        }}/>
+                      <StatsComponent searchTerm={searchTerm} />
                     </div>
                     <div className={tw(
                       'results-page-select w-1/3 mr-2 cursor-pointer',
@@ -245,7 +248,7 @@ export default function ResultsPage() {
               <SearchBox
                 submit={null}
                 reset={null}
-                defaultRefinement={searchTerm}
+                defaultRefinement={searchTerm === '0' ? '' : searchTerm}
               />
             </div>
             <div className="flex mb-10">
@@ -257,16 +260,7 @@ export default function ResultsPage() {
                   <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Profiles</div>
                   <div className="flex justify-between items-center md:mb-0 mb-3">
                     <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
-                      <Stats
-                        translations={{
-                          stats(nbHits) {
-                            return (
-                              <>
-                                <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} RESULT${nbHits > 1? 'S' : ''} FOR `}</span><br/>
-                                <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>
-                              </>);
-                          },
-                        }}/>
+                      <StatsComponent searchTerm={searchTerm} />
                     </div>
 
                   </div>

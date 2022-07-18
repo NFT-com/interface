@@ -1,4 +1,5 @@
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
+import { MaxProfiles } from 'constants/typechain';
 import { ProfileStatus } from 'graphql/generated/types';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileAuctionSigner } from 'hooks/contracts/useProfileAuctionSigner';
@@ -197,12 +198,10 @@ export const ProfileMinter = () => {
                   }
                   
                   try {
-                    const tx = await (await publicClaimSigner).publicClaim(
+                    const tx = await (await publicClaimSigner as MaxProfiles).publicClaim(
                       currentURI,
                       profileClaimHash?.hash,
                       profileClaimHash?.signature,
-                      nextTokenIdWithClaimable,
-                      account?.address,
                     );
                     setMinting(true);
 

@@ -49,6 +49,7 @@ type HomePageProps = {
     threeCardImage3: any;
     learnTitle: string;
     learnDescription: string;
+    learnCards: any;
     communityCtaTitle: string;
     communityCtaDescription: string;
     featuredProfile: any;
@@ -96,10 +97,17 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 md:px-20 lg:px-40 xl:px-80 w-screen h-full bg-white break-after-all')}>
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 md:px-20 lg:px-40 xl:px-80 w-screen h-full',
+            'break-after-all',
+          )}
+          style={{
+            backgroundImage: 'url(\'/home-banner-bg.png\')',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}>
             <div className='break-after-all space-y-2 md:w-full'>
               <div className={tw(
-                'font-rubik text-[#4D4412] text-header leading-header sm:font-header md:font-header-bold ',
+                'font-grotesk font-header-bold text-[#4D4412] text-header leading-header sm:font-header md:font-header-bold ',
                 'break-after-all space-y-2',
                 'md:mb-6'
               )}>
@@ -124,7 +132,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'block',
                     'font-medium bg-transparent rounded-xl text-[#4D4412]',
                     'flex flex-row items-center cursor-pointer opacity-80 hover:opacity-100',
-                    'font-rubik font-body',
+                    'font-grotesk font-body',
                     'py-2 px-5'
                   )}
                   type="button">

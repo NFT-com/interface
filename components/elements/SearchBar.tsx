@@ -1,10 +1,10 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
+import { typesenseInstantsearchAdapter } from 'utils/typseSenseAdapter';
 
 import { useRouter } from 'next/router';
 import SearchIcon from 'public/search.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Configure,
   connectStateResults,
@@ -13,7 +13,6 @@ import {
   Index,
   InstantSearch,
   SearchBox } from 'react-instantsearch-dom';
-import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
 
 const Hit = (hit) => {
   const router = useRouter();
@@ -42,38 +41,17 @@ const Hit = (hit) => {
 
 export const SearchBar = () => {
   const [showHits, setShowHits] = useState(false);
+  const [displaySearchBar, setDisplaySearchBar] = useState(false);
   const router = useRouter();
 
   const resultsRef = useRef();
 
-  const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
-    server: {
-      apiKey: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_APIKEY),
-      nodes: [
-        {
-          host: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_HOST),
-          port: 443,
-          protocol: 'https',
-        },
-      ],
-      cacheSearchResultsForSeconds: 2 * 60, // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
-    },
-    additionalSearchParameters: {
-      query_by: 'nftName,contractName,contractAddr,tokenId,listingType,chain,status,nftType,ownerAddr,traits',
-    },
-    collectionSpecificSearchParameters: {
-      ntfs: {
-        query_by: 'nftName,contractName,contractAddr,tokenId,listingType,chain,status,listedPx,nftType,ownerAddr,traits',
-      },
-      collections: {
-        query_by: 'contractName,contractAddr,chain',
-      },
-      profiles: {
-        query_by: 'url',
-      },
-    },
-  });
-  
+  useEffect(() => {
+    setTimeout(() => {
+      setDisplaySearchBar(true);
+    }, 1000);
+  },[]);
+
   const searchClient = typesenseInstantsearchAdapter.searchClient;
 
   useOutsideClickAlerter(resultsRef, () => {
@@ -104,7 +82,7 @@ export const SearchBar = () => {
 
   return (
     <>
-      <InstantSearch
+      {displaySearchBar && <InstantSearch
         searchClient={searchClient}
         indexName="collections"
         onSearchStateChange={() => {
@@ -153,6 +131,6 @@ export const SearchBar = () => {
           )}
         </div>
       </InstantSearch>
-
+      }
     </>);
 };

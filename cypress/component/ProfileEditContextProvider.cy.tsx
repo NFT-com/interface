@@ -2,8 +2,10 @@
 
 import { ProfileEditContext, ProfileEditContextProvider, ProfileEditContextType } from '../../components/modules/Profile/ProfileEditContext';
 import { ProfileDisplayType, ProfileLayoutType } from '../../graphql/generated/types';
+import { setupWagmiClient } from '../util/wagmi';
 
 import { useContext } from 'react';
+import { WagmiConfig } from 'wagmi';
 
 const TestComponent = () => {
   const {
@@ -98,10 +100,13 @@ const TestComponent = () => {
 
 describe('ProfileEditContextProvider', () => {
   beforeEach(() => {
+    const client = setupWagmiClient();
     cy.mount(
-      <ProfileEditContextProvider profileURI='test'>
-        <TestComponent />
-      </ProfileEditContextProvider>
+      <WagmiConfig client={client}>
+        <ProfileEditContextProvider profileURI='test'>
+          <TestComponent />
+        </ProfileEditContextProvider>
+      </WagmiConfig>
     );
   });
 
