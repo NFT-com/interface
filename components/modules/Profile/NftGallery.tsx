@@ -52,7 +52,7 @@ export function NftGallery(props: NftGalleryProps) {
   }
 
   const detailedOwnerNFTs = allOwnerNFTs.map(nft => {
-    if (profileNFTs.find(nft2 => nft2.id === nft.id)) {
+    if (profileNFTs?.find(nft2 => nft2.id === nft.id)) {
       return {
         ...nft,
         hidden: false

@@ -9,6 +9,8 @@
     "types": [
       "cypress",
       "@testing-library/cypress",
+      "@testing-library/react-hooks",
+      "@testing-library/dom",
       "node"
     ],
     "resolveJsonModule": true,

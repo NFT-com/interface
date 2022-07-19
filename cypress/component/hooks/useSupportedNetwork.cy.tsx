@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { useSupportedNetwork } from '../../../hooks/useSupportedNetwork';
-import { TestWagmiClient } from '../../util/TestWagmiClient';
+import { setupWagmiClient } from '../../util/utils';
 
 import { WagmiConfig } from 'wagmi';
 
@@ -14,26 +14,16 @@ const TestComponent = () => {
   </div>;
 };
 
-xdescribe('useSupportedNetwork', () => {
-  xit('should have the correct networks', () => {
-    // todo: set up the infrastructure to mock the react-query QueryClient and the WagmiClient APIs
-    const client = new TestWagmiClient(
-      cy.stub(),
-      cy.stub(),
-      cy.stub(),
-      cy.stub(),
-      cy.stub(),
-      cy.stub(),
-      cy.stub(),
-      cy.stub(),
-      cy.stub()
-    );
+describe('useSupportedNetwork', () => {
+  it('should have the correct networks', () => {
+    const client = setupWagmiClient();
+
     cy.mount(
       <WagmiConfig client={client}>
         <TestComponent />
       </WagmiConfig>
     );
-    cy.get('#isSupported').should('have.text', '550');
-    cy.get('#networks').should('have.text', '750');
+    cy.get('#isSupported').should('have.text', 'false');
+    cy.get('#networks').should('have.text', '["ethereum:5:goerli","ethereum:4:rinkeby"]');
   });
 });

@@ -20,7 +20,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
     align: 'start',
     loop: true,
     skipSnaps: false,
-    inViewThreshold: 0.7,
+    inViewThreshold: 1.0
   }, [autoplay]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -44,31 +44,33 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   }, [embla, setScrollSnaps, onSelect]);
 
   return (
-    <div className="overflow-hidden" ref={emblaRef}>
-      <div className="flex">
-        {props.profiles.map((profile, index) => (
-          <RoundedCornerMedia
-            key={profile?.profile?.id ?? index}
-            src={profile?.profile?.photoURL}
-            variant={RoundedCornerVariant.All}
-            containerClasses={'h-full w-full'}
-            onClick={() => router.push(`/${profile?.profile?.url}`)}
-          />
-        ))}
-      </div>
-      <div className="flex items-center justify-center mt-5 space-x-2">
-        {scrollSnaps.map((_, idx) => (
-          <div className={`w-3 h-3 bg-blog-slider-blue border rounded-full flex justify-center items-center ${
-            idx === selectedIndex ? 'border-[#0077BA]' : 'none'
-          }`} key={idx} >
-            <button
-              className={`w-2 h-2 rounded-full ${
-                idx === selectedIndex ? 'bg-[#0077BA]' : 'bg-[#B7C6CE]'
-              }`}
-              onClick={() => scrollTo(idx)}
+    <div className='relative overflow-hidden w-full'>
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex space-x-4 py-4">
+          {props.profiles.map((profile, index) => (
+            <RoundedCornerMedia
+              key={profile?.profile?.id ?? index}
+              src={profile?.profile?.photoURL}
+              variant={RoundedCornerVariant.All}
+              containerClasses={'h-full w-[25%] flex-none relative drop-shadow-xl p-4'}
+              onClick={() => router.push(`/${profile?.profile?.url}`)}
             />
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="flex items-center justify-center mt-5 space-x-2">
+          {scrollSnaps.map((_, idx) => (
+            <div className={`w-3 h-3 bg-blog-slider-blue border rounded-full flex justify-center items-center ${
+              idx === selectedIndex ? 'border-[#0077BA]' : 'none'
+            }`} key={idx} >
+              <button
+                className={`w-2 h-2 rounded-full ${
+                  idx === selectedIndex ? 'bg-[#0077BA]' : 'bg-[#B7C6CE]'
+                }`}
+                onClick={() => scrollTo(idx)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

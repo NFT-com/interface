@@ -1,5 +1,7 @@
 import { isNullOrEmpty } from 'utils/helpers';
 
+import { ALCHEMY_KEYS, ALCHEMY_PREFIXES } from './alchemynft';
+
 import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -9,10 +11,9 @@ const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     chainId = process.env.NEXT_PUBLIC_CHAIN_ID;
   }
 
-  const alchemyAPIKey = Number(chainId) !== 1 ?
-    process.env.ALCHEMY_RINKEBY_KEY :
-    process.env.ALCHEMY_MAINNET_KEY;
-  const apiUrl = `https://eth-${Number(chainId) !== 1 ? 'rinkeby' : 'mainnet'}.alchemyapi.io/v2/${alchemyAPIKey}`;
+  const alchemyAPIKey = ALCHEMY_KEYS[chainId as string];
+
+  const apiUrl = `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/v2/${alchemyAPIKey}`;
 
   try {
     const result = await fetch(apiUrl, {

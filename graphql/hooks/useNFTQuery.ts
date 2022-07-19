@@ -2,6 +2,7 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Nft } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
+import { BigNumber, BigNumberish } from 'ethers';
 import { useCallback } from 'react';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -12,7 +13,7 @@ export interface NftData {
   mutate: () => void;
 }
 
-export function useNftQuery(contract: string, id: string): NftData {
+export function useNftQuery(contract: string, id: BigNumberish): NftData {
   const sdk = useGraphQLSDK();
   const keyString = 'NftQuery ' + contract + id;
 
@@ -21,10 +22,11 @@ export function useNftQuery(contract: string, id: string): NftData {
   }, [keyString]);
 
   const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(contract) || isNullOrEmpty(id)) {
+    if (isNullOrEmpty(contract) || id == null) {
       return null;
     }
-    const result = await sdk.Nft({ contract, id });
+    // All NFT IDs are stored in hex string format.
+    const result = await sdk.Nft({ contract, id: BigNumber.from(id).toHexString() });
     return result?.nft;
   });
   return {
