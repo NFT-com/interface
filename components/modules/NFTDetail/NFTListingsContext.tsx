@@ -56,10 +56,6 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
 
 /**
  * This context provides state management and helper functions for the NFT listings cart.
- * 
- * This context does _not_ return the server-provided values for all fields. You should
- * check this context for drafts, and fallback on the server-provided values at the callsite.
- * 
  */
 export function NFTListingsContextProvider(
   props: PropsWithChildren<any>

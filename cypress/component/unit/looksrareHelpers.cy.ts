@@ -2,6 +2,7 @@
 
 import { WETH } from '../../../constants/tokens';
 import { createLooksrareParametersForNFTListing } from '../../../utils/looksrareHelpers';
+import { convertDurationToSec } from '../../../utils/marketplaceUtils';
 
 import { addressesByNetwork } from '@looksrare/sdk';
 import { BigNumber, ethers } from 'ethers';
@@ -31,7 +32,8 @@ describe('looksrareHelpers', () => {
         1, // chainId
         99, // nonce
         mockStrategy,
-        mockFeeRegistry
+        mockFeeRegistry,
+        convertDurationToSec('1 Week')
       );
 
       expect(result).to.deep.equal({
