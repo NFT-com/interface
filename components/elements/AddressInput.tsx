@@ -28,7 +28,6 @@ export function AddressInput(props: AddressInputProps) {
           value={props.value ?? ''}
           onChange={e => {
             const validReg = /^[0-9a-zA-Z]*$/;
-            console.log(e.target.value);
             if (isNullOrEmpty(e.target.value)) {
               props.onChange(null);
             } else if (
