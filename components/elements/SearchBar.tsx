@@ -1,6 +1,6 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
-import { typesenseInstantsearchAdapter } from 'utils/typseSenseAdapter';
+import { MultiIndexTypesenseInstantSearchAdapter } from 'utils/typeSenseAdapters';
 
 import { useRouter } from 'next/router';
 import SearchIcon from 'public/search.svg';
@@ -52,7 +52,7 @@ export const SearchBar = () => {
     }, 1000);
   },[]);
 
-  const searchClient = typesenseInstantsearchAdapter.searchClient;
+  const searchClient = MultiIndexTypesenseInstantSearchAdapter.searchClient;
 
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
