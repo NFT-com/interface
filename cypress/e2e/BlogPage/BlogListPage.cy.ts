@@ -8,7 +8,7 @@ describe('Blog List Page Tests', () => {
 
   it('Card click navigates to valid post', () => {
     cy.visit('/articles');
-    cy.get('[data-cy="blogPostCard"]').click();
+    cy.get('[data-cy="blogPostCard"]').first().click();
 
     cy.url().should('not.eq', '/articles');
   });
