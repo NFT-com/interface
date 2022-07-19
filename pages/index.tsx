@@ -99,7 +99,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
     return (
       <>
         <ClientOnly>
-          <Header />
+          <Header bgLight />
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>

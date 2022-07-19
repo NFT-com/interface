@@ -8,24 +8,44 @@ import { SearchBar } from './SearchBar';
 import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import Link from 'next/link';
+import LightNavLogo from 'public/hero_corner.svg';
 import NavLogo from 'public/hero_corner_dark.svg';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
-export const Header = () => {
+type HeaderProps = {
+  removeBg?: boolean
+  bgLight?: boolean
+}
+
+export const Header = ({ removeBg, bgLight } : HeaderProps) => {
   const { data: account } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
+
   return (
-    <nav className='fixed z-[99] top-0 w-screen h-20 bg-always-white drop-shadow-md'>
+    <nav className={tw(
+      'fixed z-[104] top-0 w-screen h-20 drop-shadow-md',
+      removeBg && 'bg-transparent',
+      bgLight ? 'bg-always-white' : 'bg-black'
+    )}>
       <div className="w-full mx-auto px-5">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
             <div className="flex-shrink-0 hover:cursor-pointer">
-              <Link href='/'>
-                <NavLogo className='h-8 w-8 justify-start' />
-              </Link>
+              {bgLight
+                ? (
+                  <Link href='/'>
+                    <NavLogo className='h-8 w-8 justify-start' />
+                  </Link>
+                )
+                : (
+                  <Link href='/'>
+                    <LightNavLogo className='h-8 w-8 justify-start' />
+                  </Link>
+                )
+              }
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
