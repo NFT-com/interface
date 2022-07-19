@@ -35,17 +35,15 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
       </div>
     );
   }
-
   return <div className="overflow-x-auto relative w-full">
     <table className="min-w-full border-x-0">
       <thead>
         <tr className="text-body leading-body font-body">
           <th scope="col" className="flex items-center text-body sm:text-sm leading-body font-body"></th>
           <th scope="col" className='text-left text-body sm:text-sm leading-body font-body'>Profile</th>
-          <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body'>Number of Genesis Keys</th>
-          <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body xs:hidden'>Items Collected</th>
-          <th scope="col" className='text-right text-body sm:text-sm leading-body font-body sm:hidden'>Number of Communities</th>
-          <th scope="col" className='text-right text-body sm:text-sm leading-body font-body md:hidden'>Transactions</th>
+          <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body'>NFTs Collected</th>
+          <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body sm:hidden'>Number of NFT Collections</th>
+          <th scope="col" className='text-right text-body sm:text-sm leading-body font-body sm:hidden'>Number of Genesis Keys</th>
         </tr>
       </thead>
       <tbody className="bg-always-white">
@@ -77,26 +75,19 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
             <td>
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
                 'whitespace-nowrap text-right mr-3')}>
-                {item.numberOfGenesisKeys}
-              </div>
-            </td>
-            <td className="xs:hidden">
-              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
-                'whitespace-nowrap text-right mr-3')}>
                 {item.itemsVisible}
               </div>
             </td>
             <td className="sm:hidden">
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
-                'whitespace-nowrap text-right')}>
+                'whitespace-nowrap text-right mr-3')}>
                 {item.numberOfCollections}
               </div>
             </td>
-            <td className="md:hidden">
+            <td className="sm:hidden">
               <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
                 'whitespace-nowrap text-right')}>
-                {/* // TODO: get transactions to pull from the BE */}
-                20
+                {item.numberOfGenesisKeys}
               </div>
             </td>
           </tr>
