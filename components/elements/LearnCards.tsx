@@ -42,12 +42,11 @@ export const LearnCards = (props: LearnCardsProps) => {
   );
 
   useEffect(() => {
-    console.log(props.cardImages);
     if (!embla) return;
     onSelect();
     setScrollSnaps(embla.scrollSnapList());
     embla.on('select', onSelect);
-  }, [embla, setScrollSnaps, onSelect, props.cardImages]);
+  }, [embla, setScrollSnaps, onSelect]);
 
   return (
     <div className='relative overflow-hidden'>
