@@ -78,7 +78,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                           'rounded-xl',
                           `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? 'text-[#4D4412]' : 'text-white'}`,
                           'border border-primary-button-border',
-                          'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
+                          'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
                           'py-2 px-5'
                         )}
                         type="button">
@@ -101,7 +101,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                     `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
                       ? 'bg-primary-button-bckg'
                       : 'bg-deprecated_primary-button-bckg'}`,
-                    'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
+                    'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
                     'border',
                     'border-primary-button-border',
                     'py-2 px-5'
@@ -128,7 +128,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                       `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
                         ? 'bg-primary-button-bckg'
                         : 'bg-deprecated_primary-button-bckg'}`,
-                      'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik',
+                      'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
                       'py-2 px-5'
                     )} onClick={() => {
                       toggleSidebar();

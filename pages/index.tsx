@@ -21,6 +21,7 @@ import { tw } from 'utils/tw';
 
 import { NextPageWithLayout } from './_app';
 
+import { BigNumber } from 'ethers';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
 import { useEffect, useState } from 'react';
@@ -64,20 +65,25 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile['profileURI']);
   const { data: featuredProfileNFT1 } = useNftQuery(
     data?.featuredProfile['featuredProfileNft1'].collection,
-    data?.featuredProfile['featuredProfileNft1'].tokenId
+    BigNumber.from(data?.featuredProfile['featuredProfileNft1'].tokenId)
   );
   const { data: featuredProfileNFT2 } = useNftQuery(
     data?.featuredProfile['featuredProfileNft2'].collection,
-    data?.featuredProfile['featuredProfileNft2'].tokenId
+    BigNumber.from(data?.featuredProfile['featuredProfileNft2'].tokenId)
   );
   const { data: featuredProfileNFT3 } = useNftQuery(
     data?.featuredProfile['featuredProfileNft3'].collection,
-    data?.featuredProfile['featuredProfileNft3'].tokenId
+    BigNumber.from(data?.featuredProfile['featuredProfileNft3'].tokenId)
   );
   const { profileData: profileFeed1 } = useProfileQuery(data?.feedCollections['profile1']['url']);
   const { profileData: profileFeed2 } = useProfileQuery(data?.feedCollections['profile2']['url']);
   const { profileData: profileFeed3 } = useProfileQuery(data?.feedCollections['profile3']['url']);
   const { profileData: profileFeed4 } = useProfileQuery(data?.feedCollections['profile4']['url']);
+  const { profileData: profileFeed5 } = useProfileQuery(data?.feedCollections['profile5']['url']);
+  const { profileData: profileFeed6 } = useProfileQuery(data?.feedCollections['profile6']['url']);
+  const { profileData: profileFeed7 } = useProfileQuery(data?.feedCollections['profile7']['url']);
+  const { profileData: profileFeed8 } = useProfileQuery(data?.feedCollections['profile8']['url']);
+
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
 
   useEffect(() => {
@@ -96,18 +102,18 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Header />
           <Sidebar />
         </ClientOnly>
-        <main className='flex flex-col mt-20'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 md:px-20 lg:px-40 xl:px-80 w-screen h-full',
-            'break-after-all',
+        <main className='flex flex-col mt-20 font-grotesk not-italic'>
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 space-x-10 px-20 w-screen h-full',
+            'break-after-all ',
           )}
           style={{
             backgroundImage: 'url(\'/home-banner-bg.png\')',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
           }}>
-            <div className='break-after-all space-y-2 md:w-full'>
+            <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
-                'font-grotesk font-header-bold text-[#4D4412] text-header leading-header sm:font-header md:font-header-bold ',
+                'font-header text-black text-header leading-header',
                 'break-after-all space-y-2',
                 'md:mb-6'
               )}>
@@ -121,7 +127,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
                 </div>
               </div>
-              <div className='w-full h-full inline-flex grow space-x-2'>
+              <div className='w-full h-full inline-flex grow space-x-4'>
                 <WalletRainbowKitButton signInButton showWhenConnected={false} />
                 <button
                   onClick={() => {
@@ -133,14 +139,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'font-medium bg-transparent rounded-xl text-[#4D4412]',
                     'flex flex-row items-center cursor-pointer opacity-80 hover:opacity-100',
                     'font-grotesk font-body',
-                    'py-2 px-5'
+                    'py-2'
                   )}
                   type="button">
                   Learn More
                 </button>
               </div>
             </div>
-            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20'>
+            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20 w-[70%]'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
@@ -150,7 +156,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
           <div className='space-y-12 ...'>
             <div className='h-full p-12 ...'>
-              <div className='text-header leading-header font-header justify-center ...'>
+              <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.feedDescription}
@@ -160,7 +166,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     profileFeed1,
                     profileFeed2,
                     profileFeed3,
-                    profileFeed4
+                    profileFeed4,
+                    profileFeed5,
+                    profileFeed6,
+                    profileFeed7,
+                    profileFeed8,
                   ]}
                 />
                 <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
@@ -183,14 +193,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               )}
             </div>
             <div className='h-full px-12 py-10 ...'>
-              <div className='text-header leading-header font-header justify-center mb-6 mt-14 ...'>
+              <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </div>
               <LeaderBoard data={leaderboardData} />
             </div>
             <div className='flex flex-row flex-wrap w-full h-full justify-center px-12 py-10 ...'>
               <div className='h-full w-full ...'>
-                <div className='text-header leading-header font-header justify-center ...'>
+                <div className='text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle}
                   <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                     {data?.threeCardDescription}
@@ -213,7 +223,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle2}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.threeCardDescription2}
@@ -235,7 +245,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle3}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.threeCardDescription3}
@@ -257,7 +267,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-header leading-header font-header justify-center ...'>
+                <div className='px-6 text-section leading-header font-header justify-center ...'>
                   {data?.communityCtaTitle}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.communityCtaDescription}
@@ -266,7 +276,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </div>
             </div>
             <div className='h-full w-full px-12 py-10'>
-              <div className='text-header leading-header font-header justify-center ...'>
+              <div className='text-section leading-header font-header justify-center ...'>
                 {data?.learnTitle}
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.learnDescription}
