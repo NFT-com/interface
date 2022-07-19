@@ -24,6 +24,7 @@ import { NextPageWithLayout } from './_app';
 import { BigNumber } from 'ethers';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { TickerStat } from 'types';
@@ -59,6 +60,7 @@ type HomePageProps = {
 };
 
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
+  const router = useRouter();
   const [tickerStats, setTickerStats] = useState<TickerStat[]>([]);
   const [featuredProfileNfts, setFeaturedProfileNfts] = useState<any[]>([]);
 
@@ -177,10 +179,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <Button
                     bgColor={'#F9D963'}
                     color={'#4D4412'}
-                    label='Discover'
+                    label='Discover More NFT Profiles'
                     stretch={isMobile}
                     onClick={() => {
-                      console.log('Discover clicked');
+                      router.push('/app/gallery');
                     }}
                     type={ButtonType.SECONDARY}
                   />
@@ -281,9 +283,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.learnDescription}
                 </div>
-                <LearnCards
-                  cardTitles={['What is an NFT?', 'What is a Blockchain?']}
-                />
+                <div className='w-full h-[350px] ...'>
+                  <LearnCards
+                    cardTitles={['What is an NFT?', 'What is a Blockchain?']}
+                  />
+                </div>
               </div>
             </div>
           </div>
