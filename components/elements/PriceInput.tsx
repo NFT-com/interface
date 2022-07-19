@@ -77,7 +77,7 @@ export function PriceInput(props: PriceInputProps) {
               const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
               setFormattedPrice(paddedValue);
               
-              props.onPriceChange(ethers.utils.parseEther(e.target.value));
+              props.onPriceChange(ethers.utils.parseEther(paddedValue));
             } else {
               e.preventDefault();
             }
