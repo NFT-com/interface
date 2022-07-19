@@ -114,7 +114,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 space-x-10 px-20 lg:w-screen max-w-[90rem] mx-auto h-full',
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 px-20 lg:w-screen max-w-[90rem] mx-auto h-full',
             'break-after-all ',
           )}
           style={{
@@ -157,7 +157,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </button>
               </div>
             </div>
-            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20 w-[70%]'>
+            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20 sm:w-full w-[70%]'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
