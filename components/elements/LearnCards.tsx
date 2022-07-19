@@ -2,10 +2,13 @@ import { tw } from 'utils/tw';
 
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
+import Link from 'next/link';
+import router from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 
 interface LearnCardsProps {
-  cardTitles: string[];
+  cards: any[];
+  cardImages: any[];
 }
 
 export const LearnCards = (props: LearnCardsProps) => {
@@ -31,6 +34,13 @@ export const LearnCards = (props: LearnCardsProps) => {
     setSelectedIndex(embla.selectedScrollSnap());
   }, [embla, setSelectedIndex]);
 
+  const onSlideClick = useCallback(
+    (cardUrl) => {
+      if (embla && embla.clickAllowed()) router.push(`${cardUrl}`);
+    },
+    [embla],
+  );
+
   useEffect(() => {
     if (!embla) return;
     onSelect();
@@ -42,20 +52,28 @@ export const LearnCards = (props: LearnCardsProps) => {
     <div className='relative overflow-hidden'>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex space-x-4">
-          {props.cardTitles.map((cardTitle) => (
-            <div
-              key={cardTitle}
-              className={tw(
-                'drop-shadow-md rounded-xl flex-none',
-                'w-full h-full',
-                'my-4',
-                'bg-gray-opacity',
-                'text-header leading-header font-header text-center',
-                'py-20',
-                'px-4'
-              )}>
-              {cardTitle}
-            </div>
+          {props?.cards?.map((card, index) => (
+            <Link href={card['linkTo']} passHref key={card['title']}>
+              <a
+                key={card['title']}
+                className={tw(
+                  'drop-shadow-md rounded-xl flex-none',
+                  'w-full h-full',
+                  'my-4',
+                  'text-header leading-header font-header text-center',
+                  'py-20',
+                  'px-4',
+                )}
+                onClick={() => onSlideClick(card['linkTo'])}
+                style={{
+                  background: `url("${props.cardImages[index].url}")`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                }}
+              >
+                {card['title']}
+              </a>
+            </Link>
           ))}
         </div>
         <div className="flex items-center justify-center mt-5 space-x-2">

@@ -24,6 +24,7 @@ import { NextPageWithLayout } from './_app';
 import { BigNumber } from 'ethers';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { TickerStat } from 'types';
@@ -51,6 +52,7 @@ type HomePageProps = {
     learnTitle: string;
     learnDescription: string;
     learnCards: any;
+    learnCardImagesCollection: any;
     communityCtaTitle: string;
     communityCtaDescription: string;
     featuredProfile: any;
@@ -59,7 +61,10 @@ type HomePageProps = {
 };
 
 const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
+  const router = useRouter();
   const [tickerStats, setTickerStats] = useState<TickerStat[]>([]);
+  const [learnCards, setLearnCards] = useState<any[]>([]);
+  const [learnCardImages, setLearnCardImages] = useState<any[]>([]);
   const [featuredProfileNfts, setFeaturedProfileNfts] = useState<any[]>([]);
 
   const { profileData: featuredProfile } = useProfileQuery(data?.featuredProfile['profileURI']);
@@ -93,7 +98,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
     if (data?.featuredProfile) {
       setFeaturedProfileNfts([featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3]);
     }
-  }, [data?.featuredProfile, data?.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3]);
+    if(data?.learnCards) {
+      setLearnCards([data?.learnCards['card1'], data?.learnCards['card2']]);
+    }
+    if(data?.learnCardImagesCollection) {
+      setLearnCardImages([data?.learnCardImagesCollection.items[0], data?.learnCardImagesCollection.items[1]]);
+    }
+  }, [data?.featuredProfile, data?.learnCards, data?.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data?.learnCardImagesCollection.items, data?.learnCardImagesCollection]);
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
@@ -177,10 +188,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <Button
                     bgColor={'#F9D963'}
                     color={'#4D4412'}
-                    label='Discover'
+                    label='Discover More NFT Profiles'
                     stretch={isMobile}
                     onClick={() => {
-                      console.log('Discover clicked');
+                      router.push('/app/gallery');
                     }}
                     type={ButtonType.SECONDARY}
                   />
@@ -281,9 +292,12 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.learnDescription}
                 </div>
-                <LearnCards
-                  cardTitles={['What is an NFT?', 'What is a Blockchain?']}
-                />
+                <div className='w-full h-[350px] ...'>
+                  <LearnCards
+                    cards={learnCards}
+                    cardImages={learnCardImages}
+                  />
+                </div>
               </div>
             </div>
           </div>
