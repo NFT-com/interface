@@ -131,17 +131,17 @@ module.exports = {
         'xxs4': '0.5rem',
         '3xll': '1.75rem',
         'xxs3': '0.688rem',
-        'header': '2.25rem',
+        'header': '4.75rem',
+        'section': '2.25rem',
         'body': '1rem',
         'xll': '1.375rem'
       },
       fontWeight: {
-        'header': '500',
-        'header-bold': '700',
+        'header': '700',
         'body': '400',
       },
       lineHeight: {
-        'header': '2.5rem',
+        'header': '4.5rem',
         'body': '1.5rem',
         5.5: '1.4',
       },
