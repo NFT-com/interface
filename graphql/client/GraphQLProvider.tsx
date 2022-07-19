@@ -113,7 +113,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       // if there is no connected wallet, it should fail silently.
       setSigRejected(!sigResult && !isNullOrEmpty(account?.address));
     })();
-  }, [account, isSupported, trySignature, activeChain?.id]);
+  }, [account, isSupported, trySignature]);
   
   return (
     <GraphQLContext.Provider

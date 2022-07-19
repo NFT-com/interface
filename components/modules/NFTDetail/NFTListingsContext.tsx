@@ -98,6 +98,7 @@ export function NFTListingsContextProvider(
   const clear = useCallback(() => {
     setToList([]);
     setListingBuilderData(null);
+    localStorage.setItem('stagedNftListings', null);
   }, []);
 
   const listAll = useCallback(async () => {
