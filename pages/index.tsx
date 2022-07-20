@@ -93,19 +93,19 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
   useEffect(() => {
     if (data?.tickerStats) {
-      setTickerStats(data?.tickerStats);
+      setTickerStats(data.tickerStats);
     }
     if (data?.featuredProfile) {
       setFeaturedProfileNfts([featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3]);
     }
     if(data?.learnCards) {
-      setLearnCards([data?.learnCards['card1'], data?.learnCards['card2']]);
+      setLearnCards([data.learnCards['card1'], data.learnCards['card2']]);
     }
     if(data?.learnCardImagesCollection) {
-      setLearnCardImages([data?.learnCardImagesCollection.items[0], data?.learnCardImagesCollection.items[1]]);
+      setLearnCardImages([data.learnCardImagesCollection.items[0], data.learnCardImagesCollection.items[1]]);
     }
-  }, [data?.featuredProfile, data?.learnCards, data?.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data?.learnCardImagesCollection.items, data?.learnCardImagesCollection]);
-
+  }, [data?.featuredProfile, data.learnCards, data.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data.learnCardImagesCollection.items, data.learnCardImagesCollection, data.subheroTitle]);
+  
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
       <>
@@ -114,7 +114,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 px-20 lg:w-screen max-w-[90rem] mx-auto h-full',
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 lg:w-screen px-20 max-w-screen mx-auto h-full',
             'break-after-all ',
           )}
           style={{
@@ -124,7 +124,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           }}>
             <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
-                'font-header text-black text-header leading-header',
+                'font-header text-black sm:text-5xl text-header leading-header',
                 'break-after-all space-y-2',
                 'md:mb-6'
               )}>
@@ -132,9 +132,9 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   {data?.subheroTitle}
                 </div>
                 <div>
-                  {data?.subheroDescription}
+                  {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
                 </div>
-                <div className='sm:hidden md:block text-body leading-body font-body w-[44%]'>
+                <div className='sm:hidden md:block text-body text-[#A09E9E] leading-body font-body w-[44%]'>
                 Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
                 </div>
               </div>
@@ -147,7 +147,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   className={tw(
                     'w-max',
                     'block',
-                    'font-medium bg-transparent rounded-xl text-[#4D4412]',
+                    'font-semibold bg-transparent rounded-xl text-[#4D4412]',
                     'flex flex-row items-center cursor-pointer opacity-80 hover:opacity-100',
                     'font-grotesk font-body',
                     'py-2'
@@ -224,7 +224,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'drop-shadow-md rounded-xl flex flex-col',
                     'w-full h-full',
                     'justify-center',
-                    'cursor-pointer',
                     'overflow-hidden',
                     'my-6',
                     'p-6'
@@ -246,7 +245,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   className={tw(
                     'drop-shadow-md rounded-xl flex flex-col',
                     'w-full h-full',
-                    'cursor-pointer',
                     'overflow-hidden',
                     'my-6',
                     'p-6'
@@ -268,7 +266,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   className={tw(
                     'drop-shadow-md rounded-xl flex flex-col',
                     'w-full h-full',
-                    'cursor-pointer',
                     'overflow-hidden',
                     'my-6',
                     'p-6'
@@ -292,11 +289,23 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.learnDescription}
                 </div>
-                <div className='w-full h-[350px] ...'>
+                <div className='w-full items-center h-[350px] ...'>
                   <LearnCards
                     cards={learnCards}
                     cardImages={learnCardImages}
                   />
+                  <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
+                    <Button
+                      bgColor={'#F9D963'}
+                      color={'#4D4412'}
+                      label='Learn More'
+                      stretch={isMobile}
+                      onClick={() => {
+                        router.push('/articles');
+                      }}
+                      type={ButtonType.SECONDARY}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

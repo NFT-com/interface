@@ -9,7 +9,6 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import Link from 'next/link';
 import NavLogo from 'public/hero_corner_dark.svg';
-import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
 export const Header = () => {
@@ -46,39 +45,41 @@ export const Header = () => {
               <SearchBar />
             </div>
           }
-          <div
-            className={tw(
-              'sm:hidden block',
-              'md:mr-5 mr-20',
-              'h-full flex-shrink-0',
-              'space-x-5',
-              'font-grotesk text-[#6F6F6F]  font-bold tracking-wide',
-              'flex items-center'
-            )}
-          >
-            <Link href ='/app/gallery'>
-              <span className='hover:text-link cursor-pointer'>Gallery</span>
-            </Link>
-            <span onClick={() => {
-              window.open('https://docs.nft.com', '_open');
-            }} className='hover:text-link cursor-pointer'>Docs</span>
-            {hasGksOrTokens && <Link href ='/app/vault'>
-              <span
-                className='hover:text-white cursor-pointer'
-                style={{
-                  background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
-                  backgroundSize: '200% 200%',
-                  animation: 'gradient 10s ease infinite',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}>
+          <div className='flex items-center ...'>
+            <div
+              className={tw(
+                'sm:hidden block',
+                'mr-5',
+                'h-full flex-shrink-0',
+                'space-x-5',
+                'font-grotesk text-[#6F6F6F]  font-bold tracking-wide',
+                'flex items-center'
+              )}
+            >
+              <Link href ='/app/gallery'>
+                <span className='hover:text-link cursor-pointer'>Gallery</span>
+              </Link>
+              <span onClick={() => {
+                window.open('https://docs.nft.com', '_open');
+              }} className='hover:text-link cursor-pointer'>Docs</span>
+              {hasGksOrTokens && <Link href ='/app/vault'>
+                <span
+                  className='hover:text-white cursor-pointer'
+                  style={{
+                    background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
+                    backgroundSize: '200% 200%',
+                    animation: 'gradient 10s ease infinite',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}>
                       Vault
-              </span>
-            </Link>}
-            <span>
+                </span>
+              </Link>}
+              <span>
             |
-            </span>
-            <WalletRainbowKitButton showWhenConnected signInButton={!isMobile} />
+              </span>
+            </div>
+            <WalletRainbowKitButton showWhenConnected signInButton={true} headerButtonColor />
           </div>
         </div>
       </div>
