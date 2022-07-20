@@ -271,7 +271,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <Button
                   bgColor={'#F9D963'}
                   color={'#4D4412'}
-                  label='Learn more'
+                  label='Learn More'
                   stretch={isMobile}
                   onClick={() => {
                     router.push('/articles');
@@ -297,7 +297,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     <Button
                       bgColor={'#F9D963'}
                       color={'#4D4412'}
-                      label='Read more'
+                      label='Read More'
                       stretch={isMobile}
                       onClick={() => {
                         router.push('/articles');
