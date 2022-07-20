@@ -159,9 +159,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
       {
         (editMode ? isGroupedByCollection : groupByCollectionNotOwner) ?
           <CollectionGallery profileURI={props.profileURI} /> :
-          <NftGallery
-            profileURI={props.profileURI}
-            savedLayoutType={profileData?.profile?.layoutType}/>
+          <NftGallery profileURI={props.profileURI} />
       }
     </div>
   );

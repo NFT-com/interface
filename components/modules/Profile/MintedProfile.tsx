@@ -113,7 +113,7 @@ export function MintedProfile(props: MintedProfileProps) {
       </div>
       <div className={tw(
         'flex flex-col',
-        'max-w-7xl',
+        'max-w-7xl min-w-[60%]',
         isMobile ? 'mx-2' : 'sm:mx-2 lg:mx-8 mx-auto',
       )}>
         <div
@@ -203,6 +203,7 @@ export function MintedProfile(props: MintedProfileProps) {
             (userIsAdmin && editMode) || (publiclyVisibleNftCount > 0) ?
               <MintedProfileGallery
                 profileURI={profileURI}
+                userIsAdmin={userIsAdmin}
                 ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
               /> :
               <>
