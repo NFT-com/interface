@@ -116,17 +116,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>
-          <div className='flex flex-row items-center justify-center w-screen h-[55px] font-grotesk text-lg sm:text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
-            <span>Unlock the NFT Platform Beta with a Genesis Key</span>
-            <div className='flex flex-col w-16 rounded items-center p-[1px] -ml-4'>
-              <Link href='/app/auctions' passHref>
-                <a>
-                  <Vector />
-                </a>
-              </Link>
-            </div>
+          <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk text-lg leading-6 text-white font-[500] bg-[#111111]'>
+            Unlock Our Beta with a Genesis key<Link href='/app/auctions' passHref><a> <Vector className='pl-2 w-full h-full rounded' /></a></Link>
           </div>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 lg:w-screen xl:max-w-screen xl:px-20 mx-auto h-full',
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 lg:w-screen xl:max-w-screen xl:px-20  max-w-7xl mx-auto h-full',
             'break-after-all ',
           )}
           style={{
@@ -168,7 +161,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </button>
               </div>
             </div>
-            <div className='flex sm:flex-row sm:justify-center md:ml-0 justify-end sm:py-10 md:py-0 w-full'>
+            <div className='flex sm:flex-row sm:justify-center md:ml-0 lg:pl-0 pl-20 justify-end sm:py-10 md:py-0 w-full'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
@@ -176,7 +169,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 md:px-0 xl:px-20 lg:px-0 w-screen mx-auto items-center ...'>
+          <div className='space-y-12 md:px-0 xl:px-20 lg:px-0 lg:w-screen items-center  max-w-7xl mx-auto ...'>
             <div className='h-full md:px-6 px-2 py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
@@ -198,7 +191,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full sm:rounded-none md:rounded-none lg:rounded-none rounded-xl bg-always-black py-6 drop-shadow-lg xl:w-screen xl:max-w-[100%] ...'>
+            <div className='h-full px-2 sm:rounded-none md:rounded-none lg:rounded-none rounded-xl bg-always-black py-6 drop-shadow-lg w-full mx-auto ...'>
               {tickerStats && (
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
