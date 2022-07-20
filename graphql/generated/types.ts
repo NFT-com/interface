@@ -1442,6 +1442,7 @@ export type UpdateEmailInput = {
 };
 
 export type UpdateNfTsForProfileInput = {
+  chainId?: InputMaybe<Scalars['String']>;
   pageInput?: InputMaybe<PageInput>;
   profileId: Scalars['ID'];
 };
