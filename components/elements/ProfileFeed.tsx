@@ -49,7 +49,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
                 )}
                 onClick={() => onSlideClick(profile?.profile?.url)}
               />
-              <div className='relative w-full h-full flex-none'>
+              <div className='relative w-full h-full flex-none rounded-b-3xl'>
                 <div className='absolute md:h-[50px] xl:h-[80px] rounded-b-3xl bottom-0 flex flex-row items-center bg-[#B0AFAF]/80 w-full backdrop-blur-3xl'>
                   <p className='text-white md:text-base lg:text-md font-grotesk pl-6'>{profile?.profile?.url}</p>
                 </div>
