@@ -301,12 +301,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.learnDescription}
                 </div>
-                <div className='w-full items-center h-[350px] ...'>
+                <div className='w-full h-full items-center ...'>
+                  <div className='h-[350px] w-full ...'>
                   <LearnCards
                     cards={learnCards}
                     cardImages={learnCardImages}
                   />
-                  <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
+                  </div>
+                  <div className='flex flex-row justify-center sm:w-full items-center -mt-12 ...'>
                     <Button
                       bgColor={'#F9D963'}
                       color={'#4D4412'}
