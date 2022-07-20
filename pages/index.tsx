@@ -165,7 +165,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 lg:w-full max-w-[100rem] mx-auto ...'>
+          <div className='space-y-12 lg:w-full max-w-[100rem] mx-auto items-center ...'>
             <div className='h-full py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
@@ -209,13 +209,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </div>
               <LeaderBoard data={leaderboardData} />
             </div>
-            <div className='flex flex-row flex-wrap w-full h-full justify-center ...'>
+            <div className='flex flex-row flex-wrap w-full h-full justify-center px-2 ...'>
               <div className='h-full w-full ...'>
-                <div className='text-section leading-header font-header justify-center ...'>
+                <div className='text-section font-header justify-center py-6 ...'>
                   {data?.threeCardTitle}
-                  <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
-                    {data?.threeCardDescription}
-                  </div>
                 </div>
               </div>
               <div className='h-full w-[33%] sm:w-full ...'>
@@ -226,14 +223,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'justify-center',
                     'overflow-hidden',
                     'mb-3',
-                    'md:px-1 pr-2'
+                    'p-2'
                   )}>
                   <RoundedCornerMedia
                     src={data?.threeCardImage1['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section leading-header font-header justify-center ...'>
+                <div className='text-section font-header justify-center px-4 ...'>
                   {data?.threeCardTitle2}
                   <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
                     {data?.threeCardDescription2}
@@ -247,14 +244,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'w-full h-full',
                     'overflow-hidden',
                     'mb-3',
-                    'px-1'
+                    'p-2'
                   )}>
                   <RoundedCornerMedia
                     src={data?.threeCardImage2['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section leading-header font-header justify-center ...'>
+                <div className='text-section font-header justify-center px-4 ...'>
                   {data?.threeCardTitle3}
                   <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
                     {data?.threeCardDescription3}
@@ -268,21 +265,21 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'w-full h-full',
                     'overflow-hidden',
                     'mb-3',
-                    'md:px-1 pl-2'
+                    'p-2'
                   )}>
                   <RoundedCornerMedia
                     src={data?.threeCardImage3['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section leading-header font-header justify-center ...'>
+                <div className='text-section font-header justify-center px-4 ...'>
                   {data?.communityCtaTitle}
                   <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
                     {data?.communityCtaDescription}
                   </div>
                 </div>
               </div>
-              <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
+              <div className='flex flex-row justify-center sm:w-full items-center py-6 -mb-12 ...'>
                 <Button
                   bgColor={'#F9D963'}
                   color={'#4D4412'}
@@ -295,20 +292,20 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 />
               </div>
             </div>
-            <div className='h-full w-full py-10'>
+            <div className='h-full w-full py-10 px-2'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.learnTitle}
-                <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
+                <div className='text=[#555555] text-body leading-body font-body py-2 md:whitespace-nowrap sm:whitespace-normal ...'>
                   {data?.learnDescription}
                 </div>
-                <div className='w-full h-full items-center ...'>
-                  <div className='max-h-[330px] w-full ...'>
+                <div className='w-full items-center ...'>
+                  <div className='h-full w-full ...'>
                     <LearnCards
                       cards={learnCards}
                       cardImages={learnCardImages}
                     />
                   </div>
-                  <div className='flex flex-row justify-center sm:w-full items-center sm:mt-16  ...'>
+                  <div className='flex flex-row justify-center sm:w-full items-center pt-6 ...'>
                     <Button
                       bgColor={'#F9D963'}
                       color={'#4D4412'}

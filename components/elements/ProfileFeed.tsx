@@ -35,7 +35,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   }, [embla]);
 
   return (
-    <div className='relative overflow-hidden w-full '>
+    <div className='relative overflow-hidden w-full'>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex space-x-1 py-4 drop-shadow-xl">
           {props.profiles.map((profile, index) => (
