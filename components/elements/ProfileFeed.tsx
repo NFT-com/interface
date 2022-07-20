@@ -5,7 +5,7 @@ import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect,useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 interface ProfileFeedProps {
   profiles: ProfileQuery[];
