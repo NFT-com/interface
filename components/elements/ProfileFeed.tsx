@@ -20,7 +20,8 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
     align: 'start',
     loop: true,
     skipSnaps: false,
-    inViewThreshold: 1.0
+    inViewThreshold: 1.0,
+    draggable: true,
   }, [autoplay]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -36,6 +37,13 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
     setSelectedIndex(embla.selectedScrollSnap());
   }, [embla, setSelectedIndex]);
 
+  const onSlideClick = useCallback(
+    (profileUrl) => {
+      if (embla && embla.clickAllowed()) router.push(`/${profileUrl}`);
+    },
+    [embla, router],
+  );
+
   useEffect(() => {
     if (!embla) return;
     onSelect();
@@ -46,14 +54,14 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   return (
     <div className='relative overflow-hidden w-full'>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex space-x-4 py-4">
+        <div className="flex space-x-4 py-4 drop-shadow-xl">
           {props.profiles.map((profile, index) => (
             <RoundedCornerMedia
               key={profile?.profile?.id ?? index}
               src={profile?.profile?.photoURL}
               variant={RoundedCornerVariant.All}
               containerClasses={'h-full w-[25%] flex-none relative drop-shadow-xl p-4'}
-              onClick={() => router.push(`/${profile?.profile?.url}`)}
+              onClick={() => onSlideClick(profile?.profile?.url)}
             />
           ))}
         </div>
