@@ -179,7 +179,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     label='Discover More NFT Profiles'
                     stretch={isMobile}
                     onClick={() => {
-                      router.push('/app/gallery');
+                      router.push('/app/gallery?type=profile');
                     }}
                     type={ButtonType.SECONDARY}
                   />
