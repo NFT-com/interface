@@ -25,12 +25,21 @@ export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
   const router = useRouter();
 
   return (
+<<<<<<< HEAD
     <Swiper slidesPerView={isMobile ? 1 : 3.25} spaceBetween={10} centeredSlides={false} loop={true} autoplay={{
       'delay': 3000,
       'disableOnInteraction': false
     }} className="flex space-x-1 py-4">
       {profiles.map((profile, index) => (
         <SwiperSlide key={profile?.profile?.id ?? index} className='h-full w-full flex-none cursor-pointer px-2'>
+=======
+    <Swiper slidesPerView={isMobile ? 1 : 3.2} centeredSlides={false} loop={true} autoplay={{
+      'delay': 3000,
+      'disableOnInteraction': false
+    }}>
+      {profiles.map((profile, index) => (
+        <SwiperSlide key={profile?.profile?.id ?? index} className='h-full w-3/4 sm:w-full flex-none cursor-pointer'>
+>>>>>>> f0ebc59210e421e000e6c47db46269e821a423aa
           <RoundedCornerMedia
             src={profile?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
