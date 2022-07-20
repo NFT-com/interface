@@ -25,30 +25,21 @@ export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
   const router = useRouter();
 
   return (
-<<<<<<< HEAD
-    <Swiper slidesPerView={isMobile ? 1 : 3.25} spaceBetween={10} centeredSlides={false} loop={true} autoplay={{
+    <Swiper slidesPerView={isMobile ? 1 : 3.2} spaceBetween={10} centeredSlides={false} loop={true} autoplay={{
       'delay': 3000,
       'disableOnInteraction': false
-    }} className="flex space-x-1 py-4">
+    }} className="flex space-x-1 py-4 drop-shadow-2xl">
       {profiles.map((profile, index) => (
-        <SwiperSlide key={profile?.profile?.id ?? index} className='h-full w-full flex-none cursor-pointer px-2'>
-=======
-    <Swiper slidesPerView={isMobile ? 1 : 3.2} centeredSlides={false} loop={true} autoplay={{
-      'delay': 3000,
-      'disableOnInteraction': false
-    }}>
-      {profiles.map((profile, index) => (
-        <SwiperSlide key={profile?.profile?.id ?? index} className='h-full w-3/4 sm:w-full flex-none cursor-pointer'>
->>>>>>> f0ebc59210e421e000e6c47db46269e821a423aa
+        <SwiperSlide key={profile?.profile?.id ?? index} className='h-full sm:w-3/4 md:w-[40%] w-[20%] flex-none cursor-pointer px-2'>
           <RoundedCornerMedia
             src={profile?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
             containerClasses={tw(
-              'h-[390px] w-3/4 sm:w-full flex-none cursor-pointer relative',
+              'h-[390px] w-full flex-none cursor-pointer relative',
             )}
             onClick={() => router.push(`/${profile.profile.url}`)}
           />
-          <div className='relative w-3/4 sm:w-full h-full flex-none rounded-b-3xl drop-shadow-xl'>
+          <div className='relative w-full h-full flex-none rounded-b-3xl'>
             <div className='absolute md:h-[45px] xl:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
               <p className='text-white md:text-lg text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
             </div>
