@@ -156,7 +156,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </button>
               </div>
             </div>
-            <div className='flex sm:flex-row sm:justify-center md:ml-0 justify-end sm:py-10 md:py-0 sm:w-full w-[100%]'>
+            <div className='flex sm:flex-row sm:justify-center md:ml-0 justify-end sm:py-10 md:py-0 w-full'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
