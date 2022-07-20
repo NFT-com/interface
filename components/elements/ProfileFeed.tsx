@@ -24,19 +24,6 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
     draggable: true,
   }, [autoplay]);
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState([]);
-
-  const scrollTo = useCallback(
-    (index) => embla && embla.scrollTo(index),
-    [embla]
-  );
-
-  const onSelect = useCallback(() => {
-    if (!embla) return;
-    setSelectedIndex(embla.selectedScrollSnap());
-  }, [embla, setSelectedIndex]);
-
   const onSlideClick = useCallback(
     (profileUrl) => {
       if (embla && embla.clickAllowed()) router.push(`/${profileUrl}`);
@@ -46,10 +33,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
 
   useEffect(() => {
     if (!embla) return;
-    onSelect();
-    setScrollSnaps(embla.scrollSnapList());
-    embla.on('select', onSelect);
-  }, [embla, setScrollSnaps, onSelect]);
+  }, [embla]);
 
   return (
     <div className='relative overflow-hidden w-full'>
@@ -63,20 +47,6 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
               containerClasses={'h-full w-[25%] flex-none relative drop-shadow-xl p-4'}
               onClick={() => onSlideClick(profile?.profile?.url)}
             />
-          ))}
-        </div>
-        <div className="flex items-center justify-center mt-5 space-x-2">
-          {scrollSnaps.map((_, idx) => (
-            <div className={`w-3 h-3 bg-blog-slider-blue border rounded-full flex justify-center items-center ${
-              idx === selectedIndex ? 'border-[#0077BA]' : 'none'
-            }`} key={idx} >
-              <button
-                className={`w-2 h-2 rounded-full ${
-                  idx === selectedIndex ? 'bg-[#0077BA]' : 'bg-[#B7C6CE]'
-                }`}
-                onClick={() => scrollTo(idx)}
-              />
-            </div>
           ))}
         </div>
       </div>

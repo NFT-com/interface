@@ -224,7 +224,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'drop-shadow-md rounded-xl flex flex-col',
                     'w-full h-full',
                     'justify-center',
-                    'cursor-pointer',
                     'overflow-hidden',
                     'my-6',
                     'p-6'
@@ -246,7 +245,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   className={tw(
                     'drop-shadow-md rounded-xl flex flex-col',
                     'w-full h-full',
-                    'cursor-pointer',
                     'overflow-hidden',
                     'my-6',
                     'p-6'
@@ -268,7 +266,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   className={tw(
                     'drop-shadow-md rounded-xl flex flex-col',
                     'w-full h-full',
-                    'cursor-pointer',
                     'overflow-hidden',
                     'my-6',
                     'p-6'
