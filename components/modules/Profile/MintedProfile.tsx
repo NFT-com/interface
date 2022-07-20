@@ -81,7 +81,7 @@ export function MintedProfile(props: MintedProfileProps) {
   };
 
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="h-full w-full flex flex-col mt-20">
       <div className='w-full'>
         <BannerWrapper
           imageOverride={
