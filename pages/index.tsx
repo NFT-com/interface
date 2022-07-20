@@ -168,7 +168,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div className='h-full md:px-6 px-2 py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
-                <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-nowrap ...'>
+                <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-nowrap sm:whitespace-normal ...'>
                   {data?.feedDescription}
                 </div>
                 <ProfileFeed profiles={[profileFeed1, profileFeed2, profileFeed3, profileFeed4, profileFeed5, profileFeed6, profileFeed7, profileFeed8]} />
@@ -179,7 +179,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     label='Discover more NFT Profiles'
                     stretch={isMobile}
                     onClick={() => {
-                      router.push('/app/gallery');
+                      router.push('/app/gallery?type=profile');
                     }}
                     type={ButtonType.SECONDARY}
                   />
