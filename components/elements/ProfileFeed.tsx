@@ -45,7 +45,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
                 src={profile?.profile?.photoURL}
                 variant={RoundedCornerVariant.All}
                 containerClasses={tw(
-                  'h-full w-full flex-none cursor-pointer relative',
+                  'cursor-pointer w-full',
                 )}
                 onClick={() => onSlideClick(profile?.profile?.url)}
               />
