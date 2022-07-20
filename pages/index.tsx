@@ -164,7 +164,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 md:mx-0 xl:mx-20 lg:w-full max-w-[100rem] mx-auto items-center ...'>
+          <div className='space-y-12 md:mx-0 xl:px-20 lg:mx-0 w-screen mx-auto items-center ...'>
             <div className='h-full px-2 py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
