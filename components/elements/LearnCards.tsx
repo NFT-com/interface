@@ -18,7 +18,8 @@ export const LearnCards = (props: LearnCardsProps) => {
   const [emblaRef, embla] = useEmblaCarousel({
     loop: true,
     skipSnaps: false,
-    align: 'start'
+    align: 'start',
+    draggable: true
   }, [autoplay]);
 
   const onSlideClick = useCallback(

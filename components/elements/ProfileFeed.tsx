@@ -20,7 +20,6 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
     align: 'start',
     loop: true,
     skipSnaps: false,
-    inViewThreshold: 1.0,
     draggable: true,
   }, [autoplay]);
 
@@ -36,9 +35,9 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   }, [embla]);
 
   return (
-    <div className='relative overflow-hidden w-full'>
+    <div className='relative overflow-hidden w-full '>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex space-x-4 py-4 drop-shadow-xl">
+        <div className="flex space-x-1 py-4 drop-shadow-xl">
           {props.profiles.map((profile, index) => (
             <RoundedCornerMedia
               key={profile?.profile?.id ?? index}
