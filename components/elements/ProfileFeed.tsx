@@ -27,7 +27,7 @@ export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
   const { width: screenWidth } = useWindowDimensions();
 
   return (
-    <Swiper slidesPerView={screenWidth < 600 ? 1.2 : screenWidth >= 600 && screenWidth < 900 ? 3.5 : 4.2} centeredSlides={false} loop={true} autoplay={{
+    <Swiper slidesPerView={screenWidth < 600 ? 1.2 : screenWidth >= 600 && screenWidth < 900 ? 3.2 : 4.2} centeredSlides={false} loop={true} autoplay={{
       'delay': 3000,
       'disableOnInteraction': false
     }} className="flex space-x-1 py-4 drop-shadow-2xl">
