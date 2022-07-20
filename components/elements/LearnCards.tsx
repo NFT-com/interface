@@ -31,7 +31,7 @@ export const LearnCards = (props: LearnCardsProps) => {
             key={card['title']}
             className={tw(
               'drop-shadow-md rounded-xl flex-none',
-              'w-full h-full tracking-wider',
+              'w-full h-full tracking-wider text-white',
               'my-4',
               'text-header leading-header font-header text-center',
               card['title'].length > 14 ? 'lg:py-11 py-20': 'py-20' ,
@@ -42,6 +42,7 @@ export const LearnCards = (props: LearnCardsProps) => {
               background: `url("${props.cardImages[index].url}")`,
               backgroundPosition: 'center',
               backgroundSize: 'cover',
+              fontSize: '32px'
             }}
           >
             {card['title']}
