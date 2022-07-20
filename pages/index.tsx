@@ -176,7 +176,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <Button
                     bgColor={'#F9D963'}
                     color={'#4D4412'}
-                    label='Discover More NFT Profiles'
+                    label='Discover more NFT Profiles'
                     stretch={isMobile}
                     onClick={() => {
                       router.push('/app/gallery');
@@ -271,7 +271,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <Button
                   bgColor={'#F9D963'}
                   color={'#4D4412'}
-                  label='Learn More'
+                  label='Learn more'
                   stretch={isMobile}
                   onClick={() => {
                     router.push('/articles');
@@ -297,7 +297,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     <Button
                       bgColor={'#F9D963'}
                       color={'#4D4412'}
-                      label='Read More'
+                      label='Read more'
                       stretch={isMobile}
                       onClick={() => {
                         router.push('/articles');
