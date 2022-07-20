@@ -74,7 +74,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                           `${props?.signInButton ? 'block' : 'hidden'}`,
                           'font-header',
                           `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
-                            ? 'bg-[#F9D963]'
+                            ? `${props?.headerButtonColor ? 'bg-[#F8F8F8]' : 'bg-[#F9D963]'}`
                             : 'bg-deprecated_primary-button-bckg'}`,
                           'rounded-xl',
                           `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? 'text-[#4D4412]' : 'text-white'}`,

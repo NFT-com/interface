@@ -43,7 +43,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
               key={profile?.profile?.id ?? index}
               src={profile?.profile?.photoURL}
               variant={RoundedCornerVariant.All}
-              containerClasses={'h-full w-[25%] flex-none cursor-pointer relative drop-shadow-xl p-4'}
+              containerClasses={'h-full sm:w-full w-[25%] flex-none cursor-pointer relative drop-shadow-xl p-4'}
               onClick={() => onSlideClick(profile?.profile?.url)}
             />
           ))}
