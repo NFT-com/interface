@@ -218,7 +218,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section font-header justify-center px-4 ...'>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
                   {data?.threeCardTitle2}
                   <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.threeCardDescription2}
@@ -239,7 +239,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section font-header justify-center px-4 ...'>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
                   {data?.threeCardTitle3}
                   <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.threeCardDescription3}
@@ -260,7 +260,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section font-header justify-center px-4 ...'>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
                   {data?.communityCtaTitle}
                   <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.communityCtaDescription}
