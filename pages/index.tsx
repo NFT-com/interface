@@ -114,7 +114,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 space-x-10 px-20 w-screen h-full',
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 px-20 lg:w-screen max-w-[90rem] mx-auto h-full',
             'break-after-all ',
           )}
           style={{
@@ -157,7 +157,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </button>
               </div>
             </div>
-            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20 w-[70%]'>
+            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20 sm:w-full w-[70%]'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
@@ -165,7 +165,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 ...'>
+          <div className='space-y-12 lg:w-full max-w-[90rem] mx-auto ...'>
             <div className='h-full p-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
@@ -198,7 +198,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full w-screen bg-always-black py-6 drop-shadow-lg ...'>
+            <div className='h-full w-screen bg-always-black py-6 drop-shadow-lg lg:w-full max-w-[90rem] mx-auto ...'>
               {tickerStats && (
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
