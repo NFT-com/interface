@@ -29,7 +29,7 @@ export default function Post({ post, preview }: PostProps) {
   return (
     getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
       ? (
-        <PageWrapper>
+        <PageWrapper bgLight>
           <NextSeo
             title={post.title}
             description={post.description}

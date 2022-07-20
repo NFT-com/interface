@@ -36,7 +36,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
   return (
     getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
       ? (
-        <PageWrapper>
+        <PageWrapper bgLight>
           <div className='bg-white'>
             <div className='px-6 md:px-4 sm:px-2.5 pt-28 max-w-7xl mx-auto'>
               <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>

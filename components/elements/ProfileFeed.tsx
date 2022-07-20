@@ -1,64 +1,51 @@
+/* eslint-disable import/no-unresolved */
+// Import Swiper styles
+import 'swiper/swiper.min.css';
+import 'swiper/components/pagination/pagination.min.css';
+import 'swiper/components/navigation/navigation.min.css';
+
 import { ProfileQuery } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
-import Autoplay from 'embla-carousel-autoplay';
-import useEmblaCarousel from 'embla-carousel-react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect } from 'react';
+import { isMobile } from 'react-device-detect';
+import SwiperCore, {
+  Autoplay,Navigation } from 'swiper/core';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+SwiperCore.use([Autoplay, Navigation]);
 
 interface ProfileFeedProps {
   profiles: ProfileQuery[];
 }
 
-export const ProfileFeed = (props: ProfileFeedProps) => {
+export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
   const router = useRouter();
-  const options = { delay: 5000 };
-  const autoplayRoot = (emblaRoot) => emblaRoot.parentElement;
-  const autoplay = Autoplay(options, autoplayRoot);
-  const [emblaRef, embla] = useEmblaCarousel({
-    align: 'start',
-    loop: true,
-    skipSnaps: false,
-    draggable: true,
-  }, [autoplay]);
-
-  const onSlideClick = useCallback(
-    (profileUrl) => {
-      if (embla && embla.clickAllowed()) router.push(`/${profileUrl}`);
-    },
-    [embla, router],
-  );
-
-  useEffect(() => {
-    if (!embla) return;
-  }, [embla]);
 
   return (
-    <div className='relative overflow-hidden w-full drop-shadow-2xl'>
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex space-x-1 py-4">
-          {props.profiles.map((profile, index) => (
-            <a key={profile?.profile?.id ?? index} className='h-full sm:w-3/4 w-[22%] flex-none cursor-pointer pr-4'>
-              <RoundedCornerMedia
-                src={profile?.profile?.photoURL}
-                variant={RoundedCornerVariant.All}
-                containerClasses={tw(
-                  'cursor-pointer w-full',
-                )}
-                onClick={() => onSlideClick(profile?.profile?.url)}
-              />
-              <div className='relative w-full h-full flex-none rounded-b-3xl'>
-                <div className='absolute md:h-[45px] xl:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
-                  <p className='text-white md:text-lg text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
-                </div>
-              </div>
-            </a>
-
-          ))}
-        </div>
-      </div>
-    </div>
+    <Swiper slidesPerView={isMobile ? 1 : 3.2} centeredSlides={false} loop={true} autoplay={{
+      'delay': 3000,
+      'disableOnInteraction': false
+    }} className="flex space-x-1 py-4 drop-shadow-2xl">
+      {profiles.map((profile, index) => (
+        <SwiperSlide key={profile?.profile?.id ?? index} className='h-full w-3/4 sm:w-full flex-none cursor-pointer'>
+          <RoundedCornerMedia
+            src={profile?.profile?.photoURL}
+            variant={RoundedCornerVariant.All}
+            containerClasses={tw(
+              'h-[390px] w-3/4 sm:w-full flex-none cursor-pointer relative',
+            )}
+            onClick={() => router.push(`/${profile.profile.url}`)}
+          />
+          <div className='relative w-3/4 sm:w-full h-full flex-none rounded-b-3xl'>
+            <div className='absolute md:h-[45px] xl:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
+              <p className='text-white md:text-lg text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
+            </div>
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 };
