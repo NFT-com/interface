@@ -165,7 +165,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 lg:w-full max-w-[100rem] mx-auto px-4 items-center ...'>
+          <div className='space-y-12 lg:w-full max-w-[100rem] mx-auto items-center ...'>
             <div className='h-full py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
@@ -198,7 +198,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full rounded-xl w-screen bg-always-black py-6 drop-shadow-lg lg:w-full max-w-[100rem] mx-auto ...'>
+            <div className='h-full rounded-xl bg-always-black py-6 drop-shadow-lg xl:w-screen max-w-[100rem] ...'>
               {tickerStats && (
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}

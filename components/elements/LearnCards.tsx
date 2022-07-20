@@ -46,7 +46,7 @@ export const LearnCards = (props: LearnCardsProps) => {
                   'w-full h-full',
                   'my-4',
                   'text-header leading-header font-header text-center',
-                  'py-20',
+                  card['title'].length > 14 ? 'lg:py-11 py-20': 'py-20' ,
                   'px-4',
                 )}
                 onClick={() => onSlideClick(card['linkTo'])}
