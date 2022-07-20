@@ -171,18 +171,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide text-lg py-2 whitespace-nowrap ...'>
                   {data?.feedDescription}
                 </div>
-                <ProfileFeed
-                  profiles={[
-                    profileFeed1,
-                    profileFeed2,
-                    profileFeed3,
-                    profileFeed4,
-                    profileFeed5,
-                    profileFeed6,
-                    profileFeed7,
-                    profileFeed8,
-                  ]}
-                />
+                <ProfileFeed profiles={[profileFeed1, profileFeed2, profileFeed3, profileFeed4, profileFeed5, profileFeed6, profileFeed7, profileFeed8]} />
                 <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
                   <Button
                     bgColor={'#F9D963'}
