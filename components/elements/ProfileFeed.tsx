@@ -36,22 +36,22 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
   }, [embla]);
 
   return (
-    <div className='relative overflow-hidden w-full'>
+    <div className='relative overflow-hidden w-full drop-shadow-2xl'>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex space-x-1 py-4 drop-shadow-lg">
+        <div className="flex space-x-1 py-4">
           {props.profiles.map((profile, index) => (
-            <a key={profile?.profile?.id ?? index} className='h-full sm:w-3/4 w-[40%] flex-none cursor-pointer px-4 drop-shadow-xl'>
+            <a key={profile?.profile?.id ?? index} className='h-full sm:w-3/4 w-[22%] flex-none cursor-pointer px-4'>
               <RoundedCornerMedia
                 src={profile?.profile?.photoURL}
                 variant={RoundedCornerVariant.All}
                 containerClasses={tw(
-                  'h-full w-full flex-none cursor-pointer relative',
+                  'h-full w-[3/4] flex-none cursor-pointer relative',
                 )}
                 onClick={() => onSlideClick(profile?.profile?.url)}
               />
               <div className='relative w-full h-full flex-none rounded-b-3xl'>
-                <div className='absolute md:h-[50px] xl:h-[80px] rounded-b-3xl bottom-0 flex flex-row items-center bg-[#B0AFAF]/80 w-full backdrop-blur-3xl'>
-                  <p className='text-white md:text-base lg:text-md font-grotesk pl-6'>{profile?.profile?.url}</p>
+                <div className='absolute md:h-[45px] xl:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
+                  <p className='text-white md:text-lg text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
                 </div>
               </div>
             </a>
