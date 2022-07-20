@@ -146,7 +146,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
                 </div>
                 <div className='py-5 sm:hidden md:text-base text-xl md:block md:w-[100%] text-body text-[#A09E9E] leading-10 tracking-wide font-body w-[70%]'>
-                  Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
+                  Collect, Display, and Trade your NFTs. We're building the hub for all things Web3. Get started by building your NFT Profile.
                 </div>
               </div>
               <div className='w-full pt-1 h-full inline-flex grow space-x-4'>
@@ -292,7 +292,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 />
               </div>
             </div>
-            <div className='h-full md:px-6 w-full py-10 px-2'>
+            <div className='h-full md:px-6 w-full pb-10 pt-3 px-2'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.learnTitle}
                 <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 md:whitespace-nowrap sm:whitespace-normal ...'>
