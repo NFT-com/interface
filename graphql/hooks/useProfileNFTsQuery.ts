@@ -29,7 +29,6 @@ export function useProfileNFTsQuery(
     if (isNullOrEmpty(profileId)) {
       return null;
     }
-    console.log(chainId);
     const result = await sdk.ProfileNFTs({
       input: {
         profileId,

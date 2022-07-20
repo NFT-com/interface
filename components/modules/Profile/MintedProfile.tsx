@@ -80,8 +80,6 @@ export function MintedProfile(props: MintedProfileProps) {
     }
   };
 
-  console.log(publiclyVisibleNFTs);
-
   return (
     <div className="h-full w-full flex flex-col">
       <div className='w-full'>
