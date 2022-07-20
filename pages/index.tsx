@@ -134,11 +134,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div>
                   {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
                 </div>
-                <div className='sm:hidden md:block text-body text-[#A09E9E] leading-body font-body w-[44%]'>
+                <div style={{ fontSize: '18px' }} className='py-5 sm:hidden md:block text-body text-[#A09E9E] leading-10 tracking-wide font-body w-[53%]'>
                   Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
                 </div>
               </div>
-              <div className='w-full h-full inline-flex grow space-x-4'>
+              <div className='w-full pt-1 h-full inline-flex grow space-x-4'>
                 <WalletRainbowKitButton signInButton showWhenConnected={false} />
                 <button
                   onClick={() => {
@@ -169,7 +169,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div className='h-full py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
-                <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
+                <div className='text-[#7F7F7F] text-body leading-body font-body py-2 whitespace-nowrap ...'>
                   {data?.feedDescription}
                 </div>
                 <ProfileFeed
@@ -235,7 +235,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
                 <div className='text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle2}
-                  <div className='text-body leading-body font-body py-2 ...'>
+                  <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
                     {data?.threeCardDescription2}
                   </div>
                 </div>
@@ -256,7 +256,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
                 <div className='text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle3}
-                  <div className='text-body leading-body font-body py-2 ...'>
+                  <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
                     {data?.threeCardDescription3}
                   </div>
                 </div>
@@ -277,7 +277,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
                 <div className='text-section leading-header font-header justify-center ...'>
                   {data?.communityCtaTitle}
-                  <div className='text-body leading-body font-body py-2 ...'>
+                  <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
                     {data?.communityCtaDescription}
                   </div>
                 </div>
