@@ -35,29 +35,27 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
       </div>
     );
   }
-
   return <div className="overflow-x-auto relative w-full">
     <table className="min-w-full border-x-0">
       <thead>
-        <tr className="text-body leading-body font-body">
+        <tr className="text-body leading-body font-body text-[#7F7F7F]">
           <th scope="col" className="flex items-center text-body sm:text-sm leading-body font-body"></th>
           <th scope="col" className='text-left text-body sm:text-sm leading-body font-body'>Profile</th>
-          <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body'>Number of Genesis Keys</th>
-          <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body xs:hidden'>Items Collected</th>
-          <th scope="col" className='text-right text-body sm:text-sm leading-body font-body sm:hidden'>Number of Communities</th>
-          <th scope="col" className='text-right text-body sm:text-sm leading-body font-body md:hidden'>Transactions</th>
+          <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body'>NFTs Collected</th>
+          <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body sm:hidden'>Number of NFT Collections</th>
+          <th scope="col" className='text-right text-body sm:text-sm leading-body font-body sm:hidden'>Number of Genesis Keys</th>
         </tr>
       </thead>
       <tbody className="bg-always-white">
         {data?.leaderboard?.items.map((item, i) => (
           <tr key={i}
             className={tw('cursor-pointer min-w-[5.5rem] h-20',
-              'border-x-0 border-y border-row-border dar:border:transparent')}
+              i > 0 && 'border-x-0 border-y border-row-border dar:border:transparent')}
             style={{
               backgroundColor: i === hoverIndex ? rowBackgroundActive : alwaysWhite,
             }}
           >
-            <td className="pr-0 md:pr-1 text-body sm:text-sm leading-body font-medium" >
+            <td className="pr-0 md:pr-1 font-bold text-body sm:text-sm leading-body" >
               <div className={`${isMobile ? 'flex items-start' : 'flex items-center'}`} >
                 <div>{i + 1}</div>
               </div>
@@ -66,7 +64,7 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
               <Link href={item.url}>
                 <div className={tw('h-full flex items-center',
                   'justify-start whitespace-nowrap',
-                  'text-body sm:text-sm leading-body font-medium')}>
+                  'text-body sm:text-sm leading-body font-bold')}>
                   <div className="w-14 h-14 xs:w-8 xs:h-8 mr-3 relative">
                     <Image src={item.photoURL} alt="svgImage" className="m-0 object-center rounded-full" layout='fill' />
                   </div>
@@ -75,28 +73,21 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
               </Link>
             </td>
             <td>
-              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
-                'whitespace-nowrap text-right mr-3')}>
-                {item.numberOfGenesisKeys}
-              </div>
-            </td>
-            <td className="xs:hidden">
-              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
+              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-bold',
                 'whitespace-nowrap text-right mr-3')}>
                 {item.itemsVisible}
               </div>
             </td>
             <td className="sm:hidden">
-              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
-                'whitespace-nowrap text-right')}>
+              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-bold',
+                'whitespace-nowrap text-right mr-3')}>
                 {item.numberOfCollections}
               </div>
             </td>
-            <td className="md:hidden">
-              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
+            <td className="sm:hidden">
+              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-bold',
                 'whitespace-nowrap text-right')}>
-                {/* // TODO: get transactions to pull from the BE */}
-                20
+                {item.numberOfGenesisKeys}
               </div>
             </td>
           </tr>
