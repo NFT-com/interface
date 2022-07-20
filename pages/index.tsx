@@ -135,14 +135,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
                 </div>
                 <div className='sm:hidden md:block text-body text-[#A09E9E] leading-body font-body w-[44%]'>
-                Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
+                  Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
                 </div>
               </div>
               <div className='w-full h-full inline-flex grow space-x-4'>
                 <WalletRainbowKitButton signInButton showWhenConnected={false} />
                 <button
                   onClick={() => {
-                    console.log('clicked');
+                    router.push('/articles');
                   }}
                   className={tw(
                     'w-max',
@@ -165,8 +165,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 lg:w-full max-w-[90rem] mx-auto ...'>
-            <div className='h-full p-12 ...'>
+          <div className='space-y-12 lg:w-full max-w-[100rem] mx-auto ...'>
+            <div className='h-full py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
@@ -198,18 +198,18 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full w-screen bg-always-black py-6 drop-shadow-lg lg:w-full max-w-[90rem] mx-auto ...'>
+            <div className='h-full rounded-xl w-screen bg-always-black py-6 drop-shadow-lg lg:w-full max-w-[100rem] mx-auto ...'>
               {tickerStats && (
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
             </div>
-            <div className='h-full px-12 py-10 ...'>
+            <div className='h-full ...'>
               <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </div>
               <LeaderBoard data={leaderboardData} />
             </div>
-            <div className='flex flex-row flex-wrap w-full h-full justify-center px-12 py-10 ...'>
+            <div className='flex flex-row flex-wrap w-full h-full justify-center ...'>
               <div className='h-full w-full ...'>
                 <div className='text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle}
@@ -225,15 +225,15 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'w-full h-full',
                     'justify-center',
                     'overflow-hidden',
-                    'my-6',
-                    'p-6'
+                    'mb-3',
+                    'pr-2'
                   )}>
                   <RoundedCornerMedia
                     src={data?.threeCardImage1['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-section leading-header font-header justify-center ...'>
+                <div className='text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle2}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.threeCardDescription2}
@@ -246,15 +246,15 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'drop-shadow-md rounded-xl flex flex-col',
                     'w-full h-full',
                     'overflow-hidden',
-                    'my-6',
-                    'p-6'
+                    'mb-3',
+                    'px-1'
                   )}>
                   <RoundedCornerMedia
                     src={data?.threeCardImage2['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-section leading-header font-header justify-center ...'>
+                <div className='text-section leading-header font-header justify-center ...'>
                   {data?.threeCardTitle3}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.threeCardDescription3}
@@ -267,23 +267,35 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'drop-shadow-md rounded-xl flex flex-col',
                     'w-full h-full',
                     'overflow-hidden',
-                    'my-6',
-                    'p-6'
+                    'mb-3',
+                    'pl-2'
                   )}>
                   <RoundedCornerMedia
                     src={data?.threeCardImage3['url']}
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='px-6 text-section leading-header font-header justify-center ...'>
+                <div className='text-section leading-header font-header justify-center ...'>
                   {data?.communityCtaTitle}
                   <div className='text-body leading-body font-body py-2 ...'>
                     {data?.communityCtaDescription}
                   </div>
                 </div>
               </div>
+              <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
+                <Button
+                  bgColor={'#F9D963'}
+                  color={'#4D4412'}
+                  label='Learn more'
+                  stretch={isMobile}
+                  onClick={() => {
+                    router.push('/articles');
+                  }}
+                  type={ButtonType.SECONDARY}
+                />
+              </div>
             </div>
-            <div className='h-full w-full px-12 py-10'>
+            <div className='h-full w-full py-10'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.learnTitle}
                 <div className='text-body leading-body font-body py-2 whitespace-nowrap ...'>
@@ -298,7 +310,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     <Button
                       bgColor={'#F9D963'}
                       color={'#4D4412'}
-                      label='Learn More'
+                      label='Read more'
                       stretch={isMobile}
                       onClick={() => {
                         router.push('/articles');
