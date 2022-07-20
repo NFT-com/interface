@@ -11,6 +11,7 @@ import { filterNulls, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect,useState } from 'react';
 
@@ -74,20 +75,22 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
         {filterNulls(profileTokens)
           .map((profileToken, index) => {
             return (
-              <div
-                key={profileToken.id.tokenId ?? index}
-                className={tw(
-                  'flex mb-4 items-center justify-center px-4',
-                  'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
-                )}
-              >
-                <OwnedProfileGalleryCard
-                  token={profileToken}
-                  onClick={() => {
-                    router.push('/' + profileToken?.tokenUri?.raw?.split('/').pop());
-                  }}
-                />
-              </div>
+              <Link href={'/' + profileToken?.tokenUri?.raw?.split('/').pop()} key={profileToken.id.tokenId ?? index} passHref>
+                <a
+                  key={profileToken.id.tokenId ?? index}
+                  className={tw(
+                    'flex mb-4 items-center justify-center px-4',
+                    'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
+                  )}
+                >
+                  <OwnedProfileGalleryCard
+                    token={profileToken}
+                    onClick={() => {
+                      router.push('/' + profileToken?.tokenUri?.raw?.split('/').pop());
+                    }}
+                  />
+                </a>
+              </Link>
             );
           })}
       </>
@@ -109,23 +112,25 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
                   profile?.photoURL
                 );
               return (
-                <div
-                  key={profile.id ?? index}
-                  className={tw(
-                    'flex mb-4 items-center justify-center ml-6',
-                    'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
-                  )}
-                >
-                  <GalleryCard
-                    size='small'
-                    animate={false}
-                    label={''}
-                    imageURL={image}
-                    onClick={() => {
-                      router.push('/' + profile?.url);
-                    }}
-                  />
-                </div>
+                <Link href={'/' + profile?.url} key={profile.id ?? index} passHref>
+                  <a
+                    key={profile.id ?? index}
+                    className={tw(
+                      'flex mb-4 items-center justify-center ml-6',
+                      'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
+                    )}
+                  >
+                    <GalleryCard
+                      size='small'
+                      animate={false}
+                      label={''}
+                      imageURL={image}
+                      onClick={() => {
+                        router.push('/' + profile?.url);
+                      }}
+                    />
+                  </a>
+                </Link>
               );
             })
         }

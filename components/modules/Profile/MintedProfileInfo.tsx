@@ -11,7 +11,7 @@ import { ProfileEditContext } from './ProfileEditContext';
 import GKHolderIcon from 'public/gk-holder.svg';
 import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface MintedProfileInfoProps {
   profileURI: string;
@@ -21,6 +21,7 @@ export interface MintedProfileInfoProps {
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { data: account } = useAccount();
+  const { activeChain } = useNetwork();
   
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
@@ -42,6 +43,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       
   const { mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
+    String(activeChain?.id),
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
     20

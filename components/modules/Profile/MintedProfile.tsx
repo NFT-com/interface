@@ -50,6 +50,7 @@ export function MintedProfile(props: MintedProfileProps) {
     .includes(profileURI);
   const { nfts: publiclyVisibleNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
+    String(activeChain?.id),
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
     20

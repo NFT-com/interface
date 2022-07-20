@@ -1,11 +1,12 @@
 import { ProfileQuery } from 'graphql/generated/types';
+import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect,useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 interface ProfileFeedProps {
   profiles: ProfileQuery[];
@@ -20,55 +21,41 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
     align: 'start',
     loop: true,
     skipSnaps: false,
-    inViewThreshold: 1.0
+    draggable: true,
   }, [autoplay]);
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState([]);
-
-  const scrollTo = useCallback(
-    (index) => embla && embla.scrollTo(index),
-    [embla]
+  const onSlideClick = useCallback(
+    (profileUrl) => {
+      if (embla && embla.clickAllowed()) router.push(`/${profileUrl}`);
+    },
+    [embla, router],
   );
-
-  const onSelect = useCallback(() => {
-    if (!embla) return;
-    setSelectedIndex(embla.selectedScrollSnap());
-  }, [embla, setSelectedIndex]);
 
   useEffect(() => {
     if (!embla) return;
-    onSelect();
-    setScrollSnaps(embla.scrollSnapList());
-    embla.on('select', onSelect);
-  }, [embla, setScrollSnaps, onSelect]);
+  }, [embla]);
 
   return (
-    <div className='relative overflow-hidden w-full'>
+    <div className='relative overflow-hidden w-full drop-shadow-2xl'>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex space-x-4 py-4">
+        <div className="flex space-x-1 py-4">
           {props.profiles.map((profile, index) => (
-            <RoundedCornerMedia
-              key={profile?.profile?.id ?? index}
-              src={profile?.profile?.photoURL}
-              variant={RoundedCornerVariant.All}
-              containerClasses={'h-full w-[25%] flex-none relative drop-shadow-xl p-4'}
-              onClick={() => router.push(`/${profile?.profile?.url}`)}
-            />
-          ))}
-        </div>
-        <div className="flex items-center justify-center mt-5 space-x-2">
-          {scrollSnaps.map((_, idx) => (
-            <div className={`w-3 h-3 bg-blog-slider-blue border rounded-full flex justify-center items-center ${
-              idx === selectedIndex ? 'border-[#0077BA]' : 'none'
-            }`} key={idx} >
-              <button
-                className={`w-2 h-2 rounded-full ${
-                  idx === selectedIndex ? 'bg-[#0077BA]' : 'bg-[#B7C6CE]'
-                }`}
-                onClick={() => scrollTo(idx)}
+            <a key={profile?.profile?.id ?? index} className='h-full sm:w-3/4 w-[22%] flex-none cursor-pointer pr-4'>
+              <RoundedCornerMedia
+                src={profile?.profile?.photoURL}
+                variant={RoundedCornerVariant.All}
+                containerClasses={tw(
+                  'cursor-pointer w-full',
+                )}
+                onClick={() => onSlideClick(profile?.profile?.url)}
               />
-            </div>
+              <div className='relative w-full h-full flex-none rounded-b-3xl'>
+                <div className='absolute md:h-[45px] xl:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
+                  <p className='text-white md:text-lg text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
+                </div>
+              </div>
+            </a>
+
           ))}
         </div>
       </div>

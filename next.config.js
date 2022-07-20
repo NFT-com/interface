@@ -46,6 +46,10 @@ const moduleExports = {
       {
         key: 'Permissions-Policy',
         value: 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()'
+      },
+      {
+        key: 'Strict-Transport-Security',
+        value: 'max-age=31536000; includeSubDomains'
       }
     ];
     return [
