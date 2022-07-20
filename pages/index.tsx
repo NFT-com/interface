@@ -168,7 +168,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div className='h-full md:px-6 px-2 py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
-                <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide text-lg py-2 whitespace-nowrap sm:whitespace-normal ...'>
+                <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-nowrap sm:whitespace-normal ...'>
                   {data?.feedDescription}
                 </div>
                 <ProfileFeed profiles={[profileFeed1, profileFeed2, profileFeed3, profileFeed4, profileFeed5, profileFeed6, profileFeed7, profileFeed8]} />
@@ -176,7 +176,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <Button
                     bgColor={'#F9D963'}
                     color={'#4D4412'}
-                    label='Discover More NFT Profiles'
+                    label='Discover more NFT Profiles'
                     stretch={isMobile}
                     onClick={() => {
                       router.push('/app/gallery?type=profile');
@@ -218,7 +218,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section font-header justify-center px-4 ...'>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
                   {data?.threeCardTitle2}
                   <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.threeCardDescription2}
@@ -239,7 +239,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section font-header justify-center px-4 ...'>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
                   {data?.threeCardTitle3}
                   <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.threeCardDescription3}
@@ -260,7 +260,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     variant={RoundedCornerVariant.All}
                   />
                 </div>
-                <div className='text-section font-header justify-center px-4 ...'>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
                   {data?.communityCtaTitle}
                   <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.communityCtaDescription}
