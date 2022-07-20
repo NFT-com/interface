@@ -123,7 +123,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                       toggleSidebar();
                     }}
                   >
-                    <Menu color={primaryIcon} />
+                    <Menu color={props.bgLight ? '#7F7F7F' : primaryIcon} />
                   </button>
                   <div
                     className="gap-3 sm:hidden block cursor-pointer"
