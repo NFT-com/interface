@@ -30,16 +30,16 @@ export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
       'disableOnInteraction': false
     }} className="flex space-x-1 py-4">
       {profiles.map((profile, index) => (
-        <SwiperSlide key={profile?.profile?.id ?? index} className='h-full sm:w-3/4 md:w-[40%] w-[20%] flex-none cursor-pointer px-2 drop-shadow-xl'>
+        <SwiperSlide key={profile?.profile?.id ?? index} className='h-full w-full flex-none cursor-pointer px-2'>
           <RoundedCornerMedia
             src={profile?.profile?.photoURL}
             variant={RoundedCornerVariant.All}
             containerClasses={tw(
-              'h-[390px] w-full flex-none cursor-pointer relative',
+              'h-[390px] w-3/4 sm:w-full flex-none cursor-pointer relative',
             )}
             onClick={() => router.push(`/${profile.profile.url}`)}
           />
-          <div className='relative w-full h-full flex-none rounded-b-3xl'>
+          <div className='relative w-3/4 sm:w-full h-full flex-none rounded-b-3xl drop-shadow-xl'>
             <div className='absolute md:h-[45px] xl:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
               <p className='text-white md:text-lg text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
             </div>
