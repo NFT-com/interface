@@ -55,6 +55,7 @@ export const getTypesenseInstantsearchAdapterRaw = new Typesense.Client({
     'port': 443, // For Typesense Cloud use 443
     'protocol': 'https', // For Typesense Cloud use https
   }],
+  sendApiKeyAsQueryParam: false,
   'apiKey': getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_APIKEY),
   //'connectionTimeoutSeconds': 2
 });

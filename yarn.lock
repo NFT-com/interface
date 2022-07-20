@@ -17697,6 +17697,14 @@ typesense-instantsearch-adapter@^2.4.0:
   dependencies:
     typesense "^1.2.1"
 
+typesense@1.4.0-3:
+  version "1.4.0-3"
+  resolved "https://registry.yarnpkg.com/typesense/-/typesense-1.4.0-3.tgz#3c3aec2b84b7bdabce20f791ed909bd86ddbafef"
+  integrity sha512-/O+iCqVSndSo89EIajEINptcNl66Cr/X48q3Uv54caMG9aWbPPn54Llc2B+YP8+r2YyEkFBX5MCozDVrMebkCg==
+  dependencies:
+    axios "^0.26.0"
+    loglevel "^1.8.0"
+
 typesense@^1.2.1:
   version "1.2.2"
   resolved "https://registry.npmjs.org/typesense/-/typesense-1.2.2.tgz"
@@ -17704,13 +17712,6 @@ typesense@^1.2.1:
   dependencies:
     axios "^0.21.1"
     loglevel "^1.7.1"
-
-"typesense@https://github.com/typesense/typesense-js.git#fix-sendApiKeyAsQueryParam":
-  version "1.4.0-2"
-  resolved "https://github.com/typesense/typesense-js.git#22e89056b26b00f03c17b630d4a65d896fe74ecb"
-  dependencies:
-    axios "^0.26.0"
-    loglevel "^1.8.0"
 
 typical@^4.0.0:
   version "4.0.0"
