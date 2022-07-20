@@ -76,7 +76,7 @@ export const LearnCards = (props: LearnCardsProps) => {
             </Link>
           ))}
         </div>
-        <div className="flex items-center justify-center mt-5 space-x-2">
+        {/* <div className="flex items-center justify-center mt-5 space-x-2">
           {scrollSnaps.map((_, idx) => (
             <div className={`w-3 h-3 bg-blog-slider-blue border rounded-full flex justify-center items-center ${
               idx === selectedIndex ? 'border-[#0077BA]' : 'none'
@@ -89,7 +89,7 @@ export const LearnCards = (props: LearnCardsProps) => {
               />
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );

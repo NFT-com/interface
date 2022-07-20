@@ -60,12 +60,12 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
               key={profile?.profile?.id ?? index}
               src={profile?.profile?.photoURL}
               variant={RoundedCornerVariant.All}
-              containerClasses={'h-full w-[25%] flex-none relative drop-shadow-xl p-4'}
+              containerClasses={'h-full w-[25%] flex-none cursor-pointer relative drop-shadow-xl p-4'}
               onClick={() => onSlideClick(profile?.profile?.url)}
             />
           ))}
         </div>
-        <div className="flex items-center justify-center mt-5 space-x-2">
+        {/* <div className="flex items-center justify-center mt-5 space-x-2">
           {scrollSnaps.map((_, idx) => (
             <div className={`w-3 h-3 bg-blog-slider-blue border rounded-full flex justify-center items-center ${
               idx === selectedIndex ? 'border-[#0077BA]' : 'none'
@@ -78,7 +78,7 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
               />
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );
