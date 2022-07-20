@@ -164,8 +164,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 md:mx-0 xl:px-20 lg:mx-0 w-screen mx-auto items-center ...'>
-            <div className='h-full px-2 py-12 ...'>
+          <div className='space-y-12 md:px-0 xl:px-20 lg:px-0 w-screen mx-auto items-center ...'>
+            <div className='h-full md:px-6 px-2 py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
                 <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide text-lg py-2 whitespace-nowrap ...'>
@@ -202,13 +202,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
             </div>
-            <div className='h-full px-2 ...'>
+            <div className='h-full md:px-6 px-2 ...'>
               <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </div>
               <LeaderBoard data={leaderboardData} />
             </div>
-            <div className='flex flex-row flex-wrap w-full h-full justify-center px-2 ...'>
+            <div className='flex md:px-6 flex-row flex-wrap w-full h-full justify-center px-2 ...'>
               <div className='h-full w-full ...'>
                 <div className='text-section font-header justify-center py-6 ...'>
                   {data?.threeCardTitle}
@@ -291,7 +291,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 />
               </div>
             </div>
-            <div className='h-full w-full py-10 px-2'>
+            <div className='h-full md:px-6 w-full py-10 px-2'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.learnTitle}
                 <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 md:whitespace-nowrap sm:whitespace-normal ...'>
