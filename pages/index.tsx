@@ -198,7 +198,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full rounded-xl w-screen bg-always-black py-6 drop-shadow-lg lg:w-full max-w-[100rem] mx-auto ...'>
+            <div className='h-full rounded-xl bg-always-black py-6 drop-shadow-lg xl:w-screen max-w-[100rem] ...'>
               {tickerStats && (
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
@@ -226,7 +226,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'justify-center',
                     'overflow-hidden',
                     'mb-3',
-                    'pr-2'
+                    'md:px-1 pr-2'
                   )}>
                   <RoundedCornerMedia
                     src={data?.threeCardImage1['url']}
@@ -268,7 +268,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'w-full h-full',
                     'overflow-hidden',
                     'mb-3',
-                    'pl-2'
+                    'md:px-1 pl-2'
                   )}>
                   <RoundedCornerMedia
                     src={data?.threeCardImage3['url']}
@@ -302,13 +302,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   {data?.learnDescription}
                 </div>
                 <div className='w-full h-full items-center ...'>
-                  <div className='h-[350px] w-full ...'>
-                  <LearnCards
-                    cards={learnCards}
-                    cardImages={learnCardImages}
-                  />
+                  <div className='max-h-[330px] w-full ...'>
+                    <LearnCards
+                      cards={learnCards}
+                      cardImages={learnCardImages}
+                    />
                   </div>
-                  <div className='flex flex-row justify-center sm:w-full items-center -mt-12 ...'>
+                  <div className='flex flex-row justify-center sm:w-full items-center sm:mt-16  ...'>
                     <Button
                       bgColor={'#F9D963'}
                       color={'#4D4412'}
