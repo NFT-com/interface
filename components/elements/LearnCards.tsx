@@ -36,7 +36,7 @@ export const LearnCards = (props: LearnCardsProps) => {
   return (
     <div className='relative overflow-hidden'>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 drop-shadow-md">
           {props?.cards?.map((card, index) => (
             <Link href={card['linkTo']} passHref key={card['title']}>
               <a
