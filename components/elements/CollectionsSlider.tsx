@@ -117,16 +117,15 @@ const EmblaCarousel = (props: slidesProps) => {
     onSelect();
     setScrollSnaps(embla.scrollSnapList());
   }, [embla, onSelect]);
-
   return (
     <>
       <div className="embla">
         <div className="embla__viewport" ref={viewportRef}>
           <div className="embla__container">
-            {props.slides.map((item, index) => (
+            {props.slides.map((item: any, index) => (
               <div className="embla__slide" key={index}>
                 <div className="embla__slide__inner">
-                  <CollectionsHit contractAddr={item.document.contractAddr}/>
+                  <CollectionsHit contractAddr={item.document?.contractAddr}/>
                 </div>
               </div>
             ))}
