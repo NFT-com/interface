@@ -41,7 +41,8 @@ export const LearnCards = (props: LearnCardsProps) => {
             style={{
               background: `url("${props.cardImages[index].url}")`,
               backgroundPosition: 'center',
-              backgroundSize: 'cover'
+              backgroundSize: 'cover',
+              fontSize: '32px'
             }}
           >
             {card['title']}
