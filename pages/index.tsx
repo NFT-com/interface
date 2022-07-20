@@ -105,17 +105,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       setLearnCardImages([data.learnCardImagesCollection.items[0], data.learnCardImagesCollection.items[1]]);
     }
   }, [data?.featuredProfile, data.learnCards, data.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data.learnCardImagesCollection.items, data.learnCardImagesCollection, data.subheroTitle]);
-
-  function removeLastWord(str) {
-    const lastIndexOfSpace = str.lastIndexOf(' ');
-  
-    if (lastIndexOfSpace === -1) {
-      return str;
-    }
-
-    console.log(str);
-    return str.substring(0, lastIndexOfSpace);
-  }
   
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
@@ -135,7 +124,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           }}>
             <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
-                'font-header text-black sm:text-6xl text-header leading-header',
+                'font-header text-black sm:text-5xl text-header leading-header',
                 'break-after-all space-y-2',
                 'md:mb-6'
               )}>
@@ -145,7 +134,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div>
                   {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
                 </div>
-                <div className='sm:hidden md:block text-body leading-body font-body w-[44%]'>
+                <div className='sm:hidden md:block text-body text-[#A09E9E] leading-body font-body w-[44%]'>
                 Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
                 </div>
               </div>
@@ -158,7 +147,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   className={tw(
                     'w-max',
                     'block',
-                    'font-medium bg-transparent rounded-xl text-[#4D4412]',
+                    'font-semibold bg-transparent rounded-xl text-[#4D4412]',
                     'flex flex-row items-center cursor-pointer opacity-80 hover:opacity-100',
                     'font-grotesk font-body',
                     'py-2'
