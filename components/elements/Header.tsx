@@ -79,7 +79,7 @@ export const Header = () => {
             |
               </span>
             </div>
-            <WalletRainbowKitButton showWhenConnected signInButton={true} />
+            <WalletRainbowKitButton showWhenConnected signInButton={true} headerButtonColor />
           </div>
         </div>
       </div>
