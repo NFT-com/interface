@@ -24,7 +24,9 @@ import { NextPageWithLayout } from './_app';
 import { BigNumber } from 'ethers';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Vector from 'public/Vector.svg';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { TickerStat } from 'types';
@@ -114,6 +116,9 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>
+          <div className='flex flex-row items-center justify-center w-screen h-[55px] font-grotesk text-lg leading-6 text-white font-[500] bg-[#111111]'>
+            Unlock Our Beta with a Genesis key<Link href='/app/auctions' passHref><a> <Vector className='pl-2 w-full h-full rounded' /></a></Link>
+          </div>
           <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 lg:w-screen xl:max-w-screen xl:px-20 mx-auto h-full',
             'break-after-all ',
           )}
