@@ -40,12 +40,12 @@ export const ProfileFeed = (props: ProfileFeedProps) => {
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex space-x-1 py-4">
           {props.profiles.map((profile, index) => (
-            <a key={profile?.profile?.id ?? index} className='h-full sm:w-3/4 w-[22%] flex-none cursor-pointer px-4'>
+            <a key={profile?.profile?.id ?? index} className='h-full sm:w-3/4 w-[22%] flex-none cursor-pointer pr-4'>
               <RoundedCornerMedia
                 src={profile?.profile?.photoURL}
                 variant={RoundedCornerVariant.All}
                 containerClasses={tw(
-                  'h-full w-[3/4] flex-none cursor-pointer relative',
+                  'cursor-pointer w-full',
                 )}
                 onClick={() => onSlideClick(profile?.profile?.url)}
               />
