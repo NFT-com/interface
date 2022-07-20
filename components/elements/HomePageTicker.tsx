@@ -9,7 +9,7 @@ type HomePageTickerProps = {
 export default function HomePageTicker(props: HomePageTickerProps) {
   const tickerStatsLength = Object.keys(props.tickerStats).length;
   return (
-    <Ticker offset="run-in">
+    <Ticker offset="-200">
       {({ index }) => (
         <>
           <div style={{ display: 'none' }}>{index=index%tickerStatsLength}</div>
