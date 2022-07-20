@@ -15,6 +15,7 @@ export interface ProfileNFTsQueryData {
 
 export function useProfileNFTsQuery(
   profileId: string,
+  chainId: string,
   first: number
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
@@ -31,6 +32,7 @@ export function useProfileNFTsQuery(
     const result = await sdk.ProfileNFTs({
       input: {
         profileId,
+        chainId,
         pageInput: { first: first }
       }
     });
