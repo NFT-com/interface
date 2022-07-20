@@ -12,6 +12,7 @@ import { useAccount, useDisconnect } from 'wagmi';
 interface WalletRainbowKitButtonProps {
   signInButton?: boolean;
   showWhenConnected?: boolean;
+  headerButtonColor?: boolean;
 }
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
@@ -71,13 +72,12 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                         }}
                         className={tw(
                           `${props?.signInButton ? 'block' : 'hidden'}`,
-                          'font-medium',
+                          'font-header',
                           `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
                             ? 'bg-[#F9D963]'
                             : 'bg-deprecated_primary-button-bckg'}`,
                           'rounded-xl',
                           `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? 'text-[#4D4412]' : 'text-white'}`,
-                          'border border-primary-button-border',
                           'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
                           'py-2 px-5'
                         )}
@@ -103,7 +103,6 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                       : 'bg-deprecated_primary-button-bckg'}`,
                     'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
                     'border',
-                    'border-primary-button-border',
                     'py-2 px-5'
                   )} onClick={openChainModal} type="button">
                     Unsupported network
@@ -112,14 +111,14 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
               }
               return (
                 <>
-                  <div
-                    className="sm:block hidden cursor-pointer"
+                  <button
+                    className='sm:block hidden cursor-pointer'
                     onClick={() => {
                       toggleSidebar();
                     }}
                   >
                     <Menu color={primaryIcon} />
-                  </div>
+                  </button>
                   <div
                     className="gap-3 sm:hidden block cursor-pointer"
                   >

@@ -38,7 +38,7 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
   return <div className="overflow-x-auto relative w-full">
     <table className="min-w-full border-x-0">
       <thead>
-        <tr className="text-body leading-body font-body">
+        <tr className="text-body leading-body font-body text-[#7F7F7F]">
           <th scope="col" className="flex items-center text-body sm:text-sm leading-body font-body"></th>
           <th scope="col" className='text-left text-body sm:text-sm leading-body font-body'>Profile</th>
           <th scope="col" className='text-right pr-3 text-body sm:text-sm leading-body font-body'>NFTs Collected</th>
@@ -50,7 +50,7 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
         {data?.leaderboard?.items.map((item, i) => (
           <tr key={i}
             className={tw('cursor-pointer min-w-[5.5rem] h-20',
-              'border-x-0 border-y border-row-border dar:border:transparent')}
+              i > 0 && 'border-x-0 border-y border-row-border dar:border:transparent')}
             style={{
               backgroundColor: i === hoverIndex ? rowBackgroundActive : alwaysWhite,
             }}
