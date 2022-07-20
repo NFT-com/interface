@@ -78,7 +78,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                             : 'bg-deprecated_primary-button-bckg'}`,
                           'rounded-xl',
                           `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? 'text-[#4D4412]' : 'text-white'}`,
-                          'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
+                          'flex flex-row items-center font-bold cursor-pointer hover:opacity-80 font-grotesk',
                           'py-2 px-5'
                         )}
                         type="button">
@@ -97,7 +97,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
               if (chain.unsupported) {
                 return (
                   <button className={tw(
-                    'block font-medium rounded-xl text-white',
+                    'block font-bold rounded-xl text-white',
                     `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
                       ? 'bg-primary-button-bckg'
                       : 'bg-deprecated_primary-button-bckg'}`,
@@ -123,7 +123,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                     className="gap-3 sm:hidden block cursor-pointer"
                   >
                     <button className={tw(
-                      'block font-medium rounded-xl text-white',
+                      'block font-bold rounded-xl text-white',
                       `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
                         ? 'bg-primary-button-bckg'
                         : 'bg-deprecated_primary-button-bckg'}`,

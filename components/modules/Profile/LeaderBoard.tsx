@@ -55,7 +55,7 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
               backgroundColor: i === hoverIndex ? rowBackgroundActive : alwaysWhite,
             }}
           >
-            <td className="pr-0 md:pr-1 text-body sm:text-sm leading-body font-medium" >
+            <td className="pr-0 md:pr-1 font-bold text-body sm:text-sm leading-body" >
               <div className={`${isMobile ? 'flex items-start' : 'flex items-center'}`} >
                 <div>{i + 1}</div>
               </div>
@@ -64,7 +64,7 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
               <Link href={item.url}>
                 <div className={tw('h-full flex items-center',
                   'justify-start whitespace-nowrap',
-                  'text-body sm:text-sm leading-body font-medium')}>
+                  'text-body sm:text-sm leading-body font-bold')}>
                   <div className="w-14 h-14 xs:w-8 xs:h-8 mr-3 relative">
                     <Image src={item.photoURL} alt="svgImage" className="m-0 object-center rounded-full" layout='fill' />
                   </div>
@@ -73,19 +73,19 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
               </Link>
             </td>
             <td>
-              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
+              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-bold',
                 'whitespace-nowrap text-right mr-3')}>
                 {item.itemsVisible}
               </div>
             </td>
             <td className="sm:hidden">
-              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
+              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-bold',
                 'whitespace-nowrap text-right mr-3')}>
                 {item.numberOfCollections}
               </div>
             </td>
             <td className="sm:hidden">
-              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-medium',
+              <div className={tw('flex items-end justify-end text-body sm:text-sm leading-body font-bold',
                 'whitespace-nowrap text-right')}>
                 {item.numberOfGenesisKeys}
               </div>

@@ -114,7 +114,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 lg:w-screen px-20 max-w-screen mx-auto h-full',
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 lg:w-screen xl:max-w-screen xl:px-20 mx-auto h-full',
             'break-after-all ',
           )}
           style={{
@@ -124,9 +124,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           }}>
             <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
-                'font-header text-black sm:text-5xl text-header leading-header',
-                'break-after-all space-y-2',
-                'md:mb-6'
+                'font-header text-black sm:text-5xl md:text-5xl lg:text-7xl xl:text-8xl text-header leading-header',
+                'break-after-all space-y-2'
               )}>
                 <div>
                   {data?.subheroTitle}
@@ -134,7 +133,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div>
                   {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
                 </div>
-                <div style={{ fontSize: '18px' }} className='py-5 sm:hidden md:block text-body text-[#A09E9E] leading-10 tracking-wide font-body w-[53%]'>
+                <div className='py-5 sm:hidden md:text-base text-xl md:block md:w-[100%] text-body text-[#A09E9E] leading-10 tracking-wide font-body w-[70%]'>
                   Learn, discover, and own digital items. We’re building the hub that is all things Web3. Do more with your NFT.
                 </div>
               </div>
@@ -148,7 +147,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'w-max',
                     'block',
                     'font-semibold bg-transparent rounded-xl text-[#4D4412]',
-                    'flex flex-row items-center cursor-pointer opacity-80 hover:opacity-100',
+                    'flex flex-row items-center text-lg cursor-pointer tracking-wide opacity-80 hover:opacity-100',
                     'font-grotesk font-body',
                     'py-2'
                   )}
@@ -157,7 +156,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </button>
               </div>
             </div>
-            <div className='flex sm:flex-row sm:justify-center justify-end sm:py-10 md:py-20 sm:w-full w-[70%]'>
+            <div className='flex sm:flex-row sm:justify-center md:ml-0 justify-end sm:py-10 md:py-0 sm:w-full w-[100%]'>
               <FeaturedProfile
                 profileOwner={featuredProfile}
                 gkId={1}
@@ -169,7 +168,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div className='h-full py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
-                <div className='text-[#7F7F7F] text-body leading-body font-body py-2 whitespace-nowrap ...'>
+                <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide text-lg py-2 whitespace-nowrap ...'>
                   {data?.feedDescription}
                 </div>
                 <ProfileFeed
@@ -232,7 +231,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
                 <div className='text-section font-header justify-center px-4 ...'>
                   {data?.threeCardTitle2}
-                  <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
+                  <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.threeCardDescription2}
                   </div>
                 </div>
@@ -253,7 +252,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
                 <div className='text-section font-header justify-center px-4 ...'>
                   {data?.threeCardTitle3}
-                  <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
+                  <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.threeCardDescription3}
                   </div>
                 </div>
@@ -274,7 +273,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
                 <div className='text-section font-header justify-center px-4 ...'>
                   {data?.communityCtaTitle}
-                  <div className='text-[#6F6F6F] text-body leading-body font-body mr-6 py-2 ...'>
+                  <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
                     {data?.communityCtaDescription}
                   </div>
                 </div>
@@ -295,7 +294,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div className='h-full w-full py-10 px-2'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.learnTitle}
-                <div className='text=[#555555] text-body leading-body font-body py-2 md:whitespace-nowrap sm:whitespace-normal ...'>
+                <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 md:whitespace-nowrap sm:whitespace-normal ...'>
                   {data?.learnDescription}
                 </div>
                 <div className='w-full items-center ...'>

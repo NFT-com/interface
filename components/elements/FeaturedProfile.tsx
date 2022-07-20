@@ -16,7 +16,7 @@ interface FeaturedProfileProps {
 
 export const FeaturedProfile = (props: FeaturedProfileProps) => {
   return (
-    <div className='w-full h-full sm:px-0 px-20 text-body text-[#6F6F6F] font-grotesk leading-body font-header drop-shadow-2xl py-12'>
+    <div className='w-full h-full sm:px-0 md:px-0 px-20 text-body text-[#6F6F6F] font-grotesk leading-body font-header drop-shadow-2xl md:py-4 py-12'>
       <p className='mb-2 md:mb-4'>Featured Profile</p>
       <div className='flex flex-col bg-[#B0AFAF26]/20 rounded-md backdrop-blur-xl px-4 py-6'>
         <div className='flex flex-row items-center mb-5'>
@@ -40,7 +40,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
             {props?.profileOwner?.profile?.url}
           </p>
         </div>
-        <div className='grid grid-cols-1.3 grid-rows-2 gap-x-2 gap-y-2 sm:gap-4 sm:grid-flow-col sm:auto-cols-[90%] sm:overflow-x-auto sm:grid-cols-none sm:grid-rows-1 sm:min-h-[410px] sm:overscroll-x-contain'>
+        <div className='grid grid-cols-1.3 grid-rows-2 gap-x-2 gap-y-2 sm:gap-4 sm:grid-flow-col sm:auto-cols-[90%] sm:overflow-x-auto sm:grid-cols-none sm:grid-rows-1 md:min-h-[250px] sm:min-h-[410px] sm:overscroll-x-contain'>
           <Link href={`/app/nft/${props.featuredNfts[0]?.contract}/${props.featuredNfts[0]?.tokenId}`} passHref>
             <a className='flex flex-col w-full row-span-2 sm:row-auto sm:aspect-square sm:h-full'>
               <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[0]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full' />
