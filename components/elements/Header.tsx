@@ -1,3 +1,4 @@
+import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -22,6 +23,8 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
+
+  useMaybeCreateUser();
 
   return (
     <nav className={tw(
