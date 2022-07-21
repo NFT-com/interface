@@ -114,17 +114,17 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>
-          <Link href='/app/auctions' passHref>
-            <a>
-              <div className='mx-auto flex cursor-pointer flex-row items-center justify-center w-screen h-[55px] font-grotesk text-lg sm:text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
-                <span>Unlock the NFT Platform Beta with a Genesis Key</span>
-                <div className='flex flex-col w-16 rounded items-center p-[1px] -ml-4'>
+          <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk text-lg sm:text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
+            <span>Unlock the NFT Platform Beta with a Genesis Key</span>
+            <div className='flex flex-col w-16 rounded items-center p-[1px] -ml-4'>
+              <Link href='/app/auctions' passHref>
+                <a>
                   <Vector />
-                </div>
-              </div>
-            </a>
-          </Link>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 lg:w-screen xl:max-w-screen xl:px-20 max-w-7xl mx-auto h-full',
+                </a>
+              </Link>
+            </div>
+          </div>
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 w-full max-w-7xl mx-auto h-full',
             'break-after-all ',
           )}
           style={{
@@ -134,7 +134,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           }}>
             <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
-                'font-header text-black sm:text-5xl md:text-5xl xl:text-7xl text-header leading-header',
+                'font-header text-black sm:text-5xl md:text-5xl lg:text-7xl xl:text-8xl text-header leading-header',
                 'break-after-all space-y-2'
               )}>
                 <div>
@@ -174,7 +174,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 md:px-0 xl:px-20 lg:px-0 lg:w-screen items-center max-w-7xl mx-auto ...'>
+          <div className='space-y-12 md:px-0 w-full items-center max-w-7xl mx-auto ...'>
             <div className='h-full md:px-6 px-2 py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
@@ -202,7 +202,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
             </div>
-            <div className='h-full md:px-6 px-2 ...'>
+            <div className='h-full lg:px-6 px-2 ...'>
               <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </div>
@@ -279,17 +279,16 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
               <div className='flex flex-row justify-center sm:w-full items-center py-6 -mb-12 ...'>
-                <Link href={'/articles'}>
-                  <button
-                    className={tw(
-                      'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
-                      'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
-                      'py-2 px-5'
-                    )}
-                    type="button">
-                      Learn more
-                  </button>
-                </Link>
+                <button
+                  onClick={() => window.open('https://docs.nft.com')}
+                  className={tw(
+                    'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
+                    'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
+                    'py-2 px-5'
+                  )}
+                  type="button">
+                    Learn more
+                </button>
               </div>
             </div>
             <div className='h-full md:px-6 w-full pb-10 pt-3 px-2'>
@@ -299,7 +298,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   {data?.learnDescription}
                 </div>
                 <div className='w-full items-center ...'>
-                  <div className='h-full w-full ...'>
+                  <div className='h-full w-full cursor-pointer ...'>
                     <LearnCards
                       cards={learnCards}
                       cardImages={learnCardImages}
