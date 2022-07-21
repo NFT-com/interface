@@ -131,7 +131,7 @@ export function NFTCard(props: NFTCardProps) {
               e.stopPropagation();
             }}
           >
-            {props.visible ? <Eye color={pink} /> : <EyeOff color={pink} /> }
+            {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }
           </div>
       }
       {
