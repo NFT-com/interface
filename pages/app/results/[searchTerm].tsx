@@ -117,7 +117,7 @@ export default function ResultsPage() {
             </div>
           </div>
           {<InstantSearch
-            searchClient={getTypesenseInstantsearchAdapter(SearchableFields.NFTS_COLLECTION_FIELDS)}
+            searchClient={getTypesenseInstantsearchAdapter(SearchableFields.NFTS_INDEX_FIELDS)}
             indexName="nfts">
             <Configure hitsPerPage={12} />
             <div className="hidden">
