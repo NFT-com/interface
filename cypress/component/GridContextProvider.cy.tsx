@@ -4,7 +4,7 @@ import { GridContext, GridContextProvider, GridContextType } from '../../compone
 
 import { useContext } from 'react';
 
-const buildItem = (id: string) => ({ id });
+export const buildItem = (id: string) => ({ id });
 
 const TestComponent = () => {
   const {

@@ -98,6 +98,7 @@
     "wagmi": "^0.4.2"
   },
   "devDependencies": {
+    "@4tw/cypress-drag-drop": "^2.2.1",
     "@cypress/code-coverage": "^3.10.0",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
     "@metamask/jazzicon": "^2.0.0",
