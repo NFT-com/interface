@@ -118,32 +118,39 @@ const EmblaCarousel = (props: slidesProps) => {
     setScrollSnaps(embla.scrollSnapList());
   }, [embla, onSelect]);
   return (
-    <>
-      <div className="embla">
-        <div className="embla__viewport" ref={viewportRef}>
-          <div className="embla__container">
-            {props.slides.map((item: any, index) => (
-              <div className="embla__slide" key={index}>
-                <div className="embla__slide__inner">
-                  <CollectionsHit contractAddr={item.document?.contractAddr}/>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} />
-        <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
-      </div>
-      <div className="embla__dots">
-        {scrollSnaps.map((_, index) => (
-          <DotButton
-            key={index}
-            selected={index === selectedIndex}
-            onClick={() => scrollTo(index)}
-          />
+    props.slides.length < 5 ?
+      <div className="grid grid-cols-4 gap-8" >
+        {props.slides.map((item: any, index) => (
+          <CollectionsHit key={index} contractAddr={item.document?.contractAddr}/>
         ))}
       </div>
-    </>
+      :
+      <>
+        <div className="embla">
+          <div className="embla__viewport" ref={viewportRef}>
+            <div className="embla__container">
+              {props.slides.map((item: any, index) => (
+                <div className="embla__slide" key={index}>
+                  <div className="embla__slide__inner">
+                    <CollectionsHit contractAddr={item.document?.contractAddr}/>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} />
+          <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
+        </div>
+        <div className="embla__dots">
+          {scrollSnaps.map((_, index) => (
+            <DotButton
+              key={index}
+              selected={index === selectedIndex}
+              onClick={() => scrollTo(index)}
+            />
+          ))}
+        </div>
+      </>
   );
 };
 
