@@ -15,7 +15,9 @@ export interface GenesisKeyGalleryFiltersProps {
 
 export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
   const { galleryShowMyStuff: showMyStuff, galleryItemType, setGalleryItemType, setGalleryShowMyStuff } = useGallery();
-  const { type } = useRouter().query;
+  const router = useRouter();
+
+  const type = router?.query?.['type'] ?? 'gk';
 
   const [initLoad, setInitLoad] = useState(true);
 
