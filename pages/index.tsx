@@ -202,7 +202,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <HomePageTicker tickerStats={data.tickerStats} />
               )}
             </div>
-            <div className='h-full md:px-6 px-2 ...'>
+            <div className='h-full lg:px-6 px-2 ...'>
               <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
                 {data?.leaderboardTitle}
               </div>
