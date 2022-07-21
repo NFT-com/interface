@@ -16,21 +16,24 @@ describe('FeaturedProfile', () => {
           contract: '0x8fB5a7894AB461a59ACdfab8918335768e411414',
           metadata: {
             imageURL: 'ipfs://ipfs/QmUFVMGbwcLfqpghrJSnuLFXU8kdwfGtY84pjSwhRHQdsZ'
-          }
+          },
+          tokenId: 1
         },
         {
           id: '2185',
           contract: '0x8fB5a7894AB461a59ACdfab8918335768e411414',
           metadata: {
             imageURL: 'ipfs://ipfs/QmUFVMGbwcLfqpghrJSnuLFXU8kdwfGtY84pjSwhRHQdsZ'
-          }
+          },
+          tokenId: 2
         },
         {
           id: '2185',
           contract: '0x8fB5a7894AB461a59ACdfab8918335768e411414',
           metadata: {
             imageURL: 'ipfs://ipfs/QmUFVMGbwcLfqpghrJSnuLFXU8kdwfGtY84pjSwhRHQdsZ'
-          }
+          },
+          tokenId: 3
         }]}
       />
     );

@@ -4,12 +4,13 @@ import { ProfileLayoutType } from 'graphql/generated/types';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { Doppler,getEnv } from 'utils/env';
 
 import { NftGrid } from './NftGrid';
 import { ProfileEditContext } from './ProfileEditContext';
 
 import { useContext, useState } from 'react';
-
+import { useNetwork } from 'wagmi';
 export interface NftGalleryProps {
   profileURI: string;
   savedLayoutType: ProfileLayoutType;
@@ -20,6 +21,8 @@ export const PROFILE_GALLERY_PAGE_SIZE = 20;
 export function NftGallery(props: NftGalleryProps) {
   const { profileURI } = props;
 
+  const { activeChain } = useNetwork();
+
   // todo: proper pagination to avoid overfetching here.
   const [loadedCount, setLoadedCount] = useState(PROFILE_GALLERY_PAGE_SIZE);
 
@@ -27,6 +30,7 @@ export function NftGallery(props: NftGalleryProps) {
   const { data: allOwnerNFTs, totalItems: ownerNFTCount } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs, totalItems: publicNFTCount } = useProfileNFTsQuery(
     profileData?.profile?.id,
+    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     loadedCount
   );
   const { editMode, saving } = useContext(ProfileEditContext);

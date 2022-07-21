@@ -1,11 +1,9 @@
-import { NFTCard } from 'components/elements/NFTCard';
-import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
+import CollectionsSlider from 'components/elements/CollectionsSlider';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { SearchUIFilter } from 'components/modules/Profile/SearchUIFilter';
-import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
-import { Doppler, getEnv } from 'utils/env';
-import { shortenAddress } from 'utils/helpers';
+import { Hit } from 'components/modules/Search/Hit';
 import { tw } from 'utils/tw';
+import { getTypesenseInstantsearchAdapter, getTypesenseInstantsearchAdapterRaw, SearchableFields } from 'utils/typeSenseAdapters';
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -20,42 +18,10 @@ import {
   SortBy,
   Stats,
 } from 'react-instantsearch-dom';
-// import Typesense from 'typesense';
-import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
-
-export interface HitInnerProps {
-  nftName: string;
-  url: string;
-  id: string;
-  imageURL: string;
-  contractAddr: string;
-  contractName: string;
-  nftDescription: string;
-  listedPx: number;
-  tokenId: string;
-}
 
 export interface StatsComponentProps {
   searchTerm: string | string[];
 }
-
-const getTypesenseInstantsearchAdapter = (QUERY_BY) => {
-  const typesenseInstantsearchAdapter = new TypesenseInstantSearchAdapter({
-    server: {
-      apiKey: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_APIKEY),
-      nodes: [
-        {
-          host: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_HOST),
-          port: 443,
-          protocol: 'https',
-        },
-      ],
-      cacheSearchResultsForSeconds: 2 * 60, // Cache search results from server. Defaults to 2 minutes. Set to 0 to disable caching.
-    },
-    additionalSearchParameters: { query_by: QUERY_BY, },
-  });
-  return typesenseInstantsearchAdapter.searchClient;
-};
 
 const indexName = 'nfts';
 const sorts = [
@@ -66,69 +32,9 @@ const sorts = [
 
 const sortByDefaultRefinement = 'nfts';//sorts[0].value;
 
-const Hit = (hit: { hit: HitInnerProps }) => {
-  const router = useRouter();
-  console.log(hit.hit, 'hit hit fdo');
-  return (
-    <div data-testid={'NFTCard-' + hit.hit.contractAddr}>
-      <NFTCard
-        header={{ value: hit.hit.nftName ?? hit.hit.url, key: '' }}
-        traits={[{ value: shortenAddress(hit.hit.contractAddr), key: '' }]}
-        title={'Price: ' + (hit.hit.listedPx ? (hit.hit.listedPx + 'ETH') : 'Not estimated')}
-        subtitle={hit.hit.contractName}
-        images={[hit.hit.imageURL]}
-        onClick={() => {
-          if (hit.hit.url) {
-            hit.hit.url && router.push(`/${hit.hit.url}`);
-          }
-  
-          if (hit.hit.nftName) {
-            router.push(`/app/nft/${hit.hit.contractAddr}/${hit.hit.tokenId}`);
-          }
-        }}
-        description={hit.hit.nftDescription ? hit.hit.nftDescription.slice(0,50) + '...': '' }
-      />
-    </div>
-  );
-};
-
-const CollectionsHit = (hit: { hit: HitInnerProps }) => {
-  const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
-  const [imageArray, setImageArray] = useState([]);
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const images = [];
-    hit.hit.contractAddr && fetchCollectionsNFTs({
-      collectionAddress: hit.hit.contractAddr,
-      pageInput:{
-        first: 3,
-        afterCursor: null, }
-    }).then((collectionsData => {
-      setCount(collectionsData?.collectionNFTs.items.length);
-      images.push(collectionsData?.collectionNFTs.items[0]?.metadata.imageURL);
-      images.push(collectionsData?.collectionNFTs.items[1]?.metadata.imageURL);
-      images.push(collectionsData?.collectionNFTs.items[2]?.metadata.imageURL);
-      setImageArray([...images]);
-    }));
-  }, [fetchCollectionsNFTs, hit.hit.contractAddr]);
-  return (
-    imageArray.length > 0 && <div data-testid={'NFTCollection-' + hit.hit.contractAddr} >
-      <NFTCollectionCard
-        contract={hit.hit.contractAddr}
-        count={count}
-        images={imageArray}
-        onClick={() => null }
-      />
-    </div>
-  );
-};
-
 const Results = connectStateResults(
   ({ props, searchResults/*, children */ }) => {
-    return searchResults && searchResults.nbHits !== 0
-      ? <InfiniteHits hitComponent={props.hitComponent} /> :
-      <div className="dark:text-always-white text-sm p-3 text-gray-500">No results found</div>;
+    return searchResults && searchResults.nbHits !== 0 ? <InfiniteHits hitComponent={props.hitComponent} /> : null;
   }
 );
 
@@ -140,7 +46,7 @@ const StatsComponent = ((props: StatsComponentProps) => {
           <>
             {props.searchTerm === '0' ?
               <span>{`${nbHits.toLocaleString()} TOTAL RESULTS`}</span> :
-              <span>{nbHits === 0 ? '' : `${nbHits.toLocaleString()} RESULT${nbHits > 1? 'S' : ''} FOR `}</span>
+              <span>{nbHits === 0 ? 'NO RESULTS FOUND FOR' : `${nbHits.toLocaleString()} RESULT${nbHits > 1? 'S' : ''} FOR `}</span>
             }
             <br/>
             {props.searchTerm !== '0' && <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{props.searchTerm}</span>}
@@ -152,6 +58,25 @@ const StatsComponent = ((props: StatsComponentProps) => {
 export default function ResultsPage() {
   const router = useRouter();
   const { searchTerm } = router.query;
+  const [collectionsSlides, setCollectionsSlides] = useState([]);
+  const [collectionsTotalResults, setCollectionsTotalResults] = useState(0);
+  const client = getTypesenseInstantsearchAdapterRaw;
+
+  useEffect(() => {
+    searchTerm && client.collections('collections')
+      .documents()
+      .search({
+        'q'         : searchTerm.toString(),
+        'query_by'  : 'contractAddr,contractName,chain',
+        'per_page': 20,
+      })
+      .then(function (searchResults) {
+        setCollectionsSlides([...searchResults.hits]);
+        setCollectionsTotalResults(searchResults.found);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
+
   return (
     <PageWrapper
       bgColorClasses='bg-always-white dark:bg-pagebg-dk'
@@ -166,18 +91,7 @@ export default function ResultsPage() {
             paddingTop: !isMobile && '8rem',
             maxWidth: isMobile ? '100%' : '100%'
           }}>
-          {<InstantSearch
-            searchClient={getTypesenseInstantsearchAdapter('contractAddr,contractName,chain')}
-            indexName="collections"
-          >
-            <Configure hitsPerPage={4} />
-            <div className="hidden">
-              <SearchBox
-                submit={null}
-                reset={null}
-                defaultRefinement={searchTerm === '0' ? '' : searchTerm}
-              />
-            </div>
+          <div>
             <div className="flex mb-10">
               <div className="w-1/4 flex flex-col px-5 md:hidden">
 
@@ -187,18 +101,23 @@ export default function ResultsPage() {
                   <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Collections</div>
                   <div className="flex justify-start items-center md:mb-0 mb-3">
                     <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
-                      <StatsComponent searchTerm={searchTerm} />
+                      {searchTerm === '0' ?
+                        <span>{`${collectionsTotalResults.toLocaleString()} TOTAL RESULTS`}</span> :
+                        <span>{collectionsTotalResults === 0 ? 'NO RESULTS FOUND FOR' : `${collectionsTotalResults.toLocaleString()} RESULT${collectionsTotalResults > 1? 'S' : ''} FOR `}</span>
+                      }
+                      <br/>
+                      {searchTerm !== '0' && <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>}
                     </div>
                   </div>
                   <div className="results-grid  mb-16">
-                    <Results hitComponent={CollectionsHit}/>
+                    {collectionsSlides.length > 0 && <CollectionsSlider slides={collectionsSlides} />}
                   </div>
                 </div>
               </div>
             </div>
-          </InstantSearch>}
+          </div>
           {<InstantSearch
-            searchClient={getTypesenseInstantsearchAdapter('nftName,contractName,contractAddr,tokenId,listingType,chain,status,nftType,traits')}
+            searchClient={getTypesenseInstantsearchAdapter(SearchableFields.NFTS_INDEX_FIELDS)}
             indexName="nfts">
             <Configure hitsPerPage={12} />
             <div className="hidden">
@@ -241,7 +160,7 @@ export default function ResultsPage() {
             </div>
           </InstantSearch>}
           {<InstantSearch
-            searchClient={getTypesenseInstantsearchAdapter('url')}
+            searchClient={getTypesenseInstantsearchAdapter(SearchableFields.PROFILES_INDEX_FIELDS)}
             indexName="profiles">
             <Configure hitsPerPage={12} />
             <div className="hidden">

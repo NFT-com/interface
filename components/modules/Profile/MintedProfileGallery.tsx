@@ -4,6 +4,7 @@ import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { Doppler,getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -20,7 +21,7 @@ import GKBadgeIcon from 'public/gk_badge.svg';
 import NftLabelIcon from 'public/label.svg';
 import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface MintedProfileGalleryProps {
   profileURI: string;
@@ -46,9 +47,12 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
   
   const { data: account } = useAccount();
+  const { activeChain } = useNetwork();
+
   const { profileData } = useProfileQuery(props.profileURI);
   const { totalItems: publicNFTCount } = useProfileNFTsQuery(
     profileData?.profile?.id,
+    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     PROFILE_GALLERY_PAGE_SIZE
   );
 

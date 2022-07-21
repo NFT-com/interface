@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Nft, PageInfo } from 'graphql/generated/types';
+import { Maybe, Nft, PageInfo } from 'graphql/generated/types';
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate } from 'swr';
@@ -15,6 +16,7 @@ export interface ProfileNFTsQueryData {
 
 export function useProfileNFTsQuery(
   profileId: string,
+  chainId: Maybe<string>,
   first: number
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
@@ -27,10 +29,10 @@ export function useProfileNFTsQuery(
     if (isNullOrEmpty(profileId)) {
       return null;
     }
-    
     const result = await sdk.ProfileNFTs({
       input: {
         profileId,
+        chainId: chainId ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
         pageInput: { first: first }
       }
     });

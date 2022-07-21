@@ -96,18 +96,20 @@ export const feeToConsiderationItem = ({
 export function createSeaportParametersForNFTListing(
   offerer: string,
   nft: PartialDeep<Nft>,
-  price: BigNumberish,
+  startingPrice: BigNumberish,
+  endingPrice: BigNumberish,
   currency: string,
-  // todo: specify start/end times, currency, and order types
+  duration: BigNumberish,
+  // takerAddress: string,
 ): SeaportOrderParameters {
   // This is what the seller will accept for their NFT.
   // For now, we support a single currency.
   const considerationItems = [{
-    itemType: ItemType.NATIVE,
+    itemType: currency === NULL_ADDRESS ? ItemType.NATIVE : ItemType.ERC20,
     token: currency,
     identifierOrCriteria: BigNumber.from(0).toString(),
-    startAmount: BigNumber.from(price).toString(),
-    endAmount: BigNumber.from(price).toString(),
+    startAmount: BigNumber.from(startingPrice).toString(),
+    endAmount: BigNumber.from(endingPrice).toString(),
     recipient: offerer,
   }];
   const openseaFee: Fee = {
@@ -129,12 +131,13 @@ export function createSeaportParametersForNFTListing(
       feeToConsiderationItem({
         fee: openseaFee,
         token: currency,
-        baseAmount: price,
+        baseAmount: startingPrice,
+        baseEndAmount: endingPrice
       })
     ],
     orderType: OrderType.FULL_RESTRICTED,
     startTime: BigNumber.from(Date.now()).div(1000).toString(),
-    endTime: BigNumber.from(Date.now()).div(1000).add(604800 /* 1 week in seconds */).toString(),
+    endTime: BigNumber.from(Date.now()).div(1000).add(duration).toString(),
     zoneHash: SEAPORT_ZONE_HASH,
     totalOriginalConsiderationItems: '2',
     salt: generateRandomSalt(),
