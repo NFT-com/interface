@@ -279,17 +279,16 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
               <div className='flex flex-row justify-center sm:w-full items-center py-6 -mb-12 ...'>
-                <Link href={'/articles'}>
-                  <button
-                    className={tw(
-                      'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
-                      'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
-                      'py-2 px-5'
-                    )}
-                    type="button">
-                      Learn more
-                  </button>
-                </Link>
+                <button
+                  onClick={() => window.open('https://docs.nft.com')}
+                  className={tw(
+                    'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
+                    'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
+                    'py-2 px-5'
+                  )}
+                  type="button">
+                    Learn more
+                </button>
               </div>
             </div>
             <div className='h-full md:px-6 w-full pb-10 pt-3 px-2'>
@@ -299,7 +298,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   {data?.learnDescription}
                 </div>
                 <div className='w-full items-center ...'>
-                  <div className='h-full w-full ...'>
+                  <div className='h-full cursor-pointer w-full ...'>
                     <LearnCards
                       cards={learnCards}
                       cardImages={learnCardImages}
