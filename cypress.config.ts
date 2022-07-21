@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+
+import codeCoverageTask from '@cypress/code-coverage/task';
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
@@ -9,8 +11,7 @@ export default defineConfig({
       bundler: 'webpack',
     },
     setupNodeEvents(on, config) {
-      require('@cypress/react/plugins/next')(on, config);
-      require('@cypress/code-coverage/task')(on, config);
+      codeCoverageTask(on, config);
       return config;
     },
   },
@@ -21,7 +22,7 @@ export default defineConfig({
       url: '/api/__coverage__',
     },
     setupNodeEvents(on, config) {
-      require('@cypress/code-coverage/task')(on, config);
+      codeCoverageTask(on, config);
 
       return config;
     },
