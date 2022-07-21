@@ -20,8 +20,8 @@ import {
   nftProfile,
   nftResolver,
   nftToken,
-  profileAuction,
-  validationLogic } from 'constants/contracts';
+  profileAuction
+} from 'constants/contracts';
 import { DeployedContract } from 'constants/contracts';
 import {
   DAI,

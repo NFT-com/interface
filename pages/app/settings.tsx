@@ -58,6 +58,7 @@ export default function Settings() {
     const selectedProfile = profileRef.current.value;
     const address = addressRef.current.value;
     await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => console.log(res));
+    addressRef.current.value = '';
   };
 
   const acceptPendingProfile = async (e, url) => {
@@ -93,21 +94,23 @@ export default function Settings() {
           </select>
         </div>
 
-        <div className="mb-4">
-          <form className="bg-white  dark:bg-modal-overlay-dk shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <label className="block text-gray-700 dark:text-white  text-sm font-bold mb-2" htmlFor="account">
+        {profileRef?.current?.value !== 'Select A Profile' && (
+          <div className="mb-4">
+            <form className="bg-white  dark:bg-modal-overlay-dk shadow-md rounded px-8 pt-6 pb-8 mb-4">
+              <label className="block text-gray-700 dark:text-white  text-sm font-bold mb-2" htmlFor="account">
             Add Associated Account
-            </label>
+              </label>
            
-            <div className='flex'>
-              <input ref={addressRef} className="shadow appearance-none border rounded-l-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="account" type="text" placeholder="0x0000...0000" />
+              <div className='flex'>
+                <input ref={addressRef} className="shadow appearance-none border rounded-l-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="account" type="text" placeholder="0x0000...0000" />
 
-              <button onClick={(e) => submitHandler(e)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-r-md focus:outline-none focus:shadow-outline" type="button">
+                <button onClick={(e) => submitHandler(e)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-r-md focus:outline-none focus:shadow-outline" type="button">
               Submit
-              </button>
-            </div>
-          </form>
-        </div>
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
 
         <div className='mt-5 dark:bg-modal-overlay-dk p-8 rounded-md'>
           <h2 className='mb-2 font-bold text-black dark:text-white'>Associated Accounts</h2>
@@ -155,15 +158,14 @@ export default function Settings() {
               </div>
             ))}
             {associatedProfiles?.pending?.map((profile, index)=> (
-              <div key={index} className='hover:cursor-pointer shadow-md rounded p-3 flex  justify-between mb-3 bg-white dark:bg-dark-overlay'>
+              <div key={index} className='shadow-md rounded p-3 flex  justify-between mb-3 bg-white dark:bg-dark-overlay'>
                 <div className='flex items-center truncate'>
                   <Clock size={25} className='mr-3' color='orange' weight='fill' />
                   <p className='truncate text-black dark:text-white'>{profile.url}</p>
                 </div>
                 
                 <div className='flex items-center'>
-                  <CheckSquare size={25} className='mr-1' color='white' weight='fill' onClick={(e) => acceptPendingProfile(e, profile.url)} />
-                  <Trash weight='fill' className='ml-2 hover:cursor-pointer text-black dark:text-white' onClick={() => removeHandler('profile', profile.url)} size={20}/>
+                  <CheckSquare size={25} className='mr-1 hover:cursor-pointer' color='white' weight='fill' onClick={(e) => acceptPendingProfile(e, profile.url)} />
                 </div>
               </div>
             ))}
