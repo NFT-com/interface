@@ -6,7 +6,6 @@ import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
 import HeroHeader from 'components/modules/Hero/HeroHeader';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
-import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -40,8 +39,6 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
   
   const { data: account } = useAccount();
 
-  useMaybeCreateUser();
-  
   return (
     <div className={tw(
       'flex flex-col h-screen',
