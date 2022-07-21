@@ -7,7 +7,12 @@ export default defineConfig({
     devServer: {
       framework: 'next',
       bundler: 'webpack',
-    }
+    },
+    setupNodeEvents(on, config) {
+      require('@cypress/react/plugins/next')(on, config);
+      require('@cypress/code-coverage/task')(on, config);
+      return config;
+    },
   },
 
   e2e: {
