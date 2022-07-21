@@ -124,7 +124,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </Link>
             </div>
           </div>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 w-full max-w-7xl mx-auto h-full',
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 w-full max-w-[1100px] mx-auto h-full',
             'break-after-all ',
           )}
           style={{
@@ -174,7 +174,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               />
             </div>
           </div>
-          <div className='space-y-12 md:px-0 w-full items-center max-w-7xl mx-auto ...'>
+          <div className='space-y-12 md:px-0 w-full items-center max-w-[1100px] mx-auto ...'>
             <div className='h-full md:px-6 px-2 py-12 ...'>
               <div className='text-section leading-header font-header justify-center ...'>
                 {data?.feedTitle}
