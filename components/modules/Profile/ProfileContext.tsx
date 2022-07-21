@@ -35,8 +35,6 @@ export interface ProfileContextType {
   toggleHidden: (id: string, currentVisibility: boolean) => void;
   hideNftIds: (toHide: string[]) => void;
   showNftIds: (toShow: string[]) => void;
-  onHideAll: () => void;
-  onShowAll: () => void;
   draftHeaderImg: DraftImg,
   setDraftHeaderImg: (img: DraftImg) => void,
   draftProfileImg: DraftImg,
@@ -72,8 +70,6 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   toggleHidden: () => null,
   hideNftIds: () => null,
   showNftIds: () => null,
-  onHideAll: () => null,
-  onShowAll: () => null,
   draftHeaderImg: { preview: '', raw: '' },
   setDraftHeaderImg: () => null,
   draftProfileImg: { preview: '', raw: '' },
@@ -352,12 +348,6 @@ export function ProfileContextProvider(
           setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
         }
       });
-    },
-    onHideAll: () => {
-      this.hideNftIds(allOwnerNfts.map(nft => nft.id));
-    },
-    onShowAll: () => {
-      this.showNftIds(allOwnerNfts.map(nft => nft.id));
     },
     saveProfile,
     saving,

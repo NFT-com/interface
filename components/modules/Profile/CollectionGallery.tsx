@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Loader from 'components/elements/Loader';
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
+import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -122,7 +123,9 @@ export function CollectionGallery(props: CollectionGalleryProps) {
       <span className='w-full text-center text-2xl text-primary-txt dark:text-primary-txt-dk mb-12 font-medium'>
         {collectionData?.collection?.name}
       </span>
-      <NftGrid profileURI={profileURI} nfts={detailedCollectionNFTs} />
+      <GridContextProvider items={detailedCollectionNFTs} key={JSON.stringify(detailedCollectionNFTs)}>
+        <NftGrid profileURI={profileURI} />
+      </GridContextProvider>
     </div>;
   }
 

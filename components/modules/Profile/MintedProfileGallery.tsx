@@ -29,8 +29,6 @@ export interface MintedProfileGalleryProps {
 export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const {
     editMode,
-    onShowAll,
-    onHideAll,
     draftDisplayType,
     setDraftDisplayType,
     selectedCollection,
@@ -38,7 +36,10 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     setDraftGkIconVisible,
     draftNftsDescriptionsVisible,
     setDraftNftsDescriptionsVisible,
-    publiclyVisibleNftCount
+    publiclyVisibleNftCount,
+    showNftIds,
+    hideNftIds,
+    allOwnerNFTs
   } = useContext(ProfileContext);
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
@@ -97,14 +98,14 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
             {!isMobile && <GalleryToggleAllButtons
               publicNFTCount={publiclyVisibleNftCount}
               onShowAll={() => {
-                onShowAll();
+                showNftIds(allOwnerNFTs?.map(nft => nft.id));
                 analytics.track('Show All NFTs', {
                   ethereumAddress: account?.address,
                   profile: props.profileURI
                 });
               }}
               onHideAll={() => {
-                onHideAll();
+                hideNftIds(allOwnerNFTs?.map(nft => nft.id));
                 analytics.track('Hide All NFTs', {
                   ethereumAddress: account?.address,
                   profile: props.profileURI
@@ -128,7 +129,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 isMobile && {
                   label: 'Show All',
                   onSelect: () => {
-                    onShowAll();
+                    showNftIds(allOwnerNFTs?.map(nft => nft.id));
                     analytics.track('Show All NFTs', {
                       ethereumAddress: account?.address,
                       profile: props.profileURI
@@ -139,7 +140,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 isMobile && {
                   label: 'Hide All',
                   onSelect:() => {
-                    onHideAll();
+                    hideNftIds(allOwnerNFTs?.map(nft => nft.id));
                     analytics.track('Hide All NFTs', {
                       ethereumAddress: account?.address,
                       profile: props.profileURI
