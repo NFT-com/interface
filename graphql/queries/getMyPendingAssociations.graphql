@@ -1,0 +1,6 @@
+query GetMyPendingAssociations {
+  getMyPendingAssociations {
+    owner
+    url
+  }
+}
