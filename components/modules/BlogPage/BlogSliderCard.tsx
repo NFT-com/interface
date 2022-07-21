@@ -88,7 +88,7 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
               <button
                 className={tw(
                   'font-grotesk font-bold bg-[#F9D963] rounded-lg text-[#4D4412] block',
-                  'flex flex-row items-center cursor-pointer hover:opacity-80 font-rubik w-max mt-8 lg:mt-6 md:mt-3 mb-9 md:mb-6 sm:mb-4',
+                  'flex flex-row items-center cursor-pointer hover:opacity-80 w-max mt-8 lg:mt-6 md:mt-3 mb-9 md:mb-6 sm:mb-4',
                   'py-2 px-5'
                 )}
                 type="button">

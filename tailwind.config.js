@@ -170,7 +170,8 @@ module.exports = {
       },
       height: {
         'slider-button': '2.1875rem',
-        'sumBanner':'2.875rem',
+        'sumBanner': '2.875rem',
+        'homeTicker': '155px',
         'blogHero-lg': '29rem',
         'blogHero-xl': '37rem',
       },

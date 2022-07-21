@@ -50,6 +50,7 @@ export function MintedProfile(props: MintedProfileProps) {
     .includes(profileURI);
   const { nfts: publiclyVisibleNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
+    String(activeChain?.id),
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
     20
@@ -80,7 +81,7 @@ export function MintedProfile(props: MintedProfileProps) {
   };
 
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="h-full w-full flex flex-col mt-20">
       <div className='w-full'>
         <BannerWrapper
           imageOverride={

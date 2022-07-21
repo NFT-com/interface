@@ -3,7 +3,9 @@ import { Switch } from 'components/elements/Switch';
 import { useGallery } from 'hooks/state/useGallery';
 import { tw } from 'utils/tw';
 
+import { useRouter } from 'next/router';
 import SearchIcon from 'public/search.svg';
+import { useState } from 'react';
 
 export interface GenesisKeyGalleryFiltersProps {
   showFilters: boolean;
@@ -13,6 +15,16 @@ export interface GenesisKeyGalleryFiltersProps {
 
 export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
   const { galleryShowMyStuff: showMyStuff, galleryItemType, setGalleryItemType, setGalleryShowMyStuff } = useGallery();
+  const router = useRouter();
+
+  const type = router?.query?.['type'] ?? 'gk';
+
+  const [initLoad, setInitLoad] = useState(true);
+
+  if(type === 'profile' && initLoad) {
+    setGalleryItemType('profile');
+    setInitLoad(false);
+  }
 
   return (
     <>
@@ -23,7 +35,7 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
           right="Profiles"
           enabled={galleryItemType === 'profile'}
           setEnabled={(enabled: boolean) => {
-            setGalleryItemType(enabled ? 'profile' : 'gk');
+            (type === 'profile' && !enabled) ? setGalleryItemType('gk') : setGalleryItemType(enabled ? 'profile' : 'gk');
           }}
         />
       </div>
