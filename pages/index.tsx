@@ -114,16 +114,16 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <Sidebar />
         </ClientOnly>
         <main className='flex flex-col mt-20 font-grotesk not-italic'>
-          <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk text-lg sm:text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
-            <span>Unlock the NFT Platform Beta with a Genesis Key</span>
-            <div className='flex flex-col w-16 rounded items-center p-[1px] -ml-4'>
-              <Link href='/app/auctions' passHref>
-                <a>
+          <Link href='/app/auctions' passHref>
+            <a>
+              <div className='mx-auto flex cursor-pointer flex-row items-center justify-center w-screen h-[55px] font-grotesk text-lg sm:text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
+                <span>Unlock the NFT Platform Beta with a Genesis Key</span>
+                <div className='flex flex-col w-16 rounded items-center p-[1px] -ml-4'>
                   <Vector />
-                </a>
-              </Link>
-            </div>
-          </div>
+                </div>
+              </div>
+            </a>
+          </Link>
           <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 lg:w-screen xl:max-w-screen xl:px-20  max-w-7xl mx-auto h-full',
             'break-after-all ',
           )}
