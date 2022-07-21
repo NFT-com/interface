@@ -134,7 +134,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           }}>
             <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
-                'font-header text-black sm:text-5xl md:text-5xl lg:text-7xl xl:text-8xl text-header leading-header',
+                'font-header text-black sm:text-5xl md:text-5xl xl:text-7xl text-header leading-header',
                 'break-after-all space-y-2'
               )}>
                 <div>
