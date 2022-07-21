@@ -1,4 +1,3 @@
-import { Button, ButtonType } from 'components/elements/Button';
 import { FeaturedProfile } from 'components/elements/FeaturedProfile';
 import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
@@ -28,7 +27,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Vector from 'public/Vector.svg';
 import { useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { TickerStat } from 'types';
 
 type HomePageProps = {
@@ -107,7 +105,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       setLearnCardImages([data.learnCardImagesCollection.items[0], data.learnCardImagesCollection.items[1]]);
     }
   }, [data?.featuredProfile, data.learnCards, data.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data.learnCardImagesCollection.items, data.learnCardImagesCollection, data.subheroTitle]);
-  
+
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)) {
     return (
       <>
@@ -158,8 +156,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   className={tw(
                     'w-max',
                     'block',
-                    'font-semibold bg-transparent rounded-xl text-[#4D4412]',
-                    'flex flex-row items-center text-lg cursor-pointer tracking-wide opacity-80 hover:opacity-100',
+                    'font-bold bg-transparent rounded-xl text-[#4D4412]',
+                    'flex flex-row items-center text cursor-pointer tracking-wide opacity-80 hover:opacity-100',
                     'font-grotesk font-body',
                     'py-2'
                   )}
@@ -185,16 +183,17 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
                 <ProfileFeed profiles={[profileFeed1, profileFeed2, profileFeed3, profileFeed4, profileFeed5, profileFeed6, profileFeed7, profileFeed8]} />
                 <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
-                  <Button
-                    bgColor={'#F9D963'}
-                    color={'#4D4412'}
-                    label='Discover more NFT Profiles'
-                    stretch={isMobile}
-                    onClick={() => {
-                      router.push('/app/gallery?type=profile');
-                    }}
-                    type={ButtonType.SECONDARY}
-                  />
+                  <Link href={'/app/gallery?type=profile'}>
+                    <button
+                      className={tw(
+                        'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
+                        'flex flex-row items-center cursor-pointer hover:opacity-80 w-max ',
+                        'py-2 px-5'
+                      )}
+                      type="button">
+                      Discover more NFT Profiles
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -280,16 +279,17 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
               <div className='flex flex-row justify-center sm:w-full items-center py-6 -mb-12 ...'>
-                <Button
-                  bgColor={'#F9D963'}
-                  color={'#4D4412'}
-                  label='Learn more'
-                  stretch={isMobile}
-                  onClick={() => {
-                    router.push('/articles');
-                  }}
-                  type={ButtonType.SECONDARY}
-                />
+                <Link href={'/articles'}>
+                  <button
+                    className={tw(
+                      'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
+                      'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
+                      'py-2 px-5'
+                    )}
+                    type="button">
+                      Learn more
+                  </button>
+                </Link>
               </div>
             </div>
             <div className='h-full md:px-6 w-full pb-10 pt-3 px-2'>
@@ -306,16 +306,17 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     />
                   </div>
                   <div className='flex flex-row justify-center sm:w-full items-center pt-6 ...'>
-                    <Button
-                      bgColor={'#F9D963'}
-                      color={'#4D4412'}
-                      label='Read more'
-                      stretch={isMobile}
-                      onClick={() => {
-                        router.push('/articles');
-                      }}
-                      type={ButtonType.SECONDARY}
-                    />
+                    <Link href={'/articles'}>
+                      <button
+                        className={tw(
+                          'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
+                          'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
+                          'py-2 px-5'
+                        )}
+                        type="button">
+                      Read more
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </div>

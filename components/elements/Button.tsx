@@ -125,7 +125,7 @@ export function Button(props: ButtonProps) {
       style={{
         backgroundColor: bgColor(),
         color: textColor(),
-        borderColor: props?.type === ButtonType.ERROR ? red : '#CAD2E8'
+        borderColor: props?.type === ButtonType.ERROR ? red : props?.type === ButtonType.SECONDARY ? '' : '#CAD2E8'
       }}
       onClick={() => {
         if (props?.disabled ?? false) {
