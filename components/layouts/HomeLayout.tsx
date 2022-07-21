@@ -1,3 +1,5 @@
+import { SignOutModal } from 'components/elements/SignOutModal';
+import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { tw } from 'utils/tw';
 
 type HomeLayoutProps = {
@@ -5,6 +7,7 @@ type HomeLayoutProps = {
 };
 
 export default function HomeLayout({ children }: HomeLayoutProps) {
+  const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   return (
     <div className={tw('flex flex-col',
       'h-screen w-screen min-h-screen',
@@ -15,6 +18,13 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
         style={{ minHeight: '100vh' }}
       >
         {children}
+
+        <SignOutModal
+          visible={signOutDialogOpen}
+          onClose={() => {
+            setSignOutDialogOpen(false);
+          }}
+        />
       </div>
     </div>
   );

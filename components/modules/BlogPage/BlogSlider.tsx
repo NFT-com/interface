@@ -1,5 +1,3 @@
-import { Doppler, getEnvBool } from 'utils/env';
-
 import BlogSliderCard from './BlogSliderCard';
 
 import Autoplay from 'embla-carousel-autoplay';
@@ -43,56 +41,29 @@ export default function BlogSlider({ posts }:BlogSliderProps) {
   }, [embla, setScrollSnaps, onSelect]);
 
   return (
-    getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
-      ? (
-        <div className="relative mx-auto px-2.5 bg-[#4C4313] p-3 rounded-2xl overflow-hidden">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex">
-              {posts?.map((post) => (
-                <BlogSliderCard key={post?.sys.id} post={post} />
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center justify-center mt-5 space-x-2">
-            {scrollSnaps.map((_, idx) => (
-              <div className={`w-3 h-3 bg-[#4C4313] border rounded-full flex justify-center items-center ${
-                idx === selectedIndex ? 'border-[#F9D963]' : 'none'
-              }`} key={idx} >
-                <button
-                  className={`w-2 h-2 rounded-full ${
-                    idx === selectedIndex ? 'bg-[#F9D963]' : 'bg-[#B7C6CE]'
-                  }`}
-                  onClick={() => scrollTo(idx)}
-                />
-              </div>
-            ))}
-          </div>
-          <div className='absolute bottom-0 -right-16 lg:-right-20 md:-right-24 w-28 h-96 max-h-3/5 bg-gradient-to-t from-[#F9D963] to-[#F6BE54] opacity-10  row-span-2 mt-48 -skew-x-[17deg]'></div>
-        </div> )
-      : (
-        <div className="mx-auto px-2.5 bg-blog-slider-blue dark:bg-dark-overlay p-3 rounded-2xl">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex">
-              {posts?.map((post) => (
-                <BlogSliderCard key={post?.sys.id} post={post} />
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center justify-center mt-5 space-x-2">
-            {scrollSnaps.map((_, idx) => (
-              <div className={`w-3 h-3 bg-blog-slider-blue border rounded-full flex justify-center items-center ${
-                idx === selectedIndex ? 'border-[#0077BA]' : 'none'
-              }`} key={idx} >
-                <button
-                  className={`w-2 h-2 rounded-full ${
-                    idx === selectedIndex ? 'bg-[#0077BA]' : 'bg-[#B7C6CE]'
-                  }`}
-                  onClick={() => scrollTo(idx)}
-                />
-              </div>
-            ))}
-          </div>
+    <div className="relative mx-auto px-2.5 bg-[#4C4313] p-3 rounded-2xl overflow-hidden">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {posts?.map((post) => (
+            <BlogSliderCard key={post?.sys.id} post={post} />
+          ))}
         </div>
-      )
+      </div>
+      <div className="flex items-center justify-center mt-5 space-x-2">
+        {scrollSnaps.map((_, idx) => (
+          <div className={`w-3 h-3 bg-[#4C4313] border rounded-full flex justify-center items-center ${
+            idx === selectedIndex ? 'border-[#F9D963]' : 'none'
+          }`} key={idx} >
+            <button
+              className={`w-2 h-2 rounded-full ${
+                idx === selectedIndex ? 'bg-[#F9D963]' : 'bg-[#B7C6CE]'
+              }`}
+              onClick={() => scrollTo(idx)}
+            />
+          </div>
+        ))}
+      </div>
+      <div className='absolute bottom-0 -right-16 lg:-right-20 md:-right-24 w-28 h-96 max-h-3/5 bg-gradient-to-t from-[#F9D963] to-[#F6BE54] opacity-10  row-span-2 mt-48 -skew-x-[17deg]'></div>
+    </div>
   );
 }

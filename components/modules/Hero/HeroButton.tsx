@@ -1,5 +1,4 @@
 import Loader from 'components/elements/Loader';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -58,7 +57,7 @@ export function Button(props: ButtonProps) {
       'ERROR': secondaryButtonBackgroundDisabled
     };
     const enabledBgColors = {
-      'PRIMARY': getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? primaryButtonBackground_rebrand : primaryButtonBackground,
+      'PRIMARY':  primaryButtonBackground_rebrand,
       'SECONDARY': secondaryButtonBackground
     };
     if (props?.disabled ?? false) {
@@ -66,7 +65,7 @@ export function Button(props: ButtonProps) {
     } else {
       return enabledBgColors[props.type];
     }
-  }, [primaryButtonBackground, primaryButtonBackgroundDisabled, primaryButtonBackground_rebrand, props.color, props?.disabled, props.type, secondaryButtonBackground, secondaryButtonBackgroundDisabled]);
+  }, [primaryButtonBackgroundDisabled, primaryButtonBackground_rebrand, props.color, props?.disabled, props.type, secondaryButtonBackground, secondaryButtonBackgroundDisabled]);
 
   return (
     <div

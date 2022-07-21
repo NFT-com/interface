@@ -4,10 +4,8 @@ import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
-import HeroHeader from 'components/modules/Hero/HeroHeader';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import ClientOnly from 'utils/ClientOnly';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import Head from 'next/head';
@@ -70,23 +68,9 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
                 hideAnalytics={headerOptions?.hideAnalytics}
               />
           )}
-          {getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
-            ? (
-              <ClientOnly>
-                <Header bgLight={bgLight} removeBg={headerOptions?.removeBackground} />
-              </ClientOnly>)
-            :(
-              <ClientOnly>
-                <HeroHeader
-                  walletPopup={headerOptions?.walletPopupMenu}
-                  walletOnly={headerOptions?.walletOnly}
-                  removeBackground={headerOptions?.removeBackground}
-                  heroHeader={headerOptions?.heroHeader}
-                  heroHeaderBlack={headerOptions?.heroHeaderBlack}
-                  profileHeader={headerOptions?.profileHeader}
-                />
-              </ClientOnly>
-            )}
+          <ClientOnly>
+            <Header bgLight={bgLight} removeBg={headerOptions?.removeBackground} />
+          </ClientOnly>)
         </div>}
         <ClientOnly>
           <Sidebar />
