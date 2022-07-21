@@ -124,7 +124,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </Link>
             </div>
           </div>
-          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 w-full xl:px-20  max-w-7xl mx-auto h-full',
+          <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 w-full max-w-7xl mx-auto h-full',
             'break-after-all ',
           )}
           style={{
