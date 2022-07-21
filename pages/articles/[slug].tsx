@@ -1,10 +1,14 @@
+import { Footer } from 'components/elements/Footer';
+import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
+import { Sidebar } from 'components/elements/Sidebar';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
+import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { getPost } from 'lib/contentful/api';
@@ -29,7 +33,11 @@ export default function Post({ post, preview }: PostProps) {
   return (
     getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
       ? (
-        <PageWrapper bgLight>
+        <>
+          <ClientOnly>
+            <Header bgLight />
+            <Sidebar />
+          </ClientOnly>
           <NextSeo
             title={post.title}
             description={post.description}
@@ -88,9 +96,12 @@ export default function Post({ post, preview }: PostProps) {
                 : null}
             </div>
           </div>
+          <Footer />
           {preview && <PreviewBanner />}
-        </PageWrapper> )
-      : (
+        </>
+      )
+      :
+      (
         <PageWrapper>
           <NextSeo
             title={post.title}
