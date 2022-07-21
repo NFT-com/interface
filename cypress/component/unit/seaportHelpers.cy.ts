@@ -11,6 +11,7 @@ import { Fee,
   SEAPORT_ZONE_HASH,
   SeaportOrderComponents
 } from '../../../types/seaport';
+import { convertDurationToSec } from '../../../utils/marketplaceUtils';
 import {
   createSeaportParametersForNFTListing,
   deductFees,
@@ -297,7 +298,9 @@ describe('Unit test our seaport functions', () => {
           contract: 'test_collection'
         } as PartialDeep<Nft>,
         ethers.utils.parseEther('10'),
+        ethers.utils.parseEther('10'),
         NULL_ADDRESS,
+        convertDurationToSec('1 Week'),
       );
 
       expect(params).to.deep.eq({

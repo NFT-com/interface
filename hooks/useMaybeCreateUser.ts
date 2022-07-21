@@ -33,8 +33,15 @@ export function useMaybeCreateUser(): boolean {
     },
   });
 
+  const getCacheKey = (address: string, chainId: number) => {
+    return 'uidForWallet:' + address + ':chainId:' + chainId;
+  };
+
   useEffect(() => {
-    const cachedUserId = localStorage.getItem('uidForWallet:' + account?.address);
+    if (isNullOrEmpty(account?.address)) {
+      return;
+    }
+    const cachedUserId = localStorage.getItem(getCacheKey(account?.address, activeChain?.id));
     if (cachedUserId != null) {
       setCreatedUser(true);
       return;
@@ -42,7 +49,6 @@ export function useMaybeCreateUser(): boolean {
     if(
       (!createdUser) &&
       (!creating) &&
-      (!isNullOrEmpty(account?.address)) && (account?.address != null) &&
       (signed) &&
       (isSupported)
     ) {
@@ -59,9 +65,9 @@ export function useMaybeCreateUser(): boolean {
               network: 'ethereum',
             },
           });
-          localStorage.setItem('uidForWallet:' + account?.address, result?.signUp?.id);
+          localStorage.setItem(getCacheKey(account?.address, activeChain?.id), result?.signUp?.id);
         } else {
-          localStorage.setItem('uidForWallet:' + account?.address, meResult?.id);
+          localStorage.setItem(getCacheKey(account?.address, activeChain?.id), meResult?.id);
         }
         setCreatedUser(true);
       })();

@@ -1,14 +1,11 @@
-import { NULL_ADDRESS } from 'constants/addresses';
 import { Nft } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 
 import { NFTListingsContext } from './NFTListingsContext';
 
-import { Addresses, addressesByNetwork } from '@looksrare/sdk';
-import { ethers } from 'ethers';
 import { useContext } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export interface NFTApprovalsProps {
   nft: PartialDeep<Nft>;
@@ -16,7 +13,6 @@ export interface NFTApprovalsProps {
 
 export function NftApprovals(props: NFTApprovalsProps) {
   const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
 
   const {
     allowedAll: openseaAllowed,
@@ -36,7 +32,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
     TransferProxyTarget.LooksRare
   );
 
-  const { stageListing } = useContext(NFTListingsContext);
+  const { openListingBuilder } = useContext(NFTListingsContext);
   
   return <div className="w-full flex sm:flex-col items-center justify-around text-primary-text dark:text-primary-txt-dk">
     <div>
@@ -47,14 +43,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
             <span
               className='text-link hover:underline cursor-pointer ml-2'
               onClick={async () => {
-                const addresses: Addresses = addressesByNetwork[activeChain?.id];
-                // todo: get currency and price from user.
-                stageListing({
-                  type: 'looksrare',
-                  nft: props.nft,
-                  price: ethers.utils.parseEther('10'),
-                  currency: addresses?.WETH
-                });
+                openListingBuilder('looksrare', props.nft);
               }}
             >
               List Now
@@ -75,12 +64,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
           <span
             className='text-link hover:underline cursor-pointer ml-2'
             onClick={async () => {
-              stageListing({
-                type: 'seaport',
-                nft: props.nft,
-                price: ethers.utils.parseEther('10'),
-                currency: NULL_ADDRESS
-              });
+              openListingBuilder('seaport', props.nft);
             }}
           >
             List Now

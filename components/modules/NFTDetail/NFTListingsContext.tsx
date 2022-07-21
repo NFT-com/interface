@@ -1,4 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
+import { Modal } from 'components/elements/Modal';
 import { Nft } from 'graphql/generated/types';
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
@@ -11,6 +12,8 @@ import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
+import { ListingBuilder } from './ListingBuilder';
+
 import { MakerOrder } from '@looksrare/sdk';
 import { BigNumber, BigNumberish } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg';
@@ -20,39 +23,46 @@ import { PartialDeep } from 'type-fest';
 import { SeaportOrderParameters } from 'types';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
 
+export type ListingType = 'looksrare' | 'seaport';
+
 export type StagedListing = {
-  type: 'looksrare' | 'seaport';
+  type: ListingType;
   nft: PartialDeep<Nft>;
-  price: BigNumberish;
+  startingPrice: BigNumberish;
+  endingPrice: BigNumberish;
   currency: string;
+  duration: BigNumberish;
+  // takerAddress: string;
 }
 
 interface NFTListingsContextType {
   toList: StagedListing[];
   stageListing: (listing: StagedListing) => void;
+  openListingBuilder: (type: ListingType, nft: PartialDeep<Nft>) => void;
   clear: () => void;
   listAll: () => void;
+  submitting: boolean;
 }
 
 // initialize with default values
 export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   toList: [],
   stageListing: () => null,
+  openListingBuilder: () => null,
   clear: () => null,
-  listAll: () => null
+  listAll: () => null,
+  submitting: false
 });
 
 /**
- * This context provides state management and helper functions for editing Profiles.
- * 
- * This context does _not_ return the server-provided values for all fields. You should
- * check this context for drafts, and fallback on the server-provided values at the callsite.
- * 
+ * This context provides state management and helper functions for the NFT listings cart.
  */
 export function NFTListingsContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toList, setToList] = useState<Array<StagedListing>>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [listingBuilderData, setListingBuilderData] = useState<PartialDeep<StagedListing>>(null);
 
   useEffect(() => {
     if (window != null) {
@@ -71,6 +81,10 @@ export function NFTListingsContextProvider(
   const seaportCounter = useSeaportCounter(account?.address);
   const signOrderForSeaport = useSignSeaportOrder();
 
+  const openListingBuilder = useCallback((type: ListingType, nft: PartialDeep<Nft>) => {
+    setListingBuilderData({ type, nft });
+  }, []);
+
   const stageListing = useCallback((
     listing: StagedListing
   ) => {
@@ -83,21 +97,26 @@ export function NFTListingsContextProvider(
 
   const clear = useCallback(() => {
     setToList([]);
+    setListingBuilderData(null);
+    localStorage.setItem('stagedNftListings', null);
   }, []);
 
   const listAll = useCallback(async () => {
+    setSubmitting(true);
     let nonce: number = await getLooksrareNonce(account?.address);
-    toList.forEach(async (listing) => {
+    await Promise.all(toList.map(async (listing) => {
       if (listing.type === 'looksrare') {
         const order: MakerOrder = await createLooksrareParametersForNFTListing(
           account?.address, // offerer
           listing.nft,
-          listing.price,
+          listing.startingPrice,
           listing.currency,
           activeChain?.id,
           nonce,
           looksrareStrategy,
           looksrareRoyaltyFeeRegistry,
+          listing.duration,
+          // listing.takerAddress
         );
         nonce++;
         const signature = await signOrderForLooksrare(order);
@@ -107,15 +126,19 @@ export function NFTListingsContextProvider(
         const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
           account?.address,
           listing.nft,
-          listing.price,
+          listing.startingPrice,
+          listing.endingPrice,
           listing.currency,
+          listing.duration,
+          // listing.takerAddress
         );
         const signature = await signOrderForSeaport(parameters, seaportCounter);
         await listSeaport(signature , { ...parameters, counter: seaportCounter });
         // todo: check success/failure and maybe mutate external listings query.
         localStorage.setItem('stagedNftListings', null);
       }
-    });
+    }));
+    setSubmitting(false);
     clear();
   }, [
     account?.address,
@@ -132,9 +155,31 @@ export function NFTListingsContextProvider(
   return <NFTListingsContext.Provider value={{
     toList,
     stageListing,
+    openListingBuilder,
     clear,
-    listAll
+    listAll,
+    submitting
   }}>
+    <Modal
+      fullModal
+      visible={listingBuilderData != null}
+      loading={false}
+      title={''}
+      onClose={() => {
+        setListingBuilderData(null);
+      }}
+    >
+      <ListingBuilder
+        nft={listingBuilderData?.nft}
+        type={listingBuilderData?.type}
+        onCancel={() => {
+          setListingBuilderData(null);
+        }}
+        onSuccessfulCreate={() => {
+          setListingBuilderData(null);
+        }}
+      />
+    </Modal>
     {
       toList.length > 0 && <div className='z-50 absolute top-20 right-0 h-full w-40 bg-white flex flex-col'>
         {toList.map((listing, index) => {

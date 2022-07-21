@@ -4,6 +4,7 @@ import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { Doppler,getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -51,7 +52,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const { profileData } = useProfileQuery(props.profileURI);
   const { totalItems: publicNFTCount } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(activeChain?.id),
+    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     PROFILE_GALLERY_PAGE_SIZE
   );
 
