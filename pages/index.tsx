@@ -14,7 +14,6 @@ import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
