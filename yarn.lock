@@ -15484,6 +15484,13 @@ react-medium-image-zoom@^4.4.3:
     focus-options-polyfill "1.5.1"
     tslib "^2.4.0"
 
+react-page-visibility@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/react-page-visibility/-/react-page-visibility-7.0.0.tgz#13dfe604790d061e70b900038bad1ca769a36cbc"
+  integrity sha512-d4Kq/8TtJSr8dQc8EJeAZcSKTrGzC5OPTm6UrMur9BnwP0fgTawI9+Nd+ZGB7vwCfn2yZS0qDF9DR3/QYTGazw==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-query@4.0.0-beta.12:
   version "4.0.0-beta.12"
   resolved "https://registry.npmjs.org/react-query/-/react-query-4.0.0-beta.12.tgz"
