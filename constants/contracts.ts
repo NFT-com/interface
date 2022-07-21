@@ -59,7 +59,7 @@ export const ethereumRegex: DeployedContract = {
 };
 
 export const nftResolver: DeployedContract = {
-  goerli: '0x45d296A1042248F48f484c6f2be01006D26fCBF0',
-  mainnet: '0x45d296A1042248F48f484c6f2be01006D26fCBF0', // todo: use mainnet address 
-  rinkeby: '0x45d296A1042248F48f484c6f2be01006D26fCBF0', // todo: remove this
+  goerli: '0x3a3539B6727E74fa1c5D4d39B433F0fAB5BC4F4a',
+  mainnet: '0x3a3539B6727E74fa1c5D4d39B433F0fAB5BC4F4a', // todo: use mainnet address 
+  rinkeby: '0x3a3539B6727E74fa1c5D4d39B433F0fAB5BC4F4a', // todo: remove this
 };
