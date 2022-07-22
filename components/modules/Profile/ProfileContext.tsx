@@ -160,7 +160,7 @@ export function ProfileContextProvider(
     currentVisibility: boolean
   ) => {
     if (currentVisibility) {
-      setPubliclyVisibleNfts(publiclyVisibleNfts.slice().filter(nft => nft.id !== id));
+      setPubliclyVisibleNfts((publiclyVisibleNfts ?? []).slice().filter(nft => nft.id !== id));
     } else {
       // NFT is currently hidden.
       const nft = allOwnerNfts.find(nft => nft.id === id);
@@ -312,7 +312,7 @@ export function ProfileContextProvider(
     setDraftLayoutType,
     toggleHidden,
     hideNftIds: (toHide: string[]) => {
-      setPubliclyVisibleNfts(publiclyVisibleNfts.slice().filter(nft => !toHide.includes(nft.id)));
+      setPubliclyVisibleNfts((publiclyVisibleNfts ?? []).slice().filter(nft => !toHide.includes(nft.id)));
     },
     showNftIds: (toShow: string[]) => {
       allOwnerNfts.filter(nft => toShow.includes(nft.id)).forEach((nft) => {
