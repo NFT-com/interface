@@ -18,6 +18,7 @@ export function NftGallery(props: NftGalleryProps) {
   const { profileData } = useProfileQuery(profileURI);
   const {
     editMode,
+    editModeNfts,
     saving,
     allOwnerNfts,
     allOwnerNftCount,
@@ -47,10 +48,7 @@ export function NftGallery(props: NftGalleryProps) {
   }
 
   const nftsToShow = editMode ?
-    [
-      ...publiclyVisibleNfts.map(nft => ({ ...nft, hidden: false })),
-      ...allOwnerNfts.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null).map(nft => ({ ...nft, hidden: true }))
-    ] :
+    editModeNfts :
     (publiclyVisibleNfts ?? []);
 
   return (

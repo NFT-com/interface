@@ -12,8 +12,10 @@ const TestComponent = () => {
     toggleHidden,
     hideNftIds,
     showNftIds,
-    // onHideAll, // todo: stub gql mutation to test
-    // onShowAll, // todo: stub gql mutation to test
+    onHideAll,
+    onShowAll,
+    publiclyVisibleNfts,
+    editModeNfts,
     draftHeaderImg,
     setDraftHeaderImg,
     draftProfileImg,
@@ -44,6 +46,8 @@ const TestComponent = () => {
       {editMode + ''}
     </div>
     <div id="saving">{saving + ''}</div>
+    <div id="publiclyVisibleNfts">{JSON.stringify(publiclyVisibleNfts)}</div>
+    <div id="editModeNfts">{JSON.stringify(editModeNfts)}</div>
     <div id="draftHeaderImg">{JSON.stringify(draftHeaderImg)}</div>
     <div id="draftProfileImg">{JSON.stringify(draftProfileImg)}</div>
     <div id="draftBio">{draftBio}</div>
@@ -91,6 +95,12 @@ const TestComponent = () => {
     <button onClick={() => {
       clearDrafts();
     }}>clearDrafts</button>
+    <button onClick={() => {
+      onHideAll();
+    }}>onHideAll</button>
+    <button onClick={() => {
+      onShowAll();
+    }}>onShowAll</button>
   </div>;
 };
 
@@ -117,6 +127,9 @@ describe('ProfileContextProvider', () => {
     cy.get('#draftLayoutType').should('have.text', 'null');
     cy.get('#selectedCollection').should('have.text', 'null');
     cy.get('#draftNftsDescriptionsVisible').should('have.text', 'undefined');
+    // todo: figure out how to stub the gQL queries in tests
+    cy.get('#publiclyVisibleNfts').should('have.text', '');
+    cy.get('#editModeNfts').should('have.text', '[]');
   });
 
   it('toggles edit mode correctly', () => {
