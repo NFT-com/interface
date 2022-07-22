@@ -8,7 +8,6 @@ import Markdown from 'components/modules/BlogPage/Markdown';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import { getPost } from 'lib/contentful/api';
 import Link from 'next/link';
@@ -25,7 +24,7 @@ type PostProps = {
 export default function Post({ post, preview }: PostProps) {
   const router = useRouter();
 
-  if (!router.isFallback && !post || !getEnvBool(Doppler.NEXT_PUBLIC_BLOG_PAGES_ENABLED)) {
+  if (!router.isFallback && !post) {
     return <NotFoundPage />;
   }
 
