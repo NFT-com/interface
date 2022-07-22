@@ -70,7 +70,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
           )}
           <ClientOnly>
             <Header bgLight={bgLight} removeBg={headerOptions?.removeBackground} />
-          </ClientOnly>)
+          </ClientOnly>
         </div>}
         <ClientOnly>
           <Sidebar />
