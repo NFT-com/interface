@@ -140,13 +140,13 @@ export function ProfileContextProvider(
   const [draftLayoutType , setDraftLayoutType] = useState<ProfileLayoutType>(null);
   
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
-  const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(publicProfileNfts);
+  const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);
   
   useEffect(() => {
-    if (publiclyVisibleNfts == null) {
+    if (publiclyVisibleNfts == null || !editMode) {
       setPubliclyVisibleNfts(publicProfileNfts);
     }
-  }, [publicProfileNfts, publiclyVisibleNfts]);
+  }, [publicProfileNfts, publiclyVisibleNfts, editMode]);
   
   /**
    * Mutations
@@ -175,11 +175,11 @@ export function ProfileContextProvider(
     setDraftBio(profileData?.profile?.description);
     setDraftGkIconVisible(draftGkIconVisible);
     setDraftNftsDescriptionsVisible(draftNftsDescriptionsVisible);
-    setPubliclyVisibleNfts(publicProfileNfts);
     setEditMode(false);
     setDraftDisplayType(null);
     setDraftLayoutType(null);
-  }, [draftGkIconVisible, draftNftsDescriptionsVisible, profileData?.profile?.description, publicProfileNfts]);
+    setPubliclyVisibleNfts(null);
+  }, [draftGkIconVisible, draftNftsDescriptionsVisible, profileData?.profile?.description]);
 
   useEffect(() => {
     setSelectedCollection(null);
