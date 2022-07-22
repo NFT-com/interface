@@ -82,7 +82,10 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                           'py-2 px-5'
                         )}
                         type="button">
-                        <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="white" alt={'Logged out wallet'}/>
+                        <Wallet className={tw(
+                          'h-5 w-5 mr-2',
+                          props.header ? (props.bgLight ? 'fill-[#B6B6B6]' : 'fill-white') : 'fill-[#4d4412]',
+                        )} weight='fill' color="white" alt={'Logged out wallet'}/>
                       Sign In
                       </button>
                     }
