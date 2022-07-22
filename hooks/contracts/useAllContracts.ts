@@ -4,6 +4,7 @@ import {
   Genesis_key_distributor,
   Genesis_key_team_claim,
   Genesis_key_team_distributor,
+  MaxProfiles,
   Nft_profile,
   Nft_resolver,
   Nft_token,
@@ -26,6 +27,7 @@ import { getGenesisKeyTeamClaimContract } from './getGenesisKeyTeamClaimContract
 import { getGenesisKeyTeamDistributorContract } from './getGenesisKeyTeamDistributorContract';
 import { getMarketplaceContract } from './getMarketplaceContract';
 import { getMarketplaceEventContract } from './getMarketplaceEventContract';
+import { getMaxProfilesContract } from './getMaxProfilesContract';
 import { getNftResolverContract } from './getNftResolverContract';
 import { getValidationLogicContract } from './getValidationLogicContract';
 
@@ -39,7 +41,7 @@ export interface Contracts {
   nftToken: Nft_token;
   nftProfile: Nft_profile;
   nftResolver: Nft_resolver;
-  profileAuction: Profile_auction;
+  profileAuction: Profile_auction | MaxProfiles;
   genesisKey: Genesis_key;
   genesisKeyDistributor: Genesis_key_distributor;
   genesisKeyTeamDistributor: Genesis_key_team_distributor;
@@ -64,10 +66,13 @@ export function useAllContracts(): Contracts {
     useState(getNftTokenContract(getAddress('nft', chainId), provider));
   const [nftProfileContract, setNftProfileContract] =
     useState(getNftProfileContract(getAddress('nftProfile', chainId), provider));
-  const [profileAuctionContract, setProfileAuctionContract] = useState(getProfileAuctionContract(
-    getAddress('profileAuction', chainId),
-    provider
-  ));
+  const [profileAuctionContract, setProfileAuctionContract] = useState(
+    chainId === 5 ?
+      getMaxProfilesContract(getAddress('profileAuction', chainId), provider) :
+      getProfileAuctionContract(
+        getAddress('profileAuction', chainId),
+        provider
+      ));
   const [genesisKeyContract, setGenesisKeyContract] =
     useState(getGenesisKeyContract(getAddress('genesisKey', chainId), provider));
   const [genesisKeyDistributorContract, setGenesisKeyDistributorContract] = useState(

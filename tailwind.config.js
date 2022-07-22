@@ -119,7 +119,6 @@ module.exports = {
       fontFamily: {
         'rubik': ['Rubik'],
         'hero-heading1': ['Stretch Pro'],
-        'hero-heading2': ['Bebas Neue'],
         'dm-mono': ['DM Mono'],
         'grotesk': ['Grotesk']
       },

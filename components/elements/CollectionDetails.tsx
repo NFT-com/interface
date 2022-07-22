@@ -60,7 +60,7 @@ export const CollectionDetails = (props: CollectionDetailsProps) => {
   const [nextCursor, setNextCursor] = useState('start');
   const router = useRouter();
 
-  const onGrabData = useCallback((currentPage) => {
+  const onGrabData = useCallback(() => {
     // when we reach the end of the list
     if (nextCursor == null) {
       return [];

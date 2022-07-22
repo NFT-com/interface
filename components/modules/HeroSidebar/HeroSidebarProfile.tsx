@@ -51,19 +51,6 @@ export function HeroSidebarProfile(props: HeroSidebarProfileProps) {
           'bg-modal-overlay-dk border-accent-border-dk',
         )}
       >
-        {/* {
-          profileData?.profile?.photoURL ?
-            <div className="ml-4 mr-2.5 h-9 aspect-square rounded-full relative">
-              <Image
-                className='rounded-full'
-                layout="fill"
-                objectFit="cover"
-                src={profileData?.profile?.photoURL}
-                alt="genesis key generic"
-              />
-            </div> :
-            <ProfileGeneric className="ml-4 mr-2.5 h-9 aspect-square rounded-full" />
-        } */}
         {profileData?.profile?.photoURL ?
           <img
             className="ml-4 mr-2.5 h-9 aspect-square rounded-full"
