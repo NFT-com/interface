@@ -287,7 +287,7 @@ export function ProfileContextProvider(
   return <ProfileContext.Provider value={{
     editModeNfts: [
       ...setHidden(publiclyVisibleNfts ?? [], false),
-      ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
+      ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
     ],
     allOwnerNfts,
     allOwnerNftCount,
