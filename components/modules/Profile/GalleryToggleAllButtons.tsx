@@ -13,7 +13,7 @@ export interface GalleryToggleAllButtonsProps {
 }
 
 export function GalleryToggleAllButtons(props: GalleryToggleAllButtonsProps) {
-  const { draftToShow } = useContext(ProfileContext);
+  const { publiclyVisibleNfts } = useContext(ProfileContext);
   return <div className='flex'>
     <div
       className={tw(
@@ -27,7 +27,7 @@ export function GalleryToggleAllButtons(props: GalleryToggleAllButtonsProps) {
     <div
       className={tw(
         'flex items-center cursor-pointer',
-        (props.publicNFTCount === 0 && draftToShow?.size === 0) ? 'text-link' : ''
+        (props.publicNFTCount === 0 && publiclyVisibleNfts?.length === 0) ? 'text-link' : ''
       )}
       onClick={props.onHideAll}
     >
