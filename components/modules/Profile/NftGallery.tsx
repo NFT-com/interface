@@ -52,6 +52,7 @@ export function NftGallery(props: NftGalleryProps) {
       ...allOwnerNfts.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null).map(nft => ({ ...nft, hidden: true }))
     ] :
     (publiclyVisibleNfts ?? []);
+
   return (
     <>
       <NftGrid nfts={nftsToShow} profileURI={profileURI} />

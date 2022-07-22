@@ -36,30 +36,31 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     showNftIds,
     publiclyVisibleNfts,
     allOwnerNfts,
-    allOwnerNftCount,
-    publiclyVisibleNftCount
   } = useContext(ProfileContext);
 
   const { data: collectionData } = useCollectionQuery(String(activeChain?.id), selectedCollection, true);
 
-  const { data: collections } = useSWR('' + editMode + publiclyVisibleNftCount + allOwnerNftCount, () => {
-    const nftsToShow = editMode ?
-      (allOwnerNfts ?? []) :
-      (publiclyVisibleNfts ?? []);
-    const newCollections = nftsToShow?.reduce((
-      previousValue: Map<string, Nft[]>,
-      currentValue: Nft,
-    ) => {
-      if (previousValue.has(currentValue?.contract)) {
-        previousValue.get(currentValue?.contract).push(currentValue);
-        return previousValue;
-      } else {
-        previousValue.set(currentValue?.contract, [currentValue]);
-        return previousValue;
-      }
-    }, new Map<string, Nft[]>()) ?? new Map();
-    return newCollections;
-  });
+  const { data: collections } = useSWR(
+    '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(allOwnerNfts),
+    () => {
+      const nftsToShow = editMode ?
+        (allOwnerNfts ?? []) :
+        (publiclyVisibleNfts ?? []);
+      const newCollections = nftsToShow?.reduce((
+        previousValue: Map<string, Nft[]>,
+        currentValue: Nft,
+      ) => {
+        if (previousValue.has(currentValue?.contract)) {
+          previousValue.get(currentValue?.contract).push(currentValue);
+          return previousValue;
+        } else {
+          previousValue.set(currentValue?.contract, [currentValue]);
+          return previousValue;
+        }
+      }, new Map<string, Nft[]>()) ?? new Map();
+      return newCollections;
+    }
+  );
 
   if (publiclyVisibleNfts == null || profileData == null) {
     return (
