@@ -139,7 +139,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               <div>
                 {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
               </div>
-              <div className='py-5 sm:hidden md:text-base text-xl md:block md:w-[100%] text-body text-[#A09E9E] leading-10 tracking-wide font-body w-[70%]'>
+              <div className='py-5 md:text-base text-xl md:block md:w-[100%] text-body text-[#A09E9E] leading-10 tracking-wide font-body w-[70%]'>
                   Collect, Display, and Trade your NFTs. We&apos;re building the hub for all things Web3. Get started by building your NFT Profile.
               </div>
             </div>
