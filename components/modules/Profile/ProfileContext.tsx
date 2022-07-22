@@ -2,11 +2,12 @@ import { Maybe, Nft, ProfileDisplayType, ProfileLayoutType } from 'graphql/gener
 import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
+import { useProfileOrderingUpdateMutation } from 'graphql/hooks/useProfileOrderingUpdateMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { Doppler,getEnv } from 'utils/env';
+import { Doppler,getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
@@ -145,6 +146,14 @@ export function ProfileContextProvider(
   
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
   const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);
+  const [editModeNfts, setEditModeNfts] = useState<PartialDeep<DetailedNft>[]>(null);
+
+  useEffect(() => {
+    setEditModeNfts([
+      ...setHidden(publiclyVisibleNfts ?? [], false),
+      ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
+    ]);
+  }, [allOwnerNfts, publiclyVisibleNfts]);
   
   useEffect(() => {
     if (publiclyVisibleNfts == null || !editMode) {
@@ -158,6 +167,7 @@ export function ProfileContextProvider(
   const { updateProfile } = useUpdateProfileMutation();
   const { fileUpload } = useFileUploadMutation();
   const { uploadProfileImages } = useUpdateProfileImagesMutation();
+  const { updateOrder } = useProfileOrderingUpdateMutation();
 
   const toggleHidden = useCallback((
     id: string,
@@ -222,6 +232,12 @@ export function ProfileContextProvider(
             );
           }
         }
+        if (getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED)) {
+          await updateOrder({
+            profileId: profileData?.profile?.id,
+            updates: editModeNfts?.map((nft, index) => ({ nftId: nft.id, newIndex: index }))
+          });
+        }
         const result = await updateProfile({
           id: profileData?.profile?.id,
           description: isNullOrEmpty(draftBio) ? profileData?.profile?.description : draftBio,
@@ -254,6 +270,8 @@ export function ProfileContextProvider(
       setSaving(false);
     }
   }, [
+    editModeNfts,
+    updateOrder,
     draftProfileImg,
     draftHeaderImg,
     clearDrafts,
@@ -285,10 +303,7 @@ export function ProfileContextProvider(
   };
 
   return <ProfileContext.Provider value={{
-    editModeNfts: [
-      ...setHidden(publiclyVisibleNfts ?? [], false),
-      ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
-    ],
+    editModeNfts,
     allOwnerNfts,
     allOwnerNftCount,
     publiclyVisibleNfts,

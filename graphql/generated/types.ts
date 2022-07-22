@@ -1712,6 +1712,13 @@ export type IgnoreAssocationsMutationVariables = Exact<{
 
 export type IgnoreAssocationsMutation = { __typename?: 'Mutation', ignoreAssocations: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null } | null> };
 
+export type ProfileNftOrderingUpdatesMutationVariables = Exact<{
+  input: OrderingUpdatesInput;
+}>;
+
+
+export type ProfileNftOrderingUpdatesMutation = { __typename?: 'Mutation', orderingUpdates: { __typename?: 'Profile', id: string } };
+
 export type ProfileClaimedMutationVariables = Exact<{
   input: ProfileClaimedInput;
 }>;
@@ -2123,6 +2130,13 @@ export const IgnoreAssocationsDocument = gql`
     destinationAddress
     blockNumber
     ignore
+  }
+}
+    `;
+export const ProfileNftOrderingUpdatesDocument = gql`
+    mutation ProfileNftOrderingUpdates($input: OrderingUpdatesInput!) {
+  orderingUpdates(input: $input) {
+    id
   }
 }
     `;
@@ -2949,6 +2963,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     IgnoreAssocations(variables: IgnoreAssocationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoreAssocationsMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<IgnoreAssocationsMutation>(IgnoreAssocationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoreAssocations', 'mutation');
+    },
+    ProfileNftOrderingUpdates(variables: ProfileNftOrderingUpdatesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNftOrderingUpdatesMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfileNftOrderingUpdatesMutation>(ProfileNftOrderingUpdatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNftOrderingUpdates', 'mutation');
     },
     ProfileClaimed(variables: ProfileClaimedMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileClaimedMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileClaimedMutation>(ProfileClaimedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileClaimed', 'mutation');
