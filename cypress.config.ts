@@ -9,27 +9,6 @@ export default defineConfig({
     devServer: {
       framework: 'next',
       bundler: 'webpack',
-      // webpackConfig: {
-      //   mode: 'development',
-      //   devtool: false,
-      //   module: {
-      //     rules: [
-      //       {
-      //         test: [/\.tsx?$/, /\.ts?$/],
-      //         exclude: /node_modules/,
-      //         use: {
-      //           loader: 'babel-loader',
-      //           options: {
-      //             presets: ['@babel/preset-env', '@babel/preset-react'],
-      //             plugins: [
-      //               'istanbul'
-      //             ]
-      //           }
-      //         }
-      //       }
-      //     ]
-      //   }
-      // }
     },
     setupNodeEvents(on, config) {
       codeCoverageTask(on, config);
