@@ -1,9 +1,8 @@
 describe('Blog List Page Tests', () => {
   it('Slider click navigates to valid post', () => {
     cy.visit('/articles');
-    cy.wait(2000);
-    cy.contains('View Post').click({ waitForAnimations: false });
-
+    cy.wait(5000);
+    cy.get('[style="left: 0%;"] > .relative > a > span > .rounded-lg').click({ waitForAnimations: false });
     cy.url().should('not.eq', '/articles');
   });
 
