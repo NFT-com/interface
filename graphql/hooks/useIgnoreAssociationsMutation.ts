@@ -18,12 +18,9 @@ export function useIgnoreAssociationsMutation(): IgnoreAssociationsMutationResul
   const ignoreAssociations = useCallback(async (input: MutationIgnoreAssocationsArgs) => {
     setLoading(true);
     try {
-      console.log('🚀 ~ file: useIgnoreAssociationsMutation.ts ~ line 23 ~ ignoreAssociations ~ eventIdArray', input.eventIdArray);
       const result = await sdk.IgnoreAssocations({
         eventIdArray: input.eventIdArray
-        
       });
-      
       setLoading(false);
       return result;
     } catch (err) {
