@@ -288,6 +288,20 @@ export type CurationsOutput = {
   totalItems?: Maybe<Scalars['Int']>;
 };
 
+export type Event = {
+  __typename?: 'Event';
+  blockNumber?: Maybe<Scalars['String']>;
+  chainId: Scalars['String'];
+  contract: Scalars['String'];
+  destinationAddress?: Maybe<Scalars['String']>;
+  eventName: Scalars['String'];
+  id: Scalars['ID'];
+  ignore?: Maybe<Scalars['Boolean']>;
+  ownerAddress?: Maybe<Scalars['String']>;
+  profileUrl?: Maybe<Scalars['String']>;
+  txHash: Scalars['String'];
+};
+
 export type ExternalListing = {
   __typename?: 'ExternalListing';
   baseCoin?: Maybe<BaseCoin>;
@@ -551,6 +565,8 @@ export type Mutation = {
   fillChainIds: FillChainIdsOutput;
   /** AUTHENTICATED */
   followProfile: Profile;
+  /** AUTHENTICATED */
+  ignoreAssocations: Array<Maybe<Event>>;
   mintGKProfile: Scalars['String'];
   /** AUTHENTICATED */
   orderingUpdates: Profile;
@@ -558,6 +574,8 @@ export type Mutation = {
   profileClaimed: Profile;
   /** AUTHETICATED */
   refreshMyNFTs: RefreshMyNfTsOutput;
+  /** AUTHETICATED */
+  refreshNFTOrder: Scalars['String'];
   refreshNft: Nft;
   /** AUTHENTICATED */
   removeCuration: Profile;
@@ -589,6 +607,8 @@ export type Mutation = {
   updateNFTsForProfile: NfTsOutput;
   /** AUTHENTICATED */
   updateProfile: Profile;
+  /** AUTHENTICATED */
+  updateProfileView: Profile;
   /** AUTHENTICATED */
   uploadFileSession: FileUploadOutput;
   /** AUTHENTICATED */
@@ -676,6 +696,11 @@ export type MutationFollowProfileArgs = {
 };
 
 
+export type MutationIgnoreAssocationsArgs = {
+  eventIdArray: Array<InputMaybe<Scalars['String']>>;
+};
+
+
 export type MutationMintGkProfileArgs = {
   input?: InputMaybe<MintGkProfileInput>;
 };
@@ -688,6 +713,11 @@ export type MutationOrderingUpdatesArgs = {
 
 export type MutationProfileClaimedArgs = {
   input: ProfileClaimedInput;
+};
+
+
+export type MutationRefreshNftOrderArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -779,6 +809,11 @@ export type MutationUpdateNfTsForProfileArgs = {
 
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
+};
+
+
+export type MutationUpdateProfileViewArgs = {
+  input?: InputMaybe<UpdateProfileViewInput>;
 };
 
 
@@ -959,6 +994,7 @@ export type PageInput = {
 
 export type PendingAssociationOutput = {
   __typename?: 'PendingAssociationOutput';
+  id: Scalars['String'];
   owner: Scalars['String'];
   url: Scalars['String'];
 };
@@ -979,6 +1015,7 @@ export type Profile = {
   nftsDescriptionsVisible?: Maybe<Scalars['Boolean']>;
   owner?: Maybe<Wallet>;
   photoURL?: Maybe<Scalars['String']>;
+  profileView?: Maybe<ProfileViewType>;
   status?: Maybe<ProfileStatus>;
   tokenId?: Maybe<Scalars['String']>;
   url: Scalars['String'];
@@ -1011,6 +1048,11 @@ export enum ProfileStatus {
   Available = 'Available',
   Owned = 'Owned',
   Pending = 'Pending'
+}
+
+export enum ProfileViewType {
+  Collection = 'Collection',
+  Gallery = 'Gallery'
 }
 
 export type ProfilesInput = {
@@ -1486,6 +1528,11 @@ export type UpdateProfileInput = {
   showNFTIds?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
+export type UpdateProfileViewInput = {
+  profileViewType: ProfileViewType;
+  url: Scalars['String'];
+};
+
 export type UpdateUserInput = {
   avatarURL?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
@@ -1658,6 +1705,13 @@ export type FileUploadMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type FileUploadMutation = { __typename?: 'Mutation', uploadFileSession: { __typename?: 'FileUploadOutput', bucket: string, accessKey: string, secretKey: string, sessionToken: string } };
 
+export type IgnoreAssocationsMutationVariables = Exact<{
+  eventIdArray: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+}>;
+
+
+export type IgnoreAssocationsMutation = { __typename?: 'Mutation', ignoreAssocations: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null } | null> };
+
 export type ProfileClaimedMutationVariables = Exact<{
   input: ProfileClaimedInput;
 }>;
@@ -1780,7 +1834,7 @@ export type GetBidsQuery = { __typename?: 'Query', getBids: { __typename?: 'GetM
 export type GetMyPendingAssociationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMyPendingAssociationsQuery = { __typename?: 'Query', getMyPendingAssociations: Array<{ __typename?: 'PendingAssociationOutput', owner: string, url: string } | null> };
+export type GetMyPendingAssociationsQuery = { __typename?: 'Query', getMyPendingAssociations: Array<{ __typename?: 'PendingAssociationOutput', id: string, owner: string, url: string } | null> };
 
 export type GetNftAsksQueryVariables = Exact<{
   input: NftAsksInput;
@@ -2053,6 +2107,22 @@ export const FileUploadDocument = gql`
     accessKey
     secretKey
     sessionToken
+  }
+}
+    `;
+export const IgnoreAssocationsDocument = gql`
+    mutation IgnoreAssocations($eventIdArray: [String]!) {
+  ignoreAssocations(eventIdArray: $eventIdArray) {
+    id
+    chainId
+    contract
+    eventName
+    txHash
+    ownerAddress
+    profileUrl
+    destinationAddress
+    blockNumber
+    ignore
   }
 }
     `;
@@ -2339,6 +2409,7 @@ export const GetBidsDocument = gql`
 export const GetMyPendingAssociationsDocument = gql`
     query GetMyPendingAssociations {
   getMyPendingAssociations {
+    id
     owner
     url
   }
@@ -2875,6 +2946,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     FileUpload(variables?: FileUploadMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileUploadMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileUploadMutation>(FileUploadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FileUpload', 'mutation');
+    },
+    IgnoreAssocations(variables: IgnoreAssocationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoreAssocationsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IgnoreAssocationsMutation>(IgnoreAssocationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoreAssocations', 'mutation');
     },
     ProfileClaimed(variables: ProfileClaimedMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileClaimedMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileClaimedMutation>(ProfileClaimedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileClaimed', 'mutation');

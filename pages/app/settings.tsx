@@ -1,4 +1,5 @@
 import { PageWrapper } from 'components/layouts/PageWrapper';
+import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -12,6 +13,7 @@ import { useAccount } from 'wagmi';
 export default function Settings() {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { data: pendingAssociatedProfiles } = usePendingAssociationQuery();
+  const { ignoreAssociations } = useIgnoreAssociationsMutation();
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [] });
   const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
@@ -66,12 +68,14 @@ export default function Settings() {
     await nftResolver.associateSelfWithUsers([url]).then((res) => console.log(res));
   };
 
-  const removeHandler = async (action, address) => {
+  const removeHandler = async (action, input) => {
     if(action === 'address'){
       const selectedProfile = profileRef.current.value;
-      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: address }, selectedProfile).then((res) => console.log(res));
+      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile).then((res) => console.log(res));
     } else if (action === 'profile') {
-      await nftResolver.removeAssociatedProfile(address).then((res) => console.log(res));
+      await nftResolver.removeAssociatedProfile(input).then((res) => console.log(res));
+    } else if (action === 'profile-pending') {
+      await ignoreAssociations({ eventIdArray: input }).then((res) => console.log(res));
     } else {
       console.log('error');
     }
@@ -166,6 +170,7 @@ export default function Settings() {
                 
                 <div className='flex items-center'>
                   <CheckSquare size={25} className='mr-1 hover:cursor-pointer' color='white' weight='fill' onClick={(e) => acceptPendingProfile(e, profile.url)} />
+                  <Trash weight='fill' className='ml-2 hover:cursor-pointer text-black dark:text-white' onClick={() => removeHandler('profile-pending', profile.id)} size={20}/>
                 </div>
               </div>
             ))}
