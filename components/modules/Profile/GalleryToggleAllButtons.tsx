@@ -1,7 +1,7 @@
 
 import { tw } from 'utils/tw';
 
-import { ProfileEditContext } from './ProfileEditContext';
+import { ProfileContext } from './ProfileContext';
 
 import { useContext } from 'react';
 import { Eye, EyeOff } from 'react-feather';
@@ -13,7 +13,7 @@ export interface GalleryToggleAllButtonsProps {
 }
 
 export function GalleryToggleAllButtons(props: GalleryToggleAllButtonsProps) {
-  const { draftToShow } = useContext(ProfileEditContext);
+  const { draftToShow } = useContext(ProfileContext);
   return <div className='flex'>
     <div
       className={tw(

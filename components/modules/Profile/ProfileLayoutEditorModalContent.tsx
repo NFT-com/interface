@@ -2,7 +2,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { ProfileLayoutType } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
-import { ProfileEditContext } from './ProfileEditContext';
+import { ProfileContext } from './ProfileContext';
 
 import Image from 'next/image';
 import { X } from 'phosphor-react';
@@ -23,7 +23,7 @@ export function ProfileLayoutEditorModalContent(props: ProfileLayoutEditorModalC
   const {
     draftLayoutType,
     setDraftLayoutType
-  } = useContext(ProfileEditContext);
+  } = useContext(ProfileContext);
 
   const [originalLayout, setOriginalLayout] = useState(null);
 
