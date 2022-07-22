@@ -1,18 +1,15 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
-import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ProfileEditContext } from './ProfileEditContext';
+import { ProfileContext } from './ProfileContext';
 
 import GKHolderIcon from 'public/gk-holder.svg';
 import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export interface MintedProfileInfoProps {
   profileURI: string;
@@ -22,7 +19,6 @@ export interface MintedProfileInfoProps {
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
   
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
@@ -36,19 +32,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     saveProfile,
     setEditMode,
     clearDrafts
-  } = useContext(ProfileEditContext);
+  } = useContext(ProfileContext);
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
-
-  const { mutate: mutateMyNFTs } = useMyNFTsQuery(20);
-      
-  const { mutate: mutateProfileNFTs } = useProfileNFTsQuery(
-    profileData?.profile?.id,
-    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-    // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
-    // however, we should still fetch the full first page for caching purposes.
-    20
-  );
   
   const handleBioChange = (event) => {
     let bioValue = event.target.value;
@@ -91,8 +77,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
 
                   saveProfile();
                   setEditMode(false);
-                  mutateProfileNFTs();
-                  mutateMyNFTs();
                 }}
               />
             </div>
