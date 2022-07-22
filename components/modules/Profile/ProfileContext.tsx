@@ -9,6 +9,8 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
+import { DetailedNft } from './NftGrid';
+
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -22,6 +24,7 @@ export interface DraftImg {
 export interface ProfileContextType {
   // display state
   publiclyVisibleNfts: PartialDeep<Nft>[];
+  editModeNfts: PartialDeep<DetailedNft>[];
   publiclyVisibleNftCount: number;
   allOwnerNfts: PartialDeep<Nft>[];
   allOwnerNftCount: number;
@@ -59,6 +62,7 @@ export interface ProfileContextType {
 // initialize with default values
 export const ProfileContext = React.createContext<ProfileContextType>({
   publiclyVisibleNfts: [],
+  editModeNfts: [],
   publiclyVisibleNftCount: 0,
   allOwnerNfts: [],
   allOwnerNftCount: 0,
@@ -223,8 +227,8 @@ export function ProfileContextProvider(
           description: isNullOrEmpty(draftBio) ? profileData?.profile?.description : draftBio,
           gkIconVisible: draftGkIconVisible,
           nftsDescriptionsVisible: draftNftsDescriptionsVisible,
-          hideNFTIds: allOwnerNfts.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null).map(nft => nft.id),
-          showNFTIds: publiclyVisibleNfts.map(nft => nft.id),
+          hideNFTIds: allOwnerNfts?.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null)?.map(nft => nft.id),
+          showNFTIds: publiclyVisibleNfts?.map(nft => nft.id),
           displayType: draftDisplayType,
           layoutType: draftLayoutType,
           ...(imageUploadResult
@@ -271,7 +275,20 @@ export function ProfileContextProvider(
     publiclyVisibleNfts
   ]);
 
+  const setHidden: (
+    nfts: PartialDeep<Nft>[], hidden: boolean
+  ) => PartialDeep<DetailedNft>[] = (
+    nfts: PartialDeep<Nft>[],
+    hidden: boolean
+  ) => {
+    return nfts.map(nft => ({ ...nft, hidden: hidden }));
+  };
+
   return <ProfileContext.Provider value={{
+    editModeNfts: [
+      ...setHidden(publiclyVisibleNfts ?? [], false),
+      ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
+    ],
     allOwnerNfts,
     allOwnerNftCount,
     publiclyVisibleNfts,

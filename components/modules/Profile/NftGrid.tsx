@@ -14,7 +14,7 @@ import { useContext, useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
 
-type DetailedNft = Nft & { hidden?: boolean };
+export type DetailedNft = Nft & { hidden?: boolean };
 
 export interface NftGridProps {
   nfts: PartialDeep<DetailedNft>[];
