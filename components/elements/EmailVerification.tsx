@@ -108,7 +108,7 @@ export function EmailVerification(props) {
             username: `ethereum-${ethers.utils.getAddress(currentAddress)}`,
             wallet: {
               address: currentAddress,
-              chainId: String(chain.id),
+              chainId: String(chain?.id),
               network: 'ethereum',
             },
           });
@@ -170,7 +170,7 @@ export function EmailVerification(props) {
                     username: null, // null to force user to authenticate code, instead of allowing skip
                     wallet: {
                       address: currentAddress,
-                      chainId: String(chain.id),
+                      chainId: String(chain?.id),
                       network: 'ethereum',
                     },
                   });

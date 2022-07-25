@@ -52,13 +52,13 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       cache: 'default',
       headers: {
         authorization: signature,
-        'chain-id': String(chain.id),
-        chainId: String(chain.id),
+        'chain-id': String(chain?.id),
+        chainId: String(chain?.id),
         network: 'ethereum', // TODO: support new networks
       },
     });
     setClient(gqlClient);
-  }, [chain.id]);
+  }, [chain?.id]);
 
   const trySignature = useCallback(async () => {
     setSigned(false);

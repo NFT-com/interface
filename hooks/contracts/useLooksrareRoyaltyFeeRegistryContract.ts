@@ -9,7 +9,7 @@ import { useNetwork } from 'wagmi';
 
 export function useLooksrareRoyaltyFeeRegistryContractContract(provider: Provider): Maybe<RoyaltyFeeRegistry> {
   const { chain } = useNetwork();
-  const addresses: Addresses = addressesByNetwork[chain.id];
+  const addresses: Addresses = addressesByNetwork[chain?.id];
   const address = addresses?.ROYALTY_FEE_REGISTRY;
   if (isNullOrEmpty(address)) {
     return null;

@@ -10,7 +10,7 @@ export function useDaiAllowance(
 ): {allowance: BalanceData | null; mutate: () => void} {
   const { dai } = useAllContracts();
   const { chain } = useNetwork();
-  const { data, mutate } = useSWR(`${chain.id}_Dai_allowance_${currentAddress}`, async () => {
+  const { data, mutate } = useSWR(`${chain?.id}_Dai_allowance_${currentAddress}`, async () => {
     if (spender == null) {
       return null;
     }

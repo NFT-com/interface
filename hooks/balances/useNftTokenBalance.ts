@@ -9,7 +9,7 @@ export function useNftTokenBalance(currentAddress: string): BalanceData | null {
   const { nftToken } = useAllContracts();
   const { chain } = useNetwork();
   const { data } = useSWR(
-    `${currentAddress}_${getAddress('nft', chain.id)}_${chain.id}_nft_balanceOf`,
+    `${currentAddress}_${getAddress('nft', chain?.id)}_${chain?.id}_nft_balanceOf`,
     async () => {
       const balance = await nftToken.balanceOf(currentAddress);
       const decimals = await nftToken.decimals();

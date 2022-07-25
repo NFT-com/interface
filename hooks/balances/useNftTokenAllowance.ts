@@ -10,7 +10,7 @@ export function useNftTokenAllowance(
 ): {allowance: BalanceData | null; mutate: () => void} {
   const { nftToken } = useAllContracts();
   const { chain } = useNetwork();
-  const { data, mutate } = useSWR(`${chain.id}_nft_allowance_${currentAddress}`, async () => {
+  const { data, mutate } = useSWR(`${chain?.id}_nft_allowance_${currentAddress}`, async () => {
     if (spender == null) {
       return null;
     }

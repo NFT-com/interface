@@ -8,7 +8,7 @@ import { useNetwork } from 'wagmi';
 
 export function useLooksrareStrategyContract(provider: Provider): IExecutionStrategy {
   const { chain } = useNetwork();
-  const addresses: Addresses = addressesByNetwork[chain.id];
+  const addresses: Addresses = addressesByNetwork[chain?.id];
   const address = addresses?.STRATEGY_STANDARD_SALE;
   if (isNullOrEmpty(address)) {
     return null;

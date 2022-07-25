@@ -22,7 +22,7 @@ class EthersProviderWrapper extends providers.StaticJsonRpcProvider {
 
 export function getNetwork(chain: Chain) {
   return {
-    chainId: chain.id,
+    chainId: chain?.id,
     ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     name: chain.name,
   };

@@ -10,7 +10,7 @@ export function useSignLooksrareOrder() {
   const signOrder = useCallback(async (
     order: MakerOrder
   ) => {
-    const { domain, value, type } = generateMakerOrderTypedData(currentAddress, chain.id, order);
+    const { domain, value, type } = generateMakerOrderTypedData(currentAddress, chain?.id, order);
     const signature = await signTypedDataAsync({
       domain: {
         name: domain.name,
@@ -23,6 +23,6 @@ export function useSignLooksrareOrder() {
       value
     });
     return signature;
-  }, [currentAddress, chain.id, signTypedDataAsync]);
+  }, [currentAddress, chain?.id, signTypedDataAsync]);
   return signOrder;
 }

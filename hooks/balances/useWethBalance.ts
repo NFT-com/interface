@@ -12,7 +12,7 @@ export function useWethBalance(currentAddress: string): BalanceData | null {
   const { chain } = useNetwork();
   const { signed } = useContext(GraphQLContext);
   const { data } = useSWR(
-    `${currentAddress}_${getAddress('weth', chain.id)}_${chain.id}_nft_balanceOf${signed}`,
+    `${currentAddress}_${getAddress('weth', chain?.id)}_${chain?.id}_nft_balanceOf${signed}`,
     async () => {
       const balance = await weth.balanceOf(currentAddress);
       const decimals = await weth.decimals();

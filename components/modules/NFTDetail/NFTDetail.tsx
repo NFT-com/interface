@@ -107,7 +107,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             <span className="text-link cursor-pointer hover:underline"
               onClick={() => {
                 window.open(getEtherscanLink(
-                  chain.id,
+                  chain?.id,
                   props.nft?.contract,
                   'address'
                 ), '_blank');

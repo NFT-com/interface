@@ -10,7 +10,7 @@ export function useUsdcAllowance(
 ): {allowance: BalanceData | null; mutate: () => void} {
   const { usdc } = useAllContracts();
   const { chain } = useNetwork();
-  const { data, mutate } = useSWR(`${chain.id}_Usdc_allowance_${currentAddress}`, async () => {
+  const { data, mutate } = useSWR(`${chain?.id}_Usdc_allowance_${currentAddress}`, async () => {
     if (spender == null) {
       return null;
     }

@@ -9,7 +9,7 @@ export function useDaiBalance(currentAddress: string): BalanceData | null {
   const { dai } = useAllContracts();
   const { chain } = useNetwork();
   const { data } = useSWR(
-    `${currentAddress}_${getAddress('dai', chain.id)}_${chain.id}_nft_balanceOf`,
+    `${currentAddress}_${getAddress('dai', chain?.id)}_${chain?.id}_nft_balanceOf`,
     async () => {
       const balance = await dai.balanceOf(currentAddress);
       const decimals = await dai.decimals();

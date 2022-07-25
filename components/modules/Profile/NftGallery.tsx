@@ -30,7 +30,7 @@ export function NftGallery(props: NftGalleryProps) {
   const { data: allOwnerNFTs, totalItems: ownerNFTCount } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs, totalItems: publicNFTCount } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    String(chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     loadedCount
   );
   const { editMode, saving } = useContext(ProfileEditContext);

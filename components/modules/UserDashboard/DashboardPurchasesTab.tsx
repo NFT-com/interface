@@ -72,7 +72,7 @@ export function DashboardPurchasesTab() {
           return (
             <a target="_blank" rel="noreferrer"
               href={getEtherscanLink(
-                chain.id,
+                chain?.id,
                 swap.txHash,
                 'transaction'
               )}

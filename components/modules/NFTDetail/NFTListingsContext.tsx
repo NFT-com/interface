@@ -111,7 +111,7 @@ export function NFTListingsContextProvider(
           listing.nft,
           listing.startingPrice,
           listing.currency,
-          chain.id,
+          chain?.id,
           nonce,
           looksrareStrategy,
           looksrareRoyaltyFeeRegistry,
@@ -142,7 +142,7 @@ export function NFTListingsContextProvider(
     clear();
   }, [
     currentAddress,
-    chain.id,
+    chain?.id,
     looksrareRoyaltyFeeRegistry,
     looksrareStrategy,
     seaportCounter,

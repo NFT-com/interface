@@ -22,7 +22,7 @@ export function useMaybeCreateUser(): boolean {
 
   useEffect(() => {
     setCreatedUser(false);
-  }, [currentAddress, chain.id]);
+  }, [currentAddress, chain?.id]);
 
   const { createUser, creating } = useCreateUserMutation({
     onCreateSuccess: () => {
@@ -41,7 +41,7 @@ export function useMaybeCreateUser(): boolean {
     if (isNullOrEmpty(currentAddress)) {
       return;
     }
-    const cachedUserId = localStorage.getItem(getCacheKey(currentAddress, chain.id));
+    const cachedUserId = localStorage.getItem(getCacheKey(currentAddress, chain?.id));
     if (cachedUserId != null) {
       setCreatedUser(true);
       return;
@@ -61,13 +61,13 @@ export function useMaybeCreateUser(): boolean {
             username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
             wallet: {
               address: currentAddress,
-              chainId: String(chain.id),
+              chainId: String(chain?.id),
               network: 'ethereum',
             },
           });
-          localStorage.setItem(getCacheKey(currentAddress, chain.id), result?.signUp?.id);
+          localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
         } else {
-          localStorage.setItem(getCacheKey(currentAddress, chain.id), meResult?.id);
+          localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
         }
         setCreatedUser(true);
       })();
@@ -76,7 +76,7 @@ export function useMaybeCreateUser(): boolean {
     isSupported,
     createUser,
     currentAddress,
-    chain.id,
+    chain?.id,
     creating,
     createdUser,
     fetchMe,

@@ -52,7 +52,7 @@ export function useAllContracts(): Contracts {
   const { chain } = useNetwork();
   const { data: signer } = useSigner();
 
-  const chainId = chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
+  const chainId = chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
   
   const provider = useProvider({ chainId: Number(chainId) });
 

@@ -19,7 +19,7 @@ export function useMyNFTsQuery(first: number): NftsData {
   const { signed } = useContext(GraphQLContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
-  const keyString = 'MyNFTsQuery ' + currentAddress + chain.id + signed + first;
+  const keyString = 'MyNFTsQuery ' + currentAddress + chain?.id + signed + first;
 
   const { data } = useSWR(keyString, async () => {
     if (!currentAddress) {

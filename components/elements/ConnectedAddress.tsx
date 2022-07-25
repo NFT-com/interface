@@ -31,7 +31,7 @@ export function ConnectedAddress(props: ConnectedAddressProps) {
           }}
         >
           <ExternalLink
-            href={getEtherscanLink(chain.id, ensName ?? currentAddress, 'address')}
+            href={getEtherscanLink(chain?.id, ensName ?? currentAddress, 'address')}
           >
             {currentAddress &&
             <div

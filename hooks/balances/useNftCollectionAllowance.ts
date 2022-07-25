@@ -21,10 +21,10 @@ export function useNftCollectionAllowance(
   const { connector } = useAccount();
   const { data: signer } = useSigner();
   const { chain } = useNetwork();
-  const provider = useProvider({ chainId: chain.id });
+  const provider = useProvider({ chainId: chain?.id });
   const collection = use721Contract(collectionAddress, provider);
 
-  const keyString = `${chain.id}_${collectionAddress}_allowance_${currentAddress}_${target}`;
+  const keyString = `${chain?.id}_${collectionAddress}_allowance_${currentAddress}_${target}`;
 
   const { data, mutate } = useSWR(keyString, async () => {
     if (collection == null) {

@@ -33,7 +33,7 @@ export default function HeroSidebarAccountDetails(
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
-  const isChainAvailable = chains.some((item) => item.id === chain.id);
+  const isChainAvailable = chains.some((item) => item.id === chain?.id);
   return (
     <>
       <div className="px-5 pb-5 flex flex-col">

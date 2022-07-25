@@ -14,7 +14,7 @@ export function useSignSeaportOrder() {
     counter: string,
   ) => {
     const data: SignTypedDataArgs = {
-      domain: getTypedDataDomain(chain.id ?? 1),
+      domain: getTypedDataDomain(chain?.id ?? 1),
       types: EIP_712_ORDER_TYPE,
       value: {
         ...orderParameters,

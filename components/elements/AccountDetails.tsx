@@ -190,7 +190,7 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
     <>
       <AddFundsDialog key={currentAddress} currentAddress={currentAddress} />
       <div className="px-5 py-8 flex flex-col">
-        {chain.id !== 1 && (
+        {chain?.id !== 1 && (
           <div className="text-center text-red-500 font-bold mb-6">Please switch to Mainnet</div>
         )}
         <div className='flex w-full justify-between'>

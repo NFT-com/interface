@@ -7,9 +7,9 @@ export function useEthBalance(
   currentAddress: string
 ): {balance: BalanceData; mutate: () => void} {
   const { chain } = useNetwork();
-  const provider = useProvider({ chainId: chain.id });
+  const provider = useProvider({ chainId: chain?.id });
   const { data, mutate } = useSWR(
-    `${chain.id}_eth_balance_${currentAddress}`,
+    `${chain?.id}_eth_balance_${currentAddress}`,
     async () => {
       const balance = await provider?.getBalance(currentAddress);
       return {

@@ -10,7 +10,7 @@ export function useWethAllowance(
 ): {allowance: BalanceData | null; mutate: () => void} {
   const { weth } = useAllContracts();
   const { chain } = useNetwork();
-  const { data, mutate } = useSWR(`${chain.id}_weth_allowance_${currentAddress}_${spender}`, async () => {
+  const { data, mutate } = useSWR(`${chain?.id}_weth_allowance_${currentAddress}_${spender}`, async () => {
     if (spender == null) {
       return null;
     }

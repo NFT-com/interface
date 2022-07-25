@@ -187,7 +187,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
                   shortenAddress(owner, isMobile ? 3 : 4),
               onClick: () => {
                 window.open(
-                  getEtherscanLink(chain.id, owner, 'address')
+                  getEtherscanLink(chain?.id, owner, 'address')
                   , '_blank'
                 );
               }
