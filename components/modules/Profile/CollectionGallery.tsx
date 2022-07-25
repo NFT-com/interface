@@ -3,21 +3,19 @@ import Loader from 'components/elements/Loader';
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
 import { Nft } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
-import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
-import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { Doppler, getEnv } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
 import { NftGrid } from './NftGrid';
-import { ProfileEditContext } from './ProfileEditContext';
+import { ProfileContext } from './ProfileContext';
 
 import { CaretLeft } from 'phosphor-react';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import useSWR from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionGalleryProps {
@@ -26,8 +24,6 @@ export interface CollectionGalleryProps {
 
 export function CollectionGallery(props: CollectionGalleryProps) {
   const { profileURI } = props;
-
-  const [loadedCount,] = useState(100);
   
   const { activeChain } = useNetwork();
   const { profileData } = useProfileQuery(profileURI);
@@ -38,37 +34,35 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     setSelectedCollection,
     hideNftIds,
     showNftIds,
-  } = useContext(ProfileEditContext);
+    publiclyVisibleNfts,
+    allOwnerNfts,
+  } = useContext(ProfileContext);
 
   const { data: collectionData } = useCollectionQuery(String(activeChain?.id), selectedCollection, true);
 
-  const { data: allOwnerNFTs } = useMyNFTsQuery(loadedCount);
-  const { nfts: profileNFTs } = useProfileNFTsQuery(
-    profileData?.profile?.id,
-    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-    loadedCount
+  const { data: collections } = useSWR(
+    '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(allOwnerNfts),
+    () => {
+      const nftsToShow = editMode ?
+        (allOwnerNfts ?? []) :
+        (publiclyVisibleNfts ?? []);
+      const newCollections = nftsToShow?.reduce((
+        previousValue: Map<string, Nft[]>,
+        currentValue: Nft,
+      ) => {
+        if (previousValue.has(currentValue?.contract)) {
+          previousValue.get(currentValue?.contract).push(currentValue);
+          return previousValue;
+        } else {
+          previousValue.set(currentValue?.contract, [currentValue]);
+          return previousValue;
+        }
+      }, new Map<string, Nft[]>()) ?? new Map();
+      return newCollections;
+    }
   );
 
-  const { data: collections } = useSWR('' + editMode + profileNFTs?.length + allOwnerNFTs?.length, () => {
-    const nftsToShow = editMode ?
-      (allOwnerNFTs ?? []) :
-      (profileNFTs ?? []);
-    const newCollections = nftsToShow?.reduce((
-      previousValue: Map<string, Nft[]>,
-      currentValue: Nft,
-    ) => {
-      if (previousValue.has(currentValue?.contract)) {
-        previousValue.get(currentValue?.contract).push(currentValue);
-        return previousValue;
-      } else {
-        previousValue.set(currentValue?.contract, [currentValue]);
-        return previousValue;
-      }
-    }, new Map<string, Nft[]>()) ?? new Map();
-    return newCollections;
-  });
-
-  if (profileNFTs == null || profileData == null) {
+  if (publiclyVisibleNfts == null || profileData == null) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-white">
@@ -78,7 +72,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     );
   }
 
-  if (editMode && (allOwnerNFTs.length ?? 0) === 0) {
+  if (editMode && (allOwnerNfts.length ?? 0) === 0) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-primary-txt dark:text-primary-txt-dk">
@@ -89,20 +83,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
   }
 
   if (selectedCollection) {
-    const detailedCollectionNFTs = (collections?.get(selectedCollection) ?? [])
-      .map(nft => {
-        if (profileNFTs.find(nft2 => nft2.id === nft.id)) {
-          return {
-            ...nft,
-            hidden: false
-          };
-        } else {
-          return {
-            ...nft,
-            hidden: true
-          };
-        }
-      });
+    const detailedCollectionNFTs = collections?.get(selectedCollection) ?? [];
     
     return <div className={'w-full flex flex-col items-center'}>
       <div className='w-full flex items-center px-8 mb-8 cursor-pointer justify-between'>
@@ -158,7 +139,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           <NFTCollectionCard
             contract={key}
             count={collections?.get(key)?.length}
-            images={collections?.get(key)?.map((nft) => {
+            images={collections?.get(key)?.map((nft: PartialDeep<Nft>) => {
               if (sameAddress(nft?.contract, getAddress('genesisKey', activeChain?.id ?? 1))) {
                 return getGenesisKeyThumbnail(nft?.tokenId);
               }
