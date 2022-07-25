@@ -1,7 +1,6 @@
 import { Doppler, getEnvBool } from './env';
 
 import ReactGA from 'react-ga';
-import { WalletSubTab } from 'types';
 
 export enum LoggingCategory {
   Wallet = 'Wallet',
@@ -52,19 +51,6 @@ export function logWatchlistAddClick() {
   logEvent(LoggingCategory.Watchlist, 'watchlist_add_click');
 }
 
-export function logDetailedWalletViewImpression(subtab: WalletSubTab) {
-  switch (subtab) {
-  case WalletSubTab.Watchlist:
-    logEvent(LoggingCategory.UserDetail, 'user_detail_watchlist_impression');
-    break;
-  case WalletSubTab.Bids:
-    logEvent(LoggingCategory.UserDetail, 'user_detail_bids_impression');
-    break;
-  case WalletSubTab.Profiles:
-    logEvent(LoggingCategory.UserDetail, 'user_detail_profiles_impression');
-    break;
-  }
-}
 
 export function logTopProfilesImpression() {
   logEvent(LoggingCategory.TopProfiles, 'top_profiles_impression');

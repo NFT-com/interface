@@ -42,7 +42,6 @@ class MyDocument extends Document {
           <link href="https://fonts.googleapis.com/css?family=DM+Mono:300,400,500&display=swap" rel="stylesheet" />
           <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet" />
           <link href='https://cdn.nft.com/StretchPro.otf' rel='stylesheet' />
-          <link href='https://cdn.nft.com/BEBAS___.ttf' rel='stylesheet' />
         </Head>
         <body>
           <noscript>You need to enable JavaScript to run this app.</noscript>

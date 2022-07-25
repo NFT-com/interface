@@ -1,5 +1,4 @@
 import { useSidebar } from 'hooks/state/useSidebar';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -75,24 +74,18 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                         className={tw(
                           `${props?.signInButton ? 'block' : 'hidden'}`,
                           'font-header',
-                          `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
-                            ? `${props?.headerButtonColor ? props.bgLight && props.header ? 'bg-[#F8F8F8]' : 'bg-black' : 'bg-[#F9D963]'}`
-                            : 'bg-deprecated_primary-button-bckg'}`,
+                          `${props?.headerButtonColor ? props.bgLight && props.header ? 'bg-[#F8F8F8]' : 'bg-black' : 'bg-[#F9D963]'}`,
                           !props.bgLight && props.header && 'border-[#6F6F6F] border',
                           'rounded-xl',
-                          `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ? props.header ? (props.bgLight ? 'text-[#7F7F7F]' : 'text-white') : 'text-[#4d4412]' : 'text-white'}`,
+                          props.header ? (props.bgLight ? 'text-[#7F7F7F]' : 'text-white') : 'text-[#4d4412]',
                           'flex flex-row items-center font-bold cursor-pointer hover:opacity-80 font-grotesk',
                           'py-2 px-5'
                         )}
                         type="button">
-                        {getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED) ?
-                          <Wallet className={tw(
-                            'h-5 w-5 mr-2',
-                            props.header ? (props.bgLight ? 'fill-[#B6B6B6]' : 'fill-white') : 'fill-[#4d4412]',
-                          )} weight='fill' color="white" alt={'Logged out wallet'}/>
-                          :
-                          <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="white" alt={'Logged out wallet'}/>
-                        }
+                        <Wallet className={tw(
+                          'h-5 w-5 mr-2',
+                          props.header ? (props.bgLight ? 'fill-[#B6B6B6]' : 'fill-white') : 'fill-[#4d4412]',
+                        )} weight='fill' color="white" alt={'Logged out wallet'}/>
                       Sign In
                       </button>
                     }
@@ -104,9 +97,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 return (
                   <button className={tw(
                     'block font-bold rounded-xl text-white',
-                    `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
-                      ? 'bg-primary-button-bckg'
-                      : 'bg-deprecated_primary-button-bckg'}`,
+                    'bg-primary-button-bckg',
                     'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
                     'border',
                     'py-2 px-5'
@@ -130,9 +121,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                   >
                     <button className={tw(
                       'block font-bold rounded-xl text-white',
-                      `${getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V2_ENABLED)
-                        ? 'bg-primary-button-bckg'
-                        : 'bg-deprecated_primary-button-bckg'}`,
+                      'bg-primary-button-bckg',
                       'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
                       'py-2 px-5',
                       (!props.bgLight && props.header) && 'border-[#6F6F6F] border',

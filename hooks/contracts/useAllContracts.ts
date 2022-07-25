@@ -4,12 +4,14 @@ import {
   Genesis_key_distributor,
   Genesis_key_team_claim,
   Genesis_key_team_distributor,
+  MaxProfiles,
   Nft_profile,
+  Nft_resolver,
   Nft_token,
   Profile_auction,
   Usdc,
-  Weth
-} from 'constants/typechain';
+  Validation_logic,
+  Weth } from 'constants/typechain';
 import { getDaiContract } from 'hooks/contracts/getDaiContract';
 import { getGenesisKeyContract } from 'hooks/contracts/getGenesisKeyContract';
 import { getNftProfileContract } from 'hooks/contracts/getNftProfileContract';
@@ -23,9 +25,14 @@ import { getAddress } from 'utils/httpHooks';
 import { getGenesisKeyDistributorContract } from './getGenesisKeyDistributorContract';
 import { getGenesisKeyTeamClaimContract } from './getGenesisKeyTeamClaimContract';
 import { getGenesisKeyTeamDistributorContract } from './getGenesisKeyTeamDistributorContract';
+import { getMarketplaceContract } from './getMarketplaceContract';
+import { getMarketplaceEventContract } from './getMarketplaceEventContract';
+import { getMaxProfilesContract } from './getMaxProfilesContract';
+import { getNftResolverContract } from './getNftResolverContract';
+import { getValidationLogicContract } from './getValidationLogicContract';
 
 import { useEffect, useState } from 'react';
-import { useNetwork, useProvider } from 'wagmi';
+import { useNetwork, useProvider, useSigner } from 'wagmi';
 
 export interface Contracts {
   dai: Dai;
@@ -33,7 +40,8 @@ export interface Contracts {
   usdc: Usdc;
   nftToken: Nft_token;
   nftProfile: Nft_profile;
-  profileAuction: Profile_auction;
+  nftResolver: Nft_resolver;
+  profileAuction: Profile_auction | MaxProfiles;
   genesisKey: Genesis_key;
   genesisKeyDistributor: Genesis_key_distributor;
   genesisKeyTeamDistributor: Genesis_key_team_distributor;
@@ -42,6 +50,7 @@ export interface Contracts {
 
 export function useAllContracts(): Contracts {
   const { activeChain } = useNetwork();
+  const { data: signer } = useSigner();
 
   const chainId = activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
   
@@ -57,10 +66,13 @@ export function useAllContracts(): Contracts {
     useState(getNftTokenContract(getAddress('nft', chainId), provider));
   const [nftProfileContract, setNftProfileContract] =
     useState(getNftProfileContract(getAddress('nftProfile', chainId), provider));
-  const [profileAuctionContract, setProfileAuctionContract] = useState(getProfileAuctionContract(
-    getAddress('profileAuction', chainId),
-    provider
-  ));
+  const [profileAuctionContract, setProfileAuctionContract] = useState(
+    chainId === 5 ?
+      getMaxProfilesContract(getAddress('profileAuction', chainId), provider) :
+      getProfileAuctionContract(
+        getAddress('profileAuction', chainId),
+        provider
+      ));
   const [genesisKeyContract, setGenesisKeyContract] =
     useState(getGenesisKeyContract(getAddress('genesisKey', chainId), provider));
   const [genesisKeyDistributorContract, setGenesisKeyDistributorContract] = useState(
@@ -75,6 +87,8 @@ export function useAllContracts(): Contracts {
   const [genesisKeyTeamClaim, setGenesisKeyTeamClaim] = useState(
     getGenesisKeyTeamClaimContract(getAddress('genesisKeyTeamClaim', chainId), provider)
   );
+  const [nftResolverContract, setNftResolverContract] =
+  useState(getNftResolverContract(getAddress('nftResolver', chainId), signer));
 
   useEffect(() => {
     setDaiContract(getDaiContract(getAddress('dai', chainId), provider));
@@ -98,7 +112,10 @@ export function useAllContracts(): Contracts {
     setGenesisKeyTeamClaim(
       getGenesisKeyTeamClaimContract(getAddress('genesisKeyTeamClaim', chainId), provider)
     );
-  }, [chainId, provider]);
+    setNftResolverContract(
+      getNftResolverContract(getAddress('nftResolver', chainId), signer)
+    );
+  }, [chainId, provider, signer]);
   
   return {
     dai: daiContract,
@@ -106,6 +123,7 @@ export function useAllContracts(): Contracts {
     usdc: usdcContract,
     nftToken: nftTokenContract,
     nftProfile: nftProfileContract,
+    nftResolver: nftResolverContract,
     profileAuction: profileAuctionContract,
     genesisKey: genesisKeyContract,
     genesisKeyDistributor: genesisKeyDistributorContract,
