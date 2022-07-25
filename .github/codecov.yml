@@ -1,5 +1,6 @@
 ignore:
   - "**/generated/**/*"
+  - "**/generated/*"
 
 coverage:
   status:
