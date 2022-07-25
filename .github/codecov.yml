@@ -1,6 +1,7 @@
 ignore:
   - "**/generated/**/*"
   - "**/generated/*"
+  - "**/cypress/*/*.ts"
 
 coverage:
   status:
