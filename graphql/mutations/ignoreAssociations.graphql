@@ -1,0 +1,14 @@
+mutation IgnoreAssocations($eventIdArray: [String]!) {
+  ignoreAssocations(eventIdArray: $eventIdArray) {
+    id
+    chainId
+    contract
+    eventName
+    txHash
+    ownerAddress
+    profileUrl
+    destinationAddress
+    blockNumber
+    ignore
+  }
+}
