@@ -15,8 +15,8 @@ import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
 export function DashboardListingsTab() {
-  const { data: account } = useAccount();
-  const { data: userCreatedAsks } = useGetAsks(account?.address);
+  const { address: currentAddress } = useAccount();
+  const { data: userCreatedAsks } = useGetAsks(currentAddress);
   const router = useRouter();
   const { setWalletSlideOpen } = useWalletSlide();
 

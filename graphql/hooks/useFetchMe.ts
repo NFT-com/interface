@@ -16,12 +16,12 @@ export interface FetchMeData {
 export function useFetchMe(): FetchMeData {
   const sdk = useGraphQLSDK();
   const [loading, setLoading] = useState(false);
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { signed } = useContext(GraphQLContext);
   const { isSupported } = useSupportedNetwork();
 
   const fetchMe = useCallback(async () => {
-    if (isNullOrEmpty(account?.address) || !signed || !isSupported) {
+    if (isNullOrEmpty(currentAddress) || !signed || !isSupported) {
       return null;
     }
     try {
@@ -34,7 +34,7 @@ export function useFetchMe(): FetchMeData {
       // todo: handle the error based on the error code.
       return null;
     }
-  }, [account, isSupported, sdk, signed]);
+  }, [currentAddress, isSupported, sdk, signed]);
 
   return {
     fetchMe,

@@ -6,7 +6,7 @@ import { EIP_712_ORDER_TYPE, SeaportOrderComponents, SeaportOrderParameters } fr
 import { useNetwork, useSignTypedData } from 'wagmi';
 
 export function useSignSeaportOrder() {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const { signTypedDataAsync } = useSignTypedData();
 
   const signOrder = useCallback(async (
@@ -14,7 +14,7 @@ export function useSignSeaportOrder() {
     counter: string,
   ) => {
     const data: SignTypedDataArgs = {
-      domain: getTypedDataDomain(activeChain?.id ?? 1),
+      domain: getTypedDataDomain(chain.id ?? 1),
       types: EIP_712_ORDER_TYPE,
       value: {
         ...orderParameters,
@@ -31,7 +31,7 @@ export function useSignSeaportOrder() {
       return '';
     }
     return signature;
-  }, [activeChain, signTypedDataAsync]);
+  }, [chain, signTypedDataAsync]);
 
   return signOrder;
 }

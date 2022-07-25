@@ -1,4 +1,4 @@
-import { accounts } from './constants';
+import { currentAddresss } from './constants';
 import { renderHook } from './wagmi';
 
 import { BaseProvider, WebSocketProvider } from '@ethersproject/providers';
@@ -30,7 +30,7 @@ export function getNetwork(chain: Chain) {
 
 export function getSigners() {
   const provider = getProvider();
-  const signers = accounts.map((x) => {
+  const signers = currentAddresss.map((x) => {
     const wallet = new Wallet(x.privateKey);
     return provider.getSigner(wallet.address);
   });

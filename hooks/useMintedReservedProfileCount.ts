@@ -16,14 +16,14 @@ export interface MintedReservedProfileCountResults {
 }
 
 export function useMintedReservedProfileCount(): MintedReservedProfileCountResults {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { reservedProfiles } = useInsiderReservedProfiles();
   const { nftProfile } = useAllContracts();
 
   const [loading, setLoading] = useState(false);
 
   const keyString = 'mintedReservedProfileCounts ' + reservedProfiles?.length;
-  const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(account?.address ?? null);
+  const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(currentAddress ?? null);
 
   const { data, error } = useSWR(keyString, async () => {
     if (insiderMerkleData == null) {

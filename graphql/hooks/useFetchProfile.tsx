@@ -13,7 +13,7 @@ export interface FetchProfile {
 
 export function useFetchProfile(): FetchProfile {
   const sdk = useGraphQLSDK();
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const { supportedNetworks } = useSupportedNetwork();
 
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ export function useFetchProfile(): FetchProfile {
       setLoading(true);
       const result = await sdk.Profile({
         url,
-        chainId: String(activeChain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0])),
+        chainId: String(chain.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0])),
       });
       setLoading(false);
       return result;
@@ -35,7 +35,7 @@ export function useFetchProfile(): FetchProfile {
       console.log('Failed to fetch profile. It might be unminted.');
       return null;
     }
-  }, [activeChain?.id, sdk, supportedNetworks]);
+  }, [chain.id, sdk, supportedNetworks]);
 
   return {
     fetchProfile,

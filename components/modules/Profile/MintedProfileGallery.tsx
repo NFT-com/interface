@@ -46,13 +46,13 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
   
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
 
   const { profileData } = useProfileQuery(props.profileURI);
   const { totalItems: publicNFTCount } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    String(chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     PROFILE_GALLERY_PAGE_SIZE
   );
 
@@ -108,14 +108,14 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               onShowAll={() => {
                 onShowAll();
                 analytics.track('Show All NFTs', {
-                  ethereumAddress: account?.address,
+                  ethereumAddress: currentAddress,
                   profile: props.profileURI
                 });
               }}
               onHideAll={() => {
                 onHideAll();
                 analytics.track('Hide All NFTs', {
-                  ethereumAddress: account?.address,
+                  ethereumAddress: currentAddress,
                   profile: props.profileURI
                 });
               }}
@@ -139,7 +139,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect: () => {
                     onShowAll();
                     analytics.track('Show All NFTs', {
-                      ethereumAddress: account?.address,
+                      ethereumAddress: currentAddress,
                       profile: props.profileURI
                     });
                   },
@@ -150,7 +150,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect:() => {
                     onHideAll();
                     analytics.track('Hide All NFTs', {
-                      ethereumAddress: account?.address,
+                      ethereumAddress: currentAddress,
                       profile: props.profileURI
                     });
                   },

@@ -49,11 +49,11 @@ export const CardsView = () => {
 };
 
 export default function CollectionPage() {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const router = useRouter();
   const { contractAddr } = router.query;
   const [enabled, setEnabled] = useState(false);
-  const { data: collectionData } = useCollectionQuery(String(activeChain?.id | getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),contractAddr?.toString(), false);
+  const { data: collectionData } = useCollectionQuery(String(chain.id | getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),contractAddr?.toString(), false);
 
   if (!ethers.utils.isAddress(contractAddr?.toString())) {
     return <NotFoundPage />;

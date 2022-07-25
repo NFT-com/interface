@@ -102,7 +102,7 @@ export function GenesiskeyEducationModal() {
             Profile NFTs!  (e.g. NFT.com/you)
           </span>
           <span className='text-base text-white text-left mb-3 w-full italic'>
-            *If an account does not maintain sufficient ETH in their wallet for their bid,{' '}
+            *If an currentAddress does not maintain sufficient ETH in their wallet for their bid,{' '}
             their bid will be discarded and the next highest bid will be selected.
           </span>
           <span className='text-base text-white text-left mb-3 w-full italic'>

@@ -15,13 +15,13 @@ export interface MyProfilesQueryData {
 
 export function useMyProfilesQuery(): MyProfilesQueryData {
   const sdk = useGraphQLSDK();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { signed } = useContext(GraphQLContext);
 
-  const keyString = 'MyProfilesQueryQuery' + account?.address + signed;
+  const keyString = 'MyProfilesQueryQuery' + currentAddress + signed;
 
   const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(account?.address) || !signed) {
+    if (isNullOrEmpty(currentAddress) || !signed) {
       return null;
     }
 
@@ -38,7 +38,7 @@ export function useMyProfilesQuery(): MyProfilesQueryData {
   });
   return {
     data: data,
-    loading: data == null && !isNullOrEmpty(account?.address) && signed,
+    loading: data == null && !isNullOrEmpty(currentAddress) && signed,
     mutate: () => {
       mutate(keyString);
     },

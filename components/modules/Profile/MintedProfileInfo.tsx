@@ -21,8 +21,8 @@ export interface MintedProfileInfoProps {
 
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
@@ -37,14 +37,14 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     setEditMode,
     clearDrafts
   } = useContext(ProfileEditContext);
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
   const { mutate: mutateMyNFTs } = useMyNFTsQuery(20);
       
   const { mutate: mutateProfileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    String(chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
     20
@@ -82,7 +82,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 label={'Save'}
                 onClick={() => {
                   analytics.track('Update Profile', {
-                    ethereumAddress: account?.address,
+                    ethereumAddress: currentAddress,
                     profile: profileURI,
                     newProfile: draftProfileImg?.preview ? true : false,
                     newHeader: draftHeaderImg?.preview ? true : false,

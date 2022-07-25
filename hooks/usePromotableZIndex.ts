@@ -25,7 +25,7 @@ const usePromotableZIndex = <K extends string | number | symbol>(input: Input<K>
   // `undefined` (none promoted):
   const [promotedElementName, setPromotedElementName] = useState<SiblingName | undefined>(undefined);
 
-  // Returns the z-index of a sibling, taking into account whether it's the
+  // Returns the z-index of a sibling, taking into currentAddress whether it's the
   // currently promoted one:
   const getZIndex = (siblingName: SiblingName) =>
     (promotedElementName === siblingName) ? promotedZIndex : retrieveKey(normalZIndices, siblingName);

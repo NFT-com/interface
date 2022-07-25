@@ -29,7 +29,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
 
   const [loadedCount,] = useState(100);
   
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const { profileData } = useProfileQuery(profileURI);
 
   const {
@@ -40,12 +40,12 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     showNftIds,
   } = useContext(ProfileEditContext);
 
-  const { data: collectionData } = useCollectionQuery(String(activeChain?.id), selectedCollection, true);
+  const { data: collectionData } = useCollectionQuery(String(chain.id), selectedCollection, true);
 
   const { data: allOwnerNFTs } = useMyNFTsQuery(loadedCount);
   const { nfts: profileNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    String(chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     loadedCount
   );
 
@@ -159,7 +159,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             contract={key}
             count={collections?.get(key)?.length}
             images={collections?.get(key)?.map((nft) => {
-              if (sameAddress(nft?.contract, getAddress('genesisKey', activeChain?.id ?? 1))) {
+              if (sameAddress(nft?.contract, getAddress('genesisKey', chain.id ?? 1))) {
                 return getGenesisKeyThumbnail(nft?.tokenId);
               }
               return nft?.metadata?.imageURL;

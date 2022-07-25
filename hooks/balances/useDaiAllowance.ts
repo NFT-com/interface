@@ -5,16 +5,16 @@ import { BalanceData } from 'types';
 import { useNetwork } from 'wagmi';
 
 export function useDaiAllowance(
-  account: string,
+  currentAddress: string,
   spender: string | null | undefined
 ): {allowance: BalanceData | null; mutate: () => void} {
   const { dai } = useAllContracts();
-  const { activeChain } = useNetwork();
-  const { data, mutate } = useSWR(`${activeChain?.id}_Dai_allowance_${account}`, async () => {
+  const { chain } = useNetwork();
+  const { data, mutate } = useSWR(`${chain.id}_Dai_allowance_${currentAddress}`, async () => {
     if (spender == null) {
       return null;
     }
-    const balance = await dai.allowance(account, spender);
+    const balance = await dai.allowance(currentAddress, spender);
     const decimals = await dai.decimals();
     return {
       balance: balance,

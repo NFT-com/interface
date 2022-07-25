@@ -19,8 +19,8 @@ type HeaderProps = {
 }
 
 export const Header = ({ removeBg, bgLight } : HeaderProps) => {
-  const { data: account } = useAccount();
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { address: currentAddress } = useAccount();
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
 

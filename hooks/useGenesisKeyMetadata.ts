@@ -8,9 +8,9 @@ import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export function useGenesisKeyMetadata(tokenId: BigNumberish | null): Maybe<any> {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
 
-  const keyString = 'GenesisKeyMetadata' + tokenId + activeChain?.id;
+  const keyString = 'GenesisKeyMetadata' + tokenId + chain.id;
 
   const { data } = useSWR(
     keyString,
@@ -19,9 +19,9 @@ export function useGenesisKeyMetadata(tokenId: BigNumberish | null): Maybe<any> 
         return null;
       }
       const result = await getNftMetadata(
-        getAddress('genesisKey', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+        getAddress('genesisKey', chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
         tokenId,
-        activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+        chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
       );
       
       return result;

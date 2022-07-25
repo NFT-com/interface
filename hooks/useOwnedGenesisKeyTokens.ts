@@ -19,9 +19,9 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
   mutate: () => void
 } {
   const [loading, setLoading] = useState(false);
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
 
-  const keyString = 'OwnedGenesisKeyTokens' + address + activeChain?.id;
+  const keyString = 'OwnedGenesisKeyTokens' + address + chain.id;
 
   const { data } = useSWR(keyString, async () => {
     if (
@@ -34,8 +34,8 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
 
     const result = await getNftsByContract(
       address,
-      getAddress('genesisKey', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-      activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+      getAddress('genesisKey', chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+      chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
       null // pageKey
     );
     const ownedTokens = result?.ownedNfts;
@@ -44,8 +44,8 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
       // There are further pages to load.
       const nextPage = await getNftsByContract(
         address,
-        getAddress('genesisKey', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-        activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+        getAddress('genesisKey', chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+        chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
         pageKey
       );
       ownedTokens.push(...nextPage?.ownedNfts as AlchemyOwnedNFT[]);

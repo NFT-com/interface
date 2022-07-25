@@ -23,22 +23,22 @@ export const GraphQLProviderProps = {};
  */
 export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderProps>) {
   const { isSupported } = useSupportedNetwork();
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress, connector } = useAccount();
+  const { chain } = useNetwork();
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState(defaultClient);
   const [signed, setSigned] = useState(false);
-  const [sigRejected, setSigRejected] = useState(!account);
+  const [sigRejected, setSigRejected] = useState(!currentAddress);
   const { signMessageAsync } = useSignMessage({
     message: getEnv(Doppler.NEXT_PUBLIC_APOLLO_AUTH_MESSAGE),
     onSuccess(data) {
       localStorage.setItem('signatureData', JSON.stringify({
         signature: data,
-        address: account?.address,
+        address: currentAddress,
       }));
-      // analytics.track('SignIn', {
-      //   ethereumAddress: account
-      // });
+      analytics.track('SignIn', {
+        ethereumAddress: currentAddress
+      });
       setSigned(true);
     },
     onError(error) {
@@ -52,13 +52,13 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       cache: 'default',
       headers: {
         authorization: signature,
-        'chain-id': String(activeChain?.id),
-        chainId: String(activeChain?.id),
+        'chain-id': String(chain.id),
+        chainId: String(chain.id),
         network: 'ethereum', // TODO: support new networks
       },
     });
     setClient(gqlClient);
-  }, [activeChain?.id]);
+  }, [chain.id]);
 
   const trySignature = useCallback(async () => {
     setSigned(false);
@@ -71,7 +71,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         const parsedSigData = JSON.parse(cachedSigData);
         const cachedAddress = parsedSigData['address'];
         const cachedSignature = parsedSigData['signature'];
-        if (account?.address === cachedAddress) {
+        if (currentAddress === cachedAddress) {
           createSignedClient(cachedSignature);
           setSigned(true);
           setLoading(false);
@@ -92,28 +92,28 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       console.log('Failed to get login signature. Only public endpoints will succeed.');
       return false;
     }
-  }, [account, createSignedClient, signMessageAsync]);
+  }, [currentAddress, createSignedClient, signMessageAsync]);
 
   useEffect(() => {
-    if (!account) {
+    if (!currentAddress) {
       setSigRejected(false);
     }
-  }, [account]);
+  }, [currentAddress]);
 
   useEffect(() => {
-    if((account && !isSupported) || account?.connector == null) {
+    if((currentAddress && !isSupported) || connector == null) {
       return;
     }
-    if (isNullOrEmpty(account?.address)) {
+    if (isNullOrEmpty(currentAddress)) {
       setSigRejected(false);
     }
     (async () => {
       const sigResult = await trySignature();
       // we only want to count the rejection of a real signature request.
       // if there is no connected wallet, it should fail silently.
-      setSigRejected(!sigResult && !isNullOrEmpty(account?.address));
+      setSigRejected(!sigResult && !isNullOrEmpty(currentAddress));
     })();
-  }, [account, isSupported, trySignature]);
+  }, [currentAddress, connector, isSupported, trySignature]);
   
   return (
     <GraphQLContext.Provider
@@ -124,7 +124,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       }}
     >
       <SignatureModal
-        visible={!signed && !isNullOrEmpty(account?.address) && !loading}
+        visible={!signed && !isNullOrEmpty(currentAddress) && !loading}
         showRetry={sigRejected}
         onRetry={trySignature}
       />

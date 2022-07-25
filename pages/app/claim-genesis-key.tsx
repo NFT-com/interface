@@ -19,12 +19,12 @@ export default function ClaimGenesisKeyPage() {
   const [firstLoaded, setFirstLoaded] = useState(false);
 
   const { bg: keyBackground, img: keyImg } = useKeyBackground();
-  const { data: account } = useAccount();
-  const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(account?.address);
+  const { address: currentAddress } = useAccount();
+  const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(currentAddress);
   const {
     data: ownedGenesisKeyTokens,
     loading: loadingOwnedGenesisKeys
-  } = useOwnedGenesisKeyTokens(account?.address);
+  } = useOwnedGenesisKeyTokens(currentAddress);
   const { data: insiderReservedIDs, loading: loadingInsiderReservedGKs } = useInsiderGenesisKeyIDs();
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function ClaimGenesisKeyPage() {
   }, [insiderMerkleData]);
 
   const getContent = useCallback(() => {
-    if (!account) {
+    if (!currentAddress) {
       return (<SignedOutView />);
     }
     return (
@@ -62,7 +62,7 @@ export default function ClaimGenesisKeyPage() {
         }
       </>
     );
-  }, [insiderMerkleData, shouldShowClaim, account]);
+  }, [insiderMerkleData, shouldShowClaim, currentAddress]);
 
   return (
     <PageWrapper

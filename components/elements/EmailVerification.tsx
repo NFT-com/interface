@@ -28,8 +28,8 @@ export function EmailVerification(props) {
   const referral: string = (parsedSearch?.ref ?? '') as string;
 
   const { email, hideOptional } = props;
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const { primaryTextClass, primaryText, inputBackground, inputBorder } = useThemeColors();
 
   const [codeSent, setCodeSent] = useState(false);
@@ -105,10 +105,10 @@ export function EmailVerification(props) {
             avatarURL: null,
             referredBy: referral,
             email: currentEmail !== '' ? currentEmail : null,
-            username: `ethereum-${ethers.utils.getAddress(account?.address)}`,
+            username: `ethereum-${ethers.utils.getAddress(currentAddress)}`,
             wallet: {
-              address: account?.address,
-              chainId: String(activeChain?.id),
+              address: currentAddress,
+              chainId: String(chain.id),
               network: 'ethereum',
             },
           });
@@ -169,8 +169,8 @@ export function EmailVerification(props) {
                     email: currentEmail !== '' ? currentEmail : null,
                     username: null, // null to force user to authenticate code, instead of allowing skip
                     wallet: {
-                      address: account?.address,
-                      chainId: String(activeChain?.id),
+                      address: currentAddress,
+                      chainId: String(chain.id),
                       network: 'ethereum',
                     },
                   });

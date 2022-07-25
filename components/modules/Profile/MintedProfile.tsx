@@ -41,8 +41,8 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftProfileImg,
   } = useContext(ProfileEditContext);
 
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { profileData } = useProfileQuery(profileURI);
   const userIsAdmin = ownedProfileTokens
@@ -50,13 +50,13 @@ export function MintedProfile(props: MintedProfileProps) {
     .includes(profileURI);
   const { nfts: publiclyVisibleNFTs } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    String(chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
     // however, we should still fetch the full first page for caching purposes.
     20
   );
 
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -219,27 +219,27 @@ export function MintedProfile(props: MintedProfileProps) {
               <>
                 <div className={tw(
                   'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
-                  addressOwner !== account ? 'cursor-pointer ' : ''
+                  addressOwner !== currentAddress ? 'cursor-pointer ' : ''
                 )}
                 >
                   <div className="mx-auto md:text-base lg:text-lg text-xl w-3/5 md:text-center text-left font-bold">
                     <div
                       onClick={() => {
-                        if (addressOwner !== account?.address) {
+                        if (addressOwner !== currentAddress) {
                           window.open(
-                            getEtherscanLink(activeChain?.id, addressOwner, 'address'),
+                            getEtherscanLink(chain.id, addressOwner, 'address'),
                             '_blank'
                           );
                         }
                       }}
                       className="lg:text-sm text-lg text-center font-bold"
                     >
-                      {addressOwner === account?.address ? 'You own this profile.' :'This profile is owned by ' + shortenAddress(addressOwner)}
+                      {addressOwner === currentAddress ? 'You own this profile.' :'This profile is owned by ' + shortenAddress(addressOwner)}
                     </div>
                   </div>
                   <div className="mx-auto text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col">
                     <div className="lg:text-sm text-lg md:mb-8 mt-8 w-full text-center">
-                      {addressOwner === account?.address ?
+                      {addressOwner === currentAddress ?
                         <p className='mx-8'>
                         As we roll out new features, you can return here for the latest NFT.com news, discover{' '}
                         other minted Genesis Keys and profiles in our community, and more.{' '}
@@ -252,7 +252,7 @@ export function MintedProfile(props: MintedProfileProps) {
                         </p>}
                     </div>
                     <div className="lg:mt-10 mt-24 w-full flex justify-center mb-24 sm:px-4">
-                      <LinksToSection isAddressOwner={addressOwner === account?.address}/>
+                      <LinksToSection isAddressOwner={addressOwner === currentAddress}/>
                     </div>
                   </div>
                 </div>

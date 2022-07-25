@@ -70,15 +70,15 @@ export function NFTListingsContextProvider(
     }
   }, []);
 
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const provider = useProvider();
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
   const looksrareStrategy = useLooksrareStrategyContract(provider);
 
-  const seaportCounter = useSeaportCounter(account?.address);
+  const seaportCounter = useSeaportCounter(currentAddress);
   const signOrderForSeaport = useSignSeaportOrder();
 
   const openListingBuilder = useCallback((type: ListingType, nft: PartialDeep<Nft>) => {
@@ -103,15 +103,15 @@ export function NFTListingsContextProvider(
 
   const listAll = useCallback(async () => {
     setSubmitting(true);
-    let nonce: number = await getLooksrareNonce(account?.address);
+    let nonce: number = await getLooksrareNonce(currentAddress);
     await Promise.all(toList.map(async (listing) => {
       if (listing.type === 'looksrare') {
         const order: MakerOrder = await createLooksrareParametersForNFTListing(
-          account?.address, // offerer
+          currentAddress, // offerer
           listing.nft,
           listing.startingPrice,
           listing.currency,
-          activeChain?.id,
+          chain.id,
           nonce,
           looksrareStrategy,
           looksrareRoyaltyFeeRegistry,
@@ -124,7 +124,7 @@ export function NFTListingsContextProvider(
         // todo: check success/failure and maybe mutate external listings query.
       } else {
         const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
-          account?.address,
+          currentAddress,
           listing.nft,
           listing.startingPrice,
           listing.endingPrice,
@@ -141,8 +141,8 @@ export function NFTListingsContextProvider(
     setSubmitting(false);
     clear();
   }, [
-    account?.address,
-    activeChain?.id,
+    currentAddress,
+    chain.id,
     looksrareRoyaltyFeeRegistry,
     looksrareStrategy,
     seaportCounter,

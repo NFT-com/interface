@@ -5,13 +5,13 @@ import useSWR from 'swr';
 import { BalanceData } from 'types';
 import { useNetwork } from 'wagmi';
 
-export function useDaiBalance(account: string): BalanceData | null {
+export function useDaiBalance(currentAddress: string): BalanceData | null {
   const { dai } = useAllContracts();
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const { data } = useSWR(
-    `${account}_${getAddress('dai', activeChain?.id)}_${activeChain?.id}_nft_balanceOf`,
+    `${currentAddress}_${getAddress('dai', chain.id)}_${chain.id}_nft_balanceOf`,
     async () => {
-      const balance = await dai.balanceOf(account);
+      const balance = await dai.balanceOf(currentAddress);
       const decimals = await dai.decimals();
       return {
         balance: balance,

@@ -30,10 +30,10 @@ export default function RoadmapPage() {
     window.addEventListener('scroll', listenScrollEvent);
   });
 
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const router = useRouter();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
-  const { data: ownedGKTokens, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGKTokens, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
 
   const ref = useRef(null);

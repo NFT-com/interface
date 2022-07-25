@@ -4,14 +4,14 @@ import { BalanceData } from 'types';
 import { useNetwork, useProvider } from 'wagmi';
 
 export function useEthBalance(
-  account: string
+  currentAddress: string
 ): {balance: BalanceData; mutate: () => void} {
-  const { activeChain } = useNetwork();
-  const provider = useProvider({ chainId: activeChain?.id });
+  const { chain } = useNetwork();
+  const provider = useProvider({ chainId: chain.id });
   const { data, mutate } = useSWR(
-    `${activeChain?.id}_eth_balance_${account}`,
+    `${chain.id}_eth_balance_${currentAddress}`,
     async () => {
-      const balance = await provider?.getBalance(account);
+      const balance = await provider?.getBalance(currentAddress);
       return {
         balance: balance,
         decimals: 18,

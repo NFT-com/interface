@@ -49,10 +49,10 @@ export interface Contracts {
 }
 
 export function useAllContracts(): Contracts {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const { data: signer } = useSigner();
 
-  const chainId = activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
+  const chainId = chain.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
   
   const provider = useProvider({ chainId: Number(chainId) });
 

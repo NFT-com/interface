@@ -20,8 +20,8 @@ export function DashboardPurchasesTab() {
   const [nextCursor, setNextCursor] = useState('start');
   const [sortBy, setSortBy] = useState(0);
 
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const { fetchSwaps } = useFetchSwaps();
   const { setWalletSlideOpen } = useWalletSlide();
 
@@ -31,7 +31,7 @@ export function DashboardPurchasesTab() {
       return [];
     }
     return fetchSwaps(
-      account?.address,
+      currentAddress,
       {
         first: 12, // num per page
         afterCursor: nextCursor === 'start' ? null : nextCursor
@@ -39,7 +39,7 @@ export function DashboardPurchasesTab() {
       setNextCursor(result?.pageInfo?.lastCursor);
       return result?.items ?? [];
     });
-  }, [account?.address, fetchSwaps, nextCursor]);
+  }, [currentAddress, fetchSwaps, nextCursor]);
 
   const { data: swaps, loading } = useLazyLoad({ triggerRef, onGrabData });
 
@@ -72,7 +72,7 @@ export function DashboardPurchasesTab() {
           return (
             <a target="_blank" rel="noreferrer"
               href={getEtherscanLink(
-                activeChain?.id,
+                chain.id,
                 swap.txHash,
                 'transaction'
               )}
