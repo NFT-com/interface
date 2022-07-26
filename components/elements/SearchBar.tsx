@@ -6,12 +6,18 @@ import { useRouter } from 'next/router';
 import SearchIcon from 'public/search.svg';
 import { useRef, useState } from 'react';
 
-export const SearchBar = () => {
+type SearchBarProps = {
+  bgLight?: boolean
+}
+
+export const SearchBar = (props: SearchBarProps) => {
   const [showHits, setShowHits] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const router = useRouter();
   const resultsRef = useRef();
   const cliente = getTypesenseInstantsearchAdapterRaw;
+
+  console.log(props.bgLight, 'bgLight');
 
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
@@ -82,7 +88,8 @@ export const SearchBar = () => {
       <div className="flex flex-col w-full">
         <div className={tw(
           'relative flex items-center border rounded-xl py-2 px-3',
-          'mr-4 md:hidden block w-full dark:text-always-white')}>
+          'mr-4 md:hidden block w-full',
+          props.bgLight ? 'text-black':'text-white')}>
           <SearchIcon className='mr-2 shrink-0 aspect-square' />
           <div className="w-full">
             <input
@@ -102,19 +109,30 @@ export const SearchBar = () => {
           <div
             ref={resultsRef}
             className={tw(
-              'absolute mt-10 max-w-[27rem] bg-always-white dark:bg-always-black',
+              'absolute mt-10 max-w-[27rem]',
+              props.bgLight ? 'bg-always-white':'bg-always-black',
               'flex flex-col w-full p-4 border border-grey z-50 text-rubik rounded-xl')}>
             {searchResults.length > 0 && searchResults.map((item, index) => {
               return (
                 <div key={index}>
-                  <span className="text-xs text-gray-400">{item.request_params.collection_name.toUpperCase()}</span>
+                  <span className={tw(
+                    'text-xs text-gray-400',
+                    props.bgLight ? 'text-gray-400':'text-white')}>
+                    {item.request_params.collection_name.toUpperCase()}</span>
                   {item.found === 0 ?
-                    <div className="dark:text-always-white text-sm p-3 text-gray-500">No results found</div>
+                    <div className={tw(
+                      props.bgLight ? 'text-gray-400':'text-white',
+                      'text-sm p-3 text-gray-500')}>
+                        No results found
+                    </div>
                     : (item.hits.map((hit, index) => {
                       return (
                         <div
                           key={index}
-                          className="flex flex-col text-sm my-1 font-medium dark:text-always-white hover:cursor-pointer hover:opacity-70"
+                          className={tw(
+                            'flex flex-col text-sm my-1 font-medium',
+                            props.bgLight ? 'text-gray-400':'text-white',
+                            'hover:cursor-pointer hover:opacity-70')}
                           onClick={() => goTo(hit.document)}>
                           <span>{hit.document.contractName}</span>
                           <span>{hit.document.url}</span>
