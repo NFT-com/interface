@@ -357,12 +357,12 @@ export function ProfileContextProvider(
     },
     showNftIds: (toShow: string[]) => {
       const additions = [];
-      allOwnerNfts.filter(nft => toShow.includes(nft.id)).forEach((nft) => {
-        if (!publiclyVisibleNfts.includes(nft) && !additions.includes(nft)) {
+      allOwnerNfts?.filter(nft => toShow?.includes(nft.id))?.forEach((nft) => {
+        if (!publiclyVisibleNfts?.includes(nft) && !additions?.includes(nft)) {
           additions.push(nft);
         }
       });
-      setPubliclyVisibleNfts([...publiclyVisibleNfts, ...additions]);
+      setPubliclyVisibleNfts([...(publiclyVisibleNfts ?? []), ...additions]);
     },
     saveProfile,
     saving,
