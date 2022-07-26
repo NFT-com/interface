@@ -1,5 +1,6 @@
-import { ProfileEditContext } from 'components/modules/Profile/ProfileEditContext';
+import { ProfileContext } from 'components/modules/Profile/ProfileContext';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { Doppler, getEnv } from 'utils/env';
 
 import { NFTCard } from './NFTCard';
 
@@ -21,9 +22,9 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
 
   const {
     draftNftsDescriptionsVisible
-  } = useContext(ProfileEditContext);
+  } = useContext(ProfileContext);
 
-  const { data: collection } = useCollectionQuery(String(chain?.id), props?.contract, false);
+  const { data: collection } = useCollectionQuery(String(chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract, false);
   const processedImages = props.images.filter(i => i != null);
 
   return (

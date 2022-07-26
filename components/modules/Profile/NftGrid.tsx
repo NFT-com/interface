@@ -6,7 +6,7 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ProfileEditContext } from './ProfileEditContext';
+import { ProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
@@ -14,7 +14,7 @@ import { useContext, useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
 
-type DetailedNft = Nft & { hidden?: boolean };
+export type DetailedNft = Nft & { hidden?: boolean };
 
 export interface NftGridProps {
   nfts: PartialDeep<DetailedNft>[];
@@ -25,16 +25,14 @@ export function NftGrid(props: NftGridProps) {
   const {
     toggleHidden,
     editMode,
-    draftToHide,
-    draftToShow,
     draftNftsDescriptionsVisible,
-  } = useContext(ProfileEditContext);
+    draftLayoutType
+  } = useContext(ProfileContext);
   const { profileData } = useProfileQuery(props.profileURI);
 
   const { tileBackgroundSecondary } = useThemeColors();
   const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
-  const { draftLayoutType } = useContext(ProfileEditContext);
 
   const [spotlightIndex, setSpotLightIndex] = useState<number>(0);
 
@@ -67,7 +65,7 @@ export function NftGrid(props: NftGridProps) {
   data-testid={savedLayoutType+'-layout-option'}>
     {displayNFTs?.map((nft: PartialDeep<DetailedNft>, index) => (
       <div
-        key={nft?.id + '-' + nft?.contract?.address}
+        key={nft?.id + '-' + nft?.tokenId + '-' + nft?.contract}
         className={tw(
           'NFTCardContainer',
           'flex justify-center px-3 sm:mb-2',
@@ -81,16 +79,14 @@ export function NftGrid(props: NftGridProps) {
       >
         <NFTCard
           title={nft?.metadata?.name}
-          traits={[{ key: '', value: shortenAddress(nft?.contract?.address) }]}
+          traits={[{ key: '', value: shortenAddress(nft?.contract) }]}
           images={[nft?.metadata?.imageURL]}
           profileURI={props.profileURI}
           contractAddress={nft?.contract}
           tokenId={nft?.tokenId}
           // only show the eye icons to the owner in edit mode
           visible={editMode ?
-            nft?.hidden ?
-              draftToShow.has(nft?.id) :
-              !draftToHide.has(nft?.id) :
+            !nft?.hidden :
             null
           }
           onVisibleToggle={() => {

@@ -1,6 +1,6 @@
 import { NullState } from 'components/elements/NullState';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
-import { ProfileEditContextProvider } from 'components/modules/Profile/ProfileEditContext';
+import { ProfileContextProvider } from 'components/modules/Profile/ProfileContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
@@ -74,7 +74,7 @@ export function ProfilePage(props: ProfilePageProps) {
       />;
     } else {
       return (
-        <ProfileEditContextProvider
+        <ProfileContextProvider
           key={processedProfileURI}
           profileURI={processedProfileURI}
         >
@@ -83,7 +83,7 @@ export function ProfilePage(props: ProfilePageProps) {
             profileURI={processedProfileURI}
             addressOwner={profileOwner}
           />
-        </ProfileEditContextProvider>
+        </ProfileContextProvider>
       );
     }
   }, [

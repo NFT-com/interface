@@ -2,18 +2,16 @@
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
-import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler,getEnv,getEnvBool } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
-import { ProfileEditContext } from './ProfileEditContext';
+import { ProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
 import cameraIcon from 'public/camera.png';
@@ -39,22 +37,13 @@ export function MintedProfile(props: MintedProfileProps) {
     draftHeaderImg,
     setDraftHeaderImg,
     setDraftProfileImg,
-  } = useContext(ProfileEditContext);
+    userIsAdmin,
+    publiclyVisibleNftCount
+  } = useContext(ProfileContext);
 
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
-  const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { profileData } = useProfileQuery(profileURI);
-  const userIsAdmin = ownedProfileTokens
-    .map(token => token?.tokenUri?.raw?.split('/').pop())
-    .includes(profileURI);
-  const { nfts: publiclyVisibleNFTs } = useProfileNFTsQuery(
-    profileData?.profile?.id,
-    String(chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-    // this query is only used to determine if the profile has any nfts, so we don't need to track the page info.
-    // however, we should still fetch the full first page for caching purposes.
-    20
-  );
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
       
@@ -211,7 +200,7 @@ export function MintedProfile(props: MintedProfileProps) {
           )}
         >
           {
-            (userIsAdmin && editMode) || (publiclyVisibleNFTs?.length ?? 0) > 0 ?
+            (userIsAdmin && editMode) || (publiclyVisibleNftCount > 0) ?
               <MintedProfileGallery
                 profileURI={profileURI}
                 ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
