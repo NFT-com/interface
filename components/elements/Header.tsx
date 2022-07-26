@@ -64,7 +64,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
               'flex items-center mr-4 md:hidden',
               'block lg:w-1/2 w-80'
             )}>
-              <SearchBar />
+              <SearchBar bgLight={bgLight} />
             </div>
           }
           <div className='flex items-center ...'>
