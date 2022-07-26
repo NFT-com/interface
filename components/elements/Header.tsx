@@ -19,8 +19,8 @@ type HeaderProps = {
 }
 
 export const Header = ({ removeBg, bgLight } : HeaderProps) => {
-  const { data: account } = useAccount();
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { address: currentAddress } = useAccount();
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
 
@@ -64,7 +64,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
               'flex items-center mr-4 md:hidden',
               'block lg:w-1/2 w-80'
             )}>
-              <SearchBar />
+              <SearchBar bgLight={bgLight} />
             </div>
           }
           <div className='flex items-center ...'>

@@ -17,33 +17,33 @@ export interface LoggedInIdenticonProps {
 export default function LoggedInIdenticon({ large, round, border }: LoggedInIdenticonProps) {
   const ref = useRef<HTMLDivElement>();
 
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { myPhoto, loading } = useMyPhotoQuery();
   const { primaryIcon } = useThemeColors();
 
   useEffect(() => {
-    if (account && ref.current) {
+    if (currentAddress && ref.current) {
       ref.current.innerHTML = '';
-      ref.current.appendChild(Jazzicon(16, parseInt(account?.address.slice(2, 10), 16)));
+      ref.current.appendChild(Jazzicon(16, parseInt(currentAddress.slice(2, 10), 16)));
     }
-  }, [account]);
+  }, [currentAddress]);
 
   if (myPhoto && !loading) {
     return (
       <Image
         className={joinClasses(
-          account == null ? 'hidden' : '',
+          currentAddress == null ? 'hidden' : '',
           round === true ? 'rounded-full' : '',
           large === true ? 'h-32 w-32' : 'h-10 w-10',
           border === true ? 'border-4' : ''
         )}
         style={{ borderColor: primaryIcon }}
         src={myPhoto}
-        alt={account?.address}
+        alt={currentAddress}
       />
     );
   }
 
   // 'polkadot', 'substrate', 'beachball' or 'jdenticon'
-  return <Identicon1 size={large === true ? 120 : 32} string={account?.address} />;
+  return <Identicon1 size={large === true ? 120 : 32} string={currentAddress} />;
 }

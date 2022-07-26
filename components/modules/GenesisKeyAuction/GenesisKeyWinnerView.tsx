@@ -43,7 +43,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
     alwaysBlack
   } = useThemeColors();
   const { genesisKeyTeamDistributor } = useAllContracts();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
   const { keyVideoVisible: showVideo, useKeyVideoToggle: playKeyVideo } = useKeyVideo();
   const { setKeyBackground } = useKeyBackground();
@@ -54,7 +54,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
     ? genesisKeyMetadata?.metadata?.image
     : genesisKeyMetadata?.metadata?.animation_url);
   
-  const { mutate: mutateOwnedGKs } = useOwnedGenesisKeyTokens(account?.address);
+  const { mutate: mutateOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress);
 
   const [showPostClaimView, setShowPostClaimView] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -225,7 +225,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                             .connect(signer)
                             .claim(
                               props.insiderClaimData.index,
-                              account?.address,
+                              currentAddress,
                               BigNumber.from(props.insiderClaimData.amount),
                               props.insiderClaimData.proof,
                               {

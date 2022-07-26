@@ -16,9 +16,9 @@ import { useAccount } from 'wagmi';
 const keySplash = 'https://cdn.nft.com/key_splash2.png';
 
 export default function ProfilePreferencesPage() {
-  const { data: account } = useAccount();
-  const { data: ownedGKs, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(account?.address ?? null);
-  const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(account?.address);
+  const { address: currentAddress } = useAccount();
+  const { data: ownedGKs, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress ?? null);
+  const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(currentAddress);
   const { mintedReservedProfileCount, loading: loadingReservedCount } = useMintedReservedProfileCount();
   const showInsiderReservedProfiles = insiderMerkleData != null &&
     ownedGKs?.length >= 1 &&
@@ -76,7 +76,7 @@ export default function ProfilePreferencesPage() {
           )}>
           <LoadedContainer loaded={firstLoaded}>
             {
-              !account ?
+              !currentAddress ?
                 <SignedOutView /> :
                 showInsiderReservedProfiles ?
                   <InsiderProfileClaim /> :

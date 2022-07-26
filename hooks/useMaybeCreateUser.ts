@@ -12,8 +12,8 @@ import { useAccount, useNetwork } from 'wagmi';
 
 export function useMaybeCreateUser(): boolean {
   const [createdUser, setCreatedUser] = useState(false);
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const { signed } = useContext(GraphQLContext);
   const { isSupported } = useSupportedNetwork();
 
@@ -22,7 +22,7 @@ export function useMaybeCreateUser(): boolean {
 
   useEffect(() => {
     setCreatedUser(false);
-  }, [account, activeChain?.id]);
+  }, [currentAddress, chain?.id]);
 
   const { createUser, creating } = useCreateUserMutation({
     onCreateSuccess: () => {
@@ -38,10 +38,10 @@ export function useMaybeCreateUser(): boolean {
   };
 
   useEffect(() => {
-    if (isNullOrEmpty(account?.address)) {
+    if (isNullOrEmpty(currentAddress)) {
       return;
     }
-    const cachedUserId = localStorage.getItem(getCacheKey(account?.address, activeChain?.id));
+    const cachedUserId = localStorage.getItem(getCacheKey(currentAddress, chain?.id));
     if (cachedUserId != null) {
       setCreatedUser(true);
       return;
@@ -58,16 +58,16 @@ export function useMaybeCreateUser(): boolean {
           const result = await createUser({
             avatarURL: null,
             referredBy: null,
-            username: `ethereum-${ethers.utils.getAddress(account.address || '')}`,
+            username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
             wallet: {
-              address: account?.address,
-              chainId: String(activeChain?.id),
+              address: currentAddress,
+              chainId: String(chain?.id),
               network: 'ethereum',
             },
           });
-          localStorage.setItem(getCacheKey(account?.address, activeChain?.id), result?.signUp?.id);
+          localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
         } else {
-          localStorage.setItem(getCacheKey(account?.address, activeChain?.id), meResult?.id);
+          localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
         }
         setCreatedUser(true);
       })();
@@ -75,8 +75,8 @@ export function useMaybeCreateUser(): boolean {
   }, [
     isSupported,
     createUser,
-    account,
-    activeChain?.id,
+    currentAddress,
+    chain?.id,
     creating,
     createdUser,
     fetchMe,

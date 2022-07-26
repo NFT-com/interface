@@ -22,9 +22,9 @@ export interface GenesisKeyGalleryItemsProps {
 }
 
 export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const router = useRouter();
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const itemsPerRow = useCallback(() => {

@@ -31,7 +31,7 @@ export const ProfileMinter = () => {
   const [claimableIndex, setClaimableIndex] = useState(0);
 
   const { isSupported } = useSupportedNetwork();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { inputBorder, alwaysBlack } = useThemeColors();
   const {
     profileTokenId,
@@ -44,7 +44,7 @@ export const ProfileMinter = () => {
     totalClaimable,
     mutate: mutateClaimableProfileCount,
     loading: loadingClaimable
-  } = useClaimableProfileCount(account?.address);
+  } = useClaimableProfileCount(currentAddress);
   const publicClaimSigner = useProfileAuctionSigner();
   const { blocked: currentURIBlocked } = useProfileBlocked(currentURI, true);
   const { profileClaimHash, mutate: mutateProfileHash } = useGetProfileClaimHash(currentURI);
@@ -91,7 +91,7 @@ export const ProfileMinter = () => {
     return status != null && status === ProfileStatus.Owned;
   }, [currentURIBlocked, getProfileStatus]);
 
-  if (account && !isSupported ) {
+  if (currentAddress && !isSupported ) {
     return <div className='mb-12'>
       <NetworkErrorTile />
     </div>;

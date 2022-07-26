@@ -4,6 +4,7 @@
 
 .ais-SearchBox-input {
   width: 100%;
+  background-color: inherit;
 }
 
 .ais-SearchBox-form {
@@ -12,10 +13,6 @@
 
 .ais-SearchBox {
   width: 100%;
-}
-
-.ais-SearchBox-input {
-  background-color: inherit;
 }
 
 .results-grid>.ais-Hits {

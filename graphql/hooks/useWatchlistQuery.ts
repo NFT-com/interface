@@ -17,15 +17,15 @@ export interface WatchlistQueryData {
 export function useWatchlistQuery(input: ProfilesInput): WatchlistQueryData {
   const sdk = useGraphQLSDK();
 
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { signed } = useContext(GraphQLContext);
 
   const [loading, setLoading] = useState(false);
 
-  const keyString = 'WatchlistQuery' + JSON.stringify(input) + signed + account?.address;
+  const keyString = 'WatchlistQuery' + JSON.stringify(input) + signed + currentAddress;
 
   const { data, error } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(account?.address) || !signed) {
+    if (isNullOrEmpty(currentAddress) || !signed) {
       return;
     }
     setLoading(true);

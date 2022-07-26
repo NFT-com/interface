@@ -9,14 +9,14 @@ export interface SupportedNetworkResponse {
 }
 
 export function useSupportedNetwork(): SupportedNetworkResponse {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
 
   const supportedNetworks: string[] = getEnv(Doppler.NEXT_PUBLIC_SUPPORTED_NETWORKS)?.split('::');
-  const key = activeChain?.id as number;
+  const key = chain?.id as number;
   // TODO: support non-ethereum networks
   return {
     isSupported: CHAIN_ID_TO_NETWORK[key as keyof CHAIN_ID_TO_NETWORK_TYPE ?? 1] ?
-      supportedNetworks?.includes(`ethereum:${activeChain?.id}:${CHAIN_ID_TO_NETWORK[key as keyof CHAIN_ID_TO_NETWORK_TYPE ?? 1].toLowerCase()}`) ?? false :
+      supportedNetworks?.includes(`ethereum:${chain?.id}:${CHAIN_ID_TO_NETWORK[key as keyof CHAIN_ID_TO_NETWORK_TYPE ?? 1].toLowerCase()}`) ?? false :
       false,
     supportedNetworks
   };

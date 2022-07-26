@@ -13,8 +13,8 @@ import { useAccount } from 'wagmi';
 
 export function HeroSidebarProfiles() {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-  const { data: account } = useAccount();
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { address: currentAddress } = useAccount();
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
   const [collapsed, setCollapsed] = useState(false);
   const [showMoreGKs, setShowMoreGKs] = useState(false);
@@ -110,7 +110,7 @@ export function HeroSidebarProfiles() {
             collapsed ?
               0 :
               (16 * 4 * // height of a tile
-                (2.5 /* account for extra spacing */ +
+                (2.5 /* currentAddress for extra spacing */ +
                 (genesisKeysToShow?.length ?? 0) + (profilesToShow?.length ?? 0)))
         }}
         transition={{ duration: 0.2 }}

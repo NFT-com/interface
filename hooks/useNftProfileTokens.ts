@@ -14,9 +14,9 @@ export interface ProfileTokenResults {
 }
 
 export function useNftProfileTokens(owner: string): ProfileTokenResults {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
 
-  const keyString = 'NftProfileTokens ' + owner + activeChain?.id;
+  const keyString = 'NftProfileTokens ' + owner + chain?.id;
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(owner) || owner == null) {
@@ -25,8 +25,8 @@ export function useNftProfileTokens(owner: string): ProfileTokenResults {
 
     const result = await getNftsByContract(
       owner,
-      getAddress('nftProfile', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-      activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+      getAddress('nftProfile', chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+      chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
       null // pageKey
     );
     const ownedTokens = result?.ownedNfts;
@@ -35,8 +35,8 @@ export function useNftProfileTokens(owner: string): ProfileTokenResults {
       // There are further pages to load.
       const nextPage = await getNftsByContract(
         owner,
-        getAddress('nftProfile', activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-        activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+        getAddress('nftProfile', chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+        chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
         pageKey
       );
       ownedTokens.push(...nextPage?.ownedNfts as AlchemyOwnedNFT[]);

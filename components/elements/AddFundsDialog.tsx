@@ -13,7 +13,7 @@ import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export interface AddFundsDialogProps {
-  account: string;
+  currentAddress: string;
 }
 
 export default function AddFundsDialog(props: AddFundsDialogProps) {
@@ -74,10 +74,10 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
               </div>
             </> :
             <>
-              <QRCode value={`ethereum:${props.account}`} />
+              <QRCode value={`ethereum:${props.currentAddress}`} />
               <div className="mt-7">
                 <div className={['w-full text-center text-base', primaryTextClass].join(' ')}>
-                  {shorten(props.account, isMobile)}
+                  {shorten(props.currentAddress, isMobile)}
                 </div>
 
                 <div
@@ -90,7 +90,7 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
                 </div>
               </div>
 
-              <Copy toCopy={props.account}>
+              <Copy toCopy={props.currentAddress}>
                 <span className="ml-1">Copy</span>
               </Copy>
             </>
@@ -107,7 +107,7 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
         onClick={() => {
           if (showWyreDisclaimer) {
             window.open(
-              `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${props.account}`,
+              `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${props.currentAddress}`,
               '_blank'
             );
             setShowWyreDisclaimer(false);

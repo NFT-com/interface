@@ -15,8 +15,8 @@ export interface ConnectedAddressProps {
 export function ConnectedAddress(props: ConnectedAddressProps) {
   const { ensName } = props;
   const { secondaryText, pink, link } = useThemeColors();
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
 
   return (
     <div className="flex items-center w-full">
@@ -31,16 +31,16 @@ export function ConnectedAddress(props: ConnectedAddressProps) {
           }}
         >
           <ExternalLink
-            href={getEtherscanLink(activeChain?.id, ensName ?? account?.address, 'address')}
+            href={getEtherscanLink(chain?.id, ensName ?? currentAddress, 'address')}
           >
-            {account?.address &&
+            {currentAddress &&
             <div
               className='flex justify-between font-dm-mono'
               style={{
                 color: props.color === 'pink' ? pink : link
               }}
             >
-              {ensName ?? shortenAddress(account?.address)}
+              {ensName ?? shortenAddress(currentAddress)}
               <LinkIcon size={20} className='ml-2'/>
             </div>}
           </ExternalLink>

@@ -5,13 +5,13 @@ import useSWR from 'swr';
 import { BalanceData } from 'types';
 import { useNetwork } from 'wagmi';
 
-export function useNftTokenBalance(account: string): BalanceData | null {
+export function useNftTokenBalance(currentAddress: string): BalanceData | null {
   const { nftToken } = useAllContracts();
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const { data } = useSWR(
-    `${account}_${getAddress('nft', activeChain?.id)}_${activeChain?.id}_nft_balanceOf`,
+    `${currentAddress}_${getAddress('nft', chain?.id)}_${chain?.id}_nft_balanceOf`,
     async () => {
-      const balance = await nftToken.balanceOf(account);
+      const balance = await nftToken.balanceOf(currentAddress);
       const decimals = await nftToken.decimals();
       return {
         balance: balance,

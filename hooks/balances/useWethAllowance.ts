@@ -5,16 +5,16 @@ import { BalanceData } from 'types';
 import { useNetwork } from 'wagmi';
 
 export function useWethAllowance(
-  account: string,
+  currentAddress: string,
   spender: string | null | undefined
 ): {allowance: BalanceData | null; mutate: () => void} {
   const { weth } = useAllContracts();
-  const { activeChain } = useNetwork();
-  const { data, mutate } = useSWR(`${activeChain?.id}_weth_allowance_${account}_${spender}`, async () => {
+  const { chain } = useNetwork();
+  const { data, mutate } = useSWR(`${chain?.id}_weth_allowance_${currentAddress}_${spender}`, async () => {
     if (spender == null) {
       return null;
     }
-    const balance = await weth.allowance(account, spender);
+    const balance = await weth.allowance(currentAddress, spender);
     const decimals = await weth.decimals();
     return {
       balance: balance,

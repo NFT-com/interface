@@ -11,7 +11,7 @@ import { useAccount } from 'wagmi';
 
 export function SignatureErrorTile() {
   const { alwaysWhite } = useThemeColors();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { signed, trySignature } = useContext(GraphQLContext);
 
   const [showWalletOptions, setShowWalletOptions] = useState(false);
@@ -52,7 +52,7 @@ export function SignatureErrorTile() {
           <Button
             label={'Try Again'}
             onClick={() => {
-              if (!account) {
+              if (!currentAddress) {
                 setShowWalletOptions(true);
               } else {
                 trySignature();

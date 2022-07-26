@@ -3,9 +3,9 @@ import { ProfileTokenResults, useNftProfileTokens } from './useNftProfileTokens'
 import { useAccount } from 'wagmi';
 
 export function useMyNftProfileTokens(): ProfileTokenResults {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   
-  const result = useNftProfileTokens(account?.address);
+  const result = useNftProfileTokens(currentAddress);
 
   return result;
 }

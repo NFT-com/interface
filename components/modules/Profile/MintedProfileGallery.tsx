@@ -44,7 +44,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
   
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
 
   const { profileData } = useProfileQuery(props.profileURI);
 
@@ -100,14 +100,14 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               onShowAll={() => {
                 showNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Show All NFTs', {
-                  ethereumAddress: account?.address,
+                  ethereumAddress: currentAddress,
                   profile: props.profileURI
                 });
               }}
               onHideAll={() => {
                 hideNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Hide All NFTs', {
-                  ethereumAddress: account?.address,
+                  ethereumAddress: currentAddress,
                   profile: props.profileURI
                 });
               }}
@@ -131,7 +131,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect: () => {
                     showNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Show All NFTs', {
-                      ethereumAddress: account?.address,
+                      ethereumAddress: currentAddress,
                       profile: props.profileURI
                     });
                   },
@@ -142,7 +142,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect:() => {
                     hideNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Hide All NFTs', {
-                      ethereumAddress: account?.address,
+                      ethereumAddress: currentAddress,
                       profile: props.profileURI
                     });
                   },

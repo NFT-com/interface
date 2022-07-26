@@ -28,12 +28,12 @@ export interface SidebarCTA {
 }
 
 export function useActiveSidebarCTA(): Maybe<SidebarCTA> {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const router = useRouter();
   
   const { totalRemaining } = useTotalGKPublicRemaining();
   
-  const { totalClaimable: totalClaimableForThisAddress } = useClaimableProfileCount(account?.address);
+  const { totalClaimable: totalClaimableForThisAddress } = useClaimableProfileCount(currentAddress);
 
   const { setSidebarOpen } = useSidebar();
 
