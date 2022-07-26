@@ -28,13 +28,13 @@ export function NftGrid(props: NftGridProps) {
     draftNftsDescriptionsVisible,
     draftLayoutType
   } = useContext(ProfileContext);
+  const { items, moveItem } = useContext(GridContext);
+
   const { profileData } = useProfileQuery(props.profileURI);
 
   const { tileBackgroundSecondary } = useThemeColors();
   const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
-
-  const { items, moveItem } = useContext(GridContext);
 
   const mosaicArray = [0];
   let seq = 0;
@@ -81,7 +81,8 @@ export function NftGrid(props: NftGridProps) {
           )}
         >
           <NFTCard
-            title={nft?.metadata?.name}
+            // title={nft?.metadata?.name}
+            title={BigNumber.from(nft?.tokenId).toString()}
             traits={[{ key: '', value: shortenAddress(nft?.contract?.address) }]}
             images={[nft?.metadata?.imageURL]}
             profileURI={props.profileURI}
