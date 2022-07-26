@@ -81,8 +81,7 @@ export function NftGrid(props: NftGridProps) {
           )}
         >
           <NFTCard
-            // title={nft?.metadata?.name}
-            title={BigNumber.from(nft?.tokenId).toString()}
+            title={nft?.metadata?.name}
             traits={[{ key: '', value: shortenAddress(nft?.contract?.address) }]}
             images={[nft?.metadata?.imageURL]}
             profileURI={props.profileURI}
