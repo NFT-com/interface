@@ -18,24 +18,24 @@ interface WalletRainbowKitButtonProps {
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   const { toggleSidebar } = useSidebar();
-  const { data: account, status } = useAccount();
+  const { address: currentAddress, connector } = useAccount();
   const { disconnect } = useDisconnect();
   const { primaryIcon } = useThemeColors();
 
   useCallback(() => {
-    if (account?.connector == null && status === 'success') {
+    if (currentAddress == null || connector == null) {
       disconnect();
     }
-  }, [account, disconnect, status]);
+  }, [connector, currentAddress, disconnect]);
 
-  if(props?.showWhenConnected === false && account?.connector != null) {
+  if(props?.showWhenConnected === false && connector != null) {
     return <></>;
   }
 
   return (
     <ConnectButton.Custom>
       {({
-        account,
+        account: currentAddress,
         chain,
         openChainModal,
         openConnectModal,
@@ -54,7 +54,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
             })}
           >
             {(() => {
-              if (!mounted || !account || !chain) {
+              if (!mounted || !currentAddress || !chain) {
                 return (
                   <div>
                     { !props?.signInButton ?
@@ -129,7 +129,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                       toggleSidebar();
                     }} type="button">
                       <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                      {account?.displayName}
+                      {currentAddress?.displayName}
                     </button>
                   </div>
                 </>

@@ -4,7 +4,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { useAccount } from 'wagmi';
 
 export function useSignedIn(): boolean {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
 
-  return !isNullOrEmpty(account?.address);
+  return !isNullOrEmpty(currentAddress);
 }

@@ -20,8 +20,8 @@ interface HeroSidebarAccountDetailsProps {
 export default function HeroSidebarAccountDetails(
   { ENSName }: HeroSidebarAccountDetailsProps
 ) {
-  const { data: account } = useAccount();
-  const { activeChain, chains } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain, chains } = useNetwork();
   const { disconnect } = useDisconnect();
   const { secondaryIcon } = useThemeColors();
   const [isCopied, setCopied] = useCopyClipboard();
@@ -30,10 +30,10 @@ export default function HeroSidebarAccountDetails(
   const { setSignOutDialogOpen } = useSignOutDialog();
 
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
-  const isChainAvailable = chains.some((item) => item.id === activeChain?.id);
+  const isChainAvailable = chains.some((item) => item.id === chain?.id);
   return (
     <>
       <div className="px-5 pb-5 flex flex-col">
@@ -51,7 +51,7 @@ export default function HeroSidebarAccountDetails(
               <CopyIcon
                 className='h-5 aspect-square cursor-pointer hover:opacity-90 flex-shrink-0'
                 onClick={() => {
-                  setCopied(account?.address);
+                  setCopied(currentAddress);
                 }}
               />
             }

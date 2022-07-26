@@ -29,7 +29,7 @@ export enum AuctionType {
  */
 export function GenesisKeyAuction() {
   const liveAuctionName = 'public';
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { isSupported } = useSupportedNetwork();
   const { totalRemaining, loading: loadingTotalGKRemaining } = useTotalGKPublicRemaining();
 
@@ -43,12 +43,12 @@ export function GenesisKeyAuction() {
   const {
     data: ownedGenesisKeyTokens,
     loading: loadingOwnedGenesisKeys
-  } = useOwnedGenesisKeyTokens(account?.address);
+  } = useOwnedGenesisKeyTokens(currentAddress);
 
   const [firstLoaded, setFirstLoaded] = useState(false);
   useEffect(() => {
     if (!firstLoaded) {
-      if (!account) {
+      if (!currentAddress) {
         setFirstLoaded(true);
       } else {
         setFirstLoaded(
@@ -69,7 +69,7 @@ export function GenesisKeyAuction() {
     loadingTotalGKRemaining,
     totalRemaining,
     loadingOwnedGenesisKeys,
-    account
+    currentAddress
   ]);
 
   const [auctionEnded, setAuctionEnded] = useState(
@@ -81,7 +81,7 @@ export function GenesisKeyAuction() {
   }, [liveAuctionName, totalRemaining]);
 
   const getAuctionContent = useCallback(() => {
-    if(!account){
+    if(!currentAddress){
       return (
         <div className='w-full flex h-full flex-col items-center'>
           <SignedOutView auctionText />
@@ -90,12 +90,12 @@ export function GenesisKeyAuction() {
     if (!isSupported) {
       return null;
     }
-    if (!auctionEnded && !account) {
+    if (!auctionEnded && !currentAddress) {
       return <div className='w-full flex h-full flex-col items-center'>
         <SignedOutView auctionText />
       </div>;
     }
-    if (!auctionEnded && account) {
+    if (!auctionEnded && currentAddress) {
       return (
         <div className='w-full flex flex-col h-full items-center'>
           <GenesisKeyPublicSale currentPrice={currentPrice}/>
@@ -103,7 +103,7 @@ export function GenesisKeyAuction() {
       );
     }
     if (auctionEnded) {
-      if (!account) {
+      if (!currentAddress) {
         return <div className='w-full h-full flex flex-col items-center'>
           <SignedOutView auctionText ended/>
         </div>;
@@ -125,7 +125,7 @@ export function GenesisKeyAuction() {
         </div>
       );
     }
-  }, [isSupported, auctionEnded, account, currentPrice]);
+  }, [isSupported, auctionEnded, currentAddress, currentPrice]);
 
   return (
     <div className={tw(
@@ -184,7 +184,7 @@ export function GenesisKeyAuction() {
             className={tw(
               'flex flex-col w-full h-full items-center mt-20',
             )}>
-            {account && !isSupported && <NetworkErrorTile />}
+            {currentAddress && !isSupported && <NetworkErrorTile />}
             <LoadedContainer loaded={firstLoaded} fitToParent>
               {getAuctionContent()}
             </LoadedContainer>

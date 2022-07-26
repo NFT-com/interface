@@ -32,7 +32,7 @@ export function ProfilePreferencesSearch() {
 
   const router = useRouter();
   const { isSupported } = useSupportedNetwork();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { primaryText, secondaryText, inputBorder, alwaysBlack, link } = useThemeColors();
   const {
     profileTokenId,
@@ -45,7 +45,7 @@ export function ProfilePreferencesSearch() {
     totalClaimable,
     mutate: mutateClaimableProfileCount,
     loading: loadingClaimable
-  } = useClaimableProfileCount(account?.address);
+  } = useClaimableProfileCount(currentAddress);
   const profileAuctionSigner = useProfileAuctionSigner();
 
   const { blocked: currentURIBlocked } = useProfileBlocked(currentURI, true);
@@ -151,7 +151,7 @@ export function ProfilePreferencesSearch() {
   }, [alwaysBlack, link, router, totalRemaining]);
 
   const getNonSearchView = useCallback(() => {
-    if (account && !isSupported ) {
+    if (currentAddress && !isSupported ) {
       return <div className='mb-12'>
         <NetworkErrorTile />
       </div>;
@@ -201,7 +201,7 @@ export function ProfilePreferencesSearch() {
       </>;
     }
   }, [
-    account,
+    currentAddress,
     allDoneText,
     isSupported,
     alwaysBlack,
@@ -318,7 +318,7 @@ export function ProfilePreferencesSearch() {
                     const tx = await (await profileAuctionSigner).genesisKeyClaimProfile(
                       currentURI,
                       nextTokenIdWithClaimable,
-                      account?.address,
+                      currentAddress,
                       profileClaimHash?.hash,
                       profileClaimHash?.signature
                     );

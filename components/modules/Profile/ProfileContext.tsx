@@ -106,7 +106,7 @@ export interface ProfileContextProviderProps {
 export function ProfileContextProvider(
   props: PropsWithChildren<ProfileContextProviderProps>
 ) {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
 
   /**
    * Queries
@@ -120,7 +120,7 @@ export function ProfileContextProvider(
     mutate: mutatePublicProfileNfts,
   } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    String(chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     loadedCount
   );
   const {

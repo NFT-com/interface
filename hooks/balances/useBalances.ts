@@ -14,13 +14,13 @@ export interface AllBalances {
   eth: BalanceData;
 }
 
-export function useBalances(account: string): AllBalances {
+export function useBalances(currentAddress: string): AllBalances {
   // TODO: re-add these for the marketplace launch.
-  // const nftBalance = useNftTokenBalance(account);
-  // const daiBalance = useDaiBalance(account);
-  // const usdcBalance = useUsdcBalance(account);
-  // const wethBalance = useWethBalance(account);
-  const ethBalance = useEthBalance(account);
+  // const nftBalance = useNftTokenBalance(currentAddress);
+  // const daiBalance = useDaiBalance(currentAddress);
+  // const usdcBalance = useUsdcBalance(currentAddress);
+  // const wethBalance = useWethBalance(currentAddress);
+  const ethBalance = useEthBalance(currentAddress);
   return {
     // nft: nftBalance,
     // dai: daiBalance,

@@ -9,11 +9,11 @@ import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 
 export function GenesisKeyDetailContent(props: { id: string | string[] }) {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { isSupported } = useSupportedNetwork();
   const router = useRouter();
 
-  if(account && !isSupported) {
+  if(currentAddress && !isSupported) {
     return <div className='w-full justify-center flex mt-12'>
       <NetworkErrorTile />
     </div>;

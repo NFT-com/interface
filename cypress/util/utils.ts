@@ -1,4 +1,4 @@
-import { accounts } from './constants';
+import { currentAddresss } from './constants';
 import { renderHook } from './wagmi';
 
 import { BaseProvider, WebSocketProvider } from '@ethersproject/providers';
@@ -22,7 +22,7 @@ class EthersProviderWrapper extends providers.StaticJsonRpcProvider {
 
 export function getNetwork(chain: Chain) {
   return {
-    chainId: chain.id,
+    chainId: chain?.id,
     ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     name: chain.name,
   };
@@ -30,7 +30,7 @@ export function getNetwork(chain: Chain) {
 
 export function getSigners() {
   const provider = getProvider();
-  const signers = accounts.map((x) => {
+  const signers = currentAddresss.map((x) => {
     const wallet = new Wallet(x.privateKey);
     return provider.getSigner(wallet.address);
   });

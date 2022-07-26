@@ -14,10 +14,10 @@ export interface FetchMyNFTsData {
 export function useFetchMyNFTs(): FetchMyNFTsData {
   const sdk = useGraphQLSDK();
   const [loading, setLoading] = useState(false);
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
 
   const fetchMyNFTs = useCallback(async (pageInput: PageInput) => {
-    if (isNullOrEmpty(account?.address)) {
+    if (isNullOrEmpty(currentAddress)) {
       return null;
     }
     try {
@@ -34,7 +34,7 @@ export function useFetchMyNFTs(): FetchMyNFTsData {
       // todo: handle the error based on the error code.
       return null;
     }
-  }, [account, sdk]);
+  }, [currentAddress, sdk]);
 
   return {
     fetchMyNFTs,

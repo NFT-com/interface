@@ -17,9 +17,9 @@ export interface GalleryPageTitleProps {
 }
 
 export function GalleryPageTitle(props: GalleryPageTitleProps) {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
 
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
   const gkIDFilter: (token: AlchemyOwnedNFT) => boolean = useCallback((token: AlchemyOwnedNFT) => {
     if (isNullOrEmpty(props.currentFilter)) {

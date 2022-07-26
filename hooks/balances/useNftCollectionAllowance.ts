@@ -11,27 +11,27 @@ export enum TransferProxyTarget {
 
 export function useNftCollectionAllowance(
   collectionAddress: string,
-  account: string,
+  currentAddress: string,
   target: TransferProxyTarget
 ): {
     allowedAll: boolean,
     mutate: () => void ,
     requestAllowance: () => Promise<void>
   } {
-  const { data: acctData } = useAccount();
+  const { connector } = useAccount();
   const { data: signer } = useSigner();
-  const { activeChain } = useNetwork();
-  const provider = useProvider({ chainId: activeChain?.id });
+  const { chain } = useNetwork();
+  const provider = useProvider({ chainId: chain?.id });
   const collection = use721Contract(collectionAddress, provider);
 
-  const keyString = `${activeChain?.id}_${collectionAddress}_allowance_${account}_${target}`;
+  const keyString = `${chain?.id}_${collectionAddress}_allowance_${currentAddress}_${target}`;
 
   const { data, mutate } = useSWR(keyString, async () => {
     if (collection == null) {
       return false;
     }
     try {
-      const allowed = await collection.isApprovedForAll(account, target);
+      const allowed = await collection.isApprovedForAll(currentAddress, target);
       return allowed ?? false;
     } catch (e) {
       console.log(
@@ -44,7 +44,7 @@ export function useNftCollectionAllowance(
   });
 
   const requestAllowance = useCallback(async () => {
-    if (acctData?.connector == null || target == null || signer == null) {
+    if (connector == null || target == null || signer == null) {
       console.log('Failed to set approvals, please connect wallet');
       return;
     }
@@ -54,7 +54,7 @@ export function useNftCollectionAllowance(
     await tx.wait(1).then(() => {
       mutate();
     });
-  }, [acctData, collection, target, signer, mutate]);
+  }, [connector, target, signer, collection, mutate]);
 
   return {
     allowedAll: data ?? false,

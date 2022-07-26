@@ -269,7 +269,7 @@ export const getUnsignedOrder = (
 };
 
 export const getMarketAskSignatureData = (
-  chainId: BigNumberish,
+  chainId: string | number | bigint,
   verifyingContract: string,
   unsignedOrder: UnsignedOrder
 ): SignTypedDataArgs => {
@@ -331,7 +331,7 @@ export const getMarketplaceAssetInput = (
 };
 
 export const getMarketBidSignatureData = (
-  chainId: BigNumberish,
+  chainId: string | number | bigint,
   verifyingContract: string,
   unsignedOrder: UnsignedOrder
 ): SignTypedDataArgs => {

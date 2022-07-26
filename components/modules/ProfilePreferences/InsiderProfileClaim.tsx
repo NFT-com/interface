@@ -17,12 +17,12 @@ import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
 export function InsiderProfileClaim() {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { nftProfile } = useAllContracts();
   const profileAuctionSigner = useProfileAuctionSigner();
   const { alwaysBlack, link } = useThemeColors();
   const { mutate: mutateMyProfileTokens } = useMyNftProfileTokens();
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { reservedProfiles } = useInsiderReservedProfiles();
   
   const [minting, setMinting] = useState(false);
@@ -42,7 +42,7 @@ export function InsiderProfileClaim() {
         const tx = await (await profileAuctionSigner).genesisKeyClaimProfile(
           profileURIToMint,
           ownedGKTokens?.[0]?.id?.tokenId,
-          account?.address,
+          currentAddress,
           profileClaimHash?.hash,
           profileClaimHash?.signature
         );
@@ -63,7 +63,7 @@ export function InsiderProfileClaim() {
   }, [
     profileAuctionSigner,
     ownedGKTokens,
-    account,
+    currentAddress,
     profileClaimHash?.hash,
     profileClaimHash?.signature,
     mutateMintedStatusFlag,

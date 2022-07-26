@@ -11,8 +11,8 @@ import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
 export function DashboardBidsTab() {
-  const { data: account } = useAccount();
-  const { data: bidsForUser } = useGetBids(undefined, account?.address);
+  const { address: currentAddress } = useAccount();
+  const { data: bidsForUser } = useGetBids(undefined, currentAddress);
 
   const [selectedBids, setSelectedBids] = useState<PartialDeep<MarketBid>[]>([]);
   const [sortBy, setSortBy] = useState(0);

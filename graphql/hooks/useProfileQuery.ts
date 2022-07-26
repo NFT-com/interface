@@ -17,7 +17,7 @@ export function useProfileQuery(
   url: string, options?: SWRConfiguration
 ): ProfileData {
   const sdk = useGraphQLSDK();
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const { supportedNetworks } = useSupportedNetwork();
 
   const keyString = 'ProfileQuery ' + url;
@@ -29,7 +29,7 @@ export function useProfileQuery(
     try {
       const result = await sdk.Profile({
         url,
-        chainId: String(activeChain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0]))
+        chainId: String(chain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0]))
       });
       return result;
     } catch (error) {

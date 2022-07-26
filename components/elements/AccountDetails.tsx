@@ -31,10 +31,10 @@ interface AccountDetailsProps {
 }
 
 export default function AccountDetails({ ENSName, openOptions }: AccountDetailsProps) {
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
 
-  const userEthBalance = useEthBalance(account?.address);
+  const userEthBalance = useEthBalance(currentAddress);
   const { setAddFundsDialogOpen } = useAddFundsDialog();
   const { toggleWalletSlide } = useWalletSlide();
   const ethPriceUSD = useEthPriceUSD();
@@ -55,7 +55,7 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
     address: string;
   };
 
-  // const balances = useBalances(account);
+  // const balances = useBalances(currentAddress);
 
   const formatBalance = (item: Maybe<BalanceData>) => {
     if (item == null) {
@@ -126,7 +126,7 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
       {
         title: isCopied ? 'Copied!' : 'Copy Address',
         onClick: () => {
-          setCopied(account?.address);
+          setCopied(currentAddress);
         },
         isLink: false
       },
@@ -184,13 +184,13 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
         isLink: true
       },
     ];
-  }, [account?.address, isCopied, openOptions, router, setCopied, toggleWalletSlide]);
+  }, [currentAddress, isCopied, openOptions, router, setCopied, toggleWalletSlide]);
 
   return (
     <>
-      <AddFundsDialog key={account?.address} account={account?.address} />
+      <AddFundsDialog key={currentAddress} currentAddress={currentAddress} />
       <div className="px-5 py-8 flex flex-col">
-        {activeChain.id !== 1 && (
+        {chain?.id !== 1 && (
           <div className="text-center text-red-500 font-bold mb-6">Please switch to Mainnet</div>
         )}
         <div className='flex w-full justify-between'>
@@ -314,7 +314,7 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
         onClick={() => {
           if (isMobile) {
             window.open(
-              `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${account?.address}`,
+              `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${currentAddress}`,
               '_blank'
             );
           } else {

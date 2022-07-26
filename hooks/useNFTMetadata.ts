@@ -7,9 +7,9 @@ import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export function useNFTMetadata(contract: string, tokenId: BigNumberish | null): Maybe<any> {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
 
-  const keyString = 'NFTMetadata' + tokenId + activeChain?.id;
+  const keyString = 'NFTMetadata' + tokenId + chain?.id;
 
   const { data } = useSWR(
     keyString,
@@ -20,7 +20,7 @@ export function useNFTMetadata(contract: string, tokenId: BigNumberish | null): 
       const result = await getNftMetadata(
         contract,
         tokenId,
-        activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+        chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
       );
       
       return result;

@@ -15,23 +15,23 @@ export interface InsiderReservedProfileResults {
 }
 
 export function useInsiderReservedProfiles(): InsiderReservedProfileResults {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
 
   const [loading, setLoading] = useState(false);
 
-  const keyString = 'InsiderReservedProfiles ' + account?.address + signed;
+  const keyString = 'InsiderReservedProfiles ' + currentAddress + signed;
 
   const { data, error } = useSWR(keyString, async () => {
     setLoading(true);
-    if (isNullOrEmpty(account?.address) || account?.address == null) {
+    if (isNullOrEmpty(currentAddress) || currentAddress == null) {
       return null;
     }
 
     const data = await sdk.InsiderReservedProfiles({
       input: {
-        address: account?.address,
+        address: currentAddress,
       }
     });
     setLoading(false);
