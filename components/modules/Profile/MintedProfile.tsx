@@ -203,7 +203,6 @@ export function MintedProfile(props: MintedProfileProps) {
             (userIsAdmin && editMode) || (publiclyVisibleNftCount > 0) ?
               <MintedProfileGallery
                 profileURI={profileURI}
-                userIsAdmin={userIsAdmin}
                 ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
               /> :
               <>
