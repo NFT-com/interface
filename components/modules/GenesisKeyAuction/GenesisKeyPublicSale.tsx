@@ -32,9 +32,9 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
   const { alwaysBlack } = useThemeColors();
   const ethPriceUSD = useEthPriceUSD();
   const { genesisKey } = useAllContracts();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
-  const userEthBalance = useEthBalance(account?.address);
+  const userEthBalance = useEthBalance(currentAddress);
   const { useKeyVideoToggle: playKeyVideo } = useKeyVideo();
   const { setKeyBackground } = useKeyBackground();
 
@@ -47,7 +47,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
     BigNumber.from(userEthBalance?.balance?.balance ?? 0)
   )
     .gte(props.currentPrice);
-  const { data: ownedGenesisKeyTokens, mutate: mutateOwnedGKs } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGenesisKeyTokens, mutate: mutateOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress);
   const latestGKMinted = ownedGenesisKeyTokens?.length > 0 ?
     Math.max(...(ownedGenesisKeyTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber()) as number[])) : // returns -Infinity if array is empty.
     null;
@@ -151,7 +151,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
                         }
                         if (!enoughETH) {
                           window.open(
-                            `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${account?.address}`,
+                            `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${currentAddress}`,
                             '_blank'
                           );
                         }

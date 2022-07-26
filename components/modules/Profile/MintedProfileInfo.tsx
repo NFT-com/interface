@@ -18,7 +18,7 @@ export interface MintedProfileInfoProps {
 
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
@@ -33,7 +33,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     setEditMode,
     clearDrafts
   } = useContext(ProfileContext);
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   
   const handleBioChange = (event) => {
@@ -68,7 +68,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 label={'Save'}
                 onClick={() => {
                   analytics.track('Update Profile', {
-                    ethereumAddress: account?.address,
+                    ethereumAddress: currentAddress,
                     profile: profileURI,
                     newProfile: draftProfileImg?.preview ? true : false,
                     newHeader: draftHeaderImg?.preview ? true : false,

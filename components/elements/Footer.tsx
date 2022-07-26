@@ -10,8 +10,8 @@ import { useAccount } from 'wagmi';
 
 export const Footer = () => {
   const router = useRouter();
-  const { data: account } = useAccount();
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { address: currentAddress } = useAccount();
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
 
   const footerData = [

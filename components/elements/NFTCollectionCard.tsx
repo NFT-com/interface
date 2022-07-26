@@ -18,13 +18,13 @@ export interface NFTCollectionCardProps {
  * Simple wrapper to an NFT card that will fetch collection data for you.
  */
 export function NFTCollectionCard(props: NFTCollectionCardProps) {
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
 
   const {
     draftNftsDescriptionsVisible
   } = useContext(ProfileContext);
 
-  const { data: collection } = useCollectionQuery(String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract, false);
+  const { data: collection } = useCollectionQuery(String(chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract, false);
   const processedImages = props.images.filter(i => i != null);
 
   return (

@@ -16,13 +16,13 @@ export interface IndividualBids {
 export function useMyBidsQuery(input: BidsInput): IndividualBids {
   const sdk = useGraphQLSDK();
 
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { signed } = useContext(GraphQLContext);
 
-  const keyString = 'MyBidsQuery ' + input?.profileId + account + signed;
+  const keyString = 'MyBidsQuery ' + input?.profileId + currentAddress + signed;
 
   const { data, error } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(account?.address) || !signed || input?.profileId == null) {
+    if (isNullOrEmpty(currentAddress) || !signed || input?.profileId == null) {
       return null;
     }
     const result = await sdk.MyBids({ input: input });
@@ -30,7 +30,7 @@ export function useMyBidsQuery(input: BidsInput): IndividualBids {
     // TODO: we shouldn't have to filter on the frontend.
     // Check if the filtering is broken on the backend
     result.myBids.items = result.myBids.items.filter(b =>
-      sameAddress(b.wallet.address, account?.address)
+      sameAddress(b.wallet.address, currentAddress)
     );
     return result;
   });

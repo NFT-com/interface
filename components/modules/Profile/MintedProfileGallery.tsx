@@ -43,7 +43,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
   
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
 
   const { profileData } = useProfileQuery(props.profileURI);
 
@@ -99,14 +99,14 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               onShowAll={() => {
                 onShowAll();
                 analytics.track('Show All NFTs', {
-                  ethereumAddress: account?.address,
+                  ethereumAddress: currentAddress,
                   profile: props.profileURI
                 });
               }}
               onHideAll={() => {
                 onHideAll();
                 analytics.track('Hide All NFTs', {
-                  ethereumAddress: account?.address,
+                  ethereumAddress: currentAddress,
                   profile: props.profileURI
                 });
               }}
@@ -130,7 +130,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect: () => {
                     onShowAll();
                     analytics.track('Show All NFTs', {
-                      ethereumAddress: account?.address,
+                      ethereumAddress: currentAddress,
                       profile: props.profileURI
                     });
                   },
@@ -141,7 +141,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect:() => {
                     onHideAll();
                     analytics.track('Hide All NFTs', {
-                      ethereumAddress: account?.address,
+                      ethereumAddress: currentAddress,
                       profile: props.profileURI
                     });
                   },

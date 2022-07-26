@@ -20,7 +20,7 @@ export interface NFTDetailProps {
 export const NFTDetail = (props: NFTDetailProps) => {
   const router = useRouter();
 
-  const { activeChain } = useNetwork();
+  const { chain } = useNetwork();
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
   
   const { profileData } = useProfileQuery(profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop());
@@ -107,7 +107,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             <span className="text-link cursor-pointer hover:underline"
               onClick={() => {
                 window.open(getEtherscanLink(
-                  activeChain?.id,
+                  chain?.id,
                   props.nft?.contract,
                   'address'
                 ), '_blank');

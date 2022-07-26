@@ -18,38 +18,38 @@ export default function Settings() {
   const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [] });
   const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
   const { nftResolver } = useAllContracts();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const addressRef = useRef(null);
   const profileRef = useRef(null);
 
   const fetchAddresses = useCallback(
     async (profile) => {
       const data = await nftResolver.associatedAddresses(profile) || [];
-      const allData = await nftResolver.getAllAssociatedAddr(account.address , profile) || [];
+      const allData = await nftResolver.getAllAssociatedAddr(currentAddress, profile) || [];
       const result = allData.filter(a => !data.some(b => a.chainAddr === b.chainAddr));
       setAssociatedAddresses({ pending: result, accepted: data });
     },
-    [nftResolver, account?.address],
+    [nftResolver, currentAddress],
   );
 
   useEffect(() => {
-    if(selectedProfile && account) {
+    if(selectedProfile && currentAddress) {
       fetchAddresses(selectedProfile).catch(console.error);
     }
-  }, [selectedProfile, fetchAddresses, account]);
+  }, [selectedProfile, fetchAddresses, currentAddress]);
 
   const fetchProfiles = useCallback(
     async () => {
-      const evm = await nftResolver.getApprovedEvm(account?.address);
+      const evm = await nftResolver.getApprovedEvm(currentAddress);
       const result = pendingAssociatedProfiles?.getMyPendingAssociations.filter(a => !evm.some(b => a.url === b.profileUrl));
       setAssociatedProfiles({ pending: result, accepted: evm });
     },
-    [nftResolver, account, pendingAssociatedProfiles?.getMyPendingAssociations],
+    [nftResolver, currentAddress, pendingAssociatedProfiles?.getMyPendingAssociations],
   );
 
   useEffect(() => {
     fetchProfiles().catch(console.error);
-  }, [nftResolver, account, fetchProfiles]);
+  }, [nftResolver, currentAddress, fetchProfiles]);
   
   if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
     return <NotFoundPage />;
@@ -101,12 +101,12 @@ export default function Settings() {
         {profileRef?.current?.value !== 'Select A Profile' && (
           <div className="mb-4">
             <form className="bg-white  dark:bg-modal-overlay-dk shadow-md rounded px-8 pt-6 pb-8 mb-4">
-              <label className="block text-gray-700 dark:text-white  text-sm font-bold mb-2" htmlFor="account">
+              <label className="block text-gray-700 dark:text-white  text-sm font-bold mb-2" htmlFor="currentAddress">
             Add Associated Account
               </label>
            
               <div className='flex'>
-                <input ref={addressRef} className="shadow appearance-none border rounded-l-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="account" type="text" placeholder="0x0000...0000" />
+                <input ref={addressRef} className="shadow appearance-none border rounded-l-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="currentAddress" type="text" placeholder="0x0000...0000" />
 
                 <button onClick={(e) => submitHandler(e)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-r-md focus:outline-none focus:shadow-outline" type="button">
               Submit

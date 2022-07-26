@@ -16,16 +16,16 @@ export interface ProfileClaimHashResult {
 }
 
 export function useGetProfileClaimHash(profileUrl: string) {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
 
-  const keyString = 'useGetProfileClaimHash' + account?.address + profileUrl;
+  const keyString = 'useGetProfileClaimHash' + currentAddress + profileUrl;
 
   const { data } = useSWR(
     keyString,
     async () => {
-      if (isNullOrEmpty(account?.address) || !signed || isNullOrEmpty(profileUrl)) {
+      if (isNullOrEmpty(currentAddress) || !signed || isNullOrEmpty(profileUrl)) {
         return null;
       }
   

@@ -17,7 +17,7 @@ export interface NFTDetailPageProps {
 }
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
 
   return (
@@ -28,7 +28,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
         {
           getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-          account?.address === nft?.wallet?.address &&
+          currentAddress === nft?.wallet?.address &&
           <NftApprovals nft={nft} />
         }
         <ExternalListings nft={nft} />

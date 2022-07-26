@@ -44,15 +44,15 @@ export interface GenesisKeyGalleryDetailViewProps {
 }
 
 export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewProps) {
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const { profileAuction } = useAllContracts();
   const genesisKeyMetadata = useGenesisKeyMetadata(BigNumber.from(props.id));
   const { primaryIcon, secondaryIcon } = useThemeColors();
   const { owner } = useGenesisKeyOwner(BigNumber.from(props.id));
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const userIsOwner = sameAddress(account?.address, owner) ?? false;
+  const userIsOwner = sameAddress(currentAddress, owner) ?? false;
 
   const [claimableProfileCount, setClaimableProfileCount] = useState(null);
 
@@ -187,7 +187,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
                   shortenAddress(owner, isMobile ? 3 : 4),
               onClick: () => {
                 window.open(
-                  getEtherscanLink(activeChain?.id, owner, 'address')
+                  getEtherscanLink(chain?.id, owner, 'address')
                   , '_blank'
                 );
               }
