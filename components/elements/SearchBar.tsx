@@ -17,8 +17,6 @@ export const SearchBar = (props: SearchBarProps) => {
   const resultsRef = useRef();
   const cliente = getTypesenseInstantsearchAdapterRaw;
 
-  console.log(props.bgLight, 'bgLight');
-
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
   });
