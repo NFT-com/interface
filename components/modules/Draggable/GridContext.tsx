@@ -1,4 +1,7 @@
-import React, { createContext, PropsWithChildren, useCallback, useState } from 'react';
+
+import { ProfileContext } from 'components/modules/Profile/ProfileContext';
+
+import React, { createContext, PropsWithChildren, useCallback, useContext, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -18,13 +21,11 @@ function moveElement(array: any[], index: number, offset: number) {
 
 export interface GridContextType {
   items: any[],
-  setItems: (items: any[]) => void,
   moveItem: (sourceId: string, destinationId: string) => void,
 }
 
 export const GridContext = createContext<GridContextType>({
   items: [],
-  setItems: () => null,
   moveItem: () => null,
 });
 
@@ -35,7 +36,10 @@ export interface GridContextProviderProps {
 export function GridContextProvider(
   props: PropsWithChildren<GridContextProviderProps>
 ) {
-  const [items, setItems] = useState(props.items);
+  const [items] = useState(props.items);
+
+  const { setAllItemsOrder } = useContext(ProfileContext);
+
   const moveItem = useCallback((sourceId: string, destinationId: string) => {
     const sourceIndex = items.findIndex(item => item.id === sourceId);
     const destinationIndex = items.findIndex(item => item.id === destinationId);
@@ -45,14 +49,13 @@ export function GridContextProvider(
     const offset = destinationIndex - sourceIndex;
     const newItems = moveElement(items, sourceIndex, offset);
 
-    setItems(newItems.slice());
-  }, [items]);
+    setAllItemsOrder(newItems);
+  }, [items, setAllItemsOrder]);
 
   return <DndProvider backend={HTML5Backend}>
     <GridContext.Provider value={{
       items,
-      moveItem,
-      setItems
+      moveItem
     }}>
       {props.children}
     </GridContext.Provider>

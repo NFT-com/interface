@@ -31,6 +31,7 @@ export interface ProfileContextType {
   allOwnerNftCount: number;
   userIsAdmin: boolean;
   loadMoreNfts: () => void;
+  setAllItemsOrder: (items: PartialDeep<Nft>[]) => void;
   // editor state
   toggleHidden: (id: string, currentVisibility: boolean) => void;
   hideNftIds: (toHide: string[]) => void;
@@ -66,6 +67,7 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   allOwnerNfts: [],
   allOwnerNftCount: 0,
   loadMoreNfts: () => null,
+  setAllItemsOrder: () => null,
   userIsAdmin: false,
   toggleHidden: () => null,
   hideNftIds: () => null,
@@ -150,6 +152,13 @@ export function ProfileContextProvider(
       ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
     ]);
   }, [allOwnerNfts, publiclyVisibleNfts]);
+
+  const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
+    setEditModeNfts([
+      ...orderedItems.filter((nft: DetailedNft) => !nft.hidden),
+      ...orderedItems.filter((nft: DetailedNft) => nft.hidden),
+    ]);
+  }, []);
   
   useEffect(() => {
     if (publiclyVisibleNfts == null || !editMode) {
@@ -307,6 +316,7 @@ export function ProfileContextProvider(
     loadMoreNfts: () => {
       setLoadedCount(loadedCount + 100);
     },
+    setAllItemsOrder,
     userIsAdmin: ownedProfileTokens
       .map(token => token?.tokenUri?.raw?.split('/').pop())
       .includes(props.profileURI),

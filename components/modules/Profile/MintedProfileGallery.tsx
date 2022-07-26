@@ -39,7 +39,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     publiclyVisibleNftCount,
     showNftIds,
     hideNftIds,
-    allOwnerNFTs
+    allOwnerNfts
   } = useContext(ProfileContext);
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
@@ -98,14 +98,14 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
             {!isMobile && <GalleryToggleAllButtons
               publicNFTCount={publiclyVisibleNftCount}
               onShowAll={() => {
-                showNftIds(allOwnerNFTs?.map(nft => nft.id));
+                showNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Show All NFTs', {
                   ethereumAddress: account?.address,
                   profile: props.profileURI
                 });
               }}
               onHideAll={() => {
-                hideNftIds(allOwnerNFTs?.map(nft => nft.id));
+                hideNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Hide All NFTs', {
                   ethereumAddress: account?.address,
                   profile: props.profileURI
@@ -129,7 +129,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 isMobile && {
                   label: 'Show All',
                   onSelect: () => {
-                    showNftIds(allOwnerNFTs?.map(nft => nft.id));
+                    showNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Show All NFTs', {
                       ethereumAddress: account?.address,
                       profile: props.profileURI
@@ -140,7 +140,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 isMobile && {
                   label: 'Hide All',
                   onSelect:() => {
-                    hideNftIds(allOwnerNFTs?.map(nft => nft.id));
+                    hideNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Hide All NFTs', {
                       ethereumAddress: account?.address,
                       profile: props.profileURI

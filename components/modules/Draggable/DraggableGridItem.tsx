@@ -1,4 +1,5 @@
-import { ProfileEditContext } from 'components/modules/Profile/ProfileEditContext';
+
+import { ProfileContext } from 'components/modules/Profile/ProfileContext';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import React, { useContext, useRef } from 'react';
@@ -9,7 +10,7 @@ type GridDragObject = { id: string }
 const DraggableGridItem = ({ id, onMoveItem, children }) => {
   const ref = useRef(null);
 
-  const { editMode } = useContext(ProfileEditContext);
+  const { editMode } = useContext(ProfileContext);
 
   const [{ isDragging }, connectDrag] = useDrag<GridDragObject, unknown, {isDragging : boolean}>(() => ({
     type: 'gridItem',
