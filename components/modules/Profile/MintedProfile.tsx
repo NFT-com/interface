@@ -113,7 +113,7 @@ export function MintedProfile(props: MintedProfileProps) {
       </div>
       <div className={tw(
         'flex flex-col',
-        'max-w-7xl',
+        'max-w-7xl min-w-[60%]',
         isMobile ? 'mx-2' : 'sm:mx-2 lg:mx-8 mx-auto',
       )}>
         <div

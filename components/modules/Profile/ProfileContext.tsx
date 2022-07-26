@@ -31,12 +31,11 @@ export interface ProfileContextType {
   allOwnerNftCount: number;
   userIsAdmin: boolean;
   loadMoreNfts: () => void;
+  setAllItemsOrder: (items: PartialDeep<Nft>[]) => void;
   // editor state
   toggleHidden: (id: string, currentVisibility: boolean) => void;
   hideNftIds: (toHide: string[]) => void;
   showNftIds: (toShow: string[]) => void;
-  onHideAll: () => void;
-  onShowAll: () => void;
   draftHeaderImg: DraftImg,
   setDraftHeaderImg: (img: DraftImg) => void,
   draftProfileImg: DraftImg,
@@ -68,12 +67,11 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   allOwnerNfts: [],
   allOwnerNftCount: 0,
   loadMoreNfts: () => null,
+  setAllItemsOrder: () => null,
   userIsAdmin: false,
   toggleHidden: () => null,
   hideNftIds: () => null,
   showNftIds: () => null,
-  onHideAll: () => null,
-  onShowAll: () => null,
   draftHeaderImg: { preview: '', raw: '' },
   setDraftHeaderImg: () => null,
   draftProfileImg: { preview: '', raw: '' },
@@ -126,6 +124,7 @@ export function ProfileContextProvider(
   );
   const {
     data: allOwnerNfts,
+    loading: loadingAllOwnerNfts,
     totalItems: allOwnerNftCount,
     mutate: mutateAllOwnerNfts
   } = useMyNFTsQuery(loadedCount);
@@ -149,11 +148,20 @@ export function ProfileContextProvider(
   const [editModeNfts, setEditModeNfts] = useState<PartialDeep<DetailedNft>[]>(null);
 
   useEffect(() => {
+    if (!loadingAllOwnerNfts) {
+      setEditModeNfts([
+        ...setHidden(publiclyVisibleNfts ?? [], false),
+        ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
+      ]);
+    }
+  }, [allOwnerNfts, publiclyVisibleNfts, loadingAllOwnerNfts]);
+
+  const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
     setEditModeNfts([
-      ...setHidden(publiclyVisibleNfts ?? [], false),
-      ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
+      ...orderedItems.filter((nft: DetailedNft) => !nft.hidden),
+      ...orderedItems.filter((nft: DetailedNft) => nft.hidden),
     ]);
-  }, [allOwnerNfts, publiclyVisibleNfts]);
+  }, []);
   
   useEffect(() => {
     if (publiclyVisibleNfts == null || !editMode) {
@@ -311,6 +319,7 @@ export function ProfileContextProvider(
     loadMoreNfts: () => {
       setLoadedCount(loadedCount + 100);
     },
+    setAllItemsOrder,
     userIsAdmin: ownedProfileTokens
       .map(token => token?.tokenUri?.raw?.split('/').pop())
       .includes(props.profileURI),
@@ -347,17 +356,13 @@ export function ProfileContextProvider(
       setPubliclyVisibleNfts((publiclyVisibleNfts ?? []).slice().filter(nft => !toHide.includes(nft.id)));
     },
     showNftIds: (toShow: string[]) => {
-      allOwnerNfts.filter(nft => toShow.includes(nft.id)).forEach((nft) => {
-        if (!publiclyVisibleNfts.includes(nft)) {
-          setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
+      const additions = [];
+      allOwnerNfts?.filter(nft => toShow?.includes(nft.id))?.forEach((nft) => {
+        if (!publiclyVisibleNfts?.includes(nft) && !additions?.includes(nft)) {
+          additions.push(nft);
         }
       });
-    },
-    onHideAll: () => {
-      this.hideNftIds(allOwnerNfts.map(nft => nft.id));
-    },
-    onShowAll: () => {
-      this.showNftIds(allOwnerNfts.map(nft => nft.id));
+      setPubliclyVisibleNfts([...(publiclyVisibleNfts ?? []), ...additions]);
     },
     saveProfile,
     saving,

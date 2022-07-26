@@ -11,6 +11,7 @@
       "@testing-library/cypress",
       "@testing-library/react-hooks",
       "@testing-library/dom",
+      "@4tw/cypress-drag-drop",
       "node"
     ],
     "resolveJsonModule": true,
