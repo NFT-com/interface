@@ -1,25 +1,26 @@
+import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { WalletRainbowKitButton } from './WalletRainbowKitButton';
-
 import { Dialog } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/solid';
+//import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect,useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
 export const ResolverSidebar = () => {
-  const [showWalletOptions, setShowWalletOptions] = useState(false);
   const { sidebarOpen, setSidebarOpen } = useSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
   const { address: currentAddress } = useAccount();
-  const { primaryIcon } = useThemeColors();
+  //const { openConnectModal } = useConnectModal();
+  const { primaryIcon, alwaysBlack } = useThemeColors();
+  const [currentURI, setCurrentURI] = useState('');
 
   const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
 
@@ -30,34 +31,8 @@ export const ResolverSidebar = () => {
     };
   }, [promoteZIndex, sidebarOpen, restoreZIndex]);
 
-  const getSidebarContent = useCallback(() => {
-    return (
-      <motion.div
-        layout
-        key='sidebarContent'
-        className='flex flex-col mt-5 dark'
-      >
-        {isMobile &&
-          <motion.div
-            key='sidebarMobileXIcon'
-            className='flex justify-end pt-6 px-4'
-          >
-            <XIcon
-              color={primaryIcon}
-              className="block h-8 w-8 mb-8"
-              aria-hidden="true"
-              onClick={() => {
-                setSidebarOpen(false);
-              }}
-            />
-          </motion.div>
-        }
-      </motion.div>
-    );
-  }, [primaryIcon, setSidebarOpen]);
-
   const getSidebarPanel = useCallback(() => {
-    if(!showWalletOptions && !isNullOrEmpty(currentAddress)) {
+    if(!isNullOrEmpty(currentAddress)) {
       return (
         <motion.div
           key='sidebarMainContentPanel'
@@ -74,63 +49,110 @@ export const ResolverSidebar = () => {
             duration: 0.4
           }}
         >
-          {getSidebarContent()}
-        </motion.div>
-      );
-    }
-    if(showWalletOptions || isNullOrEmpty(currentAddress)) {
-      return (
-        <motion.div
-          layout
-          key='sidebarWalletOptionsPanel'
-          initial={{
-            // mobile browsers can't handle this animation
-            x: isMobile ? 0 : '100%'
-          }}
-          animate={{
-            x: 0
-          }}
-          exit={{
-            x: '100%'
-          }}
-          transition={{
-            type: 'spring',
-            bounce: 0,
-            duration: 0.4
-          }}
-          className='p-8'
-        >
-          {isMobile &&
-            <motion.div
-              layout
-              key='sidebarWalletOptionsMobileXIcon'
-              className='flex justify-end py-6 px-4'
-            >
-              <XIcon
-                color={primaryIcon}
-                className="block h-8 w-8"
-                aria-hidden="true"
-                onClick={() => {
-                  setSidebarOpen(false);
-                }}
-              />
-            </motion.div>
-          }
-          {!isNullOrEmpty(currentAddress) &&
-            <motion.div
-              layout
-              key='sidebarWalletOptionsBack'
-              className="cursor-pointer text-primary-txt-dk mb-4 hover:underline"
+          <motion.div
+            layout
+            key='sidebarContent'
+            className='flex flex-col w-full h-3/5 mt-5 px-4'
+          >
+            {isMobile &&
+              <motion.div
+                key='sidebarMobileXIcon'
+                className='flex justify-end pt-6 px-4'
+              >
+                <XIcon
+                  color={alwaysBlack}
+                  className="block h-8 w-8 mb-8"
+                  onClick={() => {
+                    setSidebarOpen(false);
+                  }}
+                />
+              </motion.div>
+            }
+            <div className='flex flex-row w-full pb-10'>
+              Sign In
+            </div>
+            <div className='flex flex-row w-full pb-4'>
+              Enter your profile and connect your wallet.
+            </div>
+            <input
+              className={tw(
+                'flex flex-row w-full',
+                'text-md min-w-0',
+                'text-left py-4 px-3 w-full h-10 rounded-lg font-medium',
+                'border'
+              )}
+              placeholder="Profile Name"
+              autoFocus={true}
+              spellCheck={false}
+              onChange={async e => {
+                const validReg = /^[a-z0-9_]*$/;
+                if (
+                  validReg.test(e.target.value.toLowerCase()) &&
+                          e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
+                ) {
+                  setCurrentURI(e.target.value.toLowerCase());
+                } else {
+                  e.preventDefault();
+                }
+              }}
+            />
+            <div className='flex flex-row w-full py-4 h-10'>
+              <button className={tw(
+                'inline-flex w-full h-10',
+                'text-md',
+                'leading-none',
+                'items-center',
+                'justify-around',
+                'justify-center',
+                'bg-[#F9D963]',
+                'rounded-lg',
+                'leading-10'
+              )}
               onClick={() => {
-                setShowWalletOptions(false);
+              // TODO: add validation, check if profile exists, set current profile, etc.
               }}>
-                Back
-            </motion.div>
-          }
+                Sign In With Profile
+              </button>
+            </div>
+            <div className='flex flex-row w-full py-10 h-10'>
+              Or
+            </div>
+            <div className='flex flex-row w-full pb-4'>
+              Maybe you don&apos;t have one yet?
+            </div>
+            <div className='flex flex-row w-full py-4 h-10'>
+              <button className={tw(
+                'inline-flex w-full h-10',
+                'text-md',
+                'leading-none',
+                'items-center',
+                'justify-around',
+                'justify-center',
+                'bg-[#F9D963]',
+                'rounded-lg',
+                'leading-10'
+              )}
+              onClick={() => {
+              // TODO: Add back in before we release so we can preserve existing sidebar functionality
+              //openConnectModal();
+              }}>
+              Connect With Wallet
+              </button>
+            </div>
+            <div className='flex flex-row w-full py-10 h-10'>
+              Have no idea what we&apos;re talking about?
+            </div>
+            <a className='flex flex-row w-full h-10 underline'>
+            Wallets! Learn about them by clicking here.
+            </a>
+            <a className='flex flex-row w-full py-10 h-10 underline'>
+            Profiles are great! Click here to learn more.
+            </a>
+          </motion.div>
         </motion.div>
       );
     }
-  }, [currentAddress, getSidebarContent, primaryIcon, setSidebarOpen, showWalletOptions]);
+  }, [alwaysBlack, currentAddress, setSidebarOpen]);
 
   return (
     <AnimatePresence>
