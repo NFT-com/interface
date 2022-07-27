@@ -175,6 +175,9 @@ module.exports = {
       },
       gridTemplateColumns: {
         '1.3': '1.3fr 1fr'
+      },
+      maxWidth: {
+        'nftcom': '1200px',
       }
     },
   },

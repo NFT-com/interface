@@ -123,16 +123,16 @@ export const Footer = () => {
 
   return (
     <div id="FooterContainer" className={tw(
-      'flex md:flex-col relative md:content-between py-12 bg-[#222222]',
+      'flex flex-col minlg:flex-row relative content-between minlg:content-center py-12 bg-[#222222]',
       'dark:text-primary-txt-dk'
     )}>
       <div className={tw(
-        'w-2/5 md:w-full flex-shrink-0 flex',
-        'items-start justify-between flex-col text-base pl-24 md:pl-0 md:items-center'
+        'minlg:w-2/5 w-full flex-shrink-0 flex',
+        'items-start justify-between flex-col text-base minlg:pl-24 pl-0 items-center minlg:items-start'
       )}>
         <Link href="/">
           <div className={tw(
-            'font-hero-heading1 flex items-center md:mb-0 mb-8',
+            'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
           )}>
             <div className={tw('h-10 w-10 mr-1 relative')}>
               <Image
@@ -144,14 +144,14 @@ export const Footer = () => {
             </div>
           </div>
         </Link>
-        <div className="md:hidden block h-1/5 sm:mt-3">
+        <div className="hidden minlg:block h-1/5 mt-3 minmd:mt-0">
           © {new Date().getFullYear()} NFT.com. All rights reserved
         </div>
       </div>
-      <div className="w-3/5 md:w-full grid grid-cols-4 md:grid-cols-2">
+      <div className="minlg:w-3/5 w-full grid minlg:grid-cols-4 grid-cols-2">
         {filterNulls(footerData).map((item, index) => {
           return (
-            <div className="text-base md:mt-12 sm:pl-[30%] md:pl-[35%]" key={index}>
+            <div className="text-base mt-12 minlg:mt-0 pl-[30%] minmd:pl-[35%] minlg:pl-0" key={index}>
               <span className="font-medium">
                 <b>{item.title}</b>
               </span>
@@ -180,7 +180,7 @@ export const Footer = () => {
             </div>);
         })}
       </div>
-      <div className="md:block hidden mx-auto align-items text-grey-txt h-1/5 md:mt-10">
+      <div className="block minlg:hidden mx-auto align-items text-grey-txt h-1/5 mt-10 minlg:mt-0">
         © {new Date().getFullYear()} NFT.com. All rights reserved
       </div>
     </div>
