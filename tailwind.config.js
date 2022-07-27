@@ -193,5 +193,7 @@ module.exports = {
     fill: ['hover', 'focus'],
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 };
