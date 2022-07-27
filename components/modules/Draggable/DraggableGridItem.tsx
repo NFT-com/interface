@@ -1,16 +1,18 @@
 
-import { DetailedNft } from 'components/modules/Profile/NftGrid';
 import { ProfileContext } from 'components/modules/Profile/ProfileContext';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import React, { PropsWithChildren, ReactElement, useContext, useRef } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useDrag, useDrop } from 'react-dnd';
-import { PartialDeep } from 'type-fest';
 
-type GridDragObject = PartialDeep<DetailedNft>;
+export type GridDragObject = {
+  id: string; // NFT ID
+  hidden: boolean;
+};
 
 type DraggableGridItemProps = {
-  item: PartialDeep<DetailedNft>,
+  item: GridDragObject,
   onMoveItem: (fromId: string, toId: string) => void,
 }
 
@@ -22,7 +24,7 @@ const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => 
   const [{ isDragging }, connectDrag] = useDrag<GridDragObject, unknown, {isDragging : boolean}>(() => ({
     type: 'gridItem',
     item: props.item,
-    canDrag: editMode && getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED),
+    canDrag: editMode && getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED) && !isMobile && !props.item.hidden,
     collect: monitor => {
       return {
         isDragging: monitor.isDragging()
