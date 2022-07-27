@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers';
 import { useCallback,useEffect } from 'react';
 import useSWR from 'swr';
-import { useAccount } from 'wagmi';
 
 export interface UserState {
   currentProfileTokenId: BigNumber | null;
@@ -9,25 +8,13 @@ export interface UserState {
 }
 
 export const userStateInitial: UserState = {
-  currentProfileTokenId: null,
+  currentProfileTokenId: (typeof window !== 'undefined')
+    ? BigNumber.from(localStorage.getItem('selectedProfileTokenId'))
+    : null,
   isDarkMode: true
 };
 
 export function useUser() {
-  useAccount({
-    onConnect({ isReconnected }) {
-      if (isReconnected && !!data?.currentProfileTokenId) {
-        setCurrentProfileTokenId(BigNumber.from(localStorage.getItem('selectedProfileTokenId')));
-      } else {
-        setCurrentProfileTokenId(null);
-      }
-    },
-    onDisconnect() {
-      console.log('disconnected');
-      setCurrentProfileTokenId(null);
-    },
-  });
-    
   const { data, mutate } = useSWR('user', { fallbackData: userStateInitial });
 
   const loading = !data;
@@ -43,7 +30,7 @@ export function useUser() {
       ...data,
       currentProfileTokenId: selectedProfileTokenId
     });
-    localStorage.setItem('selectedProfileTokenId', selectedProfileTokenId?.toString());
+    localStorage.setItem('selectedProfileTokenId', !selectedProfileTokenId ? null : selectedProfileTokenId?.toString());
   }, [data, mutate]);
 
   useEffect(() => {
