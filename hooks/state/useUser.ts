@@ -1,29 +1,50 @@
-import { getCurrentTimestamp } from 'utils/helpers';
-
-import { useEffect } from 'react';
+import { BigNumber } from 'ethers';
+import { useCallback,useEffect } from 'react';
 import useSWR from 'swr';
+import { useAccount } from 'wagmi';
 
 export interface UserState {
+  currentProfileTokenId: BigNumber | null;
   isDarkMode: boolean;
-  timestamp: number;
 }
 
 export const userStateInitial: UserState = {
-  isDarkMode: true,
-  timestamp: getCurrentTimestamp(),
+  currentProfileTokenId: null,
+  isDarkMode: true
 };
 
 export function useUser() {
+  useAccount({
+    onConnect({ isReconnected }) {
+      if (isReconnected && !!data?.currentProfileTokenId) {
+        setCurrentProfileTokenId(BigNumber.from(localStorage.getItem('selectedProfileTokenId')));
+      } else {
+        setCurrentProfileTokenId(null);
+      }
+    },
+    onDisconnect() {
+      console.log('disconnected');
+      setCurrentProfileTokenId(null);
+    },
+  });
+    
   const { data, mutate } = useSWR('user', { fallbackData: userStateInitial });
 
   const loading = !data;
-  const updateDarkMode = (darkMode: boolean) => {
+  const setDarkMode = (darkMode: boolean) => {
     mutate({
       ...data,
-      isDarkMode: darkMode,
-      timestamp: getCurrentTimestamp()
+      isDarkMode: darkMode
     });
   };
+
+  const setCurrentProfileTokenId = useCallback((selectedProfileTokenId: BigNumber | null) => {
+    mutate({
+      ...data,
+      currentProfileTokenId: selectedProfileTokenId
+    });
+    localStorage.setItem('selectedProfileTokenId', selectedProfileTokenId?.toString());
+  }, [data, mutate]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -34,8 +55,7 @@ export function useUser() {
   return {
     user: data,
     loading,
-    isDarkMode: data?.isDarkMode,
-    timestamp: data?.timestamp,
-    updateDarkMode,
+    setDarkMode,
+    setCurrentProfileTokenId,
   };
 }
