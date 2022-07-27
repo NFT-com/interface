@@ -9,8 +9,11 @@ import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
 import useENSName from 'hooks/useENSName';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
+
+import { ResolverSidebar } from './ResolverSidebar';
 
 import { Dialog } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/solid';
@@ -31,7 +34,7 @@ export const Sidebar = () => {
   const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
 
   useEffect(() => {
-    sidebarOpen && promoteZIndex('heroSideBar');
+    sidebarOpen && promoteZIndex('sidebar');
     return () => {
       restoreZIndex();
     };
@@ -243,59 +246,63 @@ export const Sidebar = () => {
     }
   }, [currentAddress, getSidebarContent, primaryIcon, setSidebarOpen, showWalletOptions]);
 
-  return (
-    <AnimatePresence>
-      {sidebarOpen && (
-        <Dialog
-          layout
-          key='sidebarDialog'
-          static
-          as={motion.div}
-          open={sidebarOpen}
-          className="fixed inset-0 overflow-hidden"
-          onClose={() => {
-            !addFundsDialogOpen && setSidebarOpen(false);
-          }}
-          style={{ zIndex: getZIndex('heroSideBar') }}
-        >
-          <Dialog.Overlay
+  if(getEnvBool(Doppler.NEXT_PUBLIC_RESOLVER_SIDEBAR_ENABLED)) {
+    return <ResolverSidebar />;
+  } else {
+    return (
+      <AnimatePresence>
+        {sidebarOpen && (
+          <Dialog
             layout
-            key='sidebarDialogOverlay'
+            key='sidebarDialog'
+            static
             as={motion.div}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              ease: 'backInOut',
-              duration: 0.4
+            open={sidebarOpen}
+            className="fixed inset-0 overflow-hidden"
+            onClose={() => {
+              !addFundsDialogOpen && setSidebarOpen(false);
             }}
-            className={tw(
-              'absolute inset-0',
-              'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
-            )}
-          />
-          <motion.div
-            key='sidebarWrapperPanel'
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{
-              type: 'spring',
-              bounce: 0,
-              duration: 0.4
-            }}
-            className={
-              tw('flex flex-col fixed inset-y-0 right-0 sm:top-0',
-                'w-screen max-w-md h-full',
-                'pb-6 shadow-xl overflow-y-scroll overflow-x-hidden',
-                'bg-pagebg-dk dark',
-                'border-l border-accent-border-dk')
-            }
+            style={{ zIndex: getZIndex('sidebar') }}
           >
-            {getSidebarPanel()}
-          </motion.div>
-        </Dialog>
-      )}
-    </AnimatePresence>
-  );
+            <Dialog.Overlay
+              layout
+              key='sidebarDialogOverlay'
+              as={motion.div}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                ease: 'backInOut',
+                duration: 0.4
+              }}
+              className={tw(
+                'absolute inset-0',
+                'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
+              )}
+            />
+            <motion.div
+              key='sidebarWrapperPanel'
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{
+                type: 'spring',
+                bounce: 0,
+                duration: 0.4
+              }}
+              className={
+                tw('flex flex-col fixed inset-y-0 right-0 sm:top-0',
+                  'w-screen max-w-md h-full',
+                  'pb-6 shadow-xl overflow-y-scroll overflow-x-hidden',
+                  'bg-pagebg-dk dark',
+                  'border-l border-accent-border-dk')
+              }
+            >
+              {getSidebarPanel()}
+            </motion.div>
+          </Dialog>
+        )}
+      </AnimatePresence>
+    );
+  }
 };
