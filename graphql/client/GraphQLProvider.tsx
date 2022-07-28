@@ -52,8 +52,8 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       cache: 'default',
       headers: {
         authorization: signature,
-        'chain-id': chain?.id,
-        chainId: chain?.id,
+        'chain-id': chain?.id == null ? null : String(chain?.id),
+        chainId: chain?.id == null ? null : String(chain?.id),
         network: 'ethereum', // TODO: support new networks
       },
     });
