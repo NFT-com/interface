@@ -47,15 +47,15 @@ export interface NFTCardProps {
 export function NFTCard(props: NFTCardProps) {
   const { tileBackground, secondaryText, pink, link, secondaryIcon } = useThemeColors();
 
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const [selected, setSelected] = useState(false);
 
-  const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', activeChain?.id ?? 1)) && !isNullOrEmpty(props.tokenId) ?
+  const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', chain?.id ?? 1)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
-  const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, String(activeChain?.id));
+  const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, String(chain?.id));
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-sm sm:text-xs' style={{ color: pink }}>
@@ -87,7 +87,7 @@ export function NFTCard(props: NFTCardProps) {
       onClick={() => {
         // TODO: move to helper / logger class at some point
         analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
-          ethereumAddress: account?.address,
+          ethereumAddress: currentAddress,
           title: props?.title,
           processedImageURLs: processedImageURLs?.[0],
           profile: props?.profileURI,
@@ -131,7 +131,7 @@ export function NFTCard(props: NFTCardProps) {
               e.stopPropagation();
             }}
           >
-            {props.visible ? <Eye color={pink} /> : <EyeOff color={pink} /> }
+            {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }
           </div>
       }
       {

@@ -35,7 +35,7 @@ import { useAccount } from 'wagmi';
 export default function GalleryPage() {
   const parentRef = useRef();
 
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { isSupported } = useSupportedNetwork();
   const signedIn = useSignedIn();
 
@@ -121,7 +121,7 @@ export default function GalleryPage() {
               currentFilter={currentFilter}
               totalGKSupply={BigNumber.from(10000)}
             />
-            {account && !isSupported && <div className='w-full justify-center flex mt-12'>
+            {currentAddress && !isSupported && <div className='w-full justify-center flex mt-12'>
               <NetworkErrorTile />
             </div>}
             <LoadedContainer loaded={true} fitToParent>

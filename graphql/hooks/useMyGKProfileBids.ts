@@ -17,13 +17,13 @@ export interface MyGKProfileBids {
 export function useMyGKProfileBids(): MyGKProfileBids {
   const sdk = useGraphQLSDK();
 
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { signed } = useContext(GraphQLContext);
 
-  const keyString = 'MyGenesisKeyProfileBids ' + account?.address + signed;
+  const keyString = 'MyGenesisKeyProfileBids ' + currentAddress + signed;
 
   const { data, error } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(account?.address) || !signed) {
+    if (isNullOrEmpty(currentAddress) || !signed) {
       return null;
     }
     const result = await sdk.MyBids({

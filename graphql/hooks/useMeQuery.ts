@@ -20,16 +20,16 @@ export interface MeQueryData {
 
 export function useMeQuery(): MeQueryData {
   const sdk = useGraphQLSDK();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { signed } = useContext(GraphQLContext);
   const { isSupported } = useSupportedNetwork();
 
   const [loading, setLoading] = useState(false);
 
-  const keyString = 'MeQuery' + account?.address + signed;
+  const keyString = 'MeQuery' + currentAddress + signed;
 
   const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(account?.address) || !signed || !isSupported) {
+    if (isNullOrEmpty(currentAddress) || !signed || !isSupported) {
       return null;
     }
     setLoading(true);

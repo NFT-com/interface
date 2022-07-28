@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { ProfileEditContext, ProfileEditContextProvider, ProfileEditContextType } from '../../components/modules/Profile/ProfileEditContext';
+import { ProfileContext, ProfileContextProvider, ProfileContextType } from '../../components/modules/Profile/ProfileContext';
 import { ProfileDisplayType, ProfileLayoutType } from '../../graphql/generated/types';
 import { setupWagmiClient } from '../util/wagmi';
 
@@ -9,13 +9,11 @@ import { WagmiConfig } from 'wagmi';
 
 const TestComponent = () => {
   const {
-    draftToHide,
-    draftToShow,
     toggleHidden,
     hideNftIds,
     showNftIds,
-    // onHideAll, // todo: stub gql mutation to test
-    // onShowAll, // todo: stub gql mutation to test
+    publiclyVisibleNfts,
+    editModeNfts,
     draftHeaderImg,
     setDraftHeaderImg,
     draftProfileImg,
@@ -37,17 +35,17 @@ const TestComponent = () => {
     setSelectedCollection,
     draftNftsDescriptionsVisible,
     setDraftNftsDescriptionsVisible,
-  }: ProfileEditContextType = useContext(ProfileEditContext);
+  }: ProfileContextType = useContext(ProfileContext);
   
   return <div>
-    <div id="draftToHide">{JSON.stringify(Array.from(draftToHide.values()))}</div>
-    <div id="draftToShow">{JSON.stringify(Array.from(draftToShow.values()))}</div>
     <div id="editMode" onClick={() => {
       setEditMode(!editMode);
     }}>
       {editMode + ''}
     </div>
     <div id="saving">{saving + ''}</div>
+    <div id="publiclyVisibleNfts">{JSON.stringify(publiclyVisibleNfts)}</div>
+    <div id="editModeNfts">{JSON.stringify(editModeNfts)}</div>
     <div id="draftHeaderImg">{JSON.stringify(draftHeaderImg)}</div>
     <div id="draftProfileImg">{JSON.stringify(draftProfileImg)}</div>
     <div id="draftBio">{draftBio}</div>
@@ -98,21 +96,19 @@ const TestComponent = () => {
   </div>;
 };
 
-describe('ProfileEditContextProvider', () => {
+describe('ProfileContextProvider', () => {
   beforeEach(() => {
     const client = setupWagmiClient();
     cy.mount(
       <WagmiConfig client={client}>
-        <ProfileEditContextProvider profileURI='test'>
+        <ProfileContextProvider profileURI='test'>
           <TestComponent />
-        </ProfileEditContextProvider>
+        </ProfileContextProvider>
       </WagmiConfig>
     );
   });
 
   it('returns the expected default values', () => {
-    cy.get('#draftToHide').should('have.text', '[]');
-    cy.get('#draftToShow').should('have.text', '[]');
     cy.get('#editMode').should('have.text', 'false');
     cy.get('#saving').should('have.text', 'false');
     cy.get('#draftHeaderImg').should('have.text', JSON.stringify({ preview: '', raw: null }));
@@ -123,34 +119,15 @@ describe('ProfileEditContextProvider', () => {
     cy.get('#draftLayoutType').should('have.text', 'null');
     cy.get('#selectedCollection').should('have.text', 'null');
     cy.get('#draftNftsDescriptionsVisible').should('have.text', 'undefined');
+    // todo: figure out how to stub the gQL queries in tests
+    cy.get('#publiclyVisibleNfts').should('have.text', '');
+    cy.get('#editModeNfts').should('have.text', '[]');
   });
 
   it('toggles edit mode correctly', () => {
     cy.get('#editMode').should('have.text', 'false');
     cy.get('#editMode').click('left');
     cy.get('#editMode').should('have.text', 'true');
-  });
-
-  it('toggles hidden correctly', () => {
-    cy.findByText('toggleHidden').click();
-    cy.get('#draftToShow').should('have.text', '["test_id"]');
-    cy.findByText('toggleHidden').click();
-    cy.get('#draftToHide').should('have.text', '[]');
-  });
-
-  it('toggles shown correctly', () => {
-    cy.findByText('toggleShown').click();
-    cy.get('#draftToHide').should('have.text', '["test_id"]');
-    cy.findByText('toggleShown').click();
-    cy.get('#draftToShow').should('have.text', '[]');
-  });
-
-  it('hideNftIds and showNftIds toggle correctly', () => {
-    cy.findByText('hideNftIds').click();
-    cy.get('#draftToHide').should('have.text', '["test_id"]');
-    cy.findByText('showNftIds').click();
-    cy.get('#draftToHide').should('have.text', '[]');
-    cy.get('#draftToShow').should('have.text', '["test_id"]');
   });
 
   it('sets draftHeaderImg correctly', () => {
@@ -204,7 +181,6 @@ describe('ProfileEditContextProvider', () => {
     cy.findByText('setDraftProfileImg').click();
     cy.findByText('hideNftIds').click();
     cy.findByText('showNftIds').click();
-    cy.findByText('toggleHidden').click();
 
     cy.findByText('clearDrafts').click();
     cy.get('#draftHeaderImg').should('have.text', JSON.stringify({ preview: '', raw: null }));
@@ -212,7 +188,5 @@ describe('ProfileEditContextProvider', () => {
     cy.get('#draftBio').should('have.text', '');
     cy.get('#draftDisplayType').should('have.text', 'null');
     cy.get('#draftLayoutType').should('have.text', 'null');
-    cy.get('#draftToShow').should('have.text', '[]');
-    cy.get('#draftToHide').should('have.text', '[]');
   });
 });

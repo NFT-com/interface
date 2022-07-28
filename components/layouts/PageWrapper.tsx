@@ -35,7 +35,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
 
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
 
   return (
     <div className={tw(
@@ -57,7 +57,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
           overflow: 'scroll',
         }}
       >
-        <AddFundsDialog key={account?.address} account={account?.address} />
+        <AddFundsDialog key={currentAddress} currentAddress={currentAddress} />
         {headerOptions?.omit !== true &&
         <div className="fixed z-[104] top-0 w-full">
           {props.headerOptions?.removeSummaryBanner && ( // TODO: Remove this temporary hidding after fixing proper behavior and zIndex stack for buttons on the left

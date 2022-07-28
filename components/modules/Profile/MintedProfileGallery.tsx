@@ -2,16 +2,14 @@ import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
-import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { Doppler,getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { CollectionGallery } from './CollectionGallery';
 import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
-import { NftGallery, PROFILE_GALLERY_PAGE_SIZE } from './NftGallery';
-import { ProfileEditContext } from './ProfileEditContext';
+import { NftGallery } from './NftGallery';
+import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
 import EditLayoutIcon from 'public/edit_layout.svg';
@@ -21,20 +19,16 @@ import GKBadgeIcon from 'public/gk_badge.svg';
 import NftLabelIcon from 'public/label.svg';
 import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export interface MintedProfileGalleryProps {
   profileURI: string;
-
-  setDraftNftsDescriptionsVisible?: (val: boolean) => void;
   ownedGKTokens?: number[];
 }
 
 export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const {
     editMode,
-    onShowAll,
-    onHideAll,
     draftDisplayType,
     setDraftDisplayType,
     selectedCollection,
@@ -42,19 +36,17 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     setDraftGkIconVisible,
     draftNftsDescriptionsVisible,
     setDraftNftsDescriptionsVisible,
-  } = useContext(ProfileEditContext);
+    publiclyVisibleNftCount,
+    showNftIds,
+    hideNftIds,
+    allOwnerNfts
+  } = useContext(ProfileContext);
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
   
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
+  const { address: currentAddress } = useAccount();
 
   const { profileData } = useProfileQuery(props.profileURI);
-  const { totalItems: publicNFTCount } = useProfileNFTsQuery(
-    profileData?.profile?.id,
-    String(activeChain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-    PROFILE_GALLERY_PAGE_SIZE
-  );
 
   const isGroupedByCollection = (
     profileData?.profile?.displayType === ProfileDisplayType.Collection &&
@@ -104,18 +96,18 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           {editMode &&
           <div className="flex flex-row justify-end">
             {!isMobile && <GalleryToggleAllButtons
-              publicNFTCount={publicNFTCount}
+              publicNFTCount={publiclyVisibleNftCount}
               onShowAll={() => {
-                onShowAll();
+                showNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Show All NFTs', {
-                  ethereumAddress: account?.address,
+                  ethereumAddress: currentAddress,
                   profile: props.profileURI
                 });
               }}
               onHideAll={() => {
-                onHideAll();
+                hideNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Hide All NFTs', {
-                  ethereumAddress: account?.address,
+                  ethereumAddress: currentAddress,
                   profile: props.profileURI
                 });
               }}
@@ -137,9 +129,9 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 isMobile && {
                   label: 'Show All',
                   onSelect: () => {
-                    onShowAll();
+                    showNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Show All NFTs', {
-                      ethereumAddress: account?.address,
+                      ethereumAddress: currentAddress,
                       profile: props.profileURI
                     });
                   },
@@ -148,9 +140,9 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 isMobile && {
                   label: 'Hide All',
                   onSelect:() => {
-                    onHideAll();
+                    hideNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Hide All NFTs', {
-                      ethereumAddress: account?.address,
+                      ethereumAddress: currentAddress,
                       profile: props.profileURI
                     });
                   },
@@ -168,9 +160,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
       {
         (editMode ? isGroupedByCollection : groupByCollectionNotOwner) ?
           <CollectionGallery profileURI={props.profileURI} /> :
-          <NftGallery
-            profileURI={props.profileURI}
-            savedLayoutType={profileData?.profile?.layoutType}/>
+          <NftGallery profileURI={props.profileURI} />
       }
     </div>
   );

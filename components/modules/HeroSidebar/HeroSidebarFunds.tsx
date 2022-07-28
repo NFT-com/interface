@@ -17,8 +17,8 @@ import { useAccount } from 'wagmi';
  */
 
 export default function HeroSidebarFunds() {
-  const { data: account } = useAccount();
-  const { data: balanceData } = useBalance({ addressOrName: account?.address, watch: true });
+  const { address: currentAddress } = useAccount();
+  const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
 
   const { setAddFundsDialogOpen } = useAddFundsDialog();
 
@@ -26,7 +26,7 @@ export default function HeroSidebarFunds() {
 
   return (
     <>
-      <AddFundsDialog key={account?.address} account={account?.address} />
+      <AddFundsDialog key={currentAddress} currentAddress={currentAddress} />
       <div className='mx-5 text-secondary-txt text-lg mb-4 mt-2.5'>
         Tokens
       </div>
@@ -74,7 +74,7 @@ export default function HeroSidebarFunds() {
           onClick={() => {
             if (isMobile) {
               window.open(
-                `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${account?.address}`,
+                `https://pay.sendwyre.com/?sourceCurrency=USD&destCurrency=ETH&dest=${currentAddress}`,
                 '_blank'
               );
             } else {

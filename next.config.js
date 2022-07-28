@@ -1,11 +1,18 @@
 /** @type {import('next').NextConfig} */
 const { withSentryConfig } = require('@sentry/nextjs');
+const withTM = require('next-transpile-modules')([
+  'react-dnd',
+  'dnd-core',
+  '@react-dnd/invariant',
+  '@react-dnd/asap',
+  '@react-dnd/shallowequal',
+]);
 
 const sentryWebpackPluginOptions = {
   silent: true,
 };
 
-const moduleExports = {
+const moduleExports = withTM({
   reactStrictMode: true,
   sentry: { hideSourceMaps: true },
   productionBrowserSourceMaps: false,
@@ -23,6 +30,7 @@ const moduleExports = {
       resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
       use: ['@svgr/webpack'],
     });
+    
     return config;
   },
   async headers() {
@@ -74,6 +82,6 @@ const moduleExports = {
   images: {
     domains: ['cdn.nft.com', 'nft-llc.mypinata.cloud', 'cdn.nft.com/_ipx', 'images.ctfassets.net'],
   },
-};
+});
 
 module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);

@@ -24,8 +24,8 @@ export const Sidebar = () => {
   const [showWalletOptions, setShowWalletOptions] = useState(false);
   const { sidebarOpen, setSidebarOpen } = useSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
-  const { data: account } = useAccount();
-  const { ENSName } = useENSName(account?.address);
+  const { address: currentAddress } = useAccount();
+  const { ENSName } = useENSName(currentAddress);
   const { primaryIcon, alwaysBlack } = useThemeColors();
 
   const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
@@ -155,7 +155,7 @@ export const Sidebar = () => {
   }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setSidebarOpen]);
 
   const getSidebarPanel = useCallback(() => {
-    if(!showWalletOptions && !isNullOrEmpty(account?.address)) {
+    if(!showWalletOptions && !isNullOrEmpty(currentAddress)) {
       return (
         <motion.div
           key='sidebarMainContentPanel'
@@ -176,7 +176,7 @@ export const Sidebar = () => {
         </motion.div>
       );
     }
-    if(showWalletOptions || isNullOrEmpty(account?.address)) {
+    if(showWalletOptions || isNullOrEmpty(currentAddress)) {
       return (
         <motion.div
           layout
@@ -214,7 +214,7 @@ export const Sidebar = () => {
               />
             </motion.div>
           }
-          {!isNullOrEmpty(account?.address) &&
+          {!isNullOrEmpty(currentAddress) &&
             <motion.div
               layout
               key='sidebarWalletOptionsBack'
@@ -241,7 +241,7 @@ export const Sidebar = () => {
         </motion.div>
       );
     }
-  }, [account?.address, getSidebarContent, primaryIcon, setSidebarOpen, showWalletOptions]);
+  }, [currentAddress, getSidebarContent, primaryIcon, setSidebarOpen, showWalletOptions]);
 
   return (
     <AnimatePresence>
@@ -285,12 +285,13 @@ export const Sidebar = () => {
               duration: 0.4
             }}
             className={
-              tw('flex flex-col fixed inset-y-0 right-0 sm:top-0',
+              tw(
+                'flex flex-col fixed inset-y-0 right-0',
                 'w-screen max-w-md h-full',
                 'pb-6 shadow-xl overflow-y-scroll overflow-x-hidden',
                 'bg-pagebg-dk dark',
-                'border-l border-accent-border-dk')
-            }
+                'border-l border-accent-border-dk'
+              )}
           >
             {getSidebarPanel()}
           </motion.div>

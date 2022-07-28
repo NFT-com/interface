@@ -29,20 +29,20 @@ export default function HeroHeader(props: HeroHeaderProps) {
   const { isDarkMode } = useUser();
 
   const { walletSlideOpen } = useWalletSlide();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { me } = useMeQuery();
 
   // only identify once per user session to not overwhelm segment.io
-  const cachedId = account && localStorage.getItem(me?.id);
-  if (account && !cachedId) {
+  const cachedId = currentAddress && localStorage.getItem(me?.id);
+  if (currentAddress && !cachedId) {
     analytics.identify(me?.id, {
-      ethereumAddress: account,
+      ethereumAddress: currentAddress,
     });
     localStorage.setItem(me?.id, me?.id);
   }
 
-  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(account?.address);
+  const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
   const showHeaderNav = !isMobile;
   const searchEnabled = getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED);

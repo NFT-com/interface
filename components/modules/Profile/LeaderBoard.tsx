@@ -3,9 +3,6 @@ import { LeaderboardQuery } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
 // import { usePaginator } from 'hooks/usePaginator';
-// eslint-disable-next-line no-restricted-imports
-import leaderboardFixtureMockData from '../../../cypress/fixtures/leaderboard.json';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -18,8 +15,6 @@ type LeaderBoardProps= {
 
 export function LeaderBoard({ data } : LeaderBoardProps) {
   const [hoverIndex,] = useState(-1);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [analyticsData, setAnalyticsdata] = useState(leaderboardFixtureMockData);
 
   const {
     rowBackgroundActive,

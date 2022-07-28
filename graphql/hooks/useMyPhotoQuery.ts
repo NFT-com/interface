@@ -14,15 +14,15 @@ export interface MyPhotoData {
 
 export function useMyPhotoQuery(): MyPhotoData {
   const sdk = useGraphQLSDK();
-  const { data: account } = useAccount();
+  const { address: currentAddress } = useAccount();
   const { signed } = useContext(GraphQLContext);
 
   const [loading, setLoading] = useState(false);
 
-  const keyString = 'MyPhotoQuery' + account?.address + signed;
+  const keyString = 'MyPhotoQuery' + currentAddress + signed;
 
   const { data } = useSWR(keyString, async () => {
-    if (isNullOrEmpty(account?.address) || !signed) {
+    if (isNullOrEmpty(currentAddress) || !signed) {
       return null;
     }
     setLoading(true);

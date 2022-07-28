@@ -17,12 +17,12 @@ export interface NftsData {
 export function useMyNFTsQuery(first: number): NftsData {
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
-  const { data: account } = useAccount();
-  const { activeChain } = useNetwork();
-  const keyString = 'MyNFTsQuery ' + account?.address + activeChain?.id + signed + first;
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
+  const keyString = 'MyNFTsQuery ' + currentAddress + chain?.id + signed + first;
 
   const { data } = useSWR(keyString, async () => {
-    if (!account) {
+    if (!currentAddress) {
       return { myNFTs: null };
     }
     const result: MyNfTsQuery = await sdk.MyNFTs({
