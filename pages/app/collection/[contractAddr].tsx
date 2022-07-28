@@ -1,6 +1,7 @@
 import CollectionDetails from 'components/elements/CollectionDetails';
 import Copy from 'components/elements/Copy';
 import { GraphView } from 'components/elements/GraphView';
+import { NFTCard } from 'components/elements/NFTCard';
 import { Switch } from 'components/elements/Switch';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
@@ -8,10 +9,12 @@ import { NotFoundPage } from 'pages/404';
 import { Doppler, getEnv } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
+import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import CopyIcon from 'public/arrow_square_out.svg';
+import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 export type CollectionPageRouteParams = {
@@ -53,7 +56,35 @@ export default function CollectionPage() {
   const router = useRouter();
   const { contractAddr } = router.query;
   const [enabled, setEnabled] = useState(false);
-  const { data: collectionData } = useCollectionQuery(String(chain?.id | getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),contractAddr?.toString(), false);
+  const { data: collectionData } = useCollectionQuery(String( getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),contractAddr?.toString(), false);
+  const client = getTypesenseInstantsearchAdapterRaw;
+  const [collectionNfts, setCollectionNfts] = useState([]);
+  
+  const displayZeros = (quantity: number) => {
+    if (quantity < 10) {
+      return '0000';
+    } else if (quantity < 100){
+      return '000';
+    } else if (quantity < 1000){
+      return '00';
+    } else if (quantity < 10000){
+      return '0';
+    }
+  };
+  useEffect(() => {
+    contractAddr && client.collections('nfts')
+      .documents()
+      .search({
+        'q'         : contractAddr.toString(),
+        'query_by'  : 'contractAddr',
+        'per_page': 20,
+      })
+      .then(function (nftsResults) {
+        setCollectionNfts([...nftsResults.hits]);
+        console.log(collectionNfts, 'collectionNfts fdo');
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contractAddr]);
 
   if (!ethers.utils.isAddress(contractAddr?.toString())) {
     return <NotFoundPage />;
@@ -93,6 +124,37 @@ export default function CollectionPage() {
           financial decisions. <b>Only ERC721 supported, more soon.</b>
         </div>
         <CollectionDetails address={contractAddr?.toString()} collectionName={collectionData?.collection?.name}/>
+      </div>}
+      {collectionNfts.length > 0 &&
+      <div className="mt-36 mx-8">
+        <div className="font-grotesk font-black text-4xl">{collectionNfts[0].document.nftName}</div>
+        <div className="mb-5 text-4xl">
+          <Copy lightModeForced toCopy={contractAddr?.toString()} after>
+            {shortenAddress(contractAddr?.toString())}
+            <CopyIcon />
+          </Copy>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {collectionNfts.map((nft, index) => {
+            return (
+              <div key={index}>
+                <NFTCard
+                  traits={[{ value: 'Price: ' + (nft.document.listedPx ? (nft.document.listedPx + 'ETH') : 'Not estimated'), key: '' }]}
+                  title={nft.document.nftName}
+                  subtitle={'GK'+displayZeros(Number(nft.document.tokenId))+nft.document.tokenId}
+                  images={[nft.document.imageURL]}
+                  onClick={() => {
+                    if (nft.document.nftName) {
+                      router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
+                    }
+                  }}
+                  description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
+                  customBackground={'#303030'}
+                  customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+                />
+              </div>);}
+          )}
+        </div>
       </div>}
     </PageWrapper>
   );
