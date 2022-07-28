@@ -1,12 +1,9 @@
-import CollectionDetails from 'components/elements/CollectionDetails';
+import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
-import { GraphView } from 'components/elements/GraphView';
 import { NFTCard } from 'components/elements/NFTCard';
-import { Switch } from 'components/elements/Switch';
 import { PageWrapper } from 'components/layouts/PageWrapper';
-import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { NotFoundPage } from 'pages/404';
-import { Doppler, getEnv } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
@@ -14,7 +11,7 @@ import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import CopyIcon from 'public/arrow_square_out.svg';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 export type CollectionPageRouteParams = {
@@ -55,10 +52,10 @@ export default function CollectionPage() {
   const { chain } = useNetwork();
   const router = useRouter();
   const { contractAddr } = router.query;
-  const [enabled, setEnabled] = useState(false);
-  const { data: collectionData } = useCollectionQuery(String( getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),contractAddr?.toString(), false);
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [found, setFound] = useState(0);
   
   const displayZeros = (quantity: number) => {
     if (quantity < 10) {
@@ -71,20 +68,27 @@ export default function CollectionPage() {
       return '0';
     }
   };
-  useEffect(() => {
+
+  const loadNFTs = useCallback(() => {
     contractAddr && client.collections('nfts')
       .documents()
       .search({
-        'q'         : contractAddr.toString(),
-        'query_by'  : 'contractAddr',
-        'per_page': 20,
+        'q'       : contractAddr.toString(),
+        'query_by': 'contractAddr',
+        'per_page': 8,
+        'page'    : currentPage < 1 ? 1 : currentPage
       })
       .then(function (nftsResults) {
-        setCollectionNfts([...nftsResults.hits]);
-        console.log(collectionNfts, 'collectionNfts fdo');
+        setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
+        setFound(nftsResults.found);
       });
+    setCurrentPage(currentPage + 1);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contractAddr]);
+  }, [client, collectionNfts, contractAddr]);
+
+  useEffect(() => {
+    collectionNfts.length < 1 && loadNFTs();
+  }, [collectionNfts.length, loadNFTs]);
 
   if (!ethers.utils.isAddress(contractAddr?.toString())) {
     return <NotFoundPage />;
@@ -94,47 +98,21 @@ export default function CollectionPage() {
     <PageWrapper
       bgColorClasses={tw(
         'bg-always-white',
-        //'dark:bg-pagebg-dk'
       )}
       headerOptions={{
         removeSummaryBanner: true,
       }}>
-      {collectionData && collectionData.collection && <div className="md:mx-10 lg:mx-20 mx-72 mt-36">
-        <div className="font-medium text-3xl tracking-normal mt-6 text-gray-500 text-always-black">
-          <b>NFT Collection - {collectionData?.collection?.name}</b>
-        </div>
-        <div className="text-gray-500 dark:text-black">
-          <Copy toCopy={contractAddr?.toString()} after>
-            {shortenAddress(contractAddr?.toString())}
-          </Copy>
-        </div>
-        <div className="flex justify-end items-center mb-2 text-always-black">
-          <Switch
-            left="Card View"
-            right="Graph View"
-            enabled={enabled}
-            setEnabled={setEnabled}
-          />
-        </div>
-        {enabled ? <GraphView /> : <CardsView />}
-        <div className="font-bold text-3xl tracking-normal mt-6 text-always-black">NFT</div>
-        <div className="text-gray-500 mt-4 mb-1 text-sm tracking-wider">
-          NOTE: The estimated values are not financial advice, and should only be used as
-          a general guide of relative rarity. Please do your own research before making
-          financial decisions. <b>Only ERC721 supported, more soon.</b>
-        </div>
-        <CollectionDetails address={contractAddr?.toString()} collectionName={collectionData?.collection?.name}/>
-      </div>}
+      <BannerWrapper />
       {collectionNfts.length > 0 &&
-      <div className="mt-36 mx-8">
-        <div className="font-grotesk font-black text-4xl">{collectionNfts[0].document.nftName}</div>
+      <div className="mt-10 mx-8 max-w-nftcom minlg:mx-auto">
+        <div className="font-grotesk font-black text-4xl">{collectionNfts[0].document.contractName}</div>
         <div className="mb-5 text-4xl">
           <Copy lightModeForced toCopy={contractAddr?.toString()} after>
             {shortenAddress(contractAddr?.toString())}
             <CopyIcon />
           </Copy>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4">
           {collectionNfts.map((nft, index) => {
             return (
               <div key={index}>
@@ -155,6 +133,18 @@ export default function CollectionPage() {
               </div>);}
           )}
         </div>
+        {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+          <Button
+            color={'black'}
+            accent={AccentType.SCALE}
+            stretch={true}
+            label={'Load More'}
+            onClick={ () => {
+              loadNFTs();
+            }}
+            type={ButtonType.PRIMARY}
+          />
+        </div>}
       </div>}
     </PageWrapper>
   );
