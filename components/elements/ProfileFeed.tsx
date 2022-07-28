@@ -44,8 +44,8 @@ export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
                 onClick={() => router.push(`/${profile.profile.url}`)}
               />
               <div className='relative w-[93%] h-full flex-none rounded-b-3xl'>
-                <div className='absolute md:h-[45px] xl:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
-                  <p className='text-white md:text-lg text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
+                <div className='absolute h-[45px] minlg:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
+                  <p className='text-white text-lg minlg:text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
                 </div>
               </div>
             </a>
