@@ -1,5 +1,7 @@
+import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
+import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 
 import SidebarNoProfiles from './NoProfiles';
@@ -14,27 +16,32 @@ import { useDisconnect } from 'wagmi';
 
 type LoginResultsProps = {
   profileValue?: string;
-  setProfileValue?: any;
   setViewed?: any;
 };
 
-export default function LoginResults({ profileValue, setProfileValue, setViewed }: LoginResultsProps) {
+export default function LoginResults({ profileValue, setViewed }: LoginResultsProps) {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { setSidebarOpen } = useSidebar();
   const { primaryIcon } = useThemeColors();
   const { setSignOutDialogOpen } = useSignOutDialog();
   const { disconnect } = useDisconnect();
+  const { setCurrentProfileTokenId } = useUser();
 
   const exitClickHandler = () => {
     if(myOwnedProfileTokens.length) {
       setSignOutDialogOpen(true);
       disconnect();
       setSidebarOpen(false);
-      setProfileValue('');
+      // setProfileValue('');
     } else {
       setViewed(true);
     }
   };
+
+  const selectProfileHandler = (tokenId) => {
+    setCurrentProfileTokenId(tokenId);
+  };
+
   return (
     <motion.div
       layout
@@ -79,7 +86,7 @@ export default function LoginResults({ profileValue, setProfileValue, setViewed 
               backgroundSize: 'cover',
             }}
             className='bg-black rounded-[10px] mb-4 hover:cursor-pointer'
-            onClick={() => setProfileValue(profile.title)}
+            onClick={() => selectProfileHandler(profile.id.tokenId)}
             key={index}
           >
             <div className='bg-black opacity-80 flex items-center py-4 px-4 rounded-[10px]' >

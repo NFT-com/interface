@@ -1,6 +1,7 @@
 import { ConnectedAddress } from 'components/elements/ConnectedAddress';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
+import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
@@ -28,7 +29,7 @@ export default function HeroSidebarAccountDetails(
   const router = useRouter();
   const { setSidebarOpen, toggleSidebar } = useSidebar();
   const { setSignOutDialogOpen } = useSignOutDialog();
-
+  const { setCurrentProfileTokenId } = useUser();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
@@ -108,6 +109,7 @@ export default function HeroSidebarAccountDetails(
             disconnect();
             setSignOutDialogOpen(true);
             toggleSidebar();
+            setCurrentProfileTokenId(null);
           }}
         >
           Sign Out

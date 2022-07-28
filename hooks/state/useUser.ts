@@ -9,7 +9,7 @@ export interface UserState {
 
 export const userStateInitial: UserState = {
   currentProfileTokenId: (typeof window !== 'undefined')
-    ? (localStorage.getItem('selectedProfileTokenId') ? BigNumber.from(localStorage.getItem('selectedProfileTokenId')) : null)
+    ? localStorage.getItem('selectedProfileTokenId') === JSON.stringify(null) ? null : BigNumber.from(localStorage.getItem('selectedProfileTokenId'))
     : null,
   isDarkMode: true
 };
@@ -30,7 +30,7 @@ export function useUser() {
       ...data,
       currentProfileTokenId: selectedProfileTokenId
     });
-    localStorage.setItem('selectedProfileTokenId', !selectedProfileTokenId ? null : selectedProfileTokenId?.toString());
+    localStorage.setItem('selectedProfileTokenId', selectedProfileTokenId === null ? null : selectedProfileTokenId?.toString());
   }, [data, mutate]);
 
   useEffect(() => {

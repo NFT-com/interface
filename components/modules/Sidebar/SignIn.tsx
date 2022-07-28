@@ -1,19 +1,30 @@
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
+import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useSidebar } from 'hooks/state/useSidebar';
+import { useUser } from 'hooks/state/useUser';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { XCircle } from 'phosphor-react';
+import { useState } from 'react';
 
-type SignInProps = {
-  profileValue?: string;
-  setProfileValue?: any;
-};
+// type SignInProps = {
+//   profileValue?: string;
+//   setProfileValue?: any;
+// };
 
-export default function SignIn({ setProfileValue, profileValue }: SignInProps) {
+export default function SignIn() {
   const { setSidebarOpen } = useSidebar();
   const { openConnectModal } = useConnectModal();
+  const [inputValue, setInputValue] = useState('');
+  const { profileTokenId } = useProfileTokenQuery(inputValue);
+  const { setCurrentProfileTokenId } = useUser();
+  const submitHandler = () => {
+    openConnectModal();
+    setCurrentProfileTokenId(profileTokenId);
+  };
+
   return (
     <motion.div className='text-black font-grotesk bg-white h-full p-8'>
                
@@ -22,19 +33,19 @@ export default function SignIn({ setProfileValue, profileValue }: SignInProps) {
       <h2 className='font-bold text-4xl mb-9 pt-24'>Sign In</h2>
 
       <p className='text-[#6F6F6F]'>Enter your profile and connect your wallet.</p>
-      <input value={profileValue ?? ''} onChange={async e => {
+      <input value={inputValue ?? ''} onChange={async e => {
         const validReg = /^[a-z0-9_]*$/;
         if (
           validReg.test(e.target.value.toLowerCase()) &&
                           e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
         ) {
-          setProfileValue(e.target.value);
+          setInputValue(e.target.value);
         } else {
           e.preventDefault();
         }
       }} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-4" id="account" type="text" placeholder="Profile Name" />
-      <button onClick={openConnectModal} disabled={!profileValue} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-4 disabled:hover:cursor-not-allowed" type="button">
-                  Sign in with Profile
+      <button onClick={submitHandler} disabled={!inputValue} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-4 disabled:hover:cursor-not-allowed" type="button">
+          Sign in with Profile
       </button>
 
       <h2 className='font-bold text-4xl my-9'>Or</h2>

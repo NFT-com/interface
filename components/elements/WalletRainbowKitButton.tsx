@@ -1,5 +1,6 @@
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
@@ -67,7 +68,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 :
                 <button
                   onClick={() => {
-                    openConnectModal();
+                    !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) ? openConnectModal() : toggleSidebar();
                   }}
                   className={tw(
                     `${props?.signInButton ? 'block' : 'hidden'}`,

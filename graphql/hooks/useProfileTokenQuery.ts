@@ -24,14 +24,16 @@ export function useProfileTokenQuery(
     if (isNullOrEmpty(url)) {
       return null;
     }
+    console.log('🚀 ~ file: useProfileTokenQuery.ts ~ line 27 ~ const{data}=useSWR ~ url', url);
     try {
       setLoading(true);
       const result = await nftProfile.getTokenId(url);
       setLoading(false);
       return result;
     } catch (error) {
+      console.log('🚀 ~ file: useProfileTokenQuery.ts ~ line 33 ~ const{data}=useSWR ~ error', error);
       setLoading(false);
-      console.log('Failed to fetch profile token ID. It is likely unminted.');
+      // console.log('Failed to fetch profile token ID. It is likely unminted.');
       return null;
     }
   }, options);

@@ -7,10 +7,13 @@ import { HeroSidebarProfiles } from 'components/modules/HeroSidebar/HeroSidebarP
 import { SidebarCTA, useActiveSidebarCTA } from 'components/modules/HeroSidebar/useActiveSidebarCTA';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
 import SignIn from 'components/modules/Sidebar/SignIn';
+import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
+import { useUser } from 'hooks/state/useUser';
 import useENSName from 'hooks/useENSName';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useProfileMetadata } from 'hooks/useProfileMetadata';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -26,9 +29,10 @@ import { useAccount } from 'wagmi';
 
 export const Sidebar = () => {
   const [showWalletOptions, setShowWalletOptions] = useState(false);
-  const [profileValue, setProfileValue] = useState(''); //local storage
+  // const [profileValue, setProfileValue] = useState(''); //local storage
   const [viewed, setViewed] = useState(false); //context?
-
+  const { user } = useUser();
+  const profileValue = useProfileMetadata(user.currentProfileTokenId) || '';
   const { address: currentAddress } = useAccount();
   const { ENSName } = useENSName(currentAddress);
   const { sidebarOpen, setSidebarOpen } = useSidebar();
@@ -46,14 +50,14 @@ export const Sidebar = () => {
   
   const activeCTA: SidebarCTA = useActiveSidebarCTA();
 
-  useEffect(() => {
-    if(!currentAddress){
-      setProfileValue('');
-    }
-  }, [currentAddress]);
+  // useEffect(() => {
+  //   if(!currentAddress){
+  //     setProfileValue('');
+  //   }
+  // }, [currentAddress]);
 
   const getSidebarContent = useCallback(() => {
-    if(currentAddress && myOwnedProfileTokens.findIndex(e => e.title === profileValue) !== -1 || viewed || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length) {
+    if(currentAddress && myOwnedProfileTokens.findIndex(e => e.title === profileValue?.name) !== -1 || viewed || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length) {
       return (
         <motion.div
           layout
@@ -167,9 +171,11 @@ export const Sidebar = () => {
         </motion.div>
       );}
 
-    if(myOwnedProfileTokens.findIndex(e => e.title === profileValue) < 0 || !viewed){
+    if(myOwnedProfileTokens.findIndex(e => e.title === profileValue?.name) < 0 || !viewed){
       return (
-        <LoginResults profileValue={profileValue} setProfileValue={setProfileValue} setViewed={setViewed} />
+        <LoginResults
+          profileValue={profileValue?.name}
+          setViewed={setViewed} />
       );
     }
   }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setSidebarOpen, profileValue, currentAddress, viewed, myOwnedProfileTokens]);
@@ -267,13 +273,16 @@ export const Sidebar = () => {
             )
             :
             (
-              <SignIn profileValue={profileValue} setProfileValue={setProfileValue} />
+              <SignIn
+                // profileValue={profileValue}
+              // setProfileValue={setProfileValue}
+              />
             )
           }
         </motion.div>
       );
     }
-  }, [currentAddress, getSidebarContent, primaryIcon, setSidebarOpen, showWalletOptions, profileValue]);
+  }, [currentAddress, getSidebarContent, primaryIcon, setSidebarOpen, showWalletOptions]);
 
   return (
     <AnimatePresence>
