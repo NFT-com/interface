@@ -9,7 +9,7 @@ export interface UserState {
 
 export const userStateInitial: UserState = {
   currentProfileTokenId: (typeof window !== 'undefined')
-    ? BigNumber.from(localStorage.getItem('selectedProfileTokenId'))
+    ? (localStorage.getItem('selectedProfileTokenId') ? BigNumber.from(localStorage.getItem('selectedProfileTokenId')) : null)
     : null,
   isDarkMode: true
 };
