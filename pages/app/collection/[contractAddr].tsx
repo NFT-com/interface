@@ -3,7 +3,9 @@ import Copy from 'components/elements/Copy';
 import { NFTCard } from 'components/elements/NFTCard';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { NotFoundPage } from 'pages/404';
+import { Doppler, getEnv } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
@@ -56,6 +58,7 @@ export default function CollectionPage() {
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [found, setFound] = useState(0);
+  const { data: collectionData } = useCollectionQuery(String( chain | getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), true);
   
   const displayZeros = (quantity: number) => {
     if (quantity < 10) {
@@ -102,11 +105,13 @@ export default function CollectionPage() {
       headerOptions={{
         removeSummaryBanner: true,
       }}>
-      <BannerWrapper />
+      <div className="mt-20">
+        <BannerWrapper imageOverride={collectionData?.openseaInfo?.collection?.banner_image_url}/>
+      </div>
       {collectionNfts.length > 0 &&
-      <div className="mt-10 mx-8 max-w-nftcom minlg:mx-auto">
+      <div className="mt-7 mx-8 minmd:mx-10 max-w-nftcom minlg:mx-auto">
         <div className="font-grotesk font-black text-4xl">{collectionNfts[0].document.contractName}</div>
-        <div className="mb-5 text-4xl">
+        <div className="mb-7 text-4xl">
           <Copy lightModeForced toCopy={contractAddr?.toString()} after>
             {shortenAddress(contractAddr?.toString())}
             <CopyIcon />
