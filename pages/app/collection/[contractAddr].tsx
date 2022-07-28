@@ -53,7 +53,7 @@ export default function CollectionPage() {
   const router = useRouter();
   const { contractAddr } = router.query;
   const [enabled, setEnabled] = useState(false);
-  const { data: collectionData } = useCollectionQuery(String(chain?.id | getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),contractAddr?.toString(), false);
+  const { data: collectionData } = useCollectionQuery(String(chain?.id | getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), false);
 
   if (!ethers.utils.isAddress(contractAddr?.toString())) {
     return <NotFoundPage />;

@@ -39,7 +39,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     allOwnerNfts,
   } = useContext(ProfileContext);
 
-  const { data: collectionData } = useCollectionQuery(String(chain?.id), selectedCollection, true);
+  const { data: collectionData } = useCollectionQuery(chain?.id, selectedCollection, true);
 
   const { data: collections } = useSWR(
     '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(allOwnerNfts),

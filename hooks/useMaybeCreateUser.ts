@@ -61,7 +61,7 @@ export function useMaybeCreateUser(): boolean {
             username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
             wallet: {
               address: currentAddress,
-              chainId: String(chain?.id),
+              chainId: chain?.id,
               network: 'ethereum',
             },
           });

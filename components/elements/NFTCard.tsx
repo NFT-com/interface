@@ -55,7 +55,7 @@ export function NFTCard(props: NFTCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
-  const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, String(chain?.id));
+  const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, chain?.id);
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-sm sm:text-xs' style={{ color: pink }}>

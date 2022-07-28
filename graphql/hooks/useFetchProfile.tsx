@@ -26,7 +26,7 @@ export function useFetchProfile(): FetchProfile {
       setLoading(true);
       const result = await sdk.Profile({
         url,
-        chainId: String(chain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0])),
+        chainId: chain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0]),
       });
       setLoading(false);
       return result;

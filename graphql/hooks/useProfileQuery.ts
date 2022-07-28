@@ -29,7 +29,7 @@ export function useProfileQuery(
     try {
       const result = await sdk.Profile({
         url,
-        chainId: String(chain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0]))
+        chainId: chain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0])
       });
       return result;
     } catch (error) {

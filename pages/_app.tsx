@@ -53,7 +53,7 @@ const { chains, provider } = configureChains(
     jsonRpcProvider({
       rpc: (chain) => {
         const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
-        url.searchParams.set('chainId', String(chain.id));
+        url.searchParams.set('chainId', chain.id);
         return {
           http: url.toString(),
         };
