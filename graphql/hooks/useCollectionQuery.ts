@@ -15,7 +15,7 @@ export function useCollectionQuery(chainId: string, contract: string, withOpense
   const keyString = 'CollectionQuery ' + contract + chainId + withOpensea;
 
   const { data } = useSWR(keyString, async () => {
-    if(!chainId || !contract) {
+    if (!chainId || !contract) {
       return {};
     }
     const result = await sdk.Collection({
