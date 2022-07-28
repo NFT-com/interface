@@ -18,11 +18,12 @@ export default function SignIn() {
   const { setSidebarOpen } = useSidebar();
   const { openConnectModal } = useConnectModal();
   const [inputValue, setInputValue] = useState('');
-  const { profileTokenId } = useProfileTokenQuery(inputValue);
-  const { setCurrentProfileTokenId } = useUser();
+  // const { profileTokenId } = useProfileTokenQuery(inputValue);
+  const { setCurrentProfileUrl } = useUser();
   const submitHandler = () => {
     openConnectModal();
-    setCurrentProfileTokenId(profileTokenId);
+    // setCurrentProfileTokenId(profileTokenId);
+    setCurrentProfileUrl(inputValue);
   };
 
   return (

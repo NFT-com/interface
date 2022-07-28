@@ -4,7 +4,6 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import { BigNumber } from 'ethers';
 import { Wallet } from 'phosphor-react';
 import { useCallback } from 'react';
 import { Menu } from 'react-feather';
@@ -21,18 +20,18 @@ interface WalletRainbowKitButtonProps {
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   const { toggleSidebar } = useSidebar();
-  const { user, setCurrentProfileTokenId } = useUser();
+  const { user, setCurrentProfileUrl } = useUser();
   const { address: currentAddress, connector, isConnected } = useAccount({
     onConnect({ isReconnected }) {
-      if (isReconnected && !!user?.currentProfileTokenId) {
-        setCurrentProfileTokenId(BigNumber.from(localStorage.getItem('selectedProfileTokenId')));
+      if (isReconnected && !! user?.currentProfileUrl) {
+        setCurrentProfileUrl(localStorage.getItem('selectedProfileUrl'));
       } else {
-        setCurrentProfileTokenId(null);
+        setCurrentProfileUrl('');
       }
     },
     onDisconnect() {
       console.log('disconnected');
-      setCurrentProfileTokenId(null);
+      setCurrentProfileUrl('');
     },
   });
   const { disconnect } = useDisconnect();

@@ -29,10 +29,7 @@ import { useAccount } from 'wagmi';
 
 export const Sidebar = () => {
   const [showWalletOptions, setShowWalletOptions] = useState(false);
-  // const [profileValue, setProfileValue] = useState(''); //local storage
-  const [viewed, setViewed] = useState(false); //context?
-  const { user } = useUser();
-  const profileValue = useProfileMetadata(user.currentProfileTokenId) || '';
+  const profileValue = localStorage.getItem('selectedProfileUrl');
   const { address: currentAddress } = useAccount();
   const { ENSName } = useENSName(currentAddress);
   const { sidebarOpen, setSidebarOpen } = useSidebar();
@@ -50,14 +47,8 @@ export const Sidebar = () => {
   
   const activeCTA: SidebarCTA = useActiveSidebarCTA();
 
-  // useEffect(() => {
-  //   if(!currentAddress){
-  //     setProfileValue('');
-  //   }
-  // }, [currentAddress]);
-
   const getSidebarContent = useCallback(() => {
-    if(currentAddress && myOwnedProfileTokens.findIndex(e => e.title === profileValue?.name) !== -1 || viewed || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length) {
+    if(currentAddress && myOwnedProfileTokens.findIndex(e => e.title === profileValue) !== -1 || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length) {
       return (
         <motion.div
           layout
@@ -171,14 +162,14 @@ export const Sidebar = () => {
         </motion.div>
       );}
 
-    if(myOwnedProfileTokens.findIndex(e => e.title === profileValue?.name) < 0 || !viewed){
+    if(myOwnedProfileTokens.findIndex(e => e.title === profileValue) < 0){
       return (
         <LoginResults
-          profileValue={profileValue?.name}
-          setViewed={setViewed} />
+          profileValue={profileValue}
+        />
       );
     }
-  }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setSidebarOpen, profileValue, currentAddress, viewed, myOwnedProfileTokens]);
+  }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setSidebarOpen, profileValue, currentAddress, myOwnedProfileTokens]);
 
   const getSidebarPanel = useCallback(() => {
     if(!showWalletOptions && !isNullOrEmpty(currentAddress)) {

@@ -29,7 +29,7 @@ export default function HeroSidebarAccountDetails(
   const router = useRouter();
   const { setSidebarOpen, toggleSidebar } = useSidebar();
   const { setSignOutDialogOpen } = useSignOutDialog();
-  const { setCurrentProfileTokenId } = useUser();
+  const { setCurrentProfileUrl } = useUser();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
@@ -109,7 +109,7 @@ export default function HeroSidebarAccountDetails(
             disconnect();
             setSignOutDialogOpen(true);
             toggleSidebar();
-            setCurrentProfileTokenId(null);
+            setCurrentProfileUrl('');
           }}
         >
           Sign Out

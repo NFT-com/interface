@@ -1,17 +1,14 @@
-import { BigNumber } from 'ethers';
 import { useCallback,useEffect } from 'react';
 import useSWR from 'swr';
 
 export interface UserState {
-  currentProfileTokenId: BigNumber | null;
+  currentProfileUrl: string
   isDarkMode: boolean;
 }
 
 export const userStateInitial: UserState = {
-  currentProfileTokenId: (typeof window !== 'undefined')
-    ? localStorage.getItem('selectedProfileTokenId') === JSON.stringify(null) ? null : BigNumber.from(localStorage.getItem('selectedProfileTokenId'))
-    : null,
-  isDarkMode: true
+  isDarkMode: true,
+  currentProfileUrl: '',
 };
 
 export function useUser() {
@@ -25,12 +22,12 @@ export function useUser() {
     });
   };
 
-  const setCurrentProfileTokenId = useCallback((selectedProfileTokenId: BigNumber | null) => {
+  const setCurrentProfileUrl= useCallback((selectedProfileUrl: string) => {
     mutate({
       ...data,
-      currentProfileTokenId: selectedProfileTokenId
+      currentProfileUrl: selectedProfileUrl
     });
-    localStorage.setItem('selectedProfileTokenId', selectedProfileTokenId === null ? null : selectedProfileTokenId?.toString());
+    localStorage.setItem('selectedProfileUrl', selectedProfileUrl === '' ? '' : selectedProfileUrl);
   }, [data, mutate]);
 
   useEffect(() => {
@@ -43,6 +40,6 @@ export function useUser() {
     user: data,
     loading,
     setDarkMode,
-    setCurrentProfileTokenId,
+    setCurrentProfileUrl
   };
 }

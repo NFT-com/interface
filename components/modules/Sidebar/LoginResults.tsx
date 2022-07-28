@@ -16,30 +16,25 @@ import { useDisconnect } from 'wagmi';
 
 type LoginResultsProps = {
   profileValue?: string;
-  setViewed?: any;
 };
 
-export default function LoginResults({ profileValue, setViewed }: LoginResultsProps) {
+export default function LoginResults({ profileValue }: LoginResultsProps) {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { setSidebarOpen } = useSidebar();
   const { primaryIcon } = useThemeColors();
   const { setSignOutDialogOpen } = useSignOutDialog();
   const { disconnect } = useDisconnect();
-  const { setCurrentProfileTokenId } = useUser();
+  const { setCurrentProfileUrl } = useUser();
 
   const exitClickHandler = () => {
-    if(myOwnedProfileTokens.length) {
-      setSignOutDialogOpen(true);
-      disconnect();
-      setSidebarOpen(false);
-      // setProfileValue('');
-    } else {
-      setViewed(true);
-    }
+    setSignOutDialogOpen(true);
+    disconnect();
+    setSidebarOpen(false);
+    setCurrentProfileUrl('');
   };
 
-  const selectProfileHandler = (tokenId) => {
-    setCurrentProfileTokenId(tokenId);
+  const selectProfileHandler = (url) => {
+    setCurrentProfileUrl(url);
   };
 
   return (
@@ -86,7 +81,7 @@ export default function LoginResults({ profileValue, setViewed }: LoginResultsPr
               backgroundSize: 'cover',
             }}
             className='bg-black rounded-[10px] mb-4 hover:cursor-pointer'
-            onClick={() => selectProfileHandler(profile.id.tokenId)}
+            onClick={() => selectProfileHandler(profile.title)}
             key={index}
           >
             <div className='bg-black opacity-80 flex items-center py-4 px-4 rounded-[10px]' >
