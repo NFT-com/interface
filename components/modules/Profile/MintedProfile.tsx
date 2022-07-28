@@ -216,7 +216,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       onClick={() => {
                         if (addressOwner !== currentAddress) {
                           window.open(
-                            getEtherscanLink(chain?.id, addressOwner, 'address'),
+                            getEtherscanLink(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), addressOwner, 'address'),
                             '_blank'
                           );
                         }

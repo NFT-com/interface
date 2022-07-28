@@ -1,4 +1,5 @@
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { Doppler, getEnv } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -51,11 +52,11 @@ export function NFTCard(props: NFTCardProps) {
   const { chain } = useNetwork();
   const [selected, setSelected] = useState(false);
 
-  const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', chain?.id ?? 1)) && !isNullOrEmpty(props.tokenId) ?
+  const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)))) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
-  const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, chain?.id);
+  const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-sm sm:text-xs' style={{ color: pink }}>
