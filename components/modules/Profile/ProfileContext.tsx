@@ -119,7 +119,7 @@ export function ProfileContextProvider(
     mutate: mutatePublicProfileNfts,
   } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     loadedCount
   );
   const {
