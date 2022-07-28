@@ -5,7 +5,6 @@ import { MarketSwap } from 'graphql/generated/types';
 import { useFetchSwaps } from 'graphql/hooks/useFetchSwaps';
 import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import useLazyLoad from 'hooks/useLazyLoad';
-import { Doppler, getEnv } from 'utils/env';
 import { getEtherscanLink, shorten } from 'utils/helpers';
 
 import { DashboardTabTitle } from './DashboardTabTitle';
@@ -73,7 +72,7 @@ export function DashboardPurchasesTab() {
           return (
             <a target="_blank" rel="noreferrer"
               href={getEtherscanLink(
-                String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+                chain?.id,
                 swap.txHash,
                 'transaction'
               )}
