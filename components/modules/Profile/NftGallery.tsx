@@ -94,7 +94,7 @@ export function NftGallery(props: NftGalleryProps) {
         </div>
       }
       {
-        (editMode ? allOwnerNftCount > nftsToShow.length : publiclyVisibleNftCount > nftsToShow.length) &&
+        (editMode ? allOwnerNftCount > nftsToShow?.length : publiclyVisibleNftCount > nftsToShow?.length) &&
           <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium">
             <Button
               color={'white'}

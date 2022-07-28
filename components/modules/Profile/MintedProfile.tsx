@@ -12,6 +12,7 @@ import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
 import { ProfileContext } from './ProfileContext';
+import { ProfileScrollContextProvider } from './ProfileScrollContext';
 
 import { BigNumber } from 'ethers';
 import cameraIcon from 'public/camera.png';
@@ -70,7 +71,7 @@ export function MintedProfile(props: MintedProfileProps) {
   };
 
   return (
-    <div className="h-full w-full flex flex-col mt-20">
+    <ProfileScrollContextProvider>
       <div className='w-full'>
         <BannerWrapper
           imageOverride={
@@ -253,6 +254,6 @@ export function MintedProfile(props: MintedProfileProps) {
       <div className='w-full mt-20'>
         <Footer />
       </div>
-    </div>
+    </ProfileScrollContextProvider>
   );
 }

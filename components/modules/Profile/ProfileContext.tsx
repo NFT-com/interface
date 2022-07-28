@@ -119,7 +119,7 @@ export function ProfileContextProvider(
     mutate: mutatePublicProfileNfts,
   } = useProfileNFTsQuery(
     profileData?.profile?.id,
-    String(chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     loadedCount
   );
   const {
@@ -311,11 +311,11 @@ export function ProfileContextProvider(
   };
 
   return <ProfileContext.Provider value={{
-    editModeNfts,
-    allOwnerNfts,
-    allOwnerNftCount,
-    publiclyVisibleNfts,
-    publiclyVisibleNftCount: publicProfileNftsCount,
+    editModeNfts: editModeNfts ?? [],
+    allOwnerNfts: allOwnerNfts ?? [],
+    allOwnerNftCount: allOwnerNftCount ?? 0,
+    publiclyVisibleNfts: publiclyVisibleNfts ?? [],
+    publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
     loadMoreNfts: () => {
       setLoadedCount(loadedCount + 100);
     },

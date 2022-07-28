@@ -8,6 +8,7 @@ import { useResendEmailMutation } from 'graphql/hooks/useResendEmailMutation';
 import { useUpdateEmailMutation } from 'graphql/hooks/useUpdateEmailMutation';
 import { useUpdateMeMutation } from 'graphql/hooks/useUpdateMeMutation';
 import { useBidModal } from 'hooks/state/useBidModal';
+import { Doppler, getEnv } from 'utils/env';
 import { logVerificationSuccess } from 'utils/gaLogger';
 import { isNullOrEmpty, joinClasses } from 'utils/helpers';
 
@@ -108,7 +109,7 @@ export function EmailVerification(props) {
             username: `ethereum-${ethers.utils.getAddress(currentAddress)}`,
             wallet: {
               address: currentAddress,
-              chainId: String(chain?.id),
+              chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
               network: 'ethereum',
             },
           });
@@ -170,7 +171,7 @@ export function EmailVerification(props) {
                     username: null, // null to force user to authenticate code, instead of allowing skip
                     wallet: {
                       address: currentAddress,
-                      chainId: String(chain?.id),
+                      chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
                       network: 'ethereum',
                     },
                   });

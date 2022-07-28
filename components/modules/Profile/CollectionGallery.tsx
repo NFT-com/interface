@@ -5,6 +5,7 @@ import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { Doppler, getEnv } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -39,7 +40,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     allOwnerNfts,
   } = useContext(ProfileContext);
 
-  const { data: collectionData } = useCollectionQuery(String(chain?.id), selectedCollection, true);
+  const { data: collectionData } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), selectedCollection, true);
 
   const { data: collections } = useSWR(
     '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(allOwnerNfts),
@@ -143,7 +144,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             contract={key}
             count={collections?.get(key)?.length}
             images={collections?.get(key)?.map((nft: PartialDeep<Nft>) => {
-              if (sameAddress(nft?.contract, getAddress('genesisKey', chain?.id ?? 1))) {
+              if (sameAddress(nft?.contract, getAddress('genesisKey', String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))))) {
                 return getGenesisKeyThumbnail(nft?.tokenId);
               }
               return nft?.metadata?.imageURL;
