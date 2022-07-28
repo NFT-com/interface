@@ -1,6 +1,8 @@
 
 import { ProfileContext } from 'components/modules/Profile/ProfileContext';
 
+import { DndScrollWrapper } from './DndScrollWrapper';
+
 import React, { createContext, PropsWithChildren, useCallback, useContext } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -55,7 +57,9 @@ export function GridContextProvider(
       items: props.items,
       moveItem
     }}>
-      {props.children}
+      <DndScrollWrapper>
+        {props.children}
+      </DndScrollWrapper>
     </GridContext.Provider>
   </DndProvider>;
 }
