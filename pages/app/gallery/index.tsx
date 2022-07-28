@@ -98,8 +98,8 @@ export default function GalleryPage() {
           {/* Desktop Filters - sidebar */}
           {!isMobile &&
          <div className={tw(
-           'flex flex-col w-1/4 shrink-0 h-full min-h-4/5 border-r border-accent-border-dk',
-           'border-t px-10 pt-6 md:hidden'
+           'minlg:flex flex-col w-1/4 shrink-0 h-full min-h-4/5 border-r border-accent-border-dk',
+           'border-t px-10 pt-6 hidden'
          )}>
            <GenesisKeyGalleryFilters
              showFilters={true}
@@ -113,7 +113,7 @@ export default function GalleryPage() {
           <div className={tw(
             'flex flex-col flex-grow h-full overflow-auto',
             'border-t border-accent-border-dk bg-modal-overlay-dk',
-            'px-4 sm:px-0 pt-6'
+            'minmd:px-4 px-0 pt-6'
           )}>
             <GalleryPageTitle
               showMyStuff={showMyStuff}
@@ -133,8 +133,8 @@ export default function GalleryPage() {
         </div>
         {/* mobile filters */}
         <div className={tw(
-          'hidden w-full h-full absolute dark top-0 left-0',
-          !showFilters ? 'md:hidden' : 'md:block',
+          'minlg:hidden w-full h-full absolute dark top-0 left-0',
+          !showFilters ? 'hidden' : 'block',
           'bg-modal-overlay-dk mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
           'border-t border-accent-border-dk'
         )}>
@@ -147,7 +147,7 @@ export default function GalleryPage() {
           />
         </div>
         <div className={tw(
-          'md:block absolute bottom-20 mb-2 left-0 hidden w-full flex justify-center',
+          'absolute bottom-20 mb-2 left-0 minlg:hidden w-full flex justify-center',
           'drop-shadow-md px-8'
         )}>
           <Button

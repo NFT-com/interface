@@ -2,6 +2,7 @@ import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useCreateUserMutation } from 'graphql/hooks/useCreateUserMutation';
 import { useFetchMe } from 'graphql/hooks/useFetchMe';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useSupportedNetwork } from './useSupportedNetwork';
@@ -61,7 +62,7 @@ export function useMaybeCreateUser(): boolean {
             username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
             wallet: {
               address: currentAddress,
-              chainId: String(chain?.id),
+              chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
               network: 'ethereum',
             },
           });
