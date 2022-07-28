@@ -1,19 +1,21 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
-import { ProfileLayoutType } from 'graphql/generated/types';
+import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
 import { ProfileContext } from './ProfileContext';
 
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 export interface NftGalleryProps {
   profileURI: string;
-  savedLayoutType: ProfileLayoutType;
 }
 
 export function NftGallery(props: NftGalleryProps) {
   const { profileURI } = props;
+
+  const [spotlightIndex, setSpotLightIndex] = useState<number>(0);
 
   const { profileData } = useProfileQuery(profileURI);
   const {
@@ -24,8 +26,11 @@ export function NftGallery(props: NftGalleryProps) {
     allOwnerNftCount,
     publiclyVisibleNfts,
     publiclyVisibleNftCount,
-    loadMoreNfts
+    loadMoreNfts,
+    draftLayoutType
   } = useContext(ProfileContext);
+
+  const savedLayoutType = profileData?.profile?.layoutType;
 
   if (allOwnerNfts == null || publiclyVisibleNfts == null || profileData == null || saving) {
     return (
@@ -51,9 +56,43 @@ export function NftGallery(props: NftGalleryProps) {
     editModeNfts :
     (publiclyVisibleNfts ?? []);
 
+  const displayNFTs = (draftLayoutType ?? savedLayoutType) !== 'Spotlight' ?
+    nftsToShow :
+    [nftsToShow[spotlightIndex]];
+
   return (
     <>
-      <NftGrid nfts={nftsToShow} profileURI={profileURI} />
+      <GridContextProvider items={displayNFTs} key={JSON.stringify(displayNFTs)}>
+        <NftGrid profileURI={profileURI} />
+      </GridContextProvider>
+      {
+        (draftLayoutType ?? savedLayoutType) === 'Spotlight' && <div className={tw(
+          'w-full flex items-center col-start-2 justify-around mb-16'
+        )}>
+          <div className='pr-2 w-1/2'>
+            <Button
+              stretch
+              color="white"
+              label={'Back'}
+              onClick={() => {
+                setSpotLightIndex(spotlightIndex === 0 ? displayNFTs.length - 1 : spotlightIndex - 1);
+              }}
+              type={ButtonType.PRIMARY}
+            />
+          </div>
+          <div className="pl-2 w-1/2">
+            <Button
+              stretch
+              color="white"
+              label={'Next'}
+              onClick={() => {
+                setSpotLightIndex(spotlightIndex + 1 > displayNFTs.length - 1 ? 0 : spotlightIndex + 1);
+              }}
+              type={ButtonType.PRIMARY}
+            />
+          </div>
+        </div>
+      }
       {
         (editMode ? allOwnerNftCount > nftsToShow.length : publiclyVisibleNftCount > nftsToShow.length) &&
           <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium">

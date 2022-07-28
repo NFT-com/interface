@@ -11,6 +11,7 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 import Link from 'next/link';
 import LightNavLogo from 'public/hero_corner.svg';
 import NavLogo from 'public/hero_corner_dark.svg';
+import React from 'react';
 import { useAccount } from 'wagmi';
 
 type HeaderProps = {
@@ -37,13 +38,17 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
             <div className="flex-shrink-0 hover:cursor-pointer">
               {bgLight
                 ? (
-                  <Link href='/'>
-                    <NavLogo className='h-8 w-8 justify-start' />
+                  <Link href='/' passHref>
+                    <div>
+                      <NavLogo className='h-8 w-8 justify-start' />
+                    </div>
                   </Link>
                 )
                 : (
-                  <Link href='/'>
-                    <LightNavLogo className='h-8 w-8 justify-start' />
+                  <Link href='/' passHref>
+                    <div>
+                      <LightNavLogo className='h-8 w-8 justify-start' />
+                    </div>
                   </Link>
                 )
               }
@@ -64,7 +69,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
               'flex items-center mr-4 md:hidden',
               'block lg:w-1/2 w-80'
             )}>
-              <SearchBar />
+              <SearchBar bgLight={bgLight} />
             </div>
           }
           <div className='flex items-center ...'>

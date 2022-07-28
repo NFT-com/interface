@@ -38,7 +38,7 @@ export const Sidebar = () => {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
 
   useEffect(() => {
-    sidebarOpen && promoteZIndex('heroSideBar');
+    sidebarOpen && promoteZIndex('sidebar');
     return () => {
       restoreZIndex();
     };
@@ -288,7 +288,7 @@ export const Sidebar = () => {
           onClose={() => {
             !addFundsDialogOpen && setSidebarOpen(false);
           }}
-          style={{ zIndex: getZIndex('heroSideBar') }}
+          style={{ zIndex: getZIndex('sidebar') }}
         >
           <Dialog.Overlay
             layout
@@ -332,4 +332,3 @@ export const Sidebar = () => {
     </AnimatePresence>
   );
 };
-

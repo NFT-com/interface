@@ -12,8 +12,6 @@ const TestComponent = () => {
     toggleHidden,
     hideNftIds,
     showNftIds,
-    onHideAll,
-    onShowAll,
     publiclyVisibleNfts,
     editModeNfts,
     draftHeaderImg,
@@ -95,12 +93,6 @@ const TestComponent = () => {
     <button onClick={() => {
       clearDrafts();
     }}>clearDrafts</button>
-    <button onClick={() => {
-      onHideAll();
-    }}>onHideAll</button>
-    <button onClick={() => {
-      onShowAll();
-    }}>onShowAll</button>
   </div>;
 };
 

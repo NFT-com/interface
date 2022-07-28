@@ -17,7 +17,7 @@ const usePromotableZIndex = <K extends string | number | symbol>(input: Input<K>
   const normalZIndices = {
     modal: 300,
     wallet: 200,
-    heroSideBar: 199,
+    sidebar: 199,
   };
   type SiblingName = keyof typeof normalZIndices
 

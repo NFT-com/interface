@@ -113,7 +113,7 @@ export function MintedProfile(props: MintedProfileProps) {
       </div>
       <div className={tw(
         'flex flex-col',
-        'max-w-7xl',
+        'max-w-7xl min-w-[60%]',
         isMobile ? 'mx-2' : 'sm:mx-2 lg:mx-8 mx-auto',
       )}>
         <div
@@ -147,7 +147,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     className={tw(
                       'rounded-full absolute flex border bg-white/10',
                       'items-center justify-center h-full w-full',
-                      'xs:mt-[-60px] sm:mt-[-67px] md:mt-[-120px] lg:mt-[-86px] mt-[-115px] absolute'
+                      'xs:mt-[-60px] sm:mt-[-67px] md:mt-[-120px]  mt-[-115px] absolute'
                     )}
                   >
                     <Loader/>
