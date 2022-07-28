@@ -26,7 +26,7 @@ export interface HeroHeaderProps {
 }
 
 export default function HeroHeader(props: HeroHeaderProps) {
-  const { isDarkMode } = useUser();
+  const { user } = useUser();
 
   const { walletSlideOpen } = useWalletSlide();
   const { address: currentAddress } = useAccount();
@@ -75,7 +75,7 @@ export default function HeroHeader(props: HeroHeaderProps) {
                   'text-always-white',
                   'font-hero-heading1 flex items-center')}>
                   <div className='h-10 w-10 mr-2'>
-                    { isDarkMode ?
+                    { user?.isDarkMode ?
                       <HeroCorner />
                       : <HeroCornerDark />
                     }

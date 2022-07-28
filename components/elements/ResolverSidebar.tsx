@@ -19,7 +19,7 @@ export const ResolverSidebar = () => {
   const { addFundsDialogOpen } = useAddFundsDialog();
   const { address: currentAddress } = useAccount();
   //const { openConnectModal } = useConnectModal();
-  const { primaryIcon, alwaysBlack } = useThemeColors();
+  const { alwaysBlack } = useThemeColors();
   const [currentURI, setCurrentURI] = useState('');
 
   const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });

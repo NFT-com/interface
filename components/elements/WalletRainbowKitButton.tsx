@@ -1,6 +1,5 @@
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
