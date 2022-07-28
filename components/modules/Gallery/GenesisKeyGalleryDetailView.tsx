@@ -74,11 +74,11 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
 
   return (
     <div className={tw(
-      props.verticalDetail ? 'flex flex-col items-center md:max-w-full max-w-6xl' : 'flex sm:flex-col max-w-6xl',
+      props.verticalDetail ? 'flex flex-col items-center max-w-nftcom' : 'flex flex-col minmd:flex-row max-w-nftcom',
       'text-primary-txt-dk dark',
     )}>
       {props.hideCloseButton !== true && <div className={tw(
-        'pt-8 pr-8 absolute right-0 top-0 flex deprecated_sm:block hidden z-50'
+        'pt-8 pr-8 absolute right-0 top-0 flex block minmd:hidden z-50'
       )} onClick={props.onClose}>
         <XIcon
           className="h-6 w-6 cursor-pointer"
@@ -87,14 +87,14 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
         />
       </div>}
       <div className={tw(
-        props.verticalDetail ? 'w-3/4 deprecated_sm:w-full' : 'w-1/2 deprecated_sm:w-full',
-        props.verticalDetail ? 'rounded-xl' : 'rounded-bl-xl deprecated_sm:rounded-bl-none rounded-tl-xl',
+        props.verticalDetail ? 'minmd:w-3/4 w-full' : 'minmd:w-1/2 w-full',
+        props.verticalDetail ? 'rounded-xl' : 'minmd:rounded-bl-xl rounded-bl-none rounded-tl-xl',
       )}>
         <video
           className={tw(
-            props.verticalDetail ? 'rounded-xl w-full' : 'rounded-tl-xl rounded-bl-xl',
+            props.verticalDetail ? 'minmd:rounded-xl w-full' : 'minmd:rounded-l-xl',
             'h-full aspect-square cursor-pointer',
-            'deprecated_sm:rounded-none z-30 object-cover',
+            'rounded-none z-30 object-cover',
           )}
           autoPlay
           muted
@@ -106,7 +106,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
         />
       </div>
       <div className={tw(
-        props.verticalDetail ? 'w-3/4 deprecated_sm:w-full' : 'w-1/2 deprecated_sm:w-full',
+        props.verticalDetail ? 'minmd:w-3/4 w-full' : 'minmd:w-1/2 w-full',
         'flex flex-col px-6 my-6 overflow-y-scroll'
       )}>
         <div className='w-full flex justify-between'>
@@ -175,7 +175,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
         </div>
         <div className={tw(
           'grid gap-2 overflow-y-scroll overflow-x-hidden mt-4',
-          props.verticalDetail && !isMobile ? 'grid-cols-3 sm:grid-cols-2 w-full' : 'grid-cols-2 w-full'
+          props.verticalDetail && !isMobile ? 'minmd:grid-cols-3 grid-cols-2 w-full' : 'grid-cols-2 w-full'
         )}>
           {[
             {

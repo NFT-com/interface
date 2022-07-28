@@ -285,12 +285,13 @@ export const Sidebar = () => {
               duration: 0.4
             }}
             className={
-              tw('flex flex-col fixed inset-y-0 right-0 sm:top-0',
+              tw(
+                'flex flex-col fixed inset-y-0 right-0',
                 'w-screen max-w-md h-full',
                 'pb-6 shadow-xl overflow-y-scroll overflow-x-hidden',
                 'bg-pagebg-dk dark',
-                'border-l border-accent-border-dk')
-            }
+                'border-l border-accent-border-dk'
+              )}
           >
             {getSidebarPanel()}
           </motion.div>
