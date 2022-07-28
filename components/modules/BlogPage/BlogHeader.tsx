@@ -15,26 +15,26 @@ export default function BlogHeader({ post }: HeaderProps) {
   const result = readingTime(post?.body);
   return (
     <>
-      <h2 className="font-grotesk font-bold mx-auto text-4xl sm:text-lg md:text-2xl sm:mb-3 max-w-2xl leading-5.5 md:leading-6 tracking-wider px-0 md:px-10">
+      <h2 className="font-grotesk font-bold mx-auto text-lg minmd:text-2xl minlg:text-4xl minmd:mb-0 mb-3 max-w-2xl minlg:leading-5.5 leading-6 tracking-wider minlg:px-0 px-10">
         {post?.title}
       </h2>
       {post?.author?.image?.url && (
-        <div className="mb-4 mt-4 md:mt-3 mx-auto h-12 md:h-9 w-12 md:w-9">
+        <div className="mb-4 minlg:mt-4 mt-3 mx-auto minlg:h-12 h-9 minlg:w-12 w-9">
           <Image
             src={post.author.image.url}
             alt={post.author.image.description || 'Author Image'}
-            className="rounded-full"
+            className="rounded-full object-cover"
             width="100%"
             height="100%"
           />
         </div>
       )}
-      <p className="font-grotesk mt-2 text-xl md:text-base leading-4 tracking-wider">
+      <p className="font-grotesk mt-2 minlg:text-xl text-base leading-4 tracking-wider">
         {post?.author?.name}
       </p>
 
       {post && (
-        <div className="font-grotesk relative flex justify-center mt-2 md:mt-0.5 pb-7 md:pb-8 mb-5 md:mb-2.5 text-xs md:text-sm text-blog-text-reskin leading-3 tracking-wider">
+        <div className="font-grotesk relative flex justify-center minlg:mt-2 mt-0.5 minlg:pb-7 pb-8 minlg:mb-5 mb-2.5 text-sm text-blog-text-reskin leading-3 tracking-wider">
           <p>{moment(post?.publishDate).format('MMM Do, YYYY')}</p>
           <span className="mx-1">.</span>
           {post?.body && <p>{result.minutes} min read</p>}
