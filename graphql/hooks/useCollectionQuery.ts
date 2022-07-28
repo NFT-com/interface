@@ -20,7 +20,7 @@ export function useCollectionQuery(chainId: string, contract: string, withOpense
     }
     const result = await sdk.Collection({
       input: {
-        chainId: chainId,
+        chainId,
         contract,
         network: 'ethereum',
         withOpensea
