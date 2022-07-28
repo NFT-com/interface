@@ -53,7 +53,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
                 )
               }
             </div>
-            <div className="hidden md:block">
+            <div className="minlg:hidden block">
               <div className="ml-10 flex items-baseline space-x-4">
                 <a
                   href="#"
@@ -66,16 +66,18 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
           {
             getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
             <div className={tw(
-              'flex items-center mr-4 md:hidden',
-              'block lg:w-1/2 w-80'
+              'flex-row items-center justify-end hidden',
+              'minlg:flex w-full mx-8'
             )}>
-              <SearchBar bgLight={bgLight} />
+              <div className='flex grow max-w-3xl items-center h-full'>
+                <SearchBar bgLight={bgLight} />
+              </div>
             </div>
           }
           <div className='flex items-center ...'>
             <div
               className={tw(
-                'sm:hidden block',
+                'hidden minmd:block',
                 'mr-5',
                 'h-full flex-shrink-0',
                 'space-x-5',

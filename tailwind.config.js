@@ -6,6 +6,12 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     screens: {
+      // everything above 1200 is XL, but content should be constrained to 1200px
+      'minxl': '1200px',
+      'minlg': '900px',
+      'minmd': '600px',
+      // "small" is handled as the default
+
       // if all other sizes below are specified, then the "default" value wil apply to the XL range too.
       'xl': { 'max': '10000px' },
       'lg': { 'max': '1199px' },
@@ -16,35 +22,18 @@ module.exports = {
       // maxes
       'deprecated_xxl': { 'max': '10000px' },
       'deprecated_2xl': { 'max': '1800px' },
-      'deprecated_xl': { 'max': '1500px' },
       'deprecated_lg': { 'max': '1280px' },
       'deprecated_md': { 'max': '960px' },
       'deprecated_sm': { 'max': '640px' },
-      'deprecated_xs': { 'max': '500px' },
       
       // mins
       'deprecated_minxs': '390px',
-      // => @media (min-width: 400px) { ... }
       'deprecated_minxs2': '585px',
-      // => @media (min-width: 585px) { ... }
       'deprecated_minsm': '640px',
-      // => @media (min-width: 640px) { ... }
       'deprecated_minmd': '768px',
-      // => @media (min-width: 768px) { ... }
-      'deprecated_minmd2': { 'min': '860px', 'max': '1156px' },
-      // => @media (min-width: 860px, max-width: 1156px) { ... }
       'deprecated_minlg': '1024px',
-      // => @media (min-width: 1024px) { ... }
       'deprecated_minxl': '1280px',
-      // => @media (min-width: 1280px) { ... }
       'deprecated_min2xl': '1536px',
-      // => @media (min-width: 1536px) { ... }
-      'deprecated_min3xl': '1727px',
-      // => @media (min-width: 1900px) { ... }
-      'deprecated_min4xl': '1900px',
-      // => @media (min-width: 2200px) { ... }
-      'deprecated_min5xl': '2301px',
-      // => @media (min-width: 2200px) { ... }
     },
     extend: {
       colors: {
@@ -186,6 +175,9 @@ module.exports = {
       },
       gridTemplateColumns: {
         '1.3': '1.3fr 1fr'
+      },
+      maxWidth: {
+        'nftcom': '1200px',
       }
     },
   },
