@@ -35,12 +35,12 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
   return (
     <PageWrapper bgLight>
       <div className='bg-white'>
-        <div className='px-6 md:px-4 sm:px-2.5 pt-28 max-w-7xl mx-auto'>
+        <div className='px-6 px-2.5 pt-28 max-w-nftcom mx-auto'>
           <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
           {posts && <BlogSlider posts={data?.blogSlidesCollection.items} />}
       
-          <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 mt-10 '>{data?.listTitle}</h2>
-          <div className="grid gap-x-4 sm:gap-x-3 gap-y-7 grid-cols-3 md:grid-cols-2 pb-24 lg:pb-12 ">
+          <h2 className='font-bold font-grotesk minlg:text-4xl text-lg minlg:mb-6 mb-4 mt-10 '>{data?.listTitle}</h2>
+          <div className="grid minmd:gap-x-4 gap-x-3 gap-y-7 minlg:grid-cols-3 grid-cols-2 minxl:pb-24 pb-12 ">
             {posts && posts.map((post) => (
               <RelatedPostCard key={post.sys.id} post={post} />
             ))}

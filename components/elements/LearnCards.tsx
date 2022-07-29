@@ -34,7 +34,7 @@ export const LearnCards = (props: LearnCardsProps) => {
               'w-full h-full tracking-wider text-white',
               'my-4',
               'text-header leading-header font-header text-center',
-              card['title'].length > 14 ? 'lg:py-11 py-20': 'py-20' ,
+              card['title'].length > 14 ? 'py-11 minxl:py-20': 'py-20' ,
               'px-4',
             )}
             onClick={() => router.push(card['linkTo'])}
