@@ -7,13 +7,10 @@ import { HeroSidebarProfiles } from 'components/modules/HeroSidebar/HeroSidebarP
 import { SidebarCTA, useActiveSidebarCTA } from 'components/modules/HeroSidebar/useActiveSidebarCTA';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
 import SignIn from 'components/modules/Sidebar/SignIn';
-import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
-import { useUser } from 'hooks/state/useUser';
 import useENSName from 'hooks/useENSName';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { useProfileMetadata } from 'hooks/useProfileMetadata';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';

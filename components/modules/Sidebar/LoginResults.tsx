@@ -1,4 +1,3 @@
-import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';

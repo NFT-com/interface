@@ -1,5 +1,4 @@
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
-import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 
