@@ -11,10 +11,10 @@ type ConnectedAccountsProps = {
     pending: Address[];
     accepted: Address[];
   };
-  remove: (type: string, address: string) => void
+  removeHandler: (type: string, address: string) => void
 };
 
-export default function ConnectedAccounts({ selectedProfile, associatedAddresses, remove }: ConnectedAccountsProps) {
+export default function ConnectedAccounts({ selectedProfile, associatedAddresses, removeHandler }: ConnectedAccountsProps) {
   return (
     <div id="wallets" className='mt-8 font-grotesk'>
       <h3 className='text-base font-semibold tracking-wide mb-1'>Connected Wallets</h3>
@@ -31,10 +31,10 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
             </div>
 
             {associatedAddresses?.accepted.map((address, index)=> (
-              <AssociatedAddress key={index} address={address} remove={remove} />
+              <AssociatedAddress key={index} address={address} remove={removeHandler} />
             ))}
             {associatedAddresses?.pending.map((address, index)=> (
-              <AssociatedAddress pending key={index} address={address} remove={remove} />
+              <AssociatedAddress pending key={index} address={address} remove={removeHandler} />
             ))}
           </div>
         )

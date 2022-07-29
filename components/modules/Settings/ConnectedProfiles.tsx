@@ -10,10 +10,10 @@ type ConnectedProfilesProps = {
     pending: Profile[];
     accepted: Profile[];
   };
-  remove: (type: string, address: string) => void
+  removeHandler: (type: string, address: string) => void
 };
 
-export default function ConnectedProfiles({ associatedProfiles, remove }: ConnectedProfilesProps) {
+export default function ConnectedProfiles({ associatedProfiles, removeHandler }: ConnectedProfilesProps) {
   return (
     <div id="profiles" className='mt-10 md:w-full w-3/4'>
       <h2 className='font-grotesk tracking-wide font-bold text-black md:text-2xl text-4xl mb-1'>Connected Profiles</h2>
@@ -24,10 +24,10 @@ export default function ConnectedProfiles({ associatedProfiles, remove }: Connec
           <p className='text-sm font-medium'>No connection requests</p>
         )}
         {associatedProfiles?.accepted?.map((profile, index)=> (
-          <AssociatedProfile profile={profile} key={index} remove={remove} />
+          <AssociatedProfile profile={profile} key={index} remove={removeHandler} />
         ))}
         {associatedProfiles?.pending?.map((profile, index)=> (
-          <AssociatedProfile pending profile={profile} key={index} remove={remove} />
+          <AssociatedProfile pending profile={profile} key={index} remove={removeHandler} />
         ))}
       </div>
     </div>
