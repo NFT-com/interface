@@ -45,7 +45,7 @@ export const Sidebar = () => {
   const activeCTA: SidebarCTA = useActiveSidebarCTA();
 
   const getSidebarContent = useCallback(() => {
-    if(currentAddress && myOwnedProfileTokens.findIndex(e => e.title === profileValue) !== -1 || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length) {
+    if(currentAddress && myOwnedProfileTokens.some(e => e.title === profileValue) || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length) {
       return (
         <motion.div
           layout
@@ -159,7 +159,7 @@ export const Sidebar = () => {
         </motion.div>
       );}
 
-    if(myOwnedProfileTokens.findIndex(e => e.title === profileValue) < 0){
+    if(!myOwnedProfileTokens.some(e => e.title === profileValue)){
       return (
         <LoginResults
           profileValue={profileValue}
@@ -261,10 +261,7 @@ export const Sidebar = () => {
             )
             :
             (
-              <SignIn
-                // profileValue={profileValue}
-              // setProfileValue={setProfileValue}
-              />
+              <SignIn />
             )
           }
         </motion.div>

@@ -1,6 +1,7 @@
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { Doppler, getEnvBool } from 'utils/env';
+import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
@@ -127,7 +128,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 toggleSidebar();
               }} type="button">
                 <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                {currentAddress.substring(0, 6)}
+                {shortenAddress(currentAddress)}
               </button>
             </div>
           </>
