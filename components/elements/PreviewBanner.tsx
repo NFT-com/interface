@@ -5,7 +5,7 @@ function PreviewBanner() {
   const router = useRouter();
   return (
     <div
-      className='flex text-sm h-16 bg-black dark:bg-white text-white dark:text-black w-full justify-center items-center gap-16 sm:gap-4 fixed bottom-0 z-50'
+      className='flex text-sm h-16 bg-black dark:bg-white text-white dark:text-black w-full justify-center items-center minmd:gap-16 gap-4 fixed bottom-0 z-50'
     >
       <span>PREVIEW MODE ENABLED</span>
       <Link

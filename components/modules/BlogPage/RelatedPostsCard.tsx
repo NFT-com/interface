@@ -26,11 +26,11 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
         />
       </div>
         }
-        <h3 className="font-grotesk font-bold text-xl lg:text-lg md:text-base sm:text-sm mt-2">
+        <h3 className="font-grotesk font-bold minxl:text-xl minlg:text-lg minmd:text-base text-sm mt-2">
           {post?.title}
         </h3>
         {post?.description && (
-          <p className="font-grotesk text-base md:text-xs mt-1 leading-5.5 md:leading-4 text-blog-text">
+          <p className="font-grotesk minlg:text-base text-xs mt-1 minlg:leading-5.5 leading-4 text-blog-text">
             {post.description.length > 75
               ? post.description.substring(0, 75) + '...'
               : post.description}
@@ -38,28 +38,28 @@ export default function RelatedPostCard({ post }: RelatedPostProps) {
         )}
         <div className="flex mt-3">
           {post?.author?.image?.url && (
-            <div className="h-9 md:h-7 w-9 md:w-7 mr-2 mt-0.5">
+            <div className="minlg:h-9 h-7 minlg:w-9 w-7 mr-2 mt-0.5">
               <Image
                 src={post?.author?.image?.url}
                 alt={post?.author?.image?.description || 'Author Image'}
-                className="rounded-full"
+                className="rounded-full object-cover"
                 width="100%"
                 height="100%"
               />
             </div>)}
           <div>
-            <p className="font-grotesk text-base md:text-xs leading-5">
+            <p className="font-grotesk minlg:text-base text-xs leading-5">
               {post?.author?.name}
             </p>
             <div className="font-grotesk flex text-blog-text">
-              <p className="text-sm md:text-xxs3">
+              <p className="minlg:text-sm text-xxs3">
                 {moment(post?.publishDate).format('MMM Do, YYYY')}
               </p>
-              <span className="mx-1 block md:hidden text-sm md:text-xxs3 ">
+              <span className="mx-1 minlg:block hidden minlg:text-sm text-xxs3 ">
               .
               </span>
               {post?.body && (
-                <p className="block md:hidden text-sm md:text-xxs3">
+                <p className="minlg:block hidden minlg:text-sm text-xxs3">
                   {result.minutes} min read
                 </p>
               )}
