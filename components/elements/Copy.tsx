@@ -28,6 +28,7 @@ export default function CopyHelper(props: {
   white?: boolean;
   toCopy: string;
   children?: React.ReactNode;
+  lightModeForced?: boolean;
 }) {
   const [isCopied, setCopied] = useCopyClipboard();
   const { primaryIcon, alwaysWhite } = useThemeColors();
@@ -38,12 +39,12 @@ export default function CopyHelper(props: {
         className={joinClasses(
           'bg-none cursor-pointer font-medium',
           'border-0 shrink-0 flex items-center',
-          'no-underline text-primary-txt',
-          'dark:text-primary-txt-dk text-copy-size',
-          'active:hover:no-underline active:hover:text-primary-txt',
-          'active:hover:dark:text-primary-txt-dk',
+          'no-underline text-copy-size',
+          props.lightModeForced ? ' text-[#6F6F6F]': 'dark:text-primary-txt-dk text-copy-size',
+          'active:hover:no-underline',
+          props.lightModeForced ? 'active:hover:text-primary-txt' : 'active:hover:text-primary-txt active:hover:dark:text-primary-txt-dk',
           'focus:no-underline focus:outline-0',
-          'focus:text-primary-txt focus:dark:text-primary-txt-dk',
+          props.lightModeForced ? 'focus:text-primary-txt': 'focus:text-primary-txt focus:dark:text-primary-txt-dk',
         )}>
         {props.after === true && (props.keepContent !== true && isCopied ? '' : props.children)}
         {isCopied

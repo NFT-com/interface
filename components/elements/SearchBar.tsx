@@ -116,14 +116,14 @@ export const SearchBar = (props: SearchBarProps) => {
                   <span className={tw(
                     'text-xs text-gray-400',
                     props.bgLight ? 'text-gray-400':'text-white')}>
-                    {item.request_params.collection_name.toUpperCase()}</span>
+                    {item?.request_params?.collection_name?.toUpperCase()}</span>
                   {item.found === 0 ?
                     <div className={tw(
                       props.bgLight ? 'text-gray-400':'text-white',
                       'text-sm p-3 text-gray-500')}>
                         No results found
                     </div>
-                    : (item.hits.map((hit, index) => {
+                    : (item?.hits?.map((hit, index) => {
                       return (
                         <div
                           key={index}

@@ -1,17 +1,19 @@
-import CollectionDetails from 'components/elements/CollectionDetails';
+import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
-import { GraphView } from 'components/elements/GraphView';
-import { Switch } from 'components/elements/Switch';
+import { NFTCard } from 'components/elements/NFTCard';
 import { PageWrapper } from 'components/layouts/PageWrapper';
+import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { NotFoundPage } from 'pages/404';
 import { Doppler, getEnv } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
+import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import CopyIcon from 'public/arrow_square_out.svg';
+import { useCallback, useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 export type CollectionPageRouteParams = {
@@ -52,8 +54,44 @@ export default function CollectionPage() {
   const { chain } = useNetwork();
   const router = useRouter();
   const { contractAddr } = router.query;
-  const [enabled, setEnabled] = useState(false);
-  const { data: collectionData } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), false);
+  const client = getTypesenseInstantsearchAdapterRaw;
+  const [collectionNfts, setCollectionNfts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [found, setFound] = useState(0);
+  const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), true);
+  
+  const displayZeros = (quantity: number) => {
+    if (quantity < 10) {
+      return '0000';
+    } else if (quantity < 100){
+      return '000';
+    } else if (quantity < 1000){
+      return '00';
+    } else if (quantity < 10000){
+      return '0';
+    }
+  };
+
+  const loadNFTs = useCallback(() => {
+    contractAddr && client.collections('nfts')
+      .documents()
+      .search({
+        'q'       : contractAddr.toString(),
+        'query_by': 'contractAddr',
+        'per_page': 8,
+        'page'    : currentPage < 1 ? 1 : currentPage
+      })
+      .then(function (nftsResults) {
+        setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
+        setFound(nftsResults.found);
+      });
+    setCurrentPage(currentPage + 1);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [client, collectionNfts, contractAddr]);
+
+  useEffect(() => {
+    collectionNfts.length < 1 && loadNFTs();
+  }, [collectionNfts.length, loadNFTs]);
 
   if (!ethers.utils.isAddress(contractAddr?.toString())) {
     return <NotFoundPage />;
@@ -63,36 +101,55 @@ export default function CollectionPage() {
     <PageWrapper
       bgColorClasses={tw(
         'bg-always-white',
-        //'dark:bg-pagebg-dk'
       )}
       headerOptions={{
         removeSummaryBanner: true,
       }}>
-      {collectionData && collectionData.collection && <div className="md:mx-10 lg:mx-20 mx-72 mt-36">
-        <div className="font-medium text-3xl tracking-normal mt-6 text-gray-500 text-always-black">
-          <b>NFT Collection - {collectionData?.collection?.name}</b>
-        </div>
-        <div className="text-gray-500 dark:text-black">
-          <Copy toCopy={contractAddr?.toString()} after>
+      <div className="mt-20">
+        <BannerWrapper imageOverride={collectionData?.openseaInfo?.collection?.banner_image_url}/>
+      </div>
+      {collectionNfts.length > 0 &&
+      <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
+        <div className="font-grotesk font-black text-4xl">{collectionNfts[0].document.contractName}</div>
+        <div className="mb-7 text-4xl">
+          <Copy lightModeForced toCopy={contractAddr?.toString()} after>
             {shortenAddress(contractAddr?.toString())}
+            <CopyIcon />
           </Copy>
         </div>
-        <div className="flex justify-end items-center mb-2 text-always-black">
-          <Switch
-            left="Card View"
-            right="Graph View"
-            enabled={enabled}
-            setEnabled={setEnabled}
+        <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4">
+          {collectionNfts.map((nft, index) => {
+            return (
+              <div className="NftCollectionItem" key={index}>
+                <NFTCard
+                  traits={[{ value: 'Price: ' + (nft.document.listedPx ? (nft.document.listedPx + 'ETH') : 'Not estimated'), key: '' }]}
+                  title={nft.document.nftName}
+                  subtitle={'GK'+displayZeros(Number(nft.document.tokenId))+nft.document.tokenId}
+                  images={[nft.document.imageURL]}
+                  onClick={() => {
+                    if (nft.document.nftName) {
+                      router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
+                    }
+                  }}
+                  description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
+                  customBackground={'#303030'}
+                  customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+                />
+              </div>);}
+          )}
+        </div>
+        {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+          <Button
+            color={'black'}
+            accent={AccentType.SCALE}
+            stretch={true}
+            label={'Load More'}
+            onClick={ () => {
+              loadNFTs();
+            }}
+            type={ButtonType.PRIMARY}
           />
-        </div>
-        {enabled ? <GraphView /> : <CardsView />}
-        <div className="font-bold text-3xl tracking-normal mt-6 text-always-black">NFT</div>
-        <div className="text-gray-500 mt-4 mb-1 text-sm tracking-wider">
-          NOTE: The estimated values are not financial advice, and should only be used as
-          a general guide of relative rarity. Please do your own research before making
-          financial decisions. <b>Only ERC721 supported, more soon.</b>
-        </div>
-        <CollectionDetails address={contractAddr?.toString()} collectionName={collectionData?.collection?.name}/>
+        </div>}
       </div>}
     </PageWrapper>
   );
