@@ -109,7 +109,7 @@ export default function CollectionPage() {
         <BannerWrapper imageOverride={collectionData?.openseaInfo?.collection?.banner_image_url}/>
       </div>
       {collectionNfts.length > 0 &&
-      <div className="mt-7 mx-8 minmd:mx-10 max-w-nftcom minlg:mx-auto">
+      <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
         <div className="font-grotesk font-black text-4xl">{collectionNfts[0].document.contractName}</div>
         <div className="mb-7 text-4xl">
           <Copy lightModeForced toCopy={contractAddr?.toString()} after>
@@ -120,7 +120,7 @@ export default function CollectionPage() {
         <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4">
           {collectionNfts.map((nft, index) => {
             return (
-              <div key={index}>
+              <div className="NftCollectionItem" key={index}>
                 <NFTCard
                   traits={[{ value: 'Price: ' + (nft.document.listedPx ? (nft.document.listedPx + 'ETH') : 'Not estimated'), key: '' }]}
                   title={nft.document.nftName}
