@@ -78,44 +78,6 @@ export function prettify(num: number | string, dec?: number) {
   return formatted;
 }
 
-export function prettifyBigNum(num: BigNumber) {
-  return Number(num) >= 1.0e9
-    ? (Number(num) / 1.0e9).toFixed(2) + 'B'
-    : Number(num) >= 1.0e6
-      ? (Number(num) / 1.0e6).toFixed(2) + 'M'
-      : Number(num) >= 1.0e3
-        ? (Number(num) / 1.0e3).toFixed(2) + 'K'
-        : Number(num).toFixed(2);
-}
-
-export function convertRegular(num: number | string) {
-  return Number(BigNumber.from(num).div(BigNumber.from(10).pow(18)));
-}
-
-export function parseIpfs(uri: string) {
-  if (uri?.includes('ipfs://')) {
-    return `https://nft-llc.mypinata.cloud/ipfs/${uri?.replace('ipfs://', '')}`;
-  } else if (uri?.includes('https://')) {
-    return uri;
-  } else if (uri?.length === 59) {
-    return `https://nft-llc.mypinata.cloud/ipfs/${uri}`;
-  }
-  return uri;
-}
-
-export function stringToColor(str: string) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  let colour = '#';
-  for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xff;
-    colour += ('00' + value.toString(16)).substr(-2);
-  }
-  return colour;
-}
-
 export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
 
 export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
@@ -123,16 +85,17 @@ export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == 
 export const filterNulls = (items: any[]) => items.filter(item => item != null);
 
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
+  const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
   if (image == null) {
     return null;
   } else if (image.indexOf('ipfs://ipfs/') === 0) {
-    return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(12);
+    return prefix + image.slice(12);
   } else if (image.indexOf('ipfs://') === 0) {
-    return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(7);
+    return prefix + image.slice(7);
   } else if (image.indexOf('https://ipfs.io/ipfs/') === 0) {
-    return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(21);
+    return prefix + image.slice(21);
   } else if (image.indexOf('https://gateway.pinata.cloud/ipfs/') === 0) {
-    return 'https://nft-llc.mypinata.cloud/ipfs/' + image.slice(34);
+    return prefix + image.slice(34);
   }
   return image;
 };
@@ -196,9 +159,9 @@ export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
 }
 
 export function getFallbackChainIdFromSupportedNetwork(network: string): string {
-  if (network.includes('rinkeby')) {
+  if (network.includes('goerli')) {
     return '5';
-  } else if (network.includes('goerli')) {
+  } else if (network.includes('rinkeby')) {
     return '4';
   } else {
     return '1';
