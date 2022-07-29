@@ -63,7 +63,7 @@ export default function BlogSlider({ posts }:BlogSliderProps) {
           </div>
         ))}
       </div>
-      <div className='absolute bottom-0 -right-16 lg:-right-20 md:-right-24 w-28 h-96 max-h-3/5 bg-gradient-to-t from-[#F9D963] to-[#F6BE54] opacity-10  row-span-2 mt-48 -skew-x-[17deg]'></div>
+      <div className='absolute bottom-0 minxl:-right-16 minlg:-right-20 -right-24 w-28 h-96 max-h-3/5 bg-gradient-to-t from-[#F9D963] to-[#F6BE54] opacity-10  row-span-2 mt-48 -skew-x-[17deg]'></div>
     </div>
   );
 }
