@@ -37,7 +37,7 @@ describe('FeaturedProfile', () => {
         }]}
       />
     );
-    cy.get('.mb-2').should('exist');
+    cy.get('.mb-4').should('exist');
     cy.contains('Featured Profile').should('exist');
     cy.contains('test').should('exist');
   });

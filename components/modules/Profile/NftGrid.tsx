@@ -65,7 +65,7 @@ export function NftGrid(props: NftGridProps) {
     {items?.map((nft: PartialDeep<DetailedNft>, index) => (
       <DraggableGridItem
         key={nft?.id}
-        item={nft}
+        item={{ id: nft?.id, hidden: nft?.hidden }}
         onMoveItem={moveItem}
       >
         <div

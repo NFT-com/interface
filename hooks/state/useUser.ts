@@ -1,29 +1,47 @@
-import { getCurrentTimestamp } from 'utils/helpers';
-
-import { useEffect } from 'react';
+import { BigNumber } from 'ethers';
+import { useCallback,useEffect } from 'react';
 import useSWR from 'swr';
 
 export interface UserState {
+  currentProfileUrl: string
   isDarkMode: boolean;
-  timestamp: number;
+  currentProfileTokenId: BigNumber | null;
 }
 
 export const userStateInitial: UserState = {
   isDarkMode: true,
-  timestamp: getCurrentTimestamp(),
+  currentProfileUrl: '',
+  currentProfileTokenId: (typeof window !== 'undefined')
+    ? (localStorage.getItem('selectedProfileTokenId') ? BigNumber.from(localStorage.getItem('selectedProfileTokenId')) : null)
+    : null,
 };
 
 export function useUser() {
   const { data, mutate } = useSWR('user', { fallbackData: userStateInitial });
 
   const loading = !data;
-  const updateDarkMode = (darkMode: boolean) => {
+  const setDarkMode = (darkMode: boolean) => {
     mutate({
       ...data,
-      isDarkMode: darkMode,
-      timestamp: getCurrentTimestamp()
+      isDarkMode: darkMode
     });
   };
+
+  const setCurrentProfileUrl= useCallback((selectedProfileUrl: string) => {
+    mutate({
+      ...data,
+      currentProfileUrl: selectedProfileUrl
+    });
+    localStorage.setItem('selectedProfileUrl', selectedProfileUrl === '' ? '' : selectedProfileUrl);
+  }, [data, mutate]);
+
+  const setCurrentProfileTokenId = useCallback((selectedProfileTokenId: BigNumber | null) => {
+    mutate({
+      ...data,
+      currentProfileTokenId: selectedProfileTokenId
+    });
+    localStorage.setItem('selectedProfileTokenId', !selectedProfileTokenId ? null : selectedProfileTokenId?.toString());
+  }, [data, mutate]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -34,8 +52,8 @@ export function useUser() {
   return {
     user: data,
     loading,
-    isDarkMode: data?.isDarkMode,
-    timestamp: data?.timestamp,
-    updateDarkMode,
+    setDarkMode,
+    setCurrentProfileUrl,
+    setCurrentProfileTokenId,
   };
 }

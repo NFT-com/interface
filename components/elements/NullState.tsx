@@ -31,9 +31,9 @@ export interface NullStateProps {
 }
 
 export function NullState(props: NullStateProps) {
-  const { isDarkMode } = useUser();
+  const { user } = useUser();
 
-  const randomErrorImage = isDarkMode ?
+  const randomErrorImage = user?.isDarkMode ?
     errorImagesDark[Math.floor(Math.random() * errorImagesDark.length)]
     :
     errorImagesLight[Math.floor(Math.random() * errorImagesLight.length)];

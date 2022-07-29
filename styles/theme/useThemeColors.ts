@@ -51,25 +51,25 @@ export interface ThemeColors {
 }
 
 export function useThemeColors(): ThemeColors {
-  const { isDarkMode } = useUser();
+  const { user } = useUser();
   return {
     // constants
     alwaysBlack: '#000000',
     alwaysWhite: '#FFFFFF',
-    red: isDarkMode ? '#F36886' : rgba(239, 68, 68, 1),
-    green: isDarkMode ? '#8EE4BD' : rgba(16, 185, 129, 1),
+    red: user?.isDarkMode ? '#F36886' : rgba(239, 68, 68, 1),
+    green: user?.isDarkMode ? '#8EE4BD' : rgba(16, 185, 129, 1),
     pink: '#F2358E',
     heroPink: '#FF62EF',
     transparent: rgba(255, 255, 255, 0),
     // hex colors
-    accent: isDarkMode ? '#2C3448' : '#F0F5FF',
-    accentBorder: isDarkMode ? '#384260' : 'transparent',
-    background: isDarkMode ? '#0C0F17' : rgba(244, 246, 251, 1),
-    headerBackground: isDarkMode ? '#0C0F17' : '#FFFFFF',
-    tileBackground: isDarkMode ? rgba(17, 21, 32, 0.75) : '#FFFFFF',
-    tileBackgroundSecondary: isDarkMode ? '#303030' : '#FFFFFF',
-    inputBackground: isDarkMode ? '#111520' : rgba(202, 210, 234, 0.2),
-    inputBorder: isDarkMode ? '#37425C' : '#CAD2EA',
+    accent: user?.isDarkMode ? '#2C3448' : '#F0F5FF',
+    accentBorder: user?.isDarkMode ? '#384260' : 'transparent',
+    background: user?.isDarkMode ? '#0C0F17' : rgba(244, 246, 251, 1),
+    headerBackground: user?.isDarkMode ? '#0C0F17' : '#FFFFFF',
+    tileBackground: user?.isDarkMode ? rgba(17, 21, 32, 0.75) : '#FFFFFF',
+    tileBackgroundSecondary: user?.isDarkMode ? '#303030' : '#FFFFFF',
+    inputBackground: user?.isDarkMode ? '#111520' : rgba(202, 210, 234, 0.2),
+    inputBorder: user?.isDarkMode ? '#37425C' : '#CAD2EA',
     primaryButtonBackground: '#00A4FF',
     primaryButtonBackground_rebrand: '#F9D963',
     primaryButtonBackgroundDisabled: rgba(52, 58, 80, 0.5),
@@ -87,17 +87,17 @@ export function useThemeColors(): ThemeColors {
     primaryButtonTextDisabled_rebrand: '#4D4412',
     errorButtonBackground: '#E8006F',
     disabledButtonBackground: '#6B7280',
-    modalOverlay: isDarkMode ? rgba(23, 27, 39, 0.5) : rgba(240, 245, 255, 0.5),
-    modalBackground: isDarkMode ? '#22293B' : '#FFFFFF',
-    primaryText: isDarkMode ? '#FFFFFF' : '#F3F3F3',
-    primaryIcon: isDarkMode ? '#FFFFFF' : '#F3F3F3',
+    modalOverlay: user?.isDarkMode ? rgba(23, 27, 39, 0.5) : rgba(240, 245, 255, 0.5),
+    modalBackground: user?.isDarkMode ? '#22293B' : '#FFFFFF',
+    primaryText: user?.isDarkMode ? '#FFFFFF' : '#F3F3F3',
+    primaryIcon: user?.isDarkMode ? '#FFFFFF' : '#F3F3F3',
     secondaryIcon: '#777E93',
-    rowBackgroundActive: isDarkMode ? rgba(44, 51, 74, 0.75) : '#F0F5FF',
-    rowBackgroundInactive: isDarkMode ? rgba(23, 27, 39, 0.75) : rgba(255, 255, 255, 0.8),
-    rowBorder: isDarkMode ? 'transparent' : '#E6ECFF',
+    rowBackgroundActive: user?.isDarkMode ? rgba(44, 51, 74, 0.75) : '#F0F5FF',
+    rowBackgroundInactive: user?.isDarkMode ? rgba(23, 27, 39, 0.75) : rgba(255, 255, 255, 0.8),
+    rowBorder: user?.isDarkMode ? 'transparent' : '#E6ECFF',
     secondaryText: '#777E93',
     // class names
-    dividerColorClass: isDarkMode ? 'border-gray-200' : 'border-gray-800',
-    primaryTextClass: isDarkMode ? 'text-white' : 'text-black',
+    dividerColorClass: user?.isDarkMode ? 'border-gray-200' : 'border-gray-800',
+    primaryTextClass: user?.isDarkMode ? 'text-white' : 'text-black',
   };
 }
