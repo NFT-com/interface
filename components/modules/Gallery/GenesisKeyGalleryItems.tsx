@@ -63,7 +63,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
         key={tokenId}
         className={tw(
           'flex mb-4 items-center justify-center px-4',
-          'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
+          'minxl:w-1/5 minlg:w-1/4 minmd:w-1/3 w-2/5'
         )}
       >
         <GenesisKeyGalleryCard
@@ -102,7 +102,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
         key={props.currentFilter}
         className={tw(
           'flex mb-4 items-center justify-center px-4',
-          'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
+          'minxl:w-1/5 minlg:w-1/4 minmd:w-1/3 w-2/5'
         )}
       >
         <GenesisKeyGalleryCard
@@ -127,7 +127,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
               key={genesisKeyToken?.id?.tokenId}
               className={tw(
                 'flex mb-4 items-center justify-center px-4',
-                'w-1/5 lg:w-1/4 md:w-1/3 sm:w-2/5'
+                'minxl:w-1/5 minlg:w-1/4 minmd:w-1/3 w-2/5'
               )}
             >
               <GenesisKeyGalleryCard

@@ -1,6 +1,7 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { MyNfTsQuery, Nft } from 'graphql/generated/types';
+import { Doppler, getEnv } from 'utils/env';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -19,7 +20,7 @@ export function useMyNFTsQuery(first: number): NftsData {
   const { signed } = useContext(GraphQLContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
-  const keyString = 'MyNFTsQuery ' + currentAddress + chain?.id + signed + first;
+  const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first;
 
   const { data } = useSWR(keyString, async () => {
     if (!currentAddress) {

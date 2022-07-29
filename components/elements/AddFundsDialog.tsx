@@ -45,7 +45,7 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
   >
     <div
       className={tw(
-        'sm:w-full',
+        'w-full max-w-nftcom',
         'rounded-xl text-center flex flex-col',
         'items-center justify-between mt-8 p-8',
       )}
@@ -63,10 +63,9 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
                   color: primaryText,
                 }}
               >
-                  You tried to place a bid higher than the amount of ETH in your wallet.{' '}
-                  You are being redirected to Wyre (sendwyre.com) to purchase more ETH. It is
-                  entirely up to you if you would like to use this FIAT to crypto service or fund
-                  your wallet a different way. {'\n'}
+                You are being redirected to Wyre (sendwyre.com) to purchase more ETH. It is
+                entirely up to you if you would like to use this FIAT to crypto service or fund
+                your wallet a different way. {'\n'}
               </div>
               <div className='w-full text-center text-base break-words max-w-xl'>
                   Please note: NFT.com is not affiliated with sendwyre.com in any way, and are
@@ -97,7 +96,7 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
         }
       </div>
     </div>
-    <div className="font-hero-heading1 mx-[18%] md:mx-0 mb-5 md:mb-0">
+    <div className="font-hero-heading1 minlg:mx-[18%] mx-0 minlg:mb-5 mb-0">
       <Button
         icon={!showWyreDisclaimer ? FiatBlack : null}
         type={ButtonType.PRIMARY}

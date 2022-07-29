@@ -14,7 +14,12 @@ export interface GenesisKeyGalleryFiltersProps {
 }
 
 export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
-  const { galleryShowMyStuff: showMyStuff, galleryItemType, setGalleryItemType, setGalleryShowMyStuff } = useGallery();
+  const {
+    galleryShowMyStuff: showMyStuff,
+    galleryItemType,
+    setGalleryItemType,
+    setGalleryShowMyStuff
+  } = useGallery();
   const router = useRouter();
 
   const type = router?.query?.['type'] ?? 'gk';
@@ -28,7 +33,7 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
 
   return (
     <>
-      <span className='text-4xl deprecated_md:text-2xl'>Filter</span>
+      <span className='minlg:text-4xl text-2xl'>Filter</span>
       <div className='w-full mt-4 dark border-b border-accent-border-dk py-4'>
         <Switch
           left="Genesis Keys"
@@ -63,7 +68,7 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
           <SearchIcon className='w-6 h-6 mr-2 shrink-0 aspect-square' />
           <input
             className={tw(
-              'text-lg deprecated_md:text-lg min-w-0 block',
+              'text-lg min-w-0 block',
               'text-left px-3 py-3 w-[70%] rounded-lg font-medium',
               'text-white bg-transparent shrink-0'
             )}

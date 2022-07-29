@@ -191,6 +191,10 @@ export function getEtherscanLink(
   }
 }
 
+export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
+  return (chainId == null ? null : String(chainId));
+}
+
 export function getFallbackChainIdFromSupportedNetwork(network: string): string {
   if (network.includes('rinkeby')) {
     return '5';
