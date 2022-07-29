@@ -112,7 +112,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       <main className='flex flex-col mt-20 font-grotesk not-italic'>
         <Link href='/app/auctions' passHref>
           <a>
-            <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk text-lg sm:text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
+            <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
               <span>Unlock the NFT Platform Beta with a Genesis Key</span>
               <div className='flex flex-col rounded items-center p-[1px] ml-2'>
                 <Vector />
@@ -120,7 +120,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             </div>
           </a>
         </Link>
-        <div className={tw('flex flex-row sm:flex-wrap items-center justify-between sm:p-6 sm:space-x-0 space-x-10 md:max-w-screen md:px-5 w-full max-w-[1100px] mx-auto h-full',
+        <div className={tw('flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between minmd:p-0 p-6 space-x-0 minmd:space-x-10 max-w-screen minlg:px-0 px-5 w-full minlg:max-w-nftcom mx-auto h-full',
           'break-after-all ',
         )}
         style={{
@@ -130,7 +130,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         }}>
           <div className='break-after-all space-y-2 w-full ...'>
             <div className={tw(
-              'font-header text-black sm:text-5xl md:text-5xl xl:text-7xl text-header leading-header',
+              'font-header text-black text-5xl minxl:text-7xl text-header leading-header',
               'break-after-all space-y-2'
             )}>
               <div>
@@ -139,7 +139,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               <div>
                 {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
               </div>
-              <div className='py-5 md:text-base text-xl md:block md:w-[100%] text-body text-[#A09E9E] leading-10 tracking-wide font-body w-[70%]'>
+              <div className='py-5 text-base minlg:text-xl block w-[100%] text-body text-[#A09E9E] leading-10 tracking-wide font-body minlg:w-[70%]'>
                   Collect, Display, and Trade your NFTs. We&apos;re building the hub for all things Web3. Get started by building your NFT Profile.
               </div>
             </div>
@@ -162,7 +162,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </button>
             </div>
           </div>
-          <div className='flex sm:flex-row sm:justify-center md:ml-0 lg:pl-0 pl-20 justify-end sm:py-10 md:py-0 w-full'>
+          <div className='flex flex-row justify-center pl-0 minxl:pl-20 minmd:justify-end py-10 minmd:py-0 w-full'>
             <FeaturedProfile
               profileOwner={featuredProfile}
               gkId={1}
@@ -170,8 +170,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             />
           </div>
         </div>
-        <div className='space-y-12 md:px-0 w-full items-center max-w-[1100px] mx-auto ...'>
-          <div className='h-full md:px-6 px-2 py-12 ...'>
+        <div className='space-y-12 w-full items-center max-w-[1100px] mx-auto ...'>
+          <div className='h-full px-6 minlg:px-2 py-12 ...'>
             <div className='text-section leading-header font-header justify-center ...'>
               {data?.feedTitle}
               <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-nowrap sm:whitespace-normal ...'>
@@ -193,24 +193,24 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </div>
             </div>
           </div>
-          <div className='h-full px-2 sm:rounded-none md:rounded-none lg:rounded-none rounded-xl bg-always-black py-6 drop-shadow-lg w-full mx-auto ...'>
+          <div className='h-full px-2 rounded-none minxl:rounded-xl bg-always-black py-6 drop-shadow-lg w-full mx-auto ...'>
             {tickerStats && (
               <HomePageTicker tickerStats={data.tickerStats} />
             )}
           </div>
-          <div className='h-full lg:px-6 px-2 ...'>
+          <div className='h-full px-6 minxl:px-2 ...'>
             <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
               {data?.leaderboardTitle}
             </div>
             <LeaderBoard data={leaderboardData} />
           </div>
-          <div className='flex md:px-6 flex-row flex-wrap w-full h-full justify-center px-2 ...'>
+          <div className='flex px-6 flex-row flex-wrap w-full h-full justify-center minlg:px-2 ...'>
             <div className='h-full w-full ...'>
               <div className='text-section font-header justify-center py-6 ...'>
                 {data?.threeCardTitle}
               </div>
             </div>
-            <div className='h-full w-[33%] sm:w-full ...'>
+            <div className='h-full minmd:w-[33%] w-full ...'>
               <div
                 className={tw(
                   'drop-shadow-md rounded-xl flex flex-col',
@@ -232,7 +232,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full w-[33%] sm:w-full ...'>
+            <div className='h-full minmd:w-[33%] w-full ...'>
               <div
                 className={tw(
                   'drop-shadow-md rounded-xl flex flex-col',
@@ -253,7 +253,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
               </div>
             </div>
-            <div className='h-full w-[33%] sm:w-full ...'>
+            <div className='h-full minmd:w-[33%] w-full ...'>
               <div
                 className={tw(
                   'drop-shadow-md rounded-xl flex flex-col',
@@ -287,10 +287,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </button>
             </div>
           </div>
-          <div className='h-full md:px-6 w-full pb-10 pt-3 px-2'>
+          <div className='h-full px-6 w-full pb-10 pt-3 minlg:px-2'>
             <div className='text-section leading-header font-header justify-center ...'>
               {data?.learnTitle}
-              <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 md:whitespace-nowrap sm:whitespace-normal ...'>
+              <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 minlg:whitespace-normal minmd:whitespace-nowrap whitespace-normal ...'>
                 {data?.learnDescription}
               </div>
               <div className='w-full items-center ...'>
@@ -300,7 +300,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     cardImages={learnCardImages}
                   />
                 </div>
-                <div className='flex flex-row justify-center sm:w-full items-center pt-6 ...'>
+                <div className='flex flex-row justify-center minmd:w-auto w-full items-center pt-6 ...'>
                   <Link href={'/articles'}>
                     <button
                       className={tw(
