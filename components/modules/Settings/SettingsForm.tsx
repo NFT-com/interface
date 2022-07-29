@@ -1,7 +1,10 @@
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 
+import { BigNumber } from 'ethers';
 import { GasPump } from 'phosphor-react';
 import { useRef } from 'react';
+import { useAccount } from 'wagmi';
 
 type SettingsFormProps = {
   type: string;
@@ -10,8 +13,11 @@ type SettingsFormProps = {
 };
 
 export default function NftOwner({ type, buttonText, selectedProfile }: SettingsFormProps) {
+  const { address: currentAddress } = useAccount();
   const addressRef = useRef(null);
-  const { nftResolver } = useAllContracts();
+  const { nftResolver, nftProfile } = useAllContracts();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const profileToken = myOwnedProfileTokens.find(a => a.title === selectedProfile);
   
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -20,7 +26,9 @@ export default function NftOwner({ type, buttonText, selectedProfile }: Settings
       await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => console.log(res));
       addressRef.current.value = '';
     } else {
-      console.log('test');
+      const address = addressRef.current.value;
+      await nftProfile.transferFrom(currentAddress, address, BigNumber.from(profileToken)).then((res) => console.log(res));
+      addressRef.current.value = '';
     }
   };
 

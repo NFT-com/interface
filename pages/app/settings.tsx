@@ -65,7 +65,6 @@ export default function Settings() {
         mutate();
       }
       const result = pendingAssociatedProfiles?.getMyPendingAssociations.filter(a => !evm.some(b => a.url === b.profileUrl));
-      console.log('🚀 ~ file: settings.tsx ~ line 59 ~ pendingAssociatedProfiles', pendingAssociatedProfiles);
       setAssociatedProfiles({ pending: result, accepted: evm });
     },
     [nftResolver, currentAddress, pendingAssociatedProfiles],
@@ -127,7 +126,7 @@ export default function Settings() {
               ? (<div id="transfer" className='mt-10'>
                 <h2 className='font-grotesk tracking-wide font-bold text-black md:text-2xl text-4xl mb-1'>Transfer Profile</h2>
                 <p className='text-blog-text-reskin mb-4'>Send this profile to another wallet.</p>
-                <SettingsForm buttonText='Transfer Profile' type='transfer' />
+                <SettingsForm selectedProfile={selectedProfile} buttonText='Transfer Profile' type='transfer' />
               </div>)
               : null }
           </div>
