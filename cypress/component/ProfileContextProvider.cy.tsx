@@ -120,7 +120,7 @@ describe('ProfileContextProvider', () => {
     cy.get('#selectedCollection').should('have.text', 'null');
     cy.get('#draftNftsDescriptionsVisible').should('have.text', 'undefined');
     // todo: figure out how to stub the gQL queries in tests
-    cy.get('#publiclyVisibleNfts').should('have.text', '');
+    cy.get('#publiclyVisibleNfts').should('have.text', '[]');
     cy.get('#editModeNfts').should('have.text', '[]');
   });
 
