@@ -158,8 +158,6 @@ export const getGenesisKeyThumbnail: (id: BigNumberish) => string = (id: BigNumb
   return 'https://cdn.nft.com/gk-min/' + BigNumber.from(id).toString() + '.jpeg';
 };
 
-export const getCurrentTimestamp = () => new Date().getTime();
-
 export function getAPIURL() {
   return getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL);
 }

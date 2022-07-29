@@ -16,7 +16,7 @@ export interface SummaryBannerProps {
 }
 
 export const SummaryBanner = (props: SummaryBannerProps) => {
-  const { isDarkMode, updateDarkMode } = useUser();
+  const { user, setDarkMode } = useUser();
 
   return (
     <nav
@@ -99,11 +99,11 @@ export const SummaryBanner = (props: SummaryBannerProps) => {
             <HeaderNavItem
               alt="Dark/Light Toggle"
               active={false}
-              logoActive={isDarkMode ? logoSun : logoMoon}
-              logoInactive={isDarkMode ? logoSun : logoMoon}
+              logoActive={user.isDarkMode ? logoSun : logoMoon}
+              logoInactive={user.isDarkMode ? logoSun : logoMoon}
               styleClasses={TAB_ICON_EXTRA_CLASSES.slice()}
               overrideBorder={true}
-              onClick={() => updateDarkMode(!isDarkMode)}
+              onClick={() => setDarkMode(!user.isDarkMode)}
             />
           </div>}
         </div>
