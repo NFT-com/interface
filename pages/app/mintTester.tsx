@@ -4,12 +4,15 @@ import { NextPageWithLayout } from 'pages/_app';
 import { Doppler,getEnvBool } from 'utils/env';
 
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const MintTester_ProfileFactory: NextPageWithLayout = () => {
   const router = useRouter();
-  if(!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
-    router.push('/404');
-  }
+  useEffect(() => {
+    if(!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
+      router.push('/404');
+    }
+  }, [router]);
 
   return (
     <main className="bg-pagebg-dk text-white rubik vault-lp">
