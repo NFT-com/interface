@@ -32,21 +32,21 @@ export function CollectionGallery(props: CollectionGalleryProps) {
 
   const {
     editMode,
+    editModeNfts,
     selectedCollection,
     setSelectedCollection,
     hideNftIds,
     showNftIds,
     publiclyVisibleNfts,
-    allOwnerNfts,
   } = useContext(ProfileContext);
 
   const { data: collectionData } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), selectedCollection, true);
 
   const { data: collections } = useSWR(
-    '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(allOwnerNfts),
+    '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(editModeNfts),
     () => {
       const nftsToShow = editMode ?
-        (allOwnerNfts ?? []) :
+        (editModeNfts ?? []) :
         (publiclyVisibleNfts ?? []);
       const newCollections = nftsToShow?.reduce((
         previousValue: Map<string, Nft[]>,
@@ -74,7 +74,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     );
   }
 
-  if (editMode && (allOwnerNfts.length ?? 0) === 0) {
+  if (editMode && (editModeNfts.length ?? 0) === 0) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-primary-txt dark:text-primary-txt-dk">
