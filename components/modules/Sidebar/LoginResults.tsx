@@ -1,3 +1,4 @@
+import ProfileCard from 'components/modules/Sidebar/ProfileCard';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
@@ -7,7 +8,6 @@ import SidebarNoProfiles from './NoProfiles';
 
 import { XIcon } from '@heroicons/react/solid';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { XCircle } from 'phosphor-react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -71,23 +71,9 @@ export default function LoginResults({ profileValue }: LoginResultsProps) {
             <p className='text-[#6F6F6F] mb-4 tracking-wide'>Good news! We found your profiles.</p>
       }
 
-      {myOwnedProfileTokens.length > 0 && myOwnedProfileTokens?.map((profile, index) => {
+      {myOwnedProfileTokens.length > 0 && myOwnedProfileTokens?.map((profile) => {
         return (
-          <motion.div
-            style={{
-              background: `url("${profile.metadata.header}")`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-            }}
-            className='bg-black rounded-[10px] mb-4 hover:cursor-pointer'
-            onClick={() => selectProfileHandler(profile.title)}
-            key={index}
-          >
-            <div className='bg-black opacity-80 flex items-center py-4 px-4 rounded-[10px]' >
-              <Image className='rounded-full' width={50} height={50} alt={`profile for ${profile.title}`} src={profile.metadata.image} />
-              <p className='font-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide'>{profile.title}</p>
-            </div>
-          </motion.div>
+          <ProfileCard key={profile?.title} onClick={selectProfileHandler} profile={profile} />
         );
       })}
 
