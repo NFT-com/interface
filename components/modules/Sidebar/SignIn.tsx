@@ -9,20 +9,13 @@ import Link from 'next/link';
 import { XCircle } from 'phosphor-react';
 import { useState } from 'react';
 
-// type SignInProps = {
-//   profileValue?: string;
-//   setProfileValue?: any;
-// };
-
 export default function SignIn() {
   const { setSidebarOpen } = useSidebar();
   const { openConnectModal } = useConnectModal();
   const [inputValue, setInputValue] = useState('');
-  // const { profileTokenId } = useProfileTokenQuery(inputValue);
   const { setCurrentProfileUrl } = useUser();
   const submitHandler = () => {
     openConnectModal();
-    // setCurrentProfileTokenId(profileTokenId);
     setCurrentProfileUrl(inputValue);
   };
 

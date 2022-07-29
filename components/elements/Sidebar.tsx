@@ -321,7 +321,6 @@ export const Sidebar = () => {
                 'w-screen max-w-md h-full',
                 'shadow-xl overflow-y-scroll overflow-x-hidden',
                 'bg-pagebg-dk',
-                // !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) ? 'bg-pagebg-dk dark' : 'bg-white',
                 'border-l border-accent-border-dk')
             }
           >
