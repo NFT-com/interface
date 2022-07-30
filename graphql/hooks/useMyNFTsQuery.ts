@@ -24,7 +24,7 @@ export function useMyNFTsQuery(first: number): NftsData {
 
   const { data } = useSWR(keyString, async () => {
     if (!currentAddress) {
-      return { myNFTs: null };
+      return { myNFTs: { items: [], totalItems: 0, loading: false } };
     }
     const result: MyNfTsQuery = await sdk.MyNFTs({
       input: {
@@ -33,6 +33,7 @@ export function useMyNFTsQuery(first: number): NftsData {
     });
     return result;
   });
+  
   return {
     data: data?.myNFTs?.items ?? [],
     totalItems: data?.myNFTs?.totalItems ?? 0,

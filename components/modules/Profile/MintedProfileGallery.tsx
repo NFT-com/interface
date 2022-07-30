@@ -15,9 +15,10 @@ import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalConte
 import EditLayoutIcon from 'public/edit_layout.svg';
 import EyeIcon from 'public/eye.svg';
 import EyeOffIcon from 'public/eye_off.svg';
+import GearIcon from 'public/gear_drop_down.svg';
 import GKBadgeIcon from 'public/gk_badge.svg';
 import NftLabelIcon from 'public/label.svg';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
 
@@ -48,12 +49,13 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
 
   const { profileData } = useProfileQuery(props.profileURI);
 
-  const isGroupedByCollection = (
-    profileData?.profile?.displayType === ProfileDisplayType.Collection &&
-    draftDisplayType !== ProfileDisplayType.Nft
-  ) || draftDisplayType === ProfileDisplayType.Collection;
+  const isGroupedByCollection = draftDisplayType === ProfileDisplayType.Collection;
 
   const [groupByCollectionNotOwner, setGroupByCollectionNotOwner] = useState(isGroupedByCollection);
+
+  useEffect(() => {
+    setGroupByCollectionNotOwner(false);
+  }, [editMode]);
 
   return (
     <div className={tw(
@@ -116,7 +118,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               constrain
               selectedIndex={0}
               options={filterNulls([
-                props.ownedGKTokens.length > 0 && {
+                props.ownedGKTokens?.length > 0 && {
                   label: `${(draftNftsDescriptionsVisible) ? 'Hide' : 'Show'} Descriptions`,
                   onSelect: () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible),
                   icon: <NftLabelIcon className="w-5 h-5" alt="Description label" />,
@@ -153,7 +155,9 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
                   icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
                 },
-              ])}/>
+              ])}>
+              <GearIcon className="w-8 h-8 shrink-0 aspect-square" alt="Edit menu" />
+            </DropdownPickerModal>
           </div>}
         </div>
       }

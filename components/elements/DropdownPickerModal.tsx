@@ -3,8 +3,7 @@ import { tw } from 'utils/tw';
 
 import { Modal } from './Modal';
 
-import GearIcon from 'public/gear_drop_down.svg';
-import { useCallback, useRef, useState } from 'react';
+import { PropsWithChildren, useCallback, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
 export interface PickerOption {
@@ -18,7 +17,6 @@ export interface DropdownPickerModalProps {
   options: Array<PickerOption>;
   selectedIndex: number;
   constrain?: boolean;
-  above?: boolean;
   placeholder?: string;
 }
 
@@ -30,16 +28,16 @@ export interface DropdownPickerModalProps {
  * using absolute positioning (so expect them to overflow and cover the surrounding UI).
  * 
  * Configuration:
- * - above:     add this if you want the options to appear above the component
  * - constrain: add this to use a self-constrained width and height, with no guarantees about
  *              the resulting size or layout. by default, this component fills the width and
  *              and height of its container.
  */
-export function DropdownPickerModal(props: DropdownPickerModalProps) {
+export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModalProps>) {
   const [optionHoverIndex, setOptionHoverIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
 
-  const wrapperRef = useRef(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   useOutsideClickAlerter(wrapperRef, () => {
     !isMobile && setExpanded(false);
   });
@@ -68,32 +66,37 @@ export function DropdownPickerModal(props: DropdownPickerModalProps) {
       <div
         ref={wrapperRef}
         className={tw(
+          'relative',
           'cursor-pointer flex flex-col items-end rounded-xl',
           'text-base',
           props.constrain ? '' : 'w-full h-full shrink-0',
           'dark:text-always-white text-primary-txt',
-          'whitespace-nowrap justify-between'
+          'whitespace-nowrap justify-between',
         )}
       >
         <div
-          className={tw('flex flex-row items-end px-2.5',
+          ref={anchorRef}
+          className={tw(
+            'flex flex-row items-end px-2.5',
             'bg-white dark:bg-secondary-dk py-2 h-full',
-            'justify-between rounded-xl w-full')}
+            'justify-between rounded-xl w-full',
+          )}
           key={props.options[props.selectedIndex].label}
           onClick={() => {
             setExpanded(!expanded);
           }}
         >
-          <GearIcon className="w-8 h-8 shrink-0 aspect-square" alt="Edit menu" />
+          {props.children}
         </div>
 
         {expanded && !isMobile &&
         <div
           style={{
             maxWidth: wrapperRef.current.clientWidth,
+            marginTop: anchorRef.current.clientHeight + 8
           }}
           className={tw(
-            'rounded-xl mt-14',
+            'rounded-xl',
             'bg-white dark:bg-secondary-bg-dk',
             'w-full absolute z-50',
             'min-w-[14rem] drop-shadow-md',

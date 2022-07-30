@@ -156,6 +156,10 @@ export function ProfileContextProvider(
     }
   }, [allOwnerNfts, publiclyVisibleNfts, loadingAllOwnerNfts]);
 
+  useEffect(() => {
+    setDraftDisplayType(null);
+  }, [editMode]);
+
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
     setEditModeNfts([
       ...orderedItems.filter((nft: DetailedNft) => !nft.hidden),
@@ -198,7 +202,6 @@ export function ProfileContextProvider(
     setDraftGkIconVisible(draftGkIconVisible);
     setDraftNftsDescriptionsVisible(draftNftsDescriptionsVisible);
     setEditMode(false);
-    setDraftDisplayType(null);
     setDraftLayoutType(null);
     setPubliclyVisibleNfts(null);
   }, [draftGkIconVisible, draftNftsDescriptionsVisible, profileData?.profile?.description]);
@@ -253,7 +256,6 @@ export function ProfileContextProvider(
           nftsDescriptionsVisible: draftNftsDescriptionsVisible,
           hideNFTIds: allOwnerNfts?.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null)?.map(nft => nft.id),
           showNFTIds: publiclyVisibleNfts?.map(nft => nft.id),
-          displayType: draftDisplayType,
           layoutType: draftLayoutType,
           ...(imageUploadResult
             ? {}
@@ -290,7 +292,6 @@ export function ProfileContextProvider(
     draftBio,
     draftGkIconVisible,
     draftNftsDescriptionsVisible,
-    draftDisplayType,
     draftLayoutType,
     fileUpload,
     props.profileURI,
