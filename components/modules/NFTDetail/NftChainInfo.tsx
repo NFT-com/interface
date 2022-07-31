@@ -5,6 +5,7 @@ import { tw } from 'utils/tw';
 import { NftDetailCard } from './NftDetailCard';
 
 import { BigNumber } from 'ethers';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { PartialDeep } from 'type-fest';
@@ -16,7 +17,8 @@ export interface NftChainInfoProps {
 export const NftChainInfo = (props: NftChainInfoProps) => {
   const { nft } = props;
   const [expanded, setExpanded] = useState(true);
-
+  const router = useRouter();
+  
   return (
     <div className="flex flex-col md:basis-auto basis-1/3 mt-8" id="NftChainInfoContainer">
       <div className={tw(
@@ -37,7 +39,8 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
               {[
                 {
                   'type': 'CONTRACT ADDRESS',
-                  'value': shortenAddress(nft?.contract)
+                  'value': shortenAddress(nft?.contract),
+                  'onClick': () => router.push(`/app/collection/${nft?.contract}/`),
                 },
                 {
                   'type': 'BLOCKCHAIN',
@@ -57,6 +60,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
                   type={item.type}
                   value={item.value}
                   valueClasses="text-link dark:text-link overflow-x-auto"
+                  onClick={item.onClick}
                 />;
               })}
             </div>
