@@ -43,6 +43,7 @@
     "@looksrare/sdk": "^0.8.0",
     "@rainbow-me/rainbowkit": "0.4.4",
     "@sentry/nextjs": "^7.3.0",
+    "@tailwindcss/line-clamp": "^0.4.0",
     "@testing-library/cypress": "^8.0.3",
     "@testing-library/dom": "^8.16.0",
     "@testing-library/react-hooks": "^8.0.1",
