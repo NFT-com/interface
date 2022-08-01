@@ -186,7 +186,7 @@ describe('ProfileContextProvider', () => {
     cy.get('#draftHeaderImg').should('have.text', JSON.stringify({ preview: '', raw: null }));
     cy.get('#draftProfileImg').should('have.text', JSON.stringify({ preview: '', raw: null }));
     cy.get('#draftBio').should('have.text', '');
-    cy.get('#draftDisplayType').should('have.text', 'null');
+    cy.get('#draftDisplayType').should('have.text', 'NFT');
     cy.get('#draftLayoutType').should('have.text', 'null');
   });
 });
