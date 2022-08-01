@@ -179,12 +179,4 @@ describe('Unit test our helper functions', () => {
       expect(getChainIdString(null)).to.equal(null);
     });
   });
-
-  context('getFallbackChainIdFromSupportedNetwork', () => {
-    it('should return the correct chain i', () => {
-      expect(getFallbackChainIdFromSupportedNetwork('rinkeby')).to.equal('4');
-      expect(getFallbackChainIdFromSupportedNetwork('goerli')).to.equal('5');
-      expect(getFallbackChainIdFromSupportedNetwork('anything')).to.equal('1');
-    });
-  });
 });

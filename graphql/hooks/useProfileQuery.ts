@@ -1,7 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
-import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
-import { getChainIdString, getFallbackChainIdFromSupportedNetwork, isNullOrEmpty } from 'utils/helpers';
+import { Doppler, getEnv } from 'utils/env';
+import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate,SWRConfiguration } from 'swr';
 import { useNetwork } from 'wagmi';
@@ -18,8 +18,7 @@ export function useProfileQuery(
 ): ProfileData {
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
-  const { supportedNetworks } = useSupportedNetwork();
-
+  
   const keyString = 'ProfileQuery ' + url;
 
   const { data, error } = useSWR(keyString, async () => {
@@ -29,7 +28,7 @@ export function useProfileQuery(
     try {
       const result = await sdk.Profile({
         url,
-        chainId: getChainIdString(chain?.id) ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0])
+        chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
       });
       return result;
     } catch (error) {
