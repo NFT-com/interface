@@ -120,8 +120,9 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             </div>
           </a>
         </Link>
-        <div className={tw('flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between minmd:p-0 p-6 space-x-0 minmd:space-x-10 max-w-screen minlg:px-0 px-5 w-full minlg:max-w-nftcom mx-auto h-full',
-          'break-after-all ',
+        <div className={tw(
+          'flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between p-6 space-x-0 minmd:space-x-10 max-w-screen w-full minlg:max-w-nftcom mx-auto h-full',
+          'break-after-all',
         )}
         style={{
           backgroundImage: 'url(\'/home-banner-bg.png\')',
@@ -130,7 +131,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         }}>
           <div className='break-after-all space-y-2 w-full ...'>
             <div className={tw(
-              'font-header text-black text-5xl minxl:text-7xl text-header leading-header',
+              'font-header text-black text-4xl minlg:text-5xl minxl:text-7xl text-header leading-header',
               'break-after-all space-y-2'
             )}>
               <div>

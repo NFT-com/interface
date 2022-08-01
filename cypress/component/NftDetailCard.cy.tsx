@@ -26,4 +26,20 @@ describe('NftDetailCard', () => {
     cy.contains('testSubtitle').should('exist');
     cy.contains('testValue').should('have.class', 'testValueClasses');
   });
+
+  it('copies value to clipboard', () => {
+    cy.mount(
+      <NftDetailCard
+        type="testType"
+        value="testValue"
+        subtitle='testSubtitle'
+        valueClasses='testValueClasses'
+      />
+    );
+    cy.window().then((win) => {
+      win.navigator.clipboard.readText().then((text) => {
+        expect(text).to.equal('testValue');
+      });
+    });
+  });
 });
