@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import { tw } from 'utils/tw';
 
+import React from 'react';
+
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
   TopLeft = 'topleft',
@@ -45,7 +47,7 @@ const getRoundedClass = (variant: RoundedCornerVariant): string => {
   }
 };
 
-export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
+export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   return (
     <div className={tw(
       'flex object-cover aspect-square',
@@ -69,4 +71,4 @@ export function RoundedCornerMedia(props: RoundedCornerMediaProps) {
       />
     </div>
   );
-}
+});
