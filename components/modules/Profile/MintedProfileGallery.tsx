@@ -137,7 +137,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                       profile: props.profileURI
                     });
                   },
-                  icon: <EyeIcon className="w-5 h-5" alt="Show descriptions" />,
+                  icon: <EyeIcon alt="Show all nfts" />,
                 },
                 isMobile && {
                   label: 'Hide All',
@@ -148,7 +148,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                       profile: props.profileURI
                     });
                   },
-                  icon: <EyeOffIcon className="w-5 h-5" alt="Hide descriptions" />,
+                  icon: <EyeOffIcon alt="Hide all nfts" />,
                 },
                 {
                   label: 'Edit Layouts',
