@@ -69,7 +69,7 @@ export default function CollectionPage() {
       return '00';
     } else if (quantity < 10000){
       return '0';
-    }
+    } else return '';
   };
 
   const loadNFTs = useCallback(() => {
