@@ -90,11 +90,11 @@ export default function CollectionPage() {
   }, [client, collectionNfts, contractAddr]);
 
   useEffect(() => {
-    contractAddr && loadNFTs();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contractAddr]);
+    contractAddr && collectionNfts.length < 1 && loadNFTs();
+  }, [collectionNfts.length, contractAddr, loadNFTs]);
 
-  if (!ethers.utils.isAddress(contractAddr?.toString())) {
+  const caseInsensitiveAddr = contractAddr?.toString().toLowerCase();
+  if (!ethers.utils.isAddress(caseInsensitiveAddr)) {
     return <NotFoundPage />;
   }
 
