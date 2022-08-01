@@ -40,7 +40,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
                 {
                   'type': 'CONTRACT ADDRESS',
                   'value': shortenAddress(nft?.contract),
-                  'onClick': nft?.contract && (() => router.push(`/app/collection/${nft?.contract?.toLowerCase()}/`)),
+                  'onClick': nft?.contract && (() => router.push(`/app/collection/${nft?.contract?.toUpperCase()}/`)),
                 },
                 {
                   'type': 'BLOCKCHAIN',
