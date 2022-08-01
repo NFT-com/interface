@@ -4,6 +4,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { NFTListingsContextProvider } from 'components/modules/NFTDetail/NFTListingsContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
+import { getChainIdString } from 'utils/helpers';
 
 import {
   connectorsForWallets,
@@ -53,7 +54,7 @@ const { chains, provider } = configureChains(
     jsonRpcProvider({
       rpc: (chain) => {
         const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
-        url.searchParams.set('chainId', chain.id);
+        url.searchParams.set('chainId', getChainIdString(chain?.id));
         return {
           http: url.toString(),
         };

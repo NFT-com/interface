@@ -1,7 +1,8 @@
+/// <reference types="cypress" />
+
 import '../plugins/tailwind';
 
-import { Sidebar } from '../../components/elements/Sidebar';
-import { useSidebar } from '../../hooks/state/useSidebar';
+import { ProfileMinter } from '../../components/elements/ProfileMinter';
 import { rainbowDark } from '../../styles/RainbowKitThemes';
 import { Doppler, getEnv } from '../../utils/env';
 import { setupWagmiClient } from '../util/wagmi';
@@ -18,7 +19,7 @@ const { chains } = configureChains(
     jsonRpcProvider({
       rpc: (chain) => {
         const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
-        url.searchParams.set('chainId', chain?.id.toString());
+        url.searchParams.set('chainId', String(chain?.id));
         return {
           http: url.toString(),
         };
@@ -28,17 +29,13 @@ const { chains } = configureChains(
 );
 
 const TestComponent = () => {
-  const { toggleSidebar } = useSidebar();
   return <div>
-    <Sidebar />
-    <button onClick={() => {
-      toggleSidebar();
-    }}>openSidebar</button>
+    <ProfileMinter />
   </div>;
 };
 
-describe('Sidebar', () => {
-  it('mounts with valid props', () => {
+describe('ProfileClaimer', () => {
+  beforeEach(() => {
     cy.viewport(800, 1200);
     const client = setupWagmiClient();
     cy.mount(
@@ -54,7 +51,18 @@ describe('Sidebar', () => {
         </RainbowKitProvider>
       </WagmiConfig>
     );
-    cy.findByText('openSidebar').click();
-    cy.findByText('Sign In').should('exist');
+  });
+  it('mounts with valid props', () => {
+    cy.get('.min-w-0').should('exist');
+    cy.get('.buttonContainer').should('exist');
+  });
+  it('able to type in the input', () => {
+    cy.get('.min-w-0').type('test');
+    cy.contains('Available').should('be.visible');
+  });
+  it('able to clear text from the input', () => {
+    cy.get('.min-w-0').type('test');
+    cy.get('.min-w-0').clear();
+    cy.get('.pr-4').invoke('text').should('have.length', 0);
   });
 });

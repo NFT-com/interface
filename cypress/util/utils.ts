@@ -1,4 +1,4 @@
-import { currentAddresss } from './constants';
+import { currentAddress } from './constants';
 import { renderHook } from './wagmi';
 
 import { BaseProvider, WebSocketProvider } from '@ethersproject/providers';
@@ -30,7 +30,7 @@ export function getNetwork(chain: Chain) {
 
 export function getSigners() {
   const provider = getProvider();
-  const signers = currentAddresss.map((x) => {
+  const signers = currentAddress.map((x) => {
     const wallet = new Wallet(x.privateKey);
     return provider.getSigner(wallet.address);
   });
@@ -44,9 +44,9 @@ export function getProvider({ chainId }: { chainId?: number } = {}) {
   return new EthersProviderWrapper(url, network);
 }
 
-export function setupWagmiClient(config: Config = {}) {
+export function setupWagmiClient(config: Config = {}, connectors?: MockConnector[]) {
   return createClient<BaseProvider, WebSocketProvider>({
-    connectors: [
+    connectors: connectors ?? [
       new MockConnector({
         options: {
           signer: getSigners()[0],

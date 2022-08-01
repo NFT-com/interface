@@ -158,8 +158,6 @@ export const getGenesisKeyThumbnail: (id: BigNumberish) => string = (id: BigNumb
   return 'https://cdn.nft.com/gk-min/' + BigNumber.from(id).toString() + '.jpeg';
 };
 
-export const getCurrentTimestamp = () => new Date().getTime();
-
 export function getAPIURL() {
   return getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL);
 }
@@ -191,6 +189,10 @@ export function getEtherscanLink(
     return `${prefix}/address/${data}`;
   }
   }
+}
+
+export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
+  return (chainId == null ? null : String(chainId));
 }
 
 export function getFallbackChainIdFromSupportedNetwork(network: string): string {

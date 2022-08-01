@@ -1,7 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ProfileQuery } from 'graphql/generated/types';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
-import { getFallbackChainIdFromSupportedNetwork, isNullOrEmpty } from 'utils/helpers';
+import { getChainIdString, getFallbackChainIdFromSupportedNetwork, isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback,useState } from 'react';
 import { useNetwork } from 'wagmi';
@@ -26,7 +26,7 @@ export function useFetchProfile(): FetchProfile {
       setLoading(true);
       const result = await sdk.Profile({
         url,
-        chainId: chain?.id ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0]),
+        chainId: getChainIdString(chain?.id) ?? getFallbackChainIdFromSupportedNetwork(supportedNetworks[0]),
       });
       setLoading(false);
       return result;
