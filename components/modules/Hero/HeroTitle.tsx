@@ -15,7 +15,7 @@ export function HeroTitle(props: HeroTitleProps) {
         props.color === 'blue' ? 'text-[#00A4FF]' : 'text-hero-pink',
         'text-2xl minmd:text-5xl minxl:text-6xl',
         'z-30 text-center font-normal font-hero-heading1',
-        'max-w-[30rem] md:max-w-[43rem] minxl:max-w-[100rem]',
+        'max-w-[30rem] minmd:max-w-[43rem] minxl:max-w-[100rem]',
       )}
       style={{
         textShadow: '0px 4px 4px rgba(0,0,0,0.9)',

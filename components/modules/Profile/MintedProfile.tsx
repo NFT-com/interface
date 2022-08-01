@@ -157,7 +157,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     style={{ zIndex: 102, }}
                     className={tw(
                       isPicturedHovered ? 'opacity-100' : 'opacity-30',
-                      'absolute right-4 minlg:right-9 mnxl:right-6',
+                      'absolute right-4 minlg:right-9 minxl:right-6',
                       'bottom-24 minmd:bottom-[9.5rem] minlg:bottom-[9.5rem] minxl:bottom-40'
                     )}
                   >
