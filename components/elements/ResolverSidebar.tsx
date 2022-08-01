@@ -20,7 +20,7 @@ export const ResolverSidebar = () => {
   const { address: currentAddress } = useAccount();
   //const { openConnectModal } = useConnectModal();
   const { alwaysBlack } = useThemeColors();
-  const [currentURI, setCurrentURI] = useState('');
+  const [, setCurrentURI] = useState('');
 
   const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
 
