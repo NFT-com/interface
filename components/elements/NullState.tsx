@@ -45,11 +45,11 @@ export function NullState(props: NullStateProps) {
         'text-secondary-txt')}>
       {props.showImage &&
         <Image src={randomErrorImage} width='500' height='500' alt='404' className='mb-10 drop-shadow-2xl'/>}
-      <div className='flex flex-col items-center justify-center space-y-6 mx-2 deprecated_minlg:mx-0'>
+      <div className='flex flex-col items-center justify-center space-y-6 mx-2 minlg:mx-0'>
         <div
           className={tw(
             'text-primary-txt dark:text-primary-txt-dk',
-            'text-sm deprecated_minxs:2:text-base deprecated_minsm:text-2xl deprecated_minlg:text-3xl deprecated_min2xl:text-4xl ...')}>
+            'text-base minmd:text-3xl minxl:text-4xl')}>
           {props.primaryMessage}
         </div>
         <div
@@ -57,7 +57,7 @@ export function NullState(props: NullStateProps) {
           style={{ fontSize: '20px' }}>
           {props.secondaryMessage}
         </div>
-        <div className={`${props.secondaryBtnLabel && props.secondaryOnClick ? 'flex justify-evenly w-full deprecated_minmd:w-1/2 items-center': ''} `}>
+        <div className={`${props.secondaryBtnLabel && props.secondaryOnClick ? 'flex justify-evenly w-full minmd:w-1/2 items-center': ''} `}>
           {props.buttonLabel && <div className='drop-shadow-md'>
             <Button type={ButtonType.PRIMARY} onClick={props.onClick} label={props.buttonLabel} />
           </div>}

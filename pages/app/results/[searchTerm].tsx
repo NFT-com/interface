@@ -93,13 +93,13 @@ export default function ResultsPage() {
           }}>
           <div>
             <div className="flex mb-10">
-              <div className="w-1/4 flex flex-col px-5 md:hidden">
+              <div className="w-1/4 flex flex-col px-5 hidden minlg:block">
 
               </div>
-              <div className="w-3/4 md:w-full md:mt-36">
+              <div className="w-full minlg:w-3/4 mt-36 minlg:mt-0">
                 <div className="flex flex-col">
                   <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Collections</div>
-                  <div className="flex justify-start items-center md:mb-0 mb-3">
+                  <div className="flex justify-start items-center mb-0 minlg:mb-3">
                     <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
                       {searchTerm === '0' ?
                         <span>{`${collectionsTotalResults.toLocaleString()} TOTAL RESULTS`}</span> :
@@ -109,7 +109,7 @@ export default function ResultsPage() {
                       {searchTerm !== '0' && <span className="text-gray-400 dark:text-always-white font-medium text-2xl">{searchTerm}</span>}
                     </div>
                   </div>
-                  <div className="results-grid  mb-16">
+                  <div className="results-grid mb-16">
                     {collectionsSlides.length > 0 && <CollectionsSlider slides={collectionsSlides} />}
                   </div>
                 </div>
@@ -128,7 +128,7 @@ export default function ResultsPage() {
               />
             </div>
             <div className="flex mb-10">
-              <div className="w-1/4 flex flex-col px-5 md:hidden">
+              <div className="w-1/4 flex flex-col px-5 hidden minlg:block">
                 <div className="w-full pl-5 pb-3 text-gray-400 dark:text-always-white font-bold text-lg">Filters</div>
                 <div className="h-40 w-full">
                   <SearchUIFilter filter="listingType" title="Listing Type" searchable={false} />
@@ -137,11 +137,11 @@ export default function ResultsPage() {
                   <ClearRefinements className="py-3 px-5 mt-1"/>
                 </div>
               </div>
-              <div className="w-3/4 md:w-full md:mt-36">
+              <div className="w-full minlg:w-3/4 mt-36 minlg:mt-0">
                 <div className="flex flex-col">
                   <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">NFTs</div>
-                  <div className="flex justify-between items-center md:mb-0 mb-3">
-                    <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
+                  <div className="flex justify-between items-center mb-0 minlg:mb-3">
+                    <div className="text-always-black dark:text-always-white pt-2 minlg:pt-2 pl-4 minlg:pl-0">
                       <StatsComponent searchTerm={searchTerm} />
                     </div>
                     <div className={tw(
@@ -174,11 +174,11 @@ export default function ResultsPage() {
               <div className="w-1/4 flex flex-col px-5 md:hidden">
 
               </div>
-              <div className="w-3/4 md:w-full md:mt-36">
+              <div className="w-full minlg:w-3/4 mt-36 minlg:mt-0">
                 <div className="flex flex-col">
                   <div className="w-full pb-3 text-gray-400 dark:text-always-white font-bold text-4xl">Profiles</div>
                   <div className="flex justify-between items-center md:mb-0 mb-3">
-                    <div className="text-always-black dark:text-always-white md:pt-2 md:pl-4">
+                    <div className="text-always-black dark:text-always-white pt-2 minlg:pt-2 pl-4 minlg:pl-0">
                       <StatsComponent searchTerm={searchTerm} />
                     </div>
 

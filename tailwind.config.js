@@ -20,20 +20,9 @@ module.exports = {
       'xs': { 'max' : '374px' },
       
       // maxes
-      'deprecated_xxl': { 'max': '10000px' },
       'deprecated_2xl': { 'max': '1800px' },
-      'deprecated_lg': { 'max': '1280px' },
       'deprecated_md': { 'max': '960px' },
       'deprecated_sm': { 'max': '640px' },
-      
-      // mins
-      'deprecated_minxs': '390px',
-      'deprecated_minxs2': '585px',
-      'deprecated_minsm': '640px',
-      'deprecated_minmd': '768px',
-      'deprecated_minlg': '1024px',
-      'deprecated_minxl': '1280px',
-      'deprecated_min2xl': '1536px',
     },
     extend: {
       colors: {

@@ -92,11 +92,10 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
               <div className="flex flex-col items-center">
                 <div
                   className={tw(
-                    'text-xl deprecated_minxs:text-2xl deprecated_minxs2:text-3xl',
-                    'deprecated_minmd:text-4xl deprecated_minmd:text-5xl deprecated_minxl:text-6xl z-30 text-center',
-                    'font-normal text-footer-txt font-hero-heading1 max-w-[20rem]',
-                    'deprecated_minxs:max-w-[21rem] deprecated_minsm:max-w-[30rem] deprecated_minmd:max-w-[43rem]',
-                    'deprecated_minxl:max-w-[100rem] deprecated_minmd:pb-0')}
+                    'text-2xl minmd:text-5xl minxl:text-6xl',
+                    'z-30 text-center font-normal text-footer-txt font-hero-heading1',
+                    'max-w-[30rem] md:max-w-[43rem] minxl:max-w-[100rem]',
+                  )}
                   style={{
                     textShadow: '0px 4px 4px rgba(0,0,0,0.9)',
                   }}
@@ -112,9 +111,9 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
             </div>
             <div
               className={tw(
-                'flex flex-col items-center rounded-xl border deprecated_sm:border-none',
+                'flex flex-col items-center rounded-xl border-none minmd:border ',
                 'px-10 pb-12 drop-shadow mx-4 w-3/5 text-center',
-                'bg-always-black deprecated_sm:bg-transparent border-accent-border-dk'
+                'bg-transparent minmd:bg-always-black border-accent-border-dk'
               )}
             >
               { totalRemaining.toString() !== '0' ?
@@ -222,7 +221,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
             </div>
           </>
       }
-      {!mintSuccess && <div className='flex z-[20] justify-center deprecated_sm:px-4 mt-40 deprecated_sm:mt-12'>
+      {!mintSuccess && <div className='flex z-[20] justify-center px-4 minmd:px-0 mt-12 minmd:mt-40 '>
         <Image src={truststamps} alt="quant stamp" className='mb-4'/>
       </div>}
       <div className='flex flex-col justify-end grow items-center'>
