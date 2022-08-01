@@ -43,11 +43,21 @@ export function useUser() {
     localStorage.setItem('selectedProfileTokenId', !selectedProfileTokenId ? null : selectedProfileTokenId?.toString());
   }, [data, mutate]);
 
+  const getCurrentProfileUrl = useCallback(() => {
+    return typeof window !== 'undefined' ? localStorage?.getItem('selectedProfileUrl') : '';
+  }, []);
+
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove(data?.isDarkMode ? 'light' : 'dark');
     root.classList.add(data?.isDarkMode ? 'dark' : 'light');
   }, [data?.isDarkMode]);
+
+  const result = typeof window !== 'undefined' ? localStorage?.getItem('selectedProfileUrl') : '';
+
+  useEffect(() => {
+    setCurrentProfileUrl(result);
+  }, [setCurrentProfileUrl, result]);
 
   return {
     user: data,
@@ -55,5 +65,6 @@ export function useUser() {
     setDarkMode,
     setCurrentProfileUrl,
     setCurrentProfileTokenId,
+    getCurrentProfileUrl
   };
 }
