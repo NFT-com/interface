@@ -1,6 +1,12 @@
-import ConnectedAccounts from './ConnectedAccounts';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useUpdateProfileViewMutation } from 'graphql/hooks/useUpdateProfileViewMutation';
 
-import { useState } from 'react';
+import ConnectedAccounts from './ConnectedAccounts';
+import { RejectedEvent } from './ConnectedAccounts';
+import ConnectedCollections from './ConnectedCollections';
+
+import { profile } from 'console';
+import { useEffect, useState } from 'react';
 
 type Address = {
   chainAddr: string;
@@ -11,38 +17,55 @@ type DisplayModeProps = {
   associatedAddresses : {
     pending: Address[];
     accepted: Address[];
+    denied: RejectedEvent[]
   };
   removeHandler: (type: string, address: string) => void
 };
 
 export default function DisplayMode({ selectedProfile, associatedAddresses, removeHandler }: DisplayModeProps) {
-  const [selected, setSelected] = useState('personal');
+  const [selected, setSelected] = useState('');
+  const { profileData } = useProfileQuery(selectedProfile);
+  const { updateProfileView } = useUpdateProfileViewMutation();
+  const [hasDeployerWallet, setHasDeployerWallet] = useState(false);
+  const [deployerWallet, setDeployerWallet] = useState({ accepted: [], pending: [] });
+
+  useEffect(() => {
+    if(profileData?.profile?.profileView === 'Collection'){
+      setSelected('Collection');
+    } else {
+      setSelected('Gallery');
+    }
+  }, [profileData?.profile?.profileView, selectedProfile]);
+
   const handleChange = event => {
     setSelected(event.target.value);
+    updateProfileView({ profileViewType: event.target.value, url: selectedProfile }).catch(e => console.log(e));
   };
+
   return (
     <div id="display" className='mt-10 font-grotesk'>
       <h2 className='text-black mb-2 font-bold md:text-2xl text-4xl tracking-wide'>Display Mode</h2>
       <p className='mb-4 text-[#6F6F6F]'>Select what your profile will show to the public.</p>
   
       <div className='mt-4'>
-        <input checked={selected === 'personal'} onChange={handleChange} className="form-radio text-[#F9D963] border-2 border-[#D5D5D5] w-4 h-4 focus:ring-[#F9D963]" type="radio" name="gallery-display" value='personal' id='personal' />
-        <label className="ml-3" htmlFor="personal">
+        <input checked={selected === 'Gallery'} onChange={handleChange} className="form-radio text-[#F9D963] border-2 border-[#D5D5D5] w-4 h-4 focus:ring-[#F9D963]" type="radio" name="gallery-display" value='Gallery' id='Gallery' />
+        <label className="ml-3" htmlFor="Gallery">
             Personal Gallery
         </label>
         <p className='md:mt-2 mt-0 mb-4 text-xs text-[#6F6F6F] md:ml-6 ml-7'>
           Your profile will display the NFTs in your wallet.
         </p>
 
-        <input checked={selected === 'collection'} onChange={handleChange} className="form-radio text-[#F9D963] border-2 border-[#D5D5D5] w-4 h-4 focus:ring-[#F9D963]" type="radio" name="gallery-display" value='collection' id='collection' />
-        <label className="ml-3" htmlFor="collection">
+        <input checked={selected === 'Collection'} onChange={handleChange} className="form-radio text-[#F9D963] border-2 border-[#D5D5D5] w-4 h-4 focus:ring-[#F9D963]" type="radio" name="gallery-display" value='Collection' id='Collection' />
+        <label className="ml-3" htmlFor="Collection">
           NFT Collection
         </label>
         <p className='md:mt-2 mt-0 mb-4 text-xs text-[#6F6F6F] md:ml-6 ml-7'>
           Your profile will act as an official landing page for your deployed NFT Collection.
         </p>
       </div>
-      {selected === 'personal' && <ConnectedAccounts {...{ associatedAddresses, removeHandler, selectedProfile }} />}
+      {selected === 'Gallery' && <ConnectedAccounts {...{ associatedAddresses, removeHandler, selectedProfile }} />}
+      {selected === 'Collection' && <ConnectedCollections {...{ associatedCollections: { pending: [], accepted: [] }, removeHandler, selectedProfile, hasDeployerWallet, deployerWallet }} />}
     </div>
   );
 }

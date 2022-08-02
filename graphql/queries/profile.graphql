@@ -14,5 +14,6 @@ query Profile($url: String!, $chainId: String!) {
       chainId
       network
     }
+    profileView
   }
 }
