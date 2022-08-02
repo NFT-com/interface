@@ -6,7 +6,7 @@ type Address = {
 }
 
 type ConnectedAccountsProps = {
-  selectedProfile: string; //local state
+  selectedProfile: string;
   associatedAddresses : {
     pending: Address[];
     accepted: Address[];

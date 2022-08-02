@@ -13,7 +13,6 @@ type ProfileCardProps = {
     title: string
   }
   onClick?: (value?: string | SetStateAction<boolean> | SetStateAction<string> ) => void
-  onChange?: (value?: string ) => void
   opensModal?: boolean
   message?: string
   showSwitch?: boolean
