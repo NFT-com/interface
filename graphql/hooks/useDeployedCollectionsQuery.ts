@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Collection } from 'graphql/generated/types';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -15,6 +16,9 @@ export function useDeployedCollectionsQuery(address: string): CollectionData {
   const keyString = 'DeployedCollectionsQuery ' + address;
 
   const { data } = useSWR(keyString, async () => {
+    if (isNullOrEmpty(address)) {
+      return [];
+    }
     const result = await sdk.DeployedCollections({
       deployer: address
     });

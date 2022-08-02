@@ -160,7 +160,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 {
                   label: `${(draftDeployedContractsVisible) ? 'Hide' : 'Show'} Created Collections`,
                   onSelect: () => setDraftDeployedContractsVisible(!draftDeployedContractsVisible),
-                  icon: <EditLayoutIcon className="w-5 h-5" alt="Collections toggle" />,
+                  icon: <EditLayoutIcon className="" alt="Collections toggle" />,
                 }
               ])}>
               <GearIcon className="w-8 h-8 shrink-0 aspect-square" alt="Edit menu" />

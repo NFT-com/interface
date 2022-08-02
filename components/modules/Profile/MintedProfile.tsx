@@ -51,7 +51,8 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
-  const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
+  // const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
+  const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) ;
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -202,7 +203,7 @@ export function MintedProfile(props: MintedProfileProps) {
           showDeployedTab &&
           <div className={tw(
             'flex w-full px-12',
-            editMode ? 'mt-20 mb-4' : 'sm:mt-5'
+            editMode ? 'mt-20 mb-4' : 'sm:mt-5 mb-4'
           )}>
             <span
               onClick={() => {
