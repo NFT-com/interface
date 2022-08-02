@@ -5,6 +5,15 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     environment: dev
+    strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving the Dashboard hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      fail-fast: false
+      matrix:
+        # run 3 copies of the current job in parallel
+        containers: [1, 2, 3]
     steps:
     - name: Checkout
       uses: actions/checkout@v2.4.2
@@ -25,6 +34,7 @@ jobs:
         component: true
         record: true
         tag: ${{ github.ref_name }}
+        parallel: true
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -35,6 +45,7 @@ jobs:
         NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
         NEXT_PUBLIC_BLOG_PAGES_ENABLED: ${{ secrets.NEXT_PUBLIC_BLOG_PAGES_ENABLED }}    
         NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED: ${{ secrets.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED }}
+        NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
     
     - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4
