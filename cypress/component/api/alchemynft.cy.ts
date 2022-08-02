@@ -31,7 +31,7 @@ describe('alchemy nft API', () => {
       url.searchParams.set('tokenType', 'erc721');
       url.searchParams.set('action', 'getNftMetadata');
       url.searchParams.set('chainId', String(chainId));
-      cy.request(url.toString()).then((response) => {
+      cy.request({ url: url.toString(), failOnStatusCode: false }).then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body).to.have.deep.property('contract', {
           address: genesisKey[CHAIN_ID_TO_NETWORK[Number(chainId)].toLowerCase()].toLowerCase(),
@@ -65,7 +65,7 @@ describe('alchemy nft API', () => {
       url.searchParams.set('tokenId', BigNumber.from(1).toString());
       url.searchParams.set('tokenType', 'erc721');
       url.searchParams.set('action', 'getNftMetadata');
-      cy.request(url.toString()).then((response) => {
+      cy.request({ url: url.toString(), failOnStatusCode: false }).then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body).to.have.property('title', 'NFT.com Genesis Key #00001');
       });
@@ -85,7 +85,7 @@ describe('alchemy nft API', () => {
       url.searchParams.set('action', 'getNfts');
       url.searchParams.set('chainId', String(chainId));
       url.searchParams.set('owner', addresses[CHAIN_ID_TO_NETWORK[Number(chainId)].toLowerCase()]);
-      cy.request(url.toString()).then((response) => {
+      cy.request({ url: url.toString(), failOnStatusCode: false }).then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body).to.have.property('ownedNfts');
         expect(response.body.ownedNfts[0]).to.have.property('id');

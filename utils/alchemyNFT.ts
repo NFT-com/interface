@@ -17,7 +17,7 @@ export async function getNftMetadata(
   return result;
 }
 
-export async function getNftsByContract(
+export async function getNftsByContractAndOwner(
   owner: string,
   contract: string,
   chainId: string | number,
