@@ -34,6 +34,7 @@ export default function Settings() {
   const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [] });
   const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
   const profileRef = useRef(null);
+  const [rejected, setRejected] = useState(false);
 
   const fetchAddresses = useCallback(
     async (profile) => {
@@ -89,7 +90,7 @@ export default function Settings() {
     } else if (action === 'profile') {
       await nftResolver.removeAssociatedProfile(input).then((res) => console.log(res));
     } else if (action === 'profile-pending') {
-      await ignoreAssociations({ eventIdArray: input }).then((res) => console.log(res));
+      await ignoreAssociations({ eventIdArray: input }).then(() => setRejected(true)).catch((e) => console.log(e));
     } else {
       console.log('error');
     }
@@ -120,7 +121,7 @@ export default function Settings() {
               )
               : null}
           
-            <ConnectedProfiles {...{ associatedProfiles, removeHandler }} />
+            <ConnectedProfiles {...{ associatedProfiles, removeHandler, rejected, setRejected }} />
           
             {ownsProfilesAndSelectedProfile
               ? (

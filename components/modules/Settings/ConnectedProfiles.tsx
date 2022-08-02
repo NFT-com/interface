@@ -11,9 +11,11 @@ type ConnectedProfilesProps = {
     accepted: Profile[];
   };
   removeHandler: (type: string, address: string) => void
+  rejected: boolean
+  setRejected: (isRejected: boolean) => void
 };
 
-export default function ConnectedProfiles({ associatedProfiles, removeHandler }: ConnectedProfilesProps) {
+export default function ConnectedProfiles({ associatedProfiles, removeHandler, rejected, setRejected }: ConnectedProfilesProps) {
   return (
     <div id="profiles" className='mt-10 md:w-full w-3/4'>
       <h2 className='font-grotesk tracking-wide font-bold text-black md:text-2xl text-4xl mb-1'>Connected Profiles</h2>
@@ -27,7 +29,7 @@ export default function ConnectedProfiles({ associatedProfiles, removeHandler }:
           <AssociatedProfile profile={profile} key={index} remove={removeHandler} />
         ))}
         {associatedProfiles?.pending?.map((profile, index)=> (
-          <AssociatedProfile pending profile={profile} key={index} remove={removeHandler} />
+          <AssociatedProfile {...{ profile, rejected, setRejected }} pending key={index} remove={removeHandler} />
         ))}
       </div>
     </div>
