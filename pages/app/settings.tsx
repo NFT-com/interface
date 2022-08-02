@@ -114,8 +114,7 @@ export default function Settings() {
               ? (
                 <>
                   <NftOwner {...{ selectedProfile }} />
-                  <DisplayMode/>
-                  <ConnectedAccounts {...{ associatedAddresses, removeHandler, selectedProfile }} />
+                  <DisplayMode {...{ associatedAddresses, removeHandler, selectedProfile }}/>
                 </>
               )
               : null}
