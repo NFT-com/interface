@@ -9,6 +9,7 @@ import DisplayMode from 'components/modules/Settings/DisplayMode';
 import NftOwner from 'components/modules/Settings/NftOwner';
 import SettingsForm from 'components/modules/Settings/SettingsForm';
 import SettingsSidebar from 'components/modules/Settings/SettingsSidebar';
+import TransferProfile from 'components/modules/Settings/TransferProfile';
 import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -122,11 +123,9 @@ export default function Settings() {
             <ConnectedProfiles {...{ associatedProfiles, removeHandler }} />
           
             {ownsProfilesAndSelectedProfile
-              ? (<div id="transfer" className='mt-10'>
-                <h2 className='font-grotesk tracking-wide font-bold text-black md:text-2xl text-4xl mb-1'>Transfer Profile</h2>
-                <p className='text-blog-text-reskin mb-4'>Send this profile to another wallet.</p>
-                <SettingsForm selectedProfile={selectedProfile} buttonText='Transfer Profile' type='transfer' />
-              </div>)
+              ? (
+                <TransferProfile {...{ selectedProfile }} />
+              )
               : null }
           </div>
         </div>
