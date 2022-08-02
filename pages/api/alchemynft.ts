@@ -85,6 +85,31 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
   }
+  case 'getNFTsForCollection': {
+    const contractAddress = req.query['contractAddress'];
+    const limit = req.query['limit'];
+    if (isNullOrEmpty(contractAddress)) {
+      res.status(400).json(JSON.stringify({ message: 'getNfts: Invalid Arguments' }));
+      return;
+    }
+    const requestUrl = new URL(apiUrl + '/getNFTsForCollection/');
+    requestUrl.searchParams.set('contractAddress', contractAddress as string);
+    requestUrl.searchParams.set('withMetadata', 'true');
+    if (!isNullOrEmpty(limit)) {
+      requestUrl.searchParams.set('limit', limit as string);
+    }
+    try {
+      const result = await fetch(requestUrl.toString(), {
+        method: 'GET',
+        redirect: 'follow',
+      }).then(alchemyRes => alchemyRes.json());
+      res.status(200).json(result);
+      return;
+    } catch (e) {
+      res.status(500).json(JSON.stringify({ message: 'getNFTsForCollection: error processing Alchemy result', e }));
+      return;
+    }
+  }
   default:
     res.status(400).json(JSON.stringify({ message: 'Action not recognized' }));
     return;
