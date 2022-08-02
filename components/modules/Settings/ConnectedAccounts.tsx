@@ -5,11 +5,17 @@ type Address = {
   chainAddr: string;
 }
 
+export type RejectedEvent = {
+  id: string;
+  destinationAddress: string;
+}
+
 type ConnectedAccountsProps = {
   selectedProfile: string;
   associatedAddresses : {
     pending: Address[];
     accepted: Address[];
+    denied: RejectedEvent[]
   };
   removeHandler: (type: string, address: string) => void
 };
@@ -31,10 +37,13 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
             </div>
 
             {associatedAddresses?.accepted.map((address, index)=> (
-              <AssociatedAddress key={index} address={address} remove={removeHandler} />
+              <AssociatedAddress key={index} address={address.chainAddr} remove={removeHandler} />
             ))}
             {associatedAddresses?.pending.map((address, index)=> (
-              <AssociatedAddress pending key={index} address={address} remove={removeHandler} />
+              <AssociatedAddress pending key={index} address={address.chainAddr} remove={removeHandler} />
+            ))}
+            {associatedAddresses?.denied.map((address)=> (
+              <AssociatedAddress rejected key={address.id} address={address.destinationAddress} remove={removeHandler} />
             ))}
           </div>
         )

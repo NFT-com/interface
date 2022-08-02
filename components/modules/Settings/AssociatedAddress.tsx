@@ -1,32 +1,73 @@
+import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { shortenAddress } from 'utils/helpers';
 
-import { CheckCircle, Clock, Trash } from 'phosphor-react';
+import { CheckCircle, Clock, Trash, XCircle } from 'phosphor-react';
 
 type AssociatedAddressProps = {
-  address: {
-    chainAddr: string;
-  }
+  address: string;
   pending?: boolean;
-  key: number | string;
+  rejected?: boolean;
   remove: (type: string, address: string) => void
 };
 
-export default function AssociatedAddress({ address, pending, remove }: AssociatedAddressProps) {
+export default function AssociatedAddress({ address, pending, rejected, remove }: AssociatedAddressProps) {
   return (
     <div className='p-1 flex  justify-between mb-1 font-mono text-sm'>
-      {pending ?
-        <Clock size={25} className='mr-3' color='orange' weight='fill' />
+      {pending || rejected ?
+        pending ?
+          (
+            <CustomTooltip
+              mode="hover"
+              tooltipComponent={
+                <div
+                  className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                >
+                  <p className='text-[#F2890E] mb-2'>Pending</p>
+                  <p>This connection is waiting approval.</p>
+                </div>
+              }
+            >
+              <Clock size={25} className='mr-3' color='orange' weight='fill' />
+            </CustomTooltip>
+          ):
+          (
+            <CustomTooltip
+              mode="hover"
+              tooltipComponent={
+                <div
+                  className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                >
+                  <p className='text-[#D50909] mb-2'>Rejected</p>
+                  <p>This wallet has rejected the connection. If this was done in error, please try again.</p>
+                </div>
+              }
+            >
+              <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+            </CustomTooltip>
+          )
         :
-        <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
+        <CustomTooltip
+          mode="hover"
+          tooltipComponent={
+            <div
+              className="rounded-xl p-3 bg-modal-bg-dk text-white"
+            >
+              <p className='text-[#00AC30] mb-2'>Connected</p>
+              <p>This wallet has approved the connection.</p>
+            </div>
+          }
+        >
+          <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
+        </CustomTooltip>
       }
       
       <div className='flex items-center truncate w-1/2 mr-4'>
-        <p className='truncate text-black'>{shortenAddress(address?.chainAddr)}</p>
+        <p className='truncate text-black'>{shortenAddress(address)}</p>
       </div>
                 
       <div className='flex items-center w-1/2 justify-between'>
         <p>Ethereum</p>
-        <Trash weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => remove('address', address?.chainAddr)} size={25}/>
+        <Trash weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => remove('address', address)} size={25}/>
       </div>
     </div>
   );
