@@ -69,7 +69,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
               'flex-row items-center justify-end hidden',
               'minlg:flex w-full mx-8'
             )}>
-              <div className='flex grow max-w-3xl items-center h-full'>
+              <div className='flex grow max-w-[27rem] items-center h-full'>
                 <SearchBar bgLight={bgLight} />
               </div>
             </div>

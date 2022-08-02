@@ -98,7 +98,7 @@ export const SearchBar = (props: SearchBarProps) => {
               autoCapitalize="off"
               spellCheck="false"
               required maxLength={512}
-              className="bg-inherit w-full"
+              className="bg-inherit w-full border-none"
               onKeyUp={(event) => search(event)}
               onFocus={(event) => search(event)}/>
           </div>

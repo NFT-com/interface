@@ -18,28 +18,28 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
     <div className="mt-20 h-screen">
       <BannerWrapper />
       <div
-        className='md:mb-0 mb-8 flex justify-center'
+        className='mb-0 minlg:mb-8 flex justify-center'
         style={{
           zIndex: 103,
         }}
       >
         <div className="flex items-center md:flex-col">
-          <div className="flex items-end md:mt-[-30px] lg:mt-[-86px] mt-[-125px]">
+          <div className="flex items-end mt-[-30px] minlg:mt-[-86px] minxl:mt-[-125px]">
             <section>
               <div className='relative outline-none'>
                 <img
                   src={'https://cdn.nft.com/profile-image-default.svg'}
                   alt="profilePicture"
                   draggable={false}
-                  className="object-center rounded-full md:h-[72px] lg:h-[160px] h-60 md:w-[72px] lg:w-[160px] w-60"
+                  className="object-center rounded-full h-[72px] minlg:h-[160px] minxl:h-60 w-[72px] minlg:w-[160px] minxl:w-60"
                   style={{ zIndex: 101, }}
                 />
               </div>
             </section>
           </div>
-          <div className="flex items-center md:my-0 my-6 mx-4 w-full md:flex-col">
+          <div className="flex flex-col minlg:flex-row items-center my-0 minlg:my-6 mx-4 w-full">
             <div className="flex flex-col w-full">
-              <div className="font-bold lg:text-2xl text-4xl text-primary-txt dark:text-primary-txt-dk md:text-center md:mb-4">
+              <div className="font-bold text-2xl minxl:text-4xl text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mb-4 minlg:mb-0">
                 @{profileURI}
               </div>
             </div>
@@ -48,18 +48,18 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
         </div>
       </div>
       <main className='justify-start space-y-4 w-full flex flex-col'>
-        <div className='lg:text-sm text-xl text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col'>
+        <div className='text-sm minxl:text-xl text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col'>
           <div className="text-center font-bold mx-auto w-full">
             {(notAvailable || currentURIBlocked) ? 'This profile is not available.' : 'This profile is available and is ready to be minted!' }
           </div>
         </div>
         <div className='text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col'>
-          <div className="lg:text-sm text-xl sm:mb-8 md:mx-0 lg:mx-0 mx-auto mb-10 text-center">
+          <div className="text-sm minxl:text-xl mb-8 minmd:mb-10 mx-0 minxl:mx-auto  text-center">
             <p>
               {`Learn how to claim ${(notAvailable || currentURIBlocked) ? 'a' : 'this'} profile for your own by visiting either NFT.com or our Support knowledge base.`}
             </p>
           </div>
-          <div className="md:mt-0 lg:mt-10 mt-20 w-full flex justify-center lg:mb-0 mb-24">
+          <div className="mt-0 minlg:mt-10 minxl:mt-20 w-full flex justify-center mb-0 minxl:mb-24">
             <LinksToSection isAddressOwner={false} />
           </div>
         </div>

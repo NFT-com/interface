@@ -120,9 +120,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             </div>
           </a>
         </Link>
-        <div className={tw(
-          'flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between p-6 space-x-0 minmd:space-x-10 max-w-screen w-full minlg:max-w-nftcom mx-auto h-full',
-          'break-after-all',
+        <div className={tw('flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between p-6 space-x-0 minmd:space-x-10 max-w-screen minxl:px-0 px-5 w-full minlg:max-w-[1100px] mx-auto h-full',
+          'break-after-all ',
         )}
         style={{
           backgroundImage: 'url(\'/home-banner-bg.png\')',
@@ -131,7 +130,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         }}>
           <div className='break-after-all space-y-2 w-full ...'>
             <div className={tw(
-              'font-header text-black text-4xl minlg:text-5xl minxl:text-7xl text-header leading-header',
+              'font-header text-black text-5xl minxl:text-7xl leading-header',
               'break-after-all space-y-2'
             )}>
               <div>
@@ -171,7 +170,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             />
           </div>
         </div>
-        <div className='space-y-12 w-full items-center max-w-[1100px] mx-auto ...'>
+        <div className='space-y-12 w-full items-center max-w-[1100px] mx-auto minlg:px-3 minxl:px-0 ...'>
           <div className='h-full px-6 minlg:px-2 py-12 ...'>
             <div className='text-section leading-header font-header justify-center ...'>
               {data?.feedTitle}

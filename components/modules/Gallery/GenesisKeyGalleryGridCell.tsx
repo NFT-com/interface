@@ -36,7 +36,7 @@ function GenesisKeyGalleryGridCell(props: GenesisKeyGalleryGridCellProps) {
       key={tokenId}
       className={tw(
         'flex mb-4 items-center justify-center px-4',
-        'w-1/5 deprecated_lg:w-1/4 deprecated_md:w-1/3 deprecated_sm:w-2/5'
+        'w-2/5 minmd:w-1/3 minlg:w-1/4 minxl:w-1/5'
       )}
     >
       <GenesisKeyGalleryCard
