@@ -12,7 +12,7 @@ export const LoadingCard = () => {
 export const LoadingRow = () => {
   const loadPages = [1, 2, 3, 4];
   return (
-    <div className="grid gap-x-4 gap-y-5 deprecated_minmd:gap-6 deprecated_minmd:grid-cols-4 grid-cols-2 content-start">
+    <div className="grid gap-x-4 gap-y-5 minmd:gap-6 minmd:grid-cols-4 grid-cols-2 content-start">
       {loadPages.map(num => <LoadingCard key={num} />)}
     </div>
   );

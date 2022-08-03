@@ -35,6 +35,7 @@ jobs:
         NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
         NEXT_PUBLIC_BLOG_PAGES_ENABLED: ${{ secrets.NEXT_PUBLIC_BLOG_PAGES_ENABLED }}    
         NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED: ${{ secrets.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED }}
+        NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
     
     - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4

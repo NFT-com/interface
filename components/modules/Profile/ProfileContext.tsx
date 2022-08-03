@@ -142,6 +142,19 @@ export function ProfileContextProvider(
   const [draftDisplayType, setDraftDisplayType] = useState(null);
   const [selectedCollection, setSelectedCollection] = useState<string>(null);
   const [draftLayoutType , setDraftLayoutType] = useState<ProfileLayoutType>(null);
+
+  useEffect(() => {
+    // make sure these initial values are set when the Profile data loads.
+    if (draftBio == null) {
+      setDraftBio(profileData?.profile?.description);
+    }
+    if (draftGkIconVisible == null) {
+      setDraftGkIconVisible(profileData?.profile?.gkIconVisible);
+    }
+    if (draftNftsDescriptionsVisible == null) {
+      setDraftNftsDescriptionsVisible(profileData?.profile?.nftsDescriptionsVisible);
+    }
+  }, [draftBio, draftGkIconVisible, draftNftsDescriptionsVisible, profileData?.profile?.description, profileData?.profile?.gkIconVisible, profileData?.profile?.nftsDescriptionsVisible]);
   
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
   const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);

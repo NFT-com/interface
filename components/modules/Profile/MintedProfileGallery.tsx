@@ -59,8 +59,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
 
   return (
     <div className={tw(
-      'flex flex-col mt-8 md:mt-0 align-items',
-      isMobile ? 'px-2' : 'sm:px-2 px-8'
+      'flex flex-col mt-0 minlg:mt-14 align-items',
+      isMobile ? 'px-2' : 'px-2 minmd:px-8'
     )}>
       <Modal
         fullModal
@@ -84,7 +84,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
         <div className={tw(
           'flex items-center w-full justify-between text-white',
           editMode ? '' : 'mb-3')}>
-          <div className='mb-8' id="MintedProfileGalleryCollectionToggle">
+          <div id="MintedProfileGalleryCollectionToggle">
             <Switch
               left=""
               right="Group by Collection"
@@ -137,7 +137,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                       profile: props.profileURI
                     });
                   },
-                  icon: <EyeIcon className="w-5 h-5" alt="Show descriptions" />,
+                  icon: <EyeIcon alt="Show all nfts" />,
                 },
                 isMobile && {
                   label: 'Hide All',
@@ -148,7 +148,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                       profile: props.profileURI
                     });
                   },
-                  icon: <EyeOffIcon className="w-5 h-5" alt="Hide descriptions" />,
+                  icon: <EyeOffIcon alt="Hide all nfts" />,
                 },
                 {
                   label: 'Edit Layouts',

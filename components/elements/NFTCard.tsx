@@ -59,11 +59,11 @@ export function NFTCard(props: NFTCardProps) {
   const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
-      <span className='text-sm sm:text-xs' style={{ color: pink }}>
+      <span className='text-xs minmd:text-sm' style={{ color: pink }}>
         {pair.key}{isNullOrEmpty(pair.key) ? '' : ' '}
       </span>
       <span
-        className='text-sm sm:text-xs ml-1'
+        className='text-xs minmd:text-sm ml-1'
         style={{ color: secondaryText }}
       >
         {pair.value}
@@ -77,7 +77,7 @@ export function NFTCard(props: NFTCardProps) {
         'drop-shadow-md rounded-xl flex flex-col',
         props.constrain ?
           // constrain self to 2 or 4 per row
-          'md:w-2/5 w-[23%]' :
+          'w-2/5 minlg:w-[23%]' :
           'w-full',
         'justify-between cursor-pointer transform hover:scale-105',
         'overflow-hidden',
@@ -98,13 +98,13 @@ export function NFTCard(props: NFTCardProps) {
       }}
     >
       {(props.header || props.onSelectToggle != null) &&
-        <div className='flex w-full px-5 md:px-4 pt-5 md:pt-4 pb-3 md:pb-2 justify-between'>
+        <div className='flex w-full px-4 minlg:px-5 pt-4 minlg:pt-5 pb-2 minlg:pb-3  justify-between'>
           <div className='flex flex-col'>
             <span className='text-xs text-secondary-txt font-semibold'>
               {props.header?.key ?? ''}
             </span>
             <span
-              className='text-sm sm:text-xs font-bold text-primary-txt dark:text-primary-txt-dk'
+              className='text-xs minmd:text-sm  font-bold text-primary-txt dark:text-primary-txt-dk'
             >
               {props.header?.value ?? ''}
             </span>
@@ -174,9 +174,9 @@ export function NFTCard(props: NFTCardProps) {
               })}
             </div>
       }
-      {props.nftsDescriptionsVisible != false && <div className="p-4 md:p-3 flex flex-col">
+      {props.nftsDescriptionsVisible != false && <div className="p-3 minlg:p-4 flex flex-col">
         <span className={tw(
-          'text-2xl lg:text-xl md:text-lg sm:text-base font-semibold truncate',
+          ' text-base minmd:text-lg minlg:text-xl minxl:text-2xl font-semibold truncate',
           isNullOrEmpty(props.title) ?
             'text-secondary-txt' :
             'text-primary-txt dark:text-primary-txt-dk'
@@ -184,14 +184,14 @@ export function NFTCard(props: NFTCardProps) {
           {isNullOrEmpty(props.title) ? 'Unknown Name' : props.title}
         </span>
         {props.subtitle && <span
-          className='text-sm sm:text-xs text-secondary-txt mt-2'
+          className='text-xs minmd:text-sm  text-secondary-txt mt-2'
         >
           {props.subtitle}
         </span>}
         {(props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
  
         {!isNullOrEmpty(props.description) && (
-          <div className='mt-4 text-secondary-txt text-sm sm:text-xs'>
+          <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
             {props.description}
           </div>
         )}
@@ -209,7 +209,7 @@ export function NFTCard(props: NFTCardProps) {
         {
           props.cta &&
             <div
-              className="mt-4 text-sm sm:text-xs cursor-pointer hover:underline"
+              className="mt-4 text-xs minmd:text-sm cursor-pointer hover:underline"
               style={{ color: link }}
             >
               {props.cta}

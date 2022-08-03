@@ -73,7 +73,7 @@ const UNSELECTED_SUB_TAB_STYLE_LIGHT =
 
 export function getSubTabStyle(active: boolean, isDarkMode: boolean, defaultStyle?: boolean) {
   if (defaultStyle) {
-    return `deprecated_minmd:hover:text-black deprecated_minmd:hover:dark:text-white whitespace-nowrap py-3 border-b-2 hover:cursor-pointer border-transparent 
+    return `minmd:hover:text-black minmd:hover:dark:text-white whitespace-nowrap py-3 border-b-2 hover:cursor-pointer border-transparent 
       ${active ? 'text-toggle-bg font-bold' : 'dark:text-primary-txt-dk text-gray-400 hover:font-bold'}`;
   }
   if (active) {

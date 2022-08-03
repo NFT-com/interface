@@ -23,7 +23,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
   return (
     <div className='w-full h-full text-body text-[#6F6F6F] font-grotesk leading-body font-header drop-shadow-2xl py-4 minlg:py-12'>
       <p className='minlg:mb-2 mb-4'>Featured Profile</p>
-      <div className='flex flex-col bg-[#B0AFAF26]/20 rounded-md backdrop-blur-xl px-4 py-6 max-w-[478px]'>
+      <div className='flex flex-col bg-[#B0AFAF26]/20 rounded-md backdrop-blur-xl px-4 py-6 max-w-[578px] minmd:max-w-[478px]'>
         <div className='flex flex-row items-center cursor-pointer mb-5' onClick={() => router.push(`/${props.profileOwner.profile.url}`)}>
           <div className="h-10 w-10 mr-2 mt-0.5">
             {

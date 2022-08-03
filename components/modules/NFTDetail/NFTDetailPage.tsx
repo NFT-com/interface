@@ -32,8 +32,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           <NftApprovals nft={nft} />
         }
         <ExternalListings nft={nft} />
-        <div className='w-full flex flex-row md:flex-col p-4'>
-          <div className='flex flex-col w-2/4 md:w-full pr-4 md:pr-0'>
+        <div className='w-full flex flex-col minlg:flex-row p-4'>
+          <div className='flex flex-col minlg:w-1/2 w-full ming:pr-4 pr-0'>
             <div className='w-full border-b dark:border-accent-border-dk border-accent-border pb-5'>
               <DescriptionDetail nft={nft} />
             </div>
@@ -41,7 +41,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
               <NftChainInfo nft={nft} />
             </div>
           </div>
-          <div className="w-2/4 md:w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
+          <div className="minlg:w-1/2 w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
             <Properties nft={nft} />
           </div>
         </div>

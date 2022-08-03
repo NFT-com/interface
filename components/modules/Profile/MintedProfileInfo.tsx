@@ -46,12 +46,12 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   return (
     <div className={tw(
       'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
-      'xs:my-0 xs:mx-0 xs:mb-16 xs:-mt-10 sm:-mt-14 my-4 sm:mx-0 lg:mx-8 px-4',
-      'xs:w-full sm:w-4/5 lg:w-3/5 w-full xs:h-32 h-52')}>
+      'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 -mt-14 minmd:mt-0 px-4',
+      'w-4/5 minxl:w-3/5 minmd:h-52 h-32')}>
       <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
         <div
           id="MintedProfileNameContainer"
-          className="font-bold lg:text-2xl text-4xl text-primary-txt dark:text-primary-txt-dk md:text-center mr-4">
+          className="font-bold text-2xl minxl:text-4xl text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4">
             @{profileURI}
         </div>
         {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
@@ -59,7 +59,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       {userIsAdmin && hasGks && (
         editMode ?
           <div
-            className="flex mt-6 md:mt-3"
+            className="flex mt-3 minlg:mt-6"
             style={{ zIndex: 49 }}
           >
             <div className='mr-4'>
@@ -87,7 +87,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             />
           </div> :
           <div
-            className="mt-6 md:mt-3"
+            className="mt-3 minlg:mt-6 "
             style={{ zIndex: 49 }}
           >
             <Button
@@ -100,13 +100,13 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           </div>)}
       {profileData?.profile?.description &&
           <div className={tw(
-            'mt-6 md:mt-3 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
+            'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
           )}>
             {!editMode && profileData?.profile?.description}
           </div>
       }
       {editMode && userIsAdmin &&
-          <div className="max-w-2xl md:max-w-xl sm:max-w-full flex items-end flex flex-col">
+          <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex flex-col">
             <textarea
               className={tw(
                 'text-base w-full resize-none mt-4',
