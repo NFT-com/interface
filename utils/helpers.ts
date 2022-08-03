@@ -96,6 +96,10 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return prefix + image.slice(21);
   } else if (image.indexOf('https://gateway.pinata.cloud/ipfs/') === 0) {
     return prefix + image.slice(34);
+  } else if (image.indexOf('https://infura-ipfs.io/ipfs/') === 0) {
+    return prefix + image.slice(28);
+  } else if (!image.includes('/')) {
+    return prefix + image;
   }
   return image;
 };
