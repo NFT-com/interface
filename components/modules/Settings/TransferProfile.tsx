@@ -1,12 +1,11 @@
 import { Modal } from 'components/elements/Modal';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { tw } from 'utils/tw';
 
 import SettingsForm from './SettingsForm';
 
-import { BigNumber, ethers } from 'ethers';
-import { CheckCircle, GasPump, Warning, XCircle } from 'phosphor-react';
+import { BigNumber } from 'ethers';
+import { GasPump, XCircle } from 'phosphor-react';
 import { useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 

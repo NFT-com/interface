@@ -1,21 +1,36 @@
+import 'react-toastify/dist/ReactToastify.css';
+
 import { Modal } from 'components/elements/Modal';
+import Toast from 'components/elements/Toast';
 import ProfileCard from 'components/modules/Sidebar/ProfileCard';
+import { useMyProfilesQuery } from 'graphql/hooks/useMyProfilesQuery';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useUpdateWalletProfileIdMutation } from 'graphql/hooks/useUpdateWalletProfileIdMutation';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { XCircle } from 'phosphor-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 type NftOwnerProps = {
   selectedProfile: string
 }
 
 export default function NftOwner({ selectedProfile }: NftOwnerProps) {
+  const { profileData } = useProfileQuery(selectedProfile);
+  const { data: myProfiles } = useMyProfilesQuery();
+  const { updateWalletProfileId } = useUpdateWalletProfileIdMutation();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const [visible, setVisible] = useState(false);
   const [allProfiles, setAllProfiles] = useState([]);
   const [profilesToShow, setProfilesToShow] = useState([]);
-  const [selected, setSelected] = useState('lucasgoerli'); // Will be new state from endpoint
+  const [selected, setSelected] = useState('');
+
+  useEffect(() => {
+    setSelected(profileData?.profile?.owner?.preferredProfile?.url);
+  }, [profileData]);
+  
   useEffect(() => {
     setAllProfiles(myOwnedProfileTokens);
   }, [myOwnedProfileTokens]);
@@ -41,12 +56,18 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
     setProfilesToShow([...profilesToShow, ...nextProfiles]);
   };
 
+  const updateOwnerProfile = (profileTitle) => {
+    setSelected(profileTitle);
+    const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle).id;
+    updateWalletProfileId({ profileId: profileId }).then(() => toast.success('Saved!')).catch(() => toast.error('Error'));
+  };
+
   return (
     <div id="owner" className='md:mt-10 mt-0 font-grotesk'>
       <h2 className='text-black mb-2 font-bold md:text-2xlz text-4xl tracking-wide'>NFT Owner</h2>
       <p className='mb-4 text-[#6F6F6F]'>Select which profile will display as the owner for your NFTs and collections.</p>
 
-      {selectedProfile !== '' && <ProfileCard onClick={setVisible} opensModal showSwitch profile={myOwnedProfileTokens?.find(t => t.title === selectedProfile)} />}
+      {selected !== '' && <ProfileCard onClick={setVisible} opensModal showSwitch profile={myOwnedProfileTokens?.find(t => t.title === selected)} />}
       
       <Modal
         visible={visible}
@@ -60,6 +81,7 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
         pure
       >
         <div className='w-full h-screen bg-white text-left px-4'>
+          <Toast />
           <XCircle onClick={() => setVisible(false)} className='absolute top-5 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
           <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto'>
             <div>
@@ -70,7 +92,7 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
             <div>
               {profilesToShow && profilesToShow?.map((profile) => {
                 return (
-                  <ProfileCard isSelected={selected === profile.title} key={profile?.title} onClick={setSelected} profile={profile} />
+                  <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} key={profile?.title} onClick={updateOwnerProfile} profile={profile} />
                 );
               })}
             </div>

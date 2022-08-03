@@ -13,6 +13,10 @@ query Profile($url: String!, $chainId: String!) {
       address
       chainId
       network
+      preferredProfile {
+        url
+        id
+      }
     }
     profileView
   }
