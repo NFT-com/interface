@@ -101,6 +101,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
       <div
         key={props.currentFilter}
         className={tw(
+          'SingleGKSearchResultContainer',
           'flex mb-4 items-center justify-center px-4',
           'minxl:w-1/5 minlg:w-1/4 minmd:w-1/3 w-2/5'
         )}
@@ -126,6 +127,7 @@ export function GenesisKeyGalleryItems(props: GenesisKeyGalleryItemsProps) {
             <div
               key={genesisKeyToken?.id?.tokenId}
               className={tw(
+                'MyGKSearchResultContainer',
                 'flex mb-4 items-center justify-center px-4',
                 'minxl:w-1/5 minlg:w-1/4 minmd:w-1/3 w-2/5'
               )}
