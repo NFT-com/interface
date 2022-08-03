@@ -58,7 +58,7 @@ export default function CollectionPage() {
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [found, setFound] = useState(0);
-  const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), true);
+  const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString());
   
   const displayZeros = (quantity: number) => {
     if (quantity < 10) {
@@ -107,7 +107,7 @@ export default function CollectionPage() {
         removeSummaryBanner: true,
       }}>
       <div className="mt-20">
-        <BannerWrapper imageOverride={collectionData?.openseaInfo?.collection?.banner_image_url}/>
+        <BannerWrapper imageOverride={collectionData?.ubiquityResults?.collection?.banner + `?apiKey=${process.env.NEXT_PUBLIC_UBIQUITY_API_KEY}`}/>
       </div>
       <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
         {collectionNfts.length > 0 ?
