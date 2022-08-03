@@ -37,8 +37,8 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
           <th scope="col" className="flex items-center minmd:text-body text-sm leading-body font-body"></th>
           <th scope="col" className='text-left minmd:text-body text-sm leading-body font-body'>Profile</th>
           <th scope="col" className='text-right pr-3 minmd:text-body text-sm leading-body font-body'>NFTs Collected</th>
-          <th scope="col" className='text-right pr-3 minmd:text-body sm:text-sm leading-body font-body sm:hidden'>Number of NFT Collections</th>
-          <th scope="col" className='text-right minmd:text-body sm:text-sm leading-body font-body sm:hidden'>Number of Genesis Keys</th>
+          <th scope="col" className='text-right pr-3 minmd:text-body sm:text-sm leading-body font-body min-sm:hidden'>Number of NFT Collections</th>
+          <th scope="col" className='text-right minmd:text-body sm:text-sm leading-body font-body min-sm:hidden'>Number of Genesis Keys</th>
         </tr>
       </thead>
       <tbody className="bg-always-white">
@@ -73,13 +73,13 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
                 {item.itemsVisible}
               </div>
             </td>
-            <td className='sm:hidden'>
+            <td className='min-sm:hidden'>
               <div className={tw('flex items-end justify-end minmd:text-body text-sm leading-body font-bold',
                 'whitespace-nowrap text-right mr-3')}>
                 {item.numberOfCollections}
               </div>
             </td>
-            <td className='sm:hidden'>
+            <td className='min-sm:hidden'>
               <div className={tw('flex items-end justify-end minmd:text-body text-sm leading-body font-bold',
                 'whitespace-nowrap text-right')}>
                 {item.numberOfGenesisKeys}
