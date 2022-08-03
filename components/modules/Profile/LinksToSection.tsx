@@ -80,7 +80,7 @@ export function LinksToSection(props: LinksToSectionParams) {
   ];
 
   return (
-    <div className="flex flex-row lg:flex-col lg:space-y-4 space-y-0 lg:space-x-0 space-x-4 lg:w-auto w-full">
+    <div className="flex flex-col minxl:flex-row space-y-4 minxl:space-y-0 space-x-0 minxl:space-x-4 w-auto minxl:w-full">
       {
         (isAddressOwner ? ownerlinksContents : notOwnerlinksContents)
           .map((item) =>
@@ -92,13 +92,13 @@ export function LinksToSection(props: LinksToSectionParams) {
                   target='_blank'
                   key={item.section}
                   className="bg-modal-overlay-dk rounded-xl lg:w-full w-52 grow cursor-pointer">
-                  <div className="lg:text-sm text-lg md:p-2 p-4">{item.section}</div>
+                  <div className="text-sm minxl:text-lg p-2 minlg:p-4">{item.section}</div>
                   <div className="w-full">
                     <img src={item.image} className="object-center object-cover w-full" alt="link to section" />
                   </div>
-                  <div className="md:p-3 p-4">
-                    <div className="mb-1 lg:text-base text-xl">{item.title}</div>
-                    <div className="lg:text-xs text-base">{item.description}</div>
+                  <div className="p-3 minlg:p-4">
+                    <div className="mb-1 text-base minxl:text-xl">{item.title}</div>
+                    <div className="text-xs minxl:text-base">{item.description}</div>
                   </div>
                 </a>
               </Link>

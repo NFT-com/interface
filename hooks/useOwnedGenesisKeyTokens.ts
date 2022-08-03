@@ -1,5 +1,5 @@
 import { Maybe } from 'graphql/generated/types';
-import { getNftsByContract } from 'utils/alchemyNFT';
+import { getNftsByContractAndOwner } from 'utils/alchemyNFT';
 import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -32,7 +32,7 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
     }
     setLoading(true);
 
-    const result = await getNftsByContract(
+    const result = await getNftsByContractAndOwner(
       address,
       getAddress('genesisKey', chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
       chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
@@ -42,7 +42,7 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
     let pageKey = result?.pageKey;
     if (result?.pageKey) {
       // There are further pages to load.
-      const nextPage = await getNftsByContract(
+      const nextPage = await getNftsByContractAndOwner(
         address,
         getAddress('genesisKey', chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
         chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),

@@ -35,7 +35,7 @@ export const Properties = (props: PropertiesProps) => {
             </div> :
             <div className={tw(
               'grid grid-cols-2 gap-2 overflow-y-scroll overflow-x-hidden',
-              'grid-cols-2 sm:grid-cols-2 md:grid-cols-3'
+              'grid-cols-2 minlg:grid-cols-3'
             )}>
               {nftTraits?.map((item, index) => {
                 return <NftDetailCard

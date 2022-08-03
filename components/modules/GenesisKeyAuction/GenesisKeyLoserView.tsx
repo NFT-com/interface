@@ -19,7 +19,7 @@ export function GenesisKeyLoserView(props: GenesisKeyLoserViewProps) {
       <HeroTitle items={['YOU WERE OUTBID']} />
       <div className={tw('flex flex-col items-center text-center space-y-12 mt-8',
         'text-white w-2/4',
-        'deprecated_xxl:text-xl deprecated_lg:text-xl deprecated_md:text-lg deprecated_sm:text-base')}
+        'text-base minmd:text-lg minlg:text-xl')}
       >
         <span>
         No funds have been removed from your wallet, and your bid signature has been removed.
@@ -38,7 +38,7 @@ export function GenesisKeyLoserView(props: GenesisKeyLoserViewProps) {
       {props.liveAuction === AuctionType.Blind &&
         <div className={tw(
           'flex flex-col items-center my-6 text-white w-2/4 text-center',
-          'deprecated_xxl:text-xl deprecated_lg:text-xl deprecated_md:text-lg deprecated_sm:text-base')}
+          'text-base minmd:text-lg minlg:text-xl')}
         >
           <span className="text-xl my-6 max-w-2xl text-center" style={{ color: primaryText }}>
           Join our Discord below for the Public Sale instructions!

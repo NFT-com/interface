@@ -1,4 +1,4 @@
-import { getNftsByContract } from 'utils/alchemyNFT';
+import { getNftsByContractAndOwner } from 'utils/alchemyNFT';
 import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -23,7 +23,7 @@ export function useNftProfileTokens(owner: string): ProfileTokenResults {
       return null;
     }
 
-    const result = await getNftsByContract(
+    const result = await getNftsByContractAndOwner(
       owner,
       getAddress('nftProfile', chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
       chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
@@ -33,7 +33,7 @@ export function useNftProfileTokens(owner: string): ProfileTokenResults {
     let pageKey = result?.pageKey;
     while (pageKey != null) {
       // There are further pages to load.
-      const nextPage = await getNftsByContract(
+      const nextPage = await getNftsByContractAndOwner(
         owner,
         getAddress('nftProfile', chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
         chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
