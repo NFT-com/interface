@@ -17,7 +17,7 @@ export async function getNftMetadata(
   return result;
 }
 
-export async function getNftsByContract(
+export async function getNftsByContractAndOwner(
   owner: string,
   contract: string,
   chainId: string | number,
@@ -29,6 +29,18 @@ export async function getNftsByContract(
   url.searchParams.set('action', 'getNfts');
   url.searchParams.set('chainId', String(chainId));
   url.searchParams.set('pageKey', pageKey);
+  const result = await fetch(url.toString()).then(res => res.json());
+  return result;
+}
+
+export async function getNftsForCollection(
+  contract: string,
+  limit: number | null
+) {
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
+  url.searchParams.set('action', 'getNFTsForCollection');
+  url.searchParams.set('contractAddress', contract);
+  url.searchParams.set('limit', String(limit));
   const result = await fetch(url.toString()).then(res => res.json());
   return result;
 }
