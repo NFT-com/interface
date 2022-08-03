@@ -1,8 +1,7 @@
-import { NFTCard } from 'components/elements/NFTCard';
 import { useDeployedCollectionsQuery } from 'graphql/hooks/useDeployedCollectionsQuery';
 import { tw } from 'utils/tw';
 
-import { useRouter } from 'next/router';
+import { DeployedCollectionCard } from './DeployedCollectionCard';
 
 export interface DeployedCollectionsGalleryProps {
   address: string;
@@ -10,7 +9,6 @@ export interface DeployedCollectionsGalleryProps {
 
 export function DeployedCollectionsGallery(props: DeployedCollectionsGalleryProps) {
   const { collections } = useDeployedCollectionsQuery(props.address?.toLowerCase());
-  const router = useRouter();
   if (collections?.length === 0) {
     return <div className="w-full flex items-center justify-center customHeight">
       <div className="flex flex-col items-center text-primary-txt dark:text-primary-txt-dk">
@@ -28,17 +26,7 @@ export function DeployedCollectionsGallery(props: DeployedCollectionsGalleryProp
             'NFTCollectionCardContainer'
           )}
         >
-          <NFTCard
-            title={collection?.name}
-            imageLayout="row"
-            images={[
-              // todo: get 3 random NFT images from this collection
-            ]}
-            onClick={() => {
-              router.push(`/app/collection/${collection.contract}`);
-            }}
-            contractAddress={collection?.contract}
-          />
+          <DeployedCollectionCard collection={collection} />
         </div>
       ))}
     </div>

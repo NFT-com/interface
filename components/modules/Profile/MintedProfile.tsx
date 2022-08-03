@@ -51,8 +51,7 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
-  // const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
-  const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) ;
+  const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
