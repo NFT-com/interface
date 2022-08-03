@@ -130,7 +130,7 @@ describe('Unit test our helper functions', () => {
       expect(processIPFSURL('https://gateway.pinata.cloud/ipfs/test_url')).to.equal('https://nft-llc.mypinata.cloud/ipfs/test_url');
       expect(processIPFSURL('https://infura-ipfs.io/ipfs/QmbyQAnbszAt3o9hCmDngR92st8tUBW9z8mdztMSTvUaKS/preload.gif')).to.equal('https://nft-llc.mypinata.cloud/ipfs/QmbyQAnbszAt3o9hCmDngR92st8tUBW9z8mdztMSTvUaKS/preload.gif');
       expect(processIPFSURL('QmZT1ijWYugocjMDreJYKmUsPQS5Gu6mvmFbWrnUpBQK4L')).to.equal('https://nft-llc.mypinata.cloud/ipfs/QmZT1ijWYugocjMDreJYKmUsPQS5Gu6mvmFbWrnUpBQK4L');
-      expect(processIPFSURL('https://QmZT1ijWYugocjMDreJYKmUsPQS5Gu6mvmFbWrnUpBQK4L')).to.equal('https://QmZT1ijWYugocjMDreJYKmUsPQS5Gu6mvmFbWrnUpBQK4L');
+      expect(processIPFSURL('noop')).to.equal('noop');
     });
   });
 
