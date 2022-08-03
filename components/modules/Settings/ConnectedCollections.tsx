@@ -1,6 +1,8 @@
 import AssociatedAddress from './AssociatedAddress';
 import SettingsForm from './SettingsForm';
 
+import { useState } from 'react';
+
 type Address = {
   chainAddr: string;
 }
@@ -20,13 +22,20 @@ type ConnectedCollectionsProps = {
 };
 
 export default function ConnectedCollections({ selectedProfile, associatedCollections, removeHandler, hasDeployerWallet, deployerWallet }: ConnectedCollectionsProps) {
+  const [inputValDeployer, setInputValDeployer] = useState('');
+  const [inputValCollection, setInputValCollection] = useState('');
+
+  const submitHandler = () => {
+    console.log('submit');
+  };
+
   return (
     <>
       <div className='mt-8 font-grotesk'>
         <h3 className='text-base font-semibold tracking-wide mb-1'>Deployer Wallet</h3>
         <p className='text-blog-text-reskin mb-4'>Enter the wallet you have deployed your NFT collection from.</p>
 
-        {!hasDeployerWallet ? <SettingsForm selectedProfile={selectedProfile} type="request" buttonText='Request Connection' /> : null}
+        {!hasDeployerWallet ? <SettingsForm submitHandler={submitHandler} buttonText='Request Connection' inputVal={inputValDeployer} changeHandler={setInputValDeployer} /> : null}
 
         {deployerWallet?.accepted?.length || deployerWallet?.pending?.length
           ? (
@@ -52,7 +61,7 @@ export default function ConnectedCollections({ selectedProfile, associatedCollec
           <h3 className='text-base font-semibold tracking-wide mb-1'>NFT Collection</h3>
           <p className='text-blog-text-reskin mb-4'>Enter the NFT collection you want to display on your profile.</p>
 
-          <SettingsForm selectedProfile={selectedProfile} type="request" buttonText='Request Connection' />
+          <SettingsForm submitHandler={submitHandler} buttonText='Request Connection' inputVal={inputValCollection} changeHandler={setInputValCollection} />
 
           {associatedCollections?.accepted?.length || associatedCollections?.pending?.length
             ? (
