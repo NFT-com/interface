@@ -85,6 +85,9 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
                 'flex items-center'
               )}
             >
+              <Link href ='/app/discover'>
+                <span className='hover:text-link cursor-pointer'>Discover</span>
+              </Link>
               <Link href ='/app/gallery'>
                 <span className='hover:text-link cursor-pointer'>Gallery</span>
               </Link>

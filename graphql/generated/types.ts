@@ -197,6 +197,14 @@ export type CollectionNfTsInput = {
   pageInput?: InputMaybe<PageInput>;
 };
 
+export type TypesenseSearchInput = {
+  index: Scalars['String'];
+  queryFields: Scalars['String'];
+  searchTerm: Scalars['String'] | Array<Scalars['String'] >;
+  perPage: Scalars['Int'];
+  page: Scalars['Int'];
+};
+
 export type ConvertEnsToEthAddress = {
   __typename?: 'ConvertEnsToEthAddress';
   ethAddresses: Array<Scalars['String']>;
