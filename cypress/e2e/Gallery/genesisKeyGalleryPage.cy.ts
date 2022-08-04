@@ -10,19 +10,21 @@ describe('GK gallery page tests', () => {
   });
 
   it('should open a GK detail view when clicked', () => {
-    cy.findByText('00001').click();
-    cy.findByText('Owner').should('be.visible');
-    cy.findByText('Profile Mints Remaining').should('be.visible');
-    cy.findByText('Key Id').should('be.visible');
-    cy.findByText('Key Body').should('be.visible');
-    cy.findByText('Key Blade').should('be.visible');
-    cy.findByText('Key Handle').should('be.visible');
-    cy.findByText('Material').should('be.visible');
-    cy.findByText('Stand').should('be.visible');
-    cy.findByText('Background').should('be.visible');
-    cy.findByText('Glitch').should('be.visible');
-    cy.root().click('topLeft');
-    cy.findByText('Glitch').should('not.be.visible');
+    cy.findByText('00001').click().then(() => {
+      cy.findByText('Owner').should('be.visible');
+      cy.findByText('Profile Mints Remaining').should('be.visible');
+      cy.findByText('Key Id').should('be.visible');
+      cy.findByText('Key Body').should('be.visible');
+      cy.findByText('Key Blade').should('be.visible');
+      cy.findByText('Key Handle').should('be.visible');
+      cy.findByText('Material').should('be.visible');
+      cy.findByText('Stand').should('be.visible');
+      cy.findByText('Background').should('be.visible');
+      cy.findByText('Glitch').should('be.visible');
+      cy.root().click('topLeft').then(() => {
+        cy.findByText('Glitch').should('not.be.visible');
+      });
+    });
   });
 
   it('should toggle to profile view', () => {
