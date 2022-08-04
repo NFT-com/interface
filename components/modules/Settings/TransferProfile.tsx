@@ -48,13 +48,12 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
         onClose={() => {
           setVisible(false);
         }}
-        fullModal
         bgColor='white'
-        pure
+        hideX
       >
-        <div className='w-full h-screen bg-white text-left px-4'>
-          <XCircle onClick={() => setVisible(false)} className='absolute top-5 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
-          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto'>
+        <div className='max-w-[458px] sm:max-w-full h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
+          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
+            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             {success
               ?
               (

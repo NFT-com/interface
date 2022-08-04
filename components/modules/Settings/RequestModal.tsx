@@ -15,18 +15,17 @@ export default function RequestModal({ visible, setVisible, address, transaction
     <Modal
       visible={visible}
       loading={false}
-      title={'Request Modal'}
+      title={''}
       onClose={() => {
         setVisible(false);
         setAddressVal('');
       }}
-      fullModal
       bgColor='white'
-      pure
+      hideX
     >
-      <div className='w-full h-screen bg-white text-left px-4'>
-        <XCircle onClick={() => setVisible(false)} className='absolute top-5 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
-        <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto'>
+      <div className='max-w-[458px] h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
+        <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
+          <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Request Sent</h2>
           <p className='text-[#6F6F6F]'>You have sent a wallet connection request to <span className='font-mono text-black text-xl break-words mt-2'>{address}</span></p>
           <p className='mt-6'>View the transaction on {' '}

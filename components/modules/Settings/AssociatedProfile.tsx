@@ -108,17 +108,16 @@ export default function AssociatedProfile({ profile, pending, remove, rejected, 
       <Modal
         visible={visible}
         loading={false}
-        title={'Request Modal'}
+        title={''}
         onClose={() => {
           setVisible(false);
         }}
-        fullModal
         bgColor='white'
-        pure
+        hideX
       >
-        <div className='w-full h-screen bg-white text-left px-4'>
-          <XCircle onClick={() => closeModal()} className='absolute top-5 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
-          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto'>
+        <div className='max-w-[458px] h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
+          <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
+            <XCircle onClick={() => closeModal()} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             {!rejected ?
               (
                 !accepted
@@ -151,7 +150,7 @@ export default function AssociatedProfile({ profile, pending, remove, rejected, 
                         <GasPump size={20} weight="fill" />
                         <p className='ml-1'>This action will require a gas fee.</p>
                       </div>
-                      <p className='underline text-center font-bold tracking-wide' onClick={() => remove(pending ? 'profile-pending' : 'profile', profile.id)}>Reject Request</p>
+                      <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {remove(pending ? 'profile-pending' : 'profile', profile.id); closeModal();}}>Reject Request</p>
                     </div>
                   )
                   :

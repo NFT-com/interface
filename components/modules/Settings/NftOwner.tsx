@@ -72,18 +72,17 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
       <Modal
         visible={visible}
         loading={false}
-        title={'Request Modal'}
+        title={''}
         onClose={() => {
           setVisible(false);
         }}
-        fullModal
+        hideX
         bgColor='white'
-        pure
       >
-        <div className='w-full h-screen bg-white text-left px-4'>
+        <div className='max-w-[458px] h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
           <Toast />
-          <XCircle onClick={() => setVisible(false)} className='absolute top-5 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
-          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto'>
+          <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
+            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             <div>
               <h2 className='text-4xl tracking-wide font-bold mb-10'>Set Owner</h2>
               <p className='text-[#6F6F6F] mb-4'>Select the profile to sign-in with by default.</p>
