@@ -5,7 +5,6 @@ import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { Doppler, getEnv } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -32,21 +31,21 @@ export function CollectionGallery(props: CollectionGalleryProps) {
 
   const {
     editMode,
-    editModeNfts,
     selectedCollection,
     setSelectedCollection,
     hideNftIds,
     showNftIds,
     publiclyVisibleNfts,
+    allOwnerNfts,
   } = useContext(ProfileContext);
 
-  const { data: collectionData } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), selectedCollection, true);
+  const { data: collectionData } = useCollectionQuery(String(chain?.id), selectedCollection, true);
 
   const { data: collections } = useSWR(
-    '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(editModeNfts),
+    '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(allOwnerNfts),
     () => {
       const nftsToShow = editMode ?
-        (editModeNfts ?? []) :
+        (allOwnerNfts ?? []) :
         (publiclyVisibleNfts ?? []);
       const newCollections = nftsToShow?.reduce((
         previousValue: Map<string, Nft[]>,
@@ -74,7 +73,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     );
   }
 
-  if (editMode && (editModeNfts.length ?? 0) === 0) {
+  if (editMode && (allOwnerNfts.length ?? 0) === 0) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-primary-txt dark:text-primary-txt-dk">
@@ -144,7 +143,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             contract={key}
             count={collections?.get(key)?.length}
             images={collections?.get(key)?.map((nft: PartialDeep<Nft>) => {
-              if (sameAddress(nft?.contract, getAddress('genesisKey', String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))))) {
+              if (sameAddress(nft?.contract, getAddress('genesisKey', chain?.id ?? 1))) {
                 return getGenesisKeyThumbnail(nft?.tokenId);
               }
               return nft?.metadata?.imageURL;

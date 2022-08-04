@@ -16,13 +16,12 @@ import { ChevronsUp, Loader } from 'react-feather';
 
 export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void}) => {
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
+  const [active, setActive] = useState('PFP');
+
   return (
-    <div className={'border-t border-[#e5e7eb] border-b'}>
-      <div className="mx-5 text-gray-400 text-lg my-3.5 flex justify-between">
-        <div>
-          <span>Check out our curated collections</span>
-          <p>We’ve hand-picked NFT collections to help you find what you’re looking for.</p>
-        </div>
+    <div className={'border-t border-[#e5e7eb] border-b my-3.5'}>
+      <div className="flex justify-between">
+        <span className="text-black text-lg font-medium">Check out our curated collections</span>
         <ChevronsUp
           onClick={() => {
             setIsFilterCollapsed(!isFilterCollapsed);
@@ -30,32 +29,50 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
           className={tw('cursor-pointer transition-transform', isFilterCollapsed ? 'rotate-180' : '')}
         />
       </div>
+      <p className="text-blog-text-reskin font-medium">
+        We’ve hand-picked NFT collections to help you find what you’re looking for.
+      </p>
       <motion.div
         animate={{
           height: isFilterCollapsed ? 0 : 'auto' }}
         transition={{ duration: 0.2 }}
         className={tw('overflow-hidden mx-auto')}
       >
-        <div className="flex flex-wrap justify-between items-center w-[70%] mx-auto h-fit my-10">
-
+        <div className="flex flex-wrap justify-between items-center w-[90%] max-w-xs mx-auto h-fit my-7">
           <span
-            className="border border-black rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer"
-            onClick={() => props.onClick('')}
-          >PFP</span>
+            className={tw(
+              'border border-gray-300 font-grotesk',
+              'rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer',
+              active === 'PFP' ? 'bg-[#F9D963] text-black font-black': 'text-blog-text-reskin font-bold' )}
+            onClick={() => {
+              setActive('PFP');
+              props.onClick('nft');
+            }}
+          >
+            PFP
+          </span>
           <span
-            className="border border-black rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer"
-            onClick={() => props.onClick('col')}
-          >Art</span>
-          <span className="border border-black rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Gaming</span>
-          <span className="border border-black rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Genesys Keys</span>
-          <span className="border border-black rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Profiles</span>
-          <span className="border border-black rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer mx-auto">Discover by keyword</span>
+            className={tw(
+              'border border-gray-300 font-grotesk',
+              'rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer',
+              active === 'Art' ? 'bg-[#F9D963] text-black font-black': 'text-blog-text-reskin font-bold' )}
+            onClick={() => {
+              setActive('Art');
+              props.onClick('col');
+            }}
+          >
+            Art
+          </span>
+          <span className="font-grotesk font-bold text-blog-text-reskin border border-gray-300 rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Gaming</span>
+          <span className="font-grotesk font-bold text-blog-text-reskin border border-gray-300 rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Genesys Keys</span>
+          <span className="font-grotesk font-bold text-blog-text-reskin border border-gray-300 rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Profiles</span>
+          <span className="font-grotesk font-bold text-blog-text-reskin border border-gray-300 rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer mx-auto">Discover by keyword</span>
         </div>
       </motion.div>
     </div>);
 };
 
-const CollectionItem = (contractAddr: any) => {
+const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; contractName: string} ) => {
   const router = useRouter();
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const [imageArray, setImageArray] = useState([]);
@@ -74,7 +91,6 @@ const CollectionItem = (contractAddr: any) => {
       images.push(collectionsData?.collectionNFTs.items[1]?.metadata.imageURL);
       images.push(collectionsData?.collectionNFTs.items[2]?.metadata.imageURL);
       setImageArray([...images]);
-      console.log(images, 'images fdo');
     }));
   }, [fetchCollectionsNFTs, contractAddr]);
 
@@ -85,7 +101,11 @@ const CollectionItem = (contractAddr: any) => {
       images={imageArray}
       onClick={() => {
         router.push(`/app/collection/${contractAddr}/`);
-      } }
+      }}
+      customBackground={'white'}
+      customBorder={'border border-grey-200'}
+      contractName={contractName}
+      lightModeForced={true}
     />
   );
 };
@@ -108,7 +128,7 @@ export default function DiscoverPage() {
       .then((results) => {
         setCollectionsResults([...collectionsResults,...results.hits]);
         setFound(results.found);
-        console.log(results, 'results fdo');
+        //console.log(results, 'results fdo');
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, searchTerm]);
@@ -136,9 +156,9 @@ export default function DiscoverPage() {
           </a>
         </Link>
       </div>
-      <div className="my-10">
+      <div className="my-10 max-w-lg mx-[4%] self-center">
         <span className="font-grotesk text-black font-black text-4xl">Discover</span>
-        <p className="text-[#7F7F7F]">Find your next PFP, one-of-kind collectable, or membership pass to the next big thing!</p>
+        <p className="text-blog-text-reskin mt-4 text-base">Find your next PFP, one-of-kind collectable, or membership pass to the next big thing!</p>
         <CuratedCollectionsFilter onClick={changeCurated}/>
         {loading ?
           <div className="w-full mx-auto flex justify-center">
@@ -146,10 +166,12 @@ export default function DiscoverPage() {
           </div> :
           <>
             {collectionsResults && collectionsResults.map((collection, index) => {
-              console.log(collection, 'collection fdo');
               return (
-                <div key={index}>
-                  <CollectionItem contractAddr={collection.document.contractAddr} />
+                <div key={index} className="mt-6 min-h-[10.5rem]">
+                  <CollectionItem
+                    contractAddr={collection.document.contractAddr}
+                    contractName={collection.document.contractName}
+                  />
                 </div>);
             })}
           </>}
