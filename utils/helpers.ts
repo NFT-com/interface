@@ -5,6 +5,7 @@ import { Doppler, getEnv } from './env';
 import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
+import { base32cid, cid, multihash } from 'is-ipfs';
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -96,6 +97,10 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return prefix + image.slice(21);
   } else if (image.indexOf('https://gateway.pinata.cloud/ipfs/') === 0) {
     return prefix + image.slice(34);
+  } else if (image.indexOf('https://infura-ipfs.io/ipfs/') === 0) {
+    return prefix + image.slice(28);
+  } else if (base32cid(image) || multihash(image) || cid(image)) {
+    return prefix + image;
   }
   return image;
 };
