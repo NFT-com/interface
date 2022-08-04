@@ -33,7 +33,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         }
         <ExternalListings nft={nft} />
         <div className='w-full flex flex-col minlg:flex-row p-4'>
-          <div className='flex flex-col minlg:w-1/2 w-full ming:pr-4 pr-0'>
+          <div className='flex flex-col minlg:w-1/2 w-full minlg:pr-4 pr-0'>
             <div className='w-full border-b dark:border-accent-border-dk border-accent-border pb-5'>
               <DescriptionDetail nft={nft} />
             </div>

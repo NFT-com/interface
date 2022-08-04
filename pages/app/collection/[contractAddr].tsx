@@ -1,5 +1,6 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
+import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -60,18 +61,6 @@ export default function CollectionPage() {
   const [found, setFound] = useState(0);
   const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), true);
   
-  const displayZeros = (quantity: number) => {
-    if (quantity < 10) {
-      return '0000';
-    } else if (quantity < 100){
-      return '000';
-    } else if (quantity < 1000){
-      return '00';
-    } else if (quantity < 10000){
-      return '0';
-    } else return '';
-  };
-
   const loadNFTs = useCallback(() => {
     contractAddr && client.collections('nfts')
       .documents()
@@ -124,9 +113,8 @@ export default function CollectionPage() {
                 return (
                   <div className="NftCollectionItem" key={index}>
                     <NFTCard
-                      traits={[{ value: 'Price: ' + (nft.document.listedPx ? (nft.document.listedPx + 'ETH') : 'Not estimated'), key: '' }]}
                       title={nft.document.nftName}
-                      subtitle={'GK'+displayZeros(Number(nft.document.tokenId))+nft.document.tokenId}
+                      subtitle={'#'+ nft.document.tokenId}
                       images={[nft.document.imageURL]}
                       onClick={() => {
                         if (nft.document.nftName) {
@@ -154,6 +142,9 @@ export default function CollectionPage() {
             </div>}
           </>:
           <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
+      </div>
+      <div className='w-full mt-16'>
+        <Footer />
       </div>
     </PageWrapper>
   );
