@@ -1,27 +1,27 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Maybe, UpdateProfileViewInput, UpdateProfileViewMutation } from 'graphql/generated/types';
+import { Maybe, UpdateHideIgnoredInput, UpdateHideIgnoredMutation } from 'graphql/generated/types';
 
 import { useCallback, useState } from 'react';
 
-export interface UpdateProfileViewMutationResult {
+export interface UpdateHideIgnoredMutationResult {
   updating: boolean;
   error: string | null;
-  updateProfileView: (input: UpdateProfileViewInput) => Promise<Maybe<UpdateProfileViewMutation>>;
+  updateHideIgnored: (input: UpdateHideIgnoredInput) => Promise<Maybe<UpdateHideIgnoredMutation>>
 }
 
-export function useUpdateProfileViewMutation(): UpdateProfileViewMutationResult {
+export function useUpdateHideIgnored(): UpdateHideIgnoredMutationResult {
   const sdk = useGraphQLSDK();
 
   const [error, setError] = useState<Maybe<string>>(null);
   const [loading, setLoading] = useState(false);
 
-  const updateProfileView = useCallback(async (input: UpdateProfileViewInput) => {
+  const updateHideIgnored = useCallback(async (input: UpdateHideIgnoredInput) => {
     setLoading(true);
     try {
-      const result = await sdk.UpdateProfileView({
+      const result = await sdk.UpdateHideIgnored({
         input: {
-          profileViewType: input.profileViewType,
-          url: input.url
+          hideIgnored: input.hideIgnored,
+          eventIdArray: input?.eventIdArray
         }
       });
       setLoading(false);
@@ -38,6 +38,6 @@ export function useUpdateProfileViewMutation(): UpdateProfileViewMutationResult 
   return {
     updating: loading,
     error,
-    updateProfileView,
+    updateHideIgnored,
   };
 }

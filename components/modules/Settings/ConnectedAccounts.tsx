@@ -1,3 +1,4 @@
+import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 
 import AssociatedAddress from './AssociatedAddress';
@@ -13,6 +14,8 @@ type Address = {
 export type RejectedEvent = {
   id: string;
   destinationAddress: string;
+  txHash: string;
+  hideIgnored: boolean
 }
 
 type ConnectedAccountsProps = {
@@ -30,10 +33,16 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const [inputVal, setInputVal] = useState('');
   const [transaction, setTransaction] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const { updateHideIgnored } = useUpdateHideIgnored();
 
   const submitHandler = async () => {
     const address = inputVal;
-    await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => setTransaction(res.hash)).then(() => setModalVisible(true));
+    const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === address);
+    if(deniedEvent){
+      updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] }).then((res) => {console.log(res); setTransaction(deniedEvent.txHash); setModalVisible(true);});
+    } else {
+      await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => setTransaction(res.hash)).then(() => setModalVisible(true));
+    }
   };
   return (
     <div id="wallets" className='mt-8 font-grotesk'>
@@ -57,6 +66,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
               <AssociatedAddress pending key={index} address={address.chainAddr} remove={removeHandler} />
             ))}
             {associatedAddresses?.denied?.map((address)=> (
+              !address.hideIgnored &&
               <AssociatedAddress rejected key={address.id} address={address.destinationAddress} remove={removeHandler} />
             ))}
           </div>
@@ -66,4 +76,3 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
     </div>
   );
 }
-  

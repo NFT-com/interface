@@ -2,16 +2,17 @@
 import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
+import Toast from 'components/elements/Toast';
 import HomeLayout from 'components/layouts/HomeLayout';
-import ConnectedAccounts from 'components/modules/Settings/ConnectedAccounts';
 import ConnectedProfiles from 'components/modules/Settings/ConnectedProfiles';
 import DisplayMode from 'components/modules/Settings/DisplayMode';
 import NftOwner from 'components/modules/Settings/NftOwner';
-import SettingsForm from 'components/modules/Settings/SettingsForm';
 import SettingsSidebar from 'components/modules/Settings/SettingsSidebar';
 import TransferProfile from 'components/modules/Settings/TransferProfile';
+import { useHiddenEventsQuery } from 'graphql/hooks/useHiddenEventsQuery';
 import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
+import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -19,7 +20,8 @@ import NotFoundPage from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
 export default function Settings() {
@@ -31,19 +33,21 @@ export default function Settings() {
   const { getCurrentProfileUrl }= useUser();
   const result = getCurrentProfileUrl();
   const [selectedProfile, setSelectedProfile] = useState(result);
-  const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [] });
+  const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [], denied: [] });
   const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
-  const profileRef = useRef(null);
+  const { data: events } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
   const [rejected, setRejected] = useState(false);
+  const { updateHideIgnored } = useUpdateHideIgnored();
 
   const fetchAddresses = useCallback(
     async (profile) => {
       const data = await nftResolver.associatedAddresses(profile) || [];
       const allData = await nftResolver.getAllAssociatedAddr(currentAddress, profile) || [];
       const result = allData.filter(a => !data.some(b => a.chainAddr === b.chainAddr));
-      setAssociatedAddresses({ pending: result, accepted: data });
+      const filterPending = result.filter(a => !events?.hiddenEvents.some(b => a.chainAddr === b.destinationAddress && b.ignore));
+      setAssociatedAddresses({ pending: filterPending, accepted: data, denied: events?.hiddenEvents });
     },
-    [nftResolver, currentAddress],
+    [nftResolver, currentAddress, events?.hiddenEvents],
   );
 
   useEffect(() => {
@@ -51,7 +55,7 @@ export default function Settings() {
       fetchAddresses(selectedProfile).catch(console.error);
     }
     if(!currentAddress){
-      setAssociatedAddresses({ pending: [], accepted: [] });
+      setAssociatedAddresses({ pending: [], accepted: [], denied: [] });
     }
   }, [selectedProfile, fetchAddresses, currentAddress]);
 
@@ -85,12 +89,14 @@ export default function Settings() {
 
   const removeHandler = async (action, input) => {
     if(action === 'address'){
-      const selectedProfile = profileRef.current.value;
       await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile).then((res) => console.log(res));
     } else if (action === 'profile') {
-      await nftResolver.removeAssociatedProfile(input).then((res) => console.log(res));
+      await nftResolver.removeAssociatedProfile(input).then(() => toast.success('Removed')).catch(() => toast.warning('Error. Please try again'));
     } else if (action === 'profile-pending') {
-      await ignoreAssociations({ eventIdArray: input }).then(() => setRejected(true)).catch((e) => console.log(e));
+      await ignoreAssociations({ eventIdArray: input }).then(() => toast.success('Removed')).catch(() => toast.warning('Error. Please try again'));
+    } else if (action === 'address-hideRejected') {
+      const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === input);
+      updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] }).then((res) => {console.log(res); toast.success('Removed');});
     } else {
       console.log('error');
     }
@@ -104,6 +110,7 @@ export default function Settings() {
         <Header bgLight />
         <Sidebar />
       </ClientOnly>
+      <Toast />
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
           <SettingsSidebar isOwner={ownsProfilesAndSelectedProfile} />
