@@ -2,29 +2,92 @@ name: Build and Test
 on: pull_request
 
 jobs:
-  build-and-test:
+  install:
     runs-on: ubuntu-latest
     environment: dev
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Doppler CLI
+        uses: dopplerhq/cli-action@v1
+
+      - name: Configure Doppler Config
+        run: |
+          doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
+
+      # - name: Get yarn cache directory path
+      #   id: yarn-cache-dir-path
+      #   run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      # - name: Check next.js build cache
+      #   uses: actions/cache@v3
+      #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      #   with:
+      #     path: |
+      #       ${{ steps.yarn-cache-dir-path.outputs.dir }}
+      #       ${{ github.workspace }}/.next/cache
+      #     key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-yarn-
+
+      - name: Cypress build step
+        uses: cypress-io/github-action@v4
+        # if: steps.yarn-cache.outputs.cache-hit != 'true'
+        with:
+          install-command: yarn --frozen-lockfile --immutable --silent
+          # Disable running of tests within install job
+          runTests: false
+          build: yarn build
+
+      - name: Save build folder for other jobs
+        uses: actions/upload-artifact@v2
+        with:
+          name: nextbuild
+          if-no-files-found: error
+          path: .next
+
+  component-tests:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: [install]
+    strategy:
+      # when one test fails, DO NOT cancel the other
+      # containers, because this will kill Cypress processes
+      # leaving the Dashboard hanging ...
+      # https://github.com/cypress-io/github-action/issues/48
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    steps:
     - name: Checkout
       uses: actions/checkout@v2.4.2
-      
+
     - name: Install Doppler CLI
       uses: dopplerhq/cli-action@v1
 
     - name: Configure Doppler Config
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
-        
+    
+    - name: Download the build folders
+      uses: actions/download-artifact@v2
+      with:
+        name: nextbuild
+        path: .next
+
+    - run: yarn
+    - run: yarn typechain:gen
+
     - name: Cypress run - component 🧪
       uses: cypress-io/github-action@v4
       with:
-        install-command: yarn --frozen-lockfile --immutable --silent
-        build: yarn build
+        install: false
         start: yarn start
         component: true
         record: true
         tag: ${{ github.ref_name }}
+        parallel: true
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
@@ -36,11 +99,43 @@ jobs:
         NEXT_PUBLIC_BLOG_PAGES_ENABLED: ${{ secrets.NEXT_PUBLIC_BLOG_PAGES_ENABLED }}    
         NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED: ${{ secrets.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED }}
         NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-${{ matrix.container }}
+        path: coverage
+        if-no-files-found: error 
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: [install]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.4.2
+      
+    - name: Install Doppler CLI
+      uses: dopplerhq/cli-action@v1
+
+    - name: Configure Doppler Config
+      run: |
+        doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
     
+    - name: Download the build folders
+      uses: actions/download-artifact@v2
+      with:
+        name: nextbuild
+        path: .next
+
+    - run: yarn
+    - run: yarn typechain:gen
+
     - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4
       with:
         install: false
+        start: yarn start
         component: false
         browser: chrome
         record: true
@@ -51,11 +146,94 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+    
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-e2e
+        path: coverage
+        if-no-files-found: error 
+  
+  upload-codecov:
+    runs-on: ubuntu-latest
+    environment: dev
+    needs: [e2e-tests, component-tests]
+    steps:
+    - run: mkdir reports
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-e2e
+        path: reports/codecov-e2e
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-1
+        path: reports/codecov-1
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-2
+        path: reports/codecov-2
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-3
+        path: reports/codecov-3
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-4
+        path: reports/codecov-4
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-5
+        path: reports/codecov-5
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-6
+        path: reports/codecov-6
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-7
+        path: reports/codecov-7
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-8
+        path: reports/codecov-8
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-9
+        path: reports/codecov-9
+
+    - name: Download coverage artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: codecov-10
+        path: reports/codecov-10
+    
+    - name: Merge Coverage Reports
+      run: npx nyc merge reports coverage.json
+
     - name: ✅ Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.0
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+
 
   deploy-preview:
     if: startsWith(github.base_ref, 'feat') || startsWith(github.base_ref, 'fix') || startsWith(github.base_ref, 'main')
