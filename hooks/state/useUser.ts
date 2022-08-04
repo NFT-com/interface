@@ -1,3 +1,5 @@
+import { isNullOrEmpty } from 'utils/helpers';
+
 import { BigNumber } from 'ethers';
 import { useCallback,useEffect } from 'react';
 import useSWR from 'swr';
@@ -8,16 +10,19 @@ export interface UserState {
   currentProfileTokenId: BigNumber | null;
 }
 
-export const userStateInitial: UserState = {
-  isDarkMode: true,
-  currentProfileUrl: '',
-  currentProfileTokenId: (typeof window !== 'undefined')
-    ? (localStorage.getItem('selectedProfileTokenId') != null ? BigNumber.from(localStorage.getItem('selectedProfileTokenId')) : null)
-    : null,
-};
-
 export function useUser() {
-  const { data, mutate } = useSWR('user', { fallbackData: userStateInitial });
+  const { data, mutate } = useSWR('user', {
+    fallbackData: {
+      isDarkMode: true,
+      currentProfileUrl: '',
+      currentProfileTokenId: (typeof window !== 'undefined')
+        ? null
+        //(!isNullOrEmpty(localStorage.getItem('selectedProfileTokenId')) ?
+        // BigNumber.from(localStorage.getItem('selectedProfileTokenId') ?? 0) :
+        // null)
+        : null,
+    }
+  });
 
   const loading = !data;
   const setDarkMode = (darkMode: boolean) => {
@@ -27,12 +32,12 @@ export function useUser() {
     });
   };
 
-  const setCurrentProfileUrl= useCallback((selectedProfileUrl: string) => {
+  const setCurrentProfileUrl= useCallback((selectedProfileUrl: string | null) => {
     mutate({
       ...data,
       currentProfileUrl: selectedProfileUrl
     });
-    localStorage.setItem('selectedProfileUrl', selectedProfileUrl === '' ? '' : selectedProfileUrl);
+    localStorage.setItem('selectedProfileUrl', isNullOrEmpty(selectedProfileUrl) ? '' : selectedProfileUrl);
   }, [data, mutate]);
 
   const setCurrentProfileTokenId = useCallback((selectedProfileTokenId: BigNumber | null) => {
