@@ -12,7 +12,7 @@ export const userStateInitial: UserState = {
   isDarkMode: true,
   currentProfileUrl: '',
   currentProfileTokenId: (typeof window !== 'undefined')
-    ? (localStorage.getItem('selectedProfileTokenId') ? BigNumber.from(localStorage.getItem('selectedProfileTokenId')) : null)
+    ? (localStorage.getItem('selectedProfileTokenId') != null ? BigNumber.from(localStorage.getItem('selectedProfileTokenId')) : null)
     : null,
 };
 
