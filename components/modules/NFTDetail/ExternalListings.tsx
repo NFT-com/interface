@@ -1,5 +1,6 @@
 import { Nft } from 'graphql/generated/types';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -12,7 +13,7 @@ export interface ExternalListingsProps {
 }
 
 export function ExternalListings(props: ExternalListingsProps) {
-  const { data: listings } = useExternalListingsQuery(props?.nft?.contract, props?.nft?.tokenId, props.nft?.wallet.chainId);
+  const { data: listings } = useExternalListingsQuery(props?.nft?.contract, props?.nft?.tokenId, String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
   return <div className={tw(
     'flex w-full px-4',
     'flex-col minlg:flex-row flex-wrap'
