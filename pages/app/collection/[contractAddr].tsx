@@ -6,7 +6,7 @@ import { PageWrapper } from 'components/layouts/PageWrapper';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { NotFoundPage } from 'pages/404';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
@@ -83,7 +83,7 @@ export default function CollectionPage() {
   }, [collectionNfts.length, contractAddr, loadNFTs]);
 
   const caseInsensitiveAddr = contractAddr?.toString().toLowerCase();
-  if (!ethers.utils.isAddress(caseInsensitiveAddr)) {
+  if (!ethers.utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
     return <NotFoundPage />;
   }
 
