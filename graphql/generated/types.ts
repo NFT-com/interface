@@ -1944,6 +1944,13 @@ export type UploadProfileImagesMutationVariables = Exact<{
 
 export type UploadProfileImagesMutation = { __typename?: 'Mutation', uploadProfileImages: { __typename?: 'Profile', id: string } };
 
+export type AssociatedAddressesForContractQueryVariables = Exact<{
+  contract: Scalars['Address'];
+}>;
+
+
+export type AssociatedAddressesForContractQuery = { __typename?: 'Query', associatedAddressesForContract: { __typename?: 'AssociatedAddressesForContractOutput', deployerAddress?: any | null, associatedAddresses?: Array<any | null> | null, deployerIsAssociated?: boolean | null } };
+
 export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
 }>;
@@ -2525,6 +2532,15 @@ export const UploadProfileImagesDocument = gql`
     mutation UploadProfileImages($input: UploadProfileImagesInput!) {
   uploadProfileImages(input: $input) {
     id
+  }
+}
+    `;
+export const AssociatedAddressesForContractDocument = gql`
+    query AssociatedAddressesForContract($contract: Address!) {
+  associatedAddressesForContract(contract: $contract) {
+    deployerAddress
+    associatedAddresses
+    deployerIsAssociated
   }
 }
     `;
@@ -3326,6 +3342,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UploadProfileImages(variables: UploadProfileImagesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadProfileImagesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UploadProfileImagesMutation>(UploadProfileImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadProfileImages', 'mutation');
+    },
+    AssociatedAddressesForContract(variables: AssociatedAddressesForContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedAddressesForContractQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AssociatedAddressesForContractQuery>(AssociatedAddressesForContractDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedAddressesForContract', 'query');
     },
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');

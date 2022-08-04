@@ -91,7 +91,7 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
             <div>
               {profilesToShow && profilesToShow?.map((profile) => {
                 return (
-                  <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} key={profile?.title} onClick={updateOwnerProfile} profile={profile} />
+                  <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} key={profile?.title} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
                 );
               })}
             </div>

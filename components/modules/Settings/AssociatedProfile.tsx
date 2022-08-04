@@ -18,7 +18,6 @@ type AssociatedProfileProps = {
     id?: string
   }
   pending?: boolean;
-  key: number | string;
   remove?: (type: string, address: string) => void
   rejected?: boolean
   setRejected?: (isRejected: boolean) => void

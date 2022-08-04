@@ -32,3 +32,13 @@ export async function getNftsByContract(
   const result = await fetch(url.toString()).then(res => res.json());
   return result;
 }
+
+export async function getContractMetadata(
+  contract: string,
+) {
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
+  url.searchParams.set('contractAddress', contract);
+  url.searchParams.set('action', 'getContractMetadata');
+  const result = await fetch(url.toString()).then(res => res.json());
+  return result;
+}

@@ -64,8 +64,8 @@ export default function DisplayMode({ selectedProfile, associatedAddresses, remo
           Your profile will act as an official landing page for your deployed NFT Collection.
         </p>
       </div>
-      {selected === 'Gallery' && <ConnectedAccounts {...{ associatedAddresses, removeHandler, selectedProfile }} />}
-      {selected === 'Collection' && <ConnectedCollections {...{ associatedCollections: { pending: [], accepted: [] }, removeHandler, selectedProfile, hasDeployerWallet, deployerWallet }} />}
+      <ConnectedAccounts {...{ associatedAddresses, removeHandler, selectedProfile }} />
+      <ConnectedCollections {...{ associatedCollections: { pending: [], accepted: [] }, removeHandler, selectedProfile, hasDeployerWallet, deployerWallet }} />
     </div>
   );
 }
