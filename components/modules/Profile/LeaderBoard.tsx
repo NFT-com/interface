@@ -37,8 +37,8 @@ export function LeaderBoard({ data } : LeaderBoardProps) {
           <th scope="col" className="flex items-center minmd:text-body text-sm leading-body font-body"></th>
           <th scope="col" className='text-left minmd:text-body text-sm leading-body font-body'>Profile</th>
           <th scope="col" className='text-right pr-3 minmd:text-body text-sm leading-body font-body'>NFTs Collected</th>
-          <th scope="col" className='text-right pr-3 minmd:text-body minmd:text-sm leading-body font-body'>Number of NFT Collections</th>
-          <th scope="col" className='text-right minmd:text-body minmd:text-sm leading-body font-body'>Number of Genesis Keys</th>
+          <th scope="col" className='text-right pr-3 minmd:text-body text-sm leading-body font-body'>Number of NFT Collections</th>
+          <th scope="col" className='text-right minmd:text-body text-sm leading-body font-body'>Number of Genesis Keys</th>
         </tr>
       </thead>
       <tbody className="bg-always-white">
