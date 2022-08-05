@@ -28,12 +28,13 @@ export function sameAddress(first: Maybe<string>, second: Maybe<string>) {
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddress(address: string, chars = 6): string {
+export function shortenAddress(address: string, chars?: number): string {
+  const charsVal = chars || 6;
   const parsed = isAddress(address);
   if (!parsed) {
     return '';
   }
-  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`;
+  return `${parsed.substring(0, charsVal + 2)}...${parsed.substring(42 - charsVal)}`;
 }
 
 export function numberWithCommas(x: number) {

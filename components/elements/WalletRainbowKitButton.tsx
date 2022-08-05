@@ -128,7 +128,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 toggleSidebar();
               }} type="button">
                 <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                {shortenAddress(currentAddress)}
+                {shortenAddress(currentAddress, 3)}
               </button>
             </div>
           </>
