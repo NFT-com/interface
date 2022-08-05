@@ -40,7 +40,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
     publiclyVisibleNfts,
   } = useContext(ProfileContext);
 
-  const { data: collectionData } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), selectedCollection, true);
+  const { data: collectionData } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), selectedCollection);
 
   const { data: collections } = useSWR(
     '' + editMode + JSON.stringify(publiclyVisibleNfts) + JSON.stringify(editModeNfts),
@@ -107,7 +107,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           />
         </div>}
       </div>
-      {!isNullOrEmpty(collectionData?.openseaInfo?.collection?.banner_image_url) ?
+      {!isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner) ?
         <div
           className={tw('w-screen h-80',
             'flex items-center justify-center',
@@ -116,7 +116,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             'bg-auto bg-center'
           )}
           style={{
-            backgroundImage: `url(${collectionData?.openseaInfo?.collection?.banner_image_url})`
+            backgroundImage: `url(${collectionData?.ubiquityResults?.collection?.banner + `?apiKey=${process.env.NEXT_PUBLIC_UBIQUITY_API_KEY}`})`
           }}
         /> :
         ''
