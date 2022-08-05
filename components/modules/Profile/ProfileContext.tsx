@@ -131,7 +131,7 @@ export function ProfileContextProvider(
     loading: loadingAllOwnerNfts,
     totalItems: allOwnerNftCount,
     mutate: mutateAllOwnerNfts
-  } = useMyNFTsQuery(loadedCount);
+  } = useMyNFTsQuery(loadedCount, profileData?.profile?.id);
 
   /**
    * Edit mode state
