@@ -24,7 +24,7 @@ describe('GK gallery page tests', () => {
       cy.wait(500);
       cy.root().click('topLeft').then(() => {
         cy.wait(500);
-        cy.findByText('Glitch').should('not.be.visible');
+        cy.findByText('Glitch').should('not.exist');
       });
     });
   });
