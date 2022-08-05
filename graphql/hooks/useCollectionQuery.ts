@@ -10,9 +10,9 @@ export interface CollectionData {
   mutate: () => void;
 }
 
-export function useCollectionQuery(chainId: string, contract: string, withOpensea: boolean): CollectionData {
+export function useCollectionQuery(chainId: string, contract: string): CollectionData {
   const sdk = useGraphQLSDK();
-  const keyString = 'CollectionQuery ' + contract + chainId + withOpensea;
+  const keyString = 'CollectionQuery ' + contract + chainId;
 
   const { data } = useSWR(keyString, async () => {
     if (!chainId || !contract) {
@@ -23,7 +23,6 @@ export function useCollectionQuery(chainId: string, contract: string, withOpense
         chainId,
         contract,
         network: 'ethereum',
-        withOpensea
       },
     });
     return result?.collection ?? {};
