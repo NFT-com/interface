@@ -101,12 +101,17 @@ jobs:
         NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED: ${{ secrets.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED }}
         NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
 
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v2
+    - name: ✅ Upload coverage to Codecov
+      uses: codecov/codecov-action@v3.1.0
       with:
-        name: "coverage-${{ matrix.container }}"
-        path: coverage
-        if-no-files-found: error 
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: true
+    # - name: Upload coverage report
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: "coverage-${{ matrix.container }}"
+    #     path: coverage
+    #     if-no-files-found: error 
 
   e2e-tests:
     runs-on: ubuntu-latest
@@ -148,90 +153,96 @@ jobs:
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v2
-      with:
-        name: coverage-e2e
-        path: coverage
-        if-no-files-found: error 
-  
-  upload-codecov:
-    runs-on: ubuntu-latest
-    environment: dev
-    needs: [e2e-tests, component-tests]
-    steps:
-    - run: mkdir reports
-    - name: Download coverage artifact - e2e
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-e2e
-        path: reports/codecov-e2e
-
-    - name: Download coverage artifact - 1
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-1
-        path: reports/coverage-1
-
-    - name: Download coverage artifact - 2
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-2
-        path: reports/coverage-2
-
-    - name: Download coverage artifact - 3
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-3
-        path: reports/coverage-3
-
-    - name: Download coverage artifact  - 4
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-4
-        path: reports/coverage-4
-
-    - name: Download coverage artifact - 5
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-5
-        path: reports/coverage-5
-
-    - name: Download coverage artifact - 6
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-6
-        path: reports/coverage-6
-
-    - name: Download coverage artifact - 7
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-7
-        path: reports/coverage-7
-
-    - name: Download coverage artifact  - 8
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-8
-        path: reports/coverage-8
-
-    - name: Download coverage artifact - 9
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-9
-        path: reports/coverage-9
-
-    - name: Download coverage artifact - 10
-      uses: actions/download-artifact@v2
-      with:
-        name: coverage-10
-        path: reports/coverage-10
-
     - name: ✅ Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.0
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        directory: reports/
+        fail_ci_if_error: true
+    # - name: Upload coverage report
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: coverage-e2e
+    #     path: coverage
+    #     if-no-files-found: error 
+  
+  # upload-codecov:
+  #   runs-on: ubuntu-latest
+  #   environment: dev
+  #   needs: [e2e-tests, component-tests]
+  #   steps:
+  #   - run: mkdir reports
+  #   - name: Download coverage artifact - e2e
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-e2e
+  #       path: reports/codecov-e2e
+
+  #   - name: Download coverage artifact - 1
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-1
+  #       path: reports/coverage-1
+
+  #   - name: Download coverage artifact - 2
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-2
+  #       path: reports/coverage-2
+
+  #   - name: Download coverage artifact - 3
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-3
+  #       path: reports/coverage-3
+
+  #   - name: Download coverage artifact  - 4
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-4
+  #       path: reports/coverage-4
+
+  #   - name: Download coverage artifact - 5
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-5
+  #       path: reports/coverage-5
+
+  #   - name: Download coverage artifact - 6
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-6
+  #       path: reports/coverage-6
+
+  #   - name: Download coverage artifact - 7
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-7
+  #       path: reports/coverage-7
+
+  #   - name: Download coverage artifact  - 8
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-8
+  #       path: reports/coverage-8
+
+  #   - name: Download coverage artifact - 9
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-9
+  #       path: reports/coverage-9
+
+  #   - name: Download coverage artifact - 10
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: coverage-10
+  #       path: reports/coverage-10
+
+  #   - name: ✅ Upload coverage to Codecov
+  #     uses: codecov/codecov-action@v3.1.0
+  #     with:
+  #       token: ${{ secrets.CODECOV_TOKEN }}
+  #       directory: reports/
+  #       fail_ci_if_error: true
 
 
 
