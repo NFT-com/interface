@@ -9,6 +9,7 @@ import LoginResults from 'components/modules/Sidebar/LoginResults';
 import SignIn from 'components/modules/Sidebar/SignIn';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
+import { useUser } from 'hooks/state/useUser';
 import useENSName from 'hooks/useENSName';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
@@ -34,6 +35,8 @@ export const Sidebar = () => {
   const { primaryIcon, alwaysBlack } = useThemeColors();
   const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const [hiddenProfile, setHiddenProfile] = useState(null);
+  const { getHiddenProfileWithExpiry } = useUser();
 
   useEffect(() => {
     sidebarOpen && promoteZIndex('sidebar');
@@ -41,11 +44,16 @@ export const Sidebar = () => {
       restoreZIndex();
     };
   }, [promoteZIndex, sidebarOpen, restoreZIndex]);
+
+  useEffect(() => {
+    const hide = getHiddenProfileWithExpiry();
+    setHiddenProfile(hide);
+  }, [getHiddenProfileWithExpiry, profileValue]);
   
   const activeCTA: SidebarCTA = useActiveSidebarCTA();
 
   const getSidebarContent = useCallback(() => {
-    if(currentAddress && myOwnedProfileTokens.some(e => e.title === profileValue) || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length) {
+    if(currentAddress && myOwnedProfileTokens.some(e => e.title === profileValue) || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length || myOwnedProfileTokens.length === 1 && myOwnedProfileTokens.some(e => e.title === hiddenProfile)) {
       return (
         <motion.div
           layout
@@ -162,11 +170,11 @@ export const Sidebar = () => {
     if(!myOwnedProfileTokens.some(e => e.title === profileValue)){
       return (
         <LoginResults
-          profileValue={profileValue}
+          {...{ hiddenProfile, profileValue }}
         />
       );
     }
-  }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setSidebarOpen, profileValue, currentAddress, myOwnedProfileTokens]);
+  }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setSidebarOpen, profileValue, currentAddress, myOwnedProfileTokens, hiddenProfile]);
 
   const getSidebarPanel = useCallback(() => {
     if(!showWalletOptions && !isNullOrEmpty(currentAddress)) {

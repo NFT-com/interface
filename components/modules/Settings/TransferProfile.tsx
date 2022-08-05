@@ -1,5 +1,7 @@
 import { Modal } from 'components/elements/Modal';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { useSidebar } from 'hooks/state/useSidebar';
+import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 
 import SettingsForm from './SettingsForm';
@@ -14,6 +16,8 @@ type TransferProfileProps = {
 }
 
 export default function TransferProfile({ selectedProfile }: TransferProfileProps ) {
+  const { setCurrentProfileUrl, setHiddenProfileWithExpiry } = useUser();
+  const { toggleSidebar } = useSidebar();
   const { nftProfile } = useAllContracts();
   const { address: currentAddress } = useAccount();
   const [visible, setVisible] = useState(false);
@@ -23,9 +27,17 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
   const profileToken = myOwnedProfileTokens.find(a => a.title === selectedProfile)?.id?.tokenId;
   const [inputVal, setInputVal] = useState('');
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    await nftProfile.transferFrom(currentAddress, inputVal, BigNumber.from(profileToken)).then((res) => setTransaction(res.hash)).then(() => {setSuccess(true); setInputVal('');});
+  const submitHandler = async () => {
+    await nftProfile.transferFrom(currentAddress, inputVal, BigNumber.from(profileToken))
+      .then((res) => setTransaction(res.hash))
+      .then(() => {setSuccess(true); setInputVal('');});
+  };
+
+  const closeModal = () => {
+    setVisible(false);
+    toggleSidebar();
+    setCurrentProfileUrl('');
+    setHiddenProfileWithExpiry(selectedProfile);
   };
 
   const setModalOpen = () => {
@@ -42,7 +54,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
       <Modal
         visible={visible}
         loading={false}
-        title={'Request Modal'}
+        title={''}
         onClose={() => {
           setVisible(false);
         }}
@@ -51,7 +63,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
       >
         <div className='max-w-[458px] sm:max-w-full h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
           <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
-            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+            <XCircle onClick={() => closeModal()} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             {success
               ?
               (
@@ -65,7 +77,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                       rel="noreferrer" href={`https://goerli.etherscan.io/tx/${transaction}`} className='font-bold underline tracking-wide text-black'>Etherscan.
                     </a>
                   You can safely navigate away from this screen and return to NFT.com</p>
-                  <button onClick={() => setVisible(false)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+                  <button onClick={() => {closeModal();}} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                     Return to NFT.com
                   </button>
                 </>
@@ -77,7 +89,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                   <p className='text-[#6F6F6F]'>You’re about to transfer <span className='font-bold text-black tracking-wide'>{selectedProfile}</span> to  <span className='font-mono text-black text-xl break-words mt-2'>{inputVal}</span></p>
             
                   <p className='mt-6 text-[#6F6F6F]'>Please confirm this wallet address is correct. Once the transfer process begins, you will lose access to this profile.</p>
-                  <button onClick={(e) => submitHandler(e)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+                  <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                     Transfer Profile
                   </button>
                   <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>

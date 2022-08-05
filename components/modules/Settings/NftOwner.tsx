@@ -6,6 +6,7 @@ import ProfileCard from 'components/modules/Sidebar/ProfileCard';
 import { useMyProfilesQuery } from 'graphql/hooks/useMyProfilesQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateWalletProfileIdMutation } from 'graphql/hooks/useUpdateWalletProfileIdMutation';
+import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 
@@ -22,6 +23,7 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
   const { data: myProfiles } = useMyProfilesQuery();
   const { updateWalletProfileId } = useUpdateWalletProfileIdMutation();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const { getHiddenProfileWithExpiry } = useUser();
   const [visible, setVisible] = useState(false);
   const [allProfiles, setAllProfiles] = useState([]);
   const [profilesToShow, setProfilesToShow] = useState([]);
@@ -39,6 +41,10 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
   }, [myOwnedProfileTokens]);
 
   const sortProfiles = () => {
+    const hiddenProfile = getHiddenProfileWithExpiry();
+    const hiddenIndex = allProfiles.findIndex((e) => e.title === hiddenProfile);
+    allProfiles.splice(hiddenIndex, 1);
+
     allProfiles.sort((a, b) => a.title.localeCompare(b.title));
     const index = allProfiles.findIndex((e) => e.title === selected);
     allProfiles.unshift(...allProfiles.splice(index, 1));

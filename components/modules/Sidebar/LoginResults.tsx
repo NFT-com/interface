@@ -15,9 +15,10 @@ import { useDisconnect } from 'wagmi';
 
 type LoginResultsProps = {
   profileValue?: string;
+  hiddenProfile?: string
 };
 
-export default function LoginResults({ profileValue }: LoginResultsProps) {
+export default function LoginResults({ profileValue, hiddenProfile }: LoginResultsProps) {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { setSidebarOpen } = useSidebar();
   const { primaryIcon } = useThemeColors();
@@ -72,9 +73,11 @@ export default function LoginResults({ profileValue }: LoginResultsProps) {
       }
 
       {myOwnedProfileTokens.length > 0 && myOwnedProfileTokens?.map((profile) => {
-        return (
-          <ProfileCard key={profile?.title} onClick={selectProfileHandler} profile={profile} />
-        );
+        if(!hiddenProfile || profile.title !== hiddenProfile){
+          return (
+            <ProfileCard key={profile?.title} onClick={selectProfileHandler} profile={profile} />
+          );
+        }
       })}
 
       {!myOwnedProfileTokens.length &&
