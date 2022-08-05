@@ -29,12 +29,14 @@ const { chains } = configureChains(
 );
 
 const TestComponent = () => {
-  return <div>
-    <ProfileMinter />
-  </div>;
+  return (
+    <main className="bg-pagebg-dk text-white">
+      <ProfileMinter />
+    </main>
+  );
 };
 
-describe('ProfileClaimer', () => {
+describe('ProfileMinter', () => {
   beforeEach(() => {
     cy.viewport(800, 1200);
     const client = setupWagmiClient();

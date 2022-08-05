@@ -46,6 +46,12 @@ export const nftProfile: DeployedContract = {
   goerli: '0x9Ef7A34dcCc32065802B1358129a226B228daB4E',
 };
 
+export const maxProfiles: DeployedContract = {
+  rinkeby : '0x40023d97Ca437B966C8f669C91a9740C639E21C3', //todo: remove this placeholder
+  mainnet : '0x40023d97Ca437B966C8f669C91a9740C639E21C3', //todo: remove this placeholder, update to real address
+  goerli: '0x40023d97Ca437B966C8f669C91a9740C639E21C3'
+};
+
 export const profileAuction: DeployedContract = {
   rinkeby : '0x1338A9ec2Ef9906B57082dB0F67ED9E6E661F4A7',
   mainnet : '0x30f649D418AF7358f9c8CB036219fC7f1B646309',
