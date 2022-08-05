@@ -1,3 +1,5 @@
+import { useHiddenEventsQuery } from 'graphql/hooks/useHiddenEventsQuery';
+import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 
@@ -6,6 +8,7 @@ import RequestModal from './RequestModal';
 import SettingsForm from './SettingsForm';
 
 import { useState } from 'react';
+import { useAccount } from 'wagmi';
 
 type Address = {
   chainAddr: string;
@@ -29,6 +32,8 @@ type ConnectedAccountsProps = {
 };
 
 export default function ConnectedAccounts({ selectedProfile, associatedAddresses, removeHandler }: ConnectedAccountsProps) {
+  const { address: currentAddress } = useAccount();
+  const { mutate: mutateHidden } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
   const { nftResolver } = useAllContracts();
   const [inputVal, setInputVal] = useState('');
   const [transaction, setTransaction] = useState('');
@@ -39,7 +44,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
     const address = inputVal;
     const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === address);
     if(deniedEvent){
-      updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] }).then((res) => {console.log(res); setTransaction(deniedEvent.txHash); setModalVisible(true);});
+      updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); setTransaction(deniedEvent.txHash); setModalVisible(true);});
     } else {
       await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => setTransaction(res.hash)).then(() => setModalVisible(true));
     }

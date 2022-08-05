@@ -34,7 +34,7 @@ export default function Settings() {
   const [selectedProfile, setSelectedProfile] = useState(result);
   const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [], denied: [] });
   const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
-  const { data: events } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
+  const { data: events, mutate: mutateHidden } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
   const { updateHideIgnored } = useUpdateHideIgnored();
 
   const fetchAddresses = useCallback(
@@ -92,7 +92,7 @@ export default function Settings() {
       await nftResolver.removeAssociatedProfile(input).then(() => toast.success('Removed')).catch(() => toast.warning('Error. Please try again'));
     } else if (action === 'address-hideRejected') {
       const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === input);
-      updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] }).then((res) => {console.log(res); toast.success('Removed');});
+      updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); toast.success('Removed');});
     } else {
       console.log('error');
     }
