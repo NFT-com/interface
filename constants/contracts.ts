@@ -47,8 +47,8 @@ export const nftProfile: DeployedContract = {
 };
 
 export const maxProfiles: DeployedContract = {
-  rinkeby : '',
-  mainnet : '',
+  rinkeby : '0x40023d97Ca437B966C8f669C91a9740C639E21C3', //todo: remove this placeholder
+  mainnet : '0x40023d97Ca437B966C8f669C91a9740C639E21C3', //todo: remove this placeholder, update to real address
   goerli: '0x40023d97Ca437B966C8f669C91a9740C639E21C3'
 };
 
