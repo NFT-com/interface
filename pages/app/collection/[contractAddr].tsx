@@ -59,11 +59,7 @@ export default function CollectionPage() {
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [found, setFound] = useState(0);
-<<<<<<< HEAD
-  const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), true);
-=======
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString());
->>>>>>> main
   
   const loadNFTs = useCallback(() => {
     contractAddr && client.collections('nfts')
