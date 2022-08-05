@@ -34,7 +34,8 @@ describe('useOnViewPort', () => {
 
   it('should be visible if scrolled', () => {
     cy.mount(<TestComponent height={1000} />);
-    cy.scrollTo(0, 1000);
-    cy.get('#isVisible').should('have.text', 'true');
+    cy.scrollTo(0, 1000).then(() => {
+      cy.get('#isVisible').should('have.text', 'true');
+    });
   });
 });
