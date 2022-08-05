@@ -8,6 +8,7 @@ import { useDrag, useDrop } from 'react-dnd';
 export type GridDragObject = {
   id: string; // NFT ID
   hidden: boolean;
+  draggable: boolean;
 };
 
 type DraggableGridItemProps = {
@@ -23,7 +24,7 @@ const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => 
   const [{ isDragging }, connectDrag] = useDrag<GridDragObject, unknown, {isDragging : boolean}>(() => ({
     type: 'gridItem',
     item: props.item,
-    canDrag: editMode && getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED) && !isMobile && !props.item.hidden,
+    canDrag: editMode && getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED) && !isMobile && !props.item.hidden && props.item.draggable,
     collect: monitor => {
       return {
         isDragging: monitor.isDragging()
