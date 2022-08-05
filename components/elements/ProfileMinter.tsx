@@ -63,109 +63,102 @@ export const ProfileMinter = () => {
   }
   return (
     <div className="flex flex-col items-center h-full" >
-      {mintSuccess || !freeMintAvailable ?
-        <span className={tw('text-2xl my-8 text-center text-primary-txt-dk')}>
-            done
-        </span>
-        :
-        <>
-          <div className={tw(
-            'w-full mb-4 flex items-center justify-center',
-          )}>
-            <span className={tw(
-              'text-lg font-medium text-primary-txt-dk font-rubik normal-case text-center'
-            )}>
+      <div className={tw(
+        'w-full mb-4 flex items-center justify-center',
+      )}>
+        <span className={tw(
+          'text-lg font-medium text-primary-txt-dk font-rubik normal-case text-center'
+        )}>
                 Free Mints available: {freeMintAvailable ? 'yes' : 'no'}
-            </span>
-          </div>
-          <div className="relative w-full flex items-center">
-            <input
-              className={tw(
-                'text-lg min-w-0',
-                'text-left px-3 py-3 w-full rounded-r-lg font-medium'
-              )}
-              placeholder="What should we call you?"
-              autoFocus={true}
-              value={currentURI ?? ''}
-              spellCheck={false}
-              onChange={async e => {
-                if (minting) {
-                  e.preventDefault();
-                  return;
-                }
-                const validReg = /^[a-z0-9_]*$/;
-                if (
-                  validReg.test(e.target.value.toLowerCase()) &&
+        </span>
+      </div>
+      <div className="relative w-full flex items-center">
+        <input
+          className={tw(
+            'text-lg min-w-0',
+            'text-left px-3 py-3 w-full rounded-r-lg font-medium'
+          )}
+          placeholder="What should we call you?"
+          autoFocus={true}
+          value={currentURI ?? ''}
+          spellCheck={false}
+          onChange={async e => {
+            if (minting) {
+              e.preventDefault();
+              return;
+            }
+            const validReg = /^[a-z0-9_]*$/;
+            if (
+              validReg.test(e.target.value.toLowerCase()) &&
                           e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
-                ) {
-                  setCurrentURI(e.target.value.toLowerCase());
-                } else {
-                  e.preventDefault();
-                }
-              }}
-              style={{
-                borderColor: inputBorder,
-                color: alwaysBlack,
-              }}
-            />
-            <div className='absolute right-0 flex pointer-events-none pr-4'>
-              {loadingTokenId
-                ? <Loader />
-                : <BidStatusIcon
-                  whiteBackgroundOverride
-                  status={getProfileStatus()}
-                  isOwner={profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(currentURI)}
-                />}
-            </div>
-          </div>
-          <div className={tw(
-            'my-8 uppercase font-hero-heading1 font-extrabold tracking-wide',
-            'flex items-center flex-col',
-            minting ? 'opacity-50' : ''
-          )}>
-            <Button
-              type={ButtonType.PRIMARY}
-              color={alwaysBlack}
-              loadingText={'Minting...'}
-              loading={minting}
-              label={'Mint Your Profile'}
-              onClick={async () => {
-                if (
-                  minting ||
+            ) {
+              setCurrentURI(e.target.value.toLowerCase());
+            } else {
+              e.preventDefault();
+            }
+          }}
+          style={{
+            borderColor: inputBorder,
+            color: alwaysBlack,
+          }}
+        />
+        <div className='absolute right-0 flex pointer-events-none pr-4'>
+          {loadingTokenId
+            ? <Loader />
+            : <BidStatusIcon
+              whiteBackgroundOverride
+              status={getProfileStatus()}
+              isOwner={profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(currentURI)}
+            />}
+        </div>
+      </div>
+      <div className={tw(
+        'my-8 uppercase font-hero-heading1 font-extrabold tracking-wide',
+        'flex items-center flex-col',
+        minting ? 'opacity-50' : ''
+      )}>
+        <Button
+          type={ButtonType.PRIMARY}
+          color={alwaysBlack}
+          loadingText={'Minting...'}
+          loading={minting}
+          label={'Mint Your Profile'}
+          onClick={async () => {
+            if (
+              minting ||
                     isProfileUnavailable() ||
                     isNullOrEmpty(currentURI) ||
                     loadingTokenId
-                ) {
-                  return;
-                }
-                if (freeMintAvailable || isNullOrEmpty(currentURI)) {
-                  return;
-                }
+            ) {
+              return;
+            }
+            if (freeMintAvailable || isNullOrEmpty(currentURI)) {
+              return;
+            }
                   
-                try {
-                  const tx = await (await (maxProfilesSigner)).publicClaim(
-                    currentURI,
-                    profileClaimHash?.hash,
-                    profileClaimHash?.signature,
-                  );
-                  setMinting(true);
+            try {
+              const tx = await (await (maxProfilesSigner)).publicClaim(
+                currentURI,
+                profileClaimHash?.hash,
+                profileClaimHash?.signature,
+              );
+              setMinting(true);
 
-                  if (tx) {
-                    await tx.wait(1);
-                    setMintSuccess(true);
-                    mutateMyProfileTokens();
-                  }
-                  mutateProfileHash();
-                  setMinting(false);
-                  mutateTokenId();
-                  mutateFreeMintStatus();
-                } catch (err) {
-                  setMinting(false);
-                }
-              }}
-            />
-          </div>
-        </>}
+              if (tx) {
+                await tx.wait(1);
+                setMintSuccess(true);
+                mutateMyProfileTokens();
+              }
+              mutateProfileHash();
+              setMinting(false);
+              mutateTokenId();
+              mutateFreeMintStatus();
+            } catch (err) {
+              setMinting(false);
+            }
+          }}
+        />
+      </div>
     </div>
   );
 };
