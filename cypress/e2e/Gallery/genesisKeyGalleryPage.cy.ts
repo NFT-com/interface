@@ -21,7 +21,9 @@ describe('GK gallery page tests', () => {
       cy.findByText('Stand').should('be.visible');
       cy.findByText('Background').should('be.visible');
       cy.findByText('Glitch').should('be.visible');
+      cy.wait(500);
       cy.root().click('topLeft').then(() => {
+        cy.wait(500);
         cy.findByText('Glitch').should('not.be.visible');
       });
     });
