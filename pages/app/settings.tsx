@@ -28,15 +28,13 @@ export default function Settings() {
   const { nftResolver } = useAllContracts();
   const { address: currentAddress } = useAccount();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-  const { data: pendingAssociatedProfiles, mutate } = usePendingAssociationQuery();
-  const { ignoreAssociations } = useIgnoreAssociationsMutation();
+  const { data: pendingAssociatedProfiles, mutate: mutatePending } = usePendingAssociationQuery();
   const { getCurrentProfileUrl }= useUser();
   const result = getCurrentProfileUrl();
   const [selectedProfile, setSelectedProfile] = useState(result);
   const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [], denied: [] });
   const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
   const { data: events } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
-  const [rejected, setRejected] = useState(false);
   const { updateHideIgnored } = useUpdateHideIgnored();
 
   const fetchAddresses = useCallback(
@@ -68,7 +66,7 @@ export default function Settings() {
     async () => {
       const evm = await nftResolver.getApprovedEvm(currentAddress);
       if(!pendingAssociatedProfiles?.getMyPendingAssociations){
-        mutate();
+        mutatePending();
       }
       const result = pendingAssociatedProfiles?.getMyPendingAssociations.filter(a => !evm.some(b => a.url === b.profileUrl));
       setAssociatedProfiles({ pending: result, accepted: evm });
@@ -92,8 +90,6 @@ export default function Settings() {
       await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile).then((res) => console.log(res));
     } else if (action === 'profile') {
       await nftResolver.removeAssociatedProfile(input).then(() => toast.success('Removed')).catch(() => toast.warning('Error. Please try again'));
-    } else if (action === 'profile-pending') {
-      await ignoreAssociations({ eventIdArray: input }).then(() => toast.success('Removed')).catch(() => toast.warning('Error. Please try again'));
     } else if (action === 'address-hideRejected') {
       const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === input);
       updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] }).then((res) => {console.log(res); toast.success('Removed');});
@@ -128,7 +124,7 @@ export default function Settings() {
               )
               : null}
           
-            <ConnectedProfiles {...{ associatedProfiles, removeHandler, rejected, setRejected }} />
+            <ConnectedProfiles {...{ associatedProfiles, removeHandler }} />
           
             {ownsProfilesAndSelectedProfile
               ? (

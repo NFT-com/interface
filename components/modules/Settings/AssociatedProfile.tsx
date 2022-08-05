@@ -1,11 +1,14 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { Modal } from 'components/elements/Modal';
+import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
+import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import { CheckCircle, Clock, GasPump, Trash, XCircle } from 'phosphor-react';
 import { useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
+import { toast } from 'react-toastify';
 import { ExternalLink } from 'styles/theme';
 import { useNetwork } from 'wagmi';
 
@@ -19,20 +22,28 @@ type AssociatedProfileProps = {
   }
   pending?: boolean;
   remove?: (type: string, address: string) => void
-  rejected?: boolean
-  setRejected?: (isRejected: boolean) => void
 };
 
-export default function AssociatedProfile({ profile, pending, remove, rejected, setRejected }: AssociatedProfileProps) {
+export default function AssociatedProfile({ profile, pending, remove }: AssociatedProfileProps) {
+  const { mutate: mutatePending } = usePendingAssociationQuery();
+  const { ignoreAssociations } = useIgnoreAssociationsMutation();
+  const [rejected, setRejected] = useState(false);
   const [visible, setVisible] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
+
   const acceptPendingProfile = async (e, url) => {
     e.preventDefault();
     await nftResolver.associateSelfWithUsers([url])
       .then(() => setAccepted(true))
       .catch((e) => console.log(e));
+  };
+
+  const rejectPendingProfile = async (input) => {
+    await ignoreAssociations({ eventIdArray: input })
+      .then(() => {setVisible(true); setRejected(true); toast.success('Removed');})
+      .catch(() => toast.warning('Error. Please try again'));
   };
 
   const closeModal = () => {
@@ -42,6 +53,7 @@ export default function AssociatedProfile({ profile, pending, remove, rejected, 
     if(accepted){
       setAccepted(false);
     }
+    mutatePending();
     setVisible(false);
   };
   
@@ -100,7 +112,7 @@ export default function AssociatedProfile({ profile, pending, remove, rejected, 
         </div>
   
         <div className='flex items-center'>
-          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => remove(pending ? 'profile-pending' : 'profile', pending ? profile.id : profile[1] || profile.profileUrl || profile.url)} />
+          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => pending ? rejectPendingProfile(profile.id) : remove('profile', profile[1] || profile.profileUrl || profile.url)} />
         </div>
       </div>
 
@@ -124,8 +136,10 @@ export default function AssociatedProfile({ profile, pending, remove, rejected, 
                     <div>
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Approve Request</h2>
                       <p className='text-[#6F6F6F] mb-4'>
-                        <span className='text-black font-bold tracking-wide'>{profile.profileUrl || profile.url}{' '}</span>
-                is requesting to connect your wallet to their profile.
+                        <span className='text-black font-bold tracking-wide'>
+                          {profile.profileUrl || profile.url}{' '}
+                        </span>
+                        is requesting to connect your wallet to their profile.
                       </p>
                       <p className='text-[#6F6F6F]'>This profile is owned by wallet address</p>
                       <ExternalLink
@@ -149,7 +163,7 @@ export default function AssociatedProfile({ profile, pending, remove, rejected, 
                         <GasPump size={20} weight="fill" />
                         <p className='ml-1'>This action will require a gas fee.</p>
                       </div>
-                      <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {remove(pending ? 'profile-pending' : 'profile', profile.id); closeModal();}}>Reject Request</p>
+                      <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {pending ? rejectPendingProfile(profile.id) : remove('profile', profile[1] || profile.profileUrl || profile.url); setRejected(true);}}>Reject Request</p>
                     </div>
                   )
                   :
