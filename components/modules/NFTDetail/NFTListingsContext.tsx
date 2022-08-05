@@ -6,7 +6,7 @@ import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrate
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
-import { processIPFSURL } from 'utils/helpers';
+import { filterNulls, processIPFSURL } from 'utils/helpers';
 import { getLooksrareNonce, listLooksrare, listSeaport } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
@@ -92,7 +92,7 @@ export function NFTListingsContextProvider(
       return;
     }
     setToList([...toList, listing]);
-    localStorage.setItem('stagedNftListings', JSON.stringify([...toList, listing]));
+    localStorage.setItem('stagedNftListings', JSON.stringify(filterNulls([...toList, listing])));
   }, [toList]);
 
   const clear = useCallback(() => {
@@ -182,7 +182,7 @@ export function NFTListingsContextProvider(
     </Modal>
     {
       toList.length > 0 && <div className='z-50 absolute top-20 right-0 h-full w-40 bg-white flex flex-col'>
-        {toList.map((listing, index) => {
+        {filterNulls(toList).map((listing, index) => {
           return <div key={index} className='flex items-center border w-full'>
             <div className='relative h-2/4 aspect-square'>
               <video

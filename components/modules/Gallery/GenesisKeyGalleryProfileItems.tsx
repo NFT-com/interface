@@ -120,6 +120,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
                   <a
                     key={profile.id ?? index}
                     className={tw(
+                      'ProfileGalleryCardContainer',
                       'flex items-center justify-center p-4',
                       'w-2/5 minmd:w-1/3 minlg:w-1/4 minxl:w-1/5'
                     )}
