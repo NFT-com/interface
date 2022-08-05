@@ -46,11 +46,19 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
   };
 
   const searchHandler = (query) => {
-    setAllProfiles(allProfiles.filter((item) => item.title.includes(query)));
+    setAllProfiles(allProfiles.filter((item) => item?.title?.toLowerCase().includes(query)));
+    setProfilesToShow(allProfiles.slice(0, 3));
+    if(!allProfiles.length ){
+      setAllProfiles(myOwnedProfileTokens.filter((item) => item?.title?.toLowerCase().includes(query)));
+    }
     if(query === ''){
       setAllProfiles(myOwnedProfileTokens);
     }
   };
+
+  useEffect(() => {
+    setProfilesToShow(allProfiles.slice(0, 3));
+  }, [allProfiles]);
 
   const LoadMoreHandler = () => {
     const currentLength = profilesToShow.length;
@@ -60,7 +68,7 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
 
   const updateOwnerProfile = (profileTitle) => {
     setSelected(profileTitle);
-    const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle).id;
+    const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle)?.id;
     updateWalletProfileId({ profileId: profileId }).then(() => toast.success('Saved!')).catch(() => toast.error('Error'));
   };
 
@@ -98,11 +106,15 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
                   );
                 })}
               </div>
+
+              {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
+
               {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
                 <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
               Get a New Profile
                 </button>
               )}
+
               {allProfiles.length > profilesToShow.length
                 ?
                 (
