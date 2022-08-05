@@ -5,8 +5,8 @@ import ConnectedAccounts from './ConnectedAccounts';
 import { RejectedEvent } from './ConnectedAccounts';
 import ConnectedCollections from './ConnectedCollections';
 
-import { profile } from 'console';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 type Address = {
   chainAddr: string;
@@ -26,8 +26,6 @@ export default function DisplayMode({ selectedProfile, associatedAddresses, remo
   const [selected, setSelected] = useState('');
   const { profileData } = useProfileQuery(selectedProfile);
   const { updateProfileView } = useUpdateProfileViewMutation();
-  const [hasDeployerWallet, setHasDeployerWallet] = useState(false);
-  const [deployerWallet, setDeployerWallet] = useState({ accepted: [], pending: [] });
 
   useEffect(() => {
     if(profileData?.profile?.profileView === 'Collection'){
@@ -38,6 +36,7 @@ export default function DisplayMode({ selectedProfile, associatedAddresses, remo
   }, [profileData?.profile?.profileView, selectedProfile]);
 
   const handleChange = event => {
+    toast.success('Saved!');
     setSelected(event.target.value);
     updateProfileView({ profileViewType: event.target.value, url: selectedProfile }).catch(e => console.log(e));
   };
@@ -64,8 +63,11 @@ export default function DisplayMode({ selectedProfile, associatedAddresses, remo
           Your profile will act as an official landing page for your deployed NFT Collection.
         </p>
       </div>
+
+      {selected === 'Collection' &&
+        <ConnectedCollections {...{ removeHandler, selectedProfile }} />
+      }
       <ConnectedAccounts {...{ associatedAddresses, removeHandler, selectedProfile }} />
-      <ConnectedCollections {...{ associatedCollections: { pending: [], accepted: [] }, removeHandler, selectedProfile, hasDeployerWallet, deployerWallet }} />
     </div>
   );
 }

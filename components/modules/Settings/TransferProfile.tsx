@@ -6,7 +6,7 @@ import SettingsForm from './SettingsForm';
 
 import { BigNumber } from 'ethers';
 import { GasPump, XCircle } from 'phosphor-react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useAccount } from 'wagmi';
 
 type TransferProfileProps = {
@@ -16,7 +16,6 @@ type TransferProfileProps = {
 export default function TransferProfile({ selectedProfile }: TransferProfileProps ) {
   const { nftProfile } = useAllContracts();
   const { address: currentAddress } = useAccount();
-  const addressRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [success, setSuccess] = useState(false);
   const [transaction, setTransaction] = useState('');
@@ -26,8 +25,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const address = addressRef.current.value;
-    await nftProfile.transferFrom(currentAddress, address, BigNumber.from(profileToken)).then((res) => setTransaction(res.hash)).then(() => setSuccess(true));
+    await nftProfile.transferFrom(currentAddress, inputVal, BigNumber.from(profileToken)).then((res) => setTransaction(res.hash)).then(() => {setSuccess(true); setInputVal('');});
   };
 
   const setModalOpen = () => {

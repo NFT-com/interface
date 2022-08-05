@@ -28,23 +28,25 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
   const [selected, setSelected] = useState('');
 
   useEffect(() => {
-    setSelected(profileData?.profile?.owner?.preferredProfile?.url);
-  }, [profileData]);
+    if(!profileData?.profile?.owner?.preferredProfile?.url){
+      updateWalletProfileId({ profileId: myOwnedProfileTokens[0]?.title }).catch((e) => console.log(e));
+    }
+    setSelected(profileData?.profile?.owner?.preferredProfile?.url || myOwnedProfileTokens[0]?.title);
+  }, [profileData, myOwnedProfileTokens, updateWalletProfileId]);
   
   useEffect(() => {
     setAllProfiles(myOwnedProfileTokens);
   }, [myOwnedProfileTokens]);
 
-  useEffect(() => {
+  const sortProfiles = () => {
     allProfiles.sort((a, b) => a.title.localeCompare(b.title));
     const index = allProfiles.findIndex((e) => e.title === selected);
     allProfiles.unshift(...allProfiles.splice(index, 1));
     setProfilesToShow(allProfiles.slice(0, 3));
-  }, [myOwnedProfileTokens, allProfiles, selected]);
+  };
 
   const searchHandler = (query) => {
     setAllProfiles(allProfiles.filter((item) => item.title.includes(query)));
-
     if(query === ''){
       setAllProfiles(myOwnedProfileTokens);
     }
@@ -64,10 +66,11 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
 
   return (
     <div id="owner" className='md:mt-10 mt-0 font-grotesk'>
+      <Toast />
       <h2 className='text-black mb-2 font-bold md:text-2xlz text-4xl tracking-wide'>NFT Owner</h2>
       <p className='mb-4 text-[#6F6F6F]'>Select which profile will display as the owner for your NFTs and collections.</p>
 
-      {selected !== '' && <ProfileCard onClick={setVisible} opensModal showSwitch profile={myOwnedProfileTokens?.find(t => t.title === selected)} />}
+      {selected !== '' && <ProfileCard onClick={() => {setVisible(true); sortProfiles();}} opensModal showSwitch profile={myOwnedProfileTokens?.find(t => t.title === selected)} />}
       
       <Modal
         visible={visible}
@@ -80,35 +83,36 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
         bgColor='white'
       >
         <div className='max-w-[458px] h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
-          <Toast />
-          <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
+          <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto relative '>
             <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             <div>
               <h2 className='text-4xl tracking-wide font-bold mb-10'>Set Owner</h2>
               <p className='text-[#6F6F6F] mb-4'>Select the profile to sign-in with by default.</p>
               <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile Name" />
             </div>
-            <div>
-              {profilesToShow && profilesToShow?.map((profile) => {
-                return (
-                  <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} key={profile?.title} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
-                );
-              })}
-            </div>
-            {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
-              <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
+            <div className='max-h-[320px] overflow-auto'>
+              <div>
+                {profilesToShow && profilesToShow?.map((profile) => {
+                  return (
+                    <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} key={profile?.title} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
+                  );
+                })}
+              </div>
+              {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
+                <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
               Get a New Profile
-              </button>
-            )}
-            {allProfiles.length > 3
-              ?
-              (
-                <button onClick={() => LoadMoreHandler()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-              Load More
                 </button>
-              )
-              : null
-            }
+              )}
+              {allProfiles.length > profilesToShow.length
+                ?
+                (
+                  <button onClick={() => LoadMoreHandler()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
+              Load More
+                  </button>
+                )
+                : null
+              }
+            </div>
           </div>
         </div>
       </Modal>

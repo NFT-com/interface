@@ -125,9 +125,9 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <h3 className='text-base font-semibold tracking-wide mb-1'>NFT Collection</h3>
         <p className='text-blog-text-reskin mb-4'>Enter the NFT collection you want to display on your profile.</p>
 
-        {!connectedCollection?.length ? <SettingsForm submitHandler={openModal} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandler} /> : null}
+        {!connectedCollection?.chainAddr? <SettingsForm submitHandler={openModal} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandler} /> : null}
 
-        {connectedCollection?.length
+        {connectedCollection?.chainAddr
           ? <div className='mt-4 md:w-full w-3/4'>
             <AssociatedProfile
               profile={{

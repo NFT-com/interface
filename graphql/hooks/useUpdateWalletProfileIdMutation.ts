@@ -24,7 +24,6 @@ export function useUpdateWalletProfileIdMutation(): UpdateWalletProfileIdMutatio
       setLoading(false);
       return result;
     } catch (err) {
-      console.log('🚀 ~ file: useUpdateWalletProfileIdMutation.ts ~ line 27 ~ updateWalletProfileId ~ err', err);
       setLoading(false);
       setError(
         'Error updating wallet profile id'
