@@ -9,18 +9,21 @@ type SettingsFormProps = {
   inputVal: string
   changeHandler: (e) => void
   submitHandler: () => void
+  isAssociated?: boolean
 };
 
-export default function NftOwner({ buttonText, inputVal, changeHandler, submitHandler }: SettingsFormProps) {
+export default function SettingsForm({ buttonText, inputVal, changeHandler, submitHandler, isAssociated }: SettingsFormProps) {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if(ethers.utils.isAddress(inputVal)){
+    if(isAssociated){
+      setError(true);
+    } else if(ethers.utils.isAddress(inputVal)){
       setError(false);
     } else {
       setError(true);
     }
-  }, [inputVal]);
+  }, [inputVal, isAssociated, error]);
 
   return (
     <div className='md:w-full w-3/4'>
@@ -37,10 +40,16 @@ export default function NftOwner({ buttonText, inputVal, changeHandler, submitHa
             error
               ?
               (
-                <>
-                  <p className='text-[#DD0F70] mt-1 text-xs font-grotesk'>Address is not valid</p>
-                  <Warning size={25} className='mr-3 rounded-full absolute box-border top-[31%] -translate-y-1/2 right-0' weight="fill" color='#DD0F70' />
-                </>
+                isAssociated ?
+                  <>
+                    <p className='text-[#DD0F70] mt-1 text-xs font-grotesk'>You already have a request out to this address</p>
+                    <Warning size={25} className='mr-3 rounded-full absolute box-border top-[31%] -translate-y-1/2 right-0' weight="fill" color='#DD0F70' />
+                  </>
+                  :
+                  <>
+                    <p className='text-[#DD0F70] mt-1 text-xs font-grotesk'>Address is not valid</p>
+                    <Warning size={25} className='mr-3 rounded-full absolute box-border top-[31%] -translate-y-1/2 right-0' weight="fill" color='#DD0F70' />
+                  </>
               )
               :
               (
@@ -52,7 +61,7 @@ export default function NftOwner({ buttonText, inputVal, changeHandler, submitHa
           )}
       </div>
   
-      <button onClick={() => submitHandler()} disabled={error || inputVal === ''} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] font-bold tracking-wide focus:outline-none focus:shadow-outline w-full mt-3 disabled:bg-[#B6B6B6] disabled:text-white disabled:border-[#6F6F6F] disabled:border disabled:hover:cursor-not-allowed" type="button">
+      <button onClick={() => submitHandler()} disabled={error || inputVal === '' || isAssociated} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] font-bold tracking-wide focus:outline-none focus:shadow-outline w-full mt-3 disabled:bg-[#B6B6B6] disabled:text-white disabled:border-[#6F6F6F] disabled:border disabled:hover:cursor-not-allowed" type="button">
         {buttonText}
       </button>
       <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>

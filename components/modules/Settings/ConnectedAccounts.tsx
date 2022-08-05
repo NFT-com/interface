@@ -1,5 +1,4 @@
 import { useHiddenEventsQuery } from 'graphql/hooks/useHiddenEventsQuery';
-import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 
@@ -7,7 +6,7 @@ import AssociatedAddress from './AssociatedAddress';
 import RequestModal from './RequestModal';
 import SettingsForm from './SettingsForm';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 type Address = {
@@ -37,6 +36,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const { nftResolver } = useAllContracts();
   const [inputVal, setInputVal] = useState('');
   const [transaction, setTransaction] = useState('');
+  const [isAssociated, setIsAssociated] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const { updateHideIgnored } = useUpdateHideIgnored();
 
@@ -49,12 +49,21 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
       await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => setTransaction(res.hash)).then(() => setModalVisible(true));
     }
   };
+
+  useEffect(() => {
+    if(associatedAddresses.pending.find(element => element.chainAddr === inputVal) || associatedAddresses.accepted.find(element => element.chainAddr === inputVal)){
+      setIsAssociated(true);
+    } else {
+      setIsAssociated(false);
+    }
+  }, [inputVal, associatedAddresses]);
+  
   return (
     <div id="wallets" className='mt-8 font-grotesk'>
       <h3 className='text-base font-semibold tracking-wide mb-1'>Connected Wallets</h3>
       <p className='text-blog-text-reskin mb-4'>Display NFTs from other Ethereum wallets on your profile.</p>
       
-      <SettingsForm buttonText='Request Connection' submitHandler={submitHandler} {...{ inputVal }} changeHandler={setInputVal} />
+      <SettingsForm buttonText='Request Connection' submitHandler={submitHandler} {...{ inputVal, isAssociated }} changeHandler={setInputVal} />
 
       {associatedAddresses?.accepted?.length || associatedAddresses?.pending?.length
         ? (

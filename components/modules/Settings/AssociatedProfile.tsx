@@ -42,7 +42,7 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
 
   const rejectPendingProfile = async (input) => {
     await ignoreAssociations({ eventIdArray: input })
-      .then(() => {setVisible(true); setRejected(true); toast.success('Removed');})
+      .then(() => {setVisible(true); setRejected(true); toast.success('Rejected');})
       .catch(() => toast.warning('Error. Please try again'));
   };
 
