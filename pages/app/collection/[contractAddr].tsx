@@ -1,11 +1,12 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
+import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { NotFoundPage } from 'pages/404';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
@@ -60,18 +61,6 @@ export default function CollectionPage() {
   const [found, setFound] = useState(0);
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), true);
   
-  const displayZeros = (quantity: number) => {
-    if (quantity < 10) {
-      return '0000';
-    } else if (quantity < 100){
-      return '000';
-    } else if (quantity < 1000){
-      return '00';
-    } else if (quantity < 10000){
-      return '0';
-    } else return '';
-  };
-
   const loadNFTs = useCallback(() => {
     contractAddr && client.collections('nfts')
       .documents()
@@ -94,7 +83,7 @@ export default function CollectionPage() {
   }, [collectionNfts.length, contractAddr, loadNFTs]);
 
   const caseInsensitiveAddr = contractAddr?.toString().toLowerCase();
-  if (!ethers.utils.isAddress(caseInsensitiveAddr)) {
+  if (!ethers.utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
     return <NotFoundPage />;
   }
 
@@ -124,9 +113,8 @@ export default function CollectionPage() {
                 return (
                   <div className="NftCollectionItem" key={index}>
                     <NFTCard
-                      traits={[{ value: 'Price: ' + (nft.document.listedPx ? (nft.document.listedPx + 'ETH') : 'Not estimated'), key: '' }]}
                       title={nft.document.nftName}
-                      subtitle={'GK'+displayZeros(Number(nft.document.tokenId))+nft.document.tokenId}
+                      subtitle={'#'+ nft.document.tokenId}
                       images={[nft.document.imageURL]}
                       onClick={() => {
                         if (nft.document.nftName) {
@@ -154,6 +142,9 @@ export default function CollectionPage() {
             </div>}
           </>:
           <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
+      </div>
+      <div className='w-full mt-16'>
+        <Footer />
       </div>
     </PageWrapper>
   );
