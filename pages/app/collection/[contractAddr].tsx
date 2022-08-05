@@ -6,7 +6,7 @@ import { PageWrapper } from 'components/layouts/PageWrapper';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { NotFoundPage } from 'pages/404';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
@@ -59,7 +59,11 @@ export default function CollectionPage() {
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [found, setFound] = useState(0);
+<<<<<<< HEAD
   const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString(), true);
+=======
+  const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddr?.toString());
+>>>>>>> main
   
   const loadNFTs = useCallback(() => {
     contractAddr && client.collections('nfts')
@@ -83,7 +87,7 @@ export default function CollectionPage() {
   }, [collectionNfts.length, contractAddr, loadNFTs]);
 
   const caseInsensitiveAddr = contractAddr?.toString().toLowerCase();
-  if (!ethers.utils.isAddress(caseInsensitiveAddr)) {
+  if (!ethers.utils.isAddress(caseInsensitiveAddr) || !getEnvBool(Doppler.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED)) {
     return <NotFoundPage />;
   }
 
@@ -96,7 +100,7 @@ export default function CollectionPage() {
         removeSummaryBanner: true,
       }}>
       <div className="mt-20">
-        <BannerWrapper imageOverride={collectionData?.openseaInfo?.collection?.banner_image_url}/>
+        <BannerWrapper imageOverride={collectionData?.ubiquityResults?.collection?.banner + `?apiKey=${process.env.NEXT_PUBLIC_UBIQUITY_API_KEY}`}/>
       </div>
       <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
         {collectionNfts.length > 0 ?

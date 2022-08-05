@@ -15,7 +15,7 @@ const MintTester_ProfileFactory: NextPageWithLayout = () => {
   }, [router]);
 
   return (
-    <main className="bg-pagebg-dk text-white rubik vault-lp">
+    <main className="bg-pagebg-dk text-white">
       <ProfileMinter />
     </main>
   );
