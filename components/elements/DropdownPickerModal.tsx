@@ -92,13 +92,12 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
         {expanded && !isMobile &&
         <div
           style={{
-            maxWidth: wrapperRef.current.clientWidth,
             marginTop: anchorRef.current.clientHeight + 8
           }}
           className={tw(
             'rounded-xl',
             'bg-white dark:bg-secondary-bg-dk',
-            'w-full absolute z-50',
+            'absolute z-50',
             'min-w-[14rem] drop-shadow-md',
           )}
         >

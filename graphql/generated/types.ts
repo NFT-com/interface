@@ -1642,7 +1642,7 @@ export type UpdateEmailInput = {
 
 export type UpdateHideIgnoredInput = {
   eventIdArray?: InputMaybe<Array<Scalars['String']>>;
-  showOrHide: Scalars['Boolean'];
+  hideIgnored: Scalars['Boolean'];
 };
 
 export type UpdateHideIgnoredOutput = {
@@ -1961,6 +1961,13 @@ export type CollectionNfTsQueryVariables = Exact<{
 
 export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
+export type DeployedCollectionsQueryVariables = Exact<{
+  deployer: Scalars['String'];
+}>;
+
+
+export type DeployedCollectionsQuery = { __typename?: 'Query', collectionsByDeployer?: Array<{ __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null> | null };
+
 export type ExternalListingsQueryVariables = Exact<{
   contract: Scalars['Address'];
   tokenId: Scalars['String'];
@@ -2088,7 +2095,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -2440,6 +2447,15 @@ export const CollectionNfTsDocument = gql`
       lastCursor
     }
     totalItems
+  }
+}
+    `;
+export const DeployedCollectionsDocument = gql`
+    query DeployedCollections($deployer: String!) {
+  collectionsByDeployer(deployer: $deployer) {
+    id
+    contract
+    name
   }
 }
     `;
@@ -2962,6 +2978,7 @@ export const ProfileDocument = gql`
     description
     gkIconVisible
     nftsDescriptionsVisible
+    deployedContractsVisible
     layoutType
     owner {
       address
@@ -3164,6 +3181,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');
+    },
+    DeployedCollections(variables: DeployedCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeployedCollectionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeployedCollectionsQuery>(DeployedCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeployedCollections', 'query');
     },
     ExternalListings(variables: ExternalListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ExternalListingsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ExternalListingsQuery>(ExternalListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ExternalListings', 'query');

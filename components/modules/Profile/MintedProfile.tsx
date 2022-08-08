@@ -8,6 +8,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { DeployedCollectionsGallery } from './DeployedCollectionsGallery';
 import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
@@ -30,6 +31,7 @@ export interface MintedProfileProps {
 export function MintedProfile(props: MintedProfileProps) {
   const { profileURI, addressOwner } = props;
   const [isPicturedHovered, setIsPicturedHovered] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<'nfts' | 'deployed'>('nfts');
 
   const {
     editMode,
@@ -39,7 +41,8 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftHeaderImg,
     setDraftProfileImg,
     userIsAdmin,
-    publiclyVisibleNftCount
+    publiclyVisibleNftCount,
+    draftDeployedContractsVisible
   } = useContext(ProfileContext);
 
   const { address: currentAddress } = useAccount();
@@ -47,6 +50,8 @@ export function MintedProfile(props: MintedProfileProps) {
   const { profileData } = useProfileQuery(profileURI);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
+
+  const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -113,7 +118,7 @@ export function MintedProfile(props: MintedProfileProps) {
         </BannerWrapper>
       </div>
       <div className={tw(
-        'flex flex-col',
+        'flex-col',
         'max-w-7xl min-w-[60%]',
         isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
       )}>
@@ -193,11 +198,42 @@ export function MintedProfile(props: MintedProfileProps) {
             profileURI={profileURI}
           />
         </div>
+        {
+          showDeployedTab &&
+          <div className={tw(
+            'flex w-full px-12',
+            editMode ? 'mt-20 mb-4' : 'sm:mt-5 mb-4'
+          )}>
+            <span
+              onClick={() => {
+                setSelectedTab('nfts');
+              }}
+              className={tw(
+                'cursor-pointer text-white text-lg tracking-wide mr-4',
+                selectedTab === 'nfts' ? 'dark:text-white' : 'text-secondary-txt'
+              )}
+            >
+              NFTs
+            </span>
+            <span
+              onClick={() => {
+                setSelectedTab('deployed');
+              }}
+              className={tw(
+                'cursor-pointer text-lg tracking-wide',
+                selectedTab === 'deployed' ? 'dark:text-white' : 'text-secondary-txt'
+              )}
+            >
+              Created Collections
+            </span>
+          </div>
+        }
         <div
           className={tw(
             'h-full',
-            editMode ? 'mt-28 minmd:mt-16' : 'mt-5 minmd:mt-0',
+            editMode && !showDeployedTab ? 'mt-28 minmd:mt-16' : 'mt-5 minmd:mt-0',
             'w-full justify-start space-y-4 flex flex-col',
+            selectedTab === 'nfts' ? 'flex' : 'hidden'
           )}
         >
           {
@@ -248,6 +284,15 @@ export function MintedProfile(props: MintedProfileProps) {
                 </div>
               </>
           }
+        </div>
+        <div
+          className={tw(
+            'h-full sm:mt-5',
+            'w-full justify-start space-y-4 flex flex-col',
+            selectedTab === 'deployed' ? 'flex' : 'hidden'
+          )}
+        >
+          <DeployedCollectionsGallery address={addressOwner} />
         </div>
       </div>
       <div className="flex grow" />
