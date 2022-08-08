@@ -2,6 +2,7 @@
 import { TypesenseMultiSearchInput, TypesenseSearchInput } from 'graphql/generated/types';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
+import * as Sentry from '@sentry/nextjs';
 import { useCallback, useState } from 'react';
 
 export interface FetchTypesenseSearchData {
@@ -28,10 +29,10 @@ export function useFetchTypesenseSearch(): FetchTypesenseSearchData {
         });
       setLoading(false);
       return result;
-    } catch (error) {
+    } catch (err) {
       setLoading(false);
-      // todo: handle the error based on the error code.
-      console.log(error);
+      Sentry.captureException(err);
+      await Sentry.flush(2000);
       return null;
     }
   }, [client]);
