@@ -198,11 +198,17 @@ export type CollectionNfTsInput = {
 };
 
 export type TypesenseSearchInput = {
-  index: Scalars['String'];
-  queryFields: Scalars['String'];
-  searchTerm: Scalars['String'] | Array<Scalars['String'] >;
-  perPage: Scalars['Int'];
+  collection?: InputMaybe<Scalars['String']>;
+  index?: InputMaybe<Scalars['String']>;
+  q: Scalars['String'];
+  query_by: Scalars['String'];
+  //searchTerm: Scalars['String'] | Array<Scalars['String'] >;
+  per_page: Scalars['Int'];
   page: Scalars['Int'];
+};
+
+export type TypesenseMultiSearchInput = {
+  searches: Array<TypesenseSearchInput>;
 };
 
 export type ConvertEnsToEthAddress = {

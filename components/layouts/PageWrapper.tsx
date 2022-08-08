@@ -4,6 +4,7 @@ import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
@@ -74,6 +75,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
         </div>}
         <ClientOnly>
           <Sidebar />
+          <SearchModal />
         </ClientOnly>
 
         <SignOutModal

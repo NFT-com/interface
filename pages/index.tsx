@@ -10,6 +10,7 @@ import { Sidebar } from 'components/elements/Sidebar';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -108,6 +109,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       <ClientOnly>
         <Header bgLight />
         <Sidebar />
+        <SearchModal />
       </ClientOnly>
       <main className='flex flex-col mt-20 font-grotesk not-italic'>
         <Link href='/app/auctions' passHref>

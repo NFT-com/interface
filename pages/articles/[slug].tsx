@@ -1,6 +1,7 @@
 import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import { Sidebar } from 'components/elements/Sidebar';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
@@ -33,6 +34,7 @@ export default function Post({ post, preview }: PostProps) {
       <ClientOnly>
         <Header bgLight />
         <Sidebar />
+        <SearchModal />
       </ClientOnly>
       <NextSeo
         title={post.title}

@@ -1,3 +1,4 @@
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
@@ -8,10 +9,14 @@ import { tw } from 'utils/tw';
 import { SearchBar } from './SearchBar';
 import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
+// import { SearchIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 import LightNavLogo from 'public/hero_corner.svg';
 import NavLogo from 'public/hero_corner_dark.svg';
+//import SearchIcon from 'public/search.svg';
+import SearchIcon from 'public/magnifying_glass.svg';
 import React from 'react';
+import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
 type HeaderProps = {
@@ -24,6 +29,8 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
+  const { toggleSearchModal } = useSearchModal();
+  const { primaryIcon } = useThemeColors();
 
   useMaybeCreateUser();
 
@@ -111,6 +118,17 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
             |
               </span>
             </div>
+            {
+              getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
+            <button
+              className='block minlg:hidden cursor-pointer mr-2 h-full w-7'
+              onClick={() => {
+                toggleSearchModal();
+              }}
+            >
+              <SearchIcon color={primaryIcon} />
+            </button>
+            }
             <WalletRainbowKitButton header bgLight={bgLight} showWhenConnected signInButton={true} headerButtonColor />
           </div>
         </div>

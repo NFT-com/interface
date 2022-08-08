@@ -1,11 +1,12 @@
 // import { isNullOrEmpty } from 'utils/helpers';
-import { TypesenseSearchInput } from 'graphql/generated/types';
+import { TypesenseMultiSearchInput, TypesenseSearchInput } from 'graphql/generated/types';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import { useCallback, useState } from 'react';
 
 export interface FetchTypesenseSearchData {
   fetchTypesenseSearch: (input: TypesenseSearchInput) => Promise<any>;
+  fetchTypesenseMultiSearch: (input: TypesenseMultiSearchInput) => Promise<any>;
   loading: boolean;
 }
 
@@ -20,11 +21,26 @@ export function useFetchTypesenseSearch(): FetchTypesenseSearchData {
       const result = await client.collections(input.index)
         .documents()
         .search({
-          'q'         : input.searchTerm.toString(),
-          'query_by'  : input.queryFields,
-          'per_page': input.perPage,
-          'page': input.page,
+          'q'       : input.q.toString(),
+          'query_by': input.query_by,
+          'per_page': input.per_page,
+          'page'    : input.page,
         });
+      setLoading(false);
+      return result;
+    } catch (error) {
+      setLoading(false);
+      // todo: handle the error based on the error code.
+      console.log(error);
+      return null;
+    }
+  }, [client]);
+
+  const fetchTypesenseMultiSearch = useCallback(async (input: TypesenseMultiSearchInput) => {
+    setLoading(true);
+    try {
+      setLoading(true);
+      const result = await client.multiSearch.perform(input);
       setLoading(false);
       return result;
     } catch (error) {
@@ -37,6 +53,7 @@ export function useFetchTypesenseSearch(): FetchTypesenseSearchData {
 
   return {
     fetchTypesenseSearch,
+    fetchTypesenseMultiSearch,
     loading: loading,
   };
 }
