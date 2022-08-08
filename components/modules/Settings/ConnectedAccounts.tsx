@@ -7,6 +7,7 @@ import RequestModal from './RequestModal';
 import SettingsForm from './SettingsForm';
 
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
 type Address = {
@@ -27,10 +28,9 @@ type ConnectedAccountsProps = {
     accepted: Address[];
     denied: RejectedEvent[]
   };
-  removeHandler: (type: string, address: string) => void
 };
 
-export default function ConnectedAccounts({ selectedProfile, associatedAddresses, removeHandler }: ConnectedAccountsProps) {
+export default function ConnectedAccounts({ selectedProfile, associatedAddresses }: ConnectedAccountsProps) {
   const { address: currentAddress } = useAccount();
   const { mutate: mutateHidden } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
   const { nftResolver } = useAllContracts();
@@ -49,6 +49,17 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
       updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); setTransaction(deniedEvent.txHash); setSuccess(true); setModalVisible(true);});
     } else {
       await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => setTransaction(res.hash)).then(() => {setSuccess(true); setModalVisible(true);});
+    }
+  };
+
+  const removeHandler = async (action, input) => {
+    if(action === 'address'){
+      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile).then(res => console.log(res));
+    } else if (action === 'address-hideRejected') {
+      const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === input);
+      updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); toast.success('Removed');});
+    } else {
+      console.log('error');
     }
   };
 

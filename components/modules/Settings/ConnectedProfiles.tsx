@@ -1,4 +1,8 @@
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
+
 import AssociatedProfile from './AssociatedProfile';
+
+import { toast } from 'react-toastify';
 
 type Profile = {
   profileUrl: string;
@@ -10,10 +14,14 @@ type ConnectedProfilesProps = {
     pending: Profile[];
     accepted: Profile[];
   };
-  removeHandler: (type: string, address: string) => void
+  // removeHandler: (type: string, address: string) => void
 };
 
-export default function ConnectedProfiles({ associatedProfiles, removeHandler }: ConnectedProfilesProps) {
+export default function ConnectedProfiles({ associatedProfiles }: ConnectedProfilesProps) {
+  const { nftResolver } = useAllContracts();
+  const removeHandler = async (input) => {
+    await nftResolver.removeAssociatedProfile(input).then(() => toast.success('Removed')).catch(() => toast.warning('Error. Please try again'));
+  };
   return (
     <div id="profiles" className='mt-10 md:w-full w-3/4'>
       <h2 className='font-grotesk tracking-wide font-bold text-black md:text-2xl text-4xl mb-1'>Connected Profiles</h2>

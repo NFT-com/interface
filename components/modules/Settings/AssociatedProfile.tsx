@@ -21,7 +21,7 @@ type AssociatedProfileProps = {
     id?: string
   }
   pending?: boolean;
-  remove?: (type: string, address: string) => void
+  remove?: (address: string) => void
 };
 
 export default function AssociatedProfile({ profile, pending, remove }: AssociatedProfileProps) {
@@ -112,7 +112,7 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
         </div>
   
         <div className='flex items-center'>
-          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => pending ? rejectPendingProfile(profile.id) : remove('profile', profile[1] || profile.profileUrl || profile.url)} />
+          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => pending ? rejectPendingProfile(profile.id) : remove(profile[1] || profile.profileUrl || profile.url)} />
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
                         <GasPump size={20} weight="fill" />
                         <p className='ml-1'>This action will require a gas fee.</p>
                       </div>
-                      <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {pending ? rejectPendingProfile(profile.id) : remove('profile', profile[1] || profile.profileUrl || profile.url); setRejected(true);}}>Reject Request</p>
+                      <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {pending ? rejectPendingProfile(profile.id) : remove(profile[1] || profile.profileUrl || profile.url); setRejected(true);}}>Reject Request</p>
                     </div>
                   )
                   :

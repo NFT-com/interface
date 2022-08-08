@@ -85,19 +85,6 @@ export default function Settings() {
     return <NotFoundPage />;
   }
 
-  const removeHandler = async (action, input) => {
-    if(action === 'address'){
-      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile).then((res) => console.log(res));
-    } else if (action === 'profile') {
-      await nftResolver.removeAssociatedProfile(input).then(() => toast.success('Removed')).catch(() => toast.warning('Error. Please try again'));
-    } else if (action === 'address-hideRejected') {
-      const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === input);
-      updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); toast.success('Removed');});
-    } else {
-      console.log('error');
-    }
-  };
-
   const ownsProfilesAndSelectedProfile = myOwnedProfileTokens.length && myOwnedProfileTokens.some(t => t.title === selectedProfile);
   
   return (
@@ -119,12 +106,12 @@ export default function Settings() {
               ? (
                 <>
                   <NftOwner {...{ selectedProfile }} />
-                  <DisplayMode {...{ associatedAddresses, removeHandler, selectedProfile }}/>
+                  <DisplayMode {...{ associatedAddresses, selectedProfile }}/>
                 </>
               )
               : null}
           
-            <ConnectedProfiles {...{ associatedProfiles, removeHandler }} />
+            <ConnectedProfiles {...{ associatedProfiles }} />
           
             {ownsProfilesAndSelectedProfile
               ? (

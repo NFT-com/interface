@@ -19,10 +19,9 @@ type DisplayModeProps = {
     accepted: Address[];
     denied: RejectedEvent[]
   };
-  removeHandler: (type: string, address: string) => void
 };
 
-export default function DisplayMode({ selectedProfile, associatedAddresses, removeHandler }: DisplayModeProps) {
+export default function DisplayMode({ selectedProfile, associatedAddresses }: DisplayModeProps) {
   const [selected, setSelected] = useState('');
   const { profileData } = useProfileQuery(selectedProfile);
   const { updateProfileView } = useUpdateProfileViewMutation();
@@ -65,9 +64,9 @@ export default function DisplayMode({ selectedProfile, associatedAddresses, remo
       </div>
 
       {selected === 'Collection' &&
-        <ConnectedCollections {...{ removeHandler, selectedProfile }} />
+        <ConnectedCollections {...{ selectedProfile }} />
       }
-      <ConnectedAccounts {...{ associatedAddresses, removeHandler, selectedProfile }} />
+      <ConnectedAccounts {...{ associatedAddresses, selectedProfile }} />
     </div>
   );
 }
