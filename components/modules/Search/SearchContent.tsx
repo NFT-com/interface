@@ -3,7 +3,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
-import { getTypesenseInstantsearchAdapterRaw, SearchableFields } from 'utils/typeSenseAdapters';
+import { SearchableFields } from 'utils/typeSenseAdapters';
 
 import { useRouter } from 'next/router';
 import EllipseX from 'public/ellipse-x.svg';
@@ -101,8 +101,8 @@ export const SearchContent = () => {
     );
   };
 
-  const ResultsContent = (props: { searchResults: any}) => {
-    return props.searchResults.map((item, index) => {
+  const ResultsContent = (searchResults) => {
+    return searchResults.map((item, index) => {
       return (
         <>
           {resultTitle(item.found, item?.request_params?.collection_name)}

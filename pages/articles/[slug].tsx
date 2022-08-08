@@ -1,12 +1,12 @@
 import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
-import { SearchModal } from 'components/modules/Search/SearchModal';
 import { Sidebar } from 'components/elements/Sidebar';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import NotFoundPage from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
 

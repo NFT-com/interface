@@ -102,7 +102,7 @@ export default function Settings() {
       <ClientOnly>
         <Header bgLight />
         <Sidebar />
-        <SearchModal /> 
+        <SearchModal />
       </ClientOnly>
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
