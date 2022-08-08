@@ -145,7 +145,7 @@ export const SearchContent = () => {
                 autoCapitalize="off"
                 spellCheck="false"
                 required maxLength={512}
-                className="bg-inherit w-full border-none p-0"
+                className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
                 onKeyUp={(event) => search(event)}
                 onFocus={(event) => search(event)}/>
             </div>

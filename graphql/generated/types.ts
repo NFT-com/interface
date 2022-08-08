@@ -88,6 +88,13 @@ export type AssetTypeInput = {
   tokenId?: InputMaybe<Scalars['Uint256']>;
 };
 
+export type AssociatedAddressesForContractOutput = {
+  __typename?: 'AssociatedAddressesForContractOutput';
+  associatedAddresses?: Maybe<Array<Maybe<Scalars['Address']>>>;
+  deployerAddress?: Maybe<Scalars['Address']>;
+  deployerIsAssociated?: Maybe<Scalars['Boolean']>;
+};
+
 export type Attributes = {
   __typename?: 'Attributes';
   trait_type: Scalars['String'];
@@ -173,6 +180,7 @@ export type Collection = {
   __typename?: 'Collection';
   chainId?: Maybe<Scalars['String']>;
   contract?: Maybe<Scalars['Address']>;
+  deployer?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
 };
@@ -180,15 +188,19 @@ export type Collection = {
 export type CollectionInfo = {
   __typename?: 'CollectionInfo';
   collection?: Maybe<Collection>;
-  openseaInfo?: Maybe<OpenseaContract>;
-  openseaStats?: Maybe<OpenseaStats>;
+  ubiquityResults?: Maybe<UbiquityResults>;
 };
 
 export type CollectionInput = {
   chainId?: InputMaybe<Scalars['String']>;
   contract: Scalars['Address'];
   network: Scalars['String'];
-  withOpensea?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CollectionNft = {
+  __typename?: 'CollectionNFT';
+  collectionAddress: Scalars['Address'];
+  nfts: Array<Nft>;
 };
 
 export type CollectionNfTsInput = {
@@ -309,6 +321,7 @@ export type Event = {
   contract: Scalars['String'];
   destinationAddress?: Maybe<Scalars['String']>;
   eventName: Scalars['String'];
+  hideIgnored?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   ignore?: Maybe<Scalars['Boolean']>;
   ownerAddress?: Maybe<Scalars['String']>;
@@ -420,6 +433,12 @@ export type GkOutput = {
   __typename?: 'GkOutput';
   metadata: Metadata;
   tokenId: Scalars['String'];
+};
+
+export type HiddenEventsInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  profileUrl: Scalars['String'];
+  walletAddress: Scalars['Address'];
 };
 
 export type InsiderReservedProfilesInput = {
@@ -613,16 +632,25 @@ export type Mutation = {
   syncCollectionsWithNFTs: SyncCollectionsWithNfTsOutput;
   /** AUTHENTICATED */
   unfollowProfile: Profile;
+  updateAssociatedAddresses: UpdateAssociatedAddressesOuput;
   /** AUTHENTICATED */
   updateCuration: Curation;
   updateEmail: User;
   /** AUTHENTICATED */
+  updateHideIgnored: UpdateHideIgnoredOutput;
+  /** AUTHENTICATED */
   updateMe: User;
+  /** AUTHENTICATED */
+  updateNFTMemo: Nft;
+  /** AUTHENTICATED */
+  updateNFTProfileId: Nft;
   updateNFTsForProfile: NfTsOutput;
   /** AUTHENTICATED */
   updateProfile: Profile;
   /** AUTHENTICATED */
   updateProfileView: Profile;
+  /** AUTHENTICATED */
+  updateWalletProfileId: Wallet;
   /** AUTHENTICATED */
   uploadFileSession: FileUploadOutput;
   /** AUTHENTICATED */
@@ -801,6 +829,11 @@ export type MutationUnfollowProfileArgs = {
 };
 
 
+export type MutationUpdateAssociatedAddressesArgs = {
+  input?: InputMaybe<UpdateAssociatedAddressesInput>;
+};
+
+
 export type MutationUpdateCurationArgs = {
   input: UpdateCurationInput;
 };
@@ -811,8 +844,25 @@ export type MutationUpdateEmailArgs = {
 };
 
 
+export type MutationUpdateHideIgnoredArgs = {
+  input: UpdateHideIgnoredInput;
+};
+
+
 export type MutationUpdateMeArgs = {
   input: UpdateUserInput;
+};
+
+
+export type MutationUpdateNftMemoArgs = {
+  memo: Scalars['String'];
+  nftId: Scalars['ID'];
+};
+
+
+export type MutationUpdateNftProfileIdArgs = {
+  nftId: Scalars['ID'];
+  profileId: Scalars['ID'];
 };
 
 
@@ -831,6 +881,11 @@ export type MutationUpdateProfileViewArgs = {
 };
 
 
+export type MutationUpdateWalletProfileIdArgs = {
+  profileId: Scalars['ID'];
+};
+
+
 export type MutationUploadProfileImagesArgs = {
   input?: InputMaybe<UploadProfileImagesInput>;
 };
@@ -842,8 +897,11 @@ export type Nft = {
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
+  memo?: Maybe<Scalars['String']>;
   metadata: NftMetadata;
+  preferredProfile?: Maybe<Profile>;
   price?: Maybe<Scalars['Uint256']>;
+  profileId?: Maybe<Scalars['String']>;
   tokenId: Scalars['Uint256'];
   type: NftType;
   wallet?: Maybe<Wallet>;
@@ -915,6 +973,12 @@ export type NftMetadataAlchemy = {
   description?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+};
+
+export type NftsForCollectionsInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  collectionAddresses: Array<Scalars['Address']>;
+  count: Scalars['Int'];
 };
 
 export type OpenseaCollectionV1 = {
@@ -1018,6 +1082,7 @@ export type Profile = {
   bannerURL?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
+  deployedContractsVisible?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
   displayType?: Maybe<ProfileDisplayType>;
   followersCount?: Maybe<Scalars['Int']>;
@@ -1083,9 +1148,11 @@ export type ProfilesOutput = {
 
 export type Query = {
   __typename?: 'Query';
+  associatedAddressesForContract: AssociatedAddressesForContractOutput;
   blockedProfileURI: Scalars['Boolean'];
   collection?: Maybe<CollectionInfo>;
   collectionNFTs: NfTsOutput;
+  collectionsByDeployer?: Maybe<Array<Maybe<Collection>>>;
   convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
   externalListings?: Maybe<ExternalListingsOutput>;
@@ -1105,6 +1172,7 @@ export type Query = {
   getSwaps: GetMarketSwap;
   getUserSwaps: GetMarketSwap;
   gkNFTs: GetGkNftsOutput;
+  hiddenEvents: Array<Event>;
   /** AUTHENTICATED */
   insiderReservedProfiles: Array<Scalars['String']>;
   isAddressWhitelisted: Scalars['Boolean'];
@@ -1123,6 +1191,7 @@ export type Query = {
   nft: Nft;
   nftById: Nft;
   nfts: CurationNfTsOutput;
+  nftsForCollections: Array<CollectionNft>;
   profile: Profile;
   profileFollowers: FollowersOutput;
   profilePassive: Profile;
@@ -1130,6 +1199,11 @@ export type Query = {
   profilesFollowedByMe: ProfilesOutput;
   topBids: BidsOutput;
   watchlist: Watchlist;
+};
+
+
+export type QueryAssociatedAddressesForContractArgs = {
+  contract: Scalars['Address'];
 };
 
 
@@ -1146,6 +1220,11 @@ export type QueryCollectionArgs = {
 
 export type QueryCollectionNfTsArgs = {
   input: CollectionNfTsInput;
+};
+
+
+export type QueryCollectionsByDeployerArgs = {
+  deployer: Scalars['String'];
 };
 
 
@@ -1229,6 +1308,11 @@ export type QueryGkNfTsArgs = {
 };
 
 
+export type QueryHiddenEventsArgs = {
+  input: HiddenEventsInput;
+};
+
+
 export type QueryInsiderReservedProfilesArgs = {
   input: InsiderReservedProfilesInput;
 };
@@ -1283,6 +1367,11 @@ export type QueryNftByIdArgs = {
 
 export type QueryNftsArgs = {
   input: NfTsInput;
+};
+
+
+export type QueryNftsForCollectionsArgs = {
+  input: NftsForCollectionsInput;
 };
 
 
@@ -1512,6 +1601,50 @@ export type TxUserIdAndTypeInput = {
   userId: Scalars['ID'];
 };
 
+export type UbiquityCollection = {
+  __typename?: 'UbiquityCollection';
+  banner?: Maybe<Scalars['String']>;
+  contracts?: Maybe<Array<Maybe<UbiquityContract>>>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  logo?: Maybe<Scalars['String']>;
+  meta?: Maybe<UbiquityMeta>;
+  name?: Maybe<Scalars['String']>;
+  verified?: Maybe<Scalars['Boolean']>;
+};
+
+export type UbiquityContract = {
+  __typename?: 'UbiquityContract';
+  address?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  image_url?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  symbol?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type UbiquityMeta = {
+  __typename?: 'UbiquityMeta';
+  discord_url?: Maybe<Scalars['String']>;
+  external_url?: Maybe<Scalars['String']>;
+  twitter_username?: Maybe<Scalars['String']>;
+};
+
+export type UbiquityResults = {
+  __typename?: 'UbiquityResults';
+  collection?: Maybe<UbiquityCollection>;
+};
+
+export type UpdateAssociatedAddressesInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  profileUrl: Scalars['String'];
+};
+
+export type UpdateAssociatedAddressesOuput = {
+  __typename?: 'UpdateAssociatedAddressesOuput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type UpdateCurationInput = {
   id: Scalars['ID'];
   items: Array<CurationItemInput>;
@@ -1519,6 +1652,16 @@ export type UpdateCurationInput = {
 
 export type UpdateEmailInput = {
   email: Scalars['String'];
+};
+
+export type UpdateHideIgnoredInput = {
+  eventIdArray?: InputMaybe<Array<Scalars['String']>>;
+  showOrHide: Scalars['Boolean'];
+};
+
+export type UpdateHideIgnoredOutput = {
+  __typename?: 'UpdateHideIgnoredOutput';
+  message?: Maybe<Scalars['String']>;
 };
 
 export type UpdateNfTsForProfileInput = {
@@ -1529,6 +1672,7 @@ export type UpdateNfTsForProfileInput = {
 
 export type UpdateProfileInput = {
   bannerURL?: InputMaybe<Scalars['String']>;
+  deployedContractsVisible?: InputMaybe<Scalars['Boolean']>;
   description?: InputMaybe<Scalars['String']>;
   displayType?: InputMaybe<ProfileDisplayType>;
   gkIconVisible?: InputMaybe<Scalars['Boolean']>;
@@ -1606,6 +1750,8 @@ export type Wallet = {
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
   network: Scalars['String'];
+  preferredProfile?: Maybe<Profile>;
+  profileId?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
 };
 
@@ -1820,7 +1966,7 @@ export type CollectionQueryVariables = Exact<{
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null, openseaInfo?: { __typename?: 'OpenseaContract', collection?: { __typename?: 'OpenseaCollectionV1', banner_image_url?: string | null, created_date?: string | null, description?: string | null, discord_url?: string | null, external_url?: string | null, featured?: boolean | null, featured_image_url?: string | null, safelist_request_status?: string | null } | null } | null } | null };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null, ubiquityResults?: { __typename?: 'UbiquityResults', collection?: { __typename?: 'UbiquityCollection', id?: string | null, name?: string | null, description?: string | null, logo?: string | null, banner?: string | null, verified?: boolean | null, contracts?: Array<{ __typename?: 'UbiquityContract', address?: string | null, name?: string | null, symbol?: string | null, description?: string | null, image_url?: string | null, type?: string | null } | null> | null, meta?: { __typename?: 'UbiquityMeta', discord_url?: string | null, external_url?: string | null, twitter_username?: string | null } | null } | null } | null } | null };
 
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
@@ -1956,7 +2102,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, displayType?: ProfileDisplayType | null, layoutType?: ProfileLayoutType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -2259,16 +2405,27 @@ export const CollectionDocument = gql`
       contract
       name
     }
-    openseaInfo {
+    ubiquityResults {
       collection {
-        banner_image_url
-        created_date
+        id
+        name
         description
-        discord_url
-        external_url
-        featured
-        featured_image_url
-        safelist_request_status
+        logo
+        banner
+        verified
+        contracts {
+          address
+          name
+          symbol
+          description
+          image_url
+          type
+        }
+        meta {
+          discord_url
+          external_url
+          twitter_username
+        }
       }
     }
   }
@@ -2819,7 +2976,6 @@ export const ProfileDocument = gql`
     description
     gkIconVisible
     nftsDescriptionsVisible
-    displayType
     layoutType
     owner {
       address

@@ -193,7 +193,7 @@ export default function DiscoverPage() {
             <div className="mt-6 minmd:grid minmd:grid-cols-2 minmd:space-x-2">
               {collectionsResults && collectionsResults.map((collection, index) => {
                 return (
-                  <div key={index} className="min-h-[10.5rem] minmd:min-h-[13rem]">
+                  <div key={index} className="DiscoverCollectionItem min-h-[10.5rem] minmd:min-h-[13rem]">
                     <CollectionItem
                       contractAddr={collection.document.contractAddr}
                       contractName={collection.document.contractName}

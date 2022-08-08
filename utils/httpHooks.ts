@@ -2,6 +2,7 @@ import dai from 'constants/abis/dai.json';
 import daiMainnet from 'constants/abis/dai_mainnet.json';
 import marketplaceABI from 'constants/abis/marketplace.json';
 import marketplaceABIMainnet from 'constants/abis/marketplace_mainnet.json';
+import maxProfilesABI from 'constants/abis/MaxProfiles.json';
 import nftProfileABI from 'constants/abis/nft_profile.json';
 import nftProfileABIMainnet from 'constants/abis/nft_profile_mainnet.json';
 import nftTokenABI from 'constants/abis/nft_token.json';
@@ -17,10 +18,11 @@ import {
   genesisKeyDistributor,
   genesisKeyTeamClaim,
   genesisKeyTeamDistributor,
+  maxProfiles,
   nftProfile,
   nftResolver,
   nftToken,
-  profileAuction
+  profileAuction,
 } from 'constants/contracts';
 import { DeployedContract } from 'constants/contracts';
 import {
@@ -58,6 +60,7 @@ const deployedContractAddressResolver = (chainId: number | string | undefined, t
 export type SupportedTokenContract =
   | 'nft'
   | 'marketplace'
+  | 'maxProfiles'
   | 'profileAuction'
   | 'nftProfile'
   | 'usdc'
@@ -88,6 +91,8 @@ export const getAddress = (token: SupportedTokenContract, chainId: number | stri
     return deployedContractAddressResolver(chainId, nftToken);
   case 'nftProfile':
     return deployedContractAddressResolver(chainId, nftProfile);
+  case 'maxProfiles':
+    return deployedContractAddressResolver(chainId, maxProfiles);
   case 'profileAuction':
     return deployedContractAddressResolver(chainId, profileAuction);
   case 'nftResolver' :
@@ -109,6 +114,8 @@ export const getABI = (token: SupportedTokenContract, chainId: number | string) 
     return isSandbox(chainId) ? nftTokenABI : nftTokenABIMainnet;
   case 'marketplace':
     return isSandbox(chainId) ? marketplaceABI : marketplaceABIMainnet;
+  case 'maxProfiles':
+    return isSandbox(chainId) && maxProfilesABI;
   case 'profileAuction':
     return isSandbox(chainId) ? profileAuctionABI : profileAuctionABIMainnet;
   case 'nftProfile':
