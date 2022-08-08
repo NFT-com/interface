@@ -7,7 +7,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import NotFoundPage from 'pages/404';
-import { Doppler, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
@@ -19,6 +19,7 @@ import Flask from 'public/flask.svg';
 import Vector from 'public/Vector.svg';
 import { useEffect, useState } from 'react';
 import { Loader } from 'react-feather';
+import { useNetwork } from 'wagmi';
 
 export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void}) => {
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
@@ -91,10 +92,12 @@ const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; c
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const [imageArray, setImageArray] = useState([]);
   const [count, setCount] = useState(0);
+  const { chain } = useNetwork();
 
   useEffect(() => {
     const images = [];
     contractAddr && fetchCollectionsNFTs({
+      chainId: chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
       collectionAddress: contractAddr,
       pageInput:{
         first: 3,
@@ -107,7 +110,7 @@ const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; c
       images.push(collectionsData?.collectionNFTs.items[2]?.metadata.imageURL);
       setImageArray([...images]);
     }));
-  }, [fetchCollectionsNFTs, contractAddr]);
+  }, [fetchCollectionsNFTs, contractAddr, chain?.id]);
 
   return (
     imageArray.length > 0 && <NFTCollectionCard

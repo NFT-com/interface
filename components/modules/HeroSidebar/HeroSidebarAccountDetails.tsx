@@ -5,6 +5,7 @@ import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -65,54 +66,55 @@ export default function HeroSidebarAccountDetails(
           'font-rubik font-bold'
         )}
       >
-        <>          <div
-          className={tw(
-            isMobile ? '' : 'sm:block hidden',
-            'pt-2.5 text-link cursor-pointer hover:underline'
-          )}
-          onClick={() => {
-            setSidebarOpen(false);
-            router.push('/app/discover');
-          }}
-        >
+        <>
+          {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && <div
+            className={tw(
+              isMobile ? '' : 'sm:block hidden',
+              'pt-2.5 text-link cursor-pointer hover:underline'
+            )}
+            onClick={() => {
+              setSidebarOpen(false);
+              router.push('/app/discover');
+            }}
+          >
             Discover
-        </div>
-        <div
-          className={tw(
-            isMobile ? '' : 'sm:block hidden',
-            'pt-2.5 text-link cursor-pointer hover:underline'
-          )}
-          onClick={() => {
-            setSidebarOpen(false);
-            router.push('/app/gallery');
-          }}
-        >
+          </div>}
+          <div
+            className={tw(
+              isMobile ? '' : 'sm:block hidden',
+              'pt-2.5 text-link cursor-pointer hover:underline'
+            )}
+            onClick={() => {
+              setSidebarOpen(false);
+              router.push('/app/gallery');
+            }}
+          >
             Gallery
-        </div>
-        <div
-          className={tw(
-            isMobile ? '' : 'sm:block hidden',
-            'pt-2.5 text-link cursor-pointer hover:underline'
-          )}
-          onClick={() => {
-            setSidebarOpen(false);
-            window.open('https://docs.nft.com', '_open');
-          }}
-        >
+          </div>
+          <div
+            className={tw(
+              isMobile ? '' : 'sm:block hidden',
+              'pt-2.5 text-link cursor-pointer hover:underline'
+            )}
+            onClick={() => {
+              setSidebarOpen(false);
+              window.open('https://docs.nft.com', '_open');
+            }}
+          >
             Docs
-        </div>
-        {hasGksOrTokens && <div
-          className={tw(
-            isMobile ? '' : 'sm:block hidden',
-            'pt-2.5 text-link cursor-pointer hover:underline'
-          )}
-          onClick={() => {
-            setSidebarOpen(false);
-            router.push('/app/vault');
-          }}
-        >
+          </div>
+          {hasGksOrTokens && <div
+            className={tw(
+              isMobile ? '' : 'sm:block hidden',
+              'pt-2.5 text-link cursor-pointer hover:underline'
+            )}
+            onClick={() => {
+              setSidebarOpen(false);
+              router.push('/app/vault');
+            }}
+          >
             Vault
-        </div>}
+          </div>}
         </>
         <div
           className='py-2.5 text-primary-pink cursor-pointer hover:underline'

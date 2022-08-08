@@ -92,9 +92,9 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
                 'flex items-center'
               )}
             >
-              <Link href ='/app/discover'>
+              {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && <Link href ='/app/discover'>
                 <span className='hover:text-link cursor-pointer'>Discover</span>
-              </Link>
+              </Link>}
               <Link href ='/app/gallery'>
                 <span className='hover:text-link cursor-pointer'>Gallery</span>
               </Link>
