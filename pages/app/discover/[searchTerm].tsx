@@ -74,8 +74,7 @@ export default function ResultsPage() {
         setCollectionsSlides([...searchResults.hits]);
         setCollectionsTotalResults(searchResults.found);
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [client, searchTerm]);
 
   return (
     <PageWrapper
