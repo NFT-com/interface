@@ -5,6 +5,8 @@ import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQ
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
+import RemoveModal from './RemoveModal';
+
 import { CheckCircle, Clock, GasPump, Trash, XCircle } from 'phosphor-react';
 import { useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
@@ -21,14 +23,14 @@ type AssociatedProfileProps = {
     id?: string
   }
   pending?: boolean;
-  remove?: (address: string) => void
 };
 
-export default function AssociatedProfile({ profile, pending, remove }: AssociatedProfileProps) {
+export default function AssociatedProfile({ profile, pending }: AssociatedProfileProps) {
   const { mutate: mutatePending } = usePendingAssociationQuery();
   const { ignoreAssociations } = useIgnoreAssociationsMutation();
   const [rejected, setRejected] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [removeModalVisible, setRemoveModalVisible] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
@@ -40,10 +42,16 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
       .catch((e) => console.log(e));
   };
 
-  const rejectPendingProfile = async (input) => {
-    await ignoreAssociations({ eventIdArray: input })
-      .then(() => {setVisible(true); setRejected(true); toast.success('Rejected');})
-      .catch(() => toast.warning('Error. Please try again'));
+  const removeHandler = async () => {
+    if(pending){
+      await ignoreAssociations({ eventIdArray: [profile.id] })
+        .then(() => {setVisible(true); setRemoveModalVisible(false); setRejected(true); toast.success('Rejected');})
+        .catch(() => toast.warning('Error. Please try again'));
+    } else {
+      await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url)
+        .then(() => {toast.success('Removed'); setRemoveModalVisible(false); setVisible(true); setRejected(true);})
+        .catch(() => toast.warning('Error. Please try again'));
+    }
   };
 
   const closeModal = () => {
@@ -112,7 +120,7 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
         </div>
   
         <div className='flex items-center'>
-          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => pending ? rejectPendingProfile(profile.id) : remove(profile[1] || profile.profileUrl || profile.url)} />
+          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => setRemoveModalVisible(true)} />
         </div>
       </div>
 
@@ -163,7 +171,7 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
                         <GasPump size={20} weight="fill" />
                         <p className='ml-1'>This action will require a gas fee.</p>
                       </div>
-                      <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {pending ? rejectPendingProfile(profile.id) : remove(profile[1] || profile.profileUrl || profile.url); setRejected(true);}}>Reject Request</p>
+                      <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {setRemoveModalVisible(true); setVisible(false);}}>Reject Request</p>
                     </div>
                   )
                   :
@@ -213,6 +221,8 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
           </div>
         </div>
       </Modal>
+
+      <RemoveModal isProfile rejected={!pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner} remove={removeHandler} />
     </>
   );
 }
