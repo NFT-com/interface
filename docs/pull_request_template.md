@@ -6,7 +6,7 @@
 # Associated JIRA task link
 
 
-- [NFT-TASK-NUMBER]: 
+- LINK-TO-JIRA-TASK
 
 
 # Checklist before requesting a review
@@ -30,5 +30,5 @@
 ## If this is a follow-up PR to existing work, link the relevant PR(s) here (or N/A if not a follow-up)
 
 
-- [Prior Work]: 
+- Link(s) to Prior Work: 
 
