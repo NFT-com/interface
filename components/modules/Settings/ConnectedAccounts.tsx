@@ -35,19 +35,25 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const { mutate: mutateHidden } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
   const { nftResolver } = useAllContracts();
   const [inputVal, setInputVal] = useState('');
+  
   const [transaction, setTransaction] = useState('');
   const [isAssociated, setIsAssociated] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [success, setSuccess] = useState(false);
   const { updateHideIgnored } = useUpdateHideIgnored();
 
   const submitHandler = async () => {
     const address = inputVal;
     const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === address);
     if(deniedEvent){
-      updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); setTransaction(deniedEvent.txHash); setModalVisible(true);});
+      updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); setTransaction(deniedEvent.txHash); setSuccess(true); setModalVisible(true);});
     } else {
-      await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => setTransaction(res.hash)).then(() => setModalVisible(true));
+      await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => setTransaction(res.hash)).then(() => {setSuccess(true); setModalVisible(true);});
     }
+  };
+
+  const openModal = () => {
+    setModalVisible(true);
   };
 
   useEffect(() => {
@@ -63,7 +69,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
       <h3 className='text-base font-semibold tracking-wide mb-1'>Connected Wallets</h3>
       <p className='text-blog-text-reskin mb-4'>Display NFTs from other Ethereum wallets on your profile.</p>
       
-      <SettingsForm buttonText='Request Connection' submitHandler={submitHandler} {...{ inputVal, isAssociated }} changeHandler={setInputVal} />
+      <SettingsForm buttonText='Request Connection' submitHandler={openModal} {...{ inputVal, isAssociated }} changeHandler={setInputVal} />
 
       {associatedAddresses?.accepted?.length || associatedAddresses?.pending?.length
         ? (
@@ -86,7 +92,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
           </div>
         )
         : null}
-      <RequestModal address={inputVal} transaction={transaction} visible={modalVisible} setVisible={setModalVisible} setAddressVal={setInputVal} />
+      <RequestModal {...{ submitHandler, success }} address={inputVal} transaction={transaction} visible={modalVisible} setVisible={setModalVisible} setAddressVal={setInputVal} />
     </div>
   );
 }

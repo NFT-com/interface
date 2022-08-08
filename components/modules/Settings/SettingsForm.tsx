@@ -28,7 +28,7 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
   return (
     <div className='md:w-full w-3/4'>
       <div className='relative'>
-        <input onChange={(e) => changeHandler(e.target.value)}
+        <input value={inputVal} onChange={(e) => changeHandler(e.target.value)}
           className={tw('box-border shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  placeholder:font-mono placeholder:text-sm pr-10',
             inputVal === '' ? 'border-[#D5D5D5]' : error ? 'border-[#DD0F70] focus:ring-[#DD0F70] focus:ring-1 focus:border-[#DD0F70]' : 'border-[#0E8344] focus:ring-[#0E8344] focus:ring-1 focus:border-[#0E8344]',
           )}

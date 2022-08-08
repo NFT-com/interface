@@ -39,7 +39,7 @@ export default function AssociatedAddress({ address, pending, rejected, remove }
                     className="rounded-xl p-3 bg-modal-bg-dk text-white"
                   >
                     <p className='text-[#D50909] mb-2'>Rejected</p>
-                    <p>This wallet has rejected the connection. If this was done in error, please try again.</p>
+                    <p>This wallet has rejected the connection. If this was done in error, please resend the request. No gas is required.</p>
                   </div>
                 }
               >
