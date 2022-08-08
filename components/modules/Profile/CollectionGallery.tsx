@@ -125,7 +125,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         {collectionData?.collection?.name}
       </span>
       <GridContextProvider items={detailedCollectionNFTs} key={JSON.stringify(detailedCollectionNFTs)}>
-        <NftGrid profileURI={profileURI} />
+        <NftGrid profileURI={profileURI} draggable={false} />
       </GridContextProvider>
     </div>;
   }

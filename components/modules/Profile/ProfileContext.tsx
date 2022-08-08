@@ -44,6 +44,8 @@ export interface ProfileContextType {
   setDraftBio: (bio: string) => void,
   draftGkIconVisible: Maybe<boolean>,
   setDraftGkIconVisible: (val: boolean) => void,
+  draftDeployedContractsVisible: Maybe<boolean>,
+  setDraftDeployedContractsVisible: (val: boolean) => void,
   draftDisplayType: ProfileDisplayType,
   setDraftDisplayType: (displayType: ProfileDisplayType) => void,
   draftLayoutType: ProfileLayoutType,
@@ -80,6 +82,8 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   setDraftBio: () => '',
   draftGkIconVisible: true,
   setDraftGkIconVisible: () => null,
+  draftDeployedContractsVisible: false,
+  setDraftDeployedContractsVisible: () => null,
   draftDisplayType: ProfileDisplayType.Nft,
   setDraftDisplayType: () => null,
   draftLayoutType: ProfileLayoutType.Default,
@@ -142,6 +146,7 @@ export function ProfileContextProvider(
   const [draftDisplayType, setDraftDisplayType] = useState(null);
   const [selectedCollection, setSelectedCollection] = useState<string>(null);
   const [draftLayoutType , setDraftLayoutType] = useState<ProfileLayoutType>(null);
+  const [draftDeployedContractsVisible, setDraftDeployedContractsVisible] = useState<boolean>(profileData?.profile?.deployedContractsVisible);
 
   useEffect(() => {
     // make sure these initial values are set when the Profile data loads.
@@ -154,7 +159,19 @@ export function ProfileContextProvider(
     if (draftNftsDescriptionsVisible == null) {
       setDraftNftsDescriptionsVisible(profileData?.profile?.nftsDescriptionsVisible);
     }
-  }, [draftBio, draftGkIconVisible, draftNftsDescriptionsVisible, profileData?.profile?.description, profileData?.profile?.gkIconVisible, profileData?.profile?.nftsDescriptionsVisible]);
+    if (draftDeployedContractsVisible == null) {
+      setDraftDeployedContractsVisible(profileData?.profile?.deployedContractsVisible);
+    }
+  }, [
+    draftBio,
+    draftDeployedContractsVisible,
+    draftGkIconVisible,
+    draftNftsDescriptionsVisible,
+    profileData?.profile?.deployedContractsVisible,
+    profileData?.profile?.description,
+    profileData?.profile?.gkIconVisible,
+    profileData?.profile?.nftsDescriptionsVisible
+  ]);
   
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
   const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);
@@ -214,10 +231,16 @@ export function ProfileContextProvider(
     setDraftBio(profileData?.profile?.description);
     setDraftGkIconVisible(draftGkIconVisible);
     setDraftNftsDescriptionsVisible(draftNftsDescriptionsVisible);
+    setDraftDeployedContractsVisible(profileData?.profile?.deployedContractsVisible);
     setEditMode(false);
     setDraftLayoutType(null);
     setPubliclyVisibleNfts(null);
-  }, [draftGkIconVisible, draftNftsDescriptionsVisible, profileData?.profile?.description]);
+  }, [
+    draftGkIconVisible,
+    draftNftsDescriptionsVisible,
+    profileData?.profile?.deployedContractsVisible,
+    profileData?.profile?.description
+  ]);
 
   useEffect(() => {
     setSelectedCollection(null);
@@ -267,6 +290,7 @@ export function ProfileContextProvider(
           description: isNullOrEmpty(draftBio) ? profileData?.profile?.description : draftBio,
           gkIconVisible: draftGkIconVisible,
           nftsDescriptionsVisible: draftNftsDescriptionsVisible,
+          deployedContractsVisible: draftDeployedContractsVisible,
           hideNFTIds: allOwnerNfts?.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null)?.map(nft => nft.id),
           showNFTIds: publiclyVisibleNfts?.map(nft => nft.id),
           layoutType: draftLayoutType,
@@ -305,6 +329,7 @@ export function ProfileContextProvider(
     draftBio,
     draftGkIconVisible,
     draftNftsDescriptionsVisible,
+    draftDeployedContractsVisible,
     draftLayoutType,
     fileUpload,
     props.profileURI,
@@ -356,6 +381,10 @@ export function ProfileContextProvider(
     draftGkIconVisible,
     setDraftGkIconVisible: (val: boolean) => {
       setDraftGkIconVisible(val);
+    },
+    draftDeployedContractsVisible,
+    setDraftDeployedContractsVisible: (val: boolean) => {
+      setDraftDeployedContractsVisible(val);
     },
     draftNftsDescriptionsVisible,
     setDraftNftsDescriptionsVisible: (val: boolean) => {
