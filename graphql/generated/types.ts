@@ -2132,7 +2132,7 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, preferredProfile?: { __typename?: 'Profile', url: string } | null, wallet?: { __typename?: 'Wallet', address: any, chainId: string } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3138,6 +3138,9 @@ export const NftDocument = gql`
     contract
     tokenId
     type
+    preferredProfile {
+      url
+    }
     wallet {
       address
       chainId

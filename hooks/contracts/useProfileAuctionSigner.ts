@@ -5,7 +5,7 @@ import { Signer } from 'ethers';
 import { useAccount, useSigner } from 'wagmi';
 export declare type FetchSignerResult = Signer | null;
 
-export async function useProfileAuctionSigner() {
+export function useProfileAuctionSigner() {
   const { address: currentAddress, connector } = useAccount();
   const { profileAuction } = useAllContracts();
   const { data: signer } = useSigner();

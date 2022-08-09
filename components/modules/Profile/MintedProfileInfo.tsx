@@ -1,13 +1,12 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { isNullOrEmpty } from 'utils/helpers';
+import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
 
 import GKHolderIcon from 'public/gk-holder.svg';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
 import { useAccount } from 'wagmi';
 
@@ -19,6 +18,7 @@ export interface MintedProfileInfoProps {
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { address: currentAddress } = useAccount();
+  const { user, setCurrentProfileUrl } = useUser();
   
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
@@ -33,30 +33,14 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     setEditMode,
     clearDrafts
   } = useContext(ProfileContext);
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
-  
-  const handleBioChange = (event) => {
-    let bioValue = event.target.value;
-    if(bioValue.length === 0) {
-      bioValue = '';
+
+  const getProfileButton = useCallback(() => {
+    if (!userIsAdmin) {
+      return null;
     }
-    setDraftBio(bioValue);
-  };
-  return (
-    <div className={tw(
-      'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
-      'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 -mt-14 minmd:mt-0 px-4',
-      'w-4/5 minxl:w-3/5 minmd:h-52 h-32')}>
-      <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
-        <div
-          id="MintedProfileNameContainer"
-          className="font-bold text-2xl minxl:text-4xl text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4">
-            @{profileURI}
-        </div>
-        {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
-      </div>
-      {userIsAdmin && hasGks && (
+
+    return user?.currentProfileUrl === props.profileURI ?
+      (
         editMode ?
           <div
             className="flex mt-3 minlg:mt-6"
@@ -97,7 +81,44 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 setEditMode(true);
               }}
             />
-          </div>)}
+          </div>
+      ) :
+      (
+        <div
+          className='mt-3 minlg:mt-6'
+        >
+          <Button
+            type={ButtonType.PRIMARY}
+            label={'Switch'}
+            onClick={() => {
+              setCurrentProfileUrl(props.profileURI);
+            }}
+          />
+        </div>
+      );
+  }, [clearDrafts, currentAddress, draftBio, draftHeaderImg?.preview, draftProfileImg?.preview, editMode, profileURI, props.profileURI, saveProfile, setCurrentProfileUrl, setEditMode, user?.currentProfileUrl, userIsAdmin]);
+  
+  const handleBioChange = (event) => {
+    let bioValue = event.target.value;
+    if(bioValue.length === 0) {
+      bioValue = '';
+    }
+    setDraftBio(bioValue);
+  };
+  return (
+    <div className={tw(
+      'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
+      'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 -mt-14 minmd:mt-0 px-4',
+      'w-4/5 minxl:w-3/5 minmd:h-52 h-32')}>
+      <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
+        <div
+          id="MintedProfileNameContainer"
+          className="font-bold text-2xl minxl:text-4xl text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4">
+            @{profileURI}
+        </div>
+        {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
+      </div>
+      {getProfileButton()}
       {profileData?.profile?.description &&
           <div className={tw(
             'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'

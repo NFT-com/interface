@@ -39,7 +39,7 @@ export function InsiderProfileClaim() {
   const mintProfile = useCallback((profileURIToMint: string) => {
     (async () => {
       try {
-        const tx = await (await profileAuctionSigner).genesisKeyClaimProfile(
+        const tx = await profileAuctionSigner.genesisKeyClaimProfile(
           profileURIToMint,
           ownedGKTokens?.[0]?.id?.tokenId,
           currentAddress,
