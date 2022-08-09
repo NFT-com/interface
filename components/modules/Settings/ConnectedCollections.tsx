@@ -85,7 +85,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
     setChangeCollection(true);
   };
 
-  const lookupCollectionName = async (addr) => {
+  const lookupCollectionName = async (addr): Promise<any> => {
     return await getContractMetadata(addr);
   };
 
