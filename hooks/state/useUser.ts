@@ -14,6 +14,7 @@ export function useUser() {
     fallbackData: {
       isDarkMode: true,
       currentProfileUrl: '',
+      hiddenProfile: null
     }
   });
 
