@@ -32,9 +32,11 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
   const fetchAssociatedCollection = useCallback(
     async (profile) => {
       await nftResolver.associatedContract(profile)
-        .then((res) => {setConnectedCollection(res);
+        .then((res) => {
+          setConnectedCollection(res);
           lookupCollectionName(res.chainAddr)
-            .then((res2) => setCollectionName(res2?.contractMetadata?.name || res.chainAddr));
+            .then((res2) => setCollectionName(res2?.contractMetadata?.name || res.chainAddr))
+            .catch(() => Promise.resolve([]));
         });
     },
     [nftResolver],
