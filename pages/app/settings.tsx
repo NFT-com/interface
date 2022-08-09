@@ -3,6 +3,7 @@ import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import Toast from 'components/elements/Toast';
 import HomeLayout from 'components/layouts/HomeLayout';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import ConnectedProfiles from 'components/modules/Settings/ConnectedProfiles';
 import DisplayMode from 'components/modules/Settings/DisplayMode';
 import NftOwner from 'components/modules/Settings/NftOwner';
@@ -84,6 +85,7 @@ export default function Settings() {
       <ClientOnly>
         <Header bgLight />
         <Sidebar />
+        <SearchModal />
       </ClientOnly>
       <Toast />
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>

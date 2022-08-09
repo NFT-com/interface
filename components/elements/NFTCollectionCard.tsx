@@ -12,6 +12,10 @@ export interface NFTCollectionCardProps {
   count: number
   images: string[]
   onClick: () => void
+  customBackground?: string
+  customBorder?: string
+  contractName?: string
+  lightModeForced?: boolean
 }
 
 /**
@@ -29,13 +33,16 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
 
   return (
     <NFTCard
-      title={collection?.collection?.name}
+      title={collection?.collection?.name ?? props.contractName}
       traits={[{ key: '', value: props.count + (props.count > 1 ? ' items' : ' item') }]}
       images={processedImages}
       imageLayout="row"
       onClick={props.onClick}
       nftsDescriptionsVisible={draftNftsDescriptionsVisible}
       contractAddress={collection?.collection?.contract}
+      customBackground={props.customBackground}
+      customBorder={props.customBorder}
+      lightModeForced={props.lightModeForced}
     />
   );
 }

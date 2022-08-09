@@ -1,0 +1,60 @@
+// import { isNullOrEmpty } from 'utils/helpers';
+import { TypesenseMultiSearchInput, TypesenseSearchInput } from 'graphql/generated/types';
+import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
+
+import * as Sentry from '@sentry/nextjs';
+import { useCallback, useState } from 'react';
+
+export interface FetchTypesenseSearchData {
+  fetchTypesenseSearch: (input: TypesenseSearchInput) => Promise<any>;
+  fetchTypesenseMultiSearch: (input: TypesenseMultiSearchInput) => Promise<any>;
+  loading: boolean;
+}
+
+export function useFetchTypesenseSearch(): FetchTypesenseSearchData {
+  const [loading, setLoading] = useState(false);
+  const client = getTypesenseInstantsearchAdapterRaw;
+
+  const fetchTypesenseSearch = useCallback(async (input: TypesenseSearchInput) => {
+    setLoading(true);
+    try {
+      setLoading(true);
+      const result = await client.collections(input.index)
+        .documents()
+        .search({
+          'q'       : input.q.toString(),
+          'query_by': input.query_by,
+          'per_page': input.per_page,
+          'page'    : input.page,
+        });
+      setLoading(false);
+      return result;
+    } catch (err) {
+      setLoading(false);
+      Sentry.captureException(err);
+      await Sentry.flush(2000);
+      return null;
+    }
+  }, [client]);
+
+  const fetchTypesenseMultiSearch = useCallback(async (input: TypesenseMultiSearchInput) => {
+    setLoading(true);
+    try {
+      setLoading(true);
+      const result = await client.multiSearch.perform(input);
+      setLoading(false);
+      return result;
+    } catch (error) {
+      setLoading(false);
+      // todo: handle the error based on the error code.
+      console.log(error);
+      return null;
+    }
+  }, [client]);
+
+  return {
+    fetchTypesenseSearch,
+    fetchTypesenseMultiSearch,
+    loading: loading,
+  };
+}
