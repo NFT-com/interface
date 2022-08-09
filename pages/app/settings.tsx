@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
@@ -10,9 +9,7 @@ import NftOwner from 'components/modules/Settings/NftOwner';
 import SettingsSidebar from 'components/modules/Settings/SettingsSidebar';
 import TransferProfile from 'components/modules/Settings/TransferProfile';
 import { useHiddenEventsQuery } from 'graphql/hooks/useHiddenEventsQuery';
-import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
-import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -21,21 +18,19 @@ import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
 export default function Settings() {
   const { nftResolver } = useAllContracts();
   const { address: currentAddress } = useAccount();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-  const { data: pendingAssociatedProfiles, mutate: mutatePending } = usePendingAssociationQuery();
+  const { data: pendingAssociatedProfiles } = usePendingAssociationQuery();
   const { getCurrentProfileUrl }= useUser();
   const result = getCurrentProfileUrl();
   const [selectedProfile, setSelectedProfile] = useState(result);
   const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [], denied: [] });
   const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
-  const { data: events, mutate: mutateHidden } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
-  const { updateHideIgnored } = useUpdateHideIgnored();
+  const { data: events } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
 
   const fetchAddresses = useCallback(
     async (profile) => {
@@ -65,9 +60,6 @@ export default function Settings() {
   const fetchProfiles = useCallback(
     async () => {
       const evm = await nftResolver.getApprovedEvm(currentAddress);
-      if(!pendingAssociatedProfiles?.getMyPendingAssociations){
-        mutatePending();
-      }
       const result = pendingAssociatedProfiles?.getMyPendingAssociations.filter(a => !evm.some(b => a.url === b.profileUrl));
       setAssociatedProfiles({ pending: result, accepted: evm });
     },

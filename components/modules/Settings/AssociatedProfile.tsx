@@ -7,7 +7,6 @@ import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
-import { remove } from 'jszip';
 import { CheckCircle, Clock, GasPump, Trash, XCircle } from 'phosphor-react';
 import { useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
