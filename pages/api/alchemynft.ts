@@ -85,6 +85,27 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
   }
+  case 'getContractMetadata': {
+    const contractAddress = req.query['contractAddress'];
+    if (isNullOrEmpty(contractAddress)) {
+      res.status(400).json(JSON.stringify({ message: 'getContractMetadata: Invalid Arguments' }));
+      return;
+    }
+  
+    const requestUrl = new URL(apiUrl + '/getContractMetadata/');
+    requestUrl.searchParams.append('contractAddress', contractAddress as string);
+    try {
+      const result = await fetch(requestUrl.toString(), {
+        method: 'GET',
+        redirect: 'follow',
+      }).then(alchemyRes => alchemyRes.json());
+      res.status(200).json(result);
+      return;
+    } catch (e) {
+      res.status(500).json(JSON.stringify({ message: 'getContractMetadata: error processing Alchemy result', e }));
+      return;
+    }
+  }
   case 'getNFTsForCollection': {
     const contractAddress = req.query['contractAddress'];
     const limit = req.query['limit'];

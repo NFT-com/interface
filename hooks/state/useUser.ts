@@ -6,6 +6,7 @@ import useSWR from 'swr';
 export interface UserState {
   currentProfileUrl: string
   isDarkMode: boolean;
+  hiddenProfile: string[];
 }
 
 export function useUser() {
@@ -13,6 +14,7 @@ export function useUser() {
     fallbackData: {
       isDarkMode: true,
       currentProfileUrl: '',
+      hiddenProfile: null
     }
   });
 
@@ -31,6 +33,34 @@ export function useUser() {
     });
     localStorage.setItem('selectedProfileUrl', isNullOrEmpty(selectedProfileUrl) ? '' : selectedProfileUrl);
   }, [data, mutate]);
+
+  const setHiddenProfileWithExpiry = useCallback((profileToHide: string) => {
+    const now = new Date();
+    mutate({
+      ...data,
+      hiddenProfile: [profileToHide]
+    });
+    const item = {
+      value: profileToHide,
+      expiry: now.getTime() + 10000,
+    };
+    localStorage.setItem('hiddenProfile', JSON.stringify(item));
+  }, [data, mutate]);
+
+  const getHiddenProfileWithExpiry = useCallback(() => {
+    const itemStr = localStorage.getItem('hiddenProfile');
+    if (!itemStr) {
+      return null;
+    }
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem('hiddenProfile');
+      return null;
+    }
+    return item.value;
+  }, []);
 
   const getCurrentProfileUrl = useCallback(() => {
     return typeof window !== 'undefined' ? localStorage?.getItem('selectedProfileUrl') : '';
@@ -53,6 +83,8 @@ export function useUser() {
     loading,
     setDarkMode,
     setCurrentProfileUrl,
-    getCurrentProfileUrl
+    getCurrentProfileUrl,
+    setHiddenProfileWithExpiry,
+    getHiddenProfileWithExpiry
   };
 }

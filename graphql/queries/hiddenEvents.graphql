@@ -1,0 +1,15 @@
+query HiddenEvents($input: HiddenEventsInput!) {
+  hiddenEvents(input: $input) {
+    id
+    chainId
+    contract
+    eventName
+    txHash
+    ownerAddress
+    profileUrl
+    destinationAddress
+    blockNumber
+    ignore
+    hideIgnored
+  }
+}

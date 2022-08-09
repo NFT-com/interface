@@ -25,6 +25,7 @@ export interface ModalProps {
   fullModal?: boolean;
   bgColor?: string;
   transparentOverlay?: boolean;
+  hideX?: boolean
 }
 
 export function Modal(props: PropsWithChildren<ModalProps>) {
@@ -115,7 +116,7 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                         onClick={props.onClose}
                       >
                         <span className="sr-only">Close</span>
-                        <XIcon className="h-6 w-6" aria-hidden="true" />
+                        {!props.hideX && <XIcon className="h-6 w-6" aria-hidden="true" />}
                       </button>
                     </div>}
                     {

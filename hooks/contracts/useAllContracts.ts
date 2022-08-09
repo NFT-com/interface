@@ -62,6 +62,7 @@ export function useAllContracts(): Contracts {
   const [nftTokenContract, setNftTokenContract] =
     useState(getNftTokenContract(getAddress('nft', chainId), provider));
   const [nftProfileContract, setNftProfileContract] =
+    useState(getNftProfileContract(getAddress('nftProfile', chainId), provider, signer));
     useState(getNftProfileContract(getAddress('nftProfile', chainId), provider));
   const [maxProfilesContract, setMaxProfilesContract] = useState(
     getMaxProfilesContract(getAddress('profileAuction', chainId), provider)
@@ -90,7 +91,7 @@ export function useAllContracts(): Contracts {
     setWethContract(getWethContract(getAddress('weth', chainId), provider));
     setUsdcContract(getUsdcContract(getAddress('usdc', chainId), provider));
     setNftTokenContract(getNftTokenContract(getAddress('nft', chainId), provider));
-    setNftProfileContract(getNftProfileContract(getAddress('nftProfile', chainId), provider));
+    setNftProfileContract(getNftProfileContract(getAddress('nftProfile', chainId), provider, signer));
     setMaxProfilesContract(getMaxProfilesContract(getAddress('maxProfiles', chainId), provider));
     setProfileAuctionContract(getProfileAuctionContract(getAddress('profileAuction', chainId), provider));
     setGenesisKeyContract(getGenesisKeyContract(getAddress('genesisKey', chainId), provider));
