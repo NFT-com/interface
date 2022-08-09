@@ -79,7 +79,7 @@ export default function AssociatedAddress({ address, pending, rejected, remove, 
         <div className='flex items-center w-1/2 justify-between'>
           <p>Ethereum</p>
           <DropdownPickerModal
-            defaultLightMode
+            forceLightMode
             constrain
             selectedIndex={0}
             options={filterNulls([
