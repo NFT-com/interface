@@ -1,13 +1,14 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
+import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { getEtherscanLink, shortenAddress } from 'utils/helpers';
+import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
-import { CheckCircle, Clock, GasPump, Trash, XCircle } from 'phosphor-react';
+import { CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
 import { useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { toast } from 'react-toastify';
@@ -24,9 +25,10 @@ type AssociatedProfileProps = {
   }
   pending?: boolean;
   remove?: () => void
+  isCollection?: boolean
 };
 
-export default function AssociatedProfile({ profile, pending, remove }: AssociatedProfileProps) {
+export default function AssociatedProfile({ profile, pending, remove, isCollection }: AssociatedProfileProps) {
   const { mutate: mutatePending } = usePendingAssociationQuery();
   const { ignoreAssociations } = useIgnoreAssociationsMutation();
   const [rejected, setRejected] = useState(false);
@@ -121,7 +123,36 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
         </div>
   
         <div className='flex items-center'>
-          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => remove ? remove() : setRemoveModalVisible(true)} />
+          <DropdownPickerModal
+            defaultLightMode
+            constrain
+            selectedIndex={0}
+            options={filterNulls([
+              isCollection && {
+                label: 'Change Collection',
+                onSelect: () => remove(),
+                icon: null,
+              },
+              !isCollection && pending && {
+                label: 'Approve',
+                onSelect: () => setVisible(true),
+                icon: null,
+              },
+              !isCollection && {
+                label: 'Reject/Remove',
+                onSelect: () => setRemoveModalVisible(true),
+                icon: null,
+              },
+              !isCollection && {
+                label: 'View on Etherscan',
+                onSelect: () => {
+                  window.open(getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address'));
+                },
+                icon: null,
+              }
+            ])}>
+            <DotsThreeOutlineVertical size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
+          </DropdownPickerModal>
         </div>
       </div>
 
