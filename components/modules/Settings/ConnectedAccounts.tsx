@@ -54,12 +54,17 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
 
   const removeHandler = async (action, input) => {
     if(action === 'address'){
-      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile).then(res => console.log(res));
+      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile)
+        .then(() => toast.error('Error'));
     } else if (action === 'address-hideRejected') {
       const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === input);
-      updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); toast.success('Removed');});
+      updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] })
+        .then(() => {
+          mutateHidden();
+          toast.success('Removed');
+        });
     } else {
-      console.log('error');
+      toast.error('Error');
     }
   };
 

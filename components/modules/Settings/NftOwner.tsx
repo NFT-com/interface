@@ -31,7 +31,7 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
 
   useEffect(() => {
     if(!profileData?.profile?.owner?.preferredProfile?.url){
-      updateWalletProfileId({ profileId: myOwnedProfileTokens[0]?.title }).catch((e) => console.log(e));
+      updateWalletProfileId({ profileId: myOwnedProfileTokens[0]?.title }).catch(() => toast.error('Error'));
     }
     setSelected(profileData?.profile?.owner?.preferredProfile?.url || myOwnedProfileTokens[0]?.title);
   }, [profileData, myOwnedProfileTokens, updateWalletProfileId]);

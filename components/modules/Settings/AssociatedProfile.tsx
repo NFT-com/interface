@@ -40,7 +40,7 @@ export default function AssociatedProfile({ profile, pending, remove }: Associat
     e.preventDefault();
     await nftResolver.associateSelfWithUsers([url])
       .then(() => setAccepted(true))
-      .catch((e) => console.log(e));
+      .catch(() => toast.error('Error'));
   };
 
   const removeHandler = async () => {

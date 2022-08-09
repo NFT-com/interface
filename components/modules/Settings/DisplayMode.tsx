@@ -37,7 +37,7 @@ export default function DisplayMode({ selectedProfile, associatedAddresses }: Di
   const handleChange = event => {
     toast.success('Saved!');
     setSelected(event.target.value);
-    updateProfileView({ profileViewType: event.target.value, url: selectedProfile }).catch(e => console.log(e));
+    updateProfileView({ profileViewType: event.target.value, url: selectedProfile }).catch(() => toast.error('Error'));
   };
 
   return (
