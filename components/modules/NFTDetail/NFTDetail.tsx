@@ -21,14 +21,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const { chain } = useNetwork();
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
-
+  
   const { profileData } = useProfileQuery(
-    props.nft?.preferredProfile == null ?
+    props.nft?.wallet?.preferredProfile == null ?
       profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
       null
   );
 
-  const profileOwnerToShow: PartialDeep<Profile> = props.nft?.preferredProfile ?? profileData?.profile;
+  const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
 
   const { refreshNft, loading } = useRefreshNftMutation();
 

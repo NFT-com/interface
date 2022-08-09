@@ -209,20 +209,6 @@ export type CollectionNfTsInput = {
   pageInput?: InputMaybe<PageInput>;
 };
 
-export type TypesenseSearchInput = {
-  collection?: InputMaybe<Scalars['String']>;
-  index?: InputMaybe<Scalars['String']>;
-  q: Scalars['String'];
-  query_by: Scalars['String'];
-  //searchTerm: Scalars['String'] | Array<Scalars['String'] >;
-  per_page: Scalars['Int'];
-  page: Scalars['Int'];
-};
-
-export type TypesenseMultiSearchInput = {
-  searches: Array<TypesenseSearchInput>;
-};
-
 export type ConvertEnsToEthAddress = {
   __typename?: 'ConvertEnsToEthAddress';
   ethAddresses: Array<Scalars['String']>;
@@ -2132,7 +2118,7 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, preferredProfile?: { __typename?: 'Profile', url: string } | null, wallet?: { __typename?: 'Wallet', address: any, chainId: string } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -3138,12 +3124,13 @@ export const NftDocument = gql`
     contract
     tokenId
     type
-    preferredProfile {
-      url
-    }
     wallet {
       address
       chainId
+      preferredProfile {
+        url
+        photoURL
+      }
     }
     metadata {
       name
