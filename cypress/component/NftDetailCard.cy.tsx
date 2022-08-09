@@ -1,3 +1,7 @@
+/// <reference types="cypress" />
+
+import '../plugins/tailwind';
+
 import { NftDetailCard } from '../../components/modules/NFTDetail/NftDetailCard';
 
 describe('NftDetailCard', () => {
@@ -25,5 +29,21 @@ describe('NftDetailCard', () => {
     cy.contains('testValue').should('exist');
     cy.contains('testSubtitle').should('exist');
     cy.contains('testValue').should('have.class', 'testValueClasses');
+  });
+
+  it('calls onClick callback', () => {
+    const stub = cy.stub();
+    cy.mount(
+      <NftDetailCard
+        type="testType"
+        value="testValue"
+        subtitle='testSubtitle'
+        valueClasses='testValueClasses'
+        onClick={stub}
+      />
+    );
+    cy.get('.NftDetailCard').click().then(() => {
+      expect(stub).to.be.called;
+    });
   });
 });

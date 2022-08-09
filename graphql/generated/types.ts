@@ -188,15 +188,19 @@ export type Collection = {
 export type CollectionInfo = {
   __typename?: 'CollectionInfo';
   collection?: Maybe<Collection>;
-  openseaInfo?: Maybe<OpenseaContract>;
-  openseaStats?: Maybe<OpenseaStats>;
+  ubiquityResults?: Maybe<UbiquityResults>;
 };
 
 export type CollectionInput = {
   chainId?: InputMaybe<Scalars['String']>;
   contract: Scalars['Address'];
   network: Scalars['String'];
-  withOpensea?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CollectionNft = {
+  __typename?: 'CollectionNFT';
+  collectionAddress: Scalars['Address'];
+  nfts: Array<Nft>;
 };
 
 export type CollectionNft = {
@@ -1589,6 +1593,40 @@ export type TxUserIdAndTypeInput = {
   userId: Scalars['ID'];
 };
 
+export type UbiquityCollection = {
+  __typename?: 'UbiquityCollection';
+  banner?: Maybe<Scalars['String']>;
+  contracts?: Maybe<Array<Maybe<UbiquityContract>>>;
+  description?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  logo?: Maybe<Scalars['String']>;
+  meta?: Maybe<UbiquityMeta>;
+  name?: Maybe<Scalars['String']>;
+  verified?: Maybe<Scalars['Boolean']>;
+};
+
+export type UbiquityContract = {
+  __typename?: 'UbiquityContract';
+  address?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  image_url?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  symbol?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type UbiquityMeta = {
+  __typename?: 'UbiquityMeta';
+  discord_url?: Maybe<Scalars['String']>;
+  external_url?: Maybe<Scalars['String']>;
+  twitter_username?: Maybe<Scalars['String']>;
+};
+
+export type UbiquityResults = {
+  __typename?: 'UbiquityResults';
+  collection?: Maybe<UbiquityCollection>;
+};
+
 export type UpdateAssociatedAddressesInput = {
   chainId?: InputMaybe<Scalars['String']>;
   profileUrl: Scalars['String'];
@@ -1956,7 +1994,7 @@ export type CollectionQueryVariables = Exact<{
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null, openseaInfo?: { __typename?: 'OpenseaContract', collection?: { __typename?: 'OpenseaCollectionV1', banner_image_url?: string | null, created_date?: string | null, description?: string | null, discord_url?: string | null, external_url?: string | null, featured?: boolean | null, featured_image_url?: string | null, safelist_request_status?: string | null } | null } | null } | null };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null, ubiquityResults?: { __typename?: 'UbiquityResults', collection?: { __typename?: 'UbiquityCollection', id?: string | null, name?: string | null, description?: string | null, logo?: string | null, banner?: string | null, verified?: boolean | null, contracts?: Array<{ __typename?: 'UbiquityContract', address?: string | null, name?: string | null, symbol?: string | null, description?: string | null, image_url?: string | null, type?: string | null } | null> | null, meta?: { __typename?: 'UbiquityMeta', discord_url?: string | null, external_url?: string | null, twitter_username?: string | null } | null } | null } | null } | null };
 
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
@@ -1964,6 +2002,13 @@ export type CollectionNfTsQueryVariables = Exact<{
 
 
 export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
+
+export type DeployedCollectionsQueryVariables = Exact<{
+  deployer: Scalars['String'];
+}>;
+
+
+export type DeployedCollectionsQuery = { __typename?: 'Query', collectionsByDeployer?: Array<{ __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null> | null };
 
 export type ExternalListingsQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2100,6 +2145,7 @@ export type ProfileQueryVariables = Exact<{
 
 
 export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null } };
+
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -2552,16 +2598,27 @@ export const CollectionDocument = gql`
       contract
       name
     }
-    openseaInfo {
+    ubiquityResults {
       collection {
-        banner_image_url
-        created_date
+        id
+        name
         description
-        discord_url
-        external_url
-        featured
-        featured_image_url
-        safelist_request_status
+        logo
+        banner
+        verified
+        contracts {
+          address
+          name
+          symbol
+          description
+          image_url
+          type
+        }
+        meta {
+          discord_url
+          external_url
+          twitter_username
+        }
       }
     }
   }
@@ -2590,6 +2647,15 @@ export const CollectionNfTsDocument = gql`
       lastCursor
     }
     totalItems
+  }
+}
+    `;
+export const DeployedCollectionsDocument = gql`
+    query DeployedCollections($deployer: String!) {
+  collectionsByDeployer(deployer: $deployer) {
+    id
+    contract
+    name
   }
 }
     `;
@@ -3129,6 +3195,7 @@ export const ProfileDocument = gql`
     description
     gkIconVisible
     nftsDescriptionsVisible
+    deployedContractsVisible
     layoutType
     owner {
       address
@@ -3351,6 +3418,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');
+    },
+    DeployedCollections(variables: DeployedCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeployedCollectionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeployedCollectionsQuery>(DeployedCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeployedCollections', 'query');
     },
     ExternalListings(variables: ExternalListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ExternalListingsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ExternalListingsQuery>(ExternalListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ExternalListings', 'query');

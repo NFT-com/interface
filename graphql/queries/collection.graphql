@@ -5,17 +5,28 @@ query Collection($input: CollectionInput!) {
       contract
       name
     }
-    openseaInfo {
+    ubiquityResults {
       collection {
-        banner_image_url
-        created_date
+        id
+        name
         description
-        discord_url
-        external_url
-        featured
-        featured_image_url
-        safelist_request_status
+        logo
+        banner
+        verified
+        contracts {
+          address
+          name
+          symbol
+          description
+          image_url
+          type
+        }
+        meta {
+          discord_url
+          external_url
+          twitter_username
+        }
       }
-  }
+    }
   }
 }

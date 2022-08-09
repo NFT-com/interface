@@ -19,6 +19,7 @@ export type DetailedNft = Nft & { hidden?: boolean };
 
 export interface NftGridProps {
   profileURI: string;
+  draggable?: boolean;
 }
 
 export function NftGrid(props: NftGridProps) {
@@ -54,10 +55,10 @@ export function NftGrid(props: NftGridProps) {
 
   return <div
     className={tw(
-      'grid w-full sm:grid-cols-2 md:grid-cols-3 gap-y-2.5 gap-x-8 sm:grid-cols-1',
+      'grid w-full grid-cols-1 minmd:grid-cols-3 gap-y-2.5 gap-x-8',
       (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-4' : '',
-      (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-6 md:grid-cols-4' : '',
-      (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-6 lg:grid-cols-4 md:grid-cols-3' : '',
+      (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-4 minlg:grid-cols-6' : '',
+      (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-3' : '',
     )}
     data-testid={savedLayoutType+'-layout-option'}
@@ -65,19 +66,19 @@ export function NftGrid(props: NftGridProps) {
     {items?.map((nft: PartialDeep<DetailedNft>, index) => (
       <DraggableGridItem
         key={nft?.id}
-        item={{ id: nft?.id, hidden: nft?.hidden }}
+        item={{ id: nft?.id, hidden: nft?.hidden, draggable: props.draggable ?? true }}
         onMoveItem={moveItem}
       >
         <div
           className={tw(
             'NFTCardContainer',
-            'flex justify-center sm:mb-2',
+            'flex justify-center mb-2 minmd:mb-0',
             (draftLayoutType ?? savedLayoutType) === 'Default' ? 'mb-10' : '',
-            (draftLayoutType ?? savedLayoutType) === 'Featured' ? `${[1,2,3].includes((index+10)%9) ? [0,1].includes(index%10) ? 'col-span-2 md:col-span-2 ':'col-span-2 md:col-span-1': [0,1].includes(index%10) ? 'md:col-span-2' :''} mb-10` : '',
+            (draftLayoutType ?? savedLayoutType) === 'Featured' ? `${[1,2,3].includes((index+10)%9) ? [0,1].includes(index%10) ? 'col-span-2 minlg:col-span-2':'col-span-1 minlg:col-span-2': [0,1].includes(index%10) ? 'col-span-2 minlg:col-auto' :''} mb-10` : '',
             (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 1199 ? `${index % 7 === 0 ? 'row-span-3 col-span-3' : '' } ${(index-4) % 7 === 0? 'row-span-2 col-span-2' : '' }` : '',
             (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 900 && screenWidth <= 1199 ? `${mosaicArray2.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
             (draftLayoutType ?? savedLayoutType) === 'Mosaic' && screenWidth > 600 && screenWidth <= 899 ? `${ mosaicArray.includes(index) ? 'row-span-2 col-span-2' : '' }` : '',
-            (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'col-start-2 col-span-1 sm:col-start-2 mb-4' : '',
+            (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'col-start-2 col-start-2 minmd:col-span-1 mb-4' : '',
           )}
         >
           <NFTCard

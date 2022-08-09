@@ -8,6 +8,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { DeployedCollectionsGallery } from './DeployedCollectionsGallery';
 import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
@@ -30,6 +31,7 @@ export interface MintedProfileProps {
 export function MintedProfile(props: MintedProfileProps) {
   const { profileURI, addressOwner } = props;
   const [isPicturedHovered, setIsPicturedHovered] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<'nfts' | 'deployed'>('nfts');
 
   const {
     editMode,
@@ -39,7 +41,8 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftHeaderImg,
     setDraftProfileImg,
     userIsAdmin,
-    publiclyVisibleNftCount
+    publiclyVisibleNftCount,
+    draftDeployedContractsVisible
   } = useContext(ProfileContext);
 
   const { address: currentAddress } = useAccount();
@@ -47,6 +50,8 @@ export function MintedProfile(props: MintedProfileProps) {
   const { profileData } = useProfileQuery(profileURI);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
+
+  const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -100,7 +105,7 @@ export function MintedProfile(props: MintedProfileProps) {
                   </div>
                   {editMode && <div
                     className={tw(
-                      'absolute bottom-5 xs:right-6 sm:right-3 md:right-4 right-4'
+                      'absolute bottom-5 right-5 minmd:right-4'
                     )}
                     onClick={open}
                   >
@@ -113,20 +118,20 @@ export function MintedProfile(props: MintedProfileProps) {
         </BannerWrapper>
       </div>
       <div className={tw(
-        'flex flex-col',
+        'flex-col',
         'max-w-7xl min-w-[60%]',
-        isMobile ? 'mx-2' : 'sm:mx-2 lg:mx-8 mx-auto',
+        isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
       )}>
         <div
           className={tw(
-            'flex justify-start items-center sm:flex-col sm:items-start',
+            'flex flex-col minmd:flex-row justify-start items-start minmd:items-center',
           )}
           style={{
             zIndex: 103,
           }}
         >
           <div
-            className="sm:block flex items-end"
+            className="block minmd:flex items-end"
             onMouseEnter={() => setIsPicturedHovered(true)}
             onMouseLeave={() => setIsPicturedHovered(false)}>
             <Dropzone
@@ -140,7 +145,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 <div {...getRootProps()} className={tw(
                   'relative outline-none',
                   userIsAdmin ? '' : 'cursor-default',
-                  'h-52 w-52 md:h-32 md:w-32',
+                  'h-32 minlg:h-52 w-32 minlg:w-52 ',
                 )}>
                   <input {...getInputProps()} />
                   {saving && <div
@@ -148,7 +153,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     className={tw(
                       'rounded-full absolute flex border bg-white/10',
                       'items-center justify-center h-full w-full',
-                      'xs:mt-[-60px] sm:mt-[-67px] md:mt-[-120px]  mt-[-115px] absolute'
+                      'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                     )}
                   >
                     <Loader/>
@@ -157,11 +162,11 @@ export function MintedProfile(props: MintedProfileProps) {
                     style={{ zIndex: 102, }}
                     className={tw(
                       isPicturedHovered ? 'opacity-100' : 'opacity-30',
-                      'absolute xs:right-5 sm:right-4 md:right-4 lg:right-9 right-6',
-                      'xs:bottom-[5.5rem] sm:bottom-24 md:bottom-[9.5rem] lg:bottom-[9.5rem] bottom-40'
+                      'absolute right-4 minlg:right-9 minxl:right-6',
+                      'bottom-24 minmd:bottom-[9.5rem] minlg:bottom-[9.5rem] minxl:bottom-40'
                     )}
                   >
-                    <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-10 w-10 md:h-6 md:w-6 cursor-pointer'/>
+                    <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-6 minlg:h-10 w-6 minlg:w-10  cursor-pointer'/>
                   </div>}
                   <img
                     src={
@@ -180,7 +185,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       'shrink-0 aspect-square',
                       userIsAdmin && editMode ? 'cursor-pointer' : '',
                       userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
-                      'xs:mt-[-60px] sm:mt-[-67px] md:mt-[-120px]  mt-[-115px] absolute'
+                      'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                     )}
                     style={{ zIndex: 101, }}
                   />
@@ -193,11 +198,42 @@ export function MintedProfile(props: MintedProfileProps) {
             profileURI={profileURI}
           />
         </div>
+        {
+          showDeployedTab &&
+          <div className={tw(
+            'flex w-full px-12',
+            editMode ? 'mt-20 mb-4' : 'sm:mt-5 mb-4'
+          )}>
+            <span
+              onClick={() => {
+                setSelectedTab('nfts');
+              }}
+              className={tw(
+                'cursor-pointer text-white text-lg tracking-wide mr-4',
+                selectedTab === 'nfts' ? 'dark:text-white' : 'text-secondary-txt'
+              )}
+            >
+              NFTs
+            </span>
+            <span
+              onClick={() => {
+                setSelectedTab('deployed');
+              }}
+              className={tw(
+                'cursor-pointer text-lg tracking-wide',
+                selectedTab === 'deployed' ? 'dark:text-white' : 'text-secondary-txt'
+              )}
+            >
+              Created Collections
+            </span>
+          </div>
+        }
         <div
           className={tw(
             'h-full',
-            editMode ? 'sm:mt-28 md:mt-12 lg:mt-8 mt-12' : 'sm:mt-5',
+            editMode && !showDeployedTab ? 'mt-28 minmd:mt-16' : 'mt-5 minmd:mt-0',
             'w-full justify-start space-y-4 flex flex-col',
+            selectedTab === 'nfts' ? 'flex' : 'hidden'
           )}
         >
           {
@@ -212,7 +248,7 @@ export function MintedProfile(props: MintedProfileProps) {
                   addressOwner !== currentAddress ? 'cursor-pointer ' : ''
                 )}
                 >
-                  <div className="mx-auto md:text-base lg:text-lg text-xl w-3/5 md:text-center text-left font-bold">
+                  <div className="mx-auto text-base minlg:text-lg minxl:text-xl w-3/5 text-center minlg:text-left font-bold">
                     <div
                       onClick={() => {
                         if (addressOwner !== currentAddress) {
@@ -222,13 +258,13 @@ export function MintedProfile(props: MintedProfileProps) {
                           );
                         }
                       }}
-                      className="lg:text-sm text-lg text-center font-bold"
+                      className="text-sm minxl:text-lg text-center font-bold"
                     >
                       {addressOwner === currentAddress ? 'You own this profile.' :'This profile is owned by ' + shortenAddress(addressOwner)}
                     </div>
                   </div>
                   <div className="mx-auto text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col">
-                    <div className="lg:text-sm text-lg md:mb-8 mt-8 w-full text-center">
+                    <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
                       {addressOwner === currentAddress ?
                         <p className='mx-8'>
                         As we roll out new features, you can return here for the latest NFT.com news, discover{' '}
@@ -241,13 +277,22 @@ export function MintedProfile(props: MintedProfileProps) {
                         Learn how to claim a profile for your own by visiting either NFT.com or our Support knowledge base.
                         </p>}
                     </div>
-                    <div className="lg:mt-10 mt-24 w-full flex justify-center mb-24 sm:px-4">
+                    <div className="mt-10 minxl:mt-24 w-full flex justify-center mb-24 px-4 minmd:px-0">
                       <LinksToSection isAddressOwner={addressOwner === currentAddress}/>
                     </div>
                   </div>
                 </div>
               </>
           }
+        </div>
+        <div
+          className={tw(
+            'h-full sm:mt-5',
+            'w-full justify-start space-y-4 flex flex-col',
+            selectedTab === 'deployed' ? 'flex' : 'hidden'
+          )}
+        >
+          <DeployedCollectionsGallery address={addressOwner} />
         </div>
       </div>
       <div className="flex grow" />

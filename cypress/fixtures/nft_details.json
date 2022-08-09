@@ -5,8 +5,8 @@
         "expectedName": "NFT.com Genesis Key #00330"
     },
     "testnet": {
-        "contract": "0x530E404f51778F38249413264ac7807A16b88603",
-        "tokenId": "330",
-        "expectedName": "NFT.com Genesis Key #00002"
+        "contract": "0xe0060010c2c81A817f4c52A9263d4Ce5c5B66D55",
+        "tokenId": "4960",
+        "expectedName": "NFT.com Genesis Key #4960"
     }
 }

@@ -7,7 +7,6 @@ import { getSigners, setupWagmiClient } from '../../util/utils';
 
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { MockConnector } from '@wagmi/core/connectors/mock';
-import { BigNumber } from 'ethers';
 import { chain, configureChains, useDisconnect, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
@@ -30,28 +29,18 @@ const { chains } = configureChains(
 
 const TestComponent = () => {
   const { disconnect } = useDisconnect();
-  const { user, loading, setDarkMode, setCurrentProfileTokenId } = useUser();
+  const { user, loading, setDarkMode } = useUser();
   return <div>
     <button onClick={() => {
       setDarkMode(true);
-      setCurrentProfileTokenId(null);
     }}>reset state</button>
     <br />
-    {loading ? 'Loading...' : `CurrentProfileTokenId: ${user.currentProfileTokenId}`}
     <br />
     {loading ? '' : `isDarkMode: ${user.isDarkMode}`}
     <br />
     <button onClick={() => {
       setDarkMode(!user.isDarkMode);
     }}>toggleDarkMode</button>
-    <br />
-    <button onClick={() => {
-      setCurrentProfileTokenId(BigNumber.from('1'));
-    }}>setCurrentProfileTokenId</button>
-    <br />
-    <button onClick={() => {
-      setCurrentProfileTokenId(null);
-    }}>clearCurrentProfileTokenId</button>
     <br />
     <button onClick={() => {
       disconnect();
@@ -87,32 +76,9 @@ describe('useUser', () => {
     beforeEach(() => {
       cy.contains('reset state').click();
     });
-    it('user state should contain default values', () => {
-      cy.get('div').should('contain', 'CurrentProfileTokenId: null');
-      cy.get('div').should('contain', 'isDarkMode: true');
-    });
     it('should set isDarkMode to false when toggleDarkMode is clicked', () => {
       cy.get('button').contains('toggleDarkMode').click();
       cy.get('div').should('contain', 'isDarkMode: false');
     });
-    it('should set currentProfileTokenId to 1 when setCurrentProfileTokenId is clicked', () => {
-      cy.get('button').contains('setCurrentProfileTokenId').click();
-      cy.get('div').should('contain', 'CurrentProfileTokenId: 1');
-    });
-  });
-  context('when user state is set', () => {
-    beforeEach(() => {
-      cy.contains('setCurrentProfileTokenId').click();
-    });
-    it('user profile token should reset when cleared', () => {
-      cy.get('div').should('contain', 'CurrentProfileTokenId: 1');
-      cy.get('button').contains('clearCurrentProfileTokenId').click();
-      cy.get('div').should('contain', 'CurrentProfileTokenId: null');
-    });
-    // it('user profile token should reset when disconnected', () => {
-    //   cy.get('div').should('contain', 'CurrentProfileTokenId: 1');
-    //   cy.get('button').contains('Disconnect').click();
-    //   cy.get('div').should('contain', 'CurrentProfileTokenId: null');
-    // });
   });
 });

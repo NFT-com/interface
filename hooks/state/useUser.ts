@@ -1,25 +1,21 @@
-import { BigNumber } from 'ethers';
+import { isNullOrEmpty } from 'utils/helpers';
+
 import { useCallback,useEffect } from 'react';
 import useSWR from 'swr';
 
 export interface UserState {
   currentProfileUrl: string
   isDarkMode: boolean;
-  currentProfileTokenId: BigNumber | null;
   hiddenProfile: string[];
 }
 
-export const userStateInitial: UserState = {
-  isDarkMode: true,
-  currentProfileUrl: '',
-  currentProfileTokenId: (typeof window !== 'undefined')
-    ? (localStorage.getItem('selectedProfileTokenId') ? BigNumber.from(localStorage.getItem('selectedProfileTokenId')) : null)
-    : null,
-  hiddenProfile: []
-};
-
 export function useUser() {
-  const { data, mutate } = useSWR('user', { fallbackData: userStateInitial });
+  const { data, mutate } = useSWR('user', {
+    fallbackData: {
+      isDarkMode: true,
+      currentProfileUrl: '',
+    }
+  });
 
   const loading = !data;
   const setDarkMode = (darkMode: boolean) => {
@@ -29,12 +25,12 @@ export function useUser() {
     });
   };
 
-  const setCurrentProfileUrl = useCallback((selectedProfileUrl: string) => {
+  const setCurrentProfileUrl= useCallback((selectedProfileUrl: string | null) => {
     mutate({
       ...data,
       currentProfileUrl: selectedProfileUrl
     });
-    localStorage.setItem('selectedProfileUrl', selectedProfileUrl === '' ? '' : selectedProfileUrl);
+    localStorage.setItem('selectedProfileUrl', isNullOrEmpty(selectedProfileUrl) ? '' : selectedProfileUrl);
   }, [data, mutate]);
 
   const setHiddenProfileWithExpiry = useCallback((profileToHide: string) => {
@@ -65,14 +61,6 @@ export function useUser() {
     return item.value;
   }, []);
 
-  const setCurrentProfileTokenId = useCallback((selectedProfileTokenId: BigNumber | null) => {
-    mutate({
-      ...data,
-      currentProfileTokenId: selectedProfileTokenId
-    });
-    localStorage.setItem('selectedProfileTokenId', !selectedProfileTokenId ? null : selectedProfileTokenId?.toString());
-  }, [data, mutate]);
-
   const getCurrentProfileUrl = useCallback(() => {
     return typeof window !== 'undefined' ? localStorage?.getItem('selectedProfileUrl') : '';
   }, []);
@@ -94,7 +82,6 @@ export function useUser() {
     loading,
     setDarkMode,
     setCurrentProfileUrl,
-    setCurrentProfileTokenId,
     getCurrentProfileUrl,
     setHiddenProfileWithExpiry,
     getHiddenProfileWithExpiry
