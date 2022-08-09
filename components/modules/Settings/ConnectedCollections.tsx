@@ -108,7 +108,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
           <p className='mt-2 mb-4 text-[#6F6F6F]'>Enter the new address of the NFT collection you want to display on your profile.</p>
           <SettingsForm submitHandler={async () => {
             setChangeCollection(false);
-            await getContractMetadata(inputVal)
+            await lookupCollectionName(inputVal)
               .then((res) => {
                 setVisible(true);
                 setCollectionNameModal(res?.contractMetadata?.name);
