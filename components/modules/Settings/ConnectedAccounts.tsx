@@ -37,7 +37,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const [inputVal, setInputVal] = useState('');
   
   const [transaction, setTransaction] = useState('');
-  const [isAssociated, setIsAssociated] = useState(false);
+  const [isAssociatedOrSelf, setIsAssociatedOrSelf] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [success, setSuccess] = useState(false);
   const { updateHideIgnored } = useUpdateHideIgnored();
@@ -68,19 +68,19 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   };
 
   useEffect(() => {
-    if(associatedAddresses.pending.find(element => element.chainAddr === inputVal) || associatedAddresses.accepted.find(element => element.chainAddr === inputVal)){
-      setIsAssociated(true);
+    if(associatedAddresses.pending.find(element => element.chainAddr === inputVal) || associatedAddresses.accepted.find(element => element.chainAddr === inputVal) || inputVal === currentAddress){
+      setIsAssociatedOrSelf(true);
     } else {
-      setIsAssociated(false);
+      setIsAssociatedOrSelf(false);
     }
-  }, [inputVal, associatedAddresses]);
+  }, [inputVal, associatedAddresses, currentAddress]);
   
   return (
     <div id="wallets" className='mt-8 font-grotesk'>
       <h3 className='text-base font-semibold tracking-wide mb-1'>Connected Wallets</h3>
       <p className='text-blog-text-reskin mb-4'>Display NFTs from other Ethereum wallets on your profile.</p>
       
-      <SettingsForm buttonText='Request Connection' submitHandler={openModal} {...{ inputVal, isAssociated }} changeHandler={setInputVal} />
+      <SettingsForm buttonText='Request Connection' submitHandler={openModal} {...{ inputVal, isAssociatedOrSelf }} changeHandler={setInputVal} />
 
       {associatedAddresses?.accepted?.length || associatedAddresses?.pending?.length
         ? (
