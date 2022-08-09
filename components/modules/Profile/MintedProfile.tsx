@@ -92,7 +92,7 @@ export function MintedProfile(props: MintedProfileProps) {
   };
   
   if (associatedContract != null) {
-    return <div className='w-full h-full light'>
+    return <div className='w-full h-full'>
       <Collection contract={associatedContract?.['chainAddr']} />
     </div>;
   }

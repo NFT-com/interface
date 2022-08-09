@@ -54,7 +54,7 @@ export function Collection(props: CollectionProps) {
       <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
         {collectionNfts.length > 0 ?
           <>
-            <div className="font-grotesk font-black text-4xl">{collectionNfts[0].document.contractName}</div>
+            <div className="font-grotesk font-black dark:text-white text-4xl">{collectionNfts[0].document.contractName}</div>
             <div className="mb-7 text-4xl">
               <Copy lightModeForced toCopy={props.contract?.toString()} after>
                 {shortenAddress(props.contract?.toString())}
