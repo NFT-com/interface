@@ -135,7 +135,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               )}
               maxLength={300}
               placeholder="Enter bio (optional)"
-              value={draftBio ?? profileData?.profile?.description}
+              value={draftBio ?? profileData?.profile?.description ?? ''}
               onChange={e => {
                 handleBioChange(e);
               }}
