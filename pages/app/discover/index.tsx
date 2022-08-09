@@ -17,7 +17,7 @@ import { useRouter } from 'next/router';
 import CaretCircle from 'public/caret_circle.svg';
 import Flask from 'public/flask.svg';
 import Vector from 'public/Vector.svg';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Loader } from 'react-feather';
 import { useNetwork } from 'wagmi';
 
@@ -67,7 +67,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
               active === 'Art' ? 'bg-[#F9D963] text-black font-black': 'text-blog-text-reskin font-bold' )}
             onClick={() => {
               setActive('Art');
-              props.onClick('col');
+              props.onClick('');
             }}
           >
             Art
@@ -128,6 +128,14 @@ const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; c
   );
 };
 
+function usePrevious(value) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 export default function DiscoverPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
@@ -135,21 +143,37 @@ export default function DiscoverPage() {
   const [collectionsResults, setCollectionsResults] = useState([]);
   const [found, setFound] = useState(0);
   const { width: screenWidth } = useWindowDimensions();
+  const prevVal = usePrevious(page);
 
   useEffect(() => {
-    screenWidth && fetchTypesenseSearch({
+    if (page > 1 && page !== prevVal) {
+      screenWidth && fetchTypesenseSearch({
+        index:'collections',
+        query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
+        q: searchTerm,
+        per_page: screenWidth >= 600 && screenWidth < 899 ? 4 : 2,
+        page: page,
+      })
+        .then((results) => {
+          setCollectionsResults([...collectionsResults,...results.hits]);
+          setFound(results.found);
+        });
+    }
+  }, [fetchTypesenseSearch, page, searchTerm, screenWidth, collectionsResults, prevVal]);
+
+  useEffect(() => {
+    page === 1 && fetchTypesenseSearch({
       index:'collections',
       query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
-      q: searchTerm,
+      q: 'nft',
       per_page: screenWidth >= 600 && screenWidth < 899 ? 4 : 2,
-      page: page,
+      page: 1,
     })
       .then((results) => {
-        setCollectionsResults([...collectionsResults,...results.hits]);
+        setCollectionsResults([...results.hits]);
         setFound(results.found);
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchTypesenseSearch, page, searchTerm, screenWidth]);
+  }, [fetchTypesenseSearch, screenWidth, page] );
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
     return <NotFoundPage />;
