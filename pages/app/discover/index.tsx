@@ -103,7 +103,6 @@ const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; c
         first: 3,
         afterCursor: null, }
     }).then((collectionsData => {
-      console.log(collectionsData, 'collectionsData fdo');
       setCount(collectionsData?.collectionNFTs.items.length);
       images.push(collectionsData?.collectionNFTs.items[0]?.metadata.imageURL);
       images.push(collectionsData?.collectionNFTs.items[1]?.metadata.imageURL);
