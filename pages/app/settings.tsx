@@ -3,6 +3,7 @@ import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import HomeLayout from 'components/layouts/HomeLayout';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import ConnectedAccounts from 'components/modules/Settings/ConnectedAccounts';
 import ConnectedProfiles from 'components/modules/Settings/ConnectedProfiles';
 import DisplayMode from 'components/modules/Settings/DisplayMode';
@@ -101,6 +102,7 @@ export default function Settings() {
       <ClientOnly>
         <Header bgLight />
         <Sidebar />
+        <SearchModal />
       </ClientOnly>
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>

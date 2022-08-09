@@ -43,6 +43,8 @@ export interface NFTCardProps {
   customBorderRadius?: string;
   imageLayout?: 'row' | 'grid';
   nftsDescriptionsVisible?: boolean;
+  customBorder?: string;
+  lightModeForced?: boolean;
 }
 
 export function NFTCard(props: NFTCardProps) {
@@ -78,7 +80,8 @@ export function NFTCard(props: NFTCardProps) {
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
-          'w-full',
+          'w-full min-h-[inherit]',
+        props.customBorder ?? '',
         'justify-between cursor-pointer transform hover:scale-105',
         'overflow-hidden',
       )}
@@ -179,7 +182,7 @@ export function NFTCard(props: NFTCardProps) {
           ' text-base minmd:text-lg minlg:text-xl minxl:text-2xl font-semibold truncate',
           isNullOrEmpty(props.title) ?
             'text-secondary-txt' :
-            'text-primary-txt dark:text-primary-txt-dk'
+            props.lightModeForced ? 'text-primary-txt':'text-primary-txt dark:text-primary-txt-dk'
         )}>
           {isNullOrEmpty(props.title) ? 'Unknown Name' : props.title}
         </span>

@@ -209,6 +209,20 @@ export type CollectionNfTsInput = {
   pageInput?: InputMaybe<PageInput>;
 };
 
+export type TypesenseSearchInput = {
+  collection?: InputMaybe<Scalars['String']>;
+  index?: InputMaybe<Scalars['String']>;
+  q: Scalars['String'];
+  query_by: Scalars['String'];
+  //searchTerm: Scalars['String'] | Array<Scalars['String'] >;
+  per_page: Scalars['Int'];
+  page: Scalars['Int'];
+};
+
+export type TypesenseMultiSearchInput = {
+  searches: Array<TypesenseSearchInput>;
+};
+
 export type ConvertEnsToEthAddress = {
   __typename?: 'ConvertEnsToEthAddress';
   ethAddresses: Array<Scalars['String']>;
