@@ -7,6 +7,7 @@ import { getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
+import { remove } from 'jszip';
 import { CheckCircle, Clock, GasPump, Trash, XCircle } from 'phosphor-react';
 import { useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
@@ -23,9 +24,10 @@ type AssociatedProfileProps = {
     id?: string
   }
   pending?: boolean;
+  remove?: () => void
 };
 
-export default function AssociatedProfile({ profile, pending }: AssociatedProfileProps) {
+export default function AssociatedProfile({ profile, pending, remove }: AssociatedProfileProps) {
   const { mutate: mutatePending } = usePendingAssociationQuery();
   const { ignoreAssociations } = useIgnoreAssociationsMutation();
   const [rejected, setRejected] = useState(false);
@@ -120,7 +122,7 @@ export default function AssociatedProfile({ profile, pending }: AssociatedProfil
         </div>
   
         <div className='flex items-center'>
-          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => setRemoveModalVisible(true)} />
+          <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => remove ? remove() : setRemoveModalVisible(true)} />
         </div>
       </div>
 
