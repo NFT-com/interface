@@ -3,12 +3,14 @@ import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
 import { ProfileViewType } from 'graphql/generated/types';
+import { useAssociatedCollectionForProfile } from 'graphql/hooks/useAssociatedCollectionForProfileQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { DeployedCollectionsGallery } from './DeployedCollectionsGallery';
@@ -55,7 +57,7 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const { nftResolver } = useAllContracts();
   const { data: signer } = useSigner();
-  const { data: associatedContract } = useSWR(
+  const { data: associatedContract } = useSWR<AddressTupleStructOutput>(
     'AssociatedCollection' + profileURI + profileData?.profile?.profileView,
     async () => {
       if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
@@ -64,6 +66,16 @@ export function MintedProfile(props: MintedProfileProps) {
       return await nftResolver.connect(signer).associatedContract(profileURI).catch(() => null);
     }
   );
+  const { data: associatedAddresses } = useSWR<AddressTupleStructOutput[]>(
+    'AssociatedAddresses' + profileURI + profileData?.profile?.profileView,
+    async () => {
+      if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
+        return null;
+      }
+      return await nftResolver.connect(signer).associatedAddresses(profileURI).catch(() => null);
+    }
+  );
+  const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
@@ -91,9 +103,12 @@ export function MintedProfile(props: MintedProfileProps) {
     }
   };
   
-  if (associatedContract != null) {
+  if (
+    associatedContract != null &&
+    associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer))
+  ) {
     return <div className='w-full h-full'>
-      <Collection contract={associatedContract?.['chainAddr']} />
+      <Collection contract={associatedContract?.chainAddr} />
     </div>;
   }
 
