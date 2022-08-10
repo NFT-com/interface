@@ -26,9 +26,10 @@ type AssociatedProfileProps = {
   pending?: boolean;
   remove?: () => void
   isCollection?: boolean
+  isRemoved?: boolean
 };
 
-export default function AssociatedProfile({ profile, pending, remove, isCollection }: AssociatedProfileProps) {
+export default function AssociatedProfile({ profile, pending, remove, isCollection, isRemoved }: AssociatedProfileProps) {
   const { mutate: mutatePending } = usePendingAssociationQuery();
   const { ignoreAssociations } = useIgnoreAssociationsMutation();
   const [rejected, setRejected] = useState(false);
@@ -71,7 +72,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   return (
     <>
       <div className='p-1 flex justify-between items-start mb-3'>
-        <div className='flex items-start truncate'>
+        <div className='flex items-start'>
           {pending ?
             <CustomTooltip
               mode="hover"
@@ -87,35 +88,51 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               <Clock size={25} className='mr-3' color='orange' weight='fill' />
             </CustomTooltip>
             :
-            <CustomTooltip
-              mode="hover"
-              tooltipComponent={
-                <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white"
+            isCollection && isRemoved
+              ?
+              (
+                <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+              )
+              :
+              (
+                <CustomTooltip
+                  mode="hover"
+                  tooltipComponent={
+                    <div
+                      className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                    >
+                      <p className='text-[#00AC30] mb-2'>Connected</p>
+                      <p>You have authorized this connection.</p>
+                    </div>
+                  }
                 >
-                  <p className='text-[#00AC30] mb-2'>Connected</p>
-                  <p>You have authorized this connection.</p>
-                </div>
-              }
-            >
-              <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
-            </CustomTooltip>
+                  <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
+                </CustomTooltip>
+              )
           }
           <div className='w-3/4'>
             <p onClick={pending ? () => setVisible(true) : null} className='truncate text-black text-sm font-grotesk font-semibold tracking-wide'>{profile.profileUrl || profile.url}</p>
             <div className="flex items-center w-full">
               <div className="flex w-full items-center justify-between">
                 <div>
-                  <ExternalLink
-                    href={getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address')}
-                  >
-                    <div
-                      className='flex justify-between font-mono text-blog-text-reskin text-sm font-medium'
-                    >
-                      {shortenAddress(profile?.addr || profile?.owner)}
-                      <LinkIcon size={18} className='ml-2'/>
-                    </div>
-                  </ExternalLink>
+                  {isCollection && isRemoved
+                    ?
+                    (
+                      <p className='text-[#6F6F6F] text-sm mt-1'>The deployer wallet associated to this collection has been disconnected from your account. Please connect another collection.</p>
+                    )
+                    :
+                    (
+                      <ExternalLink
+                        href={getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address')}
+                      >
+                        <div
+                          className='flex justify-between font-mono text-blog-text-reskin text-sm font-medium'
+                        >
+                          {shortenAddress(profile?.addr || profile?.owner)}
+                          <LinkIcon size={18} className='ml-2'/>
+                        </div>
+                      </ExternalLink>
+                    )}
                 </div>
               </div>
             </div>

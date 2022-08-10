@@ -1,14 +1,17 @@
 import { Modal } from 'components/elements/Modal';
+import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
 import { useAssociatedAddressesForContractQuery } from 'graphql/hooks/useAssociatedAddressesForContractQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { getContractMetadata } from 'utils/alchemyNFT';
+import { sameAddress } from 'utils/helpers';
 
 import AssociatedProfile from './AssociatedProfile';
 import SettingsForm from './SettingsForm';
 
 import { GasPump, XCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import useSWR from 'swr';
+import { useAccount, useSigner } from 'wagmi';
 
 type ConnectedCollectionsProps = {
   selectedProfile: string;
@@ -16,10 +19,12 @@ type ConnectedCollectionsProps = {
 
 export default function ConnectedCollections({ selectedProfile }: ConnectedCollectionsProps) {
   const { address: currentAddress } = useAccount();
+  const { data: signer } = useSigner();
   const { nftResolver } = useAllContracts();
   const [connectedCollection, setConnectedCollection] = useState(null);
   const [inputVal, setInputVal] = useState<string>('');
-  const { data, mutate: mutateContract } = useAssociatedAddressesForContractQuery({ contract: inputVal });
+  const { data } = useAssociatedAddressesForContractQuery({ contract: connectedCollection?.chainAddr });
+  const { data: newCollection, mutate: mutateNewCollectionContract } = useAssociatedAddressesForContractQuery({ contract: inputVal });
   const [visible, setVisible] = useState(false);
   const [success, setSuccess] = useState(false);
   const [changeCollection, setChangeCollection] = useState(false);
@@ -27,6 +32,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
   const [collectionNameModal, setCollectionNameModal] = useState('');
   const [collectionName, setCollectionName] = useState('');
   const [notAuthorized, setNotAuthorized] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [isAssociatedOrSelf, setIsAssociatedOrSelf] = useState(false);
 
   const fetchAssociatedCollection = useCallback(
@@ -40,6 +46,13 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         });
     },
     [nftResolver],
+  );
+
+  const { data: associatedAddresses } = useSWR<AddressTupleStructOutput[]>(
+    'AssociatedAddresses' + selectedProfile,
+    async () => {
+      return await nftResolver.connect(signer).associatedAddresses(selectedProfile).catch(() => null);
+    }
   );
 
   useEffect(() => {
@@ -60,13 +73,16 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
   }, [fetchAssociatedCollection, selectedProfile, currentAddress]);
 
   useEffect(() => {
-    if(data && !data?.associatedAddressesForContract?.deployerIsAssociated){
+    if(newCollection && !newCollection?.associatedAddressesForContract?.deployerIsAssociated){
       setNotAuthorized(true);
     }
-    if(data !== undefined){
+    if(newCollection !== undefined){
       setLookupInProgress(false);
     }
-  }, [data]);
+    if(data){
+      setLoading(false);
+    }
+  }, [newCollection, data]);
 
   const openModal = async () => {
     setVisible(true);
@@ -79,7 +95,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
   const changeHandler = async (e) => {
     setInputVal(e);
-    mutateContract();
+    mutateNewCollectionContract();
   };
 
   const removeHandler = async () => {
@@ -99,7 +115,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
     const changeHandlerModal = async (e) => {
       setInputVal(e);
-      mutateContract();
+      mutateNewCollectionContract();
     };
 
     if(changeCollection){
@@ -114,6 +130,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
               .then((res) => {
                 setVisible(true);
                 setCollectionNameModal(res?.contractMetadata?.name);
+                setLookupInProgress(true);
               });
           }} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandlerModal} {...{ isAssociatedOrSelf }} />
         </>
@@ -173,7 +190,9 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <p className='mt-2 text-[#6F6F6F] mb-10'>We’re making sure everything looks good on our end.</p>
       </>
     );
-  }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateContract, collectionNameModal, isAssociatedOrSelf]);
+  }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateNewCollectionContract, collectionNameModal, isAssociatedOrSelf]);
+
+  console.log(associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress)));
 
   return (
     <>
@@ -181,12 +200,21 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <h3 className='text-base font-semibold tracking-wide mb-1'>NFT Collection</h3>
         <p className='text-blog-text-reskin mb-4'>Enter the NFT collection you want to display on your profile.</p>
 
-        {!connectedCollection?.chainAddr? <SettingsForm {...{ isAssociatedOrSelf }} submitHandler={openModal} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandler} /> : null}
+        {
+          !connectedCollection?.chainAddr ||
+          !associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress)) && !loading
+            ? <SettingsForm {...{ isAssociatedOrSelf }} submitHandler={openModal} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandler} />
+            : null
+        }
 
-        {connectedCollection?.chainAddr
-          ? <div className='mt-4 md:w-full w-3/4'>
+        {connectedCollection?.chainAddr && data && !loading
+          ?
+          <div className='mt-4 md:w-full w-3/4'>
             <AssociatedProfile
               isCollection
+              isRemoved={
+                !associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress))
+              }
               profile={{
                 url: collectionName || connectedCollection.chainAddr,
                 addr: connectedCollection.chainAddr
@@ -194,7 +222,11 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
               remove={removeHandler}
             />
           </div>
-          : null}
+          :
+          <div className='mt-4 md:w-full w-3/4'>
+            <p>Loading...</p>
+          </div>
+        }
       </div>
 
       <Modal
@@ -219,7 +251,12 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
                 setLookupInProgress(true);
                 setInputVal('');
                 setNotAuthorized(false);
-              }} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+              }}
+              className='absolute top-3 right-0 hover:cursor-pointer'
+              size={32}
+              color="#B6B6B6"
+              weight="fill"
+            />
             {getModalContent()}
           </div>
         </div>
