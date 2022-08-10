@@ -79,7 +79,7 @@ export const HeroSidebarGenesisKey = (props: HeroSidebarGenesisKeyProps) => {
                 />
               </div> :
               <GkCircleGeneric
-                className='flex-shrink-0 aspect-square h-9'
+                className='flex-shrink-0 aspect-square h-9 mr-4'
                 alt="genesis key generic"
               />
             }
