@@ -1,24 +1,28 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
-import { shortenAddress } from 'utils/helpers';
+import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
+import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
-import { CheckCircle, Clock, Trash, XCircle } from 'phosphor-react';
+import { CheckCircle, Clock, DotsThreeOutlineVertical, XCircle } from 'phosphor-react';
 import { useState } from 'react';
+import { useNetwork } from 'wagmi';
 
 type AssociatedAddressProps = {
   address: string;
   pending?: boolean;
   rejected?: boolean;
   remove: (type: string, address: string) => void;
+  submit?: (address: string) => void;
 };
 
-export default function AssociatedAddress({ address, pending, rejected, remove }: AssociatedAddressProps) {
+export default function AssociatedAddress({ address, pending, rejected, remove, submit }: AssociatedAddressProps) {
+  const { chain } = useNetwork();
   const [removeModalVisible, setRemoveModalVisible] = useState(false);
   return (
     <>
       <div className='p-1 flex  justify-between mb-1 font-mono text-sm'>
-        <div className='flex row '>
+        <div className='flex row items-center'>
           {pending || rejected ?
             pending ?
               (
@@ -74,7 +78,32 @@ export default function AssociatedAddress({ address, pending, rejected, remove }
                 
         <div className='flex items-center w-1/2 justify-between'>
           <p>Ethereum</p>
-          <Trash weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => setRemoveModalVisible(true)} size={25}/>
+          <DropdownPickerModal
+            forceLightMode
+            constrain
+            selectedIndex={0}
+            options={filterNulls([
+              {
+                label: 'Remove',
+                onSelect: () => setRemoveModalVisible(true),
+                icon: null,
+              },
+              {
+                label: 'View on Etherscan',
+                onSelect: () => {
+                  window.open(getEtherscanLink(chain?.id, address, 'address'));
+                },
+                icon: null,
+              },
+              rejected && {
+                label: 'Resend Request',
+                onSelect: () => submit(address),
+                icon: null,
+              },
+            ])
+            }>
+            <DotsThreeOutlineVertical size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
+          </DropdownPickerModal>
         </div>
       </div>
       <RemoveModal {...{ address, remove }} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />
