@@ -123,7 +123,7 @@ export function NFTListingsContextProvider(
         await listLooksrare({ ...order, signature });
         // todo: check success/failure and maybe mutate external listings query.
       } else {
-        const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
+        const parameters: SeaportOrderParameters = await createSeaportParametersForNFTListing(
           currentAddress,
           listing.nft,
           listing.startingPrice,
