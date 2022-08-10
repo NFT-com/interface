@@ -1,13 +1,15 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { Nft } from 'graphql/generated/types';
+import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
-import { filterNulls, processIPFSURL } from 'utils/helpers';
-import { getLooksrareNonce, getOpenseaCollection, listLooksrare, listSeaport } from 'utils/listings';
+import { Doppler, getEnv } from 'utils/env';
+import { filterNulls, getChainIdString, processIPFSURL } from 'utils/helpers';
+import { getLooksrareNonce, getOpenseaCollection } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
@@ -81,6 +83,8 @@ export function NFTListingsContextProvider(
   const seaportCounter = useSeaportCounter(currentAddress);
   const signOrderForSeaport = useSignSeaportOrder();
 
+  const { listNftSeaport, listNftLooksrare } = useListNFTMutations();
+
   const openListingBuilder = useCallback((type: ListingType, nft: PartialDeep<Nft>) => {
     setListingBuilderData({ type, nft });
   }, []);
@@ -120,7 +124,7 @@ export function NFTListingsContextProvider(
         );
         nonce++;
         const signature = await signOrderForLooksrare(order);
-        await listLooksrare({ ...order, signature });
+        await listNftLooksrare({ ...order, signature });
         // todo: check success/failure and maybe mutate external listings query.
       } else {
         const contract = await getOpenseaCollection(listing?.nft?.contract);
@@ -134,14 +138,15 @@ export function NFTListingsContextProvider(
           currentAddress,
           listing.nft,
           listing.startingPrice,
-          listing.endingPrice,
+          listing.endingPrice ?? listing.startingPrice,
           listing.currency,
           listing.duration,
           collectionFee,
+          getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
           // listing.takerAddress
         );
         const signature = await signOrderForSeaport(parameters, seaportCounter);
-        await listSeaport(signature , { ...parameters, counter: seaportCounter });
+        await listNftSeaport(signature , { ...parameters, counter: seaportCounter });
         // todo: check success/failure and maybe mutate external listings query.
         localStorage.setItem('stagedNftListings', null);
       }
@@ -149,6 +154,8 @@ export function NFTListingsContextProvider(
     setSubmitting(false);
     clear();
   }, [
+    listNftSeaport,
+    listNftLooksrare,
     currentAddress,
     chain?.id,
     looksrareRoyaltyFeeRegistry,
