@@ -80,7 +80,13 @@ const moduleExports = withTM({
     ];
   },
   images: {
-    domains: ['cdn.nft.com', 'nft-llc.mypinata.cloud', 'cdn.nft.com/_ipx', 'images.ctfassets.net'],
+    domains: [
+      'cdn.nft.com',
+      'nft-llc.mypinata.cloud',
+      'cdn.nft.com/_ipx',
+      'images.ctfassets.net',
+      'nftcom-dev-assets.s3.amazonaws.com'
+    ],
   },
 });
 

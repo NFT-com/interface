@@ -1,3 +1,4 @@
+import useCopyClipboard from 'hooks/useCopyClipboard';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -8,9 +9,12 @@ export interface NftDetailCardProps {
   valueClasses?: string;
   center?: boolean;
   onClick?: () => void;
+  copy?: boolean;
 }
 
 export function NftDetailCard(props: NftDetailCardProps) {
+  const [isCopied, staticCopy] = useCopyClipboard();
+
   return (
     <div
       className={tw(
@@ -18,10 +22,15 @@ export function NftDetailCard(props: NftDetailCardProps) {
         'flex w-full h-full',
         'bg-white dark:bg-secondary-bg-dk rounded-lg',
         'overflow-hidden',
+        props.copy && 'cursor-pointer',
         props.onClick &&
-       'transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out cursor-pointer'
+       'cursor-pointer transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out cursor-pointer'
       )}
-      onClick={() => props.onClick && props.onClick()}
+      onClick={props.copy
+        ? () => {
+          staticCopy(props.value);
+        }
+        : () => props.onClick && props.onClick()}
     >
 
       <div className={tw(
@@ -35,9 +44,10 @@ export function NftDetailCard(props: NftDetailCardProps) {
         </span>
         <span className={tw(
           'text-base dark:text-white',
+          'line-clamp-1 text-ellipsis',
           props.valueClasses
         )}>
-          {props.value}
+          {isCopied ? 'Copied!' : props.value}
         </span>
         {!isNullOrEmpty(props.subtitle) && <span className=''>{props.subtitle}</span>}
       </div>
