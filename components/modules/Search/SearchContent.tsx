@@ -93,7 +93,10 @@ export const SearchContent = () => {
         'text-xs text-blog-text-reskin font-medium bg-gray-200 py-3 px-5')}>
         <span>{title}</span>
         <span
-          onClick={() => null}
+          className="cursor-pointer hover:font-semibold"
+          onClick={() => {
+            router.push(`/app/discover/${collectionName}/${keyword}`);
+          }}
         >
           {found < 1 ? '': found > 1 ? 'SEE ALL ' + found : 'SEE ' + found }
         </span>
@@ -101,8 +104,8 @@ export const SearchContent = () => {
     );
   };
 
-  const ResultsContent = (searchResults) => {
-    return searchResults.map((item, index) => {
+  const ResultsContent = (data) => {
+    return data.searchResults && data.searchResults.length > 0 && data.searchResults.map((item, index) => {
       return (
         <>
           {resultTitle(item.found, item?.request_params?.collection_name)}
