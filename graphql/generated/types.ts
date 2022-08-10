@@ -1595,14 +1595,15 @@ export type TopBidsInput = {
 export type TxActivity = {
   __typename?: 'TxActivity';
   activityType: Scalars['String'];
+  activityTypeId: Scalars['String'];
   cancel?: Maybe<TxCancel>;
   chainId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   order?: Maybe<TxOrder>;
-  read: Scalars['String'];
+  read: Scalars['Boolean'];
   timestamp: Scalars['String'];
   transaction?: Maybe<TxTransaction>;
-  userId: Scalars['String'];
+  walletId: Scalars['String'];
 };
 
 export type TxCancel = {
@@ -1953,6 +1954,20 @@ export type IgnoreAssocationsMutationVariables = Exact<{
 
 export type IgnoreAssocationsMutation = { __typename?: 'Mutation', ignoreAssociations: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null } | null> };
 
+export type ListNftLooksrareMutationVariables = Exact<{
+  input: ListNftLooksrareInput;
+}>;
+
+
+export type ListNftLooksrareMutation = { __typename?: 'Mutation', listNFTLooksrare: boolean };
+
+export type ListNftSeaportMutationVariables = Exact<{
+  input: ListNftSeaportInput;
+}>;
+
+
+export type ListNftSeaportMutation = { __typename?: 'Mutation', listNFTSeaport: boolean };
+
 export type ProfileNftOrderingUpdatesMutationVariables = Exact<{
   input: OrderingUpdatesInput;
 }>;
@@ -2248,6 +2263,7 @@ export type MyProfilesQuery = { __typename?: 'Query', myProfiles: { __typename?:
 export type NftQueryVariables = Exact<{
   contract: Scalars['Address'];
   id: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -2460,6 +2476,16 @@ export const IgnoreAssocationsDocument = gql`
     blockNumber
     ignore
   }
+}
+    `;
+export const ListNftLooksrareDocument = gql`
+    mutation ListNftLooksrare($input: ListNFTLooksrareInput!) {
+  listNFTLooksrare(input: $input)
+}
+    `;
+export const ListNftSeaportDocument = gql`
+    mutation ListNftSeaport($input: ListNFTSeaportInput!) {
+  listNFTSeaport(input: $input)
 }
     `;
 export const ProfileNftOrderingUpdatesDocument = gql`
@@ -3287,8 +3313,8 @@ export const MyProfilesDocument = gql`
 }
     `;
 export const NftDocument = gql`
-    query Nft($contract: Address!, $id: String!) {
-  nft(contract: $contract, id: $id) {
+    query Nft($contract: Address!, $id: String!, $chainId: String) {
+  nft(contract: $contract, id: $id, chainId: $chainId) {
     id
     isOwnedByMe
     price
@@ -3526,6 +3552,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     IgnoreAssocations(variables: IgnoreAssocationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoreAssocationsMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<IgnoreAssocationsMutation>(IgnoreAssocationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoreAssocations', 'mutation');
+    },
+    ListNftLooksrare(variables: ListNftLooksrareMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ListNftLooksrareMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ListNftLooksrareMutation>(ListNftLooksrareDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ListNftLooksrare', 'mutation');
+    },
+    ListNftSeaport(variables: ListNftSeaportMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ListNftSeaportMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ListNftSeaportMutation>(ListNftSeaportDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ListNftSeaport', 'mutation');
     },
     ProfileNftOrderingUpdates(variables: ProfileNftOrderingUpdatesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNftOrderingUpdatesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileNftOrderingUpdatesMutation>(ProfileNftOrderingUpdatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNftOrderingUpdates', 'mutation');
