@@ -1,6 +1,7 @@
 import { HeroSidebar } from 'components/modules/HeroSidebar/HeroSidebar';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
 import ProfileCard from 'components/modules/Sidebar/ProfileCard';
+import { randomLabelGenerator } from 'components/modules/Sidebar/randomLabelGenerator';
 import SignIn from 'components/modules/Sidebar/SignIn';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
@@ -26,6 +27,7 @@ import { useAccount, useBalance, useDisconnect } from 'wagmi';
 
 export const Sidebar = () => {
   const profileValue = localStorage.getItem('selectedProfileUrl');
+  const randomLabel = randomLabelGenerator();
   const { address: currentAddress } = useAccount();
   const { disconnect } = useDisconnect();
   const { setSignOutDialogOpen } = useSignOutDialog();
@@ -37,65 +39,6 @@ export const Sidebar = () => {
   const { getHiddenProfileWithExpiry, user, setCurrentProfileUrl } = useUser();
   const [hiddenProfile, setHiddenProfile] = useState(null);
   const ethPriceUSD = useEthPriceUSD();
-
-  const randomlabel = useCallback(() => {
-    const random = Math.floor(Math.random() * (420 + 69));
-    const standardLabels = [
-      'Welcome Back!',
-      'What\'s s cookin\' 🧑‍🍳 good lookin\'?',
-      'Long time, no see 👀',
-      'Great to have you back',
-      'Howdy! 🤠',
-      '01101000 01101001',
-      '👋',
-    ];
-
-    const rareLabels = [
-      'Devs DID something',
-      '🤖',
-      '🤘',
-      '🚀 🚀 🚀',
-      'lgtm 🔥',
-      'Your Profile = 🔥🔥🔥',
-      'Do blockchains dream of electric apes?',
-      'You are the best',
-      'Do something awesome today, you deserve it',
-      'Hey you, yes you! You are awesome!',
-    ];
-
-    const ultraRareLabels = [
-      '¯\\_(ツ)_/¯',
-      'lorem ipsum... blah blah blah',
-      'Hello World!',
-      'This IS the utility',
-      'TYBG 🙏',
-      'I know what you right-click-saved last summer',
-      'Stuck in the metaverse with you',
-      '0x0000000000000000000000000000000000000000'
-    ];
-
-    const epicLabels = [
-      `➖➖➖🟩🟩➖🟩🟩
-    ➖➖🟩🟩🟩🟩🟩🟩🟩
-    ➖🟩🟩⬜⬛⬜⬜⬛🟩
-    ➖🟩🟩🟩🟩🟩🟩🟩
-    🟩🟩🟩🟩🟥🟥🟥🟥
-    🟩🟩🟩🟩🟩🟩🟩
-    🟦🟦🟦🟦🟦🟦🟦`,
-      'Based Ghouls 👀',
-      'Hello from San Juan and beyond'
-    ];
-    if ((random === (420 + 69 / 2))) {
-      return epicLabels[Math.floor(Math.random() * epicLabels.length)];
-    }
-    if (random === 69 || random === 420) {
-      return ultraRareLabels[Math.floor(Math.random() * ultraRareLabels.length)];
-    }
-    if(random === 42 || (random > 69 && random < 420)) {
-      return rareLabels[Math.floor(Math.random() * rareLabels.length)];
-    }
-    return standardLabels[Math.floor(Math.random() * standardLabels.length)];
-  } , []);
 
   useEffect(() => {
     sidebarOpen && promoteZIndex('sidebar');
@@ -136,7 +79,7 @@ export const Sidebar = () => {
           </div>
 
           <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 mt-8 mb-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
-            {randomlabel()}
+            {randomLabel}
           </div>
 
           {//todo: make this do something on click }
@@ -296,7 +239,7 @@ export const Sidebar = () => {
         />
       );
     }
-  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomlabel, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, toggleSidebar, user?.currentProfileUrl]);
+  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, toggleSidebar, user?.currentProfileUrl]);
 
   const getSidebarPanel = useCallback(() => {
     if(isNullOrEmpty(currentAddress)) {
