@@ -1,4 +1,4 @@
-import { useHiddenEventsQuery } from 'graphql/hooks/useHiddenEventsQuery';
+import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
 import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 
@@ -32,10 +32,10 @@ type ConnectedAccountsProps = {
 
 export default function ConnectedAccounts({ selectedProfile, associatedAddresses }: ConnectedAccountsProps) {
   const { address: currentAddress } = useAccount();
-  const { mutate: mutateHidden } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
+  const { mutate: mutateHidden } = useIgnoredEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
   const { nftResolver } = useAllContracts();
   const [inputVal, setInputVal] = useState('');
-  
+  const [isOpen, setIsOpen] = useState(null);
   const [transaction, setTransaction] = useState('');
   const [isAssociatedOrSelf, setIsAssociatedOrSelf] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -66,7 +66,10 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const removeHandler = async (action, input) => {
     if(action === 'address'){
       await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile)
-        .then(() => toast.success('Removed'))
+        .then(() => {
+          toast.success('Removed');
+          setIsOpen(false);
+        })
         .catch(() => toast.error('Error'));
     } else if (action === 'address-hideRejected') {
       const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === input);
@@ -109,14 +112,14 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
             </div>
 
             {associatedAddresses?.accepted.map((address, index)=> (
-              <AssociatedAddress key={index} address={address.chainAddr} remove={removeHandler} />
+              <AssociatedAddress key={index} address={address.chainAddr} remove={removeHandler} isOpen={isOpen} setIsOpen={setIsOpen} />
             ))}
             {associatedAddresses?.pending.map((address, index)=> (
-              <AssociatedAddress pending key={index} address={address.chainAddr} remove={removeHandler} />
+              <AssociatedAddress pending key={index} address={address.chainAddr} remove={removeHandler} isOpen={isOpen} setIsOpen={setIsOpen} />
             ))}
             {associatedAddresses?.denied?.map((address)=> (
               !address.hideIgnored &&
-              <AssociatedAddress rejected key={address.id} address={address.destinationAddress} remove={removeHandler} submit={submitHandler} />
+              <AssociatedAddress rejected key={address.id} address={address.destinationAddress} remove={removeHandler} submit={submitHandler} isOpen={isOpen} setIsOpen={setIsOpen}/>
             ))}
           </div>
         )

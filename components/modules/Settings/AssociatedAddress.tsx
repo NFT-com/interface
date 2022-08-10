@@ -5,7 +5,7 @@ import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 import RemoveModal from './RemoveModal';
 
 import { CheckCircle, Clock, DotsThreeOutlineVertical, XCircle } from 'phosphor-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 type AssociatedAddressProps = {
@@ -14,11 +14,16 @@ type AssociatedAddressProps = {
   rejected?: boolean;
   remove: (type: string, address: string) => void;
   submit?: (address: string) => void;
+  isOpen?: boolean
+  setIsOpen?: (input: boolean) => void;
 };
 
-export default function AssociatedAddress({ address, pending, rejected, remove, submit }: AssociatedAddressProps) {
+export default function AssociatedAddress({ address, pending, rejected, remove, submit, isOpen, setIsOpen }: AssociatedAddressProps) {
   const { chain } = useNetwork();
   const [removeModalVisible, setRemoveModalVisible] = useState(false);
+  useEffect(() => {
+    setRemoveModalVisible(isOpen);
+  }, [isOpen]);
   return (
     <>
       <div className='p-1 flex  justify-between mb-1 font-mono text-sm'>
@@ -85,7 +90,7 @@ export default function AssociatedAddress({ address, pending, rejected, remove, 
             options={filterNulls([
               {
                 label: 'Remove',
-                onSelect: () => setRemoveModalVisible(true),
+                onSelect: () => {setRemoveModalVisible(true); setIsOpen(null);},
                 icon: null,
               },
               {
