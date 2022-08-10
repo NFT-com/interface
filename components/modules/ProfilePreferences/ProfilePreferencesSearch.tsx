@@ -313,7 +313,6 @@ export function ProfilePreferencesSearch() {
                   if (nextTokenIdWithClaimable == null || isNullOrEmpty(currentURI)) {
                     return;
                   }
-                  console.log(profileClaimHash);
                   try {
                     const tx = await profileAuctionSigner.genesisKeyClaimProfile(
                       currentURI,
