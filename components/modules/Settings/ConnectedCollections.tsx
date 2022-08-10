@@ -186,6 +186,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         {connectedCollection?.chainAddr
           ? <div className='mt-4 md:w-full w-3/4'>
             <AssociatedProfile
+              isCollection
               profile={{
                 url: collectionName || connectedCollection.chainAddr,
                 addr: connectedCollection.chainAddr
