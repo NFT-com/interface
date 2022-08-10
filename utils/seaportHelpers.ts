@@ -1,6 +1,9 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Nft } from 'graphql/generated/types';
 
+import { filterNulls } from './helpers';
+import { getOpenseaCollection } from './listings';
+
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { _TypedDataEncoder } from 'ethers/lib/utils';
 import { PartialDeep } from 'type-fest';
@@ -93,7 +96,7 @@ export const feeToConsiderationItem = ({
   };
 };
 
-export function createSeaportParametersForNFTListing(
+export async function createSeaportParametersForNFTListing(
   offerer: string,
   nft: PartialDeep<Nft>,
   startingPrice: BigNumberish,
@@ -101,7 +104,7 @@ export function createSeaportParametersForNFTListing(
   currency: string,
   duration: BigNumberish,
   // takerAddress: string,
-): SeaportOrderParameters {
+): Promise<SeaportOrderParameters> {
   // This is what the seller will accept for their NFT.
   // For now, we support a single currency.
   const considerationItems = [{
@@ -109,13 +112,37 @@ export function createSeaportParametersForNFTListing(
     token: currency,
     identifierOrCriteria: BigNumber.from(0).toString(),
     startAmount: BigNumber.from(startingPrice).toString(),
-    endAmount: BigNumber.from(endingPrice).toString(),
+    endAmount: BigNumber.from(endingPrice ?? startingPrice).toString(),
     recipient: offerer,
   }];
   const openseaFee: Fee = {
     recipient: SEAPORT_FEE_COLLLECTION_ADDRESS,
     basisPoints: 250,
   };
+  const contract = await getOpenseaCollection(nft?.contract);
+  const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
+    ? {
+      recipient: contract?.['payout_address'],
+      basisPoints: contract?.['dev_seller_fee_basis_points'],
+    }
+    : null;
+  const considerationItemsWithFees = filterNulls([
+    ...deductFees(considerationItems, filterNulls([openseaFee, collectionFee])),
+    feeToConsiderationItem({
+      fee: openseaFee,
+      token: currency,
+      baseAmount: startingPrice,
+      baseEndAmount: endingPrice ?? startingPrice
+    }),
+    collectionFee != null
+      ? feeToConsiderationItem({
+        fee: collectionFee,
+        token: currency,
+        baseAmount: startingPrice,
+        baseEndAmount: endingPrice ?? startingPrice
+      })
+      : null
+  ]);
   return {
     offerer: offerer ?? NULL_ADDRESS,
     zone: SEAPORT_ZONE,
@@ -126,20 +153,12 @@ export function createSeaportParametersForNFTListing(
       startAmount: BigNumber.from(1).toString(),
       endAmount: BigNumber.from(1).toString(),
     }],
-    consideration: [
-      ...deductFees(considerationItems, [openseaFee]),
-      feeToConsiderationItem({
-        fee: openseaFee,
-        token: currency,
-        baseAmount: startingPrice,
-        baseEndAmount: endingPrice
-      })
-    ],
+    consideration: considerationItemsWithFees,
     orderType: OrderType.FULL_RESTRICTED,
     startTime: BigNumber.from(Date.now()).div(1000).toString(),
     endTime: BigNumber.from(Date.now()).div(1000).add(duration).toString(),
     zoneHash: SEAPORT_ZONE_HASH,
-    totalOriginalConsiderationItems: '2',
+    totalOriginalConsiderationItems: String(considerationItemsWithFees.length),
     salt: generateRandomSalt(),
     conduitKey: OPENSEA_CONDUIT_KEY,
   };
