@@ -15,7 +15,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 type NftOwnerProps = {
-  selectedProfile: string
+  selectedProfile: string;
 }
 
 export default function NftOwner({ selectedProfile }: NftOwnerProps) {

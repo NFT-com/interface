@@ -1,42 +1,101 @@
-import { Button, ButtonType } from 'components/elements/Button';
-import { OptionGrid } from 'components/elements/OptionGrid';
-import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
-import HeroSidebarAccountDetails from 'components/modules/HeroSidebar/HeroSidebarAccountDetails';
-import HeroSidebarFunds from 'components/modules/HeroSidebar/HeroSidebarFunds';
-import { HeroSidebarProfiles } from 'components/modules/HeroSidebar/HeroSidebarProfiles';
-import { SidebarCTA, useActiveSidebarCTA } from 'components/modules/HeroSidebar/useActiveSidebarCTA';
+import { HeroSidebar } from 'components/modules/HeroSidebar/HeroSidebar';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
+import ProfileCard from 'components/modules/Sidebar/ProfileCard';
 import SignIn from 'components/modules/Sidebar/SignIn';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
+import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
-import useENSName from 'hooks/useENSName';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty, prettify, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import Loader from './Loader';
+
 import { Dialog } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/solid';
+import { utils } from 'ethers';
 import { AnimatePresence, motion } from 'framer-motion';
+import Link from 'next/link';
+import { XCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { useThemeColors } from 'styles/theme/useThemeColors';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance, useDisconnect } from 'wagmi';
 
 export const Sidebar = () => {
-  const [showWalletOptions, setShowWalletOptions] = useState(false);
   const profileValue = localStorage.getItem('selectedProfileUrl');
   const { address: currentAddress } = useAccount();
-  const { ENSName } = useENSName(currentAddress);
-  const { sidebarOpen, setSidebarOpen } = useSidebar();
+  const { disconnect } = useDisconnect();
+  const { setSignOutDialogOpen } = useSignOutDialog();
+  const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
+  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
-  const { primaryIcon, alwaysBlack } = useThemeColors();
   const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const { getHiddenProfileWithExpiry, user, setCurrentProfileUrl } = useUser();
   const [hiddenProfile, setHiddenProfile] = useState(null);
-  const { getHiddenProfileWithExpiry } = useUser();
+  const ethPriceUSD = useEthPriceUSD();
+
+  const randomlabel = useCallback(() => {
+    const random = Math.floor(Math.random() * (420 + 69));
+    const standardLabels = [
+      'Welcome Back!',
+      'What\'s s cookin\' 🧑‍🍳 good lookin\'?',
+      'Long time, no see 👀',
+      'Great to have you back',
+      'Howdy! 🤠',
+      '01101000 01101001',
+      '👋',
+    ];
+
+    const rareLabels = [
+      'Devs DID something',
+      '🤖',
+      '🤘',
+      '🚀 🚀 🚀',
+      'lgtm 🔥',
+      'Your Profile = 🔥🔥🔥',
+      'Do blockchains dream of electric apes?',
+      'You are the best',
+      'Do something awesome today, you deserve it',
+      'Hey you, yes you! You are awesome!',
+    ];
+
+    const ultraRareLabels = [
+      '¯\\_(ツ)_/¯',
+      'lorem ipsum... blah blah blah',
+      'Hello World!',
+      'This IS the utility',
+      'TYBG 🙏',
+      'I know what you right-click-saved last summer',
+      'Stuck in the metaverse with you',
+      '0x0000000000000000000000000000000000000000'
+    ];
+
+    const epicLabels = [
+      `➖➖➖🟩🟩➖🟩🟩
+    ➖➖🟩🟩🟩🟩🟩🟩🟩
+    ➖🟩🟩⬜⬛⬜⬜⬛🟩
+    ➖🟩🟩🟩🟩🟩🟩🟩
+    🟩🟩🟩🟩🟥🟥🟥🟥
+    🟩🟩🟩🟩🟩🟩🟩
+    🟦🟦🟦🟦🟦🟦🟦`,
+      'Based Ghouls 👀',
+      'Hello from San Juan and beyond'
+    ];
+    if ((random === (420 + 69 / 2))) {
+      return epicLabels[Math.floor(Math.random() * epicLabels.length)];
+    }
+    if (random === 69 || random === 420) {
+      return ultraRareLabels[Math.floor(Math.random() * ultraRareLabels.length)];
+    }
+    if(random === 42 || (random > 69 && random < 420)) {
+      return rareLabels[Math.floor(Math.random() * rareLabels.length)];
+    }
+    return standardLabels[Math.floor(Math.random() * standardLabels.length)];
+  } , []);
 
   useEffect(() => {
     sidebarOpen && promoteZIndex('sidebar');
@@ -49,121 +108,184 @@ export const Sidebar = () => {
     const hide = getHiddenProfileWithExpiry();
     setHiddenProfile(hide);
   }, [getHiddenProfileWithExpiry, profileValue]);
-  
-  const activeCTA: SidebarCTA = useActiveSidebarCTA();
 
   const getSidebarContent = useCallback(() => {
-    if(currentAddress && myOwnedProfileTokens.some(e => e.title === profileValue) || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || currentAddress && !myOwnedProfileTokens.length || myOwnedProfileTokens.length === 1 && myOwnedProfileTokens.some(e => e.title === hiddenProfile)) {
+    if(currentAddress
+      && myOwnedProfileTokens.some(e => e.title === profileValue)
+      || currentAddress && !myOwnedProfileTokens.length
+      || myOwnedProfileTokens.length === 1
+      && myOwnedProfileTokens.some(e => e.title === hiddenProfile)
+    ) {
       return (
         <motion.div
           layout
           key='sidebarContent'
-          className='flex flex-col pt-5 dark bg-pagebg-dk dark'
+          className='flex flex-col bg-white h-full text-black font-grotesk'
         >
-          {isMobile &&
-          <motion.div
-            key='sidebarMobileXIcon'
-            className='flex justify-end pt-6 px-4'
-          >
-            <XIcon
-              color={primaryIcon}
-              className="block h-8 w-8 mb-8"
-              aria-hidden="true"
-              onClick={() => {
-                setSidebarOpen(false);
-              }}
-            />
-          </motion.div>
-          }
-          <motion.div
-            layout
-            key='sidebarAccountDetails'
-            className='w-full border-b border-accent-border-dk'
-          >
-            <HeroSidebarAccountDetails ENSName={ENSName} />
-          </motion.div>
-          {activeCTA &&
-        <motion.div
-          key='activeCTA'
-          layout
-        >
-          <div className='mx-5 text-primary-txt-dk text-2xl mb-4 mt-2.5'>
-          Notifications
+          <div className='flex flex-row w-full h-8 items-end py-10 pr-3'>
+            <XCircle onClick={() => {setSidebarOpen(false);}} className='absolute top-10 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
           </div>
-          <div
-            className={tw(
-              'px-7 pt-7 items-center mx-5 shrink-0',
-              'px-4 rounded-xl mb-3.5 border',
-              'bg-accent-dk',
-              'border-accent-border-dk',
-            )}
-          >
-            {activeCTA && <div
-              key={activeCTA.iconColor}
+
+          <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 items-center justify-between'>
+            <span className='font-semibold text-base leading-6 text-[#6F6F6F]'>
+              Connected Wallet
+            </span>
+            <span className='font-dm-mono font-medium text-[17px] leading-6'>
+              {shortenAddress(currentAddress)}
+            </span>
+          </div>
+
+          <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 mt-8 mb-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
+            {randomlabel()}
+          </div>
+
+          {//todo: make this do something on click }
+          }
+          <div className='w-full p-4 items-center drop-shadow-xl'>
+            <ProfileCard opensModal showSwitch profile={myOwnedProfileTokens?.find(t => t.title === user?.currentProfileUrl)} />
+          </div>
+          
+          <Link href='/app/settings' passHref>
+            <a onClick={() => setSidebarOpen(false)}
+              className='flex flex-row w-full items-start text-black font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
+            >
+            Settings
+            </a>
+          </Link>
+
+          <button
+            className='flex flex-row w-full items-start text-black font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 py-2 mb-8'
+            onClick={() => {
+              disconnect();
+              setSignOutDialogOpen(true);
+              toggleSidebar();
+              setCurrentProfileUrl('');
+            }}>
+            Sign out
+          </button>
+
+          <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 mb-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
+            Notifications
+          </div>
+
+          <div className='flex flex-col w-full items-center space-y-4'>
+            <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
+              {//TODO: return notifications from endpoint
+              }
+              <button className={tw(
+                'inline-flex w-full h-full',
+                'text-md',
+                'leading-6',
+                'items-center',
+                'justify-center',
+                'bg-[#F9D963]',
+                'rounded-lg',
+                'p-4'
+              )}
+              onClick={() => {
+              //TODO: functionality
+              }}>
+                1 NFT Profile Connection request
+              </button>
+            </div>
+
+            <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
+              {//TODO: return notifications from endpoint
+              }
+              <button className={tw(
+                'inline-flex w-full h-full',
+                'text-md',
+                'leading-6',
+                'items-center',
+                'justify-center',
+                'bg-[#F9D963]',
+                'rounded-lg',
+                'p-4'
+              )}
+              onClick={() => {
+              //TODO: functionality
+              }}>
+              2 NFT Profiles need attention
+              </button>
+            </div>
+
+            <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
+              {//TODO: return notifications from endpoint
+              }
+              <button className={tw(
+                'inline-flex w-full h-full',
+                'text-md',
+                'leading-6',
+                'items-center',
+                'justify-center',
+                'bg-[#F9D963]',
+                'rounded-lg',
+                'p-4'
+              )}
+              onClick={() => {
+              //TODO: functionality
+              }}>
+              Get a free profile!
+              </button>
+            </div>
+
+            <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
+              {//TODO: return notifications from endpoint
+              }
+              <button className={tw(
+                'inline-flex w-full h-full',
+                'text-md',
+                'leading-6',
+                'items-center',
+                'justify-center',
+                'bg-[#F9D963]',
+                'rounded-lg',
+                'p-4'
+              )}
+              onClick={() => {
+              //TODO: functionality
+              }}>
+                6 NFT Profiles available to mint
+              </button>
+            </div>
+          </div>
+
+          {/*TODO: MOAR TOKENS*/}
+          <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 my-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
+            Tokens
+          </div>
+          <div className="mx-4">
+            <div
               className={tw(
-                'flex items-center m-auto rounded-full',
-                activeCTA.iconColor,
-                'text-white w-16',
-                'aspect-square items-center justify-center'
-              )}>
-              {activeCTA.icon}
-            </div>}
-            <div className="flex items-center m-auto justify-center">
-              <div className={tw(
-                'flex flex-col py-3 text-center text-primary-txt dark:text-primary-txt-dk'
-              )}>
-                {activeCTA ? activeCTA.mainText : ''}
-                <div className={tw(
-                  'flex items-center text-secondary-txt',
-                  'text-base py-3 whitespace-normal break-normal'
-                )}>
-                  {activeCTA ? activeCTA.secondaryText : ''}
+                'flex items-center justify-center p-8',
+                'py-3 h-18 mb-3.5',
+              )}
+            >
+              <div className="w-full">
+                <div className="flex items-center justify-between font-bold text-base mb-1">
+                  <div
+                    className={'flex items-start text-black font-grotesk font-bold text-2xl leading-9'}>
+                    {balanceData?.symbol}
+                  </div>
+                  <div className="text-black font-grotesk font-bold text-2xl leading-9">
+                    {(+utils.formatEther(balanceData?.value ?? 0)).toFixed(4)}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-sm text-secondary-txt">
+                  Ethereum
+                  <div>
+                    {!ethPriceUSD
+                      ? (
+                        <Loader />
+                      )
+                      : (
+                        '$' + prettify(Number(balanceData?.formatted) * Number(ethPriceUSD))
+                      )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </motion.div>}
-          {activeCTA &&
-          <motion.div key='activeCTAButton' className='px-5 mb-4'>
-            <Button
-              stretch
-              color={alwaysBlack}
-              label={activeCTA.buttonText}
-              disabled={activeCTA.disabled}
-              onClick={activeCTA.onClick}
-              type={ButtonType.PRIMARY}
-            />
-          </motion.div>
-          }
-          {
-            activeCTA?.secondaryCTA && <div className={tw(
-              'border rounded-xl flex items-center py-4 mx-5',
-              'bg-accent-dk border-action-primary cursor-pointer',
-              'motion-safe:animate-pulse-border mb-5 hover:animate-none'
-            )}
-            onClick={activeCTA?.secondaryCTA.onClick}
-            >
-              <div className={tw(
-                'flex rounded-full w-8 h-8 aspect-square items-center justify-center',
-                'mx-4',
-                activeCTA?.secondaryCTA.iconColor,
-              )}>
-                {activeCTA?.secondaryCTA?.icon}
-              </div>
-              <div className="flex flex-col text-always-white text-lg">
-                {activeCTA?.secondaryCTA?.title}
-                <span className='text-base text-secondary-txt'>
-                  {activeCTA?.secondaryCTA?.subtitle}
-                </span>
-              </div>
-            </div>
-          }
-          <motion.div layout key='sidebarProfiles'>
-            <HeroSidebarProfiles />
-          </motion.div>
-          <motion.div className='pb-6' layout key='sidebarFunds'>
-            <HeroSidebarFunds />
-          </motion.div>
         </motion.div>
       );}
 
@@ -174,32 +296,10 @@ export const Sidebar = () => {
         />
       );
     }
-  }, [primaryIcon, ENSName, activeCTA, alwaysBlack, setSidebarOpen, profileValue, currentAddress, myOwnedProfileTokens, hiddenProfile]);
+  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomlabel, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, toggleSidebar, user?.currentProfileUrl]);
 
   const getSidebarPanel = useCallback(() => {
-    if(!showWalletOptions && !isNullOrEmpty(currentAddress)) {
-      return (
-        <motion.div
-          key='sidebarMainContentPanel'
-          initial={{ x: '-100%' }}
-          animate={{
-            x: 0
-          }}
-          exit={{
-            x: '-100%'
-          }}
-          transition={{
-            type: 'spring',
-            bounce: 0,
-            duration: 0.4
-          }}
-          className="h-full"
-        >
-          {getSidebarContent()}
-        </motion.div>
-      );
-    }
-    if(showWalletOptions || isNullOrEmpty(currentAddress)) {
+    if(isNullOrEmpty(currentAddress)) {
       return (
         <motion.div
           layout
@@ -221,116 +321,91 @@ export const Sidebar = () => {
           }}
           className='h-full'
         >
-          {isMobile &&
-            <motion.div
-              layout
-              key='sidebarWalletOptionsMobileXIcon'
-              className='flex justify-end py-6 px-4'
-            >
-              <XIcon
-                color={primaryIcon}
-                className="block h-8 w-8"
-                aria-hidden="true"
-                onClick={() => {
-                  setSidebarOpen(false);
-                }}
-              />
-            </motion.div>
-          }
-          {!isNullOrEmpty(currentAddress) &&
-            <motion.div
-              layout
-              key='sidebarWalletOptionsBack'
-              className="cursor-pointer text-primary-txt-dk mb-4 hover:underline"
-              onClick={() => {
-                setShowWalletOptions(false);
-              }}>
-                Back
-            </motion.div>
-          }
-
-          {!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) ?
-            (
-              <>
-                <div className='text-primary-txt-dk text-2xl mb-4 pl-1'>
-                  My Wallet
-                </div>
-                <div className='text-secondary-txt mb-8 pl-1'>
-                  Connect with one of our available wallet providers.
-                </div>
-                <motion.div layout key='sidebarOptionGrid'>
-                  <OptionGrid>
-                    <motion.div layout key='sidebarWalletOptions'>
-                      <WalletRainbowKitButton signInButton />
-                    </motion.div>
-                  </OptionGrid>
-                </motion.div>
-              </>
-            )
-            :
-            (
-              <SignIn />
-            )
-          }
+          <SignIn />
+        </motion.div>
+      );
+    } else {
+      return (
+        <motion.div
+          key='sidebarMainContentPanel'
+          initial={{ x: '-100%' }}
+          animate={{
+            x: 0
+          }}
+          exit={{
+            x: '-100%'
+          }}
+          transition={{
+            type: 'spring',
+            bounce: 0,
+            duration: 0.4
+          }}
+          className="h-full"
+        >
+          {getSidebarContent()}
         </motion.div>
       );
     }
-  }, [currentAddress, getSidebarContent, primaryIcon, setSidebarOpen, showWalletOptions]);
+  }, [currentAddress, getSidebarContent]);
 
-  return (
-    <AnimatePresence>
-      {sidebarOpen && (
-        <Dialog
-          layout
-          key='sidebarDialog'
-          static
-          as={motion.div}
-          open={sidebarOpen}
-          className="fixed inset-0 overflow-hidden"
-          onClose={() => {
-            !addFundsDialogOpen && setSidebarOpen(false);
-          }}
-          style={{ zIndex: getZIndex('sidebar') }}
-        >
-          <Dialog.Overlay
+  if(!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
+    return <HeroSidebar />;
+  } else {
+    return (
+      <AnimatePresence>
+        {sidebarOpen && (
+          <Dialog
             layout
-            key='sidebarDialogOverlay'
+            key='sidebarDialog'
+            static
             as={motion.div}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              ease: 'backInOut',
-              duration: 0.4
+            open={sidebarOpen}
+            className="fixed inset-0 overflow-hidden"
+            onClose={() => {
+              !addFundsDialogOpen && setSidebarOpen(false);
             }}
-            className={tw(
-              'absolute inset-0',
-              'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
-            )}
-          />
-          <motion.div
-            key='sidebarWrapperPanel'
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{
-              type: 'spring',
-              bounce: 0,
-              duration: 0.4
-            }}
-            className={
-              tw(
-                'flex flex-col fixed inset-y-0 right-0',
-                'w-screen max-w-md h-full',
-                'shadow-xl overflow-y-scroll overflow-x-hidden',
-                'bg-pagebg-dk',
-                'border-l border-accent-border-dk')
-            }
+            style={{ zIndex: getZIndex('sidebar') }}
           >
-            {getSidebarPanel()}
-          </motion.div>
-        </Dialog>
-      )}
-    </AnimatePresence>
-  );
+            <Dialog.Overlay
+              layout
+              key='sidebarDialogOverlay'
+              as={motion.div}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                ease: 'backInOut',
+                duration: 0.4
+              }}
+              className={tw(
+                'absolute inset-0',
+                'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
+              )}
+            />
+            <motion.div
+              key='sidebarWrapperPanel'
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{
+                type: 'spring',
+                bounce: 0,
+                duration: 0.4
+              }}
+              className={
+                tw(
+                  'flex flex-col fixed inset-y-0 right-0',
+                  'w-screen max-w-md h-full',
+                  'shadow-xl overflow-y-scroll overflow-x-hidden',
+                  'bg-white',
+                  'font-grotesk')
+              }
+            >
+              {getSidebarPanel()}
+            </motion.div>
+          </Dialog>
+        )}
+      </AnimatePresence>
+    );
+  }
 };
