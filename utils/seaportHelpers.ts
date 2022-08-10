@@ -1,8 +1,7 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { Nft } from 'graphql/generated/types';
+import { Maybe, Nft } from 'graphql/generated/types';
 
 import { filterNulls } from './helpers';
-import { getOpenseaCollection } from './listings';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { _TypedDataEncoder } from 'ethers/lib/utils';
@@ -96,15 +95,16 @@ export const feeToConsiderationItem = ({
   };
 };
 
-export async function createSeaportParametersForNFTListing(
+export function createSeaportParametersForNFTListing(
   offerer: string,
   nft: PartialDeep<Nft>,
   startingPrice: BigNumberish,
   endingPrice: BigNumberish,
   currency: string,
   duration: BigNumberish,
+  collectionFee: Maybe<Fee>
   // takerAddress: string,
-): Promise<SeaportOrderParameters> {
+): SeaportOrderParameters {
   // This is what the seller will accept for their NFT.
   // For now, we support a single currency.
   const considerationItems = [{
@@ -119,13 +119,7 @@ export async function createSeaportParametersForNFTListing(
     recipient: SEAPORT_FEE_COLLLECTION_ADDRESS,
     basisPoints: 250,
   };
-  const contract = await getOpenseaCollection(nft?.contract);
-  const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
-    ? {
-      recipient: contract?.['payout_address'],
-      basisPoints: contract?.['dev_seller_fee_basis_points'],
-    }
-    : null;
+  
   const considerationItemsWithFees = filterNulls([
     ...deductFees(considerationItems, filterNulls([openseaFee, collectionFee])),
     feeToConsiderationItem({
