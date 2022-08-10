@@ -3,9 +3,11 @@ import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
+import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
@@ -27,7 +29,7 @@ function usePrevious(value) {
 export default function ResultsPage() {
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
-  const { fetchTypesenseSearch, loading } = useFetchTypesenseSearch();
+  const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const { width: screenWidth } = useWindowDimensions();
   const [results, setResults] = useState([]);
   const [found, setFound] = useState(0);
@@ -35,9 +37,9 @@ export default function ResultsPage() {
   const prevVal = usePrevious(page);
 
   useEffect(() => {
-    page === 1 && searchType && screenWidth && fetchTypesenseSearch({
-      index: searchType?.toString(),
-      query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
+    page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseSearch({
+      index: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
+      query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
       per_page: screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2,
       page: page,
@@ -63,7 +65,7 @@ export default function ResultsPage() {
         });
     }
   }, [fetchTypesenseSearch, page, searchTerm, screenWidth, prevVal, searchType, results]);
-
+  
   return (
     <PageWrapper
       bgColorClasses="bg-always-white"
@@ -89,8 +91,9 @@ export default function ResultsPage() {
             </div>
           </div>
           <CuratedCollectionsFilter onClick={() => null} />
+          {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
           <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
-            {found + ' ' + searchType?.toString().toUpperCase()}
+            {found + ' ' + searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS'}
           </div>
           {searchType?.toString() === 'nfts' &&
           <div className="my-6 mb-4 flex justify-between font-grotesk font-black text-xl minmd:text-2xl">

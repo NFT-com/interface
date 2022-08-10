@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
-export const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; contractName: string} ) => {
+export const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; contractName?: string} ) => {
   const router = useRouter();
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const [imageArray, setImageArray] = useState([]);

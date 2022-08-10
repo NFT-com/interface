@@ -72,7 +72,7 @@ export const SearchContent = () => {
     setShowHits(true);
 
     if (event.keyCode === 13) {
-      router.push(`/app/results/${target.value !== '' ? target.value : '0'}`);
+      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '0'}`);
       setSearchModalOpen(false);
     }
   };
@@ -179,7 +179,7 @@ export const SearchContent = () => {
                         stretch={true}
                         label={'Search'}
                         onClick={() => {
-                          router.push(`/app/results/${keyword !== '' ? keyword : '0'}`);
+                          router.push(`/app/discover/allResults/${keyword}`);
                           setSearchModalOpen(false);
                         }}
                         type={ButtonType.PRIMARY}

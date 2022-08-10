@@ -1,13 +1,11 @@
-import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
-
-import { NFTCollectionCard } from './NFTCollectionCard';
+import { CollectionItem } from 'components/modules/Search/CollectionItem';
 
 import useEmblaCarousel from 'embla-carousel-react';
-import { useRouter } from 'next/router';
 import React, { useCallback,useEffect, useState } from 'react';
 
 export interface slidesProps {
   slides: string[];
+  full?: boolean;
 }
 
 export interface collectionProps {
@@ -52,41 +50,6 @@ export const NextButton = ({ enabled, onClick }: buttonProps) => (
   </button>
 );
 
-const CollectionsHit = ({ contractAddr }: collectionProps) => {
-  const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
-  const [imageArray, setImageArray] = useState([]);
-  const [count, setCount] = useState(0);
-  const router = useRouter();
-
-  useEffect(() => {
-    const images = [];
-    contractAddr && fetchCollectionsNFTs({
-      collectionAddress: contractAddr,
-      pageInput:{
-        first: 3,
-        afterCursor: null, }
-    }).then((collectionsData => {
-      setCount(collectionsData?.collectionNFTs.items.length);
-      images.push(collectionsData?.collectionNFTs.items[0]?.metadata.imageURL);
-      images.push(collectionsData?.collectionNFTs.items[1]?.metadata.imageURL);
-      images.push(collectionsData?.collectionNFTs.items[2]?.metadata.imageURL);
-      setImageArray([...images]);
-    }));
-  }, [fetchCollectionsNFTs, contractAddr]);
-  return (
-    imageArray.length > 0 && <div data-testid={'NFTCollection-' + contractAddr} >
-      <NFTCollectionCard
-        contract={contractAddr}
-        count={count}
-        images={imageArray}
-        onClick={() => {
-          router.push(`/app/collection/${contractAddr}/`);
-        } }
-      />
-    </div>
-  );
-};
-
 const EmblaCarousel = (props: slidesProps) => {
   const [viewportRef, embla] = useEmblaCarousel({
     dragFree: true,
@@ -117,22 +80,25 @@ const EmblaCarousel = (props: slidesProps) => {
     onSelect();
     setScrollSnaps(embla.scrollSnapList());
   }, [embla, onSelect]);
+
   return (
-    props.slides.length < 5 ?
+    !props.full && props.slides.length < 5 ?
       <div className="grid grid-cols-4 gap-8" >
         {props.slides.map((item: any, index) => (
-          <CollectionsHit key={index} contractAddr={item.document?.contractAddr}/>
+          <CollectionItem key={index} contractAddr={item.document?.contractAddr}/>
         ))}
       </div>
       :
       <>
-        <div className="embla">
+        <div className={`embla${props.full ? 'full' : ''}`}>
           <div className="embla__viewport" ref={viewportRef}>
             <div className="embla__container">
               {props.slides.map((item: any, index) => (
-                <div className="embla__slide" key={index}>
-                  <div className="embla__slide__inner">
-                    <CollectionsHit contractAddr={item.document?.contractAddr}/>
+                <div className={`embla__slide${props.full ? 'full' : ''}`} key={index}>
+                  <div className={`embla__slide__inner${props.full ? 'full' : ''}`}>
+                    <div className={`${props.full ? 'embla__slide__item' : ''}`}>
+                      <CollectionItem contractAddr={item.document?.contractAddr}/>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -141,7 +107,7 @@ const EmblaCarousel = (props: slidesProps) => {
           <PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} />
           <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
         </div>
-        <div className="embla__dots">
+        {!props.full && <div className="embla__dots">
           {scrollSnaps.map((_, index) => (
             <DotButton
               key={index}
@@ -149,7 +115,7 @@ const EmblaCarousel = (props: slidesProps) => {
               onClick={() => scrollTo(index)}
             />
           ))}
-        </div>
+        </div>}
       </>
   );
 };
