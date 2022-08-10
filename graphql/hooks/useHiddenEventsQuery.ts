@@ -1,16 +1,16 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { HiddenEventsInput, HiddenEventsQuery } from 'graphql/generated/types';
+import { IgnoredEventsInput, IgnoredEventsQuery } from 'graphql/generated/types';
 
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 
 export interface HiddenEventsQueryData {
-  data: HiddenEventsQuery;
+  data: IgnoredEventsQuery;
   loading: boolean;
   mutate: () => void;
 }
 
-export function useHiddenEventsQuery(input: HiddenEventsInput): HiddenEventsQueryData {
+export function useHiddenEventsQuery(input: IgnoredEventsInput): HiddenEventsQueryData {
   const sdk = useGraphQLSDK();
   const [loading, setLoading] = useState(false);
   
@@ -23,7 +23,7 @@ export function useHiddenEventsQuery(input: HiddenEventsInput): HiddenEventsQuer
   const { data } = useSWR(keyString, async () => {
     setLoading(true);
     try {
-      const result = await sdk.HiddenEvents({ input: input });
+      const result = await sdk.IgnoredEvents({ input: input });
       setLoading(false);
       return result;
     } catch (error) {

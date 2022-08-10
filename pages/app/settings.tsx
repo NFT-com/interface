@@ -38,10 +38,10 @@ export default function Settings() {
       const data = await (await nftResolver.associatedAddresses(profile)) || [];
       const allData = await nftResolver.getAllAssociatedAddr(currentAddress, profile) || [];
       const result = allData.filter(a => !data.some(b => a.chainAddr === b.chainAddr));
-      const filterPending = result.reverse().filter(a => !events?.hiddenEvents.some(b => a.chainAddr === b.destinationAddress && b.ignore));
-      setAssociatedAddresses({ pending: filterPending, accepted: data, denied: events?.hiddenEvents });
+      const filterPending = result.reverse().filter(a => !events?.ignoredEvents.some(b => a.chainAddr === b.destinationAddress && b.ignore));
+      setAssociatedAddresses({ pending: filterPending, accepted: data, denied: events?.ignoredEvents });
     },
-    [nftResolver, currentAddress, events?.hiddenEvents],
+    [nftResolver, currentAddress, events?.ignoredEvents],
   );
 
   useEffect(() => {
