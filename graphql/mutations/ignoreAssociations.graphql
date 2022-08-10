@@ -1,5 +1,5 @@
-mutation IgnoreAssocations($eventIdArray: [String]!) {
-  ignoreAssocations(eventIdArray: $eventIdArray) {
+mutation IgnoreAssociations($eventIdArray: [String]!) {
+  ignoreAssociations(eventIdArray: $eventIdArray) {
     id
     chainId
     contract
@@ -10,5 +10,7 @@ mutation IgnoreAssocations($eventIdArray: [String]!) {
     destinationAddress
     blockNumber
     ignore
+    hideIgnored
+    hidden
   }
 }

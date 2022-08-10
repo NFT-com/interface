@@ -1,5 +1,5 @@
-query HiddenEvents($input: HiddenEventsInput!) {
-  hiddenEvents(input: $input) {
+query IgnoredEvents($input: IgnoredEventsInput!) {
+  ignoredEvents(input: $input) {
     id
     chainId
     contract
@@ -11,5 +11,6 @@ query HiddenEvents($input: HiddenEventsInput!) {
     blockNumber
     ignore
     hideIgnored
+    hidden
   }
 }

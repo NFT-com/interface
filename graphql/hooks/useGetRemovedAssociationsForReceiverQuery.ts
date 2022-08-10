@@ -1,29 +1,26 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { HiddenEventsInput, HiddenEventsQuery } from 'graphql/generated/types';
+import { GetRemovedAssociationsForReceiverQuery } from 'graphql/generated/types';
 
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 
-export interface HiddenEventsQueryData {
-  data: HiddenEventsQuery;
+export interface GetRemovedAssociationsForReceiverQueryData {
+  data: GetRemovedAssociationsForReceiverQuery
   loading: boolean;
   mutate: () => void;
 }
 
-export function useHiddenEventsQuery(input: HiddenEventsInput): HiddenEventsQueryData {
+export function useGetRemovedAssociationsForReceiver(): GetRemovedAssociationsForReceiverQueryData {
   const sdk = useGraphQLSDK();
   const [loading, setLoading] = useState(false);
   
   const keyString =
-      'HiddenEventsQuery' +
-      input.profileUrl +
-      input.walletAddress +
-      input?.chainId;
+      'GetRemovedAssociationsForReceiverQuery';
   
   const { data } = useSWR(keyString, async () => {
     setLoading(true);
     try {
-      const result = await sdk.HiddenEvents({ input: input });
+      const result = await sdk.GetRemovedAssociationsForReceiver();
       setLoading(false);
       return result;
     } catch (error) {
