@@ -42,13 +42,24 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const [success, setSuccess] = useState(false);
   const { updateHideIgnored } = useUpdateHideIgnored();
 
-  const submitHandler = async () => {
-    const address = inputVal;
+  const submitHandler = async (input?: string) => {
+    const address = input || inputVal;
     const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === address);
     if(deniedEvent){
-      updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] }).then(() => {mutateHidden(); setTransaction(deniedEvent.txHash); setSuccess(true); setModalVisible(true);});
+      updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] })
+        .then(() => {
+          mutateHidden();
+          setTransaction(deniedEvent.txHash);
+          setSuccess(true);
+          setModalVisible(true);
+        });
     } else {
-      await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile).then((res) => setTransaction(res.hash)).then(() => {setSuccess(true); setModalVisible(true);});
+      await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile)
+        .then((res) => setTransaction(res.hash))
+        .then(() => {
+          setSuccess(true);
+          setModalVisible(true);
+        });
     }
   };
 
@@ -105,7 +116,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
             ))}
             {associatedAddresses?.denied?.map((address)=> (
               !address.hideIgnored &&
-              <AssociatedAddress rejected key={address.id} address={address.destinationAddress} remove={removeHandler} />
+              <AssociatedAddress rejected key={address.id} address={address.destinationAddress} remove={removeHandler} submit={submitHandler} />
             ))}
           </div>
         )
