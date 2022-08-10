@@ -131,7 +131,7 @@ export default function ResultsPage() {
               <div className="w-1/4 flex flex-col px-5 hidden minlg:block">
                 <div className="w-full pl-5 pb-3 text-gray-400 dark:text-always-white font-bold text-lg">Filters</div>
                 <div className="h-40 w-full">
-                  <SearchUIFilter filter="listingType" title="Listing Type" searchable={false} />
+                  <SearchUIFilter filter="nftType" title="Listing Type" searchable={false} />
                   <SearchUIFilter filter="listedPx" title="Price" searchable={true} />
                   <SearchUIFilter filter="contractName" title="Collections" searchable={true} isLastFilter/>
                   <ClearRefinements className="py-3 px-5 mt-1"/>
