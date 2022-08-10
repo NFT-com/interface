@@ -1,7 +1,7 @@
 import { HeroSidebar } from 'components/modules/HeroSidebar/HeroSidebar';
+import NftOwner from 'components/modules/Settings/NftOwner';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
-import ProfileCard from 'components/modules/Sidebar/ProfileCard';
-import { randomLabelGenerator } from 'components/modules/Sidebar/randomLabelGenerator';
+import { Notifications } from 'components/modules/Sidebar/Notifications';
 import SignIn from 'components/modules/Sidebar/SignIn';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
@@ -12,6 +12,7 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, prettify, shortenAddress } from 'utils/helpers';
+import { randomLabelGenerator } from 'utils/randomLabelGenerator';
 import { tw } from 'utils/tw';
 
 import Loader from './Loader';
@@ -20,25 +21,33 @@ import { Dialog } from '@headlessui/react';
 import { utils } from 'ethers';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { XCircle } from 'phosphor-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
 
 export const Sidebar = () => {
+  const router = useRouter();
   const profileValue = localStorage.getItem('selectedProfileUrl');
-  const randomLabel = randomLabelGenerator();
+  
+  const ethPriceUSD = useEthPriceUSD();
+
   const { address: currentAddress } = useAccount();
   const { disconnect } = useDisconnect();
-  const { setSignOutDialogOpen } = useSignOutDialog();
   const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
+
+  const { setSignOutDialogOpen } = useSignOutDialog();
   const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebar();
-  const { addFundsDialogOpen } = useAddFundsDialog();
-  const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
-  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const randomLabel = useMemo(() => randomLabelGenerator(), []);
   const { getHiddenProfileWithExpiry, user, setCurrentProfileUrl } = useUser();
+  const { addFundsDialogOpen } = useAddFundsDialog();
+
+  const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
+
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+
   const [hiddenProfile, setHiddenProfile] = useState(null);
-  const ethPriceUSD = useEthPriceUSD();
 
   useEffect(() => {
     sidebarOpen && promoteZIndex('sidebar');
@@ -85,19 +94,19 @@ export const Sidebar = () => {
           {//todo: make this do something on click }
           }
           <div className='w-full p-4 items-center drop-shadow-xl'>
-            <ProfileCard opensModal showSwitch profile={myOwnedProfileTokens?.find(t => t.title === user?.currentProfileUrl)} />
+            <NftOwner showHeaderText={false} selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router.pathname === '/app/settings' ? false : true} />
           </div>
           
           <Link href='/app/settings' passHref>
             <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-black font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
+              className='flex flex-row w-full items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
             >
             Settings
             </a>
           </Link>
 
           <button
-            className='flex flex-row w-full items-start text-black font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 py-2 mb-8'
+            className='flex flex-row w-1/3 items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 py-2 mb-8'
             onClick={() => {
               disconnect();
               setSignOutDialogOpen(true);
@@ -110,88 +119,7 @@ export const Sidebar = () => {
           <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 mb-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
             Notifications
           </div>
-
-          <div className='flex flex-col w-full items-center space-y-4'>
-            <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
-              {//TODO: return notifications from endpoint
-              }
-              <button className={tw(
-                'inline-flex w-full h-full',
-                'text-md',
-                'leading-6',
-                'items-center',
-                'justify-center',
-                'bg-[#F9D963]',
-                'rounded-lg',
-                'p-4'
-              )}
-              onClick={() => {
-              //TODO: functionality
-              }}>
-                1 NFT Profile Connection request
-              </button>
-            </div>
-
-            <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
-              {//TODO: return notifications from endpoint
-              }
-              <button className={tw(
-                'inline-flex w-full h-full',
-                'text-md',
-                'leading-6',
-                'items-center',
-                'justify-center',
-                'bg-[#F9D963]',
-                'rounded-lg',
-                'p-4'
-              )}
-              onClick={() => {
-              //TODO: functionality
-              }}>
-              2 NFT Profiles need attention
-              </button>
-            </div>
-
-            <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
-              {//TODO: return notifications from endpoint
-              }
-              <button className={tw(
-                'inline-flex w-full h-full',
-                'text-md',
-                'leading-6',
-                'items-center',
-                'justify-center',
-                'bg-[#F9D963]',
-                'rounded-lg',
-                'p-4'
-              )}
-              onClick={() => {
-              //TODO: functionality
-              }}>
-              Get a free profile!
-              </button>
-            </div>
-
-            <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
-              {//TODO: return notifications from endpoint
-              }
-              <button className={tw(
-                'inline-flex w-full h-full',
-                'text-md',
-                'leading-6',
-                'items-center',
-                'justify-center',
-                'bg-[#F9D963]',
-                'rounded-lg',
-                'p-4'
-              )}
-              onClick={() => {
-              //TODO: functionality
-              }}>
-                6 NFT Profiles available to mint
-              </button>
-            </div>
-          </div>
+          <Notifications />
 
           {/*TODO: MOAR TOKENS*/}
           <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 my-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
@@ -239,7 +167,7 @@ export const Sidebar = () => {
         />
       );
     }
-  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, toggleSidebar, user?.currentProfileUrl]);
+  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, toggleSidebar, user?.currentProfileUrl]);
 
   const getSidebarPanel = useCallback(() => {
     if(isNullOrEmpty(currentAddress)) {
