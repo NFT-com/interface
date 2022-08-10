@@ -21,9 +21,8 @@ const openseaHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           'X-API-KEY': process.env.OPENSEA_API_KEY
         },
       };
-      const url = new URL('https://api.opensea.io/api/v1/asset_contract/' + contract);
       const result = await fetch(
-        url,
+        'https://api.opensea.io/api/v1/asset_contract/' + contract,
         options
       ).then(res => res.json());
       res.status(200).json( result );
