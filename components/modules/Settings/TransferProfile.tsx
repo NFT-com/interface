@@ -30,14 +30,19 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
   const submitHandler = async () => {
     await nftProfile.transferFrom(currentAddress, inputVal, BigNumber.from(profileToken))
       .then((res) => setTransaction(res.hash))
-      .then(() => {setSuccess(true); setInputVal('');});
+      .then(() => {
+        setSuccess(true);
+        setInputVal('');
+      });
   };
 
   const closeModal = () => {
+    if(success){
+      toggleSidebar();
+      setCurrentProfileUrl('');
+      setHiddenProfileWithExpiry(selectedProfile);
+    }
     setVisible(false);
-    toggleSidebar();
-    setCurrentProfileUrl('');
-    setHiddenProfileWithExpiry(selectedProfile);
   };
 
   const setModalOpen = () => {

@@ -45,7 +45,9 @@ export default function NftOwner({ selectedProfile, showHeaderText, showToastOnS
   const sortProfiles = () => {
     const hiddenProfile = getHiddenProfileWithExpiry();
     const hiddenIndex = allProfiles.findIndex((e) => e.title === hiddenProfile);
-    allProfiles.splice(hiddenIndex, 1);
+    if(hiddenIndex !== -1){
+      allProfiles.splice(hiddenIndex, 1);
+    }
 
     allProfiles.sort((a, b) => a.title.localeCompare(b.title));
     const index = allProfiles.findIndex((e) => e.title === selected);
@@ -89,7 +91,17 @@ export default function NftOwner({ selectedProfile, showHeaderText, showToastOnS
         <p className='mb-4 text-[#6F6F6F]'>Select which profile will display as the owner for your NFTs and collections.</p>
       </>
       }
-      {selected !== '' && <ProfileCard onClick={() => {setVisible(true); sortProfiles();}} opensModal showSwitch profile={myOwnedProfileTokens?.find(t => t.title === selected)} />}
+      {selected !== '' &&
+        <ProfileCard
+          onClick={() => {
+            setVisible(true);
+            sortProfiles();
+          }}
+          opensModal
+          showSwitch
+          profile={myOwnedProfileTokens?.find(t => t.title === selected)}
+        />
+      }
       
       <Modal
         visible={visible}
@@ -122,7 +134,7 @@ export default function NftOwner({ selectedProfile, showHeaderText, showToastOnS
 
               {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
                 <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-              Get a New Profile
+                  Get a New Profile
                 </button>
               )}
 
