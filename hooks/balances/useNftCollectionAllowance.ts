@@ -31,7 +31,7 @@ export function useNftCollectionAllowance(
       return false;
     }
     try {
-      const allowed = await collection.isApprovedForAll(currentAddress, target);
+      const allowed = await collection.isApprovedForAll(currentAddress, target).catch(() => false);
       return allowed ?? false;
     } catch (e) {
       console.log(
