@@ -1,34 +1,30 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { IgnoredEventsInput, IgnoredEventsQuery } from 'graphql/generated/types';
+import { GetApprovedAssociationsQuery } from 'graphql/generated/types';
 
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 
-export interface HiddenEventsQueryData {
-  data: IgnoredEventsQuery;
+export interface ApprovedAssociationsQueryData {
+  data: GetApprovedAssociationsQuery;
   loading: boolean;
-  mutate: () => void;
+  mutate: () => void
 }
 
-export function useHiddenEventsQuery(input: IgnoredEventsInput): HiddenEventsQueryData {
+export function useApprovedAssociationsQuery(profileUrl: string) {
   const sdk = useGraphQLSDK();
   const [loading, setLoading] = useState(false);
-  
-  const keyString =
-      'HiddenEventsQuery' +
-      input.profileUrl +
-      input.walletAddress +
-      input?.chainId;
-  
+
+  const keyString = `GetApprovedAssociationsQuery${profileUrl}`;
+
   const { data } = useSWR(keyString, async () => {
     setLoading(true);
     try {
-      const result = await sdk.IgnoredEvents({ input: input });
+      const result = await sdk.getApprovedAssociations({ profileUrl: profileUrl });
       setLoading(false);
       return result;
     } catch (error) {
       setLoading(false);
-      console.log('Failed to load leaderboard.');
+      console.log('Failed to get approved associations');
     }
   });
   return {
@@ -36,6 +32,6 @@ export function useHiddenEventsQuery(input: IgnoredEventsInput): HiddenEventsQue
     loading: loading,
     mutate: () => {
       mutate(keyString);
-    },
+    }
   };
 }

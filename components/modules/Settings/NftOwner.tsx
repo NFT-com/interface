@@ -15,15 +15,17 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 type NftOwnerProps = {
-  selectedProfile: string
+  selectedProfile: string;
+  showHeaderText: boolean;
+  showToastOnSuccess: boolean;
 }
 
-export default function NftOwner({ selectedProfile }: NftOwnerProps) {
+export default function NftOwner({ selectedProfile, showHeaderText, showToastOnSuccess }: NftOwnerProps) {
   const { profileData } = useProfileQuery(selectedProfile);
   const { data: myProfiles } = useMyProfilesQuery();
   const { updateWalletProfileId } = useUpdateWalletProfileIdMutation();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-  const { getHiddenProfileWithExpiry } = useUser();
+  const { getHiddenProfileWithExpiry, setCurrentProfileUrl } = useUser();
   const [visible, setVisible] = useState(false);
   const [allProfiles, setAllProfiles] = useState([]);
   const [profilesToShow, setProfilesToShow] = useState([]);
@@ -77,15 +79,18 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
   const updateOwnerProfile = (profileTitle) => {
     setSelected(profileTitle);
     const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle)?.id;
-    updateWalletProfileId({ profileId: profileId }).then(() => toast.success('Saved!')).catch(() => toast.error('Error'));
+    updateWalletProfileId({ profileId: profileId }).then(() => toast.success('Saved!') && setCurrentProfileUrl(profileTitle)).catch(() => toast.error('Error'));
   };
 
   return (
     <div id="owner" className='mt-10 minlg:mt-20 font-grotesk'>
-      <Toast />
-      <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>NFT Owner</h2>
-      <p className='mb-4 text-[#6F6F6F]'>Select your primary NFT Profile which will display as the owner for your NFTs and collections.</p>
-
+      {showToastOnSuccess && <Toast />}
+      {showHeaderText &&
+      <>
+        <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>NFT Owner</h2>
+        <p className='mb-4 text-[#6F6F6F]'>Select your primary NFT Profile which will display as the owner for your NFTs and collections.</p>
+      </>
+      }
       {selected !== '' &&
         <ProfileCard
           onClick={() => {
