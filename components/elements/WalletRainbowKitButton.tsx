@@ -107,6 +107,13 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         }
         return (
           <>
+            {user?.notificationCount > 0 && (
+              <span className="flex h-5 w-5 -mb-3">
+                <span className="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-[#F9D963] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-5 w-5 bg-[#F9D963] justify-center">{user?.notificationCount}</span>
+              </span>
+            )
+            }
             <button
               className='sm:block hidden cursor-pointer'
               onClick={() => {

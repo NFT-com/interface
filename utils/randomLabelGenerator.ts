@@ -12,7 +12,6 @@ export function randomLabelGenerator(): string {
   ];
 
   const rareLabels = [
-    'Devs DID something',
     '🤖',
     '🤘',
     '🚀 🚀 🚀',

@@ -468,6 +468,17 @@ export type LeaderboardProfile = {
   url: Scalars['String'];
 };
 
+export type ListNftLooksrareInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  looksrareOrder?: InputMaybe<Scalars['String']>;
+};
+
+export type ListNftSeaportInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  seaportParams?: InputMaybe<Scalars['String']>;
+  seaportSignature?: InputMaybe<Scalars['String']>;
+};
+
 export type MarketAsk = {
   __typename?: 'MarketAsk';
   approvalTxHash?: Maybe<Scalars['String']>;
@@ -594,6 +605,8 @@ export type Mutation = {
   followProfile: Profile;
   /** AUTHENTICATED */
   ignoreAssociations: Array<Maybe<Event>>;
+  listNFTLooksrare: Scalars['Boolean'];
+  listNFTSeaport: Scalars['Boolean'];
   mintGKProfile: Scalars['String'];
   /** AUTHENTICATED */
   orderingUpdates: Profile;
@@ -737,6 +750,16 @@ export type MutationFollowProfileArgs = {
 
 export type MutationIgnoreAssociationsArgs = {
   eventIdArray: Array<InputMaybe<Scalars['String']>>;
+};
+
+
+export type MutationListNftLooksrareArgs = {
+  input: ListNftLooksrareInput;
+};
+
+
+export type MutationListNftSeaportArgs = {
+  input: ListNftSeaportInput;
 };
 
 
@@ -2106,6 +2129,14 @@ export type GetBidsQueryVariables = Exact<{
 
 export type GetBidsQuery = { __typename?: 'Query', getBids: { __typename?: 'GetMarketBid', items?: Array<{ __typename?: 'MarketBid', id: string, structHash: string, nonce: number, marketAskId: string, makerAddress: any, takerAddress: any, marketSwapId?: string | null, approvalTxHash?: string | null, cancelTxHash?: string | null, message: string, start: number, end: number, salt: number, offerAcceptedAt?: any | null, acceptedAt?: any | null, rejectedAt?: any | null, rejectedReason?: string | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null }> | null } };
 
+export type QueryQueryVariables = Exact<{
+  url: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type QueryQuery = { __typename?: 'Query', isProfileCustomized: boolean };
+
 export type GetMyPendingAssociationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2889,6 +2920,11 @@ export const GetBidsDocument = gql`
   }
 }
     `;
+export const QueryDocument = gql`
+    query Query($url: String!, $chainId: String) {
+  isProfileCustomized(url: $url, chainId: $chainId)
+}
+    `;
 export const GetMyPendingAssociationsDocument = gql`
     query GetMyPendingAssociations {
   getMyPendingAssociations {
@@ -3543,6 +3579,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetBids(variables: GetBidsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBidsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetBidsQuery>(GetBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetBids', 'query');
+    },
+    Query(variables: QueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<QueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<QueryQuery>(QueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Query', 'query');
     },
     GetMyPendingAssociations(variables?: GetMyPendingAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetMyPendingAssociationsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetMyPendingAssociationsQuery>(GetMyPendingAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetMyPendingAssociations', 'query');
