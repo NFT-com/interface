@@ -1,9 +1,6 @@
 import { Nft } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 
-import { NFTListingsContext } from './NFTListingsContext';
-
-import { useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -31,8 +28,6 @@ export function NftApprovals(props: NFTApprovalsProps) {
     currentAddress,
     TransferProxyTarget.LooksRare
   );
-
-  const { openListingBuilder } = useContext(NFTListingsContext);
   
   return <div className="w-full flex sm:flex-col items-center justify-around text-primary-text dark:text-primary-txt-dk">
     <div>
@@ -43,7 +38,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
             <span
               className='text-link hover:underline cursor-pointer ml-2'
               onClick={async () => {
-                openListingBuilder('looksrare', props.nft);
+                // todo: add to listing cart to be configured later
               }}
             >
               List Now
@@ -64,7 +59,7 @@ export function NftApprovals(props: NFTApprovalsProps) {
           <span
             className='text-link hover:underline cursor-pointer ml-2'
             onClick={async () => {
-              openListingBuilder('seaport', props.nft);
+              // todo: add to listing cart to be configured later
             }}
           >
             List Now

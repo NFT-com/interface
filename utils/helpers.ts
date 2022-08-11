@@ -84,7 +84,7 @@ export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
 
 export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
 
-export const filterNulls = (items: any[]) => items.filter(item => item != null);
+export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
 
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
   const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
