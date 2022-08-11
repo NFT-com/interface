@@ -12,10 +12,10 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
   const { setSearchModalOpen } = useSearchModal();
   
   return (
-    <div className={'border-t border-[#e5e7eb] border-b mt-3.5 bg-[#F8F8F8]'}>
+    <div className={'border-t border-[#e5e7eb] border-b mt-3.5 bg-[#F8F8F8] bg-gray-200'}>
       <div className="flex justify-between minmd:justify-start minmd:space-x-2">
         <Flask />
-        <span className="text-black text-xl minmd:text-2xl font-medium">Check out our curated collections</span>
+        <span className="text-black text-lg minmd:text-xl font-medium">Check out our curated collections</span>
         <CaretCircle
           onClick={() => {
             setIsFilterCollapsed(!isFilterCollapsed);

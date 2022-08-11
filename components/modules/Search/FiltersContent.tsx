@@ -10,7 +10,7 @@ import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useRef, useState } from 'react';
 
-export const SearchContent = () => {
+export const FiltersContent = () => {
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [searchResults, setSearchResults] = useState([]);

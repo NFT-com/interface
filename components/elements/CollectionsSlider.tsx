@@ -1,4 +1,5 @@
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 
 import useEmblaCarousel from 'embla-carousel-react';
 import React, { useCallback,useEffect, useState } from 'react';
@@ -51,10 +52,12 @@ export const NextButton = ({ enabled, onClick }: buttonProps) => (
 );
 
 const EmblaCarousel = (props: slidesProps) => {
+  const { width: screenWidth } = useWindowDimensions();
   const [viewportRef, embla] = useEmblaCarousel({
     dragFree: true,
     containScroll: 'trimSnaps',
-    skipSnaps: false
+    skipSnaps: false,
+    slidesToScroll : props.full && screenWidth > 599 ? 2 : 1,
   });
   const [scrollSnaps, setScrollSnaps] = useState([]);
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);

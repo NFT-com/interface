@@ -3,6 +3,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
+import router from 'next/router';
 import { useEffect, useState } from 'react';
 
 export const CollectionsResults = (props: {searchTerm: string}) => {
@@ -21,11 +22,22 @@ export const CollectionsResults = (props: {searchTerm: string}) => {
     }] })
       .then((resp) => {
         setsResults([...resp.results[0].hits]);
-        setFound(resp.found);
+        setFound(resp.results[0].found);
       });
   },[fetchTypesenseMultiSearch, props.searchTerm, screenWidth]);
 
   return(
-    results && results.length > 0 && <CollectionsSlider full slides={results} />
+    <>
+      <div className="flex justify-between items-center font-grotesk font-bold text-base minmd:text-lg text-blog-text-reskin mt-12">
+        <span> {found + ' ' + 'COLLECTIONS'} </span>
+        <span
+          className="cursor-pointer hover:font-semibold"
+          onClick={() => { router.push(`/app/discover/collections/${props.searchTerm}`); }}
+        >
+          SEE ALL
+        </span>
+      </div>
+      {results && results.length > 0 && <CollectionsSlider full slides={results} />}
+    </>
   );
 };

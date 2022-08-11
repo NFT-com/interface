@@ -6,6 +6,7 @@ import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -27,6 +28,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage() {
+  const { setSearchModalOpen } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
@@ -41,7 +43,7 @@ export default function ResultsPage() {
       index: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
-      per_page: screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2,
+      per_page: searchType?.toString() === 'collections' ? screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2 : screenWidth >= 600 ? 6 : 4,
       page: page,
     })
       .then((resp) => {
@@ -56,7 +58,7 @@ export default function ResultsPage() {
         index: searchType?.toString(),
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
         q: searchTerm?.toString(),
-        per_page: screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2,
+        per_page: searchType?.toString() === 'collections' ? screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2 : screenWidth >= 600 ? 6 : 4,
         page: page,
       })
         .then((resp) => {
@@ -93,22 +95,31 @@ export default function ResultsPage() {
           <CuratedCollectionsFilter onClick={() => null} />
           {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
           <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
-            {found + ' ' + searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS'}
+            {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
           </div>
-          {searchType?.toString() === 'nfts' &&
+          {searchType?.toString() !== 'collections' &&
           <div className="my-6 mb-4 flex justify-between font-grotesk font-black text-xl minmd:text-2xl">
-            <div className="cursor-pointer flex flex-row items-center">
+            <div
+              className="cursor-pointer flex flex-row items-center"
+              onClick={() => {
+                setSearchModalOpen(true, 'filters');
+              }}>
               <Filter className="h-10 w-10" />
               Filter
             </div>
-            <div className="cursor-pointer flex flex-row items-center">
+            <div
+              className="cursor-pointer flex flex-row items-center"
+              onClick={() => {
+                setSearchModalOpen(true, 'filters');
+              }}>
               Sort
               <ChevronDown className="h-10 w-10" />
             </div>
           </div>}
           <div className={tw(
-            'mt-6 minmd:grid minmd:grid-cols-2',
-            searchType?.toString() === 'collections' ? 'minmd:space-x-2' : 'space-y-5 minmd:gap-5 minmd:space-y-0')}>
+            'mt-6',
+            searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : 'grid grid-cols-2 minmd:grid-cols-3',
+            searchType?.toString() === 'collections' ? 'minmd:space-x-2' : 'gap-5')}>
             {results && results.map((item, index) => {
               return (
                 <div key={index}
