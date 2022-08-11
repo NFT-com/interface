@@ -7,6 +7,7 @@ export interface UserState {
   currentProfileUrl: string
   isDarkMode: boolean;
   hiddenProfile: string[];
+  notificationCount: number;
 }
 
 export function useUser() {
@@ -14,7 +15,8 @@ export function useUser() {
     fallbackData: {
       isDarkMode: true,
       currentProfileUrl: '',
-      hiddenProfile: null
+      hiddenProfile: null,
+      notificationCount: 0,
     }
   });
 
@@ -66,6 +68,13 @@ export function useUser() {
     return typeof window !== 'undefined' ? localStorage?.getItem('selectedProfileUrl') : '';
   }, []);
 
+  const setNotificationCount = useCallback((count: number) => {
+    mutate({
+      ...data,
+      notificationCount: count
+    });
+  }, [data, mutate]);
+
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove(data?.isDarkMode ? 'light' : 'dark');
@@ -85,6 +94,7 @@ export function useUser() {
     setCurrentProfileUrl,
     getCurrentProfileUrl,
     setHiddenProfileWithExpiry,
-    getHiddenProfileWithExpiry
+    getHiddenProfileWithExpiry,
+    setNotificationCount,
   };
 }

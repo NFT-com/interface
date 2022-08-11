@@ -51,7 +51,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
 
   return (
     <div id="transfer" className='mt-10'>
-      <h2 className='font-grotesk tracking-wide font-bold text-black md:text-2xl text-4xl mb-1'>Transfer Profile</h2>
+      <h2 className='font-grotesk tracking-wide font-bold text-black text-2xl mb-1'>Transfer Profile</h2>
       <p className='text-blog-text-reskin mb-4'>Send this profile to another wallet.</p>
 
       <SettingsForm buttonText='Transfer Profile' changeHandler={setInputVal} submitHandler={setModalOpen} {...{ inputVal }} />
@@ -65,10 +65,13 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
         }}
         bgColor='white'
         hideX
+        fullModal
+        pure
       >
-        <div className='max-w-[458px] sm:max-w-full h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
-          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
-            <XCircle onClick={() => closeModal()} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+        <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
+            <XCircle onClick={() => closeModal()} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             {success
               ?
               (

@@ -313,9 +313,8 @@ export function ProfilePreferencesSearch() {
                   if (nextTokenIdWithClaimable == null || isNullOrEmpty(currentURI)) {
                     return;
                   }
-                  
                   try {
-                    const tx = await (await profileAuctionSigner).genesisKeyClaimProfile(
+                    const tx = await profileAuctionSigner.genesisKeyClaimProfile(
                       currentURI,
                       nextTokenIdWithClaimable,
                       currentAddress,

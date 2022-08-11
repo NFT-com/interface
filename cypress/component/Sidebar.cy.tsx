@@ -7,6 +7,7 @@ import { Doppler, getEnv } from '../../utils/env';
 import { setupWagmiClient } from '../util/wagmi';
 
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import * as NextRouter from 'next/router';
 import { chain, configureChains, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
@@ -39,6 +40,8 @@ const TestComponent = () => {
 
 describe('Sidebar', () => {
   it('mounts with valid props', () => {
+    const pathname = '/';
+    cy.stub(NextRouter, 'useRouter').returns({ pathname });
     cy.viewport(800, 1200);
     const client = setupWagmiClient();
     cy.mount(

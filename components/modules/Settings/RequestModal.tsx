@@ -10,9 +10,10 @@ type RequestModalProps = {
   setAddressVal: (input: string) => void;
   success?: boolean;
   submitHandler: () => void;
+  isPending?: boolean
 };
 
-export default function RequestModal({ visible, setVisible, address, transaction, setAddressVal, success, submitHandler }: RequestModalProps) {
+export default function RequestModal({ visible, setVisible, address, transaction, setAddressVal, success, submitHandler, isPending }: RequestModalProps) {
   return (
     <Modal
       visible={visible}
@@ -24,36 +25,45 @@ export default function RequestModal({ visible, setVisible, address, transaction
       }}
       bgColor='white'
       hideX
+      fullModal
+      pure
     >
-      
-      <div className='max-w-[458px] h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
-        <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
-          <XCircle onClick={() => {setVisible(false); setAddressVal('');}} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+        <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+          <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
+          <XCircle onClick={() => {setVisible(false); setAddressVal('');}} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
           {!success
-            ? (
-              <>
-                <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Request</h2>
-                <p className='text-[#6F6F6F]'>You are about to send a wallet connection request to <span className='font-mono text-black text-xl break-words mt-2'>{address}</span></p>
-                <p className='mt-6'>View the address on {' '}
-                  <a
-                    target="_blank"
-                    rel="noreferrer" href={`https://etherscan.io/address/${address}`} className='font-bold underline tracking-wide'>Etherscan
-                  </a>
-                </p>
-                <p className='mt-6'>Please sign the transaction in your wallet. If you have changed your mind and do not wish to send this request, simply cancel.</p>
-                <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+            ?
+            (
+              isPending ?
+                <>
+                  <h2 className='text-4xl tracking-wide font-bold mb-10'>One second...</h2>
+                  <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
+                </>
+                :
+                <>
+                  <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Request</h2>
+                  <p className='text-[#6F6F6F]'>You are about to send a wallet connection request to <span className='font-mono text-black text-xl break-words mt-2'>{address}</span></p>
+                  <p className='mt-6'>View the address on {' '}
+                    <a
+                      target="_blank"
+                      rel="noreferrer" href={`https://etherscan.io/address/${address}`} className='font-bold underline tracking-wide'>Etherscan
+                    </a>
+                  </p>
+                  <p className='mt-6'>Please sign the transaction in your wallet. If you have changed your mind and do not wish to send this request, simply cancel.</p>
+                  <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                   Approve Request
-                </button>
-                <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
-                  <GasPump size={20} weight="fill" />
-                  <p className='ml-1'>This action will require a gas fee.</p>
-                </div>
-                <p
-                  className='underline text-center font-bold tracking-wide hover:cursor-pointer mt-6'
-                  onClick={() => {setVisible(false); setAddressVal('');}}>
+                  </button>
+                  <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
+                    <GasPump size={20} weight="fill" />
+                    <p className='ml-1'>This action will require a gas fee.</p>
+                  </div>
+                  <p
+                    className='underline text-center font-bold tracking-wide hover:cursor-pointer mt-6'
+                    onClick={() => {setVisible(false); setAddressVal('');}}>
                     Cancel
-                </p>
-              </>
+                  </p>
+                </>
             )
             :
             (

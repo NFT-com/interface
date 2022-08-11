@@ -34,6 +34,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
   const [notAuthorized, setNotAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isAssociatedOrSelf, setIsAssociatedOrSelf] = useState(false);
+  const [transactionPending, setTransactionPending] = useState(false);
 
   const fetchAssociatedCollection = useCallback(
     async (profile) => {
@@ -109,14 +110,30 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
   const getModalContent = useCallback(() => {
     const submitHandler = async () => {
+      setTransactionPending(true);
       const address = inputVal;
-      await nftResolver.setAssociatedContract( { cid: 0, chainAddr: address } , selectedProfile).then(() => setSuccess(true));
+      const tx = await nftResolver.setAssociatedContract( { cid: 0, chainAddr: address } , selectedProfile);
+      if(tx){
+        tx.wait(1).then(() => {
+          setTransactionPending(false);
+          setSuccess(true);
+        });
+      }
     };
 
     const changeHandlerModal = async (e) => {
       setInputVal(e);
       mutateNewCollectionContract();
     };
+
+    if(transactionPending){
+      return (
+        <>
+          <h2 className='text-4xl tracking-wide font-bold mb-10'>One second...</h2>
+          <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
+        </>
+      );
+    }
 
     if(changeCollection){
       return (
@@ -190,13 +207,13 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <p className='mt-2 text-[#6F6F6F] mb-10'>We’re making sure everything looks good on our end.</p>
       </>
     );
-  }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateNewCollectionContract, collectionNameModal, isAssociatedOrSelf]);
+  }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateNewCollectionContract, collectionNameModal, isAssociatedOrSelf, transactionPending]);
 
   console.log(associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress)));
 
   return (
     <>
-      <div className='mt-8 font-grotesk'>
+      <div className='mt-10 font-grotesk'>
         <h3 className='text-base font-semibold tracking-wide mb-1'>NFT Collection</h3>
         <p className='text-blog-text-reskin mb-4'>Enter the NFT collection you want to display on your profile.</p>
 
@@ -209,7 +226,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
         {connectedCollection?.chainAddr && data && !loading
           ?
-          <div className='mt-4 md:w-full w-3/4'>
+          <div className='mt-4 w-full'>
             <AssociatedProfile
               isCollection
               isRemoved={
@@ -242,21 +259,19 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         }}
         bgColor='white'
         hideX
+        fullModal
+        pure
       >
-        <div className='max-w-[458px] h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
-          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
+        <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
             <XCircle
               onClick={() => {
                 setVisible(false);
                 setLookupInProgress(true);
                 setInputVal('');
                 setNotAuthorized(false);
-              }}
-              className='absolute top-3 right-0 hover:cursor-pointer'
-              size={32}
-              color="#B6B6B6"
-              weight="fill"
-            />
+              }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             {getModalContent()}
           </div>
         </div>

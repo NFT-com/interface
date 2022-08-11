@@ -468,6 +468,17 @@ export type LeaderboardProfile = {
   url: Scalars['String'];
 };
 
+export type ListNftLooksrareInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  looksrareOrder?: InputMaybe<Scalars['String']>;
+};
+
+export type ListNftSeaportInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  seaportParams?: InputMaybe<Scalars['String']>;
+  seaportSignature?: InputMaybe<Scalars['String']>;
+};
+
 export type MarketAsk = {
   __typename?: 'MarketAsk';
   approvalTxHash?: Maybe<Scalars['String']>;
@@ -737,6 +748,16 @@ export type MutationFollowProfileArgs = {
 
 export type MutationIgnoreAssociationsArgs = {
   eventIdArray: Array<InputMaybe<Scalars['String']>>;
+};
+
+
+export type MutationListNftLooksrareArgs = {
+  input: ListNftLooksrareInput;
+};
+
+
+export type MutationListNftSeaportArgs = {
+  input: ListNftSeaportInput;
 };
 
 
@@ -2062,6 +2083,14 @@ export type AssociatedAddressesForContractQueryVariables = Exact<{
 
 export type AssociatedAddressesForContractQuery = { __typename?: 'Query', associatedAddressesForContract: { __typename?: 'AssociatedAddressesForContractOutput', deployerAddress?: any | null, associatedAddresses?: Array<any | null> | null, deployerIsAssociated?: boolean | null } };
 
+export type AssociatedCollectionForProfileQueryVariables = Exact<{
+  profile: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type AssociatedCollectionForProfileQuery = { __typename?: 'Query', associatedCollectionForProfile: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', deployer?: string | null, contract?: any | null } | null } };
+
 export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
 }>;
@@ -2092,6 +2121,13 @@ export type ExternalListingsQueryVariables = Exact<{
 
 export type ExternalListingsQuery = { __typename?: 'Query', externalListings?: { __typename?: 'ExternalListingsOutput', listings?: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null, baseCoin?: { __typename?: 'BaseCoin', symbol?: string | null, logoURI?: string | null, address?: string | null, decimals?: number | null } | null } | null> | null } | null };
 
+export type GetApprovedAssociationsQueryVariables = Exact<{
+  profileUrl: Scalars['String'];
+}>;
+
+
+export type GetApprovedAssociationsQuery = { __typename?: 'Query', getApprovedAssociations: Array<{ __typename?: 'ApprovedAssociationOutput', id: string, receiver: string, hidden: boolean } | null> };
+
 export type GetAsksQueryVariables = Exact<{
   input: AsksInput;
 }>;
@@ -2105,6 +2141,14 @@ export type GetBidsQueryVariables = Exact<{
 
 
 export type GetBidsQuery = { __typename?: 'Query', getBids: { __typename?: 'GetMarketBid', items?: Array<{ __typename?: 'MarketBid', id: string, structHash: string, nonce: number, marketAskId: string, makerAddress: any, takerAddress: any, marketSwapId?: string | null, approvalTxHash?: string | null, cancelTxHash?: string | null, message: string, start: number, end: number, salt: number, offerAcceptedAt?: any | null, acceptedAt?: any | null, rejectedAt?: any | null, rejectedReason?: string | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null }> | null } };
+
+export type QueryQueryVariables = Exact<{
+  url: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type QueryQuery = { __typename?: 'Query', isProfileCustomized: boolean };
 
 export type GetMyPendingAssociationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2158,6 +2202,14 @@ export type IsAddressWhitelistedQueryVariables = Exact<{
 
 export type IsAddressWhitelistedQuery = { __typename?: 'Query', isAddressWhitelisted: boolean };
 
+export type IsProfileCustomizedQueryVariables = Exact<{
+  url: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type IsProfileCustomizedQuery = { __typename?: 'Query', isProfileCustomized: boolean };
+
 export type LeaderboardQueryVariables = Exact<{
   input?: InputMaybe<LeaderboardInput>;
 }>;
@@ -2202,7 +2254,7 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2676,6 +2728,16 @@ export const AssociatedAddressesForContractDocument = gql`
   }
 }
     `;
+export const AssociatedCollectionForProfileDocument = gql`
+    query AssociatedCollectionForProfile($profile: String!, $chainId: String) {
+  associatedCollectionForProfile(url: $profile, chainId: $chainId) {
+    collection {
+      deployer
+      contract
+    }
+  }
+}
+    `;
 export const CollectionDocument = gql`
     query Collection($input: CollectionInput!) {
   collection(input: $input) {
@@ -2762,6 +2824,15 @@ export const ExternalListingsDocument = gql`
         decimals
       }
     }
+  }
+}
+    `;
+export const GetApprovedAssociationsDocument = gql`
+    query getApprovedAssociations($profileUrl: String!) {
+  getApprovedAssociations(profileUrl: $profileUrl) {
+    id
+    receiver
+    hidden
   }
 }
     `;
@@ -2877,6 +2948,11 @@ export const GetBidsDocument = gql`
       auctionType
     }
   }
+}
+    `;
+export const QueryDocument = gql`
+    query Query($url: String!, $chainId: String) {
+  isProfileCustomized(url: $url, chainId: $chainId)
 }
     `;
 export const GetMyPendingAssociationsDocument = gql`
@@ -3096,6 +3172,11 @@ export const IsAddressWhitelistedDocument = gql`
   isAddressWhitelisted(input: $input)
 }
     `;
+export const IsProfileCustomizedDocument = gql`
+    query isProfileCustomized($url: String!, $chainId: String) {
+  isProfileCustomized(url: $url, chainId: $chainId)
+}
+    `;
 export const LeaderboardDocument = gql`
     query Leaderboard($input: LeaderboardInput) {
   leaderboard(input: $input) {
@@ -3231,6 +3312,10 @@ export const NftDocument = gql`
     wallet {
       address
       chainId
+      preferredProfile {
+        url
+        photoURL
+      }
     }
     metadata {
       name
@@ -3513,6 +3598,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     AssociatedAddressesForContract(variables: AssociatedAddressesForContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedAddressesForContractQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AssociatedAddressesForContractQuery>(AssociatedAddressesForContractDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedAddressesForContract', 'query');
     },
+    AssociatedCollectionForProfile(variables: AssociatedCollectionForProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedCollectionForProfileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AssociatedCollectionForProfileQuery>(AssociatedCollectionForProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedCollectionForProfile', 'query');
+    },
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');
     },
@@ -3525,11 +3613,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     ExternalListings(variables: ExternalListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ExternalListingsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ExternalListingsQuery>(ExternalListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ExternalListings', 'query');
     },
+    getApprovedAssociations(variables: GetApprovedAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetApprovedAssociationsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetApprovedAssociationsQuery>(GetApprovedAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getApprovedAssociations', 'query');
+    },
     GetAsks(variables: GetAsksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetAsksQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAsksQuery>(GetAsksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAsks', 'query');
     },
     GetBids(variables: GetBidsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBidsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetBidsQuery>(GetBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetBids', 'query');
+    },
+    Query(variables: QueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<QueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<QueryQuery>(QueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Query', 'query');
     },
     GetMyPendingAssociations(variables?: GetMyPendingAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetMyPendingAssociationsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetMyPendingAssociationsQuery>(GetMyPendingAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetMyPendingAssociations', 'query');
@@ -3554,6 +3648,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     IsAddressWhitelisted(variables?: IsAddressWhitelistedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IsAddressWhitelistedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<IsAddressWhitelistedQuery>(IsAddressWhitelistedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IsAddressWhitelisted', 'query');
+    },
+    isProfileCustomized(variables: IsProfileCustomizedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IsProfileCustomizedQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IsProfileCustomizedQuery>(IsProfileCustomizedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'isProfileCustomized', 'query');
     },
     Leaderboard(variables?: LeaderboardQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LeaderboardQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<LeaderboardQuery>(LeaderboardDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Leaderboard', 'query');

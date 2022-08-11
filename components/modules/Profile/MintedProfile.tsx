@@ -1,11 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
+import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
+import { ProfileViewType } from 'graphql/generated/types';
+import { useAssociatedCollectionForProfile } from 'graphql/hooks/useAssociatedCollectionForProfileQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { DeployedCollectionsGallery } from './DeployedCollectionsGallery';
@@ -21,7 +26,8 @@ import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
-import { useAccount, useNetwork } from 'wagmi';
+import useSWR from 'swr';
+import { useAccount, useNetwork, useSigner } from 'wagmi';
 
 export interface MintedProfileProps {
   profileURI: string;
@@ -49,6 +55,28 @@ export function MintedProfile(props: MintedProfileProps) {
   const { chain } = useNetwork();
   const { profileData } = useProfileQuery(profileURI);
 
+  const { nftResolver } = useAllContracts();
+  const { data: signer } = useSigner();
+  const { data: associatedContract } = useSWR<AddressTupleStructOutput>(
+    'AssociatedCollection' + profileURI + profileData?.profile?.profileView,
+    async () => {
+      if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
+        return null;
+      }
+      return await nftResolver.connect(signer).associatedContract(profileURI).catch(() => null);
+    }
+  );
+  const { data: associatedAddresses } = useSWR<AddressTupleStructOutput[]>(
+    'AssociatedAddresses' + profileURI + profileData?.profile?.profileView,
+    async () => {
+      if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
+        return null;
+      }
+      return await nftResolver.connect(signer).associatedAddresses(profileURI).catch(() => null);
+    }
+  );
+  const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
+
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
   const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
@@ -74,6 +102,15 @@ export function MintedProfile(props: MintedProfileProps) {
       });
     }
   };
+  
+  if (
+    associatedContract != null &&
+    associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer))
+  ) {
+    return <div className='w-full h-full'>
+      <Collection contract={associatedContract?.chainAddr} />
+    </div>;
+  }
 
   return (
     <ProfileScrollContextProvider>
