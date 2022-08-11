@@ -1,5 +1,5 @@
 mutation IgnoreAssocations($eventIdArray: [String]!) {
-  ignoreAssocations(eventIdArray: $eventIdArray) {
+  ignoreAssociations(eventIdArray: $eventIdArray) {
     id
     chainId
     contract
