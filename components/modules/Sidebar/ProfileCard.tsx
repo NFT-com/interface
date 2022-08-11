@@ -33,11 +33,11 @@ export default function ProfileCard({ profile, onClick, message, showSwitch, ope
           boxShadow: 'inset 0 0 0 1000px rgba(0,0,0,.8)'
         }}
         className={tw(
-          'rounded-[10px] hover:cursor-pointer w-full bg-cover bg-center box-border',
+          'rounded-[10px] hover:cursor-pointer w-full bg-cover bg-center box-border h-20',
         )}
         onClick={onClick ? !opensModal ? () => onClick(profile?.title) : () => onClick(true) : null}
       >
-        <div className='flex items-center py-4 px-4 rounded-[10px]' >
+        <div className='flex items-center py-4 px-4 rounded-[10px] h-full' >
           {profile?.metadata?.image && <Image className='rounded-full' width={50} height={50} alt={`profile for ${profile?.title}`} src={profile?.metadata?.image} />}
           <div className='flex justify-between w-full'>
             <div>

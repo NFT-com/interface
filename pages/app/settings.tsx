@@ -38,10 +38,10 @@ export default function Settings() {
       const data = await (await nftResolver.associatedAddresses(profile)) || [];
       const allData = await nftResolver.getAllAssociatedAddr(currentAddress, profile) || [];
       const result = allData.filter(a => !data.some(b => a.chainAddr === b.chainAddr));
-      const filterPending = result.reverse().filter(a => !events?.hiddenEvents.some(b => a.chainAddr === b.destinationAddress && b.ignore));
-      setAssociatedAddresses({ pending: filterPending, accepted: data, denied: events?.hiddenEvents });
+      const filterPending = result.reverse().filter(a => !events?.ignoredEvents.some(b => a.chainAddr === b.destinationAddress && b.ignore));
+      setAssociatedAddresses({ pending: filterPending, accepted: data, denied: events?.ignoredEvents });
     },
-    [nftResolver, currentAddress, events?.hiddenEvents],
+    [nftResolver, currentAddress, events?.ignoredEvents],
   );
 
   useEffect(() => {
@@ -91,15 +91,15 @@ export default function Settings() {
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
           <SettingsSidebar isOwner={ownsProfilesAndSelectedProfile} />
-          <div className='px-5 w-3/5 md:w-full pt-28 pb-20 bg-white mx-auto'>
-            <h2 className='mb-2 font-bold text-black text-4xl font-grotesk md:block hidden'>
+          <div className='w-full bg-white mx-auto pt-28 pb-20 pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pl-80 max-w-[900px]'>
+            <h2 className='font-bold text-black text-[40px] font-grotesk block minlg:hidden'>
               <span className='text-[#F9D963]'>/</span>
-            Settings
+              Settings
             </h2>
             {ownsProfilesAndSelectedProfile
               ? (
                 <>
-                  <NftOwner {...{ selectedProfile }} />
+                  <NftOwner {...{ selectedProfile, showHeaderText: true, showToastOnSuccess: true }} />
                   <DisplayMode {...{ associatedAddresses, selectedProfile }}/>
                 </>
               )
