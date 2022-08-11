@@ -12,10 +12,10 @@ import { NftGallery } from './NftGallery';
 import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
+import { Gear } from 'phosphor-react';
 import EditLayoutIcon from 'public/edit_layout.svg';
 import EyeIcon from 'public/eye.svg';
 import EyeOffIcon from 'public/eye_off.svg';
-import GearIcon from 'public/gear_drop_down.svg';
 import GKBadgeIcon from 'public/gk_badge.svg';
 import NftLabelIcon from 'public/label.svg';
 import { useContext, useEffect, useState } from 'react';
@@ -163,7 +163,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   icon: <EditLayoutIcon className="" alt="Collections toggle" />,
                 }
               ])}>
-              <GearIcon className="w-8 h-8 shrink-0 aspect-square" alt="Edit menu" />
+              <Gear className="w-8 h-8 shrink-0 aspect-square" alt='Edit Menu'/>
             </DropdownPickerModal>
           </div>}
         </div>
