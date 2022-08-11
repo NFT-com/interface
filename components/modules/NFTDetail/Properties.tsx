@@ -42,7 +42,7 @@ export const Properties = (props: PropertiesProps) => {
                   key={index}
                   type={item.type.toUpperCase()}
                   value={item.value}
-                  center
+                  copy
                 />;
               })}
             </div>

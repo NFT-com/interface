@@ -1,9 +1,22 @@
-// import { isNullOrEmpty } from 'utils/helpers';
-import { TypesenseMultiSearchInput, TypesenseSearchInput } from 'graphql/generated/types';
+
+import { InputMaybe, Scalars } from 'graphql/generated/types';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import * as Sentry from '@sentry/nextjs';
 import { useCallback, useState } from 'react';
+
+export type TypesenseSearchInput = {
+  collection?: InputMaybe<Scalars['String']>;
+  index?: InputMaybe<Scalars['String']>;
+  q: Scalars['String'];
+  query_by: Scalars['String'];
+  //searchTerm: Scalars['String'] | Array<Scalars['String'] >;
+  per_page: Scalars['Int'];
+  page: Scalars['Int'];
+};
+export type TypesenseMultiSearchInput = {
+  searches: Array<TypesenseSearchInput>;
+};
 
 export interface FetchTypesenseSearchData {
   fetchTypesenseSearch: (input: TypesenseSearchInput) => Promise<any>;
