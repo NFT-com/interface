@@ -28,6 +28,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
   const [collectionName, setCollectionName] = useState('');
   const [notAuthorized, setNotAuthorized] = useState(false);
   const [isAssociatedOrSelf, setIsAssociatedOrSelf] = useState(false);
+  const [transactionPending, setTransactionPending] = useState(false);
 
   const fetchAssociatedCollection = useCallback(
     async (profile) => {
@@ -93,14 +94,30 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
   const getModalContent = useCallback(() => {
     const submitHandler = async () => {
+      setTransactionPending(true);
       const address = inputVal;
-      await nftResolver.setAssociatedContract( { cid: 0, chainAddr: address } , selectedProfile).then(() => setSuccess(true));
+      const tx = await nftResolver.setAssociatedContract( { cid: 0, chainAddr: address } , selectedProfile);
+      if(tx){
+        tx.wait(1).then(() => {
+          setTransactionPending(false);
+          setSuccess(true);
+        });
+      }
     };
 
     const changeHandlerModal = async (e) => {
       setInputVal(e);
       mutateContract();
     };
+
+    if(transactionPending){
+      return (
+        <>
+          <h2 className='text-4xl tracking-wide font-bold mb-10'>One second...</h2>
+          <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
+        </>
+      );
+    }
 
     if(changeCollection){
       return (
@@ -173,7 +190,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <p className='mt-2 text-[#6F6F6F] mb-10'>We’re making sure everything looks good on our end.</p>
       </>
     );
-  }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateContract, collectionNameModal, isAssociatedOrSelf]);
+  }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateContract, collectionNameModal, isAssociatedOrSelf, transactionPending]);
 
   return (
     <>

@@ -35,16 +35,16 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const { mutate: mutateHidden } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
   const { nftResolver } = useAllContracts();
   const [inputVal, setInputVal] = useState('');
-  
   const [transaction, setTransaction] = useState('');
   const [isAssociatedOrSelf, setIsAssociatedOrSelf] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [transactionPending, setTransactionPending] = useState(false);
   const [success, setSuccess] = useState(false);
   const { updateHideIgnored } = useUpdateHideIgnored();
 
   const submitHandler = async (input?: string) => {
     const address = input || inputVal;
-    const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === address);
+    const deniedEvent = associatedAddresses?.denied?.find((evt) => evt.destinationAddress === address);
     if(deniedEvent){
       updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] })
         .then(() => {
@@ -54,12 +54,16 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
           setModalVisible(true);
         });
     } else {
-      await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile)
-        .then((res) => setTransaction(res.hash))
-        .then(() => {
+      const tx = await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile);
+      setTransactionPending(true);
+      if(tx){
+        tx.wait(1).then(() => {
           setSuccess(true);
+          setTransaction(tx.hash);
           setModalVisible(true);
+          setTransactionPending(false);
         });
+      }
     }
   };
 
@@ -121,7 +125,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
           </div>
         )
         : null}
-      <RequestModal {...{ submitHandler, success }} address={inputVal} transaction={transaction} visible={modalVisible} setVisible={setModalVisible} setAddressVal={setInputVal} />
+      <RequestModal {...{ submitHandler, success }} isPending={transactionPending} address={inputVal} transaction={transaction} visible={modalVisible} setVisible={setModalVisible} setAddressVal={setInputVal} />
     </div>
   );
 }
