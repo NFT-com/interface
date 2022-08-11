@@ -81,10 +81,10 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
   };
 
   return (
-    <div id="owner" className='md:mt-10 mt-0 font-grotesk'>
+    <div id="owner" className='mt-10 minlg:mt-20 font-grotesk'>
       <Toast />
-      <h2 className='text-black mb-2 font-bold md:text-2xlz text-4xl tracking-wide'>NFT Owner</h2>
-      <p className='mb-4 text-[#6F6F6F]'>Select which profile will display as the owner for your NFTs and collections.</p>
+      <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>NFT Owner</h2>
+      <p className='mb-4 text-[#6F6F6F]'>Select your primary NFT Profile which will display as the owner for your NFTs and collections.</p>
 
       {selected !== '' &&
         <ProfileCard
@@ -107,16 +107,19 @@ export default function NftOwner({ selectedProfile }: NftOwnerProps) {
         }}
         hideX
         bgColor='white'
+        fullModal
+        pure
       >
-        <div className='max-w-[458px] h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
-          <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto relative '>
-            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+        <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+          <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
+            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             <div>
               <h2 className='text-4xl tracking-wide font-bold mb-10'>Set Owner</h2>
               <p className='text-[#6F6F6F] mb-4'>Select the profile to sign-in with by default.</p>
               <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile Name" />
             </div>
-            <div className='max-h-[320px] overflow-auto'>
+            <div className='max-h-[350px] maxlg:max-h-[320px] overflow-auto'>
               <div>
                 {profilesToShow && profilesToShow?.map((profile) => {
                   return (

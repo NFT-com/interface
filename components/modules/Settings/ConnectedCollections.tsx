@@ -177,14 +177,14 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
   return (
     <>
-      <div className='mt-8 font-grotesk'>
+      <div className='mt-10 font-grotesk'>
         <h3 className='text-base font-semibold tracking-wide mb-1'>NFT Collection</h3>
         <p className='text-blog-text-reskin mb-4'>Enter the NFT collection you want to display on your profile.</p>
 
         {!connectedCollection?.chainAddr? <SettingsForm {...{ isAssociatedOrSelf }} submitHandler={openModal} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandler} /> : null}
 
         {connectedCollection?.chainAddr
-          ? <div className='mt-4 md:w-full w-3/4'>
+          ? <div className='mt-4 w-full'>
             <AssociatedProfile
               isCollection
               profile={{
@@ -210,16 +210,19 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         }}
         bgColor='white'
         hideX
+        fullModal
+        pure
       >
-        <div className='max-w-[458px] h-max bg-white text-left px-4 pb-10 rounded-[10px]'>
-          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto relative'>
+        <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+          <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
             <XCircle
               onClick={() => {
                 setVisible(false);
                 setLookupInProgress(true);
                 setInputVal('');
                 setNotAuthorized(false);
-              }} className='absolute top-3 right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+              }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
             {getModalContent()}
           </div>
         </div>

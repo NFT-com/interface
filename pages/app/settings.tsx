@@ -91,10 +91,10 @@ export default function Settings() {
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
           <SettingsSidebar isOwner={ownsProfilesAndSelectedProfile} />
-          <div className='px-5 w-3/5 md:w-full pt-28 pb-20 bg-white mx-auto'>
-            <h2 className='mb-2 font-bold text-black text-4xl font-grotesk md:block hidden'>
+          <div className='w-full bg-white mx-auto pt-28 pb-20 pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pl-80 max-w-[900px]'>
+            <h2 className='font-bold text-black text-[40px] font-grotesk block minlg:hidden'>
               <span className='text-[#F9D963]'>/</span>
-            Settings
+              Settings
             </h2>
             {ownsProfilesAndSelectedProfile
               ? (
