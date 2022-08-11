@@ -209,20 +209,6 @@ export type CollectionNfTsInput = {
   pageInput?: InputMaybe<PageInput>;
 };
 
-export type TypesenseSearchInput = {
-  collection?: InputMaybe<Scalars['String']>;
-  index?: InputMaybe<Scalars['String']>;
-  q: Scalars['String'];
-  query_by: Scalars['String'];
-  //searchTerm: Scalars['String'] | Array<Scalars['String'] >;
-  per_page: Scalars['Int'];
-  page: Scalars['Int'];
-};
-
-export type TypesenseMultiSearchInput = {
-  searches: Array<TypesenseSearchInput>;
-};
-
 export type ConvertEnsToEthAddress = {
   __typename?: 'ConvertEnsToEthAddress';
   ethAddresses: Array<Scalars['String']>;
@@ -632,7 +618,8 @@ export type Mutation = {
   syncCollectionsWithNFTs: SyncCollectionsWithNfTsOutput;
   /** AUTHENTICATED */
   unfollowProfile: Profile;
-  updateAssociatedAddresses: UpdateAssociatedAddressesOuput;
+  updateAssociatedAddresses: UpdateAssociatedAddressesOutput;
+  updateAssociatedContract: UpdateAssociatedContractOutput;
   /** AUTHENTICATED */
   updateCuration: Curation;
   updateEmail: User;
@@ -831,6 +818,11 @@ export type MutationUnfollowProfileArgs = {
 
 export type MutationUpdateAssociatedAddressesArgs = {
   input?: InputMaybe<UpdateAssociatedAddressesInput>;
+};
+
+
+export type MutationUpdateAssociatedContractArgs = {
+  input?: InputMaybe<UpdateAssociatedContractInput>;
 };
 
 
@@ -1149,6 +1141,7 @@ export type ProfilesOutput = {
 export type Query = {
   __typename?: 'Query';
   associatedAddressesForContract: AssociatedAddressesForContractOutput;
+  associatedCollectionForProfile: CollectionInfo;
   blockedProfileURI: Scalars['Boolean'];
   collection?: Maybe<CollectionInfo>;
   collectionNFTs: NfTsOutput;
@@ -1176,6 +1169,7 @@ export type Query = {
   /** AUTHENTICATED */
   insiderReservedProfiles: Array<Scalars['String']>;
   isAddressWhitelisted: Scalars['Boolean'];
+  isProfileCustomized: Scalars['Boolean'];
   latestProfiles: ProfilesOutput;
   leaderboard: LeaderboardOutput;
   /** AUTHENTICATED */
@@ -1204,6 +1198,12 @@ export type Query = {
 
 export type QueryAssociatedAddressesForContractArgs = {
   contract: Scalars['Address'];
+};
+
+
+export type QueryAssociatedCollectionForProfileArgs = {
+  chainId?: InputMaybe<Scalars['String']>;
+  url: Scalars['String'];
 };
 
 
@@ -1320,6 +1320,12 @@ export type QueryInsiderReservedProfilesArgs = {
 
 export type QueryIsAddressWhitelistedArgs = {
   input?: InputMaybe<WhitelistCheckInput>;
+};
+
+
+export type QueryIsProfileCustomizedArgs = {
+  chainId?: InputMaybe<Scalars['String']>;
+  url: Scalars['String'];
 };
 
 
@@ -1640,8 +1646,18 @@ export type UpdateAssociatedAddressesInput = {
   profileUrl: Scalars['String'];
 };
 
-export type UpdateAssociatedAddressesOuput = {
-  __typename?: 'UpdateAssociatedAddressesOuput';
+export type UpdateAssociatedAddressesOutput = {
+  __typename?: 'UpdateAssociatedAddressesOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
+export type UpdateAssociatedContractInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  profileUrl: Scalars['String'];
+};
+
+export type UpdateAssociatedContractOutput = {
+  __typename?: 'UpdateAssociatedContractOutput';
   message?: Maybe<Scalars['String']>;
 };
 
@@ -1997,6 +2013,14 @@ export type AssociatedAddressesForContractQueryVariables = Exact<{
 
 export type AssociatedAddressesForContractQuery = { __typename?: 'Query', associatedAddressesForContract: { __typename?: 'AssociatedAddressesForContractOutput', deployerAddress?: any | null, associatedAddresses?: Array<any | null> | null, deployerIsAssociated?: boolean | null } };
 
+export type AssociatedCollectionForProfileQueryVariables = Exact<{
+  profile: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type AssociatedCollectionForProfileQuery = { __typename?: 'Query', associatedCollectionForProfile: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', deployer?: string | null, contract?: any | null } | null } };
+
 export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
 }>;
@@ -2132,7 +2156,7 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2594,6 +2618,16 @@ export const AssociatedAddressesForContractDocument = gql`
     deployerAddress
     associatedAddresses
     deployerIsAssociated
+  }
+}
+    `;
+export const AssociatedCollectionForProfileDocument = gql`
+    query AssociatedCollectionForProfile($profile: String!, $chainId: String) {
+  associatedCollectionForProfile(url: $profile, chainId: $chainId) {
+    collection {
+      deployer
+      contract
+    }
   }
 }
     `;
@@ -3141,6 +3175,10 @@ export const NftDocument = gql`
     wallet {
       address
       chainId
+      preferredProfile {
+        url
+        photoURL
+      }
     }
     metadata {
       name
@@ -3419,6 +3457,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     AssociatedAddressesForContract(variables: AssociatedAddressesForContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedAddressesForContractQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AssociatedAddressesForContractQuery>(AssociatedAddressesForContractDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedAddressesForContract', 'query');
+    },
+    AssociatedCollectionForProfile(variables: AssociatedCollectionForProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedCollectionForProfileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AssociatedCollectionForProfileQuery>(AssociatedCollectionForProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedCollectionForProfile', 'query');
     },
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');

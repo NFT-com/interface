@@ -67,7 +67,7 @@ export default function ResultsPage() {
       .documents()
       .search({
         'q'         : searchTerm.toString(),
-        'query_by'  : 'contractAddr,contractName,chain',
+        'query_by'  : SearchableFields.COLLECTIONS_INDEX_FIELDS,
         'per_page': 20,
       })
       .then(function (searchResults) {
