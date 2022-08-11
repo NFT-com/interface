@@ -7,6 +7,7 @@ import { OrderType } from '../../../types';
 import { Doppler, getEnv } from '../../../utils/env';
 import { getSigners, setupWagmiClient } from '../../util/utils';
 
+import { JsonRpcSigner } from '@ethersproject/providers';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { MockConnector } from '@wagmi/core/connectors/mock';
 import { chain, configureChains, WagmiConfig } from 'wagmi';
@@ -84,7 +85,7 @@ const TestComponent = () => {
 
 describe('useListNFTMutations', () => {
   let connector: MockConnector;
-  let signer;
+  let signer: JsonRpcSigner;
   beforeEach(() => {
     cy.intercept('POST', '*graphql*', req => {
       if (req.body.operationName === 'ListNftSeaport') {
@@ -92,28 +93,29 @@ describe('useListNFTMutations', () => {
       } else if (req.body.operationName === 'ListNftLooksrare') {
         req.alias = 'ListNftLooksrare';
       }
+    }).then(() => {
+      const signers = getSigners();
+      signer = signers[0];
+      connector = new MockConnector({
+        options: { signer },
+      });
+      const client = setupWagmiClient({}, [connector]);
+      cy.mount(
+        <WagmiConfig client={client}>
+          <RainbowKitProvider
+            appInfo={{
+              appName: 'NFT.com',
+              learnMoreUrl: 'https://docs.nft.com/',
+            }}
+            theme={rainbowDark}
+            chains={chains}>
+            <GraphQLProvider>
+              <TestComponent />
+            </GraphQLProvider>
+          </RainbowKitProvider>
+        </WagmiConfig>
+      );
     });
-    const signers = getSigners();
-    signer = signers[0];
-    connector = new MockConnector({
-      options: { signer },
-    });
-    const client = setupWagmiClient({}, [connector]);
-    cy.mount(
-      <WagmiConfig client={client}>
-        <RainbowKitProvider
-          appInfo={{
-            appName: 'NFT.com',
-            learnMoreUrl: 'https://docs.nft.com/',
-          }}
-          theme={rainbowDark}
-          chains={chains}>
-          <GraphQLProvider>
-            <TestComponent />
-          </GraphQLProvider>
-        </RainbowKitProvider>
-      </WagmiConfig>
-    );
   });
 
   context('listNftSeaport', () => {
