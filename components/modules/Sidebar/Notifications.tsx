@@ -17,8 +17,6 @@ type NotificationButtonProps = {
 const NotificationButton = ({ buttonText, onClick }: NotificationButtonProps) => {
   return (
     <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
-      {//TODO: return notifications from endpoint
-      }
       <button className={tw(
         'inline-flex w-full h-full',
         'text-md',
