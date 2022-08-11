@@ -42,24 +42,24 @@ export default function DisplayMode({ selectedProfile, associatedAddresses }: Di
 
   return (
     <div id="display" className='mt-10 font-grotesk'>
-      <h2 className='text-black mb-2 font-bold md:text-2xl text-4xl tracking-wide'>Display Mode</h2>
-      <p className='mb-4 text-[#6F6F6F]'>Select what your profile will show to the public.</p>
+      <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Display Mode</h2>
+      <p className='text-[#6F6F6F]'>Choose how you will use your NFT Profile.</p>
   
       <div className='mt-4'>
         <input checked={selected === 'Gallery'} onChange={handleChange} className="form-radio text-[#F9D963] border-2 border-[#D5D5D5] w-4 h-4 focus:ring-[#F9D963]" type="radio" name="gallery-display" value='Gallery' id='Gallery' />
-        <label className="ml-3" htmlFor="Gallery">
-            Personal Gallery
+        <label className="ml-2 text-sm" htmlFor="Gallery">
+          NFT Gallery
         </label>
-        <p className='md:mt-2 mt-0 mb-4 text-xs text-[#6F6F6F] md:ml-6 ml-7'>
-          Your profile will display the NFTs in your wallet.
+        <p className='mt-1 mb-4 text-xs text-[#6F6F6F] ml-6 leading-6'>
+          Display NFTs that you have collected and hold.
         </p>
 
         <input checked={selected === 'Collection'} onChange={handleChange} className="form-radio text-[#F9D963] border-2 border-[#D5D5D5] w-4 h-4 focus:ring-[#F9D963]" type="radio" name="gallery-display" value='Collection' id='Collection' />
-        <label className="ml-3" htmlFor="Collection">
+        <label className="ml-2 text-sm" htmlFor="Collection">
           NFT Collection
         </label>
-        <p className='md:mt-2 mt-0 mb-4 text-xs text-[#6F6F6F] md:ml-6 ml-7'>
-          Your profile will act as an official landing page for your deployed NFT Collection.
+        <p className='mt-1 text-xs text-[#6F6F6F] ml-6 leading-6'>
+          Your NFT Profile will serve as the landing page for your NFT Collection.
         </p>
       </div>
 
