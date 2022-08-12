@@ -1,7 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { IgnoredEventsInput,IgnoredEventsQuery } from 'graphql/generated/types';
 
-import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 
 export interface IgnoredEventsQueryData {
@@ -12,7 +11,6 @@ export interface IgnoredEventsQueryData {
 
 export function useIgnoredEventsQuery(input: IgnoredEventsInput): IgnoredEventsQueryData {
   const sdk = useGraphQLSDK();
-  const [loading, setLoading] = useState(false);
   
   const keyString =
       'IgnoredEventsQuery' +
@@ -21,16 +19,16 @@ export function useIgnoredEventsQuery(input: IgnoredEventsInput): IgnoredEventsQ
       input?.chainId;
   
   const { data } = useSWR(keyString, async () => {
-    setLoading(true);
     try {
       const result = await sdk.IgnoredEvents({ input: input });
-      setLoading(false);
       return result;
     } catch (error) {
-      setLoading(false);
       console.log('Failed to load leaderboard.');
     }
   });
+
+  const loading = !data;
+
   return {
     data: data,
     loading: loading,
