@@ -84,10 +84,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         tx.wait(1).then(() => {
           setTransactionPending(false);
           toast.success('Removed');
-          setRemoveModalVisible(false);
           setUserNotificationActive('associatedProfileRemoved', true);
-          setVisible(true);
-          setRejected(true);
           setAssociationRejected(true);
         }).catch(() => toast.warning('Error. Please try again'));
       }
