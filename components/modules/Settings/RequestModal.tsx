@@ -38,7 +38,7 @@ export default function RequestModal({ visible, setVisible, address, transaction
               isPending ?
                 <>
                   <div className='flex mb-10 items-center'>
-                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
                     <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
                   </div>
                   <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
@@ -55,7 +55,7 @@ export default function RequestModal({ visible, setVisible, address, transaction
                   </p>
                   <p className='mt-6'>Please sign the transaction in your wallet. If you have changed your mind and do not wish to send this request, simply cancel.</p>
                   <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                  Approve Request
+                    Request Connection
                   </button>
                   <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                     <GasPump size={20} weight="fill" />
