@@ -106,7 +106,7 @@ export const Sidebar = () => {
           </Link>
 
           <button
-            className='flex flex-row w-1/3 items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 py-2 mb-8'
+            className='w-full flex flex-row items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 py-2 mb-8'
             onClick={() => {
               disconnect();
               setSignOutDialogOpen(true);
@@ -267,7 +267,7 @@ export const Sidebar = () => {
                 tw(
                   'flex flex-col fixed inset-y-0 right-0',
                   'w-screen max-w-md h-full',
-                  'shadow-xl overflow-y-scroll overflow-x-hidden',
+                  'shadow-xl overflow-y-auto overflow-x-hidden',
                   'bg-white',
                   'font-grotesk')
               }

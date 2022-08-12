@@ -114,7 +114,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       <main className='flex flex-col mt-20 font-grotesk not-italic'>
         <Link href='/app/auctions' passHref>
           <a>
-            <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
+            <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
               <span>Unlock the NFT Platform Beta with a Genesis Key</span>
               <div className='flex flex-col rounded items-center p-[1px] ml-2'>
                 <Vector />

@@ -198,7 +198,7 @@ export const ResolverSidebar = () => {
             className={
               tw('flex flex-col fixed inset-y-0 right-0 sm:top-0',
                 'w-screen max-w-md h-full',
-                'pb-6 shadow-xl overflow-y-scroll overflow-x-hidden',
+                'pb-6 shadow-xl overflow-y-auto overflow-x-hidden',
                 'bg-white')
             }
           >

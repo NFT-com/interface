@@ -59,7 +59,7 @@ export default function ProfilePreferencesPage() {
       <div
         className={tw(
           'flex flex-col relative w-screen h-screen items-center',
-          'justify-center overflow-y-scroll overflow-x-hidden'
+          'justify-center overflow-y-auto overflow-x-hidden'
         )}
       >
         <Image
