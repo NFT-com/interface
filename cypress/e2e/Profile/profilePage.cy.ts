@@ -19,7 +19,7 @@ describe('minted profile page tests', () => {
   });
     
   it('should show the profile name, metadata, and photos', () => {
-    cy.get('#MintedProfileNameContainer').should('contain.text', '@just_toby');
+    cy.get('#MintedProfileNameContainer').should('contain.text', 'just_toby');
   });
 
   it('should allow toggling between collection and nft mode', () => {
