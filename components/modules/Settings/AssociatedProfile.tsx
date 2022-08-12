@@ -33,9 +33,9 @@ type AssociatedProfileProps = {
 export default function AssociatedProfile({ profile, pending, remove, isCollection, isRemoved }: AssociatedProfileProps) {
   const { mutate: mutatePending } = usePendingAssociationQuery();
   const { ignoreAssociations } = useIgnoreAssociationsMutation();
-  const [rejected, setRejected] = useState(false);
   const [visible, setVisible] = useState(false);
   const [transactionPending, setTransactionPending] = useState(false);
+  const [associationRejected, setAssociationRejected] = useState(false);
   const [removeModalVisible, setRemoveModalVisible] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
@@ -61,7 +61,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         .then(() => {
           setVisible(true);
           setRemoveModalVisible(false);
-          setRejected(true);
+          setAssociationRejected(true);
           toast.success('Rejected');
         })
         .catch(() => toast.warning('Error. Please try again'));
@@ -70,7 +70,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         toast.success('Removed');
         setRemoveModalVisible(false);
         setVisible(true);
-        setRejected(true);
+        setAssociationRejected(true);
       });
     } else {
       const tx = await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url);
@@ -81,15 +81,15 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         tx.wait(1).then(() => {
           setTransactionPending(false);
           toast.success('Removed');
-          setRejected(true);
+          setAssociationRejected(true);
         }).catch(() => toast.warning('Error. Please try again'));
       }
     }
   };
 
   const closeModal = () => {
-    if(rejected){
-      setRejected(false);
+    if(associationRejected){
+      setAssociationRejected(false);
     }
     if(accepted){
       setAccepted(false);
@@ -244,7 +244,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                   <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
                 </>
                 :
-                !rejected ?
+                !associationRejected ?
                   (
                     !accepted
                       ? (
@@ -286,25 +286,25 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                         <div>
                           <h2 className='text-4xl tracking-wide font-bold mb-10'>Profile Connected</h2>
                           <p className='text-[#6F6F6F] mb-4'>
-                        Congratulations! You have connected the profile{' '}
+                            Congratulations! You have connected the profile{' '}
                             <span className='text-black font-bold tracking-wide'>{profile.profileUrl || profile.url}{' '}</span>
-                        to your wallet.
+                            to your wallet.
                           </p>
                           <p className='text-[#6F6F6F] mb-4'>
-                        As a reminder, your NFTs will be available to display on their profile’s gallery.{' '}
+                            As a reminder, your NFTs will be available to display on their profile’s gallery.{' '}
                             <span className='text-black font-bold tracking-wide'>
                               {profile.profileUrl || profile.url}{' '}
                             </span>
-                        will
+                            will
                             <span className='text-black font-bold tracking-wide'>
                               {' '}NOT{' '}
                             </span>
-                        be able to make any changes to your wallet or its contents. </p>
+                            be able to make any changes to your wallet or its contents. </p>
                           <p className='text-[#6F6F6F]'>
-                        You can change this connection at any time in your account’s settings.
+                            You can change this connection at any time in your account’s settings.
                           </p>
                           <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                        Return to NFT.com
+                            Return to NFT.com
                           </button>
                         </div>
                       )
@@ -314,13 +314,13 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     <div>
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Profile Rejected</h2>
                       <p className='text-[#6F6F6F] mb-4'>
-                    You have denied wallet access to the profile
+                        You have denied wallet access to the profile
                         <span className='text-black font-bold tracking-wide'>{' '}{profile.profileUrl || profile.url}</span>
                       </p>
                       <p className='text-[#6F6F6F]'>Your NFTs will not display on their profile’s gallery.</p>
                   
                       <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                    Return to NFT.com
+                        Return to NFT.com
                       </button>
                     </div>
                   )
