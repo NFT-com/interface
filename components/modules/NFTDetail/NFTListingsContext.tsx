@@ -7,7 +7,7 @@ import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { filterNulls, processIPFSURL } from 'utils/helpers';
-import { getLooksrareNonce, listLooksrare, listSeaport } from 'utils/listings';
+import { getLooksrareNonce, getOpenseaCollection, listLooksrare, listSeaport } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
@@ -20,7 +20,7 @@ import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { SeaportOrderParameters } from 'types';
+import { Fee, SeaportOrderParameters } from 'types';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
 
 export type ListingType = 'looksrare' | 'seaport';
@@ -123,6 +123,13 @@ export function NFTListingsContextProvider(
         await listLooksrare({ ...order, signature });
         // todo: check success/failure and maybe mutate external listings query.
       } else {
+        const contract = await getOpenseaCollection(listing?.nft?.contract);
+        const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
+          ? {
+            recipient: contract?.['payout_address'],
+            basisPoints: contract?.['dev_seller_fee_basis_points'],
+          }
+          : null;
         const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
           currentAddress,
           listing.nft,
@@ -130,6 +137,7 @@ export function NFTListingsContextProvider(
           listing.endingPrice,
           listing.currency,
           listing.duration,
+          collectionFee,
           // listing.takerAddress
         );
         const signature = await signOrderForSeaport(parameters, seaportCounter);

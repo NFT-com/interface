@@ -1,5 +1,7 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { Nft } from 'graphql/generated/types';
+import { Maybe, Nft } from 'graphql/generated/types';
+
+import { filterNulls } from './helpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { _TypedDataEncoder } from 'ethers/lib/utils';
@@ -100,6 +102,7 @@ export function createSeaportParametersForNFTListing(
   endingPrice: BigNumberish,
   currency: string,
   duration: BigNumberish,
+  collectionFee: Maybe<Fee>
   // takerAddress: string,
 ): SeaportOrderParameters {
   // This is what the seller will accept for their NFT.
@@ -109,13 +112,31 @@ export function createSeaportParametersForNFTListing(
     token: currency,
     identifierOrCriteria: BigNumber.from(0).toString(),
     startAmount: BigNumber.from(startingPrice).toString(),
-    endAmount: BigNumber.from(endingPrice).toString(),
+    endAmount: BigNumber.from(endingPrice ?? startingPrice).toString(),
     recipient: offerer,
   }];
   const openseaFee: Fee = {
     recipient: SEAPORT_FEE_COLLLECTION_ADDRESS,
     basisPoints: 250,
   };
+  
+  const considerationItemsWithFees = filterNulls([
+    ...deductFees(considerationItems, filterNulls([openseaFee, collectionFee])),
+    feeToConsiderationItem({
+      fee: openseaFee,
+      token: currency,
+      baseAmount: startingPrice,
+      baseEndAmount: endingPrice ?? startingPrice
+    }),
+    collectionFee != null
+      ? feeToConsiderationItem({
+        fee: collectionFee,
+        token: currency,
+        baseAmount: startingPrice,
+        baseEndAmount: endingPrice ?? startingPrice
+      })
+      : null
+  ]);
   return {
     offerer: offerer ?? NULL_ADDRESS,
     zone: SEAPORT_ZONE,
@@ -126,20 +147,12 @@ export function createSeaportParametersForNFTListing(
       startAmount: BigNumber.from(1).toString(),
       endAmount: BigNumber.from(1).toString(),
     }],
-    consideration: [
-      ...deductFees(considerationItems, [openseaFee]),
-      feeToConsiderationItem({
-        fee: openseaFee,
-        token: currency,
-        baseAmount: startingPrice,
-        baseEndAmount: endingPrice
-      })
-    ],
+    consideration: considerationItemsWithFees,
     orderType: OrderType.FULL_RESTRICTED,
     startTime: BigNumber.from(Date.now()).div(1000).toString(),
     endTime: BigNumber.from(Date.now()).div(1000).add(duration).toString(),
     zoneHash: SEAPORT_ZONE_HASH,
-    totalOriginalConsiderationItems: '2',
+    totalOriginalConsiderationItems: String(considerationItemsWithFees.length),
     salt: generateRandomSalt(),
     conduitKey: OPENSEA_CONDUIT_KEY,
   };
