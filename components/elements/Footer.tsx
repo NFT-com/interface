@@ -137,22 +137,15 @@ export const Footer = () => {
           <div className={tw(
             'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
           )}>
-            {user.isDarkMode
-              ? (
-                <Link href='/' passHref>
-                  <div>
-                    <LightNavLogo className='h-8 w-8 justify-start' />
-                  </div>
-                </Link>
-              )
-              : (
-                <Link href='/' passHref>
-                  <div>
+            <Link href='/' passHref>
+              <div>
+                {
+                  user.isDarkMode ?
+                    <LightNavLogo className='h-8 w-8 justify-start' /> :
                     <NavLogo className='h-8 w-8 justify-start' />
-                  </div>
-                </Link>
-              )
-            }
+                }
+              </div>
+            </Link>
           </div>
         </Link>
         <div className="hidden minlg:block h-1/5 mt-3 minmd:mt-0">

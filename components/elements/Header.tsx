@@ -47,22 +47,11 @@ export const Header = ({ removeBg } : HeaderProps) => {
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
             <div className="flex-shrink-0 hover:cursor-pointer">
-              {user.isDarkMode
-                ? (
-                  <Link href='/' passHref>
-                    <div>
-                      <LightNavLogo className='h-8 w-8 justify-start' />
-                    </div>
-                  </Link>
-                )
-                : (
-                  <Link href='/' passHref>
-                    <div>
-                      <NavLogo className='h-8 w-8 justify-start' />
-                    </div>
-                  </Link>
-                )
-              }
+              <Link href='/' passHref>
+                <div>
+                  {user.isDarkMode ? <LightNavLogo className='h-8 w-8 justify-start' /> : <NavLogo className='h-8 w-8 justify-start' />}
+                </div>
+              </Link>
             </div>
             <div className="minlg:hidden block">
               <div className="ml-10 flex items-baseline space-x-4">
