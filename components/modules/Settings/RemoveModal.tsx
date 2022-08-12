@@ -8,20 +8,21 @@ type RemoveModalProps = {
   setVisible: (input:boolean) => void;
   address: string;
   rejected?: boolean;
-  remove: (action: string, address: string) => void;
+  remove: () => void;
   isProfile?: boolean
   profileUrl?: string
+  isRemoved?: boolean
 };
 
-export default function RemoveModal({ visible, setVisible, address, rejected, remove, isProfile, profileUrl }: RemoveModalProps) {
+export default function RemoveModal({ visible, setVisible, address, rejected, remove, isProfile, profileUrl, isRemoved }: RemoveModalProps) {
   const getModalContent = useCallback(() => {
-    if(isProfile && rejected) {
+    if(isProfile && rejected || isProfile && isRemoved) {
       return (
         <>
           <p className='text-[#6F6F6F]'>You are about to remove the profile <span className='text-black font-bold'>{profileUrl}</span> with the following address from your account.</p>
           <p className='font-mono text-black text-xl break-words mt-2'>{address}</p>
                 
-          <button onClick={() => remove('address-hideRejected', address)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+          <button onClick={() => remove()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
             Remove
           </button>
           <p
@@ -40,7 +41,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
                 
           <p className='mt-6 text-[#6F6F6F]'>If you reject this profile, they will not be able to display your NFTs on their profile.</p>
           <p className='mt-3 text-[#6F6F6F]'>To reconnect this profile in the future, you must pay the gas fee again.</p>
-          <button onClick={() => remove('address-hideRejected', address)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+          <button onClick={() => remove()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
             Remove
           </button>
           <p
@@ -58,7 +59,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
           <p className='font-mono text-black text-xl break-words mt-2'>{address}</p>
                 
           <p className='mt-6 text-[#6F6F6F]'>If you send another connection request, you <span className='text-black font-bold'>will not pay</span> the gas fee again.</p>
-          <button onClick={() => remove('address-hideRejected', address)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+          <button onClick={() => remove()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
             Remove
           </button>
           <p
@@ -76,7 +77,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
                 
         <p className='mt-6 text-[#6F6F6F]'>If you remove this address, you will not be able to display their NFTs on your profile, and must pay gas to complete this action.</p>
         <p className='mt-6 text-[#6F6F6F]'>To reconnect this wallet in the future, you must pay the gas fee again.</p>
-        <button onClick={() => remove('address', address)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+        <button onClick={() => remove()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
           Remove
         </button>
         <p
@@ -86,7 +87,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
         </p>
       </>
     );
-  }, [address, isProfile, rejected, remove, setVisible, profileUrl]);
+  }, [address, isProfile, rejected, remove, setVisible, profileUrl, isRemoved]);
 
   return (
     <Modal
@@ -104,7 +105,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
       <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
         <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
-          <XCircle onClick={() => {setVisible(false);}} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+          <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Are your sure?</h2>
           {getModalContent()}
         </div>

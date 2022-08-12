@@ -1946,12 +1946,12 @@ export type FileUploadMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type FileUploadMutation = { __typename?: 'Mutation', uploadFileSession: { __typename?: 'FileUploadOutput', bucket: string, accessKey: string, secretKey: string, sessionToken: string } };
 
-export type IgnoreAssocationsMutationVariables = Exact<{
+export type IgnoreAssociationsMutationVariables = Exact<{
   eventIdArray: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
 }>;
 
 
-export type IgnoreAssocationsMutation = { __typename?: 'Mutation', ignoreAssociations: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null } | null> };
+export type IgnoreAssociationsMutation = { __typename?: 'Mutation', ignoreAssociations: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null, hideIgnored?: boolean | null, hidden?: boolean | null } | null> };
 
 export type ProfileNftOrderingUpdatesMutationVariables = Exact<{
   input: OrderingUpdatesInput;
@@ -2020,6 +2020,13 @@ export type UpdateEmailMutationVariables = Exact<{
 
 
 export type UpdateEmailMutation = { __typename?: 'Mutation', updateEmail: { __typename?: 'User', id: string, email?: string | null } };
+
+export type UpdateHiddenMutationVariables = Exact<{
+  input: UpdateHiddenInput;
+}>;
+
+
+export type UpdateHiddenMutation = { __typename?: 'Mutation', updateHidden: { __typename?: 'UpdateHiddenOutput', message?: string | null } };
 
 export type UpdateHideIgnoredMutationVariables = Exact<{
   input: UpdateHideIgnoredInput;
@@ -2169,7 +2176,19 @@ export type GetRejectedAssociationsQueryVariables = Exact<{
 }>;
 
 
-export type GetRejectedAssociationsQuery = { __typename?: 'Query', getRejectedAssociations: Array<{ __typename?: 'RejectedAssociationOutput', id: string, receiver: string, hidden: boolean } | null> };
+export type GetRejectedAssociationsQuery = { __typename?: 'Query', getRejectedAssociations: Array<{ __typename?: 'RejectedAssociationOutput', hidden: boolean, id: string, receiver: string } | null> };
+
+export type GetRemovedAssociationsForSenderQueryVariables = Exact<{
+  profileUrl: Scalars['String'];
+}>;
+
+
+export type GetRemovedAssociationsForSenderQuery = { __typename?: 'Query', getRemovedAssociationsForSender: Array<{ __typename?: 'RemovedAssociationsForSenderOutput', hidden: boolean, id: string, receiver: string } | null> };
+
+export type GetRemovedAssociationsForReceiverQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRemovedAssociationsForReceiverQuery = { __typename?: 'Query', getRemovedAssociationsForReceiver: Array<{ __typename?: 'RemovedAssociationsForReceiverOutput', id: string, url: string, owner: string, hidden: boolean } | null> };
 
 export type GetUserSwapsQueryVariables = Exact<{
   input: UserSwapsInput;
@@ -2183,7 +2202,7 @@ export type IgnoredEventsQueryVariables = Exact<{
 }>;
 
 
-export type IgnoredEventsQuery = { __typename?: 'Query', ignoredEvents: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null, hideIgnored?: boolean | null }> };
+export type IgnoredEventsQuery = { __typename?: 'Query', ignoredEvents: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null, hideIgnored?: boolean | null, hidden?: boolean | null }> };
 
 export type InsiderReservedProfilesQueryVariables = Exact<{
   input: InsiderReservedProfilesInput;
@@ -2446,8 +2465,8 @@ export const FileUploadDocument = gql`
   }
 }
     `;
-export const IgnoreAssocationsDocument = gql`
-    mutation IgnoreAssocations($eventIdArray: [String]!) {
+export const IgnoreAssociationsDocument = gql`
+    mutation IgnoreAssociations($eventIdArray: [String]!) {
   ignoreAssociations(eventIdArray: $eventIdArray) {
     id
     chainId
@@ -2459,6 +2478,8 @@ export const IgnoreAssocationsDocument = gql`
     destinationAddress
     blockNumber
     ignore
+    hideIgnored
+    hidden
   }
 }
     `;
@@ -2537,6 +2558,13 @@ export const UpdateEmailDocument = gql`
   updateEmail(input: $input) {
     id
     email
+  }
+}
+    `;
+export const UpdateHiddenDocument = gql`
+    mutation UpdateHidden($input: UpdateHiddenInput!) {
+  updateHidden(input: $input) {
+    message
   }
 }
     `;
@@ -3047,8 +3075,27 @@ export const GetNftOffersDocument = gql`
 export const GetRejectedAssociationsDocument = gql`
     query GetRejectedAssociations($profileUrl: String!) {
   getRejectedAssociations(profileUrl: $profileUrl) {
+    hidden
     id
     receiver
+  }
+}
+    `;
+export const GetRemovedAssociationsForSenderDocument = gql`
+    query GetRemovedAssociationsForSender($profileUrl: String!) {
+  getRemovedAssociationsForSender(profileUrl: $profileUrl) {
+    hidden
+    id
+    receiver
+  }
+}
+    `;
+export const GetRemovedAssociationsForReceiverDocument = gql`
+    query GetRemovedAssociationsForReceiver {
+  getRemovedAssociationsForReceiver {
+    id
+    url
+    owner
     hidden
   }
 }
@@ -3145,6 +3192,7 @@ export const IgnoredEventsDocument = gql`
     blockNumber
     ignore
     hideIgnored
+    hidden
   }
 }
     `;
@@ -3524,8 +3572,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     FileUpload(variables?: FileUploadMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileUploadMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileUploadMutation>(FileUploadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FileUpload', 'mutation');
     },
-    IgnoreAssocations(variables: IgnoreAssocationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoreAssocationsMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<IgnoreAssocationsMutation>(IgnoreAssocationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoreAssocations', 'mutation');
+    IgnoreAssociations(variables: IgnoreAssociationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoreAssociationsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IgnoreAssociationsMutation>(IgnoreAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoreAssociations', 'mutation');
     },
     ProfileNftOrderingUpdates(variables: ProfileNftOrderingUpdatesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNftOrderingUpdatesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileNftOrderingUpdatesMutation>(ProfileNftOrderingUpdatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNftOrderingUpdates', 'mutation');
@@ -3556,6 +3604,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UpdateEmail(variables: UpdateEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateEmailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateEmailMutation>(UpdateEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateEmail', 'mutation');
+    },
+    UpdateHidden(variables: UpdateHiddenMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateHiddenMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateHiddenMutation>(UpdateHiddenDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateHidden', 'mutation');
     },
     UpdateHideIgnored(variables: UpdateHideIgnoredMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateHideIgnoredMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateHideIgnoredMutation>(UpdateHideIgnoredDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateHideIgnored', 'mutation');
@@ -3619,6 +3670,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetRejectedAssociations(variables: GetRejectedAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRejectedAssociationsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRejectedAssociationsQuery>(GetRejectedAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRejectedAssociations', 'query');
+    },
+    GetRemovedAssociationsForSender(variables: GetRemovedAssociationsForSenderQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRemovedAssociationsForSenderQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRemovedAssociationsForSenderQuery>(GetRemovedAssociationsForSenderDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRemovedAssociationsForSender', 'query');
+    },
+    GetRemovedAssociationsForReceiver(variables?: GetRemovedAssociationsForReceiverQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRemovedAssociationsForReceiverQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRemovedAssociationsForReceiverQuery>(GetRemovedAssociationsForReceiverDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRemovedAssociationsForReceiver', 'query');
     },
     GetUserSwaps(variables: GetUserSwapsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetUserSwapsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserSwapsQuery>(GetUserSwapsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserSwaps', 'query');

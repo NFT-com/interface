@@ -3,13 +3,14 @@ import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
+import { useUpdateHiddenMutation } from 'graphql/hooks/useUpdateHiddenMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
-import { CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
+import { ArrowsClockwise, CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
 import { useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { toast } from 'react-toastify';
@@ -27,19 +28,21 @@ type AssociatedProfileProps = {
   pending?: boolean;
   remove?: () => void
   isCollection?: boolean
+  isRemoved?: boolean
 };
 
-export default function AssociatedProfile({ profile, pending, remove, isCollection }: AssociatedProfileProps) {
+export default function AssociatedProfile({ profile, pending, remove, isCollection, isRemoved }: AssociatedProfileProps) {
   const { mutate: mutatePending } = usePendingAssociationQuery();
   const { ignoreAssociations } = useIgnoreAssociationsMutation();
-  const [rejected, setRejected] = useState(false);
   const [visible, setVisible] = useState(false);
   const [transactionPending, setTransactionPending] = useState(false);
+  const [associationRejected, setAssociationRejected] = useState(false);
   const [removeModalVisible, setRemoveModalVisible] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
   const { setUserNotificationActive } = useUser();
+  const { updateHidden } = useUpdateHiddenMutation();
 
   const acceptPendingProfile = async (e, url) => {
     e.preventDefault();
@@ -58,11 +61,25 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const removeHandler = async () => {
     if(pending){
       await ignoreAssociations({ eventIdArray: [profile.id] })
-        .then(() => {setVisible(true); setRemoveModalVisible(false); setRejected(true); toast.success('Rejected');})
+        .then(() => {
+          setVisible(true);
+          setRemoveModalVisible(false);
+          setAssociationRejected(true);
+          toast.success('Rejected');
+        })
         .catch(() => toast.warning('Error. Please try again'));
+    } else if (isRemoved){
+      updateHidden({ eventIdArray: [profile.id], hidden: true }).then(() =>{
+        toast.success('Removed');
+        setRemoveModalVisible(false);
+        setVisible(true);
+        setAssociationRejected(true);
+      });
     } else {
       const tx = await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url);
+      setVisible(true);
       setTransactionPending(true);
+      setRemoveModalVisible(false);
       if(tx){
         tx.wait(1).then(() => {
           setTransactionPending(false);
@@ -71,14 +88,15 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           setUserNotificationActive('associatedProfileRemoved', true);
           setVisible(true);
           setRejected(true);
+          setAssociationRejected(true);
         }).catch(() => toast.warning('Error. Please try again'));
       }
     }
   };
 
   const closeModal = () => {
-    if(rejected){
-      setRejected(false);
+    if(associationRejected){
+      setAssociationRejected(false);
     }
     if(accepted){
       setAccepted(false);
@@ -90,13 +108,13 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   return (
     <>
       <div className='p-1 flex justify-between items-start mb-3'>
-        <div className='flex items-start truncate'>
+        <div className='flex items-start'>
           {pending ?
             <CustomTooltip
               mode="hover"
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                  className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                 >
                   <p className='text-[#F2890E] mb-2'>Pending</p>
                   <p>This connection is waiting your approval. Click on the Profile name to approve or reject.</p>
@@ -106,35 +124,66 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               <Clock size={25} className='mr-3' color='orange' weight='fill' />
             </CustomTooltip>
             :
-            <CustomTooltip
-              mode="hover"
-              tooltipComponent={
-                <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white"
+            isRemoved
+              ?
+              (
+                isRemoved && isCollection ?
+                  <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                  :
+                  <CustomTooltip
+                    mode="hover"
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                      >
+                        <p className='text-[#D40909] mb-2'>Disconnected</p>
+                        <p>This profile has disconnected your wallet. It’s safe to remove it from your account.</p>
+                      </div>
+                    }
+                  >
+                    <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                  </CustomTooltip>
+              )
+              :
+              (
+                <CustomTooltip
+                  mode="hover"
+                  tooltipComponent={
+                    <div
+                      className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                    >
+                      <p className='text-[#00AC30] mb-2'>Connected</p>
+                      <p>You have authorized this connection.</p>
+                    </div>
+                  }
                 >
-                  <p className='text-[#00AC30] mb-2'>Connected</p>
-                  <p>You have authorized this connection.</p>
-                </div>
-              }
-            >
-              <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
-            </CustomTooltip>
+                  <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
+                </CustomTooltip>
+              )
           }
           <div className='w-3/4'>
             <p onClick={pending ? () => setVisible(true) : null} className='truncate text-black text-sm font-grotesk font-semibold tracking-wide'>{profile.profileUrl || profile.url}</p>
             <div className="flex items-center w-full">
               <div className="flex w-full items-center justify-between">
                 <div>
-                  <ExternalLink
-                    href={getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address')}
-                  >
-                    <div
-                      className='flex justify-between font-mono text-blog-text-reskin text-sm font-medium'
-                    >
-                      {shortenAddress(profile?.addr || profile?.owner)}
-                      <LinkIcon size={18} className='ml-2'/>
-                    </div>
-                  </ExternalLink>
+                  {isCollection && isRemoved
+                    ?
+                    (
+                      <p className='text-[#6F6F6F] text-sm mt-1'>The deployer wallet associated to this collection has been disconnected from your account. Please connect another collection.</p>
+                    )
+                    :
+                    (
+                      <ExternalLink
+                        href={getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address')}
+                      >
+                        <div
+                          className='flex justify-between font-mono text-blog-text-reskin text-sm font-medium'
+                        >
+                          {shortenAddress(profile?.addr || profile?.owner)}
+                          <LinkIcon size={18} className='ml-2'/>
+                        </div>
+                      </ExternalLink>
+                    )}
                 </div>
               </div>
             </div>
@@ -194,11 +243,15 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
             {
               transactionPending ?
                 <>
-                  <h2 className='text-4xl tracking-wide font-bold mb-10'>One second...</h2>
+                  <div className='flex mb-10 items-center'>
+                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+                    <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
+                  </div>
+                  
                   <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
                 </>
                 :
-                !rejected ?
+                !associationRejected ?
                   (
                     !accepted
                       ? (
@@ -240,25 +293,25 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                         <div>
                           <h2 className='text-4xl tracking-wide font-bold mb-10'>Profile Connected</h2>
                           <p className='text-[#6F6F6F] mb-4'>
-                        Congratulations! You have connected the profile{' '}
+                            Congratulations! You have connected the profile{' '}
                             <span className='text-black font-bold tracking-wide'>{profile.profileUrl || profile.url}{' '}</span>
-                        to your wallet.
+                            to your wallet.
                           </p>
                           <p className='text-[#6F6F6F] mb-4'>
-                        As a reminder, your NFTs will be available to display on their profile’s gallery.{' '}
+                            As a reminder, your NFTs will be available to display on their profile’s gallery.{' '}
                             <span className='text-black font-bold tracking-wide'>
                               {profile.profileUrl || profile.url}{' '}
                             </span>
-                        will
+                            will
                             <span className='text-black font-bold tracking-wide'>
                               {' '}NOT{' '}
                             </span>
-                        be able to make any changes to your wallet or its contents. </p>
+                            be able to make any changes to your wallet or its contents. </p>
                           <p className='text-[#6F6F6F]'>
-                        You can change this connection at any time in your account’s settings.
+                            You can change this connection at any time in your account’s settings.
                           </p>
                           <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                        Return to NFT.com
+                            Return to NFT.com
                           </button>
                         </div>
                       )
@@ -268,13 +321,13 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     <div>
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Profile Rejected</h2>
                       <p className='text-[#6F6F6F] mb-4'>
-                    You have denied wallet access to the profile
+                        You have denied wallet access to the profile
                         <span className='text-black font-bold tracking-wide'>{' '}{profile.profileUrl || profile.url}</span>
                       </p>
                       <p className='text-[#6F6F6F]'>Your NFTs will not display on their profile’s gallery.</p>
                   
                       <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                    Return to NFT.com
+                        Return to NFT.com
                       </button>
                     </div>
                   )
@@ -282,8 +335,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           </div>
         </div>
       </Modal>
-
-      <RemoveModal isProfile rejected={!pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner} remove={removeHandler} />
+      <RemoveModal isProfile isRemoved={isRemoved} rejected={pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner || profile.addr} remove={removeHandler} />
     </>
   );
 }
