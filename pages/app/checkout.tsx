@@ -11,7 +11,7 @@ import { useContext } from 'react';
  * with configuration options for the listing side.
  */
 export default function CheckoutPage() {
-  const { toList, listAll } = useContext(NFTListingsContext);
+  const { listAll } = useContext(NFTListingsContext);
 
   if (!getEnv(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
     return <NotFoundPage />;

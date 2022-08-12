@@ -32,7 +32,7 @@ export default function Post({ post, preview }: PostProps) {
   return (
     <>
       <ClientOnly>
-        <Header bgLight />
+        <Header />
         <Sidebar />
         <SearchModal />
       </ClientOnly>

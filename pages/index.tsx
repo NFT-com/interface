@@ -107,7 +107,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   return (
     <>
       <ClientOnly>
-        <Header bgLight />
+        <Header />
         <Sidebar />
         <SearchModal />
       </ClientOnly>
