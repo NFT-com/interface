@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useSignOutDialog() {
@@ -5,9 +6,9 @@ export function useSignOutDialog() {
 
   const loading = !data;
 
-  const setSignOutDialogOpen = (open: boolean) => {
+  const setSignOutDialogOpen = useCallback((open: boolean) => {
     mutate(open);
-  };
+  }, [mutate]);
 
   return {
     loading,

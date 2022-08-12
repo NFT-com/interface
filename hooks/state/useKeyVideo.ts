@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useKeyVideo() {
@@ -5,9 +6,9 @@ export function useKeyVideo() {
 
   const loading = !data;
   
-  const useKeyVideoToggle = () => {
+  const useKeyVideoToggle = useCallback(() => {
     mutate(!data);
-  };
+  }, [data, mutate]);
 
   return {
     loading,
