@@ -21,7 +21,7 @@ interface WalletRainbowKitButtonProps {
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   const { toggleSidebar } = useSidebar();
-  const { user, setCurrentProfileUrl } = useUser();
+  const { user, setCurrentProfileUrl, getNotificationCount } = useUser();
   const { address: currentAddress, connector, isConnected } = useAccount({
     onConnect({ isReconnected }) {
       if (isReconnected && !! user?.currentProfileUrl) {
@@ -107,10 +107,10 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         }
         return (
           <>
-            {(getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && user.notificationCount > 0) && (
+            {(getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && getNotificationCount() > 0) && (
               <span className="flex h-5 w-5 -mb-3">
                 <span className="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-[#F9D963] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-5 w-5 bg-[#F9D963] justify-center">{user?.notificationCount}</span>
+                <span className="relative inline-flex rounded-full h-5 w-5 bg-[#F9D963] justify-center">{getNotificationCount()}</span>
               </span>
             )
             }

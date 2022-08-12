@@ -5,6 +5,7 @@ import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociatio
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useUpdateHiddenMutation } from 'graphql/hooks/useUpdateHiddenMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { useUser } from 'hooks/state/useUser';
 import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
@@ -40,6 +41,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
+  const { setUserNotificationActive } = useUser();
   const { updateHidden } = useUpdateHiddenMutation();
 
   const acceptPendingProfile = async (e, url) => {
@@ -52,6 +54,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         setAccepted(true);
         setTransactionPending(false);
       }).catch(() => toast.error('Error'));
+      setUserNotificationActive('associatedProfileAdded', true);
     }
   };
 
@@ -81,6 +84,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         tx.wait(1).then(() => {
           setTransactionPending(false);
           toast.success('Removed');
+          setUserNotificationActive('associatedProfileRemoved', true);
           setAssociationRejected(true);
         }).catch(() => toast.warning('Error. Please try again'));
       }
