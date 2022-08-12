@@ -86,6 +86,7 @@ jobs:
         NEXT_PUBLIC_BLOG_PAGES_ENABLED: ${{ secrets.NEXT_PUBLIC_BLOG_PAGES_ENABLED }}    
         NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED: ${{ secrets.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED }}
         NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
+        NEXT_PUBLIC_REORDER_ENABLED: ${{ secrets.NEXT_PUBLIC_REORDER_ENABLED }}
 
     - name: ✅ Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.0

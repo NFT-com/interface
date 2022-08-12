@@ -1,4 +1,4 @@
-import { useHiddenEventsQuery } from 'graphql/hooks/useHiddenEventsQuery';
+import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
 import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 
@@ -7,7 +7,6 @@ import RequestModal from './RequestModal';
 import SettingsForm from './SettingsForm';
 
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
 type Address = {
@@ -32,7 +31,7 @@ type ConnectedAccountsProps = {
 
 export default function ConnectedAccounts({ selectedProfile, associatedAddresses }: ConnectedAccountsProps) {
   const { address: currentAddress } = useAccount();
-  const { mutate: mutateHidden } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
+  const { mutate: mutateHidden } = useIgnoredEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
   const { nftResolver } = useAllContracts();
   const [inputVal, setInputVal] = useState('');
   const [transaction, setTransaction] = useState('');
@@ -67,24 +66,6 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
     }
   };
 
-  const removeHandler = async (action, input) => {
-    if(action === 'address'){
-      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile)
-        .then(() => toast.success('Removed'))
-        .catch(() => toast.error('Error'));
-    } else if (action === 'address-hideRejected') {
-      const deniedEvent = associatedAddresses?.denied.find((evt) => evt.destinationAddress === input);
-      updateHideIgnored({ hideIgnored: true, eventIdArray: [deniedEvent.id] })
-        .then(() => {
-          mutateHidden();
-          toast.success('Removed');
-        })
-        .catch(() => toast.error('Error'));
-    } else {
-      toast.error('Error');
-    }
-  };
-
   const openModal = () => {
     setModalVisible(true);
   };
@@ -100,7 +81,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   return (
     <div id="wallets" className='mt-10 font-grotesk'>
       <h3 className='text-base font-semibold tracking-wide mb-1'>Connected Wallets</h3>
-      <p className='text-blog-text-reskin mb-4'>Display NFTs from other Ethereum wallets on your profile.</p>
+      <p className='text-blog-text-reskin mb-4'>Display NFTs from your Ethereum addresses on your NFT Profile.</p>
       
       <SettingsForm buttonText='Request Connection' submitHandler={openModal} {...{ inputVal, isAssociatedOrSelf }} changeHandler={setInputVal} />
 
@@ -113,14 +94,14 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
             </div>
 
             {associatedAddresses?.accepted.map((address, index)=> (
-              <AssociatedAddress key={index} address={address.chainAddr} remove={removeHandler} />
+              <AssociatedAddress {...{ selectedProfile }} key={index} address={address.chainAddr} />
             ))}
             {associatedAddresses?.pending.map((address, index)=> (
-              <AssociatedAddress pending key={index} address={address.chainAddr} remove={removeHandler} />
+              <AssociatedAddress {...{ selectedProfile }} pending key={index} address={address.chainAddr} />
             ))}
             {associatedAddresses?.denied?.map((address)=> (
               !address.hideIgnored &&
-              <AssociatedAddress rejected key={address.id} address={address.destinationAddress} remove={removeHandler} submit={submitHandler} />
+              <AssociatedAddress {...{ selectedProfile }} rejected key={address.id} eventId={address.id} address={address.destinationAddress} submit={submitHandler} />
             ))}
           </div>
         )

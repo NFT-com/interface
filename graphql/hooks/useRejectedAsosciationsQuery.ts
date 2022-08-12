@@ -24,7 +24,7 @@ export function useRejectedAssociationsQuery(profileUrl: string) {
       return result;
     } catch (error) {
       setLoading(false);
-      console.log('Failed to get approved associations');
+      console.log('Failed to get rejected associations');
     }
   });
   return {

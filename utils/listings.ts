@@ -8,6 +8,7 @@ export async function getOpenseaCollection(
   const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/opensea');
   url.searchParams.set('contract', contract);
   url.searchParams.set('action', 'getCollection');
+
   const result = await fetch(url.toString()).then(res => res.json());
   return result;
 }
