@@ -1,5 +1,4 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
-import Copy from 'components/elements/Copy';
 import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -50,7 +49,7 @@ export function Collection(props: CollectionProps) {
     <>
       <div className="mt-20">
         <BannerWrapper
-          imageOverride={collectionData?.ubiquityResults?.collection?.banner ? `${collectionData?.ubiquityResults?.collection?.banner} + ?apiKey=${process.env.NEXT_PUBLIC_UBIQUITY_API_KEY}` : null}/>
+          imageOverride={collectionData?.ubiquityResults?.collection?.banner ? `${collectionData?.ubiquityResults?.collection?.banner} + ?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null}/>
       </div>
       <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
         {collectionNfts.length > 0 ?
