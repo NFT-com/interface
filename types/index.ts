@@ -9,3 +9,11 @@ export type TickerStat = {
     sub: string;
   }
 };
+
+export type UserNotifications = {
+  hasUnclaimedProfiles: boolean;
+  hasPendingAssociatedProfiles: boolean;
+  profileNeedsCustomization: boolean;
+  associatedProfileAdded: boolean;
+  associatedProfileRemoved: boolean;
+};

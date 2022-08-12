@@ -3,42 +3,17 @@ import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQ
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
-import { tw } from 'utils/tw';
+
+import { NotificationButton } from './NotificationButton';
 
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
-
-type NotificationButtonProps = {
-  buttonText: string;
-  onClick: () => void;
-}
-
-const NotificationButton = ({ buttonText, onClick }: NotificationButtonProps) => {
-  return (
-    <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
-      <button className={tw(
-        'inline-flex w-full h-full',
-        'text-md',
-        'leading-6',
-        'items-center',
-        'justify-center',
-        'bg-[#F9D963]',
-        'rounded-lg',
-        'p-4'
-      )}
-      onClick={onClick}
-      >
-        {buttonText}
-      </button>
-    </div>
-  );
-};
 
 export const Notifications = () => {
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
-  const { user, setNotificationCount } = useUser();
+  const { user, setUserNotificationActive } = useUser();
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
 
@@ -47,21 +22,26 @@ export const Notifications = () => {
 
   const { totalClaimable: totalClaimableForThisAddress } = useClaimableProfileCount(currentAddress);
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
+  const [removedAssociationNotifClicked, setRemovedAssociationNotifClicked] = useState(false);
+  const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
 
   useEffect(() => {
     if(hasUnclaimedProfiles) {
-      setNotificationCount(user?.notificationCount + 1);
+      setUserNotificationActive('hasUnclaimedProfiles', true);
     }
     if(pendingAssociatedProfiles && pendingAssociatedProfiles.getMyPendingAssociations.length > 0 ) {
-      setNotificationCount(user?.notificationCount + 1);
+      setUserNotificationActive('hasPendingAssociatedProfiles', true);
     }
     if(profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized) {
-      setNotificationCount(user?.notificationCount + 1);
+      setUserNotificationActive('profileNeedsCustomization', true);
     }
-    if(hasUnclaimedProfiles) {
-      setNotificationCount(user?.notificationCount + 1);
+    if(removedAssociationNotifClicked) {
+      setUserNotificationActive('associatedProfileRemoved', false);
     }
-  }, [hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, setNotificationCount, user]);
+    if(addedAssociatedNotifClicked) {
+      setUserNotificationActive('associatedProfileAdded', false);
+    }
+  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, user]);
 
   return (
     <div className='flex flex-col w-full items-center space-y-4'>
@@ -70,6 +50,25 @@ export const Notifications = () => {
           <NotificationButton
             buttonText={`${pendingAssociatedProfiles.getMyPendingAssociations.length} NFT Profile Connection request${pendingAssociatedProfiles.getMyPendingAssociations.length > 1 ? 's' : ''}`}
             onClick={() => {console.log('pending association click');}}
+            notificationType='pendingAssociatedProfiles'
+          />
+        )
+      }
+      {
+        user.activeNotifications.associatedProfileRemoved && (
+          <NotificationButton
+            buttonText={'Associated Profile Removed'}
+            onClick={() => {setRemovedAssociationNotifClicked(true);}}
+            notificationType='removedAssociatedProfile'
+          />
+        )
+      }
+      {
+        user.activeNotifications.associatedProfileAdded && (
+          <NotificationButton
+            buttonText={'Associated Profile Added'}
+            onClick={() => {setAddedAssociatedNotifClicked(true);}}
+            notificationType='addedAssociatedProfile'
           />
         )
       }
@@ -78,6 +77,7 @@ export const Notifications = () => {
           <NotificationButton
             buttonText='Your NFT Profile needs attention'
             onClick={() => {console.log('profile customization click');}}
+            notificationType='profileCustomizationStatus'
           />
         )
       }
@@ -89,6 +89,7 @@ export const Notifications = () => {
           <NotificationButton
             buttonText={`${totalClaimableForThisAddress} Profile${totalClaimableForThisAddress > 1 ? 's' : ''} Available to Mint`}
             onClick={() => {setSidebarOpen(false); router.push('/app/claim-profiles');}}
+            notificationType='hasUnclaimedProfiles'
           />
         )
       }

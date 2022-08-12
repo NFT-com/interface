@@ -98,7 +98,7 @@ export default function NftOwner({ selectedProfile, showHeaderText, showToastOnS
             sortProfiles();
           }}
           opensModal
-          showSwitch
+          showSwitch={myOwnedProfileTokens && myOwnedProfileTokens.length > 1}
           profile={myOwnedProfileTokens?.find(t => t.title === selected)}
         />
       }
