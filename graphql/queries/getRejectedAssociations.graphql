@@ -1,5 +1,5 @@
-query GetRemovedAssociationsForSender($profileUrl: String!) {
-  getRemovedAssociationsForSender(profileUrl: $profileUrl) {
+query GetRejectedAssociations($profileUrl: String!) {
+  getRejectedAssociations(profileUrl: $profileUrl) {
     hidden
     id
     receiver
