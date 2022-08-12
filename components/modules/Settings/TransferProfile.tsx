@@ -84,7 +84,7 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
               transactionPending ?
                 <>
                   <div className='flex mb-10 items-center'>
-                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
                     <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
                   </div>
                   
@@ -98,14 +98,15 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Transfer In Progress</h2>
                   
                       <p className='text-[#6F6F6F]'>
-                    You can confirm this transaction on{' '}
+                        You can confirm this transaction on{' '}
                         <a
                           target="_blank"
                           rel="noreferrer" href={`https://goerli.etherscan.io/tx/${transaction}`} className='font-bold underline tracking-wide text-black'>Etherscan.
                         </a>
-                  You can safely navigate away from this screen and return to NFT.com</p>
+                        You can safely navigate away from this screen and return to NFT.com
+                      </p>
                       <button onClick={() => {closeModal();}} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                    Return to NFT.com
+                        Return to NFT.com
                       </button>
                     </>
                   )
