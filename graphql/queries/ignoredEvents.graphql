@@ -11,5 +11,6 @@ query IgnoredEvents($input: IgnoredEventsInput!) {
     blockNumber
     ignore
     hideIgnored
+    hidden
   }
 }
