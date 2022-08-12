@@ -5,7 +5,7 @@ type Profile = {
   addr: string;
 }
 
-type Removed = {
+type RemovedProfileAssociation = {
   hidden: boolean;
   id: string;
   owner: string;
@@ -16,7 +16,7 @@ type ConnectedProfilesProps = {
   associatedProfiles : {
     pending: Profile[];
     accepted: Profile[];
-    removed: Removed[];
+    removed: RemovedProfileAssociation[];
   };
 };
 
