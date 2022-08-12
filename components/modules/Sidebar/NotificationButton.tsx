@@ -3,12 +3,6 @@ import { tw } from 'utils/tw';
 type NotificationButtonProps = {
   buttonText: string;
   onClick: () => void;
-  notificationType:
-  'hasUnclaimedProfiles'
-  | 'pendingAssociatedProfiles'
-  | 'profileCustomizationStatus'
-  | 'removedAssociatedProfile'
-  | 'addedAssociatedProfile';
 }
 
 export const NotificationButton = ({ buttonText, onClick }: NotificationButtonProps) => {
