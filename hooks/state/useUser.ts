@@ -28,12 +28,12 @@ export function useUser() {
   });
 
   const loading = !data;
-  const setDarkMode = (darkMode: boolean) => {
+  const setDarkMode = useCallback((darkMode: boolean) => {
     mutate({
       ...data,
       isDarkMode: darkMode
     });
-  };
+  }, [data, mutate]);
 
   const setCurrentProfileUrl= useCallback((selectedProfileUrl: string | null) => {
     localStorage.setItem('selectedProfileUrl', isNullOrEmpty(selectedProfileUrl) ? '' : selectedProfileUrl);
