@@ -16,5 +16,27 @@ describe('discover page tests', () => {
       });
     });
   });
+
+  it('renders collections results page', () => {
+    cy.visit('/app/discover/collections/nfts').then(() => {
+      cy.contains('26 COLLECTIONS').should('exist');
+    }
+    );
+  });
+
+  it('renders nfts results page', () => {
+    cy.visit('/app/discover/nfts/nft').then(() => {
+      cy.contains('730 NFTS').should('exist');
+    }
+    );
+  });
+
+  it('renders all results page', () => {
+    cy.visit('/app/discover/allResults/nft').then(() => {
+      cy.contains('26 COLLECTIONS').should('exist');
+      cy.contains('730 NFTS').should('exist');
+    }
+    );
+  });
 });
     
