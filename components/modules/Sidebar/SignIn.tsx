@@ -21,7 +21,7 @@ export default function SignIn() {
   return (
     <motion.div className='text-black font-grotesk bg-white h-full p-8'>
                
-      <XCircle onClick={() => {setSidebarOpen(false);}} className='absolute top-10 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
+      <XCircle onClick={() => setSidebarOpen(false)} className='absolute top-10 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
                 
       <h2 className='font-bold text-4xl mb-9 pt-24'>Sign In</h2>
 
@@ -32,7 +32,7 @@ export default function SignIn() {
           validReg.test(e.target.value.toLowerCase()) &&
                           e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
         ) {
-          setInputValue(e.target.value);
+          setInputValue(e.target.value.toLowerCase());
         } else {
           e.preventDefault();
         }
@@ -44,7 +44,7 @@ export default function SignIn() {
       <h2 className='font-bold text-4xl my-9'>Or</h2>
       <p className='text-[#6F6F6F]'>Maybe you don’t have one yet?</p>
       <button onClick={openConnectModal} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-4" type="button">
-                  Connect with Wallet
+        Connect with Wallet
       </button>
 
       <h3 className='mb-4 mt-9 text-3xl font-bold'>Have no idea what we’re talking about?</h3>
