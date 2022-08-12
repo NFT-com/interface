@@ -41,7 +41,7 @@ export const Notifications = () => {
     if(addedAssociatedNotifClicked) {
       setUserNotificationActive('associatedProfileAdded', false);
     }
-  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, user]);
+  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive]);
 
   return (
     <div className='flex flex-col w-full items-center space-y-4'>
@@ -49,7 +49,7 @@ export const Notifications = () => {
         pendingAssociatedProfiles && pendingAssociatedProfiles.getMyPendingAssociations.length > 0 && (
           <NotificationButton
             buttonText={`${pendingAssociatedProfiles.getMyPendingAssociations.length} NFT Profile Connection request${pendingAssociatedProfiles.getMyPendingAssociations.length > 1 ? 's' : ''}`}
-            onClick={() => {console.log('pending association click');}}
+            onClick={() => {setSidebarOpen(false); router.push('/app/settings');}}
             notificationType='pendingAssociatedProfiles'
           />
         )

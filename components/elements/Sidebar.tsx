@@ -93,7 +93,7 @@ export const Sidebar = () => {
 
           {//todo: make this do something on click }
           }
-          <div className='w-full p-4 items-center drop-shadow-xl'>
+          <div className='w-full p-4 items-center drop-shadow-xl -mt-10 minlg:-mt-20'>
             <NftOwner showHeaderText={false} selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
           </div>
           
