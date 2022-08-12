@@ -7,7 +7,7 @@ import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { NotificationButton } from './NotificationButton';
 
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 export const Notifications = () => {
@@ -25,7 +25,7 @@ export const Notifications = () => {
   const [removedAssociationNotifClicked, setRemovedAssociationNotifClicked] = useState(false);
   const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
 
-  useEffect(() => {
+  useCallback(() => {
     if(hasUnclaimedProfiles) {
       setUserNotificationActive('hasUnclaimedProfiles', true);
     }
