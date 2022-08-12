@@ -1,6 +1,6 @@
 import { Modal } from 'components/elements/Modal';
 
-import { GasPump, XCircle } from 'phosphor-react';
+import { ArrowsClockwise, GasPump, XCircle } from 'phosphor-react';
 
 type RequestModalProps = {
   visible: boolean;
@@ -37,7 +37,10 @@ export default function RequestModal({ visible, setVisible, address, transaction
             (
               isPending ?
                 <>
-                  <h2 className='text-4xl tracking-wide font-bold mb-10'>One second...</h2>
+                  <div className='flex mb-10 items-center'>
+                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+                    <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
+                  </div>
                   <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
                 </>
                 :

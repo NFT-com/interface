@@ -1,12 +1,12 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { IgnoreAssocationsMutation, Maybe, MutationIgnoreAssociationsArgs } from 'graphql/generated/types';
+import { IgnoreAssociationsMutation, Maybe, MutationIgnoreAssociationsArgs } from 'graphql/generated/types';
 
 import { useCallback, useState } from 'react';
 
 export interface IgnoreAssociationsMutationResult {
   ignoring: boolean;
   error: string | null;
-  ignoreAssociations: (input: MutationIgnoreAssociationsArgs) => Promise<Maybe<IgnoreAssocationsMutation>>;
+  ignoreAssociations: (input: MutationIgnoreAssociationsArgs) => Promise<Maybe<IgnoreAssociationsMutation>>;
 }
 
 export function useIgnoreAssociationsMutation(): IgnoreAssociationsMutationResult {
@@ -18,7 +18,7 @@ export function useIgnoreAssociationsMutation(): IgnoreAssociationsMutationResul
   const ignoreAssociations = useCallback(async (input: MutationIgnoreAssociationsArgs) => {
     setLoading(true);
     try {
-      const result = await sdk.IgnoreAssocations({
+      const result = await sdk.IgnoreAssociations({
         eventIdArray: input.eventIdArray
       });
       setLoading(false);
