@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useWalletSlide() {
@@ -5,13 +6,13 @@ export function useWalletSlide() {
 
   const loading = !data;
 
-  const useWalletSlideToggle = () => {
+  const useWalletSlideToggle = useCallback(() => {
     mutate(!data);
-  };
+  }, [data, mutate]);
 
-  const setWalletSlideOpen = (open: boolean) => {
+  const setWalletSlideOpen = useCallback((open: boolean) => {
     mutate(open);
-  };
+  }, [mutate]);
 
   return {
     loading,

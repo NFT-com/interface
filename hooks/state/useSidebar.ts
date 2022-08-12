@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useSidebar() {
@@ -8,9 +9,9 @@ export function useSidebar() {
     mutate(!data);
   };
 
-  const setSidebarOpen = (open: boolean) => {
+  const setSidebarOpen = useCallback((open: boolean) => {
     mutate(open);
-  };
+  }, [mutate]);
 
   return {
     loading,
