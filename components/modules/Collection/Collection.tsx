@@ -46,7 +46,6 @@ export function Collection(props: CollectionProps) {
     props.contract && collectionNfts.length < 1 && loadNFTs();
   }, [collectionNfts.length, props.contract, loadNFTs]);
 
-  console.log(props.contract, 'props.contract fdo');
   return (
     <>
       <div className="mt-20">
