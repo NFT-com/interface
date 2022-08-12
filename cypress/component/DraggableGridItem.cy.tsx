@@ -8,7 +8,8 @@ import { GridContextProvider } from '../../components/modules/Draggable/GridCont
 export const buildItem = (id: string) => ({ id });
 
 describe('DraggableGridItem', () => {
-  const setUp = (moveItem = cy.stub()) => {
+  it('renders', () => {
+    const moveItem = cy.stub();
     cy.mount(
       <GridContextProvider items={[buildItem('a'), buildItem('b'), buildItem('c')]}>
         <DraggableGridItem id="a" onMoveItem={moveItem}>
@@ -21,11 +22,8 @@ describe('DraggableGridItem', () => {
           <div className="border">c</div>
         </DraggableGridItem>
       </GridContextProvider>
-    );
-  };
-
-  it('renders', () => {
-    setUp();
-    cy.findByText('a').should('exist');
+    ).then(() => {
+      cy.findByText('a').should('exist');
+    });
   });
 });
