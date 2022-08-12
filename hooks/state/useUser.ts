@@ -36,11 +36,11 @@ export function useUser() {
   };
 
   const setCurrentProfileUrl= useCallback((selectedProfileUrl: string | null) => {
+    localStorage.setItem('selectedProfileUrl', isNullOrEmpty(selectedProfileUrl) ? '' : selectedProfileUrl);
     mutate({
       ...data,
       currentProfileUrl: selectedProfileUrl
     });
-    localStorage.setItem('selectedProfileUrl', isNullOrEmpty(selectedProfileUrl) ? '' : selectedProfileUrl);
   }, [data, mutate]);
 
   const setHiddenProfileWithExpiry = useCallback((profileToHide: string) => {

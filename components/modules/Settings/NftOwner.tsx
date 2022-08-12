@@ -79,7 +79,10 @@ export default function NftOwner({ selectedProfile, showHeaderText, showToastOnS
   const updateOwnerProfile = (profileTitle) => {
     setSelected(profileTitle);
     const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle)?.id;
-    updateWalletProfileId({ profileId: profileId }).then(() => toast.success('Saved!') && setCurrentProfileUrl(profileTitle)).catch(() => toast.error('Error'));
+    updateWalletProfileId({ profileId: profileId }).then(() => {
+      toast.success('Saved!');
+    }).catch(() => toast.error('Error'));
+    setCurrentProfileUrl(profileTitle);
   };
 
   return (
