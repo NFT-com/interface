@@ -1,29 +1,54 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
+import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
+import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
 import { CheckCircle, Clock, DotsThreeOutlineVertical, XCircle } from 'phosphor-react';
-import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { useAccount, useNetwork } from 'wagmi';
 
 type AssociatedAddressProps = {
   address: string;
   pending?: boolean;
   rejected?: boolean;
-  remove: (type: string, address: string) => void;
   submit?: (address: string) => void;
   isOpen?: boolean
   setIsOpen?: (input: boolean) => void;
+  eventId?: string
+  selectedProfile: string
 };
 
-export default function AssociatedAddress({ address, pending, rejected, remove, submit, isOpen, setIsOpen }: AssociatedAddressProps) {
+export default function AssociatedAddress({ address, pending, rejected, submit, eventId, selectedProfile }: AssociatedAddressProps) {
+  const { address: currentAddress } = useAccount();
+  const { mutate: mutateHidden } = useIgnoredEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
+  const { updateHideIgnored } = useUpdateHideIgnored();
+  const { nftResolver } = useAllContracts();
   const { chain } = useNetwork();
   const [removeModalVisible, setRemoveModalVisible] = useState(false);
-  useEffect(() => {
-    setRemoveModalVisible(isOpen);
-  }, [isOpen]);
+
+  const removeHandler = async () => {
+    if(rejected){
+      updateHideIgnored({ hideIgnored: true, eventIdArray: [eventId] })
+        .then(() => {
+          mutateHidden();
+          toast.success('Removed');
+        })
+        .catch(() => toast.error('Error'));
+    } else {
+      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: address }, selectedProfile)
+        .then(() => {
+          toast.success('Removed');
+          setRemoveModalVisible(false);
+        })
+        .catch(() => toast.error('Error'));
+    }
+  };
+
   return (
     <>
       <div className='p-1 flex  justify-between mb-1 font-mono text-sm'>
@@ -90,7 +115,7 @@ export default function AssociatedAddress({ address, pending, rejected, remove, 
             options={filterNulls([
               {
                 label: 'Remove',
-                onSelect: () => {setRemoveModalVisible(true); setIsOpen(null);},
+                onSelect: () => setRemoveModalVisible(true),
                 icon: null,
               },
               {
@@ -111,7 +136,7 @@ export default function AssociatedAddress({ address, pending, rejected, remove, 
           </DropdownPickerModal>
         </div>
       </div>
-      <RemoveModal {...{ address, remove }} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />
+      <RemoveModal {...{ address }} remove={removeHandler} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />
     </>
   );
 }
