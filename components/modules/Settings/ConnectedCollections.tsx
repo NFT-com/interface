@@ -244,6 +244,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
             />
           </div>
           :
+          connectedCollection?.chainAddr !== '' &&
           <div className='mt-4 md:w-full w-3/4'>
             <p>Loading...</p>
           </div>
