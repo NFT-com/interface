@@ -47,7 +47,13 @@ export const Footer = () => {
           onClick: () => {
             router.push('/articles');
           },
-        }
+        },
+        {
+          name: 'What is an NFT?',
+          onClick: () => {
+            router.push('/articles/what-is-an-nft');
+          }
+        },
       ])
     },
     {
