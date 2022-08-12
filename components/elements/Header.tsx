@@ -23,9 +23,10 @@ import { useAccount } from 'wagmi';
 
 type HeaderProps = {
   removeBg?: boolean
+  bgLight?: boolean
 }
 
-export const Header = ({ removeBg } : HeaderProps) => {
+export const Header = ({ removeBg, bgLight } : HeaderProps) => {
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
@@ -38,10 +39,13 @@ export const Header = ({ removeBg } : HeaderProps) => {
 
   useMaybeCreateUser();
 
+  // We still need to support forced-light mode in this component until we're ready.
+  const useDarkMode = user?.isDarkMode && !bgLight;
+
   return (
     <nav className={tw(
       'fixed z-[104] top-0 w-screen h-20 drop-shadow-md',
-      removeBg ? 'bg-transparent' : user?.isDarkMode ? 'bg-black' : 'bg-always-white' ,
+      removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white' ,
     )}>
       <div className="w-full mx-auto px-5">
         <div className="flex items-center justify-between h-20">
@@ -49,7 +53,7 @@ export const Header = ({ removeBg } : HeaderProps) => {
             <div className="flex-shrink-0 hover:cursor-pointer">
               <Link href='/' passHref>
                 <div>
-                  {user.isDarkMode ? <LightNavLogo className='h-8 w-8 justify-start' /> : <NavLogo className='h-8 w-8 justify-start' />}
+                  {useDarkMode ? <LightNavLogo className='h-8 w-8 justify-start' /> : <NavLogo className='h-8 w-8 justify-start' />}
                 </div>
               </Link>
             </div>
@@ -70,7 +74,7 @@ export const Header = ({ removeBg } : HeaderProps) => {
               'minlg:flex w-full mx-8'
             )}>
               <div className='flex grow max-w-[27rem] items-center h-full'>
-                <SearchBar bgLight={!user.isDarkMode || removeBg} />
+                <SearchBar bgLight={!useDarkMode || removeBg} />
               </div>
             </div>
           }

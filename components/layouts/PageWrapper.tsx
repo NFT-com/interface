@@ -16,6 +16,7 @@ import { useAccount } from 'wagmi';
 
 export interface PageWrapperProps {
   bgColorClasses?: string;
+  bgLight?: boolean;
   headerOptions?: {
     omit?: boolean;
     walletOnly?: boolean;
@@ -69,7 +70,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
               />
           )}
           <ClientOnly>
-            <Header removeBg={headerOptions?.removeBackground} />
+            <Header bgLight={props.bgLight} removeBg={headerOptions?.removeBackground} />
           </ClientOnly>
         </div>}
         <ClientOnly>
