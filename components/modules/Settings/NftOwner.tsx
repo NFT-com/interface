@@ -16,11 +16,11 @@ import { toast } from 'react-toastify';
 
 type NftOwnerProps = {
   selectedProfile: string;
-  showHeaderText: boolean;
+  isSidebar: boolean;
   showToastOnSuccess: boolean;
 }
 
-export default function NftOwner({ selectedProfile, showHeaderText, showToastOnSuccess }: NftOwnerProps) {
+export default function NftOwner({ selectedProfile, isSidebar, showToastOnSuccess }: NftOwnerProps) {
   const { profileData } = useProfileQuery(selectedProfile);
   const { data: myProfiles } = useMyProfilesQuery();
   const { updateWalletProfileId } = useUpdateWalletProfileIdMutation();
@@ -78,14 +78,20 @@ export default function NftOwner({ selectedProfile, showHeaderText, showToastOnS
 
   const updateOwnerProfile = (profileTitle) => {
     setSelected(profileTitle);
-    const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle)?.id;
-    updateWalletProfileId({ profileId: profileId }).then(() => toast.success('Saved!') && setCurrentProfileUrl(profileTitle)).catch(() => toast.error('Error'));
+    if(isSidebar) {
+      setCurrentProfileUrl(profileTitle);
+    } else {
+      const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle)?.id;
+      updateWalletProfileId({ profileId: profileId }).then(() => {
+        toast.success('Saved!');
+      }).catch(() => toast.error('Error'));
+    }
   };
 
   return (
     <div id="owner" className='mt-10 minlg:mt-20 font-grotesk'>
       {showToastOnSuccess && <Toast />}
-      {showHeaderText &&
+      {!isSidebar &&
       <>
         <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>NFT Owner</h2>
         <p className='mb-4 text-[#6F6F6F]'>Select your primary NFT Profile which will display as the owner for your NFTs and collections.</p>
@@ -98,62 +104,115 @@ export default function NftOwner({ selectedProfile, showHeaderText, showToastOnS
             sortProfiles();
           }}
           opensModal
-          showSwitch
+          showSwitch={myOwnedProfileTokens && myOwnedProfileTokens.length > 1}
           profile={myOwnedProfileTokens?.find(t => t.title === selected)}
         />
       }
-      
-      <Modal
-        visible={visible}
-        loading={false}
-        title={''}
-        onClose={() => {
-          setVisible(false);
-        }}
-        hideX
-        bgColor='white'
-        fullModal
-        pure
-      >
-        <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
-          <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
-            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
-            <div>
-              <h2 className='text-4xl tracking-wide font-bold mb-10'>Set Owner</h2>
-              <p className='text-[#6F6F6F] mb-4'>Select the profile to sign-in with by default.</p>
-              <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile Name" />
-            </div>
-            <div className='max-h-[350px] maxlg:max-h-[320px] overflow-auto'>
+
+      {isSidebar ?
+        <Modal
+          visible={visible}
+          loading={false}
+          title={''}
+          onClose={() => {
+            setVisible(false);
+          }}
+          hideX
+          bgColor='white'
+          fullModal
+          pure
+        >
+          <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+            <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+              <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
+              <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
               <div>
-                {profilesToShow && profilesToShow?.map((profile) => {
-                  return (
-                    <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} key={profile?.title} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
-                  );
-                })}
+                <h2 className='text-4xl tracking-wide font-bold mb-10'>Switch To Profile</h2>
+                <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile Name" />
               </div>
+              <div className='max-h-[350px] maxlg:max-h-[320px] overflow-auto'>
+                <div>
+                  {profilesToShow && profilesToShow?.map((profile) => {
+                    return (
+                      <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Profile'} key={profile?.title} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
+                    );
+                  })}
+                </div>
 
-              {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
+                {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
 
-              {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
-                <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-                  Get a New Profile
-                </button>
-              )}
-
-              {allProfiles.length > profilesToShow.length
-                ?
-                (
-                  <button onClick={() => LoadMoreHandler()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-              Load More
+                {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
+                  <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
+                Get a New Profile
                   </button>
-                )
-                : null
-              }
+                )}
+
+                {allProfiles.length > profilesToShow.length
+                  ?
+                  (
+                    <button onClick={() => LoadMoreHandler()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
+            Load More
+                    </button>
+                  )
+                  : null
+                }
+              </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+        :
+        <Modal
+          visible={visible}
+          loading={false}
+          title={''}
+          onClose={() => {
+            setVisible(false);
+          }}
+          hideX
+          bgColor='white'
+          fullModal
+          pure
+        >
+          <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+            <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+              <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
+              <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+              <div>
+                <h2 className='text-4xl tracking-wide font-bold mb-10'>Set Owner</h2>
+                <p className='text-[#6F6F6F] mb-4'>Select the profile to sign-in with by default.</p>
+                <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile Name" />
+              </div>
+              <div className='max-h-[350px] maxlg:max-h-[320px] overflow-auto'>
+                <div>
+                  {profilesToShow && profilesToShow?.map((profile) => {
+                    return (
+                      <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} key={profile?.title} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
+                    );
+                  })}
+                </div>
+
+                {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
+
+                {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
+                  <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
+                  Get a New Profile
+                  </button>
+                )}
+
+                {allProfiles.length > profilesToShow.length
+                  ?
+                  (
+                    <button onClick={() => LoadMoreHandler()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
+              Load More
+                    </button>
+                  )
+                  : null
+                }
+              </div>
+            </div>
+          </div>
+        </Modal>
+      }
     </div>
   );
 }

@@ -116,7 +116,7 @@ export default function Settings() {
             {ownsProfilesAndSelectedProfile
               ? (
                 <>
-                  <NftOwner {...{ selectedProfile, showHeaderText: true, showToastOnSuccess: true }} />
+                  <NftOwner {...{ selectedProfile, isSidebar: false, showToastOnSuccess: true }} />
                   <DisplayMode {...{ associatedAddresses, selectedProfile }}/>
                 </>
               )
