@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export interface IKeyBackground {
@@ -10,19 +11,18 @@ export const keyBackgroundFallback: IKeyBackground = {
   bg: 'black'
 };
 
-
 export function useKeyBackground() {
   const { data, mutate } = useSWR('keyBackground', { fallbackData: keyBackgroundFallback });
   
   const loading = !data;
 
-  const setKeyBackground = (img: string, bg: 'black' | 'white') => {
+  const setKeyBackground = useCallback((img: string, bg: 'black' | 'white') => {
     mutate({
       ...data,
       img,
       bg
     });
-  };
+  }, [data, mutate]);
 
   return {
     loading,
