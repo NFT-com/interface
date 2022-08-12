@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export interface GalleryState {
@@ -17,19 +18,19 @@ export function useGallery() {
 
   const loading = !data;
     
-  const setGalleryItemType = (galleryItemType: 'gk' | 'profile') => {
+  const setGalleryItemType = useCallback((galleryItemType: 'gk' | 'profile') => {
     mutate({
       ...data,
       galleryItemType
     });
-  };
+  }, [data, mutate]);
 
-  const setGalleryShowMyStuff = (galleryShowMyStuff: boolean) => {
+  const setGalleryShowMyStuff = useCallback((galleryShowMyStuff: boolean) => {
     mutate({
       ...data,
       galleryShowMyStuff
     });
-  };
+  }, [data, mutate]);
 
   return {
     loading,
