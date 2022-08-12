@@ -35,7 +35,7 @@ export default function AssociatedAddress({ address, pending, rejected, remove, 
                   mode="hover"
                   tooltipComponent={
                     <div
-                      className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                      className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                     >
                       <p className='text-[#F2890E] mb-2'>Pending</p>
                       <p>This connection is waiting approval.</p>
@@ -50,7 +50,7 @@ export default function AssociatedAddress({ address, pending, rejected, remove, 
                   mode="hover"
                   tooltipComponent={
                     <div
-                      className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                      className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                     >
                       <p className='text-[#D50909] mb-2'>Rejected</p>
                       <p>This wallet has rejected the connection. If this was done in error, please resend the request. No gas is required.</p>
@@ -65,7 +65,7 @@ export default function AssociatedAddress({ address, pending, rejected, remove, 
               mode="hover"
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                  className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                 >
                   <p className='text-[#00AC30] mb-2'>Connected</p>
                   <p>This wallet has approved the connection.</p>

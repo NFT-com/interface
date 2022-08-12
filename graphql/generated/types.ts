@@ -605,6 +605,8 @@ export type Mutation = {
   followProfile: Profile;
   /** AUTHENTICATED */
   ignoreAssociations: Array<Maybe<Event>>;
+  listNFTLooksrare: Scalars['Boolean'];
+  listNFTSeaport: Scalars['Boolean'];
   mintGKProfile: Scalars['String'];
   /** AUTHENTICATED */
   orderingUpdates: Profile;
@@ -2169,6 +2171,13 @@ export type GetNftOffersQueryVariables = Exact<{
 
 export type GetNftOffersQuery = { __typename?: 'Query', getNFTOffers: Array<{ __typename?: 'MarketAsk', id: string, makerAddress: any, takerAddress: any, nonce: number, start: number, end: number, salt: number, offerAcceptedAt?: any | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null }> };
 
+export type GetRemovedAssociationsForSenderQueryVariables = Exact<{
+  profileUrl: Scalars['String'];
+}>;
+
+
+export type GetRemovedAssociationsForSenderQuery = { __typename?: 'Query', getRemovedAssociationsForSender: Array<{ __typename?: 'RemovedAssociationsForSenderOutput', hidden: boolean, id: string, receiver: string } | null> };
+
 export type GetRemovedAssociationsForReceiverQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3056,6 +3065,15 @@ export const GetNftOffersDocument = gql`
   }
 }
     `;
+export const GetRemovedAssociationsForSenderDocument = gql`
+    query GetRemovedAssociationsForSender($profileUrl: String!) {
+  getRemovedAssociationsForSender(profileUrl: $profileUrl) {
+    hidden
+    id
+    receiver
+  }
+}
+    `;
 export const GetRemovedAssociationsForReceiverDocument = gql`
     query GetRemovedAssociationsForReceiver {
   getRemovedAssociationsForReceiver {
@@ -3633,6 +3651,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getNFTOffers(variables: GetNftOffersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNftOffersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNftOffersQuery>(GetNftOffersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTOffers', 'query');
+    },
+    GetRemovedAssociationsForSender(variables: GetRemovedAssociationsForSenderQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRemovedAssociationsForSenderQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRemovedAssociationsForSenderQuery>(GetRemovedAssociationsForSenderDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRemovedAssociationsForSender', 'query');
     },
     GetRemovedAssociationsForReceiver(variables?: GetRemovedAssociationsForReceiverQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRemovedAssociationsForReceiverQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRemovedAssociationsForReceiverQuery>(GetRemovedAssociationsForReceiverDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRemovedAssociationsForReceiver', 'query');

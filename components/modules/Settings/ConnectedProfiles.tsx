@@ -16,7 +16,7 @@ export default function ConnectedProfiles({ associatedProfiles }: ConnectedProfi
   return (
     <div id="profiles" className='mt-10 w-full'>
       <h2 className='font-grotesk tracking-wide font-bold text-black text-2xl mb-1'>Connected Profiles</h2>
-      <p className='text-blog-text-reskin mb-4'>These profiles have requested access to your wallet to display your NFTs.</p>
+      <p className='text-blog-text-reskin mb-4'>These NFT Profiles have requested to display the NFTs from your address.</p>
       <div>
         <p className='text-blog-text-reskin mb-2 text-sm'>Profile Name</p>
         {!associatedProfiles?.accepted?.length && !associatedProfiles?.pending?.length && (

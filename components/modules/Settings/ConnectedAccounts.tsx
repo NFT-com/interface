@@ -104,7 +104,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   return (
     <div id="wallets" className='mt-10 font-grotesk'>
       <h3 className='text-base font-semibold tracking-wide mb-1'>Connected Wallets</h3>
-      <p className='text-blog-text-reskin mb-4'>Display NFTs from other Ethereum wallets on your profile.</p>
+      <p className='text-blog-text-reskin mb-4'>Display NFTs from your Ethereum addresses on your NFT Profile.</p>
       
       <SettingsForm buttonText='Request Connection' submitHandler={openModal} {...{ inputVal, isAssociatedOrSelf }} changeHandler={setInputVal} />
 

@@ -114,7 +114,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                   mode="hover"
                   tooltipComponent={
                     <div
-                      className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                      className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                     >
                       <p className='text-[#00AC30] mb-2'>Connected</p>
                       <p>You have authorized this connection.</p>
@@ -207,7 +207,11 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
             {
               transactionPending ?
                 <>
-                  <h2 className='text-4xl tracking-wide font-bold mb-10'>One second...</h2>
+                  <div className='flex mb-10 items-center'>
+                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+                    <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
+                  </div>
+                  
                   <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
                 </>
                 :

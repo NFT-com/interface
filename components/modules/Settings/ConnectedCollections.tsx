@@ -8,7 +8,7 @@ import { sameAddress } from 'utils/helpers';
 import AssociatedProfile from './AssociatedProfile';
 import SettingsForm from './SettingsForm';
 
-import { GasPump, XCircle } from 'phosphor-react';
+import { ArrowsClockwise, GasPump, XCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useAccount, useSigner } from 'wagmi';
@@ -129,7 +129,10 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
     if(transactionPending){
       return (
         <>
-          <h2 className='text-4xl tracking-wide font-bold mb-10'>One second...</h2>
+          <div className='flex mb-10 items-center'>
+            <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+            <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
+          </div>
           <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
         </>
       );
@@ -203,19 +206,20 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
     return (
       <>
-        <h2 className='text-4xl tracking-wide font-bold mb-10'>One Second...</h2>
+        <div className='flex mb-10 items-center'>
+          <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+          <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
+        </div>
         <p className='mt-2 text-[#6F6F6F] mb-10'>We’re making sure everything looks good on our end.</p>
       </>
     );
   }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateNewCollectionContract, collectionNameModal, isAssociatedOrSelf, transactionPending]);
 
-  console.log(associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress)));
-
   return (
     <>
       <div className='mt-10 font-grotesk'>
         <h3 className='text-base font-semibold tracking-wide mb-1'>NFT Collection</h3>
-        <p className='text-blog-text-reskin mb-4'>Enter the NFT collection you want to display on your profile.</p>
+        <p className='text-blog-text-reskin mb-4'>Connect an address to your NFT Profile.</p>
 
         {
           !connectedCollection?.chainAddr ||
