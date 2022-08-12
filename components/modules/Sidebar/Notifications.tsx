@@ -3,42 +3,17 @@ import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQ
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
-import { tw } from 'utils/tw';
+
+import { NotificationButton } from './NotificationButton';
 
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
-
-type NotificationButtonProps = {
-  buttonText: string;
-  onClick: () => void;
-}
-
-const NotificationButton = ({ buttonText, onClick }: NotificationButtonProps) => {
-  return (
-    <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
-      <button className={tw(
-        'inline-flex w-full h-full',
-        'text-md',
-        'leading-6',
-        'items-center',
-        'justify-center',
-        'bg-[#F9D963]',
-        'rounded-lg',
-        'p-4'
-      )}
-      onClick={onClick}
-      >
-        {buttonText}
-      </button>
-    </div>
-  );
-};
 
 export const Notifications = () => {
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
-  const { user, setNotificationCount } = useUser();
+  const { user, setUserNotificationActive } = useUser();
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
 
@@ -47,34 +22,55 @@ export const Notifications = () => {
 
   const { totalClaimable: totalClaimableForThisAddress } = useClaimableProfileCount(currentAddress);
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
+  const [removedAssociationNotifClicked, setRemovedAssociationNotifClicked] = useState(false);
+  const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
 
   useEffect(() => {
-    if(hasUnclaimedProfiles) {
-      setNotificationCount(user?.notificationCount + 1);
+    if(removedAssociationNotifClicked) {
+      setUserNotificationActive('associatedProfileRemoved', false);
     }
-    if(pendingAssociatedProfiles && pendingAssociatedProfiles.getMyPendingAssociations.length > 0 ) {
-      setNotificationCount(user?.notificationCount + 1);
+    if(addedAssociatedNotifClicked) {
+      setUserNotificationActive('associatedProfileAdded', false);
     }
-    if(profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized) {
-      setNotificationCount(user?.notificationCount + 1);
+    if(hasUnclaimedProfiles && !user?.activeNotifications.hasUnclaimedProfiles) {
+      setUserNotificationActive('hasUnclaimedProfiles', true);
     }
-    if(hasUnclaimedProfiles) {
-      setNotificationCount(user?.notificationCount + 1);
+    if(pendingAssociatedProfiles && pendingAssociatedProfiles.getMyPendingAssociations.length > 0 && !user?.activeNotifications.hasPendingAssociatedProfiles ) {
+      setUserNotificationActive('hasPendingAssociatedProfiles', true);
     }
-  }, [hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, setNotificationCount, user]);
+    if(profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized && !user?.activeNotifications.profileNeedsCustomization) {
+      setUserNotificationActive('profileNeedsCustomization', true);
+    }
+  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, user?.activeNotifications]);
 
   return (
     <div className='flex flex-col w-full items-center space-y-4'>
       {
-        pendingAssociatedProfiles && pendingAssociatedProfiles.getMyPendingAssociations.length > 0 && (
+        user?.activeNotifications.hasPendingAssociatedProfiles && (
           <NotificationButton
             buttonText={`${pendingAssociatedProfiles.getMyPendingAssociations.length} NFT Profile Connection request${pendingAssociatedProfiles.getMyPendingAssociations.length > 1 ? 's' : ''}`}
-            onClick={() => {console.log('pending association click');}}
+            onClick={() => {setSidebarOpen(false); router.push('/app/settings');}}
           />
         )
       }
       {
-        profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized && (
+        user.activeNotifications.associatedProfileRemoved && (
+          <NotificationButton
+            buttonText={'Associated Profile Removed'}
+            onClick={() => {setRemovedAssociationNotifClicked(true);}}
+          />
+        )
+      }
+      {
+        user.activeNotifications.associatedProfileAdded && (
+          <NotificationButton
+            buttonText={'Associated Profile Added'}
+            onClick={() => {setAddedAssociatedNotifClicked(true);}}
+          />
+        )
+      }
+      {
+        user?.activeNotifications.profileNeedsCustomization && (
           <NotificationButton
             buttonText='Your NFT Profile needs attention'
             onClick={() => {console.log('profile customization click');}}
