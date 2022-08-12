@@ -14,7 +14,7 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Filter from 'public/funnel_simple.svg';
+import { FunnelSimple } from 'phosphor-react';
 import Vector from 'public/Vector.svg';
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
@@ -104,7 +104,7 @@ export default function ResultsPage() {
               onClick={() => {
                 setSearchModalOpen(true, 'filters');
               }}>
-              <Filter className="h-10 w-10" />
+              <FunnelSimple className="h-8 w-8" />
               Filter
             </div>
             <div

@@ -7,7 +7,6 @@ import { SearchContent } from './SearchContent';
 
 export const SearchModal = () => {
   const { searchModalOpen, setSearchModalOpen, modalType } = useSearchModal();
-  console.log(modalType, 'modalType fdo');
   return (
     <Modal
       fullModal
