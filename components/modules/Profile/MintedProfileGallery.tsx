@@ -3,6 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -157,11 +158,13 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
                   icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
                 },
-                {
-                  label: `${(draftDeployedContractsVisible) ? 'Hide' : 'Show'} Created Collections`,
-                  onSelect: () => setDraftDeployedContractsVisible(!draftDeployedContractsVisible),
-                  icon: <EditLayoutIcon className="" alt="Collections toggle" />,
-                }
+                getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)
+                  ? {
+                    label: `${(draftDeployedContractsVisible) ? 'Hide' : 'Show'} Created Collections`,
+                    onSelect: () => setDraftDeployedContractsVisible(!draftDeployedContractsVisible),
+                    icon: <EditLayoutIcon className="" alt="Collections toggle" />,
+                  }
+                  : null
               ])}>
               <GearIcon className="w-8 h-8 shrink-0 aspect-square" alt="Edit menu" />
             </DropdownPickerModal>
