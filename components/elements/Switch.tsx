@@ -19,7 +19,7 @@ export const Switch = ({
   return (
     <HeadlessSwitch.Group as="div" className="flex items-center">
       <HeadlessSwitch.Label as="span" className="mr-4">
-        <span className="text-sm font-medium text-gray-900 dark:text-white ">{left}</span>
+        <span className="text-sm font-medium text-black dark:text-white">{left}</span>
       </HeadlessSwitch.Label>
       <HeadlessSwitch
         checked={enabled}
@@ -41,7 +41,7 @@ export const Switch = ({
         />
       </HeadlessSwitch>
       <HeadlessSwitch.Label as="span" className="ml-4">
-        <span className="text-sm font-medium text-gray-900 dark:text-white ">{right}</span>
+        <span className="text-sm font-medium text-black dark:text-white ">{right}</span>
       </HeadlessSwitch.Label>
     </HeadlessSwitch.Group>
   );

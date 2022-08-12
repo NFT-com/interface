@@ -1,14 +1,16 @@
+import { Button, ButtonType } from 'components/elements/Button';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { DescriptionDetail } from './DescriptionDetail';
 import { ExternalListings } from './ExternalListings';
-import { NftApprovals } from './NftApprovals';
 import { NftChainInfo } from './NftChainInfo';
 import { NFTDetail } from './NFTDetail';
+import { NFTListingsContext } from './NFTListingsContext';
 import { Properties } from './Properties';
 
+import { useContext } from 'react';
 import { useAccount } from 'wagmi';
 
 export interface NFTDetailPageProps {
@@ -19,6 +21,7 @@ export interface NFTDetailPageProps {
 export function NFTDetailPage(props: NFTDetailPageProps) {
   const { address: currentAddress } = useAccount();
   const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
+  const { stageListing } = useContext(NFTListingsContext);
 
   return (
     <PageWrapper
@@ -29,7 +32,20 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         {
           getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
           currentAddress === nft?.wallet?.address &&
-          <NftApprovals nft={nft} />
+          <div className='w-full'>
+            <div className='flex flex-col m-8 p-4 bg-modal-overlay dark:bg-modal-overlay-dk rounded-lg items-center'>
+              <span className='dark:text-white mb-4'>This item is in your wallet</span>
+              <Button
+                label={'LIST ITEM'}
+                onClick={() => {
+                  stageListing({
+                    nft: nft,
+                  });
+                }}
+                type={ButtonType.PRIMARY}
+              />
+            </div>
+          </div>
         }
         <ExternalListings nft={nft} />
         <div className='w-full flex flex-col minlg:flex-row p-4'>

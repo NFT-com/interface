@@ -33,8 +33,8 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
 
   return (
     <>
-      <span className='minlg:text-4xl text-2xl'>Filter</span>
-      <div className='w-full mt-4 dark border-b border-accent-border-dk py-4'>
+      <span className='minlg:text-4xl text-2xl text-black dark:text-white'>Filter</span>
+      <div className='w-full mt-4 border-b border-accent-border-dk py-4'>
         <Switch
           left="Genesis Keys"
           right="Profiles"
@@ -58,20 +58,20 @@ export function GenesisKeyGalleryFilters(props: GenesisKeyGalleryFiltersProps) {
           onClick={() => {
             setGalleryShowMyStuff(!showMyStuff);
           }}
-          className='text-base ml-2 cursor-pointer GenesisKeyGalleryFilters__myassets-toggle'
+          className='text-base ml-2 text-black dark:text-white cursor-pointer GenesisKeyGalleryFilters__myassets-toggle'
         >
           Show My Assets
         </span>
       </div>
       {galleryItemType === 'gk' &&
-        <div className='flex w-full dark py-4 items-center border-b border-accent-border-dk'>
+        <div className='flex w-full py-4 items-center border-b border-accent-border-dk'>
           <SearchIcon className='w-6 h-6 mr-2 shrink-0 aspect-square' />
           <input
             className={tw(
               'GenesisKeyGalleryFilters__search-input',
               'text-lg min-w-0 block',
               'text-left px-3 py-3 w-[70%] rounded-lg font-medium',
-              'text-white bg-transparent shrink-0'
+              'text-black dark:text-white bg-transparent shrink-0'
             )}
             placeholder="Filter by ID number"
             value={props.currentFilter}
