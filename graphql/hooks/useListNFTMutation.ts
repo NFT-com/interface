@@ -48,10 +48,12 @@ export function useListNFTMutations(): ListNftResult {
   const listNftLooksrare = useCallback(
     async (order: MakerOrderWithSignature) => {
       try {
-        await sdk.ListNftLooksrare({ input: {
-          looksrareOrder: JSON.stringify(order),
-          chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
-        } });
+        await sdk.ListNftLooksrare({
+          input: {
+            looksrareOrder: JSON.stringify(order),
+            chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+          }
+        });
         return true;
       } catch (err) {
         Sentry.captureException(err);
