@@ -106,7 +106,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
         <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
           <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
-          <h2 className='text-4xl tracking-wide font-bold mb-10'>Are your sure?</h2>
+          <h2 className='text-4xl tracking-wide font-bold mb-10'>Are you sure?</h2>
           {getModalContent()}
         </div>
       </div>
