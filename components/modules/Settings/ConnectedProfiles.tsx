@@ -5,10 +5,18 @@ type Profile = {
   addr: string;
 }
 
+type Removed = {
+  hidden: boolean;
+  id: string;
+  owner: string;
+  url: string;
+}
+
 type ConnectedProfilesProps = {
   associatedProfiles : {
     pending: Profile[];
     accepted: Profile[];
+    removed: Removed[];
   };
 };
 
@@ -27,6 +35,9 @@ export default function ConnectedProfiles({ associatedProfiles }: ConnectedProfi
         ))}
         {associatedProfiles?.pending?.map((profile, index)=> (
           <AssociatedProfile {...{ profile }} pending key={index} />
+        ))}
+        {associatedProfiles?.removed?.map((profile, index)=> (
+          <AssociatedProfile {...{ profile }} isRemoved key={index} />
         ))}
       </div>
     </div>

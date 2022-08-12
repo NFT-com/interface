@@ -9,7 +9,8 @@ import DisplayMode from 'components/modules/Settings/DisplayMode';
 import NftOwner from 'components/modules/Settings/NftOwner';
 import SettingsSidebar from 'components/modules/Settings/SettingsSidebar';
 import TransferProfile from 'components/modules/Settings/TransferProfile';
-import { useHiddenEventsQuery } from 'graphql/hooks/useHiddenEventsQuery';
+import { useGetRemovedAssociationsForReceiver } from 'graphql/hooks/useGetRemovedAssociationsForReceiverQuery';
+import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
@@ -26,12 +27,14 @@ export default function Settings() {
   const { address: currentAddress } = useAccount();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { data: pendingAssociatedProfiles } = usePendingAssociationQuery();
+  const { data: removedAssociations } = useGetRemovedAssociationsForReceiver();
   const { getCurrentProfileUrl }= useUser();
   const result = getCurrentProfileUrl();
   const [selectedProfile, setSelectedProfile] = useState(result);
+  const [approvedProfiles, setApprovedProfiles] = useState([]);
   const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [], denied: [] });
-  const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
-  const { data: events } = useHiddenEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
+  const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [], removed: [] });
+  const { data: events } = useIgnoredEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
 
   const fetchAddresses = useCallback(
     async (profile) => {
@@ -58,21 +61,35 @@ export default function Settings() {
     setSelectedProfile(result);
   }, [result, getCurrentProfileUrl]);
 
+  useEffect(() => {
+    setApprovedProfiles([]);
+  }, [currentAddress]);
+
   const fetchProfiles = useCallback(
     async () => {
       const evm = await nftResolver.getApprovedEvm(currentAddress);
+      evm.forEach(async(evm) => {
+        const assocAddress = await nftResolver.associatedAddresses(evm.profileUrl);
+        const isAssociated = assocAddress.some((item) => item.chainAddr === currentAddress);
+        if(isAssociated){
+          if(!approvedProfiles.some((item) => item.addr === evm.addr)){
+            setApprovedProfiles([...approvedProfiles, evm]);
+          }
+        }
+      });
       const result = pendingAssociatedProfiles?.getMyPendingAssociations.filter(a => !evm.some(b => a.url === b.profileUrl));
-      setAssociatedProfiles({ pending: result, accepted: evm });
+      const removed = removedAssociations?.getRemovedAssociationsForReceiver?.filter(a => a.hidden !== true);
+      setAssociatedProfiles({ pending: result, accepted: approvedProfiles, removed: removed });
     },
-    [nftResolver, currentAddress, pendingAssociatedProfiles],
+    [nftResolver, currentAddress, pendingAssociatedProfiles, removedAssociations, approvedProfiles],
   );
 
   useEffect(() => {
     fetchProfiles().catch(console.error);
     if(!currentAddress){
-      setAssociatedProfiles({ pending: [], accepted: [] });
+      setAssociatedProfiles({ pending: [], accepted: [], removed: [] });
     }
-  }, [nftResolver, currentAddress, fetchProfiles]);
+  }, [nftResolver, currentAddress, fetchProfiles, selectedProfile]);
   
   if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
     return <NotFoundPage />;

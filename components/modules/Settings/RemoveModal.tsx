@@ -1,6 +1,6 @@
 import { Modal } from 'components/elements/Modal';
 
-import { XCircle } from 'phosphor-react';
+import { ArrowClockwise, ArrowsClockwise, XCircle } from 'phosphor-react';
 import { useCallback } from 'react';
 
 type RemoveModalProps = {
@@ -8,20 +8,21 @@ type RemoveModalProps = {
   setVisible: (input:boolean) => void;
   address: string;
   rejected?: boolean;
-  remove: (action: string, address: string) => void;
+  remove: (action?: string, address?: string) => void;
   isProfile?: boolean
   profileUrl?: string
+  isRemoved?: boolean
 };
 
-export default function RemoveModal({ visible, setVisible, address, rejected, remove, isProfile, profileUrl }: RemoveModalProps) {
+export default function RemoveModal({ visible, setVisible, address, rejected, remove, isProfile, profileUrl, isRemoved }: RemoveModalProps) {
   const getModalContent = useCallback(() => {
-    if(isProfile && rejected) {
+    if(isProfile && rejected || isProfile && isRemoved) {
       return (
         <>
           <p className='text-[#6F6F6F]'>You are about to remove the profile <span className='text-black font-bold'>{profileUrl}</span> with the following address from your account.</p>
           <p className='font-mono text-black text-xl break-words mt-2'>{address}</p>
                 
-          <button onClick={() => remove('address-hideRejected', address)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+          <button onClick={() => remove()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
             Remove
           </button>
           <p
@@ -86,7 +87,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
         </p>
       </>
     );
-  }, [address, isProfile, rejected, remove, setVisible, profileUrl]);
+  }, [address, isProfile, rejected, remove, setVisible, profileUrl, isRemoved]);
 
   return (
     <Modal

@@ -3,12 +3,13 @@ import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
 import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
+import { useUpdateHiddenMutation } from 'graphql/hooks/useUpdateHiddenMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
-import { CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
+import { ArrowsClockwise, CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
 import { useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { toast } from 'react-toastify';
@@ -39,6 +40,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
+  const { updateHidden } = useUpdateHiddenMutation();
 
   const acceptPendingProfile = async (e, url) => {
     e.preventDefault();
@@ -56,17 +58,29 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const removeHandler = async () => {
     if(pending){
       await ignoreAssociations({ eventIdArray: [profile.id] })
-        .then(() => {setVisible(true); setRemoveModalVisible(false); setRejected(true); toast.success('Rejected');})
+        .then(() => {
+          setVisible(true);
+          setRemoveModalVisible(false);
+          setRejected(true);
+          toast.success('Rejected');
+        })
         .catch(() => toast.warning('Error. Please try again'));
+    } else if (isRemoved){
+      updateHidden({ eventIdArray: [profile.id], hidden: true }).then(() =>{
+        toast.success('Removed');
+        setRemoveModalVisible(false);
+        setVisible(true);
+        setRejected(true);
+      });
     } else {
       const tx = await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url);
+      setVisible(true);
       setTransactionPending(true);
+      setRemoveModalVisible(false);
       if(tx){
         tx.wait(1).then(() => {
           setTransactionPending(false);
           toast.success('Removed');
-          setRemoveModalVisible(false);
-          setVisible(true);
           setRejected(true);
         }).catch(() => toast.warning('Error. Please try again'));
       }
@@ -93,7 +107,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               mode="hover"
               tooltipComponent={
                 <div
-                  className="rounded-xl p-3 bg-modal-bg-dk text-white"
+                  className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                 >
                   <p className='text-[#F2890E] mb-2'>Pending</p>
                   <p>This connection is waiting your approval. Click on the Profile name to approve or reject.</p>
@@ -103,10 +117,25 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               <Clock size={25} className='mr-3' color='orange' weight='fill' />
             </CustomTooltip>
             :
-            isCollection && isRemoved
+            isRemoved
               ?
               (
-                <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                isRemoved && isCollection ?
+                  <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                  :
+                  <CustomTooltip
+                    mode="hover"
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                      >
+                        <p className='text-[#D40909] mb-2'>Disconnected</p>
+                        <p>This profile has disconnected your wallet. It’s safe to remove it from your account.</p>
+                      </div>
+                    }
+                  >
+                    <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                  </CustomTooltip>
               )
               :
               (
@@ -299,8 +328,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           </div>
         </div>
       </Modal>
-
-      <RemoveModal isProfile rejected={!pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner} remove={removeHandler} />
+      <RemoveModal isProfile isRemoved={isRemoved} rejected={pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner || profile.addr} remove={removeHandler} />
     </>
   );
 }
