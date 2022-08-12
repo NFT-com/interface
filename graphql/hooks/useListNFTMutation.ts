@@ -1,11 +1,11 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+import { SeaportOrderComponents } from 'types';
 import { Doppler,getEnv } from 'utils/env';
 import { getChainIdString } from 'utils/helpers';
 
 import { MakerOrderWithSignature } from '@looksrare/sdk';
 import * as Sentry from '@sentry/nextjs';
 import { useCallback } from 'react';
-import { SeaportOrderComponents } from 'types';
 import { useNetwork } from 'wagmi';
 
 export interface ListNftResult {
