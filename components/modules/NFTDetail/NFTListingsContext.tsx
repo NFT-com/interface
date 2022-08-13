@@ -7,6 +7,7 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
+import { Fee, SeaportOrderParameters } from 'types';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getChainIdString, processIPFSURL } from 'utils/helpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/listings';
@@ -19,7 +20,6 @@ import { BigNumber, BigNumberish } from 'ethers';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { Fee, SeaportOrderParameters } from 'types';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
 
 export type ListingType = 'looksrare' | 'seaport';

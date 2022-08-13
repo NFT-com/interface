@@ -1,7 +1,8 @@
+import { TickerStat } from 'types';
+
 import React, { useState } from 'react';
 import PageVisibility from 'react-page-visibility';
 import Ticker from 'react-ticker';
-import { TickerStat } from 'types';
 
 type HomePageTickerProps = {
   tickerStats: TickerStat[];

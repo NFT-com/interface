@@ -4,13 +4,13 @@ import { PageWrapper } from 'components/layouts/PageWrapper';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
+import { PostData } from 'types/blogs';
 import { getPaginatedPosts } from 'utils/contentful';
 
 import { getCollection } from 'lib/contentful/api';
 import { BLOG_LIST_HOME_FIELDS } from 'lib/contentful/schemas';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { PostData } from 'types/blogs';
 
 type PostListProps = {
   postData: PostData[];

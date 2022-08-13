@@ -1,12 +1,12 @@
 import Loader from 'components/elements/Loader';
 import { Maybe } from 'graphql/generated/types';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { AlchemyOwnedNFT } from 'types/alchemy';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
 import { useCallback } from 'react';
-import { AlchemyOwnedNFT } from 'types/alchemy';
 import { useAccount } from 'wagmi';
 
 export interface GalleryPageTitleProps {
