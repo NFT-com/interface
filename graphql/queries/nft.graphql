@@ -1,5 +1,5 @@
-query Nft($contract: Address!, $id: String!) {
-  nft(contract: $contract, id: $id) {
+query Nft($contract: Address!, $id: String!, $chainId: String) {
+  nft(contract: $contract, id: $id, chainId: $chainId) {
     id
     isOwnedByMe
     price

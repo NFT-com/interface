@@ -14,6 +14,7 @@ import { SearchModal } from 'components/modules/Search/SearchModal';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { TickerStat } from 'types';
 import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
@@ -26,7 +27,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Vector from 'public/Vector.svg';
 import { useEffect, useState } from 'react';
-import { TickerStat } from 'types';
 
 type HomePageProps = {
   preview: boolean;

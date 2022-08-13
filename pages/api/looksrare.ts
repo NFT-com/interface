@@ -32,7 +32,8 @@ const looksrareHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       res.status(500).json({ message: 'Failed to get nonce', error: e });
     }
     break;
-  case 'listNFT':
+  // use gQL endpoint instead
+  case 'DEPRECATED_listNFT':
     try {
       const order = JSON.parse(req.query['order'] as string);
       if (isNullOrEmpty(order)) {

@@ -8,6 +8,7 @@ import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { BalanceData } from 'types';
 import { filterNulls, prettify } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -22,7 +23,6 @@ import { isMobile } from 'react-device-detect';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import { BalanceData } from 'types';
 import { useAccount, useNetwork } from 'wagmi';
 
 interface AccountDetailsProps {
