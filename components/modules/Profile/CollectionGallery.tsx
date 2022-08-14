@@ -116,7 +116,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             'bg-auto bg-center'
           )}
           style={{
-            backgroundImage: `url(${collectionData?.ubiquityResults?.collection?.banner + `?apiKey=${process.env.NEXT_PUBLIC_UBIQUITY_API_KEY}`})`
+            backgroundImage: `url(${collectionData?.ubiquityResults?.collection?.banner ? `${collectionData?.ubiquityResults?.collection?.banner} + ?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null})`
           }}
         /> :
         ''

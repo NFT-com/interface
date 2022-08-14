@@ -1,5 +1,4 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
-import Copy from 'components/elements/Copy';
 import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -49,17 +48,20 @@ export function Collection(props: CollectionProps) {
   return (
     <>
       <div className="mt-20">
-        <BannerWrapper imageOverride={collectionData?.ubiquityResults?.collection?.banner + `?apiKey=${process.env.NEXT_PUBLIC_UBIQUITY_API_KEY}`}/>
+        <BannerWrapper
+          imageOverride={collectionData?.ubiquityResults?.collection?.banner ? `${collectionData?.ubiquityResults?.collection?.banner} + ?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null}/>
       </div>
       <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
         {collectionNfts.length > 0 ?
           <>
-            <div className="font-grotesk font-black dark:text-white text-4xl">{collectionNfts[0].document.contractName}</div>
-            <div className="mb-7 text-4xl">
-              <Copy lightModeForced toCopy={props.contract?.toString()} after>
-                {shortenAddress(props.contract?.toString())}
+            <div className="font-grotesk font-black text-black text-4xl">{collectionNfts[0].document.contractName}</div>
+            <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F]">
+              <span>{shortenAddress(props.contract?.toString())}</span>
+              <a
+                target="_blank"
+                rel="noreferrer" href={`https://etherscan.io/address/${props.contract?.toString()}`} className='font-bold underline tracking-wide'>
                 <CopyIcon />
-              </Copy>
+              </a>
             </div>
             <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4">
               {collectionNfts.map((nft, index) => {
