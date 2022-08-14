@@ -1,131 +1,18 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
-import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
 import { PageWrapper } from 'components/layouts/PageWrapper';
-import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
+import { CollectionItem } from 'components/modules/Search/CollectionItem';
+import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
-import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import NotFoundPage from 'pages/404';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { tw } from 'utils/tw';
+import { Doppler, getEnvBool } from 'utils/env';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import CaretCircle from 'public/caret_circle.svg';
-import Flask from 'public/flask.svg';
 import Vector from 'public/Vector.svg';
 import { useEffect, useRef, useState } from 'react';
 import { Loader } from 'react-feather';
-import { useNetwork } from 'wagmi';
-
-export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void}) => {
-  const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
-  const [active, setActive] = useState('PFP');
-  const { setSearchModalOpen } = useSearchModal();
-
-  return (
-    <div className={'border-t border-[#e5e7eb] border-b mt-3.5 bg-[#F8F8F8]'}>
-      <div className="flex justify-between minmd:justify-start minmd:space-x-2">
-        <Flask />
-        <span className="text-black text-lg minmd:text-xl font-medium">Check out our curated collections</span>
-        <CaretCircle
-          onClick={() => {
-            setIsFilterCollapsed(!isFilterCollapsed);
-          }}
-          className={tw('cursor-pointer transition-transform', isFilterCollapsed ? 'rotate-180' : '')}
-        />
-      </div>
-      <p className="text-blog-text-reskin font-medium text-base minmd:text-lg">
-        We’ve hand-picked NFT collections to help you find what you’re looking for.
-      </p>
-      <motion.div
-        animate={{
-          height: isFilterCollapsed ? 0 : 'auto' }}
-        transition={{ duration: 0.2 }}
-        className={tw('overflow-hidden mx-auto')}
-      >
-        <div className="flex flex-wrap justify-between items-center w-[90%] max-w-xs mx-auto h-fit my-7">
-          <span
-            className={tw(
-              'border border-gray-300 font-grotesk',
-              'rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer',
-              active === 'PFP' ? 'bg-[#F9D963] text-black font-black': 'text-blog-text-reskin font-bold' )}
-            onClick={() => {
-              setActive('PFP');
-              props.onClick('nft');
-            }}
-          >
-            PFP
-          </span>
-          <span
-            className={tw(
-              'border border-gray-300 font-grotesk',
-              'rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer',
-              active === 'Art' ? 'bg-[#F9D963] text-black font-black': 'text-blog-text-reskin font-bold' )}
-            onClick={() => {
-              setActive('Art');
-              props.onClick('');
-            }}
-          >
-            Art
-          </span>
-          <span className="font-grotesk font-bold text-blog-text-reskin border border-gray-300 rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Gaming</span>
-          <span className="font-grotesk font-bold text-blog-text-reskin border border-gray-300 rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Genesis Keys</span>
-          <span className="font-grotesk font-bold text-blog-text-reskin border border-gray-300 rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer">Profiles</span>
-          <span
-            className="font-grotesk font-bold text-blog-text-reskin border border-gray-300 rounded-[1.75rem] py-4 px-6 h-fit my-3 hover:cursor-pointer mx-auto"
-            onClick={() => {
-              setSearchModalOpen(true);
-            }}>
-                Discover by keyword
-          </span>
-        </div>
-      </motion.div>
-    </div>);
-};
-
-const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; contractName: string} ) => {
-  const router = useRouter();
-  const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
-  const [imageArray, setImageArray] = useState([]);
-  const [count, setCount] = useState(0);
-  const { chain } = useNetwork();
-
-  useEffect(() => {
-    const images = [];
-    contractAddr && fetchCollectionsNFTs({
-      chainId: chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
-      collectionAddress: contractAddr,
-      pageInput:{
-        first: 3,
-        afterCursor: null, }
-    }).then((collectionsData => {
-      setCount(collectionsData?.collectionNFTs.items.length);
-      images.push(collectionsData?.collectionNFTs.items[0]?.metadata.imageURL);
-      images.push(collectionsData?.collectionNFTs.items[1]?.metadata.imageURL);
-      images.push(collectionsData?.collectionNFTs.items[2]?.metadata.imageURL);
-      setImageArray([...images]);
-    }));
-  }, [fetchCollectionsNFTs, contractAddr, chain?.id]);
-
-  return (
-    imageArray.length > 0 && <NFTCollectionCard
-      contract={contractAddr}
-      count={count}
-      images={imageArray}
-      onClick={() => {
-        router.push(`/app/collection/${contractAddr}/`);
-      }}
-      customBackground={'white'}
-      customBorder={'border border-grey-200'}
-      contractName={contractName}
-      lightModeForced={true}
-    />
-  );
-};
 
 function usePrevious(value) {
   const ref = useRef(value);
@@ -150,7 +37,7 @@ export default function DiscoverPage() {
         index:'collections',
         query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
         q: searchTerm,
-        per_page: screenWidth >= 600 && screenWidth < 899 ? 4 : 2,
+        per_page: screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2,
         page: page,
       })
         .then((results) => {
@@ -164,15 +51,15 @@ export default function DiscoverPage() {
     page === 1 && fetchTypesenseSearch({
       index:'collections',
       query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
-      q: 'nft',
-      per_page: screenWidth >= 600 && screenWidth < 899 ? 4 : 2,
+      q: searchTerm,
+      per_page: screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2,
       page: 1,
     })
       .then((results) => {
         setCollectionsResults([...results.hits]);
         setFound(results.found);
       });
-  }, [fetchTypesenseSearch, screenWidth, page] );
+  }, [fetchTypesenseSearch, screenWidth, page, searchTerm] );
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
     return <NotFoundPage />;

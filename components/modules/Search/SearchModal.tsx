@@ -2,10 +2,11 @@ import { Modal } from 'components/elements/Modal';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
+import { FiltersContent } from './FiltersContent';
 import { SearchContent } from './SearchContent';
 
 export const SearchModal = () => {
-  const { searchModalOpen, setSearchModalOpen } = useSearchModal();
+  const { searchModalOpen, setSearchModalOpen, modalType } = useSearchModal();
   return (
     <Modal
       fullModal
@@ -24,7 +25,7 @@ export const SearchModal = () => {
         'text-primary-txt',
         'py-5'
       )}>
-        <SearchContent />
+        {modalType === 'search' ? <SearchContent /> : <FiltersContent />}
       </div>
     </Modal>);
 };
