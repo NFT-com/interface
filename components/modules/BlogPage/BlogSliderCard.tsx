@@ -1,10 +1,10 @@
+import { PostData } from 'types/blogs';
 import { tw } from 'utils/tw';
 
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { readingTime } from 'reading-time-estimator';
-import { PostData } from 'types/blogs';
 
 type BlogSliderPostProps = {
   post: PostData;

@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useSearchModal() {
@@ -9,6 +10,7 @@ export function useSearchModal() {
     } });
 
   const loading = !data;
+  
   const useToggleSearchModal = () => {
     mutate({
       ...data,

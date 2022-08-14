@@ -5,6 +5,7 @@ import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociatio
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useUpdateHiddenMutation } from 'graphql/hooks/useUpdateHiddenMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { useUser } from 'hooks/state/useUser';
 import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
@@ -40,6 +41,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
+  const { setUserNotificationActive } = useUser();
   const { updateHidden } = useUpdateHiddenMutation();
 
   const acceptPendingProfile = async (e, url) => {
@@ -52,6 +54,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         setAccepted(true);
         setTransactionPending(false);
       }).catch(() => toast.error('Error'));
+      setUserNotificationActive('associatedProfileAdded', true);
     }
   };
 
@@ -81,6 +84,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         tx.wait(1).then(() => {
           setTransactionPending(false);
           toast.success('Removed');
+          setUserNotificationActive('associatedProfileRemoved', true);
           setAssociationRejected(true);
         }).catch(() => toast.warning('Error. Please try again'));
       }
@@ -200,7 +204,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                 icon: null,
               },
               !isCollection && {
-                label: 'Reject/Remove',
+                label: pending ? 'Reject' : 'Remove',
                 onSelect: () => setRemoveModalVisible(true),
                 icon: null,
               },
@@ -237,7 +241,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
               transactionPending ?
                 <>
                   <div className='flex mb-10 items-center'>
-                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
                     <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
                   </div>
                   
@@ -269,10 +273,18 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                           </ExternalLink>
 
                           <p className='text-[#6F6F6F]'>
-                If you approve this request, your NFTs will be available to display on their profile’s gallery. <span className='text-black font-bold tracking-wide'>{profile.profileUrl || profile.url}{' '}</span> will <span className='text-black font-bold tracking-wide'>NOT</span> be able to make any changes to your wallet or its contents. You can change this connection at any time in your account’s settings.
+                            If you approve this request, your NFTs will be available to display on their profile’s gallery.
+                            <span className='text-black font-bold tracking-wide'>
+                              {profile.profileUrl || profile.url}{' '}
+                            </span>
+                              will
+                            <span className='text-black font-bold tracking-wide'>
+                                NOT
+                            </span>
+                                be able to make any changes to your wallet or its contents. You can change this connection at any time in your account’s settings.
                           </p>
                           <button onClick={(e) => acceptPendingProfile(e, profile.profileUrl || profile.url)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                Approve Request
+                            Approve Request
                           </button>
                           <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                             <GasPump size={20} weight="fill" />

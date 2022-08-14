@@ -16,10 +16,10 @@ import {
   SEAPORT_CONTRACT_VERSION,
   SEAPORT_FEE_COLLLECTION_ADDRESS, SEAPORT_ZONE,
   SEAPORT_ZONE_HASH,
+  SEAPORT_ZONE_RINKEBY,
   SeaportConsiderationItem,
   SeaportOrderComponents,
-  SeaportOrderParameters
-} from 'types/seaport';
+  SeaportOrderParameters } from 'types/seaport';
 
 export function getTypedDataDomain(chainId: string | number) {
   return {
@@ -102,7 +102,8 @@ export function createSeaportParametersForNFTListing(
   endingPrice: BigNumberish,
   currency: string,
   duration: BigNumberish,
-  collectionFee: Maybe<Fee>
+  collectionFee: Maybe<Fee>,
+  chainId: string,
   // takerAddress: string,
 ): SeaportOrderParameters {
   // This is what the seller will accept for their NFT.
@@ -139,7 +140,7 @@ export function createSeaportParametersForNFTListing(
   ]);
   return {
     offerer: offerer ?? NULL_ADDRESS,
-    zone: SEAPORT_ZONE,
+    zone: chainId === '4' ? SEAPORT_ZONE_RINKEBY : SEAPORT_ZONE,
     offer: [{
       itemType: ItemType.ERC721,
       token: nft?.contract,

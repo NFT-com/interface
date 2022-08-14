@@ -130,7 +130,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
       return (
         <>
           <div className='flex mb-10 items-center'>
-            <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+            <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
             <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
           </div>
           <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
@@ -207,7 +207,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
     return (
       <>
         <div className='flex mb-10 items-center'>
-          <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2' />
+          <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin' />
           <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
         </div>
         <p className='mt-2 text-[#6F6F6F] mb-10'>We’re making sure everything looks good on our end.</p>

@@ -2,12 +2,13 @@ import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback,useEffect } from 'react';
 import useSWR from 'swr';
+import { UserNotifications } from 'types';
 
 export interface UserState {
   currentProfileUrl: string
   isDarkMode: boolean;
   hiddenProfile: string[];
-  notificationCount: number;
+  activeNotifications: UserNotifications;
 }
 
 export function useUser() {
@@ -16,24 +17,30 @@ export function useUser() {
       isDarkMode: true,
       currentProfileUrl: '',
       hiddenProfile: null,
-      notificationCount: 0,
+      activeNotifications: {
+        hasUnclaimedProfiles: false,
+        hasPendingAssociatedProfiles: false,
+        profileNeedsCustomization: false,
+        associatedProfileAdded: false,
+        associatedProfileRemoved: false,
+      }
     }
   });
 
   const loading = !data;
-  const setDarkMode = (darkMode: boolean) => {
+  const setDarkMode = useCallback((darkMode: boolean) => {
     mutate({
       ...data,
       isDarkMode: darkMode
     });
-  };
+  }, [data, mutate]);
 
   const setCurrentProfileUrl= useCallback((selectedProfileUrl: string | null) => {
+    localStorage.setItem('selectedProfileUrl', isNullOrEmpty(selectedProfileUrl) ? '' : selectedProfileUrl);
     mutate({
       ...data,
       currentProfileUrl: selectedProfileUrl
     });
-    localStorage.setItem('selectedProfileUrl', isNullOrEmpty(selectedProfileUrl) ? '' : selectedProfileUrl);
   }, [data, mutate]);
 
   const setHiddenProfileWithExpiry = useCallback((profileToHide: string) => {
@@ -68,12 +75,25 @@ export function useUser() {
     return typeof window !== 'undefined' ? localStorage?.getItem('selectedProfileUrl') : '';
   }, []);
 
-  const setNotificationCount = useCallback((count: number) => {
+  const setUserNotificationActive = useCallback((notification: keyof UserNotifications, notificationValue: boolean) => {
     mutate({
       ...data,
-      notificationCount: count
+      activeNotifications: {
+        ...data.activeNotifications,
+        [notification]: notificationValue
+      }
     });
-  }, [data, mutate]);
+  } , [data, mutate]);
+
+  const getNotificationCount = useCallback(() => {
+    let count = 0;
+    for (const key in data.activeNotifications) {
+      if (data.activeNotifications[key]) {
+        count++;
+      }
+    }
+    return count;
+  }, [data]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -95,6 +115,7 @@ export function useUser() {
     getCurrentProfileUrl,
     setHiddenProfileWithExpiry,
     getHiddenProfileWithExpiry,
-    setNotificationCount,
+    setUserNotificationActive,
+    getNotificationCount,
   };
 }

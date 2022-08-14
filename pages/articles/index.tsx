@@ -4,13 +4,13 @@ import { PageWrapper } from 'components/layouts/PageWrapper';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
+import { PostData } from 'types/blogs';
 import { getPaginatedPosts } from 'utils/contentful';
 
 import { getCollection } from 'lib/contentful/api';
 import { BLOG_LIST_HOME_FIELDS } from 'lib/contentful/schemas';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { PostData } from 'types/blogs';
 
 type PostListProps = {
   postData: PostData[];
@@ -33,7 +33,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
     return <NotFoundPage />;
   }
   return (
-    <PageWrapper bgLight>
+    <PageWrapper bgLight >
       <div className='bg-white'>
         <div className='px-6 px-2.5 pt-28 max-w-nftcom mx-auto'>
           <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
