@@ -4,16 +4,16 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
 import router from 'next/router';
-import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 
 export const CollectionsResults = (props: {searchTerm: string}) => {
-  const [results, setsResults] = useState([]);
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const { width: screenWidth } = useWindowDimensions();
-  const [found, setFound] = useState([]);
-    
-  useEffect(() => {
-    screenWidth && fetchTypesenseMultiSearch({ searches: [{
+
+  const { data } = useSWR(screenWidth, async () => {
+    let results = [];
+    let found = 0;
+    screenWidth && await fetchTypesenseMultiSearch({ searches: [{
       collection: 'collections',
       query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: props.searchTerm,
@@ -21,15 +21,17 @@ export const CollectionsResults = (props: {searchTerm: string}) => {
       page: 1,
     }] })
       .then((resp) => {
-        setsResults([...resp.results[0].hits]);
-        setFound(resp.results[0].found);
+        results = [...resp.results[0].hits];
+        found = resp.results[0].found;
       });
-  },[fetchTypesenseMultiSearch, props.searchTerm, screenWidth]);
+
+    return { found, results };
+  });
 
   return(
     <>
       <div className="flex justify-between items-center font-grotesk font-bold text-base minmd:text-lg text-blog-text-reskin mt-12">
-        <span> {found + ' ' + 'COLLECTIONS'} </span>
+        <span> {data?.found + ' ' + 'COLLECTIONS'} </span>
         <span
           className="cursor-pointer hover:font-semibold"
           onClick={() => { router.push(`/app/discover/collections/${props.searchTerm}`); }}
@@ -37,7 +39,7 @@ export const CollectionsResults = (props: {searchTerm: string}) => {
           SEE ALL
         </span>
       </div>
-      {results && results.length > 0 && <CollectionsSlider full slides={results} />}
+      {data?.results && data?.results.length > 0 && <CollectionsSlider full slides={data?.results} />}
     </>
   );
 };

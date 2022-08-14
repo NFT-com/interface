@@ -1,22 +1,18 @@
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
 import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
-import { Doppler, getEnv } from 'utils/env';
 
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
+import { useState } from 'react';
+import useSWR from 'swr';
 
 export const CollectionItem = ({ contractAddr, contractName }: {contractAddr: string; contractName?: string} ) => {
   const router = useRouter();
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
-  const [imageArray, setImageArray] = useState([]);
   const [count, setCount] = useState(0);
-  const { chain } = useNetwork();
-  
-  useEffect(() => {
+
+  const { data: imageArray } = useSWR(contractAddr, async () => {
     const images = [];
-    contractAddr && fetchCollectionsNFTs({
-      chainId: chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+    await fetchCollectionsNFTs({
       collectionAddress: contractAddr,
       pageInput:{
         first: 3,
@@ -26,12 +22,12 @@ export const CollectionItem = ({ contractAddr, contractName }: {contractAddr: st
       images.push(collectionsData?.collectionNFTs.items[0]?.metadata.imageURL);
       images.push(collectionsData?.collectionNFTs.items[1]?.metadata.imageURL);
       images.push(collectionsData?.collectionNFTs.items[2]?.metadata.imageURL);
-      setImageArray([...images]);
     }));
-  }, [fetchCollectionsNFTs, contractAddr, chain?.id]);
+    return images;
+  });
   
   return (
-    imageArray.length > 0 && <NFTCollectionCard
+    imageArray?.length > 0 && <NFTCollectionCard
       contract={contractAddr}
       count={count}
       images={imageArray}
