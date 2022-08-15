@@ -85,7 +85,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
       
       <SettingsForm buttonText='Request Connection' submitHandler={openModal} {...{ inputVal, isAssociatedOrSelf }} changeHandler={setInputVal} />
 
-      {associatedAddresses?.accepted?.length || associatedAddresses?.pending?.length
+      {associatedAddresses?.accepted?.length || associatedAddresses?.pending?.length || associatedAddresses?.denied?.length
         ? (
           <div className='mt-4 w-full'>
             <div className='p-1 flex  justify-between mb-1'>
