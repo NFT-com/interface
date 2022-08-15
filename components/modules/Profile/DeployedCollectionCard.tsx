@@ -1,12 +1,12 @@
 import { NFTCard } from 'components/elements/NFTCard';
 import { Collection } from 'graphql/generated/types';
+import { AlchemyNFTMetaDataResponse } from 'types/alchemy';
 import { getNftsForCollection } from 'utils/alchemyNFT';
 import { filterNulls, processIPFSURL } from 'utils/helpers';
 
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
-import { AlchemyNFTMetaDataResponse } from 'types/alchemy';
 
 export interface DeployedCollectionCardProps {
   collection: PartialDeep<Collection>;

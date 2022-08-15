@@ -41,7 +41,7 @@ export function NullState(props: NullStateProps) {
     <div
       className={tw('flex flex-col',
         'text-center w-full my-10 items-center justify-center rounded-xl py-10',
-        'bg-transparent',
+        'bg-white dark:bg-black',
         'text-secondary-txt')}>
       {props.showImage &&
         <Image src={randomErrorImage} width='500' height='500' alt='404' className='mb-10 drop-shadow-2xl'/>}

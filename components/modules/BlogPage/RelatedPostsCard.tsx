@@ -1,10 +1,10 @@
 import BlurImage from 'components/elements/BlurImage';
+import { PostData } from 'types/blogs';
 
 import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import { readingTime } from 'reading-time-estimator';
-import { PostData } from 'types/blogs';
 
 type RelatedPostProps = {
   post: PostData;
