@@ -10,7 +10,7 @@ import {
 } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
-import { ListingType, NFTListingsContext } from './NFTListingsContext';
+import { NFTListingsContext, TargetMarketplace } from './NFTListingsContext';
 
 import { BigNumber, ethers } from 'ethers';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ export type LocalAuctionType = 'highest' | 'declining';
 
 export interface ListingBuilderProps {
   nft: PartialDeep<Nft>,
-  type: ListingType,
+  type: TargetMarketplace,
   onCancel: () => void,
   onSuccessfulCreate: () => void,
 }
@@ -38,7 +38,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
   const [endingPriceError, setEndingPriceError] = useState(false);
   const [reservePrice, setReservePrice] = useState<Maybe<BigNumber>>(null);
   const [reservePriceError, setReservePriceError] = useState(false);
-  const [duration, setDuration] = useState<SaleDuration>('1 Week');
+  const [duration, setDuration] = useState<SaleDuration>('7 Days');
   const [takerAddress,] = useState(null);
   const [takerAddressError, setTakerAddressError] = useState(false);
   const [saleCurrency, setSaleCurrency] = useState<SupportedCurrency>('WETH');
@@ -221,7 +221,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
           <DropdownPicker options={filterNulls([
             {
               label: '1 Week',
-              onSelect: () => setDuration('1 Week')
+              onSelect: () => setDuration('7 Days')
             },
             {
               label: '1 Day',
@@ -229,12 +229,12 @@ export function ListingBuilder(props: ListingBuilderProps) {
             },
             {
               label: '3 Days',
-              onSelect: () => setDuration('3 Days')
+              onSelect: () => setDuration('1 Hour')
             },
             saleType === 'fixed' || auctionType === 'highest'
               ? {
                 label: 'Forever',
-                onSelect: () => setDuration('Forever')
+                onSelect: () => setDuration('6 Months')
               }
               : null
           ])}
@@ -265,11 +265,11 @@ export function ListingBuilder(props: ListingBuilderProps) {
           <DropdownPicker options={[
             {
               label: '1 Week',
-              onSelect: () => setDuration('1 Week')
+              onSelect: () => setDuration('7 Days')
             },
             {
               label: '3 Days',
-              onSelect: () => setDuration('3 Days')
+              onSelect: () => setDuration('1 Hour')
             },
             {
               label: '1 Day',
@@ -277,7 +277,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
             },
             {
               label: 'Forever',
-              onSelect: () => setDuration('Forever')
+              onSelect: () => setDuration('6 Months')
             }
           ]}
           selectedIndex={['1 Week', '3 Days', '1 Day', 'Forever'].indexOf(duration)}
@@ -358,7 +358,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
               const currencyAddress = supportedCurrencyData[saleCurrency].contract;
               // Create the listing
               stageListing({
-                type: props.type,
+                targets: [props.type],
                 nft: props.nft,
                 startingPrice,
                 endingPrice,

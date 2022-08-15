@@ -7,25 +7,28 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { Fee, SeaportOrderParameters } from 'types';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getChainIdString, processIPFSURL } from 'utils/helpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
+import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
 import { MakerOrder } from '@looksrare/sdk';
 import { BigNumber, BigNumberish } from 'ethers';
 import { useRouter } from 'next/router';
+import { XCircle } from 'phosphor-react';
 import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
 
-export type ListingType = 'looksrare' | 'seaport';
+export type TargetMarketplace = 'looksrare' | 'seaport';
 
 export type StagedListing = {
-  type: ListingType;
+  targets: TargetMarketplace[],
   nft: PartialDeep<Nft>;
   startingPrice: BigNumberish;
   endingPrice: BigNumberish;
@@ -41,6 +44,9 @@ interface NFTListingsContextType {
   listAll: () => void;
   submitting: boolean;
   toggleCartSidebar: () => void;
+  toggleTargetMarketplace: (marketplace: TargetMarketplace) => void;
+  setDuration: (duration: SaleDuration) => void;
+  setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish) => void;
 }
 
 // initialize with default values
@@ -51,6 +57,9 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   listAll: () => null,
   submitting: false,
   toggleCartSidebar: () => null,
+  toggleTargetMarketplace: () => null,
+  setDuration: () => null,
+  setPrice: () => null,
 });
 
 /**
@@ -62,6 +71,8 @@ export function NFTListingsContextProvider(
   const [toList, setToList] = useState<Array<StagedListing>>([]);
   const [submitting, setSubmitting] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  const { data: supportedCurrencyData } = useSupportedCurrencies();
 
   const sidebarRef = useRef();
   useOutsideClickAlerter(sidebarRef, () => setSidebarVisible(false));
@@ -88,7 +99,7 @@ export function NFTListingsContextProvider(
   const stageListing = useCallback((
     listing: StagedListing
   ) => {
-    if (toList.find(l => l.nft.id === listing.nft.id && l.type === listing.type)) {
+    if (toList.find(l => l.nft.id === listing.nft.id)) {
       setSidebarVisible(true);
       return;
     }
@@ -105,51 +116,96 @@ export function NFTListingsContextProvider(
     setSidebarVisible(!sidebarVisible);
   }, [sidebarVisible]);
 
+  const toggleTargetMarketplace = useCallback((targetMarketplace: TargetMarketplace) => {
+    const targetFullyEnabled = toList.find(listing => listing.targets?.includes(targetMarketplace)) != null;
+    if (targetFullyEnabled) {
+      // removing the target marketplace from all nfts
+      setToList(toList.slice().map(listing => {
+        return {
+          ...listing,
+          targets: listing.targets?.filter(t => t !== targetMarketplace) ?? [],
+        };
+      }));
+    } else {
+      // adding a new marketplace to any nft that doesn't have it.
+      setToList(toList.slice().map(listing => {
+        return {
+          ...listing,
+          targets: listing.targets?.includes(targetMarketplace) ? listing.targets : [...listing.targets ?? [], targetMarketplace],
+        };
+      }));
+    }
+  }, [toList]);
+
+  const setDuration = useCallback((duration: SaleDuration) => {
+    setToList(toList.slice().map(listing => {
+      return {
+        ...listing,
+        duration: convertDurationToSec(duration),
+      };
+    }));
+  }, [toList]);
+
+  const setPrice = useCallback((listing: PartialDeep<StagedListing>, price: BigNumberish) => {
+    setToList(toList.slice().map(l => {
+      if (listing?.nft?.id === l.nft?.id) {
+        return {
+          ...l,
+          startingPrice: price,
+          currency: supportedCurrencyData['WETH'].contract
+        };
+      }
+      return l;
+    }));
+  }, [supportedCurrencyData, toList]);
+
   const listAll = useCallback(async () => {
     setSubmitting(true);
     let nonce: number = await getLooksrareNonce(currentAddress);
     await Promise.all(toList.map(async (listing) => {
-      if (listing.type === 'looksrare') {
-        const order: MakerOrder = await createLooksrareParametersForNFTListing(
-          currentAddress, // offerer
-          listing.nft,
-          listing.startingPrice,
-          listing.currency,
-          chain?.id,
-          nonce,
-          looksrareStrategy,
-          looksrareRoyaltyFeeRegistry,
-          listing.duration,
-          // listing.takerAddress
-        );
-        nonce++;
-        const signature = await signOrderForLooksrare(order);
-        await listNftLooksrare({ ...order, signature });
-        // todo: check success/failure and maybe mutate external listings query.
-      } else {
-        const contract = await getOpenseaCollection(listing?.nft?.contract);
-        const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
-          ? {
-            recipient: contract?.['payout_address'],
-            basisPoints: contract?.['dev_seller_fee_basis_points'],
-          }
-          : null;
-        const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
-          currentAddress,
-          listing.nft,
-          listing.startingPrice,
-          listing.endingPrice ?? listing.startingPrice,
-          listing.currency,
-          listing.duration,
-          collectionFee,
-          getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
-          // listing.takerAddress
-        );
-        const signature = await signOrderForSeaport(parameters, seaportCounter);
-        await listNftSeaport(signature , { ...parameters, counter: seaportCounter });
-        // todo: check success/failure and maybe mutate external listings query.
-        localStorage.setItem('stagedNftListings', null);
-      }
+      await Promise.all(listing.targets?.map(async (target: TargetMarketplace) => {
+        if (target === 'looksrare') {
+          const order: MakerOrder = await createLooksrareParametersForNFTListing(
+            currentAddress, // offerer
+            listing.nft,
+            listing.startingPrice,
+            listing.currency,
+            chain?.id,
+            nonce,
+            looksrareStrategy,
+            looksrareRoyaltyFeeRegistry,
+            listing.duration,
+            // listing.takerAddress
+          );
+          nonce++;
+          const signature = await signOrderForLooksrare(order);
+          await listNftLooksrare({ ...order, signature });
+          // todo: check success/failure and maybe mutate external listings query.
+        } else {
+          const contract = await getOpenseaCollection(listing?.nft?.contract);
+          const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
+            ? {
+              recipient: contract?.['payout_address'],
+              basisPoints: contract?.['dev_seller_fee_basis_points'],
+            }
+            : null;
+          const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
+            currentAddress,
+            listing.nft,
+            listing.startingPrice,
+            listing.endingPrice ?? listing.startingPrice,
+            listing.currency,
+            listing.duration,
+            collectionFee,
+            getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+            // listing.takerAddress
+          );
+          const signature = await signOrderForSeaport(parameters, seaportCounter);
+          await listNftSeaport(signature , { ...parameters, counter: seaportCounter });
+          // todo: check success/failure and maybe mutate external listings query.
+          localStorage.setItem('stagedNftListings', null);
+        }
+      }));
     }));
     setSubmitting(false);
     clear();
@@ -173,19 +229,25 @@ export function NFTListingsContextProvider(
     clear,
     listAll,
     submitting,
-    toggleCartSidebar
+    toggleCartSidebar,
+    toggleTargetMarketplace,
+    setDuration,
+    setPrice
   }}>
 
     {
       toList.length > 0 &&
       sidebarVisible &&
       <div ref={sidebarRef} className={tw(
-        'z-50 absolute top-20 right-0 w-full minmd:w-60 bg-white flex flex-col grow',
+        'z-50 absolute pt-20 right-0 w-full h-full minmd:w-60 bg-white flex flex-col grow',
         'drop-shadow-md'
       )}>
-        <p className='w-full text-2xl py-4 px-8'>
-          Listings
-        </p>
+        <div className='flex flex-row items-center px-8 my-8'>
+          <p className='w-full text-2xl'>
+            Listings
+          </p>
+          <XCircle onClick={() => setSidebarVisible(false)} className='hover:cursor-pointer' size={32} color="black" weight="fill" />
+        </div>
         <div className='flex px-8 mb-4'>
           <span>
             {filterNulls(toList).length} NFT{filterNulls(toList).length > 1 ? 's' : ''}
@@ -214,7 +276,7 @@ export function NFTListingsContextProvider(
                 )}
               />
             </div>
-            <div className='flex flex-col ml-12'>
+            <div className='flex flex-col ml-4'>
               <span>{listing?.nft?.metadata?.name}</span>
               <span>{'#' + BigNumber.from(listing?.nft?.tokenId ?? 0).toNumber()}</span>
             </div>
@@ -225,6 +287,7 @@ export function NFTListingsContextProvider(
             stretch
             label={'Proceed to List'}
             onClick={() => {
+              setSidebarVisible(false);
               router.push('/app/checkout');
             }}
             type={ButtonType.PRIMARY}

@@ -14,7 +14,8 @@ export interface PriceInputProps {
   currency: SupportedCurrency,
   currencyOptions: SupportedCurrency[],
   onPriceChange: (val: Maybe<BigNumber>) => void,
-  onCurrencyChange: (currency: SupportedCurrency) => void,
+  // Omit this to just display the currency, without a dropdown picker.
+  onCurrencyChange?: (currency: SupportedCurrency) => void,
   error: boolean,
 }
 
@@ -43,15 +44,15 @@ export function PriceInput(props: PriceInputProps) {
   return (
     <div
       className={tw(
-        'flex flex-row p-6 rounded-xl bg-white dark:bg-primary-txt',
-        'justify-between')}
-    >
-      <div className='relative items-center flex shrink-0 grow mr-8'>
+        'flex flex-row p-6 rounded-xl',
+      )}>
+      {props.onCurrencyChange && <div className='relative items-center flex shrink-0 grow mr-8'>
         <DropdownPicker
           options={currencies}
           selectedIndex={selectedCurrencyIndex}
         />
       </div>
+      }
       <div className='flex basis-3/5'>
         <input
           type="text"
@@ -61,7 +62,7 @@ export function PriceInput(props: PriceInputProps) {
             'w-full',
             props.error ? 'border-red-500 border-2' : ''
           )}
-          placeholder="e.g. 1 WETH"
+          placeholder="e.g. 1 ETH"
           autoFocus={true}
           value={formattedPrice ?? ''}
           onChange={e => {
@@ -87,6 +88,9 @@ export function PriceInput(props: PriceInputProps) {
           }}
         />
       </div>
+      {props.onCurrencyChange == null && <div className='font-bold text-lg flex items-center ml-2'>
+        {props.currency}
+      </div>}
     </div>
   );
 }

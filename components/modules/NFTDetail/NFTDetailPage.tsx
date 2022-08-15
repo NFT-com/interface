@@ -40,6 +40,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
                 onClick={() => {
                   stageListing({
                     nft: nft,
+                    targets: []
                   });
                 }}
                 type={ButtonType.PRIMARY}
