@@ -3,7 +3,7 @@ import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
 import { useAssociatedAddressesForContractQuery } from 'graphql/hooks/useAssociatedAddressesForContractQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { sameAddress } from 'utils/helpers';
+import { isNullOrEmpty, sameAddress } from 'utils/helpers';
 
 import AssociatedProfile from './AssociatedProfile';
 import SettingsForm from './SettingsForm';
@@ -244,6 +244,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
             />
           </div>
           :
+          !isNullOrEmpty(connectedCollection?.chainAddr) &&
           <div className='mt-4 md:w-full w-3/4'>
             <p>Loading...</p>
           </div>
