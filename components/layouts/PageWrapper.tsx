@@ -49,7 +49,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
       </Head>
       <main
         className={tw(
-          'absolute w-full h-full flex flex-col',
+          'absolute w-full h-full flex flex-col  hideScroll',
           isMobile ? 'overflow-x-hidden' : '',
           bgColorClasses ?? 'bg-white dark:bg-black',
         )}

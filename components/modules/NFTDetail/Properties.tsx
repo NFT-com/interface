@@ -34,7 +34,7 @@ export const Properties = (props: PropertiesProps) => {
               No Properties Found
             </div> :
             <div className={tw(
-              'grid grid-cols-2 gap-2 overflow-y-scroll overflow-x-hidden',
+              'grid grid-cols-2 gap-2 overflow-y-auto overflow-x-hidden',
               'grid-cols-2 minlg:grid-cols-3'
             )}>
               {nftTraits?.map((item, index) => {

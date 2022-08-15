@@ -116,7 +116,8 @@ export default function GalleryPage() {
           <div className={tw(
             'flex flex-col flex-grow h-full overflow-auto',
             'border-t border-accent-border-dk bg-modal-overlay dark:bg-modal-overlay-dk',
-            'minmd:px-4 px-0 pt-6'
+            'minmd:px-4 px-0 pt-6',
+            'hideScroll overflow-y-hidden'
           )}>
             <GalleryPageTitle
               showMyStuff={showMyStuff}

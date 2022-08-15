@@ -44,7 +44,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
 
   return (
     <nav className={tw(
-      'fixed z-[104] top-0 w-screen h-20 drop-shadow-md',
+      'fixed z-[104] top-0 w-full h-20 drop-shadow-md',
       removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white' ,
     )}>
       <div className="w-full mx-auto px-5">

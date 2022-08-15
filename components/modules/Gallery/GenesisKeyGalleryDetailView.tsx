@@ -108,7 +108,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
       </div>
       <div className={tw(
         props.verticalDetail ? 'minmd:w-3/4 w-full' : 'minmd:w-1/2 w-full',
-        'flex flex-col px-6 my-6 overflow-y-scroll'
+        'flex flex-col px-6 my-6 overflow-y-auto'
       )}>
         <div className='w-full flex justify-between'>
           <div className='flex flex-col'>
@@ -175,7 +175,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
           }
         </div>
         <div className={tw(
-          'grid gap-2 overflow-y-scroll overflow-x-hidden mt-4',
+          'grid gap-2 overflow-y-auto overflow-x-hidden mt-4',
           props.verticalDetail && !isMobile ? 'minmd:grid-cols-3 grid-cols-2 w-full' : 'grid-cols-2 w-full'
         )}>
           {[

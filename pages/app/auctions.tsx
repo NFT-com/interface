@@ -12,7 +12,7 @@ export default function GenesisKeyAuctionsPage() {
         removeSummaryBanner: true,
       }}>
       <div className={tw(
-        'relative flex flex-col overflow-y-scroll',
+        'relative flex flex-col overflow-y-auto',
         'overflow-x-hidden bg-black w-screen h-screen',
       )}>
         <GenesisKeyAuction />
