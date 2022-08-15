@@ -35,8 +35,12 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
     if(!profileData?.profile?.owner?.preferredProfile?.url){
       updateWalletProfileId({ profileId: myOwnedProfileTokens[0]?.title }).catch(() => toast.error('Error'));
     }
-    setSelected(profileData?.profile?.owner?.preferredProfile?.url || myOwnedProfileTokens[0]?.title);
-  }, [profileData, myOwnedProfileTokens, updateWalletProfileId]);
+    if(!isSidebar){
+      setSelected(profileData?.profile?.owner?.preferredProfile?.url || myOwnedProfileTokens[0]?.title);
+    } else {
+      setSelected(selectedProfile);
+    }
+  }, [profileData, myOwnedProfileTokens, updateWalletProfileId, selectedProfile, isSidebar]);
   
   useEffect(() => {
     setAllProfiles(myOwnedProfileTokens);

@@ -51,9 +51,6 @@ export default function Settings() {
     if(selectedProfile && currentAddress) {
       fetchAddresses(selectedProfile).catch(console.error);
     }
-    if(!currentAddress){
-      setAssociatedAddresses({ pending: [], accepted: [], denied: [] });
-    }
   }, [selectedProfile, fetchAddresses, currentAddress]);
 
   useEffect(() => {
@@ -63,6 +60,11 @@ export default function Settings() {
 
   useEffect(() => {
     setApprovedProfiles([]);
+
+    if(!currentAddress){
+      setAssociatedAddresses({ pending: [], accepted: [], denied: [] });
+      setAssociatedProfiles({ pending: [], accepted: [], removed: [] });
+    }
   }, [currentAddress]);
 
   const fetchProfiles = useCallback(
