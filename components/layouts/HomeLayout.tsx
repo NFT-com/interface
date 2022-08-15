@@ -10,8 +10,7 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   return (
     <div className={tw('flex flex-col',
-      'h-screen w-screen min-h-screen',
-      'overflow-x-hidden'
+      'h-screen w-full min-h-screen',
     )}>
       <div
         className='flex-1'

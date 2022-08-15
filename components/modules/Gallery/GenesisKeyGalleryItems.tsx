@@ -1,6 +1,7 @@
 import { Maybe } from 'graphql/generated/types';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { AlchemyOwnedNFT } from 'types';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -12,7 +13,6 @@ import { memo, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { areEqual, FixedSizeGrid } from 'react-window';
-import { AlchemyOwnedNFT } from 'types';
 import { useAccount } from 'wagmi';
 
 export interface GenesisKeyGalleryItemsProps {

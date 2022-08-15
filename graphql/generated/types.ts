@@ -13,17 +13,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Equivalent to solidity's address type */
   Address: any;
-  /** Equivalent to solidity's bytes type */
   Bytes: any;
-  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** Equivalent to solidity's uint256 type */
   Uint256: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -1595,14 +1589,15 @@ export type TopBidsInput = {
 export type TxActivity = {
   __typename?: 'TxActivity';
   activityType: Scalars['String'];
+  activityTypeId: Scalars['String'];
   cancel?: Maybe<TxCancel>;
   chainId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   order?: Maybe<TxOrder>;
-  read: Scalars['String'];
+  read: Scalars['Boolean'];
   timestamp: Scalars['String'];
   transaction?: Maybe<TxTransaction>;
-  userId: Scalars['String'];
+  walletId: Scalars['String'];
 };
 
 export type TxCancel = {
@@ -1953,6 +1948,20 @@ export type IgnoreAssociationsMutationVariables = Exact<{
 
 export type IgnoreAssociationsMutation = { __typename?: 'Mutation', ignoreAssociations: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null, hideIgnored?: boolean | null, hidden?: boolean | null } | null> };
 
+export type ListNftLooksrareMutationVariables = Exact<{
+  input: ListNftLooksrareInput;
+}>;
+
+
+export type ListNftLooksrareMutation = { __typename?: 'Mutation', listNFTLooksrare: boolean };
+
+export type ListNftSeaportMutationVariables = Exact<{
+  input: ListNftSeaportInput;
+}>;
+
+
+export type ListNftSeaportMutation = { __typename?: 'Mutation', listNFTSeaport: boolean };
+
 export type ProfileNftOrderingUpdatesMutationVariables = Exact<{
   input: OrderingUpdatesInput;
 }>;
@@ -2267,6 +2276,7 @@ export type MyProfilesQuery = { __typename?: 'Query', myProfiles: { __typename?:
 export type NftQueryVariables = Exact<{
   contract: Scalars['Address'];
   id: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -2481,6 +2491,16 @@ export const IgnoreAssociationsDocument = gql`
     hideIgnored
     hidden
   }
+}
+    `;
+export const ListNftLooksrareDocument = gql`
+    mutation ListNftLooksrare($input: ListNFTLooksrareInput!) {
+  listNFTLooksrare(input: $input)
+}
+    `;
+export const ListNftSeaportDocument = gql`
+    mutation ListNftSeaport($input: ListNFTSeaportInput!) {
+  listNFTSeaport(input: $input)
 }
     `;
 export const ProfileNftOrderingUpdatesDocument = gql`
@@ -3335,8 +3355,8 @@ export const MyProfilesDocument = gql`
 }
     `;
 export const NftDocument = gql`
-    query Nft($contract: Address!, $id: String!) {
-  nft(contract: $contract, id: $id) {
+    query Nft($contract: Address!, $id: String!, $chainId: String) {
+  nft(contract: $contract, id: $id, chainId: $chainId) {
     id
     isOwnedByMe
     price
@@ -3574,6 +3594,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     IgnoreAssociations(variables: IgnoreAssociationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoreAssociationsMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<IgnoreAssociationsMutation>(IgnoreAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoreAssociations', 'mutation');
+    },
+    ListNftLooksrare(variables: ListNftLooksrareMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ListNftLooksrareMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ListNftLooksrareMutation>(ListNftLooksrareDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ListNftLooksrare', 'mutation');
+    },
+    ListNftSeaport(variables: ListNftSeaportMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ListNftSeaportMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ListNftSeaportMutation>(ListNftSeaportDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ListNftSeaport', 'mutation');
     },
     ProfileNftOrderingUpdates(variables: ProfileNftOrderingUpdatesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNftOrderingUpdatesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileNftOrderingUpdatesMutation>(ProfileNftOrderingUpdatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNftOrderingUpdates', 'mutation');

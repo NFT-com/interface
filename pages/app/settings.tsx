@@ -102,7 +102,7 @@ export default function Settings() {
   return (
     <>
       <ClientOnly>
-        <Header bgLight />
+        <Header />
         <Sidebar />
         <SearchModal />
       </ClientOnly>

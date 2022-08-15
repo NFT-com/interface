@@ -89,6 +89,7 @@
             "^pages",
             "^state",
             "^theme",
+            "^types",
             "^utils"
           ], // local absolute imports `@/foo`
           [

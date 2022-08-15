@@ -186,7 +186,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
                 <p className='text-[#6F6F6F] mb-4'>Select the profile to sign-in with by default.</p>
                 <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile Name" />
               </div>
-              <div className='max-h-[350px] maxlg:max-h-[320px] overflow-auto'>
+              <div className='max-h-[350px] maxlg:max-h-[320px] overflow-auto hideScroll'>
                 <div>
                   {profilesToShow && profilesToShow?.map((profile) => {
                     return (

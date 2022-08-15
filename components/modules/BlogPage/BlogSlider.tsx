@@ -1,9 +1,10 @@
+import { PostData } from 'types/blogs';
+
 import BlogSliderCard from './BlogSliderCard';
 
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback,useEffect, useState } from 'react';
-import { PostData } from 'types/blogs';
 
 type BlogSliderProps = {
   posts: PostData[];

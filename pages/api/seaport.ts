@@ -8,7 +8,8 @@ const seaPortHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const action = req.query['action'];
   
   switch(action) {
-  case 'listNFT':
+  // use gQL endpoint instead
+  case 'DEPRECATED_listNFT':
     try {
       const signature = req.query['signature'];
       const parameters = JSON.parse(req.query['parameters'] as string);

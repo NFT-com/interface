@@ -32,7 +32,7 @@ export interface PageWrapperProps {
 }
 
 export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
-  const { headerOptions, bgColorClasses, bgLight } = props;
+  const { headerOptions, bgColorClasses } = props;
 
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   
@@ -49,9 +49,9 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
       </Head>
       <main
         className={tw(
-          'absolute w-full h-full flex flex-col',
+          'absolute w-full h-full flex flex-col  hideScroll',
           isMobile ? 'overflow-x-hidden' : '',
-          bgColorClasses ?? 'bg-black'
+          bgColorClasses ?? 'bg-white dark:bg-black',
         )}
         style={{
           minHeight: '100vh',
@@ -70,7 +70,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
               />
           )}
           <ClientOnly>
-            <Header bgLight={bgLight} removeBg={headerOptions?.removeBackground} />
+            <Header bgLight={props.bgLight} removeBg={headerOptions?.removeBackground} />
           </ClientOnly>
         </div>}
         <ClientOnly>

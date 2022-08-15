@@ -96,7 +96,7 @@ export default function ClaimGenesisKeyPage() {
             </div>
       }
       <div className={tw(
-        'relative flex flex-col overflow-y-scroll items-center mt-20',
+        'relative flex flex-col overflow-y-auto items-center mt-20',
         'overflow-x-hidden bg-black w-screen h-screen z-50',
       )}>
         <LoadedContainer loaded={firstLoaded}>

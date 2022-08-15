@@ -1,3 +1,4 @@
+import { PostData } from 'types/blogs';
 import ClientOnly from 'utils/ClientOnly';
 
 import SharingIcons from './SharingIcons';
@@ -5,7 +6,6 @@ import SharingIcons from './SharingIcons';
 import moment from 'moment';
 import Image from 'next/image';
 import { readingTime } from 'reading-time-estimator';
-import { PostData } from 'types/blogs';
 
 type HeaderProps = {
   post: PostData;

@@ -5,6 +5,7 @@ import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
 
+import { useRouter } from 'next/router';
 import GKHolderIcon from 'public/gk-holder.svg';
 import { useCallback, useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
@@ -19,6 +20,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { address: currentAddress } = useAccount();
   const { user, setCurrentProfileUrl } = useUser();
+  const router = useRouter();
   
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
@@ -71,16 +73,27 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             />
           </div> :
           <div
-            className="mt-3 minlg:mt-6 "
+            className="flex items-center mt-3 minlg:mt-6 "
             style={{ zIndex: 49 }}
           >
-            <Button
-              type={ButtonType.PRIMARY}
-              label={'Edit Profile'}
-              onClick={() => {
-                setEditMode(true);
-              }}
-            />
+            <div>
+              <Button
+                type={ButtonType.PRIMARY}
+                label={'Edit Profile'}
+                onClick={() => {
+                  setEditMode(true);
+                }}
+              />
+            </div>
+            <div className='ml-4'>
+              <Button
+                type={ButtonType.SECONDARY}
+                label={'Settings'}
+                onClick={() => {
+                  router.push('/app/settings');
+                }}
+              />
+            </div>
           </div>
       ) :
       (
@@ -96,7 +109,22 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           />
         </div>
       );
-  }, [clearDrafts, currentAddress, draftBio, draftHeaderImg?.preview, draftProfileImg?.preview, editMode, profileURI, props.profileURI, saveProfile, setCurrentProfileUrl, setEditMode, user?.currentProfileUrl, userIsAdmin]);
+  }, [
+    clearDrafts,
+    currentAddress,
+    draftBio,
+    draftHeaderImg?.preview,
+    draftProfileImg?.preview,
+    editMode,
+    profileURI,
+    props.profileURI,
+    router,
+    saveProfile,
+    setCurrentProfileUrl,
+    setEditMode,
+    user?.currentProfileUrl,
+    userIsAdmin
+  ]);
   
   const handleBioChange = (event) => {
     let bioValue = event.target.value;
@@ -113,8 +141,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
         <div
           id="MintedProfileNameContainer"
-          className="font-bold text-2xl minxl:text-4xl text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4">
-            @{profileURI}
+          className="font-bold text-2xl minxl:text-4xl text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4">
+          {profileURI}
         </div>
         {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
       </div>

@@ -317,7 +317,7 @@ export const HeroSidebar = () => {
               tw(
                 'flex flex-col fixed inset-y-0 right-0',
                 'w-screen max-w-md h-full',
-                'shadow-xl overflow-y-scroll overflow-x-hidden',
+                'shadow-xl overflow-y-auto overflow-x-hidden',
                 'bg-pagebg-dk',
                 'border-l border-accent-border-dk')
             }
