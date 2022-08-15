@@ -46,12 +46,12 @@ export default function CheckoutPage() {
 
   return <PageWrapper>
     <div className={tw(
-      'w-full h-full pt-20 flex flex-col items-center',
+      'w-full h-full pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
       getEnvBool(Doppler.NEXT_PUBLIC_FORCE_DARK_MODE) ? 'bg-white' : 'bg-white dark:bg-black'
     )}>
-      <div className='max-w-nftcom w-full flex flex-col items-center my-8'>
+      <div className='max-w-xl w-full flex flex-col items-center my-8'>
         <div className='w-full flex px-8'>
-          <h1 className='text-xl font-bold'>Configure Listings</h1>
+          <h1 className='text-xl font-bold underline'>Configure Listings</h1>
         </div>
         <div className='w-full flex flex-col px-8 mt-8'>
           <p className='text-lg'>Select Marketplace</p>
@@ -61,7 +61,7 @@ export default function CheckoutPage() {
                 toggleTargetMarketplace('seaport');
               }}
               className={tw(
-                'border-2 border-opensea-blue text-primary-txt',
+                'border-2 border-opensea-blue rounded-xl',
                 'p-2 cursor-pointer',
                 openseaFullyEnabled ? 'bg-opensea-blue text-white' : ''
               )}
@@ -73,7 +73,7 @@ export default function CheckoutPage() {
                 toggleTargetMarketplace('looksrare');
               }}
               className={tw(
-                'border-2 border-looksrare-green text-primary-txt',
+                'border-2 border-looksrare-green rounded-xl',
                 'p-2 cursor-pointer',
                 looksrareFullyEnabled ? 'bg-looksrare-green text-white' : ''
               )}
@@ -94,7 +94,7 @@ export default function CheckoutPage() {
                   }}
                   className={tw(
                     'rounded-xl py-2 px-4',
-                    toList?.find(l => l.duration === convertDurationToSec(duration as SaleDuration)) ? 'bg-black' : 'bg-pill-border',
+                    toList?.find(l => l.duration === convertDurationToSec(duration as SaleDuration)) ? 'bg-black dark:bg-white dark:text-black' : 'bg-pill-border',
                     'text-white cursor-pointer hover:opacity-80',
                   )}
                 >
@@ -104,42 +104,44 @@ export default function CheckoutPage() {
             }
           </div>
         </div>
-        {filterNulls(toList).map((listing, index) => {
-          return <div key={index} className='flex items-center w-full h-32 px-8'>
-            <div className='relative h-2/4 aspect-square'>
-              <video
-                autoPlay
-                muted
-                loop
-                key={processIPFSURL(listing.nft?.metadata?.imageURL)}
-                src={processIPFSURL(listing.nft?.metadata?.imageURL)}
-                poster={processIPFSURL(listing.nft?.metadata?.imageURL)}
-                className={tw(
-                  'flex object-fit w-full justify-center rounded-md',
-                )}
-              />
-            </div>
-            <div className='flex flex-col ml-4'>
-              <span>{listing?.nft?.metadata?.name}</span>
-              <span>{'#' + BigNumber.from(listing?.nft?.tokenId ?? 0).toNumber()}</span>
-            </div>
-            <div className='flex flex-col ml-4'>
-              {listing.targets?.includes('seaport') && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-              {listing.targets?.includes('looksrare') && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
-            </div>
-            <div className='flex flex-col ml-4'>
-              <PriceInput
-                currency={'WETH'}
-                currencyOptions={['WETH']}
-                onPriceChange={(val: BigNumber) => {
-                  setPrice(listing, val);
-                }}
-                onCurrencyChange={null}
-                error={listing?.startingPrice == null || BigNumber.from(listing?.startingPrice).eq(0)}
-              />
-            </div>
-          </div>;
-        })}
+        <div className='mt-8 border-t border-black w-full'>
+          {filterNulls(toList).map((listing, index) => {
+            return <div key={index} className='flex items-center w-full h-32 px-8'>
+              <div className='relative h-2/4 aspect-square'>
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  key={processIPFSURL(listing.nft?.metadata?.imageURL)}
+                  src={processIPFSURL(listing.nft?.metadata?.imageURL)}
+                  poster={processIPFSURL(listing.nft?.metadata?.imageURL)}
+                  className={tw(
+                    'flex object-fit w-full justify-center rounded-md',
+                  )}
+                />
+              </div>
+              <div className='flex flex-col ml-4'>
+                <span>{listing?.nft?.metadata?.name}</span>
+                <span>{'#' + BigNumber.from(listing?.nft?.tokenId ?? 0).toNumber()}</span>
+              </div>
+              <div className='flex flex-col ml-4'>
+                {listing.targets?.includes('seaport') && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+                {listing.targets?.includes('looksrare') && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+              </div>
+              <div className='flex flex-col ml-4'>
+                <PriceInput
+                  currency={'WETH'}
+                  currencyOptions={['WETH']}
+                  onPriceChange={(val: BigNumber) => {
+                    setPrice(listing, val);
+                  }}
+                  onCurrencyChange={null}
+                  error={listing?.startingPrice == null || BigNumber.from(listing?.startingPrice).eq(0)}
+                />
+              </div>
+            </div>;
+          })}
+        </div>
         {
           isNullOrEmpty(toList) && <div className='flex flex-col items-center justify-center my-12'>
             No NFTs staged for listing

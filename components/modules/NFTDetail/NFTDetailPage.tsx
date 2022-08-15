@@ -21,7 +21,7 @@ export interface NFTDetailPageProps {
 export function NFTDetailPage(props: NFTDetailPageProps) {
   const { address: currentAddress } = useAccount();
   const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
-  const { stageListing } = useContext(NFTListingsContext);
+  const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
 
   return (
     <PageWrapper
@@ -32,8 +32,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         {
           getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
           currentAddress === nft?.wallet?.address &&
-          <div className='w-full'>
-            <div className='flex flex-col m-8 p-4 bg-modal-overlay dark:bg-modal-overlay-dk rounded-lg items-center'>
+          <div className='w-full justify-center flex'>
+            <div className='flex flex-col m-4 py-8 px-24 bg-modal-overlay dark:bg-modal-overlay-dk rounded-lg items-center max-w-lg'>
               <span className='dark:text-white mb-4'>This item is in your wallet</span>
               <Button
                 label={'LIST ITEM'}
@@ -42,6 +42,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
                     nft: nft,
                     targets: []
                   });
+                  toggleCartSidebar();
                 }}
                 type={ButtonType.PRIMARY}
               />

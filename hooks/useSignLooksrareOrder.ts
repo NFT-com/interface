@@ -13,11 +13,8 @@ export function useSignLooksrareOrder() {
     const { domain, value, type } = generateMakerOrderTypedData(currentAddress, chain?.id, order);
     const signature = await signTypedDataAsync({
       domain: {
-        name: domain.name,
-        version: domain.version,
-        chainId: domain.chainId as (string | number | bigint),
-        verifyingContract: domain.verifyingContract,
-        salt: domain.salt
+        ...domain,
+        chainId: chain?.id,
       },
       types: type,
       value

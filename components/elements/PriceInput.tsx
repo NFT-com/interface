@@ -62,7 +62,7 @@ export function PriceInput(props: PriceInputProps) {
             'w-full',
             props.error ? 'border-red-500 border-2' : ''
           )}
-          placeholder="e.g. 1 ETH"
+          placeholder={'e.g. 1 ' + props.currency}
           autoFocus={true}
           value={formattedPrice ?? ''}
           onChange={e => {
