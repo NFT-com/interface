@@ -98,7 +98,7 @@ export default function Settings() {
     }
   }, [nftResolver, currentAddress, fetchProfiles, selectedProfile]);
   
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || !currentAddress) {
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
     return <NotFoundPage />;
   }
 
