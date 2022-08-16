@@ -1,7 +1,5 @@
-export default async function cancelPreview(req, res) {
-  const { slug } = req.query;
-
+export default async function cancelPreview(_, res) {
   res.clearPreviewData();
-  res.writeHead(307, { Location: slug });
+  res.writeHead(307, { Location: '/' });
   res.end();
 }
