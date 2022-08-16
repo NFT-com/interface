@@ -38,7 +38,7 @@ export const Sidebar = () => {
   const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
 
   const { setSignOutDialogOpen } = useSignOutDialog();
-  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebar();
+  const { sidebarOpen, setSidebarOpen } = useSidebar();
   const randomLabel = useMemo(() => randomLabelGenerator(), []);
   const { getHiddenProfileWithExpiry, user, setCurrentProfileUrl } = useUser();
   const { addFundsDialogOpen } = useAddFundsDialog();
@@ -111,7 +111,6 @@ export const Sidebar = () => {
             onClick={() => {
               disconnect();
               setSignOutDialogOpen(true);
-              toggleSidebar();
               setCurrentProfileUrl('');
             }}>
             Sign out
@@ -168,7 +167,7 @@ export const Sidebar = () => {
         />
       );
     }
-  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, toggleSidebar, user?.currentProfileUrl]);
+  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, user?.currentProfileUrl]);
 
   const getSidebarPanel = useCallback(() => {
     if(isNullOrEmpty(currentAddress)) {
