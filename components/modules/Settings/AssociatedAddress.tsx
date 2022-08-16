@@ -51,7 +51,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
 
   return (
     <>
-      <div className='p-1 flex  justify-between mb-1 font-mono text-sm'>
+      <div className='p-1 flex justify-between mb-1 font-mono text-sm'>
         <div className='flex row items-center'>
           {pending || rejected ?
             pending ?
@@ -63,7 +63,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
                       className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                     >
                       <p className='text-[#F2890E] mb-2'>Pending</p>
-                      <p>This connection is waiting approval.</p>
+                      <p>This address association is waiting approval.</p>
                     </div>
                   }
                 >
@@ -78,7 +78,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
                       className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                     >
                       <p className='text-[#D50909] mb-2'>Rejected</p>
-                      <p>This wallet has rejected the connection. If this was done in error, please resend the request. No gas is required.</p>
+                      <p>This address has rejected the association. If this was done in error, please resend the request. No gas is required.</p>
                     </div>
                   }
                 >
@@ -92,8 +92,8 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
                 <div
                   className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                 >
-                  <p className='text-[#00AC30] mb-2'>Connected</p>
-                  <p>This wallet has approved the connection.</p>
+                  <p className='text-[#00AC30] mb-2'>Associated</p>
+                  <p>This address has approved the NFT Profile association. </p>
                 </div>
               }
             >

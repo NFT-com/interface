@@ -129,7 +129,7 @@ export default function GalleryPage() {
               <NetworkErrorTile />
             </div>}
             <LoadedContainer loaded={true} fitToParent>
-              <div ref={parentRef} className='w-full h-full flex flex-wrap items-start mt-4'>
+              <div ref={parentRef} className='ProfileGalleryScrollContainer w-full h-full flex flex-wrap items-start mt-4 overflow-y-scroll'>
                 {getGalleryContent()}
               </div>
             </LoadedContainer>

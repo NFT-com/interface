@@ -137,7 +137,12 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 toggleSidebar();
               }} type="button">
                 <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                {myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ? user.currentProfileUrl : shortenAddress(currentAddress, 3)}
+                {!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
+                  ? shortenAddress(currentAddress, 3) :
+                  myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
+                    user.currentProfileUrl
+                    : shortenAddress(currentAddress, 3)
+                }
               </button>
             </div>
           </>

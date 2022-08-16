@@ -152,7 +152,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
                 setCollectionNameModal(res?.contractMetadata?.name);
                 setLookupInProgress(true);
               });
-          }} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandlerModal} {...{ isAssociatedOrSelf }} />
+          }} buttonText='Change Collection' inputVal={inputVal} changeHandler={changeHandlerModal} {...{ isAssociatedOrSelf }} />
         </>
       );
     }
@@ -162,8 +162,8 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <>
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Not Authorized</h2>
            
-          <p className='mt-2 text-[#6F6F6F]'>It looks like the collection was not deployed by a wallet associated to your profile.</p>
-          <p className='text-[#6F6F6F] mt-3'>Please try another collection.</p>
+          <p className='mt-2 text-[#6F6F6F]'>It looks like the collection was not deployed by a address associated to your profile.</p>
+          <p className='text-[#6F6F6F] mt-3'>Please associate the deployer address or try another collection address.</p>
           <button onClick={() => {setVisible(false); setNotAuthorized(false); setLookupInProgress(true); setInputVal(''); setCollectionNameModal('');}} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
               Return to Settings
           </button>
@@ -177,14 +177,21 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Collection</h2>
           <p className='font-mono text-black text-xl break-words mt-2'>{inputVal}</p>
              
-          <p className='mt-2 text-[#6F6F6F]'>The address you have entered represents <span className='text-black font-bold'>{collectionName === '' ? inputVal : collectionNameModal}</span></p>
-          <p className='text-[#6F6F6F] mt-6'>Please confirm this is the collection you want to display on your profile. Displaying this collection will require you to authorize a transaction in your wallet.</p>
+          <p className='mt-2 text-[#6F6F6F]'>
+            The address you have entered represents
+            <span className='text-black font-bold'>
+              {collectionName === '' ? inputVal : collectionNameModal}
+            </span>
+          </p>
+          <p className='text-[#6F6F6F] mt-6'>
+            Please confirm this is the collection you want to display on your profile. Displaying this collection will require you to authorize a transaction in your wallet.
+          </p>
           <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                Display Collection
+            Display Collection
           </button>
           <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>
             <GasPump size={20} weight="fill" />
-            <p className='ml-1'>This action will require a gas fee.</p>
+            <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
           </div>
         </>
       );
@@ -196,7 +203,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
           <h2 className='text-4xl tracking-wide font-bold mb-10'>Success!</h2>
           <p className='font-mono text-black text-xl break-words mt-2'>{inputVal}</p>
            
-          <p className='mt-2 text-[#6F6F6F]'>Your collection will now display on your profile.</p>
+          <p className='mt-2 text-[#6F6F6F]'>Your collection will now display on your NFT profile.</p>
           <p className='text-[#6F6F6F] mt-6'>You can always change the collection anytime by visiting your profile’s settings.</p>
           <button onClick={() => {setVisible(false); setSuccess(false); setLookupInProgress(true); setInputVal('');}} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
               Return to Settings
@@ -217,9 +224,21 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
   return (
     <>
-      <div className='mt-10 font-grotesk'>
-        <h3 className='text-base font-semibold tracking-wide mb-1'>NFT Collection</h3>
-        <p className='text-blog-text-reskin mb-4'>Connect an address to your NFT Profile.</p>
+      <div className='mt-10 font-grotesk w-full'>
+        <h3 className='text-blog-text-reskin text-base font-semibold tracking-wide mb-1'>
+          {connectedCollection?.chainAddr && data && !loading ?
+            'Selected NFT Collection'
+            :
+            'Select NFT Collection'
+          }
+        </h3>
+        <p className='text-blog-text-reskin mb-4'>
+          {connectedCollection?.chainAddr && data && !loading ?
+            'Your NFT Profile is displaying this collection.'
+            :
+            'Enter a collection address.'
+          }
+        </p>
 
         {
           !connectedCollection?.chainAddr ||
@@ -269,14 +288,14 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
       >
         <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
           <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
+            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
             <XCircle
               onClick={() => {
                 setVisible(false);
                 setLookupInProgress(true);
                 setInputVal('');
                 setNotAuthorized(false);
-              }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+              }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
             {getModalContent()}
           </div>
         </div>
