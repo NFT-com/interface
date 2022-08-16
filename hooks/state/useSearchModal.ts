@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useSearchModal() {
@@ -18,27 +19,27 @@ export function useSearchModal() {
     });
   };
 
-  const setSearchModalOpen = (searchModalOpen: boolean, modalType = 'search') => {
+  const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search') => {
     mutate({
       ...data,
       searchModalOpen,
       modalType
     });
-  };
+  }, [data, mutate]);
 
-  const setModalType = (modalType: 'search' | 'filters') => {
+  const setModalType = useCallback((modalType: 'search' | 'filters') => {
     mutate({
       ...data,
       modalType
     });
-  };
+  },[data, mutate]);
 
-  const setSideNavOpen = (sideNavOpen: boolean) => {
+  const setSideNavOpen = useCallback((sideNavOpen: boolean) => {
     mutate({
       ...data,
       sideNavOpen,
     });
-  };
+  }, [data, mutate]);
 
   return {
     loading,

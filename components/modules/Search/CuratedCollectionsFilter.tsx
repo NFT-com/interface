@@ -1,5 +1,4 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import useWindowDimensions from 'hooks/useWindowDimensions';
 import { tw } from 'utils/tw';
 
 import { motion } from 'framer-motion';
@@ -8,7 +7,6 @@ import Flask from 'public/flask.svg';
 import { useState } from 'react';
 
 export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void, collapsed?: boolean}) => {
-  const { width: screenWidth } = useWindowDimensions();
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(props.collapsed ?? true);
   const [active, setActive] = useState('PFP');
   const { setSearchModalOpen } = useSearchModal();

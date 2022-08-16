@@ -9,7 +9,7 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty, setPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
@@ -44,7 +44,7 @@ export default function ResultsPage() {
       index: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
-      per_page: searchType?.toString() === 'collections' ? screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2 : screenWidth >= 600 ? sideNavOpen ? 6 : 8 : 4,
+      per_page: setPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
     })
       .then((resp) => {
@@ -59,7 +59,7 @@ export default function ResultsPage() {
         index: searchType?.toString(),
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
         q: searchTerm?.toString(),
-        per_page: searchType?.toString() === 'collections' ? screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2 : screenWidth >= 600 ? 6 : 4,
+        per_page: setPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
       })
         .then((resp) => {
@@ -67,7 +67,7 @@ export default function ResultsPage() {
           setFound(resp.found);
         });
     }
-  }, [fetchTypesenseSearch, page, searchTerm, screenWidth, prevVal, searchType, results]);
+  }, [fetchTypesenseSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen]);
   
   return (
     <PageWrapper
@@ -125,8 +125,8 @@ export default function ResultsPage() {
             </div>}
               <div className={tw(
                 'mt-6',
-                searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
-                searchType?.toString() === 'collections' ? 'minmd:space-x-2' : 'gap-5')}>
+                searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-4' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
+                searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
                 {results && results.map((item, index) => {
                   return (
                     <div key={index}

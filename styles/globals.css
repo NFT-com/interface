@@ -1601,12 +1601,12 @@ li {
     min-width: 50%;
     margin-left:7px;
   } 
-   
-  .embla__slidefull__lg {
+}
+@media (min-width: 900px) {
+  .embla__slidefull {
     min-width: 33%;
     margin-left:7px;
   }
-  
 }
 
 .embla__slide__inner {
@@ -1618,6 +1618,10 @@ li {
 @media (min-width: 1200px) {
   .embla__slide__inner {
     height: 265px;
+  }
+
+  .embla__slidefull {
+    min-width: 25%;
   }
 }
 
