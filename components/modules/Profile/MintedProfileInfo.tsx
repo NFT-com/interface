@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -85,7 +86,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                 }}
               />
             </div>
-            <div className='ml-4'>
+            {getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && <div className='ml-4'>
               <Button
                 type={ButtonType.SECONDARY}
                 label={'Settings'}
@@ -93,7 +94,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
                   router.push('/app/settings');
                 }}
               />
-            </div>
+            </div>}
           </div>
       ) :
       (
