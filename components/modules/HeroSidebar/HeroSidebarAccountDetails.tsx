@@ -28,7 +28,7 @@ export default function HeroSidebarAccountDetails(
   const { secondaryIcon } = useThemeColors();
   const [isCopied, setCopied] = useCopyClipboard();
   const router = useRouter();
-  const { setSidebarOpen, toggleSidebar } = useSidebar();
+  const { setSidebarOpen } = useSidebar();
   const { setSignOutDialogOpen } = useSignOutDialog();
   const { setCurrentProfileUrl } = useUser();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
@@ -121,7 +121,6 @@ export default function HeroSidebarAccountDetails(
           onClick={() => {
             disconnect();
             setSignOutDialogOpen(true);
-            toggleSidebar();
             setCurrentProfileUrl('');
           }}
         >
