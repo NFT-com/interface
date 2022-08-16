@@ -1,11 +1,13 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import React, { PropsWithChildren, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
 export interface CustomTooltipProps {
   tooltipComponent: React.ReactNode;
-  mode: 'click' | 'hover'
+  mode: 'click' | 'hover';
+  rightPostion?: number;
 }
 
 /**
@@ -60,7 +62,9 @@ export function CustomTooltip(props: PropsWithChildren<CustomTooltipProps>) {
           ref={tooltipRef}
           className="absolute z-50 mt-2 drop-shadow-lg"
           style={{
-            right: window.innerWidth - anchorRef?.current?.getBoundingClientRect().right,
+            right: props.rightPostion !== undefined ?
+              props.rightPostion :
+              window.innerWidth - anchorRef?.current?.getBoundingClientRect().right ,
           }}
         >
           {props.tooltipComponent}

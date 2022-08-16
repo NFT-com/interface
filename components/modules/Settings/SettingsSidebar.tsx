@@ -18,16 +18,16 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
       {isOwner
         ? (
           <>
-            
-            <h3 className='mb-3 text-xs uppercase font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
-              Profile Settings
+            <h3 className='mb-3 text-xs font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
+              PROFILE SETTINGS
               <CustomTooltip
+                rightPostion={0}
                 mode="hover"
                 tooltipComponent={
                   <div
-                    className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                    className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
                   >
-                    <p className='mb-2'>Profile Settings</p>
+                    <p className='mb-3'>Profile Settings</p>
                     <p>These settings control the active profile you are signed-in with.</p>
                   </div>
                 }>
@@ -47,15 +47,16 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
         )
         : null}
 
-      <h3 className='mb-3 mt-12 text-xs uppercase font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
-        Address Settings
+      <h3 className='mb-3 mt-12 text-xs font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
+        ADDRESS SETTINGS
         <CustomTooltip
           mode="hover"
+          rightPostion={0}
           tooltipComponent={
             <div
-              className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs relative"
+              className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
             >
-              <p className='mb-2'>Address Settings</p>
+              <p className='mb-3'>Address Settings</p>
               <p>These settings relate to your address and the NFTs it contains across all your NFT Profiles.</p>
             </div>
           }>
