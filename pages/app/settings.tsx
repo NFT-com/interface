@@ -4,6 +4,7 @@ import { Sidebar } from 'components/elements/Sidebar';
 import Toast from 'components/elements/Toast';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { SearchModal } from 'components/modules/Search/SearchModal';
+import ConnectedAccounts from 'components/modules/Settings/ConnectedAccounts';
 import ConnectedProfiles from 'components/modules/Settings/ConnectedProfiles';
 import DisplayMode from 'components/modules/Settings/DisplayMode';
 import NftOwner from 'components/modules/Settings/NftOwner';
@@ -18,6 +19,7 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import NotFoundPage from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
+import { shortenAddress } from 'utils/helpers';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
@@ -102,7 +104,7 @@ export default function Settings() {
   return (
     <>
       <ClientOnly>
-        <Header />
+        <Header bgLight />
         <Sidebar />
         <SearchModal />
       </ClientOnly>
@@ -110,27 +112,38 @@ export default function Settings() {
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
           <SettingsSidebar isOwner={ownsProfilesAndSelectedProfile} />
-          <div className='w-full bg-white mx-auto pt-28 pb-20 pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pl-80 max-w-[900px]'>
-            <h2 className='font-bold text-black text-[40px] font-grotesk block minlg:hidden'>
-              <span className='text-[#F9D963]'>/</span>
-              Settings
-            </h2>
-            {ownsProfilesAndSelectedProfile
-              ? (
-                <>
-                  <NftOwner {...{ selectedProfile, isSidebar: false, showToastOnSuccess: true }} />
-                  <DisplayMode {...{ associatedAddresses, selectedProfile }}/>
-                </>
-              )
-              : null}
+          <div className='w-full bg-white mx-auto pt-28 minlg:pl-80 max-w-[900px]'>
+            <div className='pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-0 minlg:pl-0'>
+              <h2 className='font-bold text-black text-[40px] font-grotesk block minlg:hidden'>
+                <span className='text-[#F9D963]'>/</span>
+                Settings
+              </h2>
+              {ownsProfilesAndSelectedProfile
+                ? (
+                  <>
+                    <h3 className='mt-10 minlg:mt-24 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>Profile Settings for {selectedProfile}</h3>
+                    <ConnectedAccounts {...{ associatedAddresses, selectedProfile }} />
+                    <DisplayMode {...{ associatedAddresses, selectedProfile }}/>
+                    <TransferProfile {...{ selectedProfile }} />
+                  </>
+                )
+                : null }
+            </div>
+
+            <div className='bg-[#F8F8F8] pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-5 minlg:pl-5 pb-10 minlg:mb-10 minmd:rounded-[10px]'>
+              <h3 className='mt-10 pt-10 minlg:mt-10 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>
+                Address Settings for {shortenAddress(currentAddress, 4)}
+              </h3>
+              {ownsProfilesAndSelectedProfile
+                ? (
+                  <>
+                    <NftOwner {...{ selectedProfile, isSidebar: false, showToastOnSuccess: true }} />
+                  </>
+                )
+                : null}
           
-            <ConnectedProfiles {...{ associatedProfiles }} />
-          
-            {ownsProfilesAndSelectedProfile
-              ? (
-                <TransferProfile {...{ selectedProfile }} />
-              )
-              : null }
+              <ConnectedProfiles {...{ associatedProfiles }} />
+            </div>
           </div>
         </div>
         <Footer />

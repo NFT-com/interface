@@ -86,6 +86,7 @@ export default function LoginResults({ profileValue, hiddenProfile }: LoginResul
             />
           </motion.div>
       }
+      <div className='absolute top-11 right-4 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
       <XCircle onClick={() => exitClickHandler()} className='absolute top-10 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
           
       {myOwnedProfileTokens.length > 0 &&
