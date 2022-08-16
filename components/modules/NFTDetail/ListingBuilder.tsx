@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
+import { NFTListingsContext, TargetMarketplace } from 'components/modules/Checkout/NFTListingsContext';
 import { Maybe, Nft } from 'graphql/generated/types';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
@@ -9,8 +10,6 @@ import {
   SaleDuration,
 } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
-
-import { NFTListingsContext, TargetMarketplace } from './NFTListingsContext';
 
 import { BigNumber, ethers } from 'ethers';
 import { useCallback, useContext, useEffect, useState } from 'react';

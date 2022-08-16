@@ -10,15 +10,17 @@ import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { Fee, SeaportOrderParameters } from 'types';
 import { Doppler, getEnv } from 'utils/env';
-import { filterNulls, getChainIdString, processIPFSURL } from 'utils/helpers';
+import { filterNulls, getChainIdString } from 'utils/helpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
+import { CartSidebarNft } from './CartSidebarNft';
+
 import { MakerOrder } from '@looksrare/sdk';
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumberish } from 'ethers';
 import { useRouter } from 'next/router';
 import { XCircle } from 'phosphor-react';
 import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
@@ -239,7 +241,7 @@ export function NFTListingsContextProvider(
       toList.length > 0 &&
       sidebarVisible &&
       <div ref={sidebarRef} className={tw(
-        'z-50 absolute pt-20 right-0 w-full h-full minmd:w-60 bg-white flex flex-col grow',
+        'z-50 absolute pt-20 right-0 w-full h-full max-w-md bg-white flex flex-col grow',
         'drop-shadow-md'
       )}>
         <div className='flex flex-row items-center px-8 my-8'>
@@ -262,33 +264,15 @@ export function NFTListingsContextProvider(
           </span>
         </div>
         {filterNulls(toList).map((listing, index) => {
-          return <div key={index} className='flex items-center w-full h-32 px-8'>
-            <div className='relative h-2/4 aspect-square'>
-              <video
-                autoPlay
-                muted
-                loop
-                key={processIPFSURL(listing.nft?.metadata?.imageURL)}
-                src={processIPFSURL(listing.nft?.metadata?.imageURL)}
-                poster={processIPFSURL(listing.nft?.metadata?.imageURL)}
-                className={tw(
-                  'flex object-fit w-full justify-center rounded-md',
-                )}
-              />
-            </div>
-            <div className='flex flex-col ml-4'>
-              <span>{listing?.nft?.metadata?.name}</span>
-              <span>{'#' + BigNumber.from(listing?.nft?.tokenId ?? 0).toNumber()}</span>
-            </div>
-          </div>;
+          return <CartSidebarNft nft={listing?.nft} key={index} />;
         })}
         <div className="mx-8 my-4 flex">
           <Button
             stretch
-            label={'Proceed to List'}
+            label={'List Now'}
             onClick={() => {
               setSidebarVisible(false);
-              router.push('/app/checkout');
+              router.push('/app/list');
             }}
             type={ButtonType.PRIMARY}
           />

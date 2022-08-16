@@ -1,4 +1,4 @@
-import { NFTListingsContext } from 'components/modules/NFTDetail/NFTListingsContext';
+import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';

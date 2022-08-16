@@ -160,6 +160,6 @@ export function getEtherscanLink(
   }
 }
 
-export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
+export function getChainIdString(chainId: Maybe<number | string>): Maybe<string> {
   return (chainId == null ? null : String(chainId));
 }
