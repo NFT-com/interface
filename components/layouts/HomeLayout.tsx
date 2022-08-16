@@ -1,4 +1,5 @@
 import { SignOutModal } from 'components/elements/SignOutModal';
+import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { tw } from 'utils/tw';
 
@@ -8,6 +9,7 @@ type HomeLayoutProps = {
 
 export default function HomeLayout({ children }: HomeLayoutProps) {
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
+  const { toggleSidebar } = useSidebar();
   return (
     <div className={tw('flex flex-col',
       'h-screen w-full min-h-screen',
@@ -22,6 +24,7 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
           visible={signOutDialogOpen}
           onClose={() => {
             setSignOutDialogOpen(false);
+            toggleSidebar();
           }}
         />
       </div>
