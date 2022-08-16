@@ -292,7 +292,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <div className='h-full px-6 w-full pb-10 pt-3 minlg:px-2'>
             <div className='text-section leading-header font-header justify-center ...'>
               {data?.learnTitle}
-              <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 minlg:whitespace-normal minmd:whitespace-nowrap whitespace-normal ...'>
+              <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-normal ...'>
                 {data?.learnDescription}
               </div>
               <div className='w-full items-center ...'>
