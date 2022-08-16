@@ -38,7 +38,7 @@ export const Sidebar = () => {
   const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
 
   const { setSignOutDialogOpen } = useSignOutDialog();
-  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebar();
+  const { sidebarOpen, setSidebarOpen } = useSidebar();
   const randomLabel = useMemo(() => randomLabelGenerator(), []);
   const { getHiddenProfileWithExpiry, user, setCurrentProfileUrl } = useUser();
   const { addFundsDialogOpen } = useAddFundsDialog();
@@ -75,6 +75,7 @@ export const Sidebar = () => {
           className='flex flex-col bg-white h-full text-black font-grotesk'
         >
           <div className='flex flex-row w-full h-8 items-end py-10 pr-3'>
+            <div className='absolute top-11 right-4 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
             <XCircle onClick={() => {setSidebarOpen(false);}} className='absolute top-10 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
           </div>
 
@@ -110,7 +111,6 @@ export const Sidebar = () => {
             onClick={() => {
               disconnect();
               setSignOutDialogOpen(true);
-              toggleSidebar();
               setCurrentProfileUrl('');
             }}>
             Sign out
@@ -167,7 +167,7 @@ export const Sidebar = () => {
         />
       );
     }
-  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, toggleSidebar, user?.currentProfileUrl]);
+  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, user?.currentProfileUrl]);
 
   const getSidebarPanel = useCallback(() => {
     if(isNullOrEmpty(currentAddress)) {

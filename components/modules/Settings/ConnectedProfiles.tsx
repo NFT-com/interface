@@ -25,14 +25,20 @@ type ConnectedProfilesProps = {
 export default function ConnectedProfiles({ associatedProfiles }: ConnectedProfilesProps) {
   const { address: currentAddress } = useAccount();
   return (
-    <div id="profiles" className='mt-10 w-full'>
-      <h2 className='font-grotesk tracking-wide font-bold text-black text-2xl mb-1'>Connected Profiles</h2>
-      <p className='text-blog-text-reskin mb-4'>These NFT Profiles have requested to display the NFTs from your address.</p>
+    <div id="profiles" className='w-full font-grotesk'>
+      <h2 className='font-grotesk tracking-wide font-bold text-black text-2xl mb-1'>Manage Address</h2>
+      <p className='text-blog-text-reskin mb-4'>
+        The following NFT Profiles have requested to associate to your address. Only approve those you would like to give permission to display your NFTs.
+      </p>
       <div>
-        <p className='text-blog-text-reskin mb-2 text-sm'>Profile Name</p>
-        {!associatedProfiles?.accepted?.length && !associatedProfiles?.pending?.length || !currentAddress && (
-          <p className='text-sm font-medium'>No connection requests</p>
-        )}
+        <p className='text-blog-text-reskin mb-2 font-semibold'>Associated Profiles</p>
+        
+        {!associatedProfiles?.accepted?.length && !associatedProfiles?.pending?.length || !currentAddress
+          ? (
+            <p className='text-sm font-medium'>No profile association requests</p>
+          )
+          : <p className='text-blog-text-reskin mb-2 text-sm font-medium'>Profile Name</p>
+        }
         {currentAddress &&
         <>
           {associatedProfiles?.accepted?.map((profile, index)=> (
@@ -46,7 +52,6 @@ export default function ConnectedProfiles({ associatedProfiles }: ConnectedProfi
           ))}
         </>
         }
-        
       </div>
     </div>
   );

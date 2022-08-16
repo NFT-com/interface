@@ -64,9 +64,9 @@ export default function SettingsForm({ buttonText, inputVal, changeHandler, subm
       <button onClick={() => submitHandler()} disabled={error || inputVal === '' || isAssociatedOrSelf} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] font-bold tracking-wide focus:outline-none focus:shadow-outline w-full mt-3 disabled:bg-[#B6B6B6] disabled:text-white disabled:border-[#6F6F6F] disabled:border disabled:hover:cursor-not-allowed" type="button">
         {buttonText}
       </button>
-      <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>
+      <div className='flex items-center font-grotesk text-[#6F6F6F] justify-center mt-2 text-sm'>
         <GasPump size={20} weight="fill" />
-        <p className='ml-1'>This action will require a gas fee.</p>
+        <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
       </div>
     </div>
   );
