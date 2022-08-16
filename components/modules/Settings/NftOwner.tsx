@@ -84,6 +84,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
     setSelected(profileTitle);
     if(isSidebar) {
       setCurrentProfileUrl(profileTitle);
+      setVisible(false);
     } else {
       const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle)?.id;
       updateWalletProfileId({ profileId: profileId }).then(() => {
