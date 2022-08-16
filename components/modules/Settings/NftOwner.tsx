@@ -93,12 +93,14 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
   };
 
   return (
-    <div id="owner" className='mt-10 minlg:mt-20 font-grotesk'>
+    <div id="owner" className='font-grotesk mb-10'>
       {showToastOnSuccess && <Toast />}
       {!isSidebar &&
       <>
-        <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>NFT Owner</h2>
-        <p className='mb-4 text-[#6F6F6F]'>Select your primary NFT Profile which will display as the owner for your NFTs and collections.</p>
+        <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Select Primary NFT Profile</h2>
+        <p className='mb-4 text-[#6F6F6F]'>
+          Select the primary NFT Profile you want associated with your Ethereum address. This profile will display as the “owner” for NFTs and collections owned by the address which owns NFT Profile.
+        </p>
       </>
       }
       {selected !== '' &&

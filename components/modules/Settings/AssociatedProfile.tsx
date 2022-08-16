@@ -114,7 +114,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                   className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                 >
                   <p className='text-[#F2890E] mb-2'>Pending</p>
-                  <p>This connection is waiting your approval. Click on the Profile name to approve or reject.</p>
+                  <p>This NFT Profile association is waiting your approval. Click on its name to approve or reject.</p>
                 </div>
               }
             >
@@ -133,8 +133,8 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                       <div
                         className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                       >
-                        <p className='text-[#D40909] mb-2'>Disconnected</p>
-                        <p>This profile has disconnected your wallet. It’s safe to remove it from your account.</p>
+                        <p className='text-[#D40909] mb-2'>Disassociated</p>
+                        <p>This NFT Profile has been disassociated from your address. It is safe to remove it from your account.</p>
                       </div>
                     }
                   >
@@ -149,8 +149,8 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     <div
                       className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                     >
-                      <p className='text-[#00AC30] mb-2'>Connected</p>
-                      <p>You have authorized this connection.</p>
+                      <p className='text-[#00AC30] mb-2'>Associated</p>
+                      <p>You have associated your address with this NFT Profile.</p>
                     </div>
                   }
                 >
@@ -258,7 +258,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                             <span className='text-black font-bold tracking-wide'>
                               {profile.profileUrl || profile.url}{' '}
                             </span>
-                        is requesting to connect your wallet to their profile.
+                            is requesting to connect your wallet to their profile.
                           </p>
                           <p className='text-[#6F6F6F]'>This profile is owned by wallet address</p>
                           <ExternalLink
@@ -288,7 +288,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                           </button>
                           <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                             <GasPump size={20} weight="fill" />
-                            <p className='ml-1'>This action will require a gas fee.</p>
+                            <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
                           </div>
                           <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {setRemoveModalVisible(true); setVisible(false);}}>Reject Request</p>
                         </div>
