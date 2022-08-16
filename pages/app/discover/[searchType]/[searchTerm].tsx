@@ -98,7 +98,7 @@ export default function ResultsPage() {
                 <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
               </div>
             </div>
-            <CuratedCollectionsFilter onClick={() => null} />
+            {searchType?.toString() === 'collections' && <CuratedCollectionsFilter onClick={() => null} />}
             <div>
               {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
               <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">

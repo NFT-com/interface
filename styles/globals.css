@@ -1554,8 +1554,7 @@ li {
 
 .emblafull {
   position: relative;
-  background-color: #f7f7f7;
-  padding: 20px 10px;
+  padding: 0px 10px;
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -1616,10 +1615,10 @@ li {
   height: 190px;
 }
 
-.embla__slide__innerfull {
-  position: relative;
-  overflow: hidden;
-  height: 190px;
+@media (min-width: 1200px) {
+  .embla__slide__inner {
+    height: 265px;
+  }
 }
 
 .embla__button {
