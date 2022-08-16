@@ -1,4 +1,5 @@
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
 import useEmblaCarousel from 'embla-carousel-react';
@@ -52,6 +53,7 @@ export const NextButton = ({ enabled, onClick }: buttonProps) => (
 );
 
 const EmblaCarousel = (props: slidesProps) => {
+  const { sideNavOpen } = useSearchModal();
   const { width: screenWidth } = useWindowDimensions();
   const [viewportRef, embla] = useEmblaCarousel({
     dragFree: true,
@@ -97,8 +99,8 @@ const EmblaCarousel = (props: slidesProps) => {
           <div className="embla__viewport" ref={viewportRef}>
             <div className="embla__container">
               {props.slides.map((item: any, index) => (
-                <div className={`embla__slide${props.full ? 'full' : ''}`} key={index}>
-                  <div className={`embla__slide__inner${props.full ? 'full' : ''}`}>
+                <div className={`embla__slide${props.full ? sideNavOpen ? 'full' : 'full__lg' : ''}`} key={index}>
+                  <div className="embla__slide__inner">
                     <div className={`${props.full ? 'embla__slide__item' : ''}`}>
                       <CollectionItem contractAddr={item.document?.contractAddr}/>
                     </div>

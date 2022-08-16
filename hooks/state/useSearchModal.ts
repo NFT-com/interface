@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useSearchModal() {
@@ -6,7 +5,8 @@ export function useSearchModal() {
     fallbackData:
     {
       modalType: 'search',
-      searchModalOpen: false
+      searchModalOpen: false,
+      sideNavOpen: false,
     } });
 
   const loading = !data;
@@ -33,13 +33,22 @@ export function useSearchModal() {
     });
   };
 
+  const setSideNavOpen = (sideNavOpen: boolean) => {
+    mutate({
+      ...data,
+      sideNavOpen,
+    });
+  };
+
   return {
     loading,
     modalType: data.modalType,
     searchModalOpen: data.searchModalOpen,
+    sideNavOpen: data.sideNavOpen,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
+    setSideNavOpen,
   };
 }
 

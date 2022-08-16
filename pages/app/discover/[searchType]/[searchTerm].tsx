@@ -5,6 +5,7 @@ import { PageWrapper } from 'components/layouts/PageWrapper';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
+import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -28,7 +29,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage() {
-  const { setSearchModalOpen } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
@@ -43,14 +44,14 @@ export default function ResultsPage() {
       index: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
-      per_page: searchType?.toString() === 'collections' ? screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2 : screenWidth >= 600 ? 6 : 4,
+      per_page: searchType?.toString() === 'collections' ? screenWidth >= 1200 ? 9 : screenWidth >= 900 ? 6 : screenWidth >= 600 ? 4 : 2 : screenWidth >= 600 ? sideNavOpen ? 6 : 8 : 4,
       page: page,
     })
       .then((resp) => {
         setResults([...resp.hits]);
         setFound(resp.found);
       });
-  },[fetchTypesenseSearch, page, screenWidth, searchTerm, searchType]);
+  },[fetchTypesenseSearch, page, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -85,80 +86,89 @@ export default function ResultsPage() {
             </div>
           </a>
         </Link>
-        <div className="mx-6">
-          <div className="flex flex-col mt-6">
-            <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
-            <div className="text-2xl font-semibold pt-1">
-              <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
+        
+        <div className="flex">
+          <div className="hidden minlg:block">
+            <SideNav onSideNav={() => null}/>
+          </div>
+          <div className="mx-6">
+            <div className="flex flex-col mt-6">
+              <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
+              <div className="text-2xl font-semibold pt-1">
+                <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
+              </div>
+            </div>
+            <CuratedCollectionsFilter onClick={() => null} />
+            <div>
+              {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
+              <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
+                {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
+              </div>
+              {searchType?.toString() !== 'collections' &&
+            <div className="my-6 mb-4 flex justify-between font-grotesk font-black text-xl minmd:text-2xl">
+              <div
+                className="cursor-pointer flex flex-row items-center"
+                onClick={() => {
+                  setSearchModalOpen(true, 'filters');
+                }}>
+                <FunnelSimple className="h-8 w-8" />
+                Filter
+              </div>
+              <div
+                className="cursor-pointer flex flex-row items-center"
+                onClick={() => {
+                  setSearchModalOpen(true, 'filters');
+                }}>
+                Sort
+                <ChevronDown className="h-10 w-10" />
+              </div>
+            </div>}
+              <div className={tw(
+                'mt-6',
+                searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
+                searchType?.toString() === 'collections' ? 'minmd:space-x-2' : 'gap-5')}>
+                {results && results.map((item, index) => {
+                  return (
+                    <div key={index}
+                      className={tw(
+                        'DiscoverCollectionItem',
+                        searchType?.toString() === 'collections' ? 'min-h-[10.5rem] minmd:min-h-[13rem]' : '')}
+                    >
+                      {searchType?.toString() === 'collections' ?
+                        <CollectionItem
+                          contractAddr={item.document.contractAddr}
+                          contractName={item.document.contractName}
+                        />:
+                        <NFTCard
+                          title={item.document.nftName}
+                          subtitle={'#'+ item.document.tokenId}
+                          images={[item.document.imageURL]}
+                          onClick={() => {
+                            if (item.document.nftName) {
+                              router.push(`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`);
+                            }
+                          }}
+                          description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
+                          customBackground={'white'}
+                          lightModeForced
+                          customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+                        />}
+                    </div>);
+                })}
+              </div>
+              {results.length < found && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+                <Button
+                  color={'black'}
+                  accent={AccentType.SCALE}
+                  stretch={true}
+                  label={'Load More'}
+                  onClick={() => setPage(page + 1)}
+                  type={ButtonType.PRIMARY}
+                />
+              </div>}
             </div>
           </div>
-          <CuratedCollectionsFilter onClick={() => null} />
-          {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
-          <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
-            {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
-          </div>
-          {searchType?.toString() !== 'collections' &&
-          <div className="my-6 mb-4 flex justify-between font-grotesk font-black text-xl minmd:text-2xl">
-            <div
-              className="cursor-pointer flex flex-row items-center"
-              onClick={() => {
-                setSearchModalOpen(true, 'filters');
-              }}>
-              <FunnelSimple className="h-8 w-8" />
-              Filter
-            </div>
-            <div
-              className="cursor-pointer flex flex-row items-center"
-              onClick={() => {
-                setSearchModalOpen(true, 'filters');
-              }}>
-              Sort
-              <ChevronDown className="h-10 w-10" />
-            </div>
-          </div>}
-          <div className={tw(
-            'mt-6',
-            searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : 'grid grid-cols-2 minmd:grid-cols-3',
-            searchType?.toString() === 'collections' ? 'minmd:space-x-2' : 'gap-5')}>
-            {results && results.map((item, index) => {
-              return (
-                <div key={index}
-                  className={tw(
-                    'DiscoverCollectionItem',
-                    searchType?.toString() === 'collections' ? 'min-h-[10.5rem] minmd:min-h-[13rem]' : '')}
-                >
-                  {searchType?.toString() === 'collections' ?
-                    <CollectionItem
-                      contractAddr={item.document.contractAddr}
-                      contractName={item.document.contractName}
-                    />:
-                    <NFTCard
-                      title={item.document.nftName}
-                      subtitle={'#'+ item.document.tokenId}
-                      images={[item.document.imageURL]}
-                      onClick={() => {
-                        if (item.document.nftName) {
-                          router.push(`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`);
-                        }
-                      }}
-                      description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-                      customBackground={'white'}
-                      lightModeForced
-                      customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
-                    />}
-                </div>);
-            })}
-          </div>
-          {results.length < found && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-            <Button
-              color={'black'}
-              accent={AccentType.SCALE}
-              stretch={true}
-              label={'Load More'}
-              onClick={() => setPage(page + 1)}
-              type={ButtonType.PRIMARY}
-            />
-          </div>}
+        
         </div>
       </div>
     </PageWrapper>
