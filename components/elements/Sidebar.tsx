@@ -92,9 +92,7 @@ export const Sidebar = () => {
             {randomLabel}
           </div>
 
-          {//todo: make this do something on click }
-          }
-          <div className='w-full p-4 items-center drop-shadow-xl -mt-10 minlg:-mt-20'>
+          <div className='w-full p-4 items-center drop-shadow-xl -mt-3 minlg:-mt-3'>
             <NftOwner isSidebar selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
           </div>
           
@@ -102,7 +100,7 @@ export const Sidebar = () => {
             <a onClick={() => setSidebarOpen(false)}
               className='flex flex-row w-full items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
             >
-            Settings
+              Settings
             </a>
           </Link>
 

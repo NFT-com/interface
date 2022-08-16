@@ -109,6 +109,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
             setVisible(true);
             sortProfiles();
           }}
+          isSidebar={isSidebar}
           opensModal
           showSwitch={myOwnedProfileTokens && myOwnedProfileTokens.length > 1}
           profile={myOwnedProfileTokens?.find(t => t.title === selected)}
