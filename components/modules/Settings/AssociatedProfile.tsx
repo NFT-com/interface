@@ -114,7 +114,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                   className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                 >
                   <p className='text-[#F2890E] mb-2'>Pending</p>
-                  <p>This connection is waiting your approval. Click on the Profile name to approve or reject.</p>
+                  <p>This NFT Profile association is waiting your approval. Click on its name to approve or reject.</p>
                 </div>
               }
             >
@@ -133,8 +133,8 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                       <div
                         className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                       >
-                        <p className='text-[#D40909] mb-2'>Disconnected</p>
-                        <p>This profile has disconnected your wallet. It’s safe to remove it from your account.</p>
+                        <p className='text-[#D40909] mb-2'>Disassociated</p>
+                        <p>This NFT Profile has been disassociated from your address. It is safe to remove it from your account.</p>
                       </div>
                     }
                   >
@@ -149,8 +149,8 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     <div
                       className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                     >
-                      <p className='text-[#00AC30] mb-2'>Connected</p>
-                      <p>You have authorized this connection.</p>
+                      <p className='text-[#00AC30] mb-2'>Associated</p>
+                      <p>You have associated your address with this NFT Profile.</p>
                     </div>
                   }
                 >
@@ -235,8 +235,8 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       >
         <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
           <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
-            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
+            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
             {
               transactionPending ?
                 <>
@@ -258,9 +258,9 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                             <span className='text-black font-bold tracking-wide'>
                               {profile.profileUrl || profile.url}{' '}
                             </span>
-                        is requesting to connect your wallet to their profile.
+                            is requesting to associate your address to their NFT Profile.
                           </p>
-                          <p className='text-[#6F6F6F]'>This profile is owned by wallet address</p>
+                          <p className='text-[#6F6F6F]'>This profile is owned by address</p>
                           <ExternalLink
                             href={getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address')}
                           >
@@ -281,14 +281,14 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                             <span className='text-black font-bold tracking-wide'>
                                 NOT
                             </span>
-                                be able to make any changes to your wallet or its contents. You can change this connection at any time in your account’s settings.
+                                be able to make any changes to your address or its contents. You can change this connection at any time in your account’s settings.
                           </p>
                           <button onClick={(e) => acceptPendingProfile(e, profile.profileUrl || profile.url)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                             Approve Request
                           </button>
                           <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                             <GasPump size={20} weight="fill" />
-                            <p className='ml-1'>This action will require a gas fee.</p>
+                            <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
                           </div>
                           <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {setRemoveModalVisible(true); setVisible(false);}}>Reject Request</p>
                         </div>
@@ -298,12 +298,12 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                         <div>
                           <h2 className='text-4xl tracking-wide font-bold mb-10'>Profile Connected</h2>
                           <p className='text-[#6F6F6F] mb-4'>
-                            Congratulations! You have connected the profile{' '}
+                            Congratulations! You have associated the NFT Profile{' '}
                             <span className='text-black font-bold tracking-wide'>{profile.profileUrl || profile.url}{' '}</span>
-                            to your wallet.
+                            to your address.
                           </p>
                           <p className='text-[#6F6F6F] mb-4'>
-                            As a reminder, your NFTs will be available to display on their profile’s gallery.{' '}
+                            As a reminder, your NFTs will be available to display on their NFT Profile’s gallery.{' '}
                             <span className='text-black font-bold tracking-wide'>
                               {profile.profileUrl || profile.url}{' '}
                             </span>
@@ -311,9 +311,9 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                             <span className='text-black font-bold tracking-wide'>
                               {' '}NOT{' '}
                             </span>
-                            be able to make any changes to your wallet or its contents. </p>
+                            be able to make any changes to your address or its contents. </p>
                           <p className='text-[#6F6F6F]'>
-                            You can change this connection at any time in your account’s settings.
+                            You can change this association at any time in your account’s settings.
                           </p>
                           <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                             Return to NFT.com
@@ -326,10 +326,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     <div>
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Profile Rejected</h2>
                       <p className='text-[#6F6F6F] mb-4'>
-                        You have denied wallet access to the profile
+                        You have denied access to the NFT Profile
                         <span className='text-black font-bold tracking-wide'>{' '}{profile.profileUrl || profile.url}</span>
                       </p>
-                      <p className='text-[#6F6F6F]'>Your NFTs will not display on their profile’s gallery.</p>
+                      <p className='text-[#6F6F6F]'>Your NFTs will not display on their NFT Profile`&apos;`s gallery.</p>
                   
                       <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                         Return to NFT.com

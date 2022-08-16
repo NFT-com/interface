@@ -75,6 +75,7 @@ export const Sidebar = () => {
           className='flex flex-col bg-white h-full text-black font-grotesk'
         >
           <div className='flex flex-row w-full h-8 items-end py-10 pr-3'>
+            <div className='absolute top-11 right-4 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
             <XCircle onClick={() => {setSidebarOpen(false);}} className='absolute top-10 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
           </div>
 

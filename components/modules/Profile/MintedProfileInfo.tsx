@@ -42,7 +42,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       return null;
     }
 
-    return user?.currentProfileUrl === props.profileURI ?
+    return user?.currentProfileUrl === props.profileURI || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) ?
       (
         editMode ?
           <div

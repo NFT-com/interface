@@ -21,6 +21,7 @@ export default function SignIn() {
   return (
     <motion.div className='text-black font-grotesk bg-white h-full p-8'>
                
+      <div className='absolute top-11 right-4 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
       <XCircle onClick={() => setSidebarOpen(false)} className='absolute top-10 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
                 
       <h2 className='font-bold text-4xl mb-9 pt-24'>Sign In</h2>

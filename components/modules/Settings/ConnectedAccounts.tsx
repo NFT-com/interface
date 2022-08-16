@@ -79,15 +79,16 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   }, [inputVal, associatedAddresses, currentAddress]);
   
   return (
-    <div id="wallets" className='mt-10 font-grotesk'>
-      <h3 className='text-base font-semibold tracking-wide mb-1'>Connected Wallets</h3>
-      <p className='text-blog-text-reskin mb-4'>Display NFTs from your Ethereum addresses on your NFT Profile.</p>
+    <div id="addresses" className='font-grotesk'>
+      <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Associate Addresses</h2>
+      <p className='text-blog-text-reskin mb-4'>The NFTs contained or collections deployed by associated Ethereum addresses will display on this NFT Profile.</p>
       
-      <SettingsForm buttonText='Request Connection' submitHandler={openModal} {...{ inputVal, isAssociatedOrSelf }} changeHandler={setInputVal} />
+      <SettingsForm buttonText='Request Association' submitHandler={openModal} {...{ inputVal, isAssociatedOrSelf }} changeHandler={setInputVal} />
 
       {associatedAddresses?.accepted?.length || associatedAddresses?.pending?.length || associatedAddresses?.denied?.length
         ? (
-          <div className='mt-4 w-full'>
+          <div className='mt-6 w-full'>
+            <p className='text-blog-text-reskin mb-2 font-semibold pl-1'>Associated Addresses</p>
             <div className='p-1 flex  justify-between mb-1'>
               <p className='w-1/2 mr-[3.1rem] text-blog-text-reskin text-sm'>Address</p>
               <p className='w-1/2 text-blog-text-reskin text-sm'>Network</p>
