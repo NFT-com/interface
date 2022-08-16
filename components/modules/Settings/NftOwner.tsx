@@ -93,12 +93,14 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
   };
 
   return (
-    <div id="owner" className='mt-10 minlg:mt-20 font-grotesk'>
+    <div id="owner" className='font-grotesk mb-10'>
       {showToastOnSuccess && <Toast />}
       {!isSidebar &&
       <>
-        <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>NFT Owner</h2>
-        <p className='mb-4 text-[#6F6F6F]'>Select your primary NFT Profile which will display as the owner for your NFTs and collections.</p>
+        <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Select Primary NFT Profile</h2>
+        <p className='mb-4 text-[#6F6F6F]'>
+          Select the primary NFT Profile you want associated with your Ethereum address. This profile will display as the “owner” for NFTs and collections owned by the address which owns NFT Profile.
+        </p>
       </>
       }
       {selected !== '' &&
@@ -128,8 +130,8 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
         >
           <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
             <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-              <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
-              <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+              <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
+              <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
               <div>
                 <h2 className='text-4xl tracking-wide font-bold mb-10'>Switch To Profile</h2>
                 <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile Name" />
@@ -179,12 +181,16 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
         >
           <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
             <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-              <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
-              <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+              <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
+              <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
               <div>
-                <h2 className='text-4xl tracking-wide font-bold mb-10'>Set Owner</h2>
-                <p className='text-[#6F6F6F] mb-4'>Select the profile to sign-in with by default.</p>
-                <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile Name" />
+                <h2 className='text-4xl tracking-wide font-bold mb-10'>
+                  Select NFT Profile
+                </h2>
+                <p className='text-[#6F6F6F] mb-4'>
+                  Select the primary NFT Profile you want associated with your Ethereum address. This profile will display as the “owner” for NFTs and collections owned by the address which owns NFT Profile.
+                </p>
+                <input onChange={event => searchHandler(event.target.value.toLowerCase())} className="shadow appearance-none border rounded-[10px] w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4 border-[#D5D5D5] placeholder:text-sm" id="currentAddress" type="text" placeholder="Profile name" />
               </div>
               <div className='max-h-[350px] maxlg:max-h-[320px] overflow-auto hideScroll'>
                 <div>
@@ -199,7 +205,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
 
                 {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
                   <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-                  Get a New Profile
+                    Get a New Profile
                   </button>
                 )}
 
@@ -207,7 +213,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
                   ?
                   (
                     <button onClick={() => LoadMoreHandler()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-              Load More
+                      Load More
                     </button>
                   )
                   : null

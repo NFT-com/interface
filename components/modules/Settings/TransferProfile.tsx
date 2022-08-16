@@ -58,9 +58,13 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
   };
 
   return (
-    <div id="transfer" className='mt-10'>
-      <h2 className='font-grotesk tracking-wide font-bold text-black text-2xl mb-1'>Transfer Profile</h2>
-      <p className='text-blog-text-reskin mb-4'>Send this profile to another wallet.</p>
+    <div id="transfer" className='mt-10 bg-[#FFF1F1] p-4 rounded-[10px]'>
+      <h2 className='font-grotesk tracking-wide font-bold text-black text-2xl mb-1'>
+        Transfer Profile
+      </h2>
+      <p className='text-blog-text-reskin mb-4'>
+        Send this profile to another wallet. You will lose access to this profile.
+      </p>
 
       <SettingsForm buttonText='Transfer Profile' changeHandler={setInputVal} submitHandler={setModalOpen} {...{ inputVal }} />
 
@@ -78,8 +82,8 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
       >
         <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
           <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
-            <XCircle onClick={() => closeModal()} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
+            <XCircle onClick={() => closeModal()} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
             {
               transactionPending ?
                 <>
@@ -114,15 +118,25 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                   (
                     <>
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Transfer</h2>
-                      <p className='text-[#6F6F6F]'>You’re about to transfer <span className='font-bold text-black tracking-wide'>{selectedProfile}</span> to  <span className='font-mono text-black text-xl break-words mt-2'>{inputVal}</span></p>
+                      <p className='text-[#6F6F6F]'>You’re about to transfer
+                        <span className='font-bold text-black tracking-wide'>
+                          {selectedProfile}
+                        </span>
+                        to
+                        <span className='font-mono text-black text-xl break-words mt-2'>
+                          {inputVal}
+                        </span>
+                      </p>
             
-                      <p className='mt-6 text-[#6F6F6F]'>Please confirm this wallet address is correct. Once the transfer process begins, you will lose access to this profile.</p>
+                      <p className='mt-6 text-[#6F6F6F]'>
+                        Please confirm this address is correct. Once the transfer process begins, you will lose access to this profile.
+                      </p>
                       <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                     Transfer Profile
                       </button>
                       <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 text-sm'>
                         <GasPump size={20} weight="fill" />
-                        <p className='ml-1'>This action will require a gas fee.</p>
+                        <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
                       </div>
                     </>
                   )

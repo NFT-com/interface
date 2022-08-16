@@ -30,8 +30,8 @@ export default function RequestModal({ visible, setVisible, address, transaction
     >
       <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
         <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-          <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#7F7F7F] rounded-full'></div>
-          <XCircle onClick={() => {setVisible(false); setAddressVal('');}} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="#B6B6B6" weight="fill" />
+          <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
+          <XCircle onClick={() => {setVisible(false); setAddressVal('');}} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
           {!success
             ?
             (
@@ -46,24 +46,35 @@ export default function RequestModal({ visible, setVisible, address, transaction
                 :
                 <>
                   <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Request</h2>
-                  <p className='text-[#6F6F6F]'>You are about to send a wallet connection request to <span className='font-mono text-black text-xl break-words mt-2'>{address}</span></p>
+                  <p className='text-[#6F6F6F]'>
+                    You are about to send an address association request to
+                    <span className='font-mono text-black text-xl break-words mt-2'>
+                      {address}
+                    </span>
+                  </p>
                   <p className='mt-6'>View the address on {' '}
                     <a
                       target="_blank"
                       rel="noreferrer" href={`https://etherscan.io/address/${address}`} className='font-bold underline tracking-wide'>Etherscan
                     </a>
                   </p>
-                  <p className='mt-6'>Please sign the transaction in your wallet. If you have changed your mind and do not wish to send this request, simply cancel.</p>
+                  <p className='mt-6'>
+                    Please sign the transaction in your wallet. If you have changed your mind and do not wish to send this request, simply cancel.
+                  </p>
                   <button onClick={() => submitHandler()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-                    Request Connection
+                    Request Association
                   </button>
                   <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                     <GasPump size={20} weight="fill" />
-                    <p className='ml-1'>This action will require a gas fee.</p>
+                    <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
                   </div>
                   <p
                     className='underline text-center font-bold tracking-wide hover:cursor-pointer mt-6'
-                    onClick={() => {setVisible(false); setAddressVal('');}}>
+                    onClick={() => {
+                      setVisible(false);
+                      setAddressVal('');
+                    }}
+                  >
                     Cancel
                   </p>
                 </>
@@ -72,14 +83,16 @@ export default function RequestModal({ visible, setVisible, address, transaction
             (
               <>
                 <h2 className='text-4xl tracking-wide font-bold mb-10'>Request Sent</h2>
-                <p className='text-[#6F6F6F]'>You have sent a wallet connection request to <span className='font-mono text-black text-xl break-words mt-2'>{address}</span></p>
+                <p className='text-[#6F6F6F]'>You have sent an address association request to <span className='font-mono text-black text-xl break-words mt-2'>{address}</span></p>
                 <p className='mt-6'>View the transaction on {' '}
                   <a
                     target="_blank"
                     rel="noreferrer" href={`https://goerli.etherscan.io/tx/${transaction}`} className='font-bold underline tracking-wide'>Etherscan
                   </a>
                 </p>
-                <p className='mt-6'>Please inform the owner of this wallet to connect to NFT.com to approve your request.</p>
+                <p className='mt-6'>
+                  Please inform the owner of this address to connect to NFT.com to approve your request. You will receive a notification once approved.
+                </p>
                 <button onClick={() => {setVisible(false); setAddressVal(''); }} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                   Return to Settings
                 </button>
