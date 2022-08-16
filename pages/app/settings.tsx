@@ -21,10 +21,12 @@ import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 export default function Settings() {
+  const router = useRouter();
   const { nftResolver } = useAllContracts();
   const { address: currentAddress } = useAccount();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
@@ -66,8 +68,9 @@ export default function Settings() {
     if(!currentAddress){
       setAssociatedAddresses({ pending: [], accepted: [], denied: [] });
       setAssociatedProfiles({ pending: [], accepted: [], removed: [] });
+      router.push('/');
     }
-  }, [currentAddress]);
+  }, [currentAddress, router]);
 
   const fetchProfiles = useCallback(
     async () => {
@@ -95,7 +98,7 @@ export default function Settings() {
     }
   }, [nftResolver, currentAddress, fetchProfiles, selectedProfile]);
   
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) || !currentAddress) {
     return <NotFoundPage />;
   }
 
