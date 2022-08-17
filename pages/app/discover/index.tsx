@@ -9,7 +9,7 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
-import { setPerPage } from 'utils/helpers';
+import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
@@ -42,7 +42,7 @@ export default function DiscoverPage() {
         index:'collections',
         query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
         q: searchTerm,
-        per_page: setPerPage('collections', screenWidth, sideNavOpen),
+        per_page: getPerPage('collections', screenWidth, sideNavOpen),
         page: page,
       })
         .then((results) => {
@@ -57,7 +57,7 @@ export default function DiscoverPage() {
       index:'collections',
       query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm,
-      per_page: setPerPage(SearchableFields.COLLECTIONS_INDEX_FIELDS, screenWidth, sideNavOpen),
+      per_page: getPerPage(SearchableFields.COLLECTIONS_INDEX_FIELDS, screenWidth, sideNavOpen),
       page: 1,
     })
       .then((results) => {

@@ -164,7 +164,7 @@ export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
   return (chainId == null ? null : String(chainId));
 }
 
-export function setPerPage(index: string, screenWidth: number, sideNavOpen: boolean): number {
+export function getPerPage(index: string, screenWidth: number, sideNavOpen: boolean): number {
   let perPage;
   if (index === 'slider') {
     if (screenWidth >= 1200) {

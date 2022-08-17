@@ -9,7 +9,7 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { isNullOrEmpty, setPerPage } from 'utils/helpers';
+import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
@@ -44,7 +44,7 @@ export default function ResultsPage() {
       index: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
-      per_page: setPerPage(searchType?.toString(), screenWidth, sideNavOpen),
+      per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
     })
       .then((resp) => {
@@ -59,7 +59,7 @@ export default function ResultsPage() {
         index: searchType?.toString(),
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
         q: searchTerm?.toString(),
-        per_page: setPerPage(searchType?.toString(), screenWidth, sideNavOpen),
+        per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
       })
         .then((resp) => {
