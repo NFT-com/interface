@@ -21,10 +21,12 @@ import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 export default function Settings() {
+  const router = useRouter();
   const { nftResolver } = useAllContracts();
   const { address: currentAddress } = useAccount();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
@@ -66,8 +68,9 @@ export default function Settings() {
     if(!currentAddress){
       setAssociatedAddresses({ pending: [], accepted: [], denied: [] });
       setAssociatedProfiles({ pending: [], accepted: [], removed: [] });
+      router.push('/');
     }
-  }, [currentAddress]);
+  }, [currentAddress, router]);
 
   const fetchProfiles = useCallback(
     async () => {
@@ -130,7 +133,7 @@ export default function Settings() {
                 : null }
             </div>
 
-            <div className='bg-[#F8F8F8] pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-5 minlg:pl-5 pb-10 minlg:mb-10 minmd:rounded-[10px]'>
+            <div className='bg-[#F8F8F8] pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-5 minlg:pl-5 pb-10 minlg:mb-24 minmd:rounded-[10px]'>
               <h3 className='mt-10 pt-10 minlg:mt-10 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>
                 Address Settings for {shortenAddress(currentAddress, 4)}
               </h3>
