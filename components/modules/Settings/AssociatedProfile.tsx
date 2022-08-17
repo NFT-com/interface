@@ -275,13 +275,9 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                           <p className='text-[#6F6F6F]'>
                             If you approve this request, your NFTs will be available to display on their profile’s gallery.
                             <span className='text-black font-bold tracking-wide'>
-                              {profile.profileUrl || profile.url}{' '}
+                              {' '}{profile.profileUrl || profile.url}{' '}
                             </span>
-                              will
-                            <span className='text-black font-bold tracking-wide'>
-                                NOT
-                            </span>
-                                be able to make any changes to your address or its contents. You can change this connection at any time in your account’s settings.
+                              will <span className='text-black font-bold tracking-wide'>NOT</span> be able to make any changes to your address or its contents. You can change this connection at any time in your account’s settings.
                           </p>
                           <button onClick={(e) => acceptPendingProfile(e, profile.profileUrl || profile.url)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                             Approve Request
