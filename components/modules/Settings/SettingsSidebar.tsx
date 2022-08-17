@@ -18,44 +18,45 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
       {isOwner
         ? (
           <>
-            
-            <h3 className='mb-3 text-xs uppercase font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
-              Profile Settings
+            <h3 className='mb-3 text-xs font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
+              PROFILE SETTINGS
               <CustomTooltip
+                rightPostion={0}
                 mode="hover"
                 tooltipComponent={
                   <div
-                    className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                    className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
                   >
-                    <p className='mb-2'>Profile Settings</p>
+                    <p className='mb-3'>Profile Settings</p>
                     <p>These settings control the active profile you are signed-in with.</p>
                   </div>
                 }>
                 <Info className='ml-1' size={14} />
               </CustomTooltip>
             </h3>
-            <ScrollLink activeClass='font-medium' to='addresses' spy={true} smooth={true} duration={500} offset={-100}>
-              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk font-semibold'>Associate Addresses</p>
+            <ScrollLink activeClass='font-bold' to='addresses' spy={true} smooth={true} duration={500} offset={-100} >
+              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Associate Addresses</p>
             </ScrollLink>
-            <ScrollLink activeClass='font-medium' to='display' spy={true} smooth={true} duration={500} offset={-100}>
-              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk font-semibold'>Select Display Mode</p>
+            <ScrollLink activeClass='font-bold' to='display' spy={true} smooth={true} duration={500} offset={-100}>
+              <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Select Display Mode</p>
             </ScrollLink>
-            <ScrollLink to='transfer' activeClass='font-medium' spy={true} smooth={true} duration={500} offset={-100}>
-              <p className='text-[#D40909] hover:cursor-pointer mb-6 tracking-wide font-grotesk font-semibold'>Transfer Profile</p>
+            <ScrollLink to='transfer' activeClass='font-bold' spy={true} smooth={true} duration={500} offset={-100}>
+              <p className='text-[#D40909] hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Transfer Profile</p>
             </ScrollLink>
           </>
         )
         : null}
 
-      <h3 className='mb-3 mt-12 text-xs uppercase font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
-        Address Settings
+      <h3 className='mb-3 mt-12 text-xs font-extrabold font-grotesk text-[#B6B6B6] tracking-wide flex items-center relative'>
+        ADDRESS SETTINGS
         <CustomTooltip
           mode="hover"
+          rightPostion={0}
           tooltipComponent={
             <div
-              className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs relative"
+              className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
             >
-              <p className='mb-2'>Address Settings</p>
+              <p className='mb-3'>Address Settings</p>
               <p>These settings relate to your address and the NFTs it contains across all your NFT Profiles.</p>
             </div>
           }>
@@ -65,14 +66,14 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
 
       {isOwner
         ? (
-          <ScrollLink activeClass='font-medium' to='owner' spy={true} smooth={true} duration={500} offset={-100}>
-            <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk font-semibold'>Select NFT Owner</p>
+          <ScrollLink activeClass='font-bold' to='owner' spy smooth duration={500} offset={-100}>
+            <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Select NFT Owner</p>
           </ScrollLink>
         )
         : null}
 
-      <ScrollLink activeClass='font-medium' to='profiles' spy={true} smooth={true} duration={500} offset={-100}>
-        <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk font-semibold'>Associate Profiles</p>
+      <ScrollLink activeClass='font-bold' to='profiles' spy smooth duration={500} offset={-100}>
+        <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Associate Profiles</p>
       </ScrollLink>
       
     </div>

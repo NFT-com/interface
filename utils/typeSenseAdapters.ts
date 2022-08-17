@@ -1,7 +1,6 @@
-import { Doppler, getEnv } from 'utils/env';
-
 import Typesense from 'typesense';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
+import { Doppler, getEnv } from 'utils/env';
 
 export enum SearchableFields {
   COLLECTIONS_INDEX_FIELDS = 'contractAddr,contractName,chain,nftType',

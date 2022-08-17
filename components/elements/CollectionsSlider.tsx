@@ -59,6 +59,7 @@ const EmblaCarousel = (props: slidesProps) => {
     skipSnaps: false,
     slidesToScroll : props.full && screenWidth > 599 ? 2 : 1,
   });
+
   const [scrollSnaps, setScrollSnaps] = useState([]);
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
@@ -98,7 +99,7 @@ const EmblaCarousel = (props: slidesProps) => {
             <div className="embla__container">
               {props.slides.map((item: any, index) => (
                 <div className={`embla__slide${props.full ? 'full' : ''}`} key={index}>
-                  <div className={`embla__slide__inner${props.full ? 'full' : ''}`}>
+                  <div className="embla__slide__inner">
                     <div className={`${props.full ? 'embla__slide__item' : ''}`}>
                       <CollectionItem contractAddr={item.document?.contractAddr}/>
                     </div>

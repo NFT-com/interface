@@ -163,3 +163,41 @@ export function getEtherscanLink(
 export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
   return (chainId == null ? null : String(chainId));
 }
+
+export function getPerPage(index: string, screenWidth: number, sideNavOpen: boolean): number {
+  let perPage;
+  if (index === 'slider') {
+    if (screenWidth >= 1200) {
+      perPage = sideNavOpen ? 3 : 4;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 2 : 3;
+    } else if (screenWidth >= 600 ) {
+      perPage = 2;
+    } else {
+      perPage = 1;
+    }
+  }
+
+  if (index === 'collections') {
+    if (screenWidth >= 1200) {
+      perPage = sideNavOpen ? 9 : 12;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 4 : 6;
+    } else if (screenWidth >= 600) {
+      perPage = 4;
+    } else {
+      perPage = 2;
+    }
+  } else {
+    if (screenWidth >= 1200) {
+      perPage = 8;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 6 : 8;
+    } else if (screenWidth >= 600) {
+      perPage = 6;
+    } else {
+      perPage = 4;
+    }
+  }
+  return perPage;
+}
