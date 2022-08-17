@@ -13,6 +13,8 @@ export type TypesenseSearchInput = {
   //searchTerm: Scalars['String'] | Array<Scalars['String'] >;
   per_page: Scalars['Int'];
   page: Scalars['Int'];
+  facet_by?: InputMaybe<Scalars['String']>;
+  max_facet_values?: InputMaybe<Scalars['Int']>;
 };
 export type TypesenseMultiSearchInput = {
   searches: Array<TypesenseSearchInput>;

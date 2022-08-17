@@ -7,6 +7,7 @@ export enum SearchableFields {
   NFTS_INDEX_FIELDS = 'nftName,nftType,tokenId,traits,ownerAddr,chain,contractName,contractAddr,marketplace,listingType,currency,status',
   PROFILES_INDEX_FIELDS = 'url',
   NFTS_COLLECTION_FIELDS = 'contractName',
+  FACET_NFTS_INDEX_FIELDS = 'listedPx,nftType,traits,chain,contractName,marketplace,listingType,currency,status'
 }
 
 const typeSenseServerData = {

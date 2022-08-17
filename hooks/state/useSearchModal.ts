@@ -8,6 +8,7 @@ export function useSearchModal() {
       modalType: 'search',
       searchModalOpen: false,
       sideNavOpen: false,
+      searchFilters: null,
     } });
 
   const loading = !data;
@@ -41,15 +42,24 @@ export function useSearchModal() {
     });
   }, [data, mutate]);
 
+  const setSearchFilters = useCallback((searchFilters: any) => {
+    mutate({
+      ...data,
+      searchFilters: [...searchFilters],
+    });
+  }, [data, mutate]);
+
   return {
     loading,
     modalType: data.modalType,
     searchModalOpen: data.searchModalOpen,
     sideNavOpen: data.sideNavOpen,
+    searchFilters: data.searchFilters,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
     setSideNavOpen,
+    setSearchFilters,
   };
 }
 

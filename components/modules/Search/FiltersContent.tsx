@@ -11,13 +11,14 @@ import SearchIcon from 'public/search.svg';
 import { useRef, useState } from 'react';
 
 export const FiltersContent = () => {
+  const { setSearchModalOpen, searchFilters, modalType } = useSearchModal();
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [searchResults, setSearchResults] = useState([]);
-  const { setSearchModalOpen } = useSearchModal();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const router = useRouter();
   const resultsRef = useRef();
+  console.log(searchFilters, modalType, 'searcfilters fdo');
 
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);

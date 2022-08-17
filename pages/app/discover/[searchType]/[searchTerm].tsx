@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import Vector from 'public/Vector.svg';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
 
 function usePrevious(value) {
@@ -29,45 +29,52 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage() {
-  const { setSearchModalOpen, sideNavOpen } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, setSearchFilters } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
-  const { fetchTypesenseSearch } = useFetchTypesenseSearch();
+  const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const { width: screenWidth } = useWindowDimensions();
   const [results, setResults] = useState([]);
   const [found, setFound] = useState(0);
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
+  const [filters, setFilters] = useState([]);
 
   useEffect(() => {
-    page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseSearch({
-      index: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
+    page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
+      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
+      max_facet_values: 100,
+      collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
-    })
+    }] })
       .then((resp) => {
-        setResults([...resp.hits]);
-        setFound(resp.found);
+        setResults([...resp.results[0].hits]);
+        setFound(resp.results[0].found);
+        setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseSearch, page, screenWidth, searchTerm, searchType, sideNavOpen]);
+  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
-      screenWidth && fetchTypesenseSearch({
-        index: searchType?.toString(),
+      screenWidth && fetchTypesenseMultiSearch({ searches: [{
+        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
+        max_facet_values: 100,
+        collection: searchType?.toString(),
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
         q: searchTerm?.toString(),
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
-      })
+      }] })
         .then((resp) => {
-          setResults([...results,...resp.hits]);
-          setFound(resp.found);
+          setResults([...results,...resp.results[0].hits]);
+          setFound(resp.results[0].found);
+          setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen]);
+  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen]);
   
   return (
     <PageWrapper
@@ -109,6 +116,8 @@ export default function ResultsPage() {
               <div
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {
+                  console.log(filters, 'filters fdo');
+                  setSearchFilters([...filters]);
                   setSearchModalOpen(true, 'filters');
                 }}>
                 <FunnelSimple className="h-8 w-8" />
@@ -117,6 +126,8 @@ export default function ResultsPage() {
               <div
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {
+                  console.log(filters, 'filters fdo');
+                  setSearchFilters([...filters]);
                   setSearchModalOpen(true, 'filters');
                 }}>
                 Sort
