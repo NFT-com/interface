@@ -55,11 +55,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       await tx.wait(1).then(() => {
         setAccepted(true);
         setTransactionPending(false);
-        mutate('SettingsAssociatedProfiles' + currentAddress);
       }).catch(() => toast.error('Error'));
       setUserNotificationActive('associatedProfileAdded', true);
     }
-  }, [currentAddress, nftResolver, setUserNotificationActive]);
+  }, [nftResolver, setUserNotificationActive]);
 
   const removeHandler = useCallback(async () => {
     if (pending) {
@@ -68,7 +67,6 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           setVisible(true);
           setAssociationRejected(true);
           toast.success('Rejected');
-          mutate('SettingsAssociatedProfiles' + currentAddress);
         })
         .catch(() => toast.warning('Error. Please try again'));
     } else if (isRemoved) {
@@ -76,7 +74,6 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         toast.success('Removed');
         setVisible(true);
         setAssociationRejected(true);
-        mutate('SettingsAssociatedProfiles' + currentAddress);
       });
     } else {
       const tx = await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url);
@@ -88,11 +85,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           toast.success('Removed');
           setUserNotificationActive('associatedProfileRemoved', true);
           setAssociationRejected(true);
-          mutate('SettingsAssociatedProfiles' + currentAddress);
         }).catch(() => toast.warning('Error. Please try again'));
       }
     }
-  }, [currentAddress, ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden]);
+  }, [ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden]);
 
   const closeModal = useCallback(() => {
     if(associationRejected){
@@ -101,9 +97,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
     if(accepted){
       setAccepted(false);
     }
+    mutate('SettingsAssociatedProfiles' + currentAddress);
     mutatePending();
     setVisible(false);
-  }, [accepted, associationRejected, mutatePending]);
+  }, [accepted, associationRejected, mutatePending, currentAddress]);
   
   return (
     <>
