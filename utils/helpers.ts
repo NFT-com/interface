@@ -86,6 +86,10 @@ export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == 
 
 export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
 
+export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) => boolean): T[] => {
+  return items.filter((item, index) => items.findIndex((element) => isSame(item, element)) === index);
+};
+
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
   const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
   if (image == null) {

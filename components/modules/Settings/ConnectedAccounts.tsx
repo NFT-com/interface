@@ -1,3 +1,4 @@
+import { Maybe } from 'graphql/generated/types';
 import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
 import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -7,6 +8,8 @@ import RequestModal from './RequestModal';
 import SettingsForm from './SettingsForm';
 
 import { useEffect, useState } from 'react';
+import { mutate } from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
 type Address = {
@@ -22,11 +25,11 @@ export type RejectedEvent = {
 
 type ConnectedAccountsProps = {
   selectedProfile: string;
-  associatedAddresses : {
+  associatedAddresses : Maybe<{
     pending: Address[];
     accepted: Address[];
-    denied: RejectedEvent[]
-  };
+    denied: PartialDeep<RejectedEvent>[]
+  }>;
 };
 
 export default function ConnectedAccounts({ selectedProfile, associatedAddresses }: ConnectedAccountsProps) {
@@ -44,23 +47,25 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const submitHandler = async (input?: string) => {
     const address = input || inputVal;
     const deniedEvent = associatedAddresses?.denied?.find((evt) => evt.destinationAddress === address);
-    if(deniedEvent){
+    if (deniedEvent) {
       updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] })
         .then(() => {
           mutateHidden();
           setTransaction(deniedEvent.txHash);
           setSuccess(true);
           setModalVisible(true);
+          mutate('SettingsAssociatedAddresses' + selectedProfile + currentAddress);
         });
     } else {
       const tx = await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile);
       setTransactionPending(true);
-      if(tx){
-        tx.wait(1).then(() => {
+      if(tx) {
+        await tx.wait(1).then(() => {
           setSuccess(true);
           setTransaction(tx.hash);
           setModalVisible(true);
           setTransactionPending(false);
+          mutate('SettingsAssociatedAddresses' + selectedProfile + currentAddress);
         });
       }
     }
