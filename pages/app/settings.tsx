@@ -10,93 +10,117 @@ import DisplayMode from 'components/modules/Settings/DisplayMode';
 import NftOwner from 'components/modules/Settings/NftOwner';
 import SettingsSidebar from 'components/modules/Settings/SettingsSidebar';
 import TransferProfile from 'components/modules/Settings/TransferProfile';
-import { useGetRemovedAssociationsForReceiver } from 'graphql/hooks/useGetRemovedAssociationsForReceiverQuery';
-import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
-import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
+import { AddressTupleStructOutput, RelatedProfilesStructOutput } from 'constants/typechain/Nft_resolver';
+import { Event as OCREvent, PendingAssociationOutput, RemovedAssociationsForReceiverOutput } from 'graphql/generated/types';
+import { useFetchIgnoredEvents } from 'graphql/hooks/useFetchIgnoredEvents';
+import { useFetchPendingAssociations } from 'graphql/hooks/useFetchPendingAssociations';
+import { useFetchRemovedAssociationsForReceiver } from 'graphql/hooks/useFetchRemovedAssociationsForReceiver';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import NotFoundPage from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
-import { Doppler, getEnvBool } from 'utils/env';
-import { shortenAddress } from 'utils/helpers';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { filterNulls, getChainIdString, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useEffect } from 'react';
+import useSWR from 'swr';
+import { PartialDeep } from 'type-fest';
+import { useAccount, useNetwork } from 'wagmi';
+
+export type AssociatedAddresses = {
+  pending: AddressTupleStructOutput[];
+  accepted: AddressTupleStructOutput[];
+  denied: PartialDeep<OCREvent>[];
+}
+
+export type AssociatedProfiles = {
+  pending: PartialDeep<PendingAssociationOutput>[];
+  accepted: RelatedProfilesStructOutput[];
+  removed: PartialDeep<RemovedAssociationsForReceiverOutput>[];
+}
 
 export default function Settings() {
   const router = useRouter();
   const { nftResolver } = useAllContracts();
   const { address: currentAddress } = useAccount();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-  const { data: pendingAssociatedProfiles } = usePendingAssociationQuery();
-  const { data: removedAssociations } = useGetRemovedAssociationsForReceiver();
+  const { fetchAssociations } = useFetchPendingAssociations();
+  const { fetchRemovedAssociations } = useFetchRemovedAssociationsForReceiver();
   const { getCurrentProfileUrl }= useUser();
-  const result = getCurrentProfileUrl();
-  const [selectedProfile, setSelectedProfile] = useState(result);
-  const [approvedProfiles, setApprovedProfiles] = useState([]);
-  const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [], denied: [] });
-  const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [], removed: [] });
-  const { data: events } = useIgnoredEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
+  const { chain } = useNetwork();
+  const { fetchEvents } = useFetchIgnoredEvents();
 
-  const fetchAddresses = useCallback(
-    async (profile) => {
-      const data = await (await nftResolver.associatedAddresses(profile)) || [];
-      const allData = await nftResolver.getAllAssociatedAddr(currentAddress, profile) || [];
+  const selectedProfile = getCurrentProfileUrl();
+
+  // TODO: move settings page state/data management into Context
+  const { data: associatedAddresses } = useSWR<AssociatedAddresses>(
+    'SettingsAssociatedAddresses' + selectedProfile + currentAddress,
+    async () => {
+      if (isNullOrEmpty(selectedProfile) || isNullOrEmpty(currentAddress)) {
+        return { pending: [], accepted: [], denied: [] };
+      }
+      const [
+        data,
+        allData,
+        events
+      ] = await Promise.all([
+        nftResolver.associatedAddresses(selectedProfile),
+        nftResolver.getAllAssociatedAddr(currentAddress, selectedProfile),
+        fetchEvents({
+          chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+          profileUrl: selectedProfile,
+          walletAddress: currentAddress
+        })
+      ]);
       const result = allData.filter(a => !data.some(b => a.chainAddr === b.chainAddr));
       const filterPending = result.reverse().filter(a => !events?.ignoredEvents.some(b => a.chainAddr === b.destinationAddress && b.ignore));
-      setAssociatedAddresses({ pending: filterPending, accepted: data, denied: events?.ignoredEvents });
+      return { pending: filterPending, accepted: data, denied: events?.ignoredEvents };
     },
-    [nftResolver, currentAddress, events?.ignoredEvents],
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    });
+
+  // TODO: move settings page state/data management into Context
+  const { data: associatedProfiles } = useSWR<AssociatedProfiles>(
+    'SettingsAssociatedProfiles' + currentAddress,
+    async () => {
+      if (isNullOrEmpty(currentAddress)) {
+        return { pending: [], accepted: [], removed: [] };
+      }
+      const [
+        evm,
+        pendingAssociations,
+        removedAssociations
+      ] = await Promise.all([
+        nftResolver.getApprovedEvm(currentAddress).catch(() => []),
+        fetchAssociations(),
+        fetchRemovedAssociations()
+      ]);
+      const approvedProfiles = await Promise.all(evm.map(async (relatedProfile: RelatedProfilesStructOutput) => {
+        const assocAddress = await nftResolver.associatedAddresses(relatedProfile.profileUrl);
+        const isAssociated = assocAddress.some((item) => item.chainAddr === currentAddress);
+        return isAssociated ? relatedProfile : null;
+      }));
+      const result = pendingAssociations?.getMyPendingAssociations.filter(a => !evm.some(b => a.url === b.profileUrl));
+      const removed = removedAssociations?.getRemovedAssociationsForReceiver?.filter(a => a.hidden !== true);
+      return { pending: result, accepted: filterNulls(approvedProfiles), removed };
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
 
   useEffect(() => {
-    if(selectedProfile && currentAddress) {
-      fetchAddresses(selectedProfile).catch(console.error);
-    }
-  }, [selectedProfile, fetchAddresses, currentAddress]);
-
-  useEffect(() => {
-    getCurrentProfileUrl();
-    setSelectedProfile(result);
-  }, [result, getCurrentProfileUrl]);
-
-  useEffect(() => {
-    setApprovedProfiles([]);
-
     if(!currentAddress){
-      setAssociatedAddresses({ pending: [], accepted: [], denied: [] });
-      setAssociatedProfiles({ pending: [], accepted: [], removed: [] });
       router.push('/');
     }
   }, [currentAddress, router]);
-
-  const fetchProfiles = useCallback(
-    async () => {
-      const evm = await nftResolver.getApprovedEvm(currentAddress);
-      evm.forEach(async(evm) => {
-        const assocAddress = await nftResolver.associatedAddresses(evm.profileUrl);
-        const isAssociated = assocAddress.some((item) => item.chainAddr === currentAddress);
-        if(isAssociated){
-          if(!approvedProfiles.some((item) => item.addr === evm.addr)){
-            setApprovedProfiles([...approvedProfiles, evm]);
-          }
-        }
-      });
-      const result = pendingAssociatedProfiles?.getMyPendingAssociations.filter(a => !evm.some(b => a.url === b.profileUrl));
-      const removed = removedAssociations?.getRemovedAssociationsForReceiver?.filter(a => a.hidden !== true);
-      setAssociatedProfiles({ pending: result, accepted: approvedProfiles, removed: removed });
-    },
-    [nftResolver, currentAddress, pendingAssociatedProfiles, removedAssociations, approvedProfiles],
-  );
-
-  useEffect(() => {
-    fetchProfiles().catch(console.error);
-    if(!currentAddress){
-      setAssociatedProfiles({ pending: [], accepted: [], removed: [] });
-    }
-  }, [nftResolver, currentAddress, fetchProfiles, selectedProfile]);
   
   if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
     return <NotFoundPage />;
@@ -125,9 +149,9 @@ export default function Settings() {
                 ? (
                   <>
                     <h3 className='mt-10 minlg:mt-24 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>Profile Settings for {selectedProfile}</h3>
-                    <ConnectedAccounts {...{ associatedAddresses, selectedProfile }} />
-                    <DisplayMode {...{ associatedAddresses, selectedProfile }}/>
-                    <TransferProfile {...{ selectedProfile }} />
+                    <ConnectedAccounts associatedAddresses={associatedAddresses} selectedProfile={selectedProfile} />
+                    <DisplayMode selectedProfile={selectedProfile}/>
+                    <TransferProfile selectedProfile={selectedProfile} />
                   </>
                 )
                 : null }
@@ -140,12 +164,12 @@ export default function Settings() {
               {ownsProfilesAndSelectedProfile
                 ? (
                   <>
-                    <NftOwner {...{ selectedProfile, isSidebar: false, showToastOnSuccess: true }} />
+                    <NftOwner selectedProfile={selectedProfile} isSidebar={false} showToastOnSuccess={true} />
                   </>
                 )
                 : null}
           
-              <ConnectedProfiles {...{ associatedProfiles }} />
+              <ConnectedProfiles associatedProfiles={associatedProfiles} />
             </div>
           </div>
         </div>

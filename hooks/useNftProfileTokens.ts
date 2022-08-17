@@ -1,10 +1,10 @@
+import { AlchemyOwnedNFT } from 'types';
 import { getNftsByContractAndOwner } from 'utils/alchemyNFT';
 import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
 import useSWR, { mutate } from 'swr';
-import { AlchemyOwnedNFT } from 'types';
 import { useNetwork } from 'wagmi';
 
 export interface ProfileTokenResults {
