@@ -9,7 +9,7 @@ export interface NftDetailCardProps {
   valueClasses?: string;
   center?: boolean;
   onClick?: () => void;
-  copy?: boolean;
+  copy?: boolean
 }
 
 export function NftDetailCard(props: NftDetailCardProps) {
@@ -21,12 +21,11 @@ export function NftDetailCard(props: NftDetailCardProps) {
         'NftDetailCard',
         'flex w-full h-full',
         'bg-white dark:bg-secondary-bg-dk rounded-lg',
-        'overflow-hidden',
-        props.copy && 'cursor-pointer',
+        'overflow-hidden cursor-pointer',
         props.onClick &&
-       'cursor-pointer transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out cursor-pointer'
+       'cursor-pointer transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out'
       )}
-      onClick={props.copy
+      onClick={!props.onClick
         ? () => {
           staticCopy(props.value);
         }
