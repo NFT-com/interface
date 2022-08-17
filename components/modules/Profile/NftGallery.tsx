@@ -75,7 +75,7 @@ export function NftGallery(props: NftGalleryProps) {
               color="white"
               label={'Back'}
               onClick={() => {
-                setSpotLightIndex(spotlightIndex === 0 ? displayNFTs.length - 1 : spotlightIndex - 1);
+                setSpotLightIndex(spotlightIndex === 0 ? nftsToShow.length - 1 : spotlightIndex - 1);
               }}
               type={ButtonType.PRIMARY}
             />
@@ -86,7 +86,7 @@ export function NftGallery(props: NftGalleryProps) {
               color="white"
               label={'Next'}
               onClick={() => {
-                setSpotLightIndex(spotlightIndex + 1 > displayNFTs.length - 1 ? 0 : spotlightIndex + 1);
+                setSpotLightIndex(spotlightIndex + 1 > nftsToShow.length - 1 ? 0 : spotlightIndex + 1);
               }}
               type={ButtonType.PRIMARY}
             />

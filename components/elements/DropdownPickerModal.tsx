@@ -79,7 +79,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
           ref={anchorRef}
           className={tw(
             'flex flex-row items-end px-2.5',
-            props.forceLightMode ? 'bg-white' : 'bg-white dark:bg-secondary-dk',
+            props.forceLightMode ? 'bg-transparent' : 'bg-white dark:bg-secondary-dk',
             'py-2 h-full',
             'justify-between rounded-xl w-full',
           )}

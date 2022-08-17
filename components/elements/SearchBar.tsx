@@ -75,7 +75,7 @@ export const SearchBar = (props: SearchBarProps) => {
     setShowHits(true);
 
     if (event.keyCode === 13) {
-      router.push(`/app/results/${target.value !== '' ? target.value : '0'}`);
+      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '0'}`);
       setShowHits(false);
       target.click();
     }
@@ -85,8 +85,8 @@ export const SearchBar = (props: SearchBarProps) => {
     <>
       <div className="flex flex-col w-full">
         <div className={tw(
-          'relative flex items-center border rounded-xl py-2 px-3',
-          'mr-4 md:hidden block w-full',
+          'relative minlg:flex items-center border rounded-xl py-2 px-3',
+          'mr-4 hidden w-full',
           props.bgLight ? 'text-black':'text-white')}>
           <SearchIcon className='mr-2 shrink-0 aspect-square' />
           <div className="w-full">
@@ -107,7 +107,7 @@ export const SearchBar = (props: SearchBarProps) => {
           <div
             ref={resultsRef}
             className={tw(
-              'absolute mt-10 max-w-[27rem]',
+              'absolute mt-14 max-w-[27rem]',
               props.bgLight ? 'bg-always-white':'bg-always-black',
               'flex flex-col w-full p-4 border border-grey z-50 text-rubik rounded-xl')}>
             {searchResults.length > 0 && searchResults.map((item, index) => {

@@ -38,7 +38,7 @@ export const Sidebar = () => {
   const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
 
   const { setSignOutDialogOpen } = useSignOutDialog();
-  const { sidebarOpen, setSidebarOpen, toggleSidebar } = useSidebar();
+  const { sidebarOpen, setSidebarOpen } = useSidebar();
   const randomLabel = useMemo(() => randomLabelGenerator(), []);
   const { getHiddenProfileWithExpiry, user, setCurrentProfileUrl } = useUser();
   const { addFundsDialogOpen } = useAddFundsDialog();
@@ -75,6 +75,7 @@ export const Sidebar = () => {
           className='flex flex-col bg-white h-full text-black font-grotesk'
         >
           <div className='flex flex-row w-full h-8 items-end py-10 pr-3'>
+            <div className='absolute top-11 right-4 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
             <XCircle onClick={() => {setSidebarOpen(false);}} className='absolute top-10 right-3 hover:cursor-pointer' size={32} color="black" weight="fill" />
           </div>
 
@@ -91,17 +92,19 @@ export const Sidebar = () => {
             {randomLabel}
           </div>
 
-          {//todo: make this do something on click }
-          }
-          <div className='w-full p-4 items-center drop-shadow-xl -mt-10 minlg:-mt-20'>
-            <NftOwner isSidebar selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
+          <div className='w-full p-4 items-center drop-shadow-xl -mt-3 minlg:-mt-3'>
+            {myOwnedProfileTokens.length ?
+              <NftOwner isSidebar selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
+              : <p className='text-2xl text-[#B6B6B6] font-bold'>No Profiles Found</p>
+            }
+           
           </div>
-          
+
           <Link href='/app/settings' passHref>
             <a onClick={() => setSidebarOpen(false)}
               className='flex flex-row w-full items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
             >
-            Settings
+              Settings
             </a>
           </Link>
 
@@ -110,7 +113,6 @@ export const Sidebar = () => {
             onClick={() => {
               disconnect();
               setSignOutDialogOpen(true);
-              toggleSidebar();
               setCurrentProfileUrl('');
             }}>
             Sign out
@@ -167,7 +169,7 @@ export const Sidebar = () => {
         />
       );
     }
-  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, toggleSidebar, user?.currentProfileUrl]);
+  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, user?.currentProfileUrl]);
 
   const getSidebarPanel = useCallback(() => {
     if(isNullOrEmpty(currentAddress)) {

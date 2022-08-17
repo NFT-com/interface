@@ -158,7 +158,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
                   icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
                 },
-                getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)
+                getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED)
                   ? {
                     label: `${(draftDeployedContractsVisible) ? 'Hide' : 'Show'} Created Collections`,
                     onSelect: () => setDraftDeployedContractsVisible(!draftDeployedContractsVisible),

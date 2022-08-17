@@ -112,7 +112,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
             {(getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && getNotificationCount() > 0) && (
               <span className="flex h-5 w-5 -mb-3">
                 <span className="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-[#F9D963] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-5 w-5 bg-[#F9D963] justify-center">{getNotificationCount()}</span>
+                <span className="relative bg-[#F9D963] w-5 h-5 flex items-center rounded-full px-[5px]">{getNotificationCount()}</span>
               </span>
             )
             }
@@ -137,7 +137,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 toggleSidebar();
               }} type="button">
                 <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                {getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
+                {!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
                   ? shortenAddress(currentAddress, 3) :
                   myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
                     user.currentProfileUrl
