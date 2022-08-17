@@ -94,7 +94,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
           You are about to remove the following
           {' '}
           <span className='text-black font-semibold'>
-            associated
+            accepted
           </span>
           {' '}or{' '}
           <span className='text-black font-semibold'>

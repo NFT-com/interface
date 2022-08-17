@@ -145,7 +145,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
                 }
               </button>
             }
-            <WalletRainbowKitButton header bgLight={!user.isDarkMode} showWhenConnected signInButton={true} headerButtonColor />
+            <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
           </div>
         </div>
       </div>

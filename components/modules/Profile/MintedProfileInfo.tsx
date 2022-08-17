@@ -137,8 +137,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   return (
     <div className={tw(
       'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
-      'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 -mt-14 minmd:mt-0 px-4',
-      'w-4/5 minxl:w-3/5 minmd:h-52 h-32')}>
+      'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 px-4',
+      'w-4/5 minxl:w-3/5 minmd:min-h-52 min-h-32')}>
       <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
         <div
           id="MintedProfileNameContainer"
