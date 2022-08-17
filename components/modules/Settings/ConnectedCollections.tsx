@@ -33,7 +33,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
   const [collectionName, setCollectionName] = useState('');
   const [notAuthorized, setNotAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isAssociatedOrSelf, setIsAssociatedOrSelf] = useState(false);
+  const [isAssociated, setIsAssociated] = useState(false);
   const [transactionPending, setTransactionPending] = useState(false);
 
   const fetchAssociatedCollection = useCallback(
@@ -57,10 +57,10 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
   );
 
   useEffect(() => {
-    if(connectedCollection?.chainAddr === inputVal || inputVal === currentAddress){
-      setIsAssociatedOrSelf(true);
+    if(connectedCollection?.chainAddr === inputVal){
+      setIsAssociated(true);
     } else {
-      setIsAssociatedOrSelf(false);
+      setIsAssociated(false);
     }
   }, [inputVal, currentAddress, connectedCollection]);
 
@@ -152,7 +152,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
                 setCollectionNameModal(res?.contractMetadata?.name);
                 setLookupInProgress(true);
               });
-          }} buttonText='Change Collection' inputVal={inputVal} changeHandler={changeHandlerModal} {...{ isAssociatedOrSelf }} />
+          }} buttonText='Change Collection' inputVal={inputVal} changeHandler={changeHandlerModal} isAssociatedOrPending={isAssociated} />
         </>
       );
     }
@@ -220,7 +220,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         <p className='mt-2 text-[#6F6F6F] mb-10'>We’re making sure everything looks good on our end.</p>
       </>
     );
-  }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateNewCollectionContract, collectionNameModal, isAssociatedOrSelf, transactionPending]);
+  }, [success, inputVal, notAuthorized, collectionName, lookupInProgress, nftResolver, selectedProfile, changeCollection, mutateNewCollectionContract, collectionNameModal, isAssociated, transactionPending]);
 
   return (
     <>
@@ -243,7 +243,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
         {
           !connectedCollection?.chainAddr ||
           !associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress)) && !loading
-            ? <SettingsForm {...{ isAssociatedOrSelf }} submitHandler={openModal} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandler} />
+            ? <SettingsForm isAssociatedOrPending={isAssociated} submitHandler={openModal} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandler} />
             : null
         }
 
