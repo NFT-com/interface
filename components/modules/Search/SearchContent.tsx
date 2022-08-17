@@ -155,7 +155,7 @@ export const SearchContent = () => {
                 onFocus={(event) => search(event)}/>
             </div>
           </div>
-          <div className='flex items-center cursor-pointer' onClick={() => {
+          <div className='flex items-center cursor-pointer block minlg:hidden' onClick={() => {
             setSearchModalOpen(false);
           }}>
             <EllipseX />
@@ -174,7 +174,7 @@ export const SearchContent = () => {
                   </div>):
                   <>
                     <ResultsContent searchResults={searchResults} />
-                    <div className="mx-auto absolute bottom-0 w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+                    <div className="mx-auto absolute minlg:relative bottom-0 w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
                       <Button
                         color={'black'}
                         accent={AccentType.SCALE}
@@ -191,7 +191,9 @@ export const SearchContent = () => {
                 }
               </>}
             </div>)
-          :<div className="mt-14 text-base font-grotesk font-medium text-gray-500">Enter a keyword to begin searching.</div>}
+          :<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500">
+            Enter a keyword to begin searching.
+          </div>}
       </div>
     </>);
 };

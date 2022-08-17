@@ -5,6 +5,7 @@ import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
 import { SearchModal } from 'components/modules/Search/SearchModal';
+import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
@@ -33,7 +34,7 @@ export interface PageWrapperProps {
 
 export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
   const { headerOptions, bgColorClasses } = props;
-
+  const { toggleSidebar } = useSidebar();
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   
   const { address: currentAddress } = useAccount();
@@ -82,6 +83,7 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
           visible={signOutDialogOpen}
           onClose={() => {
             setSignOutDialogOpen(false);
+            toggleSidebar();
           }}
         />
         
