@@ -86,7 +86,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
           You are about to remove the following
           {' '}
           <span className='text-black font-semibold'>
-            associated
+            accepted
           </span>
           {' '}or{' '}
           <span className='text-black font-semibold'>
@@ -108,7 +108,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
         </button>
         <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
           <GasPump size={20} weight="fill" />
-          <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
+          <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
         </div>
         <p
           className='underline text-center font-bold tracking-wide hover:cursor-pointer mt-6'

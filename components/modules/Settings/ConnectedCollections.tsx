@@ -253,7 +253,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
             <AssociatedProfile
               isCollection
               isRemoved={
-                !associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress))
+                !associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress)) && !sameAddress(currentAddress, currentAddress)
               }
               profile={{
                 url: collectionName || connectedCollection.chainAddr,
