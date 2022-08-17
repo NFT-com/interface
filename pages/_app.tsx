@@ -112,7 +112,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           <RainbowKitProvider
             appInfo={{
               appName: 'NFT.com',
-              learnMoreUrl: 'https://docs.nft.com/',
+              learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
             }}
             theme={rainbowDark}
             chains={chains}

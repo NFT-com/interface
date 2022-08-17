@@ -242,7 +242,7 @@ export default function ConnectedCollections({ selectedProfile }: ConnectedColle
 
         {
           !connectedCollection?.chainAddr ||
-          !associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress)) && !loading
+          !associatedAddresses?.some(addr => sameAddress(addr?.chainAddr, data?.associatedAddressesForContract?.deployerAddress)) && !loading && !sameAddress(currentAddress, data?.associatedAddressesForContract?.deployerAddress)
             ? <SettingsForm isAssociatedOrPending={isAssociated} submitHandler={openModal} buttonText='Display Collection' inputVal={inputVal} changeHandler={changeHandler} />
             : null
         }
