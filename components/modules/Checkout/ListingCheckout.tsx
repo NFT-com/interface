@@ -33,9 +33,9 @@ export function ListingCheckout() {
 
   return (
     <>
-      <div className='w-full flex flex-col px-8 mt-8'>
+      <div className='w-full flex flex-col px-8 mt-8 items-center'>
         <p className='text-lg'>Select Marketplace</p>
-        <div className='flex flex-row items-center justify-around mt-4 max-w-lg'>
+        <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
           <div
             onClick={() => {
               toggleTargetMarketplace('seaport');
@@ -62,9 +62,9 @@ export function ListingCheckout() {
           </div>
         </div>
       </div>
-      <div className='w-full flex flex-col px-8 mt-8'>
+      <div className='w-full flex flex-col px-8 mt-8 items-center'>
         <p className='text-lg'>Select Duration</p>
-        <div className='flex flex-row items-center justify-around mt-4 max-w-lg'>
+        <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
           {
             ['1 Hour', '1 Day', '7 Days', '6 Months'].map(duration => {
               return <div
