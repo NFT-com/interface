@@ -3,13 +3,14 @@ import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
-import { Doppler,getEnv } from 'utils/env';
+import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
+import { Doppler, getEnv } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import router from 'next/router';
 import CopyIcon from 'public/arrow_square_out.svg';
-import { useCallback, useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
@@ -18,32 +19,47 @@ export interface CollectionProps {
 
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
+  const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [found, setFound] = useState(0);
+  const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
   
-  const loadNFTs = useCallback(() => {
-    props.contract && client.collections('nfts')
+  useEffect(() => {
+    currentPage === 1 && props.contract && client.collections('nfts')
       .documents()
       .search({
         'q'       : props.contract.toString(),
         'query_by': 'contractAddr',
         'per_page': 8,
-        'page'    : currentPage < 1 ? 1 : currentPage
+        'page'    : currentPage
       })
       .then(function (nftsResults) {
-        setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
+        setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
+        console.log(currentPage, 'useEffect1 fdo');
       });
-    setCurrentPage(currentPage + 1);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client, collectionNfts, props.contract]);
+  }, [client, currentPage, props.contract]);
 
   useEffect(() => {
-    props.contract && collectionNfts.length < 1 && loadNFTs();
-  }, [collectionNfts.length, props.contract, loadNFTs]);
+    if (currentPage > 1 && currentPage !== prevVal) {
+      props.contract && client.collections('nfts')
+        .documents()
+        .search({
+          'q'       : props.contract.toString(),
+          'query_by': 'contractAddr',
+          'per_page': 8,
+          'page'    : currentPage
+        })
+        .then(function (nftsResults) {
+          setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
+          setFound(nftsResults.found);
+          console.log(currentPage, 'useEffect2 fdo');
+        });
+    }
+  }, [client, collectionNfts, currentPage, prevVal, props.contract]);
 
   return (
     <>
@@ -90,7 +106,7 @@ export function Collection(props: CollectionProps) {
                 stretch={true}
                 label={'Load More'}
                 onClick={ () => {
-                  loadNFTs();
+                  setCurrentPage(currentPage + 1);
                 }}
                 type={ButtonType.PRIMARY}
               />
