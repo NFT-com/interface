@@ -3,6 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -12,10 +13,10 @@ import { NftGallery } from './NftGallery';
 import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
+import { Gear } from 'phosphor-react';
 import EditLayoutIcon from 'public/edit_layout.svg';
 import EyeIcon from 'public/eye.svg';
 import EyeOffIcon from 'public/eye_off.svg';
-import GearIcon from 'public/gear_drop_down.svg';
 import GKBadgeIcon from 'public/gk_badge.svg';
 import NftLabelIcon from 'public/label.svg';
 import { useContext, useEffect, useState } from 'react';
@@ -40,7 +41,9 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
     publiclyVisibleNftCount,
     showNftIds,
     hideNftIds,
-    allOwnerNfts
+    allOwnerNfts,
+    draftDeployedContractsVisible,
+    setDraftDeployedContractsVisible
   } = useContext(ProfileContext);
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
@@ -155,8 +158,15 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                   onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
                   icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
                 },
+                getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED)
+                  ? {
+                    label: `${(draftDeployedContractsVisible) ? 'Hide' : 'Show'} Created Collections`,
+                    onSelect: () => setDraftDeployedContractsVisible(!draftDeployedContractsVisible),
+                    icon: <EditLayoutIcon className="" alt="Collections toggle" />,
+                  }
+                  : null
               ])}>
-              <GearIcon className="w-8 h-8 shrink-0 aspect-square" alt="Edit menu" />
+              <Gear className="w-8 h-8 shrink-0 aspect-square" alt='Edit Menu'/>
             </DropdownPickerModal>
           </div>}
         </div>

@@ -4,6 +4,8 @@ import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import { SummaryBanner } from 'components/elements/SummaryBanner';
+import { SearchModal } from 'components/modules/Search/SearchModal';
+import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
@@ -31,8 +33,8 @@ export interface PageWrapperProps {
 }
 
 export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
-  const { headerOptions, bgColorClasses, bgLight } = props;
-
+  const { headerOptions, bgColorClasses } = props;
+  const { toggleSidebar } = useSidebar();
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   
   const { address: currentAddress } = useAccount();
@@ -48,9 +50,9 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
       </Head>
       <main
         className={tw(
-          'absolute w-full h-full flex flex-col',
+          'absolute w-full h-full flex flex-col  hideScroll',
           isMobile ? 'overflow-x-hidden' : '',
-          bgColorClasses ?? 'bg-black'
+          bgColorClasses ?? 'bg-white dark:bg-black',
         )}
         style={{
           minHeight: '100vh',
@@ -69,17 +71,19 @@ export const PageWrapper = (props: PropsWithChildren<PageWrapperProps>) => {
               />
           )}
           <ClientOnly>
-            <Header bgLight={bgLight} removeBg={headerOptions?.removeBackground} />
+            <Header bgLight={props.bgLight} removeBg={headerOptions?.removeBackground} />
           </ClientOnly>
         </div>}
         <ClientOnly>
           <Sidebar />
+          <SearchModal />
         </ClientOnly>
 
         <SignOutModal
           visible={signOutDialogOpen}
           onClose={() => {
             setSignOutDialogOpen(false);
+            toggleSidebar();
           }}
         />
         

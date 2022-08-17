@@ -19,6 +19,7 @@ export type DetailedNft = Nft & { hidden?: boolean };
 
 export interface NftGridProps {
   profileURI: string;
+  draggable?: boolean;
 }
 
 export function NftGrid(props: NftGridProps) {
@@ -65,7 +66,7 @@ export function NftGrid(props: NftGridProps) {
     {items?.map((nft: PartialDeep<DetailedNft>, index) => (
       <DraggableGridItem
         key={nft?.id}
-        item={{ id: nft?.id, hidden: nft?.hidden }}
+        item={{ id: nft?.id, hidden: nft?.hidden, draggable: props.draggable ?? true }}
         onMoveItem={moveItem}
       >
         <div

@@ -10,9 +10,11 @@ import { Sidebar } from 'components/elements/Sidebar';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { TickerStat } from 'types';
 import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
@@ -25,7 +27,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Vector from 'public/Vector.svg';
 import { useEffect, useState } from 'react';
-import { TickerStat } from 'types';
 
 type HomePageProps = {
   preview: boolean;
@@ -108,11 +109,12 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       <ClientOnly>
         <Header bgLight />
         <Sidebar />
+        <SearchModal />
       </ClientOnly>
       <main className='flex flex-col mt-20 font-grotesk not-italic'>
         <Link href='/app/auctions' passHref>
           <a>
-            <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
+            <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
               <span>Unlock the NFT Platform Beta with a Genesis Key</span>
               <div className='flex flex-col rounded items-center p-[1px] ml-2'>
                 <Vector />
@@ -290,7 +292,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <div className='h-full px-6 w-full pb-10 pt-3 minlg:px-2'>
             <div className='text-section leading-header font-header justify-center ...'>
               {data?.learnTitle}
-              <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 minlg:whitespace-normal minmd:whitespace-nowrap whitespace-normal ...'>
+              <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-normal ...'>
                 {data?.learnDescription}
               </div>
               <div className='w-full items-center ...'>

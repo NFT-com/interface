@@ -1,14 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import { Nft } from 'graphql/generated/types';
+import { Nft, Profile } from 'graphql/generated/types';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { getEtherscanLink, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { getEtherscanLink, isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
-import DefaultProfileImage from 'public/profile-image-default.svg';
 import { useCallback } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -23,7 +22,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const { chain } = useNetwork();
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
   
-  const { profileData } = useProfileQuery(profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop());
+  const { profileData } = useProfileQuery(
+    props.nft?.wallet?.preferredProfile == null ?
+      profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
+      null
+  );
+
+  const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
+
   const { refreshNft, loading } = useRefreshNftMutation();
 
   const refreshNftCallback = useCallback(() => {
@@ -66,28 +72,33 @@ export const NFTDetail = (props: NFTDetailProps) => {
               {
                 profileTokens?.length > 0 ?
                   <div
-                    className="flex rounded-full ml-2 py-0.5 px-2 bg-white dark:bg-secondary-bg-dk items-center cursor-pointer"
+                    className={tw(
+                      'flex rounded-full ml-2 py-0.5 px-2 bg-white dark:bg-secondary-bg-dk items-center',
+                      profileOwnerToShow?.url != null && 'cursor-pointer'
+                    )}
                     onClick={() => {
-                      router.push('/' + profileData?.profile?.url);
+                      if (profileOwnerToShow?.url == null) {
+                        return;
+                      }
+                      router.push('/' + profileOwnerToShow?.url);
                     }}
                   >
-                    <div className="relative rounded-full h-5 w-5 aspect-square">
-                      {profileData?.profile?.photoURL ?
-                        <img
-                          className='rounded-full aspect-square h-full w-full'
-                          src={profileData?.profile?.photoURL}
-                          alt='owner-profile-pic'
-                        />
-                        :
-                        <DefaultProfileImage className='rounded-full aspect-square h-full w-full' />
-                      }
-                    </div>
+                    {profileOwnerToShow?.photoURL && <div className="relative rounded-full h-5 w-5 aspect-square">
+                      <img
+                        className='rounded-full aspect-square h-full w-full'
+                        src={profileOwnerToShow?.photoURL}
+                        alt='owner-profile-pic'
+                      />
+                    </div>}
                     <span className="text-base text-link ml-1">
-                    @{profileData?.profile?.url ?? 'unknown'}
+                      {profileOwnerToShow?.url == null ?
+                        shortenAddress(props.nft?.wallet?.address) :
+                        '@' + profileOwnerToShow?.url
+                      }
                     </span>
                   </div> :
                   <span className="text-link">
-                    {props.nft?.wallet?.address ?? 'Unknown'}
+                    {shortenAddress(props.nft?.wallet?.address) ?? 'Unknown'}
                   </span>
               }
             </div>

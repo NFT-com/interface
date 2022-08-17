@@ -31,7 +31,7 @@ export function GenesisKeyDetailContent(props: { id: string | string[] }) {
     );
   }
 
-  return <div className="flex flex-col h-full w-full items-center justify-center overflow-y-scroll">
+  return <div className="flex flex-col h-full w-full items-center justify-center overflow-y-auto">
     <GenesisKeyGalleryDetailView
       verticalDetail
       hideCloseButton

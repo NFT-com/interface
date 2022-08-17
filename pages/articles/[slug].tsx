@@ -6,7 +6,9 @@ import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import NotFoundPage from 'pages/404';
+import { PostData } from 'types/blogs';
 import ClientOnly from 'utils/ClientOnly';
 
 import { getPost } from 'lib/contentful/api';
@@ -14,7 +16,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import { CaretLeft } from 'phosphor-react';
-import { PostData } from 'types/blogs';
 
 type PostProps = {
   post: PostData;
@@ -33,6 +34,7 @@ export default function Post({ post, preview }: PostProps) {
       <ClientOnly>
         <Header bgLight />
         <Sidebar />
+        <SearchModal />
       </ClientOnly>
       <NextSeo
         title={post.title}

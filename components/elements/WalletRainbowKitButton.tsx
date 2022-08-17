@@ -1,5 +1,6 @@
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -20,8 +21,9 @@ interface WalletRainbowKitButtonProps {
 }
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { toggleSidebar } = useSidebar();
-  const { user, setCurrentProfileUrl } = useUser();
+  const { user, setCurrentProfileUrl, getNotificationCount } = useUser();
   const { address: currentAddress, connector, isConnected } = useAccount({
     onConnect({ isReconnected }) {
       if (isReconnected && !! user?.currentProfileUrl) {
@@ -107,6 +109,13 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         }
         return (
           <>
+            {(getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && getNotificationCount() > 0) && (
+              <span className="flex h-5 w-5 -mb-3">
+                <span className="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-[#F9D963] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-5 w-5 bg-[#F9D963] justify-center">{getNotificationCount()}</span>
+              </span>
+            )
+            }
             <button
               className='sm:block hidden cursor-pointer'
               onClick={() => {
@@ -128,7 +137,12 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 toggleSidebar();
               }} type="button">
                 <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                {shortenAddress(currentAddress)}
+                {!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
+                  ? shortenAddress(currentAddress, 3) :
+                  myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
+                    user.currentProfileUrl
+                    : shortenAddress(currentAddress, 3)
+                }
               </button>
             </div>
           </>

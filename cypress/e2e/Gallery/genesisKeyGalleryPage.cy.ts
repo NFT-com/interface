@@ -24,7 +24,7 @@ describe('GK gallery page tests', () => {
       cy.wait(500);
       cy.root().click('topLeft').then(() => {
         cy.wait(500);
-        cy.findByText('Glitch').should('not.be.visible');
+        cy.findByText('Glitch').should('not.exist');
       });
     });
   });
@@ -32,6 +32,15 @@ describe('GK gallery page tests', () => {
   it('should toggle to profile view', () => {
     cy.findAllByText('Profiles').first().click();
     cy.get('.ProfileGalleryCardContainer').should('be.visible');
+  });
+
+  it('should scroll profile gallery', () => {
+    cy.findAllByText('Profiles').first().click().then(() => {
+      cy.get('.ProfileGalleryCardContainer').should('be.visible');
+      cy.findByText('Load More').click().then(() => {
+        cy.get('.ProfileGalleryScrollContainer').scrollTo('bottom');
+      });
+    });
   });
 
   it('should filter by ID', () => {

@@ -15,12 +15,12 @@ export interface NftsData {
   mutate: () => void;
 }
 
-export function useMyNFTsQuery(first: number): NftsData {
+export function useMyNFTsQuery(first: number, profileId: string): NftsData {
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
-  const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first;
+  const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first + profileId;
 
   const { data } = useSWR(keyString, async () => {
     if (!currentAddress) {
@@ -28,7 +28,8 @@ export function useMyNFTsQuery(first: number): NftsData {
     }
     const result: MyNfTsQuery = await sdk.MyNFTs({
       input: {
-        pageInput: { first: first }
+        pageInput: { first: first },
+        profileId: profileId
       }
     });
     return result;

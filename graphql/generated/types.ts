@@ -13,17 +13,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Equivalent to solidity's address type */
   Address: any;
-  /** Equivalent to solidity's bytes type */
   Bytes: any;
-  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** Equivalent to solidity's uint256 type */
   Uint256: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -50,6 +44,13 @@ export type ApprovalInput = {
   spender: Scalars['String'];
   txHash: Scalars['String'];
   wallet: WalletInput;
+};
+
+export type ApprovedAssociationOutput = {
+  __typename?: 'ApprovedAssociationOutput';
+  hidden: Scalars['Boolean'];
+  id: Scalars['String'];
+  receiver: Scalars['String'];
 };
 
 export enum AskSortType {
@@ -307,6 +308,7 @@ export type Event = {
   contract: Scalars['String'];
   destinationAddress?: Maybe<Scalars['String']>;
   eventName: Scalars['String'];
+  hidden?: Maybe<Scalars['Boolean']>;
   hideIgnored?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   ignore?: Maybe<Scalars['Boolean']>;
@@ -421,7 +423,7 @@ export type GkOutput = {
   tokenId: Scalars['String'];
 };
 
-export type HiddenEventsInput = {
+export type IgnoredEventsInput = {
   chainId?: InputMaybe<Scalars['String']>;
   profileUrl: Scalars['String'];
   walletAddress: Scalars['Address'];
@@ -458,6 +460,17 @@ export type LeaderboardProfile = {
   numberOfGenesisKeys?: Maybe<Scalars['Int']>;
   photoURL?: Maybe<Scalars['String']>;
   url: Scalars['String'];
+};
+
+export type ListNftLooksrareInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  looksrareOrder?: InputMaybe<Scalars['String']>;
+};
+
+export type ListNftSeaportInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  seaportParams?: InputMaybe<Scalars['String']>;
+  seaportSignature?: InputMaybe<Scalars['String']>;
 };
 
 export type MarketAsk = {
@@ -585,7 +598,9 @@ export type Mutation = {
   /** AUTHENTICATED */
   followProfile: Profile;
   /** AUTHENTICATED */
-  ignoreAssocations: Array<Maybe<Event>>;
+  ignoreAssociations: Array<Maybe<Event>>;
+  listNFTLooksrare: Scalars['Boolean'];
+  listNFTSeaport: Scalars['Boolean'];
   mintGKProfile: Scalars['String'];
   /** AUTHENTICATED */
   orderingUpdates: Profile;
@@ -618,10 +633,13 @@ export type Mutation = {
   syncCollectionsWithNFTs: SyncCollectionsWithNfTsOutput;
   /** AUTHENTICATED */
   unfollowProfile: Profile;
-  updateAssociatedAddresses: UpdateAssociatedAddressesOuput;
+  updateAssociatedAddresses: UpdateAssociatedAddressesOutput;
+  updateAssociatedContract: UpdateAssociatedContractOutput;
   /** AUTHENTICATED */
   updateCuration: Curation;
   updateEmail: User;
+  /** AUTHENTICATED */
+  updateHidden: UpdateHiddenOutput;
   /** AUTHENTICATED */
   updateHideIgnored: UpdateHideIgnoredOutput;
   /** AUTHENTICATED */
@@ -724,8 +742,18 @@ export type MutationFollowProfileArgs = {
 };
 
 
-export type MutationIgnoreAssocationsArgs = {
+export type MutationIgnoreAssociationsArgs = {
   eventIdArray: Array<InputMaybe<Scalars['String']>>;
+};
+
+
+export type MutationListNftLooksrareArgs = {
+  input: ListNftLooksrareInput;
+};
+
+
+export type MutationListNftSeaportArgs = {
+  input: ListNftSeaportInput;
 };
 
 
@@ -820,6 +848,11 @@ export type MutationUpdateAssociatedAddressesArgs = {
 };
 
 
+export type MutationUpdateAssociatedContractArgs = {
+  input?: InputMaybe<UpdateAssociatedContractInput>;
+};
+
+
 export type MutationUpdateCurationArgs = {
   input: UpdateCurationInput;
 };
@@ -827,6 +860,11 @@ export type MutationUpdateCurationArgs = {
 
 export type MutationUpdateEmailArgs = {
   input: UpdateEmailInput;
+};
+
+
+export type MutationUpdateHiddenArgs = {
+  input: UpdateHiddenInput;
 };
 
 
@@ -1135,6 +1173,7 @@ export type ProfilesOutput = {
 export type Query = {
   __typename?: 'Query';
   associatedAddressesForContract: AssociatedAddressesForContractOutput;
+  associatedCollectionForProfile: CollectionInfo;
   blockedProfileURI: Scalars['Boolean'];
   collection?: Maybe<CollectionInfo>;
   collectionNFTs: NfTsOutput;
@@ -1144,8 +1183,10 @@ export type Query = {
   externalListings?: Maybe<ExternalListingsOutput>;
   filterAsks: GetMarketAsk;
   getActivitiesByType?: Maybe<Array<Maybe<TxActivity>>>;
-  getActivitiesByUserId?: Maybe<Array<Maybe<TxActivity>>>;
-  getActivitiesByUserIdAndType?: Maybe<Array<Maybe<TxActivity>>>;
+  getActivitiesByWalletId?: Maybe<Array<Maybe<TxActivity>>>;
+  getActivitiesByWalletIdAndType?: Maybe<Array<Maybe<TxActivity>>>;
+  /** AUTHENTICATED */
+  getApprovedAssociations: Array<Maybe<ApprovedAssociationOutput>>;
   getAsks: GetMarketAsk;
   getBids: GetMarketBid;
   getContracts: GetContracts;
@@ -1155,13 +1196,20 @@ export type Query = {
   getMyPendingAssociations: Array<Maybe<PendingAssociationOutput>>;
   getNFTAsks: Array<MarketAsk>;
   getNFTOffers: Array<MarketAsk>;
+  /** AUTHENTICATED */
+  getRejectedAssociations: Array<Maybe<RejectedAssociationOutput>>;
+  /** AUTHENTICATED */
+  getRemovedAssociationsForReceiver: Array<Maybe<RemovedAssociationsForReceiverOutput>>;
+  /** AUTHENTICATED */
+  getRemovedAssociationsForSender: Array<Maybe<RemovedAssociationsForSenderOutput>>;
   getSwaps: GetMarketSwap;
   getUserSwaps: GetMarketSwap;
   gkNFTs: GetGkNftsOutput;
-  hiddenEvents: Array<Event>;
+  ignoredEvents: Array<Event>;
   /** AUTHENTICATED */
   insiderReservedProfiles: Array<Scalars['String']>;
   isAddressWhitelisted: Scalars['Boolean'];
+  isProfileCustomized: Scalars['Boolean'];
   latestProfiles: ProfilesOutput;
   leaderboard: LeaderboardOutput;
   /** AUTHENTICATED */
@@ -1190,6 +1238,12 @@ export type Query = {
 
 export type QueryAssociatedAddressesForContractArgs = {
   contract: Scalars['Address'];
+};
+
+
+export type QueryAssociatedCollectionForProfileArgs = {
+  chainId?: InputMaybe<Scalars['String']>;
+  url: Scalars['String'];
 };
 
 
@@ -1242,14 +1296,19 @@ export type QueryGetActivitiesByTypeArgs = {
 };
 
 
-export type QueryGetActivitiesByUserIdArgs = {
+export type QueryGetActivitiesByWalletIdArgs = {
   chainId?: InputMaybe<Scalars['String']>;
-  userId?: InputMaybe<Scalars['ID']>;
+  walletId?: InputMaybe<Scalars['ID']>;
 };
 
 
-export type QueryGetActivitiesByUserIdAndTypeArgs = {
-  input?: InputMaybe<TxUserIdAndTypeInput>;
+export type QueryGetActivitiesByWalletIdAndTypeArgs = {
+  input?: InputMaybe<TxWalletIdAndTypeInput>;
+};
+
+
+export type QueryGetApprovedAssociationsArgs = {
+  profileUrl: Scalars['String'];
 };
 
 
@@ -1278,6 +1337,16 @@ export type QueryGetNftOffersArgs = {
 };
 
 
+export type QueryGetRejectedAssociationsArgs = {
+  profileUrl: Scalars['String'];
+};
+
+
+export type QueryGetRemovedAssociationsForSenderArgs = {
+  profileUrl: Scalars['String'];
+};
+
+
 export type QueryGetSwapsArgs = {
   input: SwapsInput;
 };
@@ -1294,8 +1363,8 @@ export type QueryGkNfTsArgs = {
 };
 
 
-export type QueryHiddenEventsArgs = {
-  input: HiddenEventsInput;
+export type QueryIgnoredEventsArgs = {
+  input: IgnoredEventsInput;
 };
 
 
@@ -1306,6 +1375,12 @@ export type QueryInsiderReservedProfilesArgs = {
 
 export type QueryIsAddressWhitelistedArgs = {
   input?: InputMaybe<WhitelistCheckInput>;
+};
+
+
+export type QueryIsProfileCustomizedArgs = {
+  chainId?: InputMaybe<Scalars['String']>;
+  url: Scalars['String'];
 };
 
 
@@ -1398,6 +1473,13 @@ export type RefreshMyNfTsOutput = {
   status: Scalars['Boolean'];
 };
 
+export type RejectedAssociationOutput = {
+  __typename?: 'RejectedAssociationOutput';
+  hidden: Scalars['Boolean'];
+  id: Scalars['String'];
+  receiver: Scalars['String'];
+};
+
 export type RemoveCurationInput = {
   profileId: Scalars['ID'];
 };
@@ -1405,6 +1487,21 @@ export type RemoveCurationInput = {
 export type RemoveDuplicatesOutput = {
   __typename?: 'RemoveDuplicatesOutput';
   message?: Maybe<Scalars['String']>;
+};
+
+export type RemovedAssociationsForReceiverOutput = {
+  __typename?: 'RemovedAssociationsForReceiverOutput';
+  hidden: Scalars['Boolean'];
+  id: Scalars['String'];
+  owner: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type RemovedAssociationsForSenderOutput = {
+  __typename?: 'RemovedAssociationsForSenderOutput';
+  hidden: Scalars['Boolean'];
+  id: Scalars['String'];
+  receiver: Scalars['String'];
 };
 
 export type SaveScoreForProfilesInput = {
@@ -1492,28 +1589,15 @@ export type TopBidsInput = {
 export type TxActivity = {
   __typename?: 'TxActivity';
   activityType: Scalars['String'];
-  bid?: Maybe<TxBid>;
+  activityTypeId: Scalars['String'];
   cancel?: Maybe<TxCancel>;
   chainId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  listing?: Maybe<TxList>;
-  read: Scalars['String'];
-  sale?: Maybe<TxSale>;
+  order?: Maybe<TxOrder>;
+  read: Scalars['Boolean'];
   timestamp: Scalars['String'];
-  transfer?: Maybe<TxTransfer>;
-  userId: Scalars['String'];
-};
-
-export type TxBid = {
-  __typename?: 'TxBid';
-  chainId?: Maybe<Scalars['String']>;
-  consideration?: Maybe<Array<Maybe<TxConsideration>>>;
-  exchange: Scalars['String'];
-  id: Scalars['ID'];
-  makerAddress: Scalars['String'];
-  offer?: Maybe<Array<Maybe<TxOffer>>>;
-  orderHash: Scalars['String'];
-  takerAddresss?: Maybe<Scalars['String']>;
+  transaction?: Maybe<TxTransaction>;
+  walletId: Scalars['String'];
 };
 
 export type TxCancel = {
@@ -1534,18 +1618,6 @@ export type TxConsideration = {
   token: Scalars['String'];
 };
 
-export type TxList = {
-  __typename?: 'TxList';
-  chainId?: Maybe<Scalars['String']>;
-  consideration?: Maybe<Array<Maybe<TxConsideration>>>;
-  exchange: Scalars['String'];
-  id: Scalars['ID'];
-  makerAddress: Scalars['String'];
-  offer?: Maybe<Array<Maybe<TxOffer>>>;
-  orderHash: Scalars['String'];
-  takerAddresss?: Maybe<Scalars['String']>;
-};
-
 export type TxOffer = {
   __typename?: 'TxOffer';
   chainId?: Maybe<Scalars['String']>;
@@ -1554,23 +1626,21 @@ export type TxOffer = {
   token: Scalars['String'];
 };
 
-export type TxSale = {
-  __typename?: 'TxSale';
-  blockNumber: Scalars['String'];
+export type TxOrder = {
+  __typename?: 'TxOrder';
   chainId?: Maybe<Scalars['String']>;
-  currency: Scalars['String'];
   exchange: Scalars['String'];
   id: Scalars['ID'];
-  nftContractAddress: Scalars['String'];
-  nftContractTokenId: Scalars['String'];
-  price: Scalars['String'];
-  receiver: Scalars['String'];
-  sender: Scalars['String'];
-  transactionHash: Scalars['String'];
+  makerAddress: Scalars['String'];
+  orderHash: Scalars['String'];
+  orderType: Scalars['String'];
+  protocol: Scalars['String'];
+  protocolData?: Maybe<Array<Maybe<Scalars['String']>>>;
+  takerAddress?: Maybe<Scalars['String']>;
 };
 
-export type TxTransfer = {
-  __typename?: 'TxTransfer';
+export type TxTransaction = {
+  __typename?: 'TxTransaction';
   blockNumber: Scalars['String'];
   chainId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -1581,10 +1651,10 @@ export type TxTransfer = {
   transactionHash: Scalars['String'];
 };
 
-export type TxUserIdAndTypeInput = {
+export type TxWalletIdAndTypeInput = {
   activityType: Scalars['String'];
   chainId?: InputMaybe<Scalars['String']>;
-  userId: Scalars['ID'];
+  walletId: Scalars['ID'];
 };
 
 export type UbiquityCollection = {
@@ -1626,8 +1696,18 @@ export type UpdateAssociatedAddressesInput = {
   profileUrl: Scalars['String'];
 };
 
-export type UpdateAssociatedAddressesOuput = {
-  __typename?: 'UpdateAssociatedAddressesOuput';
+export type UpdateAssociatedAddressesOutput = {
+  __typename?: 'UpdateAssociatedAddressesOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
+export type UpdateAssociatedContractInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  profileUrl: Scalars['String'];
+};
+
+export type UpdateAssociatedContractOutput = {
+  __typename?: 'UpdateAssociatedContractOutput';
   message?: Maybe<Scalars['String']>;
 };
 
@@ -1640,9 +1720,19 @@ export type UpdateEmailInput = {
   email: Scalars['String'];
 };
 
+export type UpdateHiddenInput = {
+  eventIdArray?: InputMaybe<Array<Scalars['String']>>;
+  hidden: Scalars['Boolean'];
+};
+
+export type UpdateHiddenOutput = {
+  __typename?: 'UpdateHiddenOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type UpdateHideIgnoredInput = {
   eventIdArray?: InputMaybe<Array<Scalars['String']>>;
-  showOrHide: Scalars['Boolean'];
+  hideIgnored: Scalars['Boolean'];
 };
 
 export type UpdateHideIgnoredOutput = {
@@ -1851,12 +1941,26 @@ export type FileUploadMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type FileUploadMutation = { __typename?: 'Mutation', uploadFileSession: { __typename?: 'FileUploadOutput', bucket: string, accessKey: string, secretKey: string, sessionToken: string } };
 
-export type IgnoreAssocationsMutationVariables = Exact<{
+export type IgnoreAssociationsMutationVariables = Exact<{
   eventIdArray: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
 }>;
 
 
-export type IgnoreAssocationsMutation = { __typename?: 'Mutation', ignoreAssocations: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null } | null> };
+export type IgnoreAssociationsMutation = { __typename?: 'Mutation', ignoreAssociations: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null, hideIgnored?: boolean | null, hidden?: boolean | null } | null> };
+
+export type ListNftLooksrareMutationVariables = Exact<{
+  input: ListNftLooksrareInput;
+}>;
+
+
+export type ListNftLooksrareMutation = { __typename?: 'Mutation', listNFTLooksrare: boolean };
+
+export type ListNftSeaportMutationVariables = Exact<{
+  input: ListNftSeaportInput;
+}>;
+
+
+export type ListNftSeaportMutation = { __typename?: 'Mutation', listNFTSeaport: boolean };
 
 export type ProfileNftOrderingUpdatesMutationVariables = Exact<{
   input: OrderingUpdatesInput;
@@ -1926,12 +2030,34 @@ export type UpdateEmailMutationVariables = Exact<{
 
 export type UpdateEmailMutation = { __typename?: 'Mutation', updateEmail: { __typename?: 'User', id: string, email?: string | null } };
 
+export type UpdateHiddenMutationVariables = Exact<{
+  input: UpdateHiddenInput;
+}>;
+
+
+export type UpdateHiddenMutation = { __typename?: 'Mutation', updateHidden: { __typename?: 'UpdateHiddenOutput', message?: string | null } };
+
+export type UpdateHideIgnoredMutationVariables = Exact<{
+  input: UpdateHideIgnoredInput;
+}>;
+
+
+export type UpdateHideIgnoredMutation = { __typename?: 'Mutation', updateHideIgnored: { __typename?: 'UpdateHideIgnoredOutput', message?: string | null } };
+
 export type UpdateMeMutationVariables = Exact<{
   input: UpdateUserInput;
 }>;
 
 
 export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string, email?: string | null, avatarURL?: string | null } };
+
+export type UpdateNftProfileIdMutationVariables = Exact<{
+  nftId: Scalars['ID'];
+  profileId: Scalars['ID'];
+}>;
+
+
+export type UpdateNftProfileIdMutation = { __typename?: 'Mutation', updateNFTProfileId: { __typename?: 'NFT', id: string, chainId?: string | null, contract?: any | null, tokenId: any, isOwnedByMe?: boolean | null, price?: any | null, profileId?: string | null, type: NftType, createdAt: any, memo?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null }, preferredProfile?: { __typename?: 'Profile', id: string, bannerURL?: string | null, createdAt: any, chainId?: string | null, description?: string | null, displayType?: ProfileDisplayType | null, layoutType?: ProfileLayoutType | null, followersCount?: number | null, isFollowedByMe?: boolean | null, isOwnedByMe?: boolean | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, tokenId?: string | null, photoURL?: string | null, status?: ProfileStatus | null, url: string, profileView?: ProfileViewType | null } | null, wallet?: { __typename?: 'Wallet', id: string, address: any, chainId: string, chainName: string, network: string, profileId?: string | null, createdAt: any } | null } };
 
 export type UpdateProfileMutationVariables = Exact<{
   input: UpdateProfileInput;
@@ -1940,12 +2066,41 @@ export type UpdateProfileMutationVariables = Exact<{
 
 export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'Profile', id: string, photoURL?: string | null, bannerURL?: string | null, description?: string | null } };
 
+export type UpdateProfileViewMutationVariables = Exact<{
+  input?: InputMaybe<UpdateProfileViewInput>;
+}>;
+
+
+export type UpdateProfileViewMutation = { __typename?: 'Mutation', updateProfileView: { __typename?: 'Profile', id: string, bannerURL?: string | null, createdAt: any, chainId?: string | null, description?: string | null, displayType?: ProfileDisplayType | null, layoutType?: ProfileLayoutType | null, followersCount?: number | null, isFollowedByMe?: boolean | null, isOwnedByMe?: boolean | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, tokenId?: string | null, photoURL?: string | null, status?: ProfileStatus | null, url: string, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', id: string, address: any, chainId: string, chainName: string, network: string, createdAt: any } | null, winningBid?: { __typename?: 'Bid', id: string, nftType: NftType, price: any, stakeWeightedSeconds?: number | null, status: BidStatus, createdAt: any, updatedAt: any } | null } };
+
+export type UpdateWalletProfileIdMutationVariables = Exact<{
+  profileId: Scalars['ID'];
+}>;
+
+
+export type UpdateWalletProfileIdMutation = { __typename?: 'Mutation', updateWalletProfileId: { __typename?: 'Wallet', id: string, address: any, chainId: string, chainName: string, network: string, profileId?: string | null, createdAt: any, preferredProfile?: { __typename?: 'Profile', id: string, bannerURL?: string | null, createdAt: any, chainId?: string | null, description?: string | null, displayType?: ProfileDisplayType | null, layoutType?: ProfileLayoutType | null, followersCount?: number | null, isFollowedByMe?: boolean | null, isOwnedByMe?: boolean | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, tokenId?: string | null, photoURL?: string | null, status?: ProfileStatus | null, url: string, profileView?: ProfileViewType | null } | null, user?: { __typename?: 'User', id: string, avatarURL?: string | null, email?: string | null, chainId?: string | null, username?: string | null, isEmailConfirmed: boolean, referredBy?: string | null, referralId: string } | null } };
+
 export type UploadProfileImagesMutationVariables = Exact<{
   input: UploadProfileImagesInput;
 }>;
 
 
 export type UploadProfileImagesMutation = { __typename?: 'Mutation', uploadProfileImages: { __typename?: 'Profile', id: string } };
+
+export type AssociatedAddressesForContractQueryVariables = Exact<{
+  contract: Scalars['Address'];
+}>;
+
+
+export type AssociatedAddressesForContractQuery = { __typename?: 'Query', associatedAddressesForContract: { __typename?: 'AssociatedAddressesForContractOutput', deployerAddress?: any | null, associatedAddresses?: Array<any | null> | null, deployerIsAssociated?: boolean | null } };
+
+export type AssociatedCollectionForProfileQueryVariables = Exact<{
+  profile: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type AssociatedCollectionForProfileQuery = { __typename?: 'Query', associatedCollectionForProfile: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', deployer?: string | null, contract?: any | null } | null } };
 
 export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
@@ -1961,6 +2116,13 @@ export type CollectionNfTsQueryVariables = Exact<{
 
 export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
+export type DeployedCollectionsQueryVariables = Exact<{
+  deployer: Scalars['String'];
+}>;
+
+
+export type DeployedCollectionsQuery = { __typename?: 'Query', collectionsByDeployer?: Array<{ __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null> | null };
+
 export type ExternalListingsQueryVariables = Exact<{
   contract: Scalars['Address'];
   tokenId: Scalars['String'];
@@ -1969,6 +2131,13 @@ export type ExternalListingsQueryVariables = Exact<{
 
 
 export type ExternalListingsQuery = { __typename?: 'Query', externalListings?: { __typename?: 'ExternalListingsOutput', listings?: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null, baseCoin?: { __typename?: 'BaseCoin', symbol?: string | null, logoURI?: string | null, address?: string | null, decimals?: number | null } | null } | null> | null } | null };
+
+export type GetApprovedAssociationsQueryVariables = Exact<{
+  profileUrl: Scalars['String'];
+}>;
+
+
+export type GetApprovedAssociationsQuery = { __typename?: 'Query', getApprovedAssociations: Array<{ __typename?: 'ApprovedAssociationOutput', id: string, receiver: string, hidden: boolean } | null> };
 
 export type GetAsksQueryVariables = Exact<{
   input: AsksInput;
@@ -1983,6 +2152,14 @@ export type GetBidsQueryVariables = Exact<{
 
 
 export type GetBidsQuery = { __typename?: 'Query', getBids: { __typename?: 'GetMarketBid', items?: Array<{ __typename?: 'MarketBid', id: string, structHash: string, nonce: number, marketAskId: string, makerAddress: any, takerAddress: any, marketSwapId?: string | null, approvalTxHash?: string | null, cancelTxHash?: string | null, message: string, start: number, end: number, salt: number, offerAcceptedAt?: any | null, acceptedAt?: any | null, rejectedAt?: any | null, rejectedReason?: string | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null }> | null } };
+
+export type QueryQueryVariables = Exact<{
+  url: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type QueryQuery = { __typename?: 'Query', isProfileCustomized: boolean };
 
 export type GetMyPendingAssociationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2003,12 +2180,38 @@ export type GetNftOffersQueryVariables = Exact<{
 
 export type GetNftOffersQuery = { __typename?: 'Query', getNFTOffers: Array<{ __typename?: 'MarketAsk', id: string, makerAddress: any, takerAddress: any, nonce: number, start: number, end: number, salt: number, offerAcceptedAt?: any | null, chainId: string, auctionType: AuctionType, signature: { __typename?: 'Signature', v: number, r: any, s: any }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null }> };
 
+export type GetRejectedAssociationsQueryVariables = Exact<{
+  profileUrl: Scalars['String'];
+}>;
+
+
+export type GetRejectedAssociationsQuery = { __typename?: 'Query', getRejectedAssociations: Array<{ __typename?: 'RejectedAssociationOutput', hidden: boolean, id: string, receiver: string } | null> };
+
+export type GetRemovedAssociationsForSenderQueryVariables = Exact<{
+  profileUrl: Scalars['String'];
+}>;
+
+
+export type GetRemovedAssociationsForSenderQuery = { __typename?: 'Query', getRemovedAssociationsForSender: Array<{ __typename?: 'RemovedAssociationsForSenderOutput', hidden: boolean, id: string, receiver: string } | null> };
+
+export type GetRemovedAssociationsForReceiverQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRemovedAssociationsForReceiverQuery = { __typename?: 'Query', getRemovedAssociationsForReceiver: Array<{ __typename?: 'RemovedAssociationsForReceiverOutput', id: string, url: string, owner: string, hidden: boolean } | null> };
+
 export type GetUserSwapsQueryVariables = Exact<{
   input: UserSwapsInput;
 }>;
 
 
 export type GetUserSwapsQuery = { __typename?: 'Query', getUserSwaps: { __typename?: 'GetMarketSwap', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'MarketSwap', txHash: string, blockNumber: string, private?: boolean | null, marketAsk?: { __typename?: 'MarketAsk', id: string, makerAddress: any, takerAddress: any, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null } | null, marketBid?: { __typename?: 'MarketBid', id: string, makerAddress: any, takerAddress: any, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, value: any, minimumBid: any, bytes: string, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null, takeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, contractAddress: any, tokenId: any, allowAll: boolean, bytes: string } }> | null } | null }> | null } };
+
+export type IgnoredEventsQueryVariables = Exact<{
+  input: IgnoredEventsInput;
+}>;
+
+
+export type IgnoredEventsQuery = { __typename?: 'Query', ignoredEvents: Array<{ __typename?: 'Event', id: string, chainId: string, contract: string, eventName: string, txHash: string, ownerAddress?: string | null, profileUrl?: string | null, destinationAddress?: string | null, blockNumber?: string | null, ignore?: boolean | null, hideIgnored?: boolean | null, hidden?: boolean | null }> };
 
 export type InsiderReservedProfilesQueryVariables = Exact<{
   input: InsiderReservedProfilesInput;
@@ -2023,6 +2226,14 @@ export type IsAddressWhitelistedQueryVariables = Exact<{
 
 
 export type IsAddressWhitelistedQuery = { __typename?: 'Query', isAddressWhitelisted: boolean };
+
+export type IsProfileCustomizedQueryVariables = Exact<{
+  url: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type IsProfileCustomizedQuery = { __typename?: 'Query', isProfileCustomized: boolean };
 
 export type LeaderboardQueryVariables = Exact<{
   input?: InputMaybe<LeaderboardInput>;
@@ -2065,10 +2276,11 @@ export type MyProfilesQuery = { __typename?: 'Query', myProfiles: { __typename?:
 export type NftQueryVariables = Exact<{
   contract: Scalars['Address'];
   id: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2088,7 +2300,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -2263,9 +2475,9 @@ export const FileUploadDocument = gql`
   }
 }
     `;
-export const IgnoreAssocationsDocument = gql`
-    mutation IgnoreAssocations($eventIdArray: [String]!) {
-  ignoreAssocations(eventIdArray: $eventIdArray) {
+export const IgnoreAssociationsDocument = gql`
+    mutation IgnoreAssociations($eventIdArray: [String]!) {
+  ignoreAssociations(eventIdArray: $eventIdArray) {
     id
     chainId
     contract
@@ -2276,7 +2488,19 @@ export const IgnoreAssocationsDocument = gql`
     destinationAddress
     blockNumber
     ignore
+    hideIgnored
+    hidden
   }
+}
+    `;
+export const ListNftLooksrareDocument = gql`
+    mutation ListNftLooksrare($input: ListNFTLooksrareInput!) {
+  listNFTLooksrare(input: $input)
+}
+    `;
+export const ListNftSeaportDocument = gql`
+    mutation ListNftSeaport($input: ListNFTSeaportInput!) {
+  listNFTSeaport(input: $input)
 }
     `;
 export const ProfileNftOrderingUpdatesDocument = gql`
@@ -2357,12 +2581,76 @@ export const UpdateEmailDocument = gql`
   }
 }
     `;
+export const UpdateHiddenDocument = gql`
+    mutation UpdateHidden($input: UpdateHiddenInput!) {
+  updateHidden(input: $input) {
+    message
+  }
+}
+    `;
+export const UpdateHideIgnoredDocument = gql`
+    mutation UpdateHideIgnored($input: UpdateHideIgnoredInput!) {
+  updateHideIgnored(input: $input) {
+    message
+  }
+}
+    `;
 export const UpdateMeDocument = gql`
     mutation UpdateMe($input: UpdateUserInput!) {
   updateMe(input: $input) {
     id
     email
     avatarURL
+  }
+}
+    `;
+export const UpdateNftProfileIdDocument = gql`
+    mutation UpdateNFTProfileId($nftId: ID!, $profileId: ID!) {
+  updateNFTProfileId(nftId: $nftId, profileId: $profileId) {
+    id
+    chainId
+    contract
+    tokenId
+    isOwnedByMe
+    metadata {
+      name
+      description
+      imageURL
+    }
+    price
+    profileId
+    preferredProfile {
+      id
+      bannerURL
+      createdAt
+      chainId
+      description
+      displayType
+      layoutType
+      followersCount
+      isFollowedByMe
+      isOwnedByMe
+      gkIconVisible
+      nftsDescriptionsVisible
+      deployedContractsVisible
+      tokenId
+      photoURL
+      status
+      url
+      profileView
+    }
+    type
+    wallet {
+      id
+      address
+      chainId
+      chainName
+      network
+      profileId
+      createdAt
+    }
+    createdAt
+    memo
   }
 }
     `;
@@ -2376,10 +2664,113 @@ export const UpdateProfileDocument = gql`
   }
 }
     `;
+export const UpdateProfileViewDocument = gql`
+    mutation UpdateProfileView($input: UpdateProfileViewInput) {
+  updateProfileView(input: $input) {
+    id
+    bannerURL
+    createdAt
+    chainId
+    description
+    displayType
+    layoutType
+    followersCount
+    isFollowedByMe
+    isOwnedByMe
+    gkIconVisible
+    nftsDescriptionsVisible
+    deployedContractsVisible
+    owner {
+      id
+      address
+      chainId
+      chainName
+      network
+      createdAt
+    }
+    tokenId
+    photoURL
+    status
+    url
+    winningBid {
+      id
+      nftType
+      price
+      stakeWeightedSeconds
+      status
+      createdAt
+      updatedAt
+    }
+    profileView
+  }
+}
+    `;
+export const UpdateWalletProfileIdDocument = gql`
+    mutation UpdateWalletProfileId($profileId: ID!) {
+  updateWalletProfileId(profileId: $profileId) {
+    id
+    address
+    chainId
+    chainName
+    network
+    profileId
+    preferredProfile {
+      id
+      bannerURL
+      createdAt
+      chainId
+      description
+      displayType
+      layoutType
+      followersCount
+      isFollowedByMe
+      isOwnedByMe
+      gkIconVisible
+      nftsDescriptionsVisible
+      deployedContractsVisible
+      tokenId
+      photoURL
+      status
+      url
+      profileView
+    }
+    user {
+      id
+      avatarURL
+      email
+      chainId
+      username
+      isEmailConfirmed
+      referredBy
+      referralId
+    }
+    createdAt
+  }
+}
+    `;
 export const UploadProfileImagesDocument = gql`
     mutation UploadProfileImages($input: UploadProfileImagesInput!) {
   uploadProfileImages(input: $input) {
     id
+  }
+}
+    `;
+export const AssociatedAddressesForContractDocument = gql`
+    query AssociatedAddressesForContract($contract: Address!) {
+  associatedAddressesForContract(contract: $contract) {
+    deployerAddress
+    associatedAddresses
+    deployerIsAssociated
+  }
+}
+    `;
+export const AssociatedCollectionForProfileDocument = gql`
+    query AssociatedCollectionForProfile($profile: String!, $chainId: String) {
+  associatedCollectionForProfile(url: $profile, chainId: $chainId) {
+    collection {
+      deployer
+      contract
+    }
   }
 }
     `;
@@ -2443,6 +2834,15 @@ export const CollectionNfTsDocument = gql`
   }
 }
     `;
+export const DeployedCollectionsDocument = gql`
+    query DeployedCollections($deployer: String!) {
+  collectionsByDeployer(deployer: $deployer) {
+    id
+    contract
+    name
+  }
+}
+    `;
 export const ExternalListingsDocument = gql`
     query ExternalListings($contract: Address!, $tokenId: String!, $chainId: String!) {
   externalListings(contract: $contract, tokenId: $tokenId, chainId: $chainId) {
@@ -2460,6 +2860,15 @@ export const ExternalListingsDocument = gql`
         decimals
       }
     }
+  }
+}
+    `;
+export const GetApprovedAssociationsDocument = gql`
+    query getApprovedAssociations($profileUrl: String!) {
+  getApprovedAssociations(profileUrl: $profileUrl) {
+    id
+    receiver
+    hidden
   }
 }
     `;
@@ -2577,6 +2986,11 @@ export const GetBidsDocument = gql`
   }
 }
     `;
+export const QueryDocument = gql`
+    query Query($url: String!, $chainId: String) {
+  isProfileCustomized(url: $url, chainId: $chainId)
+}
+    `;
 export const GetMyPendingAssociationsDocument = gql`
     query GetMyPendingAssociations {
   getMyPendingAssociations {
@@ -2678,6 +3092,34 @@ export const GetNftOffersDocument = gql`
   }
 }
     `;
+export const GetRejectedAssociationsDocument = gql`
+    query GetRejectedAssociations($profileUrl: String!) {
+  getRejectedAssociations(profileUrl: $profileUrl) {
+    hidden
+    id
+    receiver
+  }
+}
+    `;
+export const GetRemovedAssociationsForSenderDocument = gql`
+    query GetRemovedAssociationsForSender($profileUrl: String!) {
+  getRemovedAssociationsForSender(profileUrl: $profileUrl) {
+    hidden
+    id
+    receiver
+  }
+}
+    `;
+export const GetRemovedAssociationsForReceiverDocument = gql`
+    query GetRemovedAssociationsForReceiver {
+  getRemovedAssociationsForReceiver {
+    id
+    url
+    owner
+    hidden
+  }
+}
+    `;
 export const GetUserSwapsDocument = gql`
     query GetUserSwaps($input: UserSwapsInput!) {
   getUserSwaps(input: $input) {
@@ -2756,6 +3198,24 @@ export const GetUserSwapsDocument = gql`
   }
 }
     `;
+export const IgnoredEventsDocument = gql`
+    query IgnoredEvents($input: IgnoredEventsInput!) {
+  ignoredEvents(input: $input) {
+    id
+    chainId
+    contract
+    eventName
+    txHash
+    ownerAddress
+    profileUrl
+    destinationAddress
+    blockNumber
+    ignore
+    hideIgnored
+    hidden
+  }
+}
+    `;
 export const InsiderReservedProfilesDocument = gql`
     query InsiderReservedProfiles($input: InsiderReservedProfilesInput!) {
   insiderReservedProfiles(input: $input)
@@ -2764,6 +3224,11 @@ export const InsiderReservedProfilesDocument = gql`
 export const IsAddressWhitelistedDocument = gql`
     query IsAddressWhitelisted($input: WhitelistCheckInput) {
   isAddressWhitelisted(input: $input)
+}
+    `;
+export const IsProfileCustomizedDocument = gql`
+    query isProfileCustomized($url: String!, $chainId: String) {
+  isProfileCustomized(url: $url, chainId: $chainId)
 }
     `;
 export const LeaderboardDocument = gql`
@@ -2890,8 +3355,8 @@ export const MyProfilesDocument = gql`
 }
     `;
 export const NftDocument = gql`
-    query Nft($contract: Address!, $id: String!) {
-  nft(contract: $contract, id: $id) {
+    query Nft($contract: Address!, $id: String!, $chainId: String) {
+  nft(contract: $contract, id: $id, chainId: $chainId) {
     id
     isOwnedByMe
     price
@@ -2901,6 +3366,10 @@ export const NftDocument = gql`
     wallet {
       address
       chainId
+      preferredProfile {
+        url
+        photoURL
+      }
     }
     metadata {
       name
@@ -2962,12 +3431,18 @@ export const ProfileDocument = gql`
     description
     gkIconVisible
     nftsDescriptionsVisible
+    deployedContractsVisible
     layoutType
     owner {
       address
       chainId
       network
+      preferredProfile {
+        url
+        id
+      }
     }
+    profileView
   }
 }
     `;
@@ -3117,8 +3592,14 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     FileUpload(variables?: FileUploadMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileUploadMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileUploadMutation>(FileUploadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FileUpload', 'mutation');
     },
-    IgnoreAssocations(variables: IgnoreAssocationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoreAssocationsMutation> {
-      return withWrapper((wrappedRequestHeaders) => client.request<IgnoreAssocationsMutation>(IgnoreAssocationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoreAssocations', 'mutation');
+    IgnoreAssociations(variables: IgnoreAssociationsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoreAssociationsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IgnoreAssociationsMutation>(IgnoreAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoreAssociations', 'mutation');
+    },
+    ListNftLooksrare(variables: ListNftLooksrareMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ListNftLooksrareMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ListNftLooksrareMutation>(ListNftLooksrareDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ListNftLooksrare', 'mutation');
+    },
+    ListNftSeaport(variables: ListNftSeaportMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ListNftSeaportMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ListNftSeaportMutation>(ListNftSeaportDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ListNftSeaport', 'mutation');
     },
     ProfileNftOrderingUpdates(variables: ProfileNftOrderingUpdatesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNftOrderingUpdatesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileNftOrderingUpdatesMutation>(ProfileNftOrderingUpdatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNftOrderingUpdates', 'mutation');
@@ -3150,14 +3631,35 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     UpdateEmail(variables: UpdateEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateEmailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateEmailMutation>(UpdateEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateEmail', 'mutation');
     },
+    UpdateHidden(variables: UpdateHiddenMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateHiddenMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateHiddenMutation>(UpdateHiddenDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateHidden', 'mutation');
+    },
+    UpdateHideIgnored(variables: UpdateHideIgnoredMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateHideIgnoredMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateHideIgnoredMutation>(UpdateHideIgnoredDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateHideIgnored', 'mutation');
+    },
     UpdateMe(variables: UpdateMeMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateMeMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateMeMutation>(UpdateMeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateMe', 'mutation');
+    },
+    UpdateNFTProfileId(variables: UpdateNftProfileIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNftProfileIdMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateNftProfileIdMutation>(UpdateNftProfileIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateNFTProfileId', 'mutation');
     },
     UpdateProfile(variables: UpdateProfileMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateProfileMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateProfileMutation>(UpdateProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateProfile', 'mutation');
     },
+    UpdateProfileView(variables?: UpdateProfileViewMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateProfileViewMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateProfileViewMutation>(UpdateProfileViewDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateProfileView', 'mutation');
+    },
+    UpdateWalletProfileId(variables: UpdateWalletProfileIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateWalletProfileIdMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateWalletProfileIdMutation>(UpdateWalletProfileIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateWalletProfileId', 'mutation');
+    },
     UploadProfileImages(variables: UploadProfileImagesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadProfileImagesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UploadProfileImagesMutation>(UploadProfileImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadProfileImages', 'mutation');
+    },
+    AssociatedAddressesForContract(variables: AssociatedAddressesForContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedAddressesForContractQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AssociatedAddressesForContractQuery>(AssociatedAddressesForContractDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedAddressesForContract', 'query');
+    },
+    AssociatedCollectionForProfile(variables: AssociatedCollectionForProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedCollectionForProfileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AssociatedCollectionForProfileQuery>(AssociatedCollectionForProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedCollectionForProfile', 'query');
     },
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');
@@ -3165,14 +3667,23 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');
     },
+    DeployedCollections(variables: DeployedCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeployedCollectionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeployedCollectionsQuery>(DeployedCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeployedCollections', 'query');
+    },
     ExternalListings(variables: ExternalListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ExternalListingsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ExternalListingsQuery>(ExternalListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ExternalListings', 'query');
+    },
+    getApprovedAssociations(variables: GetApprovedAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetApprovedAssociationsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetApprovedAssociationsQuery>(GetApprovedAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getApprovedAssociations', 'query');
     },
     GetAsks(variables: GetAsksQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetAsksQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAsksQuery>(GetAsksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAsks', 'query');
     },
     GetBids(variables: GetBidsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBidsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetBidsQuery>(GetBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetBids', 'query');
+    },
+    Query(variables: QueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<QueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<QueryQuery>(QueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Query', 'query');
     },
     GetMyPendingAssociations(variables?: GetMyPendingAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetMyPendingAssociationsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetMyPendingAssociationsQuery>(GetMyPendingAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetMyPendingAssociations', 'query');
@@ -3183,14 +3694,29 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getNFTOffers(variables: GetNftOffersQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetNftOffersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetNftOffersQuery>(GetNftOffersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getNFTOffers', 'query');
     },
+    GetRejectedAssociations(variables: GetRejectedAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRejectedAssociationsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRejectedAssociationsQuery>(GetRejectedAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRejectedAssociations', 'query');
+    },
+    GetRemovedAssociationsForSender(variables: GetRemovedAssociationsForSenderQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRemovedAssociationsForSenderQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRemovedAssociationsForSenderQuery>(GetRemovedAssociationsForSenderDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRemovedAssociationsForSender', 'query');
+    },
+    GetRemovedAssociationsForReceiver(variables?: GetRemovedAssociationsForReceiverQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRemovedAssociationsForReceiverQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetRemovedAssociationsForReceiverQuery>(GetRemovedAssociationsForReceiverDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRemovedAssociationsForReceiver', 'query');
+    },
     GetUserSwaps(variables: GetUserSwapsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetUserSwapsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetUserSwapsQuery>(GetUserSwapsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetUserSwaps', 'query');
+    },
+    IgnoredEvents(variables: IgnoredEventsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IgnoredEventsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IgnoredEventsQuery>(IgnoredEventsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IgnoredEvents', 'query');
     },
     InsiderReservedProfiles(variables: InsiderReservedProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<InsiderReservedProfilesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<InsiderReservedProfilesQuery>(InsiderReservedProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'InsiderReservedProfiles', 'query');
     },
     IsAddressWhitelisted(variables?: IsAddressWhitelistedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IsAddressWhitelistedQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<IsAddressWhitelistedQuery>(IsAddressWhitelistedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'IsAddressWhitelisted', 'query');
+    },
+    isProfileCustomized(variables: IsProfileCustomizedQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<IsProfileCustomizedQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IsProfileCustomizedQuery>(IsProfileCustomizedDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'isProfileCustomized', 'query');
     },
     Leaderboard(variables?: LeaderboardQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LeaderboardQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<LeaderboardQuery>(LeaderboardDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Leaderboard', 'query');

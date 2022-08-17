@@ -1,8 +1,19 @@
+import { CustomTooltip } from 'components/elements/CustomTooltip';
+import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
+import { Modal } from 'components/elements/Modal';
+import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
+import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
+import { useUpdateHiddenMutation } from 'graphql/hooks/useUpdateHiddenMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { getEtherscanLink, shortenAddress } from 'utils/helpers';
+import { useUser } from 'hooks/state/useUser';
+import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
-import { CheckCircle, Clock, Trash } from 'phosphor-react';
+import RemoveModal from './RemoveModal';
+
+import { ArrowsClockwise, CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
+import { useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
+import { toast } from 'react-toastify';
 import { ExternalLink } from 'styles/theme';
 import { useNetwork } from 'wagmi';
 
@@ -12,53 +23,325 @@ type AssociatedProfileProps = {
     addr?: string;
     owner?: string;
     url?: string;
+    id?: string
   }
   pending?: boolean;
-  key: number | string;
-  remove?: (type: string, address: string) => void
+  remove?: () => void
+  isCollection?: boolean
+  isRemoved?: boolean
 };
 
-export default function AssociatedProfile({ profile, pending, remove }: AssociatedProfileProps) {
+export default function AssociatedProfile({ profile, pending, remove, isCollection, isRemoved }: AssociatedProfileProps) {
+  const { mutate: mutatePending } = usePendingAssociationQuery();
+  const { ignoreAssociations } = useIgnoreAssociationsMutation();
+  const [visible, setVisible] = useState(false);
+  const [transactionPending, setTransactionPending] = useState(false);
+  const [associationRejected, setAssociationRejected] = useState(false);
+  const [removeModalVisible, setRemoveModalVisible] = useState(false);
+  const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
+  const { setUserNotificationActive } = useUser();
+  const { updateHidden } = useUpdateHiddenMutation();
 
   const acceptPendingProfile = async (e, url) => {
     e.preventDefault();
-    await nftResolver.associateSelfWithUsers([url]).then((res) => console.log(res));
+
+    const tx = await nftResolver.associateSelfWithUsers([url]);
+    setTransactionPending(true);
+    if(tx){
+      tx.wait(1).then(() => {
+        setAccepted(true);
+        setTransactionPending(false);
+      }).catch(() => toast.error('Error'));
+      setUserNotificationActive('associatedProfileAdded', true);
+    }
   };
+
+  const removeHandler = async () => {
+    if(pending){
+      await ignoreAssociations({ eventIdArray: [profile.id] })
+        .then(() => {
+          setVisible(true);
+          setRemoveModalVisible(false);
+          setAssociationRejected(true);
+          toast.success('Rejected');
+        })
+        .catch(() => toast.warning('Error. Please try again'));
+    } else if (isRemoved){
+      updateHidden({ eventIdArray: [profile.id], hidden: true }).then(() =>{
+        toast.success('Removed');
+        setRemoveModalVisible(false);
+        setVisible(true);
+        setAssociationRejected(true);
+      });
+    } else {
+      const tx = await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url);
+      setVisible(true);
+      setTransactionPending(true);
+      setRemoveModalVisible(false);
+      if(tx){
+        tx.wait(1).then(() => {
+          setTransactionPending(false);
+          toast.success('Removed');
+          setUserNotificationActive('associatedProfileRemoved', true);
+          setAssociationRejected(true);
+        }).catch(() => toast.warning('Error. Please try again'));
+      }
+    }
+  };
+
+  const closeModal = () => {
+    if(associationRejected){
+      setAssociationRejected(false);
+    }
+    if(accepted){
+      setAccepted(false);
+    }
+    mutatePending();
+    setVisible(false);
+  };
+  
   return (
-    <div className='p-1 flex justify-between items-start mb-3'>
-      <div className='flex items-start truncate'>
-        {pending ?
-          <Clock size={25} className='mr-3' color='orange' weight='fill' />
-          :
-          <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
-        }
-        <div className='w-3/4'>
-          <p onClick={(e) => pending && acceptPendingProfile(e, profile.url) } className='truncate text-black text-sm font-grotesk font-semibold tracking-wide'>{profile.profileUrl || profile.url}</p>
-          <div className="flex items-center w-full">
-            <div className="flex w-full items-center justify-between">
-              <div>
-                <ExternalLink
-                  href={getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address')}
+    <>
+      <div className='p-1 flex justify-between items-start mb-3'>
+        <div className='flex items-start'>
+          {pending ?
+            <CustomTooltip
+              mode="hover"
+              tooltipComponent={
+                <div
+                  className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
                 >
-                  <div
-                    className='flex justify-between font-mono text-blog-text-reskin text-sm font-medium'
+                  <p className='text-[#F2890E] mb-2'>Pending</p>
+                  <p>This NFT Profile association is waiting your approval. Click on its name to approve or reject.</p>
+                </div>
+              }
+            >
+              <Clock size={25} className='mr-3' color='orange' weight='fill' />
+            </CustomTooltip>
+            :
+            isRemoved
+              ?
+              (
+                isRemoved && isCollection ?
+                  <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                  :
+                  <CustomTooltip
+                    mode="hover"
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                      >
+                        <p className='text-[#D40909] mb-2'>Disassociated</p>
+                        <p>This NFT Profile has been disassociated from your address. It is safe to remove it from your account.</p>
+                      </div>
+                    }
                   >
-                    {shortenAddress(profile?.addr || profile?.owner)}
-                    <LinkIcon size={18} className='ml-2'/>
-                  </div>
-                </ExternalLink>
+                    <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                  </CustomTooltip>
+              )
+              :
+              (
+                <CustomTooltip
+                  mode="hover"
+                  tooltipComponent={
+                    <div
+                      className="rounded-xl p-3 bg-modal-bg-dk text-white max-w-xs"
+                    >
+                      <p className='text-[#00AC30] mb-2'>Associated</p>
+                      <p>You have associated your address with this NFT Profile.</p>
+                    </div>
+                  }
+                >
+                  <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
+                </CustomTooltip>
+              )
+          }
+          <div className='w-3/4'>
+            <p onClick={pending ? () => setVisible(true) : null} className='truncate text-black text-sm font-grotesk font-semibold tracking-wide'>{profile.profileUrl || profile.url}</p>
+            <div className="flex items-center w-full">
+              <div className="flex w-full items-center justify-between">
+                <div>
+                  {isCollection && isRemoved
+                    ?
+                    (
+                      <p className='text-[#6F6F6F] text-sm mt-1'>The deployer wallet associated to this collection has been disconnected from your account. Please connect another collection.</p>
+                    )
+                    :
+                    (
+                      <ExternalLink
+                        href={getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address')}
+                      >
+                        <div
+                          className='flex justify-between font-mono text-blog-text-reskin text-sm font-medium'
+                        >
+                          {shortenAddress(profile?.addr || profile?.owner)}
+                          <LinkIcon size={18} className='ml-2'/>
+                        </div>
+                      </ExternalLink>
+                    )}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
   
-      <div className='flex items-center'>
-        <Trash size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' onClick={() => remove(pending ? 'profile-pending' : 'profile', profile[1] || profile.profileUrl)} />
+        <div className='flex items-center'>
+          <DropdownPickerModal
+            forceLightMode
+            constrain
+            selectedIndex={0}
+            options={filterNulls([
+              isCollection && {
+                label: 'Change Collection',
+                onSelect: () => remove(),
+                icon: null,
+              },
+              !isCollection && pending && {
+                label: 'Approve',
+                onSelect: () => setVisible(true),
+                icon: null,
+              },
+              !isCollection && {
+                label: pending ? 'Reject' : 'Remove',
+                onSelect: () => setRemoveModalVisible(true),
+                icon: null,
+              },
+              !isCollection && {
+                label: 'View on Etherscan',
+                onSelect: () => {
+                  window.open(getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address'));
+                },
+                icon: null,
+              }
+            ])}>
+            <DotsThreeOutlineVertical size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
+          </DropdownPickerModal>
+        </div>
       </div>
-    </div>
+
+      <Modal
+        visible={visible}
+        loading={false}
+        title={''}
+        onClose={() => {
+          setVisible(false);
+        }}
+        bgColor='white'
+        hideX
+        fullModal
+        pure
+      >
+        <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+          <div className='pt-16 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+            <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
+            <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
+            {
+              transactionPending ?
+                <>
+                  <div className='flex mb-10 items-center'>
+                    <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
+                    <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
+                  </div>
+                  
+                  <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
+                </>
+                :
+                !associationRejected ?
+                  (
+                    !accepted
+                      ? (
+                        <div>
+                          <h2 className='text-4xl tracking-wide font-bold mb-10'>Approve Request</h2>
+                          <p className='text-[#6F6F6F] mb-4'>
+                            <span className='text-black font-bold tracking-wide'>
+                              {profile.profileUrl || profile.url}{' '}
+                            </span>
+                            is requesting to associate your address to their NFT Profile.
+                          </p>
+                          <p className='text-[#6F6F6F]'>This profile is owned by address</p>
+                          <ExternalLink
+                            href={getEtherscanLink(chain?.id, profile.addr || profile.owner, 'address')}
+                          >
+                            <div
+                              className='flex font-mono text-black text-sm font-bold tracking-wide mb-4'
+                            >
+                              {shortenAddress(profile?.addr || profile?.owner)}
+                              <LinkIcon size={18} className='ml-2'/>
+                            </div>
+                          </ExternalLink>
+
+                          <p className='text-[#6F6F6F]'>
+                            If you approve this request, your NFTs will be available to display on their profile’s gallery.
+                            <span className='text-black font-bold tracking-wide'>
+                              {profile.profileUrl || profile.url}{' '}
+                            </span>
+                              will
+                            <span className='text-black font-bold tracking-wide'>
+                                NOT
+                            </span>
+                                be able to make any changes to your address or its contents. You can change this connection at any time in your account’s settings.
+                          </p>
+                          <button onClick={(e) => acceptPendingProfile(e, profile.profileUrl || profile.url)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+                            Approve Request
+                          </button>
+                          <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
+                            <GasPump size={20} weight="fill" />
+                            <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
+                          </div>
+                          <p className='underline text-center font-bold tracking-wide hover:cursor-pointer' onClick={() => {setRemoveModalVisible(true); setVisible(false);}}>Reject Request</p>
+                        </div>
+                      )
+                      :
+                      (
+                        <div>
+                          <h2 className='text-4xl tracking-wide font-bold mb-10'>Profile Connected</h2>
+                          <p className='text-[#6F6F6F] mb-4'>
+                            Congratulations! You have associated the NFT Profile{' '}
+                            <span className='text-black font-bold tracking-wide'>{profile.profileUrl || profile.url}{' '}</span>
+                            to your address.
+                          </p>
+                          <p className='text-[#6F6F6F] mb-4'>
+                            As a reminder, your NFTs will be available to display on their NFT Profile’s gallery.{' '}
+                            <span className='text-black font-bold tracking-wide'>
+                              {profile.profileUrl || profile.url}{' '}
+                            </span>
+                            will
+                            <span className='text-black font-bold tracking-wide'>
+                              {' '}NOT{' '}
+                            </span>
+                            be able to make any changes to your address or its contents. </p>
+                          <p className='text-[#6F6F6F]'>
+                            You can change this association at any time in your account’s settings.
+                          </p>
+                          <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+                            Return to NFT.com
+                          </button>
+                        </div>
+                      )
+                  )
+                  :
+                  (
+                    <div>
+                      <h2 className='text-4xl tracking-wide font-bold mb-10'>Profile Rejected</h2>
+                      <p className='text-[#6F6F6F] mb-4'>
+                        You have denied access to the NFT Profile
+                        <span className='text-black font-bold tracking-wide'>{' '}{profile.profileUrl || profile.url}</span>
+                      </p>
+                      <p className='text-[#6F6F6F]'>Your NFTs will not display on their NFT Profile`&apos;`s gallery.</p>
+                  
+                      <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+                        Return to NFT.com
+                      </button>
+                    </div>
+                  )
+            }
+          </div>
+        </div>
+      </Modal>
+      <RemoveModal isProfile isRemoved={isRemoved} rejected={pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner || profile.addr} remove={removeHandler} />
+    </>
   );
 }
     

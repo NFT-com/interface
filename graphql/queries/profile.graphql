@@ -8,11 +8,17 @@ query Profile($url: String!, $chainId: String!) {
     description
     gkIconVisible
     nftsDescriptionsVisible
+    deployedContractsVisible
     layoutType
     owner {
       address
       chainId
       network
+      preferredProfile {
+        url
+        id
+      }
     }
+    profileView
   }
 }

@@ -1,11 +1,13 @@
+import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import LightNavLogo from 'public/hero_corner.svg';
+import NavLogo from 'public/hero_corner_dark.svg';
 import { useAccount } from 'wagmi';
 
 export const Footer = () => {
@@ -13,6 +15,7 @@ export const Footer = () => {
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
+  const { user } = useUser();
 
   const footerData = [
     {
@@ -44,7 +47,13 @@ export const Footer = () => {
           onClick: () => {
             router.push('/articles');
           },
-        }
+        },
+        {
+          name: 'What is an NFT?',
+          onClick: () => {
+            router.push('/articles/what-is-an-nft');
+          }
+        },
       ])
     },
     {
@@ -123,8 +132,8 @@ export const Footer = () => {
 
   return (
     <div id="FooterContainer" className={tw(
-      'flex flex-col minlg:flex-row relative content-between minlg:content-center py-12 bg-[#222222]',
-      'dark:text-primary-txt-dk'
+      'flex flex-col minlg:flex-row relative content-between minlg:content-center py-12 bg-footer-bg dark:bg-footer-bg-dk',
+      'dark:text-primary-txt-dk text-primary-txt'
     )}>
       <div className={tw(
         'minlg:w-2/5 w-full flex-shrink-0 flex',
@@ -134,14 +143,15 @@ export const Footer = () => {
           <div className={tw(
             'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
           )}>
-            <div className={tw('h-10 w-10 mr-1 relative')}>
-              <Image
-                src={'https://cdn.nft.com/hero_corner.svg'}
-                alt="nft.com"
-                layout='fill'
-                objectFit='cover'
-              />
-            </div>
+            <Link href='/' passHref>
+              <div>
+                {
+                  user.isDarkMode ?
+                    <LightNavLogo className='h-8 w-8 justify-start' /> :
+                    <NavLogo className='h-8 w-8 justify-start' />
+                }
+              </div>
+            </Link>
           </div>
         </Link>
         <div className="hidden minlg:block h-1/5 mt-3 minmd:mt-0">

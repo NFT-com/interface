@@ -1,15 +1,17 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
+import Toast from 'components/elements/Toast';
 import HomeLayout from 'components/layouts/HomeLayout';
+import { SearchModal } from 'components/modules/Search/SearchModal';
 import ConnectedAccounts from 'components/modules/Settings/ConnectedAccounts';
 import ConnectedProfiles from 'components/modules/Settings/ConnectedProfiles';
 import DisplayMode from 'components/modules/Settings/DisplayMode';
 import NftOwner from 'components/modules/Settings/NftOwner';
-import SettingsForm from 'components/modules/Settings/SettingsForm';
 import SettingsSidebar from 'components/modules/Settings/SettingsSidebar';
-import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
+import TransferProfile from 'components/modules/Settings/TransferProfile';
+import { useGetRemovedAssociationsForReceiver } from 'graphql/hooks/useGetRemovedAssociationsForReceiverQuery';
+import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
@@ -17,39 +19,39 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import NotFoundPage from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
 import { Doppler, getEnvBool } from 'utils/env';
+import { shortenAddress } from 'utils/helpers';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 export default function Settings() {
   const { nftResolver } = useAllContracts();
   const { address: currentAddress } = useAccount();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-  const { data: pendingAssociatedProfiles, mutate } = usePendingAssociationQuery();
-  const { ignoreAssociations } = useIgnoreAssociationsMutation();
+  const { data: pendingAssociatedProfiles } = usePendingAssociationQuery();
+  const { data: removedAssociations } = useGetRemovedAssociationsForReceiver();
   const { getCurrentProfileUrl }= useUser();
   const result = getCurrentProfileUrl();
   const [selectedProfile, setSelectedProfile] = useState(result);
-  const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [] });
-  const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [] });
-  const profileRef = useRef(null);
+  const [approvedProfiles, setApprovedProfiles] = useState([]);
+  const [associatedAddresses, setAssociatedAddresses] = useState({ pending: [], accepted: [], denied: [] });
+  const [associatedProfiles, setAssociatedProfiles] = useState({ pending: [], accepted: [], removed: [] });
+  const { data: events } = useIgnoredEventsQuery({ profileUrl: selectedProfile, walletAddress: currentAddress });
 
   const fetchAddresses = useCallback(
     async (profile) => {
-      const data = await nftResolver.associatedAddresses(profile) || [];
+      const data = await (await nftResolver.associatedAddresses(profile)) || [];
       const allData = await nftResolver.getAllAssociatedAddr(currentAddress, profile) || [];
       const result = allData.filter(a => !data.some(b => a.chainAddr === b.chainAddr));
-      setAssociatedAddresses({ pending: result, accepted: data });
+      const filterPending = result.reverse().filter(a => !events?.ignoredEvents.some(b => a.chainAddr === b.destinationAddress && b.ignore));
+      setAssociatedAddresses({ pending: filterPending, accepted: data, denied: events?.ignoredEvents });
     },
-    [nftResolver, currentAddress],
+    [nftResolver, currentAddress, events?.ignoredEvents],
   );
 
   useEffect(() => {
     if(selectedProfile && currentAddress) {
       fetchAddresses(selectedProfile).catch(console.error);
-    }
-    if(!currentAddress){
-      setAssociatedAddresses({ pending: [], accepted: [] });
     }
   }, [selectedProfile, fetchAddresses, currentAddress]);
 
@@ -58,41 +60,44 @@ export default function Settings() {
     setSelectedProfile(result);
   }, [result, getCurrentProfileUrl]);
 
+  useEffect(() => {
+    setApprovedProfiles([]);
+
+    if(!currentAddress){
+      setAssociatedAddresses({ pending: [], accepted: [], denied: [] });
+      setAssociatedProfiles({ pending: [], accepted: [], removed: [] });
+    }
+  }, [currentAddress]);
+
   const fetchProfiles = useCallback(
     async () => {
       const evm = await nftResolver.getApprovedEvm(currentAddress);
-      if(!pendingAssociatedProfiles?.getMyPendingAssociations){
-        mutate();
-      }
+      evm.forEach(async(evm) => {
+        const assocAddress = await nftResolver.associatedAddresses(evm.profileUrl);
+        const isAssociated = assocAddress.some((item) => item.chainAddr === currentAddress);
+        if(isAssociated){
+          if(!approvedProfiles.some((item) => item.addr === evm.addr)){
+            setApprovedProfiles([...approvedProfiles, evm]);
+          }
+        }
+      });
       const result = pendingAssociatedProfiles?.getMyPendingAssociations.filter(a => !evm.some(b => a.url === b.profileUrl));
-      setAssociatedProfiles({ pending: result, accepted: evm });
+      const removed = removedAssociations?.getRemovedAssociationsForReceiver?.filter(a => a.hidden !== true);
+      setAssociatedProfiles({ pending: result, accepted: approvedProfiles, removed: removed });
     },
-    [nftResolver, currentAddress, pendingAssociatedProfiles],
+    [nftResolver, currentAddress, pendingAssociatedProfiles, removedAssociations, approvedProfiles],
   );
 
   useEffect(() => {
     fetchProfiles().catch(console.error);
     if(!currentAddress){
-      setAssociatedProfiles({ pending: [], accepted: [] });
+      setAssociatedProfiles({ pending: [], accepted: [], removed: [] });
     }
-  }, [nftResolver, currentAddress, fetchProfiles]);
+  }, [nftResolver, currentAddress, fetchProfiles, selectedProfile]);
   
   if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
     return <NotFoundPage />;
   }
-
-  const removeHandler = async (action, input) => {
-    if(action === 'address'){
-      const selectedProfile = profileRef.current.value;
-      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: input }, selectedProfile).then((res) => console.log(res));
-    } else if (action === 'profile') {
-      await nftResolver.removeAssociatedProfile(input).then((res) => console.log(res));
-    } else if (action === 'profile-pending') {
-      await ignoreAssociations({ eventIdArray: input }).then((res) => console.log(res));
-    } else {
-      console.log('error');
-    }
-  };
 
   const ownsProfilesAndSelectedProfile = myOwnedProfileTokens.length && myOwnedProfileTokens.some(t => t.title === selectedProfile);
   
@@ -101,34 +106,44 @@ export default function Settings() {
       <ClientOnly>
         <Header bgLight />
         <Sidebar />
+        <SearchModal />
       </ClientOnly>
+      <Toast />
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
           <SettingsSidebar isOwner={ownsProfilesAndSelectedProfile} />
-          <div className='px-5 w-3/5 md:w-full pt-28 pb-20 bg-white mx-auto'>
-            <h2 className='mb-2 font-bold text-black text-4xl font-grotesk md:block hidden'>
-              <span className='text-[#F9D963]'>/</span>
-            Settings
-            </h2>
-            {ownsProfilesAndSelectedProfile
-              ? (
-                <>
-                  <NftOwner {...{ selectedProfile }} />
-                  <DisplayMode/>
-                  <ConnectedAccounts {...{ associatedAddresses, removeHandler, selectedProfile }} />
-                </>
-              )
-              : null}
+          <div className='w-full bg-white mx-auto pt-28 minlg:pl-80 max-w-[900px]'>
+            <div className='pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-0 minlg:pl-0'>
+              <h2 className='font-bold text-black text-[40px] font-grotesk block minlg:hidden'>
+                <span className='text-[#F9D963]'>/</span>
+                Settings
+              </h2>
+              {ownsProfilesAndSelectedProfile
+                ? (
+                  <>
+                    <h3 className='mt-10 minlg:mt-24 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>Profile Settings for {selectedProfile}</h3>
+                    <ConnectedAccounts {...{ associatedAddresses, selectedProfile }} />
+                    <DisplayMode {...{ associatedAddresses, selectedProfile }}/>
+                    <TransferProfile {...{ selectedProfile }} />
+                  </>
+                )
+                : null }
+            </div>
+
+            <div className='bg-[#F8F8F8] pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-5 minlg:pl-5 pb-10 minlg:mb-10 minmd:rounded-[10px]'>
+              <h3 className='mt-10 pt-10 minlg:mt-10 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>
+                Address Settings for {shortenAddress(currentAddress, 4)}
+              </h3>
+              {ownsProfilesAndSelectedProfile
+                ? (
+                  <>
+                    <NftOwner {...{ selectedProfile, isSidebar: false, showToastOnSuccess: true }} />
+                  </>
+                )
+                : null}
           
-            <ConnectedProfiles {...{ associatedProfiles, removeHandler }} />
-          
-            {ownsProfilesAndSelectedProfile
-              ? (<div id="transfer" className='mt-10'>
-                <h2 className='font-grotesk tracking-wide font-bold text-black md:text-2xl text-4xl mb-1'>Transfer Profile</h2>
-                <p className='text-blog-text-reskin mb-4'>Send this profile to another wallet.</p>
-                <SettingsForm selectedProfile={selectedProfile} buttonText='Transfer Profile' type='transfer' />
-              </div>)
-              : null }
+              <ConnectedProfiles {...{ associatedProfiles }} />
+            </div>
           </div>
         </div>
         <Footer />

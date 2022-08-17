@@ -14,7 +14,7 @@ export interface GalleryToggleAllButtonsProps {
 
 export function GalleryToggleAllButtons(props: GalleryToggleAllButtonsProps) {
   const { publiclyVisibleNfts } = useContext(ProfileContext);
-  return <div className='flex'>
+  return <div className='flex text-black dark:text-white'>
     <div
       className={tw(
         'flex mr-4 items-center cursor-pointer',

@@ -74,8 +74,9 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
 
   return (
     <div className={tw(
+      'bg-white dark:bg-black',
       props.verticalDetail ? 'flex flex-col items-center max-w-nftcom' : 'flex flex-col minmd:flex-row max-w-nftcom',
-      'text-primary-txt-dk dark',
+      'text-primary-txt dark:text-primary-txt-dk',
     )}>
       {props.hideCloseButton !== true && <div className={tw(
         'pt-8 pr-8 absolute right-0 top-0 flex block minmd:hidden z-50'
@@ -107,7 +108,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
       </div>
       <div className={tw(
         props.verticalDetail ? 'minmd:w-3/4 w-full' : 'minmd:w-1/2 w-full',
-        'flex flex-col px-6 my-6 overflow-y-scroll'
+        'flex flex-col px-6 my-6 overflow-y-auto'
       )}>
         <div className='w-full flex justify-between'>
           <div className='flex flex-col'>
@@ -122,7 +123,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
           {userIsOwner &&
             <div className={tw(
               'flex w-2/5',
-              'rounded-full bg-modal-overlay-dk h-10 aspect-square mr-1',
+              'rounded-full bg-modal-overlay dark:bg-modal-overlay-dk h-10 aspect-square mr-1',
               'cursor-pointer justify-center items-center',
               isDownloading ? 'opacity-80' : 'opacity-100',
               'hover:opacity-75',
@@ -174,7 +175,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
           }
         </div>
         <div className={tw(
-          'grid gap-2 overflow-y-scroll overflow-x-hidden mt-4',
+          'grid gap-2 overflow-y-auto overflow-x-hidden mt-4',
           props.verticalDetail && !isMobile ? 'minmd:grid-cols-3 grid-cols-2 w-full' : 'grid-cols-2 w-full'
         )}>
           {[

@@ -29,12 +29,13 @@ export function sameAddress(first: Maybe<string>, second: Maybe<string>) {
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
-export function shortenAddress(address: string, chars = 6): string {
+export function shortenAddress(address: string, chars?: number): string {
+  const charsVal = chars || 6;
   const parsed = isAddress(address);
   if (!parsed) {
     return '';
   }
-  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`;
+  return `${parsed.substring(0, charsVal + 2)}...${parsed.substring(42 - charsVal)}`;
 }
 
 export function numberWithCommas(x: number) {
@@ -83,7 +84,7 @@ export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
 
 export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
 
-export const filterNulls = (items: any[]) => items.filter(item => item != null);
+export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
 
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
   const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
@@ -161,4 +162,42 @@ export function getEtherscanLink(
 
 export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
   return (chainId == null ? null : String(chainId));
+}
+
+export function getPerPage(index: string, screenWidth: number, sideNavOpen: boolean): number {
+  let perPage;
+  if (index === 'slider') {
+    if (screenWidth >= 1200) {
+      perPage = sideNavOpen ? 3 : 4;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 2 : 3;
+    } else if (screenWidth >= 600 ) {
+      perPage = 2;
+    } else {
+      perPage = 1;
+    }
+  }
+
+  if (index === 'collections') {
+    if (screenWidth >= 1200) {
+      perPage = sideNavOpen ? 9 : 12;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 4 : 6;
+    } else if (screenWidth >= 600) {
+      perPage = 4;
+    } else {
+      perPage = 2;
+    }
+  } else {
+    if (screenWidth >= 1200) {
+      perPage = 8;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 6 : 8;
+    } else if (screenWidth >= 600) {
+      perPage = 6;
+    } else {
+      perPage = 4;
+    }
+  }
+  return perPage;
 }

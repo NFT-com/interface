@@ -301,6 +301,7 @@ describe('Unit test our seaport functions', () => {
         ethers.utils.parseEther('10'),
         NULL_ADDRESS,
         convertDurationToSec('1 Week'),
+        null
       );
 
       expect(params).to.deep.eq({
@@ -333,6 +334,69 @@ describe('Unit test our seaport functions', () => {
         salt: '0x123',
         startTime: '0',
         totalOriginalConsiderationItems: '2',
+        zone: '0x004c00500000ad104d7dbd00e3ae0a5c00560c00',
+        zoneHash: '0x3000000000000000000000000000000000000000000000000000000000000000'
+      });
+    });
+
+    it('should build the correct object with collection fee', () => {
+      cy.stub(Date, 'now').returns(0);
+      cy.stub(Buffer, 'from').returns('123');
+      const params = createSeaportParametersForNFTListing(
+        'test_offerer',
+        {
+          tokenId: '1',
+          contract: 'test_collection'
+        } as PartialDeep<Nft>,
+        ethers.utils.parseEther('10'),
+        ethers.utils.parseEther('10'),
+        NULL_ADDRESS,
+        convertDurationToSec('1 Week'),
+        {
+          basisPoints: 10,
+          recipient: 'test_fee_collection'
+        }
+      );
+
+      expect(params).to.deep.eq({
+        conduitKey: '0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000',
+        consideration: [{
+          endAmount: '9740000000000000000',
+          identifierOrCriteria: '0',
+          itemType: 0,
+          recipient: 'test_offerer',
+          startAmount: '9740000000000000000',
+          token: '0x0000000000000000000000000000000000000000'
+        },
+        {
+          endAmount: '250000000000000000',
+          identifierOrCriteria: '0',
+          itemType: 0,
+          recipient: '0x8De9C5A032463C561423387a9648c5C7BCC5BC90',
+          startAmount: '250000000000000000',
+          token: '0x0000000000000000000000000000000000000000'
+        },
+        {
+          endAmount: '10000000000000000',
+          identifierOrCriteria: '0',
+          itemType: 0,
+          recipient: 'test_fee_collection',
+          startAmount: '10000000000000000',
+          token: '0x0000000000000000000000000000000000000000'
+        }],
+        endTime: '604800',
+        offer: [{
+          endAmount: '1',
+          identifierOrCriteria: '1',
+          itemType: 2,
+          startAmount: '1',
+          token: 'test_collection'
+        }],
+        offerer: 'test_offerer',
+        orderType: 2,
+        salt: '0x123',
+        startTime: '0',
+        totalOriginalConsiderationItems: '3',
         zone: '0x004c00500000ad104d7dbd00e3ae0a5c00560c00',
         zoneHash: '0x3000000000000000000000000000000000000000000000000000000000000000'
       });

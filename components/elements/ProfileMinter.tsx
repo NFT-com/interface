@@ -22,7 +22,7 @@ import { useAccount } from 'wagmi';
 export const ProfileMinter = () => {
   const [currentURI, setCurrentURI] = useState('');
   const [minting, setMinting] = useState(false);
-  const [mintSuccess, setMintSuccess] = useState(false);
+  const [, setMintSuccess] = useState(false);
 
   const { isSupported } = useSupportedNetwork();
   const { address: currentAddress } = useAccount();

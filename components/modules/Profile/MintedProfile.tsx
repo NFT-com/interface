@@ -1,13 +1,19 @@
 /* eslint-disable @next/next/no-img-element */
 import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
+import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
+import { ProfileViewType } from 'graphql/generated/types';
+import { useAssociatedCollectionForProfile } from 'graphql/hooks/useAssociatedCollectionForProfileQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { DeployedCollectionsGallery } from './DeployedCollectionsGallery';
 import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
 import { MintedProfileInfo } from './MintedProfileInfo';
@@ -20,7 +26,8 @@ import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
-import { useAccount, useNetwork } from 'wagmi';
+import useSWR from 'swr';
+import { useAccount, useNetwork, useSigner } from 'wagmi';
 
 export interface MintedProfileProps {
   profileURI: string;
@@ -30,6 +37,7 @@ export interface MintedProfileProps {
 export function MintedProfile(props: MintedProfileProps) {
   const { profileURI, addressOwner } = props;
   const [isPicturedHovered, setIsPicturedHovered] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<'nfts' | 'deployed'>('nfts');
 
   const {
     editMode,
@@ -39,14 +47,39 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftHeaderImg,
     setDraftProfileImg,
     userIsAdmin,
-    publiclyVisibleNftCount
+    publiclyVisibleNftCount,
+    draftDeployedContractsVisible
   } = useContext(ProfileContext);
 
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const { profileData } = useProfileQuery(profileURI);
 
+  const { nftResolver } = useAllContracts();
+  const { data: signer } = useSigner();
+  const { data: associatedContract } = useSWR<AddressTupleStructOutput>(
+    'AssociatedCollection' + profileURI + profileData?.profile?.profileView,
+    async () => {
+      if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
+        return null;
+      }
+      return await nftResolver.connect(signer).associatedContract(profileURI).catch(() => null);
+    }
+  );
+  const { data: associatedAddresses } = useSWR<AddressTupleStructOutput[]>(
+    'AssociatedAddresses' + profileURI + profileData?.profile?.profileView,
+    async () => {
+      if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
+        return null;
+      }
+      return await nftResolver.connect(signer).associatedAddresses(profileURI).catch(() => null);
+    }
+  );
+  const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
+
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
+
+  const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -69,6 +102,15 @@ export function MintedProfile(props: MintedProfileProps) {
       });
     }
   };
+  
+  if (
+    associatedContract != null &&
+    associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer))
+  ) {
+    return <div className='w-full h-full'>
+      <Collection contract={associatedContract?.chainAddr} />
+    </div>;
+  }
 
   return (
     <ProfileScrollContextProvider>
@@ -113,7 +155,7 @@ export function MintedProfile(props: MintedProfileProps) {
         </BannerWrapper>
       </div>
       <div className={tw(
-        'flex flex-col',
+        'flex-col',
         'max-w-7xl min-w-[60%]',
         isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
       )}>
@@ -193,11 +235,42 @@ export function MintedProfile(props: MintedProfileProps) {
             profileURI={profileURI}
           />
         </div>
+        {
+          showDeployedTab &&
+          <div className={tw(
+            'flex w-full px-12',
+            editMode ? 'mt-20 mb-4' : 'sm:mt-5 mb-4'
+          )}>
+            <span
+              onClick={() => {
+                setSelectedTab('nfts');
+              }}
+              className={tw(
+                'cursor-pointer text-white text-lg tracking-wide mr-4',
+                selectedTab === 'nfts' ? 'dark:text-white' : 'text-secondary-txt'
+              )}
+            >
+              NFTs
+            </span>
+            <span
+              onClick={() => {
+                setSelectedTab('deployed');
+              }}
+              className={tw(
+                'cursor-pointer text-lg tracking-wide',
+                selectedTab === 'deployed' ? 'dark:text-white' : 'text-secondary-txt'
+              )}
+            >
+              Created Collections
+            </span>
+          </div>
+        }
         <div
           className={tw(
             'h-full',
-            editMode ? 'mt-28 minmd:mt-16' : 'mt-5 minmd:mt-0',
+            editMode && !showDeployedTab ? 'mt-28 minmd:mt-16' : 'mt-5 minmd:mt-0',
             'w-full justify-start space-y-4 flex flex-col',
+            selectedTab === 'nfts' ? 'flex' : 'hidden'
           )}
         >
           {
@@ -248,6 +321,15 @@ export function MintedProfile(props: MintedProfileProps) {
                 </div>
               </>
           }
+        </div>
+        <div
+          className={tw(
+            'h-full sm:mt-5',
+            'w-full justify-start space-y-4 flex flex-col',
+            selectedTab === 'deployed' ? 'flex' : 'hidden'
+          )}
+        >
+          <DeployedCollectionsGallery address={addressOwner} />
         </div>
       </div>
       <div className="flex grow" />

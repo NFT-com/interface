@@ -25,6 +25,7 @@ export interface ModalProps {
   fullModal?: boolean;
   bgColor?: string;
   transparentOverlay?: boolean;
+  hideX?: boolean
 }
 
 export function Modal(props: PropsWithChildren<ModalProps>) {
@@ -39,7 +40,7 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
         exit={{ opacity: 0, scale: 1 }}
         open={props.visible}
         className={tw(
-          'inset-0 absolute',
+          'inset-0 fixed',
           'overflow-y-auto sm:overflow-x-hidden',
           'max-h-screen max-w-screen',
           props.dark ? 'dark' : ''
@@ -62,9 +63,9 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
             className={tw(
               'transition-all fixed rounded-lg sm:rounded-none',
               props.pure ? '' : `pb-4 px-7 minmd:px-24 ${props.longModal ? '' : 'pt-14' }`,
-              'text-left overflow-hidden shadow-xl absolute z-50 overflow-y-scroll',
+              'text-left overflow-hidden shadow-xl absolute z-50 overflow-y-auto',
               'min-w-[600px] sm:min-w-[1px] sm:max-w-screen',
-              'sm:overflow-x-hidden sm:overflow-y-scroll',
+              'sm:overflow-x-hidden sm:overflow-y-auto',
               `${props.bgColor ?? 'bg-pagebg dark:bg-pagebg-dk'}`,
               `${props.pinkTitle && props.longModal ? 'max-h-screen' : '' }`,
               `${props.pinkTitle && !props.longModal ? 'min4xl:-mt-28 md:h-full' : '' }`,
@@ -115,7 +116,7 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                         onClick={props.onClose}
                       >
                         <span className="sr-only">Close</span>
-                        <XIcon className="h-6 w-6" aria-hidden="true" />
+                        {!props.hideX && <XIcon className="h-6 w-6" aria-hidden="true" />}
                       </button>
                     </div>}
                     {

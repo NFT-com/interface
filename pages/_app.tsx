@@ -115,7 +115,9 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
               learnMoreUrl: 'https://docs.nft.com/',
             }}
             theme={rainbowDark}
-            chains={chains}>
+            chains={chains}
+            initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ? chain.goerli : chain.mainnet}
+          >
             <AnimatePresence exitBeforeEnter>
               <GraphQLProvider>
                 <NFTListingsContextProvider>

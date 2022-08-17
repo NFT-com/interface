@@ -1,8 +1,7 @@
 import GalleryCard from 'components/elements/GalleryCard';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
-
 import { AlchemyOwnedNFT } from 'types';
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 export interface OwnedProfileGalleryCardProps {
   token: AlchemyOwnedNFT;

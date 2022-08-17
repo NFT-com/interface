@@ -1,26 +1,25 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Modal } from 'components/elements/Modal';
 import { Nft } from 'graphql/generated/types';
+import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
-import { filterNulls, processIPFSURL } from 'utils/helpers';
-import { getLooksrareNonce, listLooksrare, listSeaport } from 'utils/listings';
+import { Fee, SeaportOrderParameters } from 'types';
+import { Doppler, getEnv } from 'utils/env';
+import { filterNulls, getChainIdString, processIPFSURL } from 'utils/helpers';
+import { getLooksrareNonce, getOpenseaCollection } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
-import { ListingBuilder } from './ListingBuilder';
-
 import { MakerOrder } from '@looksrare/sdk';
 import { BigNumber, BigNumberish } from 'ethers';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { SeaportOrderParameters } from 'types';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
 
 export type ListingType = 'looksrare' | 'seaport';
@@ -37,21 +36,21 @@ export type StagedListing = {
 
 interface NFTListingsContextType {
   toList: StagedListing[];
-  stageListing: (listing: StagedListing) => void;
-  openListingBuilder: (type: ListingType, nft: PartialDeep<Nft>) => void;
+  stageListing: (listing: PartialDeep<StagedListing>) => void;
   clear: () => void;
   listAll: () => void;
   submitting: boolean;
+  toggleCartSidebar: () => void;
 }
 
 // initialize with default values
 export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   toList: [],
   stageListing: () => null,
-  openListingBuilder: () => null,
   clear: () => null,
   listAll: () => null,
-  submitting: false
+  submitting: false,
+  toggleCartSidebar: () => null,
 });
 
 /**
@@ -62,7 +61,10 @@ export function NFTListingsContextProvider(
 ) {
   const [toList, setToList] = useState<Array<StagedListing>>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [listingBuilderData, setListingBuilderData] = useState<PartialDeep<StagedListing>>(null);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  const sidebarRef = useRef();
+  useOutsideClickAlerter(sidebarRef, () => setSidebarVisible(false));
 
   useEffect(() => {
     if (window != null) {
@@ -73,6 +75,7 @@ export function NFTListingsContextProvider(
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const provider = useProvider();
+  const router = useRouter();
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -80,15 +83,13 @@ export function NFTListingsContextProvider(
 
   const seaportCounter = useSeaportCounter(currentAddress);
   const signOrderForSeaport = useSignSeaportOrder();
-
-  const openListingBuilder = useCallback((type: ListingType, nft: PartialDeep<Nft>) => {
-    setListingBuilderData({ type, nft });
-  }, []);
+  const { listNftSeaport, listNftLooksrare } = useListNFTMutations();
 
   const stageListing = useCallback((
     listing: StagedListing
   ) => {
     if (toList.find(l => l.nft.id === listing.nft.id && l.type === listing.type)) {
+      setSidebarVisible(true);
       return;
     }
     setToList([...toList, listing]);
@@ -97,9 +98,12 @@ export function NFTListingsContextProvider(
 
   const clear = useCallback(() => {
     setToList([]);
-    setListingBuilderData(null);
     localStorage.setItem('stagedNftListings', null);
   }, []);
+
+  const toggleCartSidebar = useCallback(() => {
+    setSidebarVisible(!sidebarVisible);
+  }, [sidebarVisible]);
 
   const listAll = useCallback(async () => {
     setSubmitting(true);
@@ -120,20 +124,29 @@ export function NFTListingsContextProvider(
         );
         nonce++;
         const signature = await signOrderForLooksrare(order);
-        await listLooksrare({ ...order, signature });
+        await listNftLooksrare({ ...order, signature });
         // todo: check success/failure and maybe mutate external listings query.
       } else {
+        const contract = await getOpenseaCollection(listing?.nft?.contract);
+        const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
+          ? {
+            recipient: contract?.['payout_address'],
+            basisPoints: contract?.['dev_seller_fee_basis_points'],
+          }
+          : null;
         const parameters: SeaportOrderParameters = createSeaportParametersForNFTListing(
           currentAddress,
           listing.nft,
           listing.startingPrice,
-          listing.endingPrice,
+          listing.endingPrice ?? listing.startingPrice,
           listing.currency,
           listing.duration,
+          collectionFee,
+          getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
           // listing.takerAddress
         );
         const signature = await signOrderForSeaport(parameters, seaportCounter);
-        await listSeaport(signature , { ...parameters, counter: seaportCounter });
+        await listNftSeaport(signature , { ...parameters, counter: seaportCounter });
         // todo: check success/failure and maybe mutate external listings query.
         localStorage.setItem('stagedNftListings', null);
       }
@@ -141,6 +154,8 @@ export function NFTListingsContextProvider(
     setSubmitting(false);
     clear();
   }, [
+    listNftSeaport,
+    listNftLooksrare,
     currentAddress,
     chain?.id,
     looksrareRoyaltyFeeRegistry,
@@ -155,35 +170,37 @@ export function NFTListingsContextProvider(
   return <NFTListingsContext.Provider value={{
     toList,
     stageListing,
-    openListingBuilder,
     clear,
     listAll,
-    submitting
+    submitting,
+    toggleCartSidebar
   }}>
-    <Modal
-      fullModal
-      visible={listingBuilderData != null}
-      loading={false}
-      title={''}
-      onClose={() => {
-        setListingBuilderData(null);
-      }}
-    >
-      <ListingBuilder
-        nft={listingBuilderData?.nft}
-        type={listingBuilderData?.type}
-        onCancel={() => {
-          setListingBuilderData(null);
-        }}
-        onSuccessfulCreate={() => {
-          setListingBuilderData(null);
-        }}
-      />
-    </Modal>
+
     {
-      toList.length > 0 && <div className='z-50 absolute top-20 right-0 h-full w-40 bg-white flex flex-col'>
+      toList.length > 0 &&
+      sidebarVisible &&
+      <div ref={sidebarRef} className={tw(
+        'z-50 absolute top-20 right-0 w-full minmd:w-60 bg-white flex flex-col grow',
+        'drop-shadow-md'
+      )}>
+        <p className='w-full text-2xl py-4 px-8'>
+          Listings
+        </p>
+        <div className='flex px-8 mb-4'>
+          <span>
+            {filterNulls(toList).length} NFT{filterNulls(toList).length > 1 ? 's' : ''}
+          </span>
+          <span
+            className='ml-8 cursor-pointer hover:underline text-link'
+            onClick={() => {
+              clear();
+            }}
+          >
+            Clear
+          </span>
+        </div>
         {filterNulls(toList).map((listing, index) => {
-          return <div key={index} className='flex items-center border w-full'>
+          return <div key={index} className='flex items-center w-full h-32 px-8'>
             <div className='relative h-2/4 aspect-square'>
               <video
                 autoPlay
@@ -193,31 +210,23 @@ export function NFTListingsContextProvider(
                 src={processIPFSURL(listing.nft?.metadata?.imageURL)}
                 poster={processIPFSURL(listing.nft?.metadata?.imageURL)}
                 className={tw(
-                  'flex object-fit w-full justify-center',
+                  'flex object-fit w-full justify-center rounded-md',
                 )}
               />
             </div>
-            {'#' + BigNumber.from(listing?.nft?.tokenId ?? 0).toNumber()}
-            {
-              listing.type === 'looksrare' ?
-                <LooksrareIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Looksrare logo redirect" layout="fill"/> :
-                <OpenseaIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Opensea logo redirect" layout="fill"/>
-            }
+            <div className='flex flex-col ml-12'>
+              <span>{listing?.nft?.metadata?.name}</span>
+              <span>{'#' + BigNumber.from(listing?.nft?.tokenId ?? 0).toNumber()}</span>
+            </div>
           </div>;
         })}
-        <div className="mx-2 mt-4 flex">
+        <div className="mx-8 my-4 flex">
           <Button
             stretch
-            label={'List All'}
-            onClick={listAll}
-            type={ButtonType.PRIMARY}
-          />
-        </div>
-        <div className="mx-2 mt-4 flex">
-          <Button
-            stretch
-            label={'Clear'}
-            onClick={clear}
+            label={'Proceed to List'}
+            onClick={() => {
+              router.push('/app/checkout');
+            }}
             type={ButtonType.PRIMARY}
           />
         </div>

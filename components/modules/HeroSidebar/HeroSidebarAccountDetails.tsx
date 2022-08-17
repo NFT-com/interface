@@ -5,6 +5,7 @@ import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -27,7 +28,7 @@ export default function HeroSidebarAccountDetails(
   const { secondaryIcon } = useThemeColors();
   const [isCopied, setCopied] = useCopyClipboard();
   const router = useRouter();
-  const { setSidebarOpen, toggleSidebar } = useSidebar();
+  const { setSidebarOpen } = useSidebar();
   const { setSignOutDialogOpen } = useSignOutDialog();
   const { setCurrentProfileUrl } = useUser();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
@@ -66,6 +67,18 @@ export default function HeroSidebarAccountDetails(
         )}
       >
         <>
+          {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && <div
+            className={tw(
+              isMobile ? '' : 'sm:block hidden',
+              'pt-2.5 text-link cursor-pointer hover:underline'
+            )}
+            onClick={() => {
+              setSidebarOpen(false);
+              router.push('/app/discover');
+            }}
+          >
+            Discover
+          </div>}
           <div
             className={tw(
               isMobile ? '' : 'sm:block hidden',
@@ -108,7 +121,6 @@ export default function HeroSidebarAccountDetails(
           onClick={() => {
             disconnect();
             setSignOutDialogOpen(true);
-            toggleSidebar();
             setCurrentProfileUrl('');
           }}
         >

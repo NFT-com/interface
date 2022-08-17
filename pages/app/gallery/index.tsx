@@ -11,6 +11,7 @@ import { GenesisKeyGalleryProfileItems } from 'components/modules/Gallery/Genesi
 import { SignedOutView } from 'components/modules/GenesisKeyAuction/SignedOutView';
 import { Maybe } from 'graphql/generated/types';
 import { useGallery } from 'hooks/state/useGallery';
+import { useUser } from 'hooks/state/useUser';
 import { useSignedIn } from 'hooks/useSignedIn';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import ClientOnly from 'utils/ClientOnly';
@@ -34,6 +35,8 @@ import { useAccount } from 'wagmi';
  */
 export default function GalleryPage() {
   const parentRef = useRef();
+
+  const { user } = useUser();
 
   const { address: currentAddress } = useAccount();
   const { isSupported } = useSupportedNetwork();
@@ -76,7 +79,7 @@ export default function GalleryPage() {
         walletPopupMenu: true,
       }}>
         <Modal
-          dark
+          dark={user.isDarkMode}
           pure
           visible={detailId != null}
           loading={false}
@@ -92,28 +95,29 @@ export default function GalleryPage() {
           />
         </Modal>
         <div className={tw(
-          'flex h-full w-full overflow-hidden pt-20 bg-modal-overlay-dk',
+          'flex h-full w-full overflow-hidden pt-20 bg-modal-overlay dark:bg-modal-overlay-dk',
           'text-primary-txt-dk absolute'
         )}>
           {/* Desktop Filters - sidebar */}
           {!isMobile &&
-         <div className={tw(
-           'minlg:flex flex-col w-1/4 shrink-0 h-full min-h-4/5 border-r border-accent-border-dk',
-           'border-t px-10 pt-6 hidden'
-         )}>
-           <GenesisKeyGalleryFilters
-             showFilters={true}
-             currentFilter={currentFilter}
-             setCurrentFilter={(filter: string) => {
-               setCurrentFilter(filter);
-             }}
-           />
-         </div>
+            <div className={tw(
+              'minlg:flex flex-col w-1/4 shrink-0 h-full min-h-4/5 border-r border-accent-border-dk',
+              'border-t px-10 pt-6 hidden text-black dark:text-white'
+            )}>
+              <GenesisKeyGalleryFilters
+                showFilters={true}
+                currentFilter={currentFilter}
+                setCurrentFilter={(filter: string) => {
+                  setCurrentFilter(filter);
+                }}
+              />
+            </div>
           }
           <div className={tw(
             'flex flex-col flex-grow h-full overflow-auto',
-            'border-t border-accent-border-dk bg-modal-overlay-dk',
-            'minmd:px-4 px-0 pt-6'
+            'border-t border-accent-border-dk bg-modal-overlay dark:bg-modal-overlay-dk',
+            'minmd:px-4 px-0 pt-6',
+            'hideScroll overflow-y-hidden'
           )}>
             <GalleryPageTitle
               showMyStuff={showMyStuff}
@@ -125,7 +129,7 @@ export default function GalleryPage() {
               <NetworkErrorTile />
             </div>}
             <LoadedContainer loaded={true} fitToParent>
-              <div ref={parentRef} className='w-full h-full flex flex-wrap items-start mt-4'>
+              <div ref={parentRef} className='ProfileGalleryScrollContainer w-full h-full flex flex-wrap items-start mt-4 overflow-y-scroll'>
                 {getGalleryContent()}
               </div>
             </LoadedContainer>
@@ -133,10 +137,11 @@ export default function GalleryPage() {
         </div>
         {/* mobile filters */}
         <div className={tw(
-          'minlg:hidden w-full h-full absolute dark top-0 left-0',
+          'minlg:hidden w-full h-full absolute top-0 left-0',
           !showFilters ? 'hidden' : 'block',
-          'bg-modal-overlay-dk mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
-          'border-t border-accent-border-dk'
+          'bg-modal-overlay dark:bg-modal-overlay-dk',
+          'mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
+          'border-t border-accent-border-dk text-black dark:text-white'
         )}>
           <GenesisKeyGalleryFilters
             showFilters={showFilters}
