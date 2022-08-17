@@ -47,13 +47,14 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const submitHandler = async (input?: string) => {
     const address = input || inputVal;
     const deniedEvent = associatedAddresses?.denied?.find((evt) => evt.destinationAddress === address);
-    if(deniedEvent){
+    if (deniedEvent) {
       updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] })
         .then(() => {
           mutateHidden();
           setTransaction(deniedEvent.txHash);
           setSuccess(true);
           setModalVisible(true);
+          mutate('SettingsAssociatedAddresses' + selectedProfile + currentAddress);
         });
     } else {
       const tx = await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile);

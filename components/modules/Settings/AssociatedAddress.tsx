@@ -38,6 +38,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
       updateHideIgnored({ hideIgnored: true, eventIdArray: [eventId] })
         .then(() => {
           mutateHidden();
+          setRemoveModalVisible(false);
           toast.success('Removed');
         })
         .catch(() => toast.error('Error'));
