@@ -61,7 +61,6 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
                   value={item.value}
                   valueClasses="text-link dark:text-link overflow-x-auto"
                   onClick={item.onClick}
-                  copy
                 />;
               })}
             </div>
