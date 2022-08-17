@@ -67,13 +67,13 @@ export default function SettingsSidebar({ isOwner }: SettingsSidebarProps) {
       {isOwner
         ? (
           <ScrollLink activeClass='font-bold' to='owner' spy smooth duration={500} offset={-100}>
-            <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Select NFT Owner</p>
+            <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Select Primary NFT Owner</p>
           </ScrollLink>
         )
         : null}
 
       <ScrollLink activeClass='font-bold' to='profiles' spy smooth duration={500} offset={-100}>
-        <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Associate Profiles</p>
+        <p className='text-blog-text-reskin hover:cursor-pointer mb-6 tracking-wide font-grotesk'>Manage Address</p>
       </ScrollLink>
       
     </div>

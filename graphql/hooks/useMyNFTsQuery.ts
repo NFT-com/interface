@@ -2,6 +2,7 @@ import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { MyNfTsQuery, Nft } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
@@ -23,7 +24,7 @@ export function useMyNFTsQuery(first: number, profileId: string): NftsData {
   const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first + profileId;
 
   const { data } = useSWR(keyString, async () => {
-    if (!currentAddress) {
+    if (!currentAddress || isNullOrEmpty(profileId)) {
       return { myNFTs: { items: [], totalItems: 0, loading: false } };
     }
     const result: MyNfTsQuery = await sdk.MyNFTs({

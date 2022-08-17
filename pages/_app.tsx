@@ -112,11 +112,11 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           <RainbowKitProvider
             appInfo={{
               appName: 'NFT.com',
-              learnMoreUrl: 'https://docs.nft.com/',
+              learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
             }}
             theme={rainbowDark}
             chains={chains}
-            initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' || getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
+            initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
           >
             <AnimatePresence exitBeforeEnter>
               <GraphQLProvider>
