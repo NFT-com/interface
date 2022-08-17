@@ -4,6 +4,7 @@ import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { NotificationButton } from './NotificationButton';
@@ -88,7 +89,7 @@ export const Notifications = () => {
         )
       }
       {
-        user?.activeNotifications.profileNeedsCustomization && (
+        user?.activeNotifications.profileNeedsCustomization && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
           <NotificationButton
             buttonText='Your NFT Profile needs attention'
             onClick={() => {console.log('profile customization click');}}
