@@ -11,11 +11,12 @@ import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 import RemoveModal from './RemoveModal';
 
 import { ArrowsClockwise, CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { toast } from 'react-toastify';
 import { ExternalLink } from 'styles/theme';
-import { useNetwork } from 'wagmi';
+import { mutate } from 'swr';
+import { useAccount, useNetwork } from 'wagmi';
 
 type AssociatedProfileProps = {
   profile: {
@@ -42,56 +43,61 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
   const { setUserNotificationActive } = useUser();
+  const { address: currentAddress } = useAccount();
   const { updateHidden } = useUpdateHiddenMutation();
 
-  const acceptPendingProfile = async (e, url) => {
+  const acceptPendingProfile = useCallback(async (e, url) => {
     e.preventDefault();
 
     const tx = await nftResolver.associateSelfWithUsers([url]);
     setTransactionPending(true);
-    if(tx){
-      tx.wait(1).then(() => {
+    if (tx) {
+      await tx.wait(1).then(() => {
         setAccepted(true);
         setTransactionPending(false);
+        mutate('SettingsAssociatedProfiles' + currentAddress);
       }).catch(() => toast.error('Error'));
       setUserNotificationActive('associatedProfileAdded', true);
     }
-  };
+  }, [currentAddress, nftResolver, setUserNotificationActive]);
 
-  const removeHandler = async () => {
-    if(pending){
+  const removeHandler = useCallback(async () => {
+    if (pending) {
       await ignoreAssociations({ eventIdArray: [profile.id] })
         .then(() => {
           setVisible(true);
           setRemoveModalVisible(false);
           setAssociationRejected(true);
           toast.success('Rejected');
+          mutate('SettingsAssociatedProfiles' + currentAddress);
         })
         .catch(() => toast.warning('Error. Please try again'));
-    } else if (isRemoved){
+    } else if (isRemoved) {
       updateHidden({ eventIdArray: [profile.id], hidden: true }).then(() =>{
         toast.success('Removed');
         setRemoveModalVisible(false);
         setVisible(true);
         setAssociationRejected(true);
+        mutate('SettingsAssociatedProfiles' + currentAddress);
       });
     } else {
       const tx = await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url);
       setVisible(true);
       setTransactionPending(true);
       setRemoveModalVisible(false);
-      if(tx){
-        tx.wait(1).then(() => {
+      if (tx) {
+        await tx.wait(1).then(() => {
           setTransactionPending(false);
           toast.success('Removed');
           setUserNotificationActive('associatedProfileRemoved', true);
           setAssociationRejected(true);
+          mutate('SettingsAssociatedProfiles' + currentAddress);
         }).catch(() => toast.warning('Error. Please try again'));
       }
     }
-  };
+  }, [currentAddress, ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden]);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     if(associationRejected){
       setAssociationRejected(false);
     }
@@ -100,7 +106,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
     }
     mutatePending();
     setVisible(false);
-  };
+  }, [accepted, associationRejected, mutatePending]);
   
   return (
     <>

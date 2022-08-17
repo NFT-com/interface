@@ -1,11 +1,10 @@
+import { RelatedProfilesStructOutput } from 'constants/typechain/Nft_resolver';
+import { PendingAssociationOutput } from 'graphql/generated/types';
+
 import AssociatedProfile from './AssociatedProfile';
 
+import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
-
-type Profile = {
-  profileUrl: string;
-  addr: string;
-}
 
 type RemovedProfileAssociation = {
   hidden: boolean;
@@ -16,9 +15,9 @@ type RemovedProfileAssociation = {
 
 type ConnectedProfilesProps = {
   associatedProfiles : {
-    pending: Profile[];
-    accepted: Profile[];
-    removed: RemovedProfileAssociation[];
+    pending: PartialDeep<PendingAssociationOutput>[];
+    accepted: RelatedProfilesStructOutput[];
+    removed: PartialDeep<RemovedProfileAssociation>[];
   };
 };
 
@@ -45,10 +44,10 @@ export default function ConnectedProfiles({ associatedProfiles }: ConnectedProfi
             <AssociatedProfile profile={profile} key={index}/>
           ))}
           {associatedProfiles?.pending?.map((profile, index)=> (
-            <AssociatedProfile {...{ profile }} pending key={index} />
+            <AssociatedProfile profile={profile} pending key={index} />
           ))}
           {associatedProfiles?.removed?.map((profile, index)=> (
-            <AssociatedProfile {...{ profile }} isRemoved key={index} />
+            <AssociatedProfile profile={profile} isRemoved key={index} />
           ))}
         </>
         }
