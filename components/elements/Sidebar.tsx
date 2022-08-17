@@ -99,17 +99,14 @@ export const Sidebar = () => {
             }
            
           </div>
-          
-          {myOwnedProfileTokens.length ?
-            <Link href='/app/settings' passHref>
-              <a onClick={() => setSidebarOpen(false)}
-                className='flex flex-row w-full items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
-              >
+
+          <Link href='/app/settings' passHref>
+            <a onClick={() => setSidebarOpen(false)}
+              className='flex flex-row w-full items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
+            >
               Settings
-              </a>
-            </Link>
-            : null
-          }
+            </a>
+          </Link>
 
           <button
             className='w-full flex flex-row items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 py-2 mb-8'
