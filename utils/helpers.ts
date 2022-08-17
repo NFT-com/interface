@@ -166,17 +166,6 @@ export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
 
 export function getPerPage(index: string, screenWidth: number, sideNavOpen: boolean): number {
   let perPage;
-  if (index === 'slider') {
-    if (screenWidth >= 1200) {
-      perPage = sideNavOpen ? 3 : 4;
-    } else if (screenWidth >= 900 ) {
-      perPage = sideNavOpen ? 2 : 3;
-    } else if (screenWidth >= 600 ) {
-      perPage = 2;
-    } else {
-      perPage = 1;
-    }
-  }
 
   if (index === 'collections') {
     if (screenWidth >= 1200) {
