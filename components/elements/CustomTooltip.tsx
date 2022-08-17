@@ -1,5 +1,4 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { isNullOrEmpty } from 'utils/helpers';
 
 import React, { PropsWithChildren, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
