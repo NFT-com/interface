@@ -5,6 +5,7 @@ import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { Doppler,getEnv } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
+import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import router from 'next/router';
@@ -14,6 +15,7 @@ import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
+  forceLightMode?: boolean
 }
 
 export function Collection(props: CollectionProps) {
@@ -51,11 +53,15 @@ export function Collection(props: CollectionProps) {
         <BannerWrapper
           imageOverride={collectionData?.ubiquityResults?.collection?.banner ? `${collectionData?.ubiquityResults?.collection?.banner} + ?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null}/>
       </div>
-      <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
+      <div className={tw(
+        'pt-7 px-8 minmd:px-[5%] minxl:mx-auto pb-16 w-full',
+        props.forceLightMode && 'bg-white'
+      )}
+      >
         {collectionNfts.length > 0 ?
           <>
             <div className="font-grotesk font-black text-black text-4xl">{collectionNfts[0].document.contractName}</div>
-            <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F]">
+            <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F] max-w-nftcom minxl:mx-auto">
               <span>{shortenAddress(props.contract?.toString())}</span>
               <a
                 target="_blank"
@@ -63,7 +69,7 @@ export function Collection(props: CollectionProps) {
                 <CopyIcon />
               </a>
             </div>
-            <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
               {collectionNfts.map((nft, index) => {
                 return (
                   <div className="NftCollectionItem" key={index}>
@@ -98,7 +104,7 @@ export function Collection(props: CollectionProps) {
           </>:
           <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
       </div>
-      <div className='w-full mt-16'>
+      <div className='w-full'>
         <Footer />
       </div>
     </>

@@ -108,7 +108,7 @@ export function MintedProfile(props: MintedProfileProps) {
     (associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer)) || sameAddress(currentAddress, associatedCollectionWithDeployer?.deployer))
   ) {
     return <div className='w-full h-full'>
-      <Collection contract={associatedContract?.chainAddr} />
+      <Collection contract={associatedContract?.chainAddr} forceLightMode />
     </div>;
   }
 
