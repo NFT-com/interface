@@ -62,7 +62,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
           <p className='text-[#6F6F6F]'>
             You are about to remove the following
             <span className='text-black font-bold'>
-              rejected
+              {' '}rejected{' '}
             </span>
             address from your NFT Profile.
           </p>

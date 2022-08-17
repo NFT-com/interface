@@ -32,11 +32,16 @@ export default function ConnectedProfiles({ associatedProfiles }: ConnectedProfi
       <div>
         <p className='text-blog-text-reskin mb-2 font-semibold'>Associated Profiles</p>
         
-        {!associatedProfiles?.accepted?.length && !associatedProfiles?.pending?.length || !currentAddress
-          ? (
-            <p className='text-sm font-medium'>No profile association requests</p>
-          )
-          : <p className='text-blog-text-reskin mb-2 text-sm font-medium'>Profile Name</p>
+        {
+          (
+            !associatedProfiles?.accepted?.length &&
+            !associatedProfiles?.pending?.length &&
+            !associatedProfiles?.removed?.length
+          ) || !currentAddress
+            ? (
+              <p className='text-sm font-medium'>No profile association requests</p>
+            )
+            : <p className='text-blog-text-reskin mb-2 text-sm font-medium'>Profile Name</p>
         }
         {currentAddress &&
         <>

@@ -41,7 +41,7 @@ export default function RequestModal({ visible, setVisible, address, transaction
                     <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
                     <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
                   </div>
-                  <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
+                  <p className='text-[#6F6F6F]'>We{'\''}re waiting for the transaction to complete.</p>
                 </>
                 :
                 <>
@@ -49,7 +49,7 @@ export default function RequestModal({ visible, setVisible, address, transaction
                   <p className='text-[#6F6F6F]'>
                     You are about to send an address association request to
                     <span className='font-mono text-black text-xl break-words mt-2'>
-                      {address}
+                      {' ' + address}
                     </span>
                   </p>
                   <p className='mt-6'>View the address on {' '}
