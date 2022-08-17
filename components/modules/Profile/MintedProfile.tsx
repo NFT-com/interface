@@ -239,7 +239,7 @@ export function MintedProfile(props: MintedProfileProps) {
           showDeployedTab &&
           <div className={tw(
             'flex w-full px-12',
-            editMode ? 'mt-20 mb-4' : 'sm:mt-5 mb-4'
+            editMode ? 'mt-8' : 'mt-8'
           )}>
             <span
               onClick={() => {
