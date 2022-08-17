@@ -1,6 +1,6 @@
 import { Modal } from 'components/elements/Modal';
 
-import { GasPump, XCircle } from 'phosphor-react';
+import { ArrowsClockwise, GasPump, XCircle } from 'phosphor-react';
 import { useCallback } from 'react';
 
 type RemoveModalProps = {
@@ -12,10 +12,22 @@ type RemoveModalProps = {
   isProfile?: boolean
   profileUrl?: string
   isRemoved?: boolean
+  isTxPending?: boolean
 };
 
-export default function RemoveModal({ visible, setVisible, address, rejected, remove, isProfile, profileUrl, isRemoved }: RemoveModalProps) {
+export default function RemoveModal({ visible, setVisible, address, rejected, remove, isProfile, profileUrl, isRemoved,isTxPending }: RemoveModalProps) {
   const getModalContent = useCallback(() => {
+    if(isTxPending){
+      return (
+        <>
+          <div className='flex mb-10 items-center'>
+            <ArrowsClockwise size={32} color="#6f6f6f" weight="fill" className='mr-2 animate-spin-slow' />
+            <h2 className='text-4xl tracking-wide font-bold'>One second...</h2>
+          </div>
+          <p className='text-[#6F6F6F]'>We’re waiting for the transaction to complete.</p>
+        </>
+      );
+    }
     if(isProfile && rejected || isProfile && isRemoved) {
       return (
         <>
@@ -60,11 +72,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
       return (
         <>
           <p className='text-[#6F6F6F]'>
-            You are about to remove the following
-            <span className='text-black font-bold'>
-              {' '}rejected{' '}
-            </span>
-            address from your NFT Profile.
+            You are about to remove the following <span className='text-black font-bold'> rejected </span> address from your NFT Profile.
           </p>
           <p className='font-mono text-black text-xl break-words mt-2'>{address}</p>
                 
@@ -108,7 +116,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
         </button>
         <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
           <GasPump size={20} weight="fill" />
-          <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
+          <p className='ml-1'>This action will require a<span className='border-dashed	border-b border-[#6F6F6F]'> gas fee.</span></p>
         </div>
         <p
           className='underline text-center font-bold tracking-wide hover:cursor-pointer mt-6'
@@ -117,7 +125,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
         </p>
       </>
     );
-  }, [address, isProfile, rejected, remove, setVisible, profileUrl, isRemoved]);
+  }, [address, isProfile, rejected, remove, setVisible, profileUrl, isRemoved, isTxPending]);
 
   return (
     <Modal
@@ -136,7 +144,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
         <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
           <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
-          <h2 className='text-4xl tracking-wide font-bold mb-10'>Are you sure?</h2>
+          {!isTxPending && <h2 className='text-4xl tracking-wide font-bold mb-10'>Are you sure?</h2>}
           {getModalContent()}
         </div>
       </div>

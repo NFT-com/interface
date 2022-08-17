@@ -32,6 +32,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
   const { nftResolver } = useAllContracts();
   const { chain } = useNetwork();
   const [removeModalVisible, setRemoveModalVisible] = useState(false);
+  const [txPending, setTxPending] = useState(false);
 
   const removeHandler = useCallback(async () => {
     if(rejected){
@@ -46,8 +47,10 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
       await nftResolver
         .removeAssociatedAddress({ cid: 0, chainAddr: address }, selectedProfile)
         .then(async (tx: ContractTransaction) => {
+          setTxPending(true);
           await tx.wait(1).then(() => {
             toast.success('Removed');
+            setTxPending(false);
             setRemoveModalVisible(false);
             // todo: refactor state management in settings page so we don't have to use a general mutator.
             mutate('SettingsAssociatedAddresses' + selectedProfile + currentAddress);
@@ -144,7 +147,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
           </DropdownPickerModal>
         </div>
       </div>
-      <RemoveModal {...{ address }} remove={removeHandler} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />
+      <RemoveModal {...{ address }} isTxPending={txPending} remove={removeHandler} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />
     </>
   );
 }
