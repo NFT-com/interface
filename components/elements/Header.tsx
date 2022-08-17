@@ -69,13 +69,8 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
           </div>
           {
             getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
-            <div className={tw(
-              'flex-row items-center justify-end hidden',
-              'minlg:flex w-full mx-8'
-            )}>
-              <div className='flex grow max-w-[27rem] items-center h-full'>
-                <SearchBar bgLight={!useDarkMode || removeBg} />
-              </div>
+            <div className="hidden minlg:block w-full mx-8 max-w-[27rem]">
+              <SearchBar bgLight={!useDarkMode || removeBg} />
             </div>
           }
           <div className='flex items-center ...'>

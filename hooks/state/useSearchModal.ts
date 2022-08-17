@@ -6,7 +6,8 @@ export function useSearchModal() {
     fallbackData:
     {
       modalType: 'search',
-      searchModalOpen: false
+      searchModalOpen: false,
+      sideNavOpen: false,
     } });
 
   const loading = !data;
@@ -18,28 +19,37 @@ export function useSearchModal() {
     });
   };
 
-  const setSearchModalOpen = (searchModalOpen: boolean, modalType = 'search') => {
+  const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search') => {
     mutate({
       ...data,
       searchModalOpen,
       modalType
     });
-  };
+  }, [data, mutate]);
 
-  const setModalType = (modalType: 'search' | 'filters') => {
+  const setModalType = useCallback((modalType: 'search' | 'filters') => {
     mutate({
       ...data,
       modalType
     });
-  };
+  },[data, mutate]);
+
+  const setSideNavOpen = useCallback((sideNavOpen: boolean) => {
+    mutate({
+      ...data,
+      sideNavOpen,
+    });
+  }, [data, mutate]);
 
   return {
     loading,
     modalType: data.modalType,
     searchModalOpen: data.searchModalOpen,
+    sideNavOpen: data.sideNavOpen,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
+    setSideNavOpen,
   };
 }
 

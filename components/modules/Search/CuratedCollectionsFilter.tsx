@@ -6,14 +6,14 @@ import CaretCircle from 'public/caret_circle.svg';
 import Flask from 'public/flask.svg';
 import { useState } from 'react';
 
-export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void}) => {
-  const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
+export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void, collapsed?: boolean}) => {
+  const [isFilterCollapsed, setIsFilterCollapsed] = useState(props.collapsed ?? true);
   const [active, setActive] = useState('PFP');
   const { setSearchModalOpen } = useSearchModal();
   
   return (
-    <div className={'border-t border-[#e5e7eb] border-b mt-3.5 bg-[#F8F8F8] bg-gray-200'}>
-      <div className="flex justify-between minmd:justify-start minmd:space-x-2">
+    <div className={'border-t border-[#e5e7eb] border-b mt-3.5 minlg:mt-0 bg-[#F8F8F8]'}>
+      <div className="block minlg:hidden flex justify-between minmd:justify-start minmd:space-x-2">
         <Flask />
         <span className="text-black text-lg minmd:text-xl font-medium">Check out our curated collections</span>
         <CaretCircle
@@ -23,7 +23,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
           className={tw('cursor-pointer transition-transform', isFilterCollapsed ? 'rotate-180' : '')}
         />
       </div>
-      <p className="text-blog-text-reskin font-medium text-lg minmd:text-xl">
+      <p className="text-blog-text-reskin font-medium text-lg ">
           We’ve hand-picked NFT collections to help you find what you’re looking for.
       </p>
       <motion.div
