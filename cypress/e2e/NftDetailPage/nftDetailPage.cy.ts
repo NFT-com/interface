@@ -63,7 +63,7 @@ describe('nft detail page tests', () => {
     cy.get('#NftChainInfoContainer .NftDetailCard').should('not.exist');
   });
 
-  it('should be rate limited for nft data refresh', () => {
+  xit('should be rate limited for nft data refresh', () => {
     cy.get('#refreshNftButton').should('exist').scrollIntoView().then(() => {
       cy.get('#refreshNftButton').click().then(() => {
         cy.wait('@refreshNftMutation').its('response.body.errors').should('not.exist');
