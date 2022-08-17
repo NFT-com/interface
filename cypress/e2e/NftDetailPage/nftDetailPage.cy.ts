@@ -64,17 +64,21 @@ describe('nft detail page tests', () => {
   });
 
   it('should be rate limited for nft data refresh', () => {
-    cy.get('#refreshNftButton').should('exist').scrollIntoView();
-    cy.get('#refreshNftButton').click();
-    cy.wait('@refreshNftMutation').its('response.body.errors').should('not.exist');
-    cy.wait(500);
-
-    cy.get('#refreshNftButton').click();
-    cy.wait('@refreshNftMutation').its('response.body.errors').should('have.length', 1);
-
-    cy.wait(6000); // wait 6 seconds for rate limit to expire
-    cy.get('#refreshNftButton').click();
-    cy.wait('@refreshNftMutation').its('response.body.errors').should('not.exist');
+    cy.get('#refreshNftButton').should('exist').scrollIntoView().then(() => {
+      cy.get('#refreshNftButton').click().then(() => {
+        cy.wait('@refreshNftMutation').its('response.body.errors').should('not.exist');
+        cy.wait(500).then(() => {
+          cy.get('#refreshNftButton').click().then(() => {
+            cy.wait('@refreshNftMutation').its('response.body.errors').should('have.length', 1);
+            // wait 6 seconds for rate limit to expire
+            cy.wait(6000).then(() => {
+              cy.get('#refreshNftButton').click();
+              cy.wait('@refreshNftMutation').its('response.body.errors').should('not.exist');
+            });
+          });
+        });
+      });
+    });
   });
 
   it('should query for external marketplace listings', () => {
