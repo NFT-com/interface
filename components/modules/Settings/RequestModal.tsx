@@ -48,9 +48,9 @@ export default function RequestModal({ visible, setVisible, address, transaction
                   <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Request</h2>
                   <p className='text-[#6F6F6F]'>
                     You are about to send an address association request to
-                    <span className='font-mono text-black text-xl break-words mt-2'>
-                      {address}
-                    </span>
+                  </p>
+                  <p className='font-mono text-black text-xl break-words mt-2'>
+                    {address}
                   </p>
                   <p className='mt-6'>View the address on {' '}
                     <a
@@ -66,7 +66,7 @@ export default function RequestModal({ visible, setVisible, address, transaction
                   </button>
                   <div className='flex items-center font-grotesk text-blog-text-reskin justify-center mt-2 mb-6 text-sm'>
                     <GasPump size={20} weight="fill" />
-                    <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'>gas fee.</span></p>
+                    <p className='ml-1'>This action will require a <span className='border-dashed	border-b border-[#6F6F6F]'> gas fee.</span></p>
                   </div>
                   <p
                     className='underline text-center font-bold tracking-wide hover:cursor-pointer mt-6'
