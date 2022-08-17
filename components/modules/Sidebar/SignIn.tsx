@@ -4,7 +4,6 @@ import { useUser } from 'hooks/state/useUser';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { XCircle } from 'phosphor-react';
 import { useState } from 'react';
 
@@ -49,9 +48,9 @@ export default function SignIn() {
       </button>
 
       <h3 className='mb-4 mt-9 text-3xl font-bold'>Have no idea what we’re talking about?</h3>
-      <Link href='#' >
+      <a href='https://docs.nft.com/what-is-a-wallet' target="_blank" rel="noopener noreferrer">
         <span className='underline mt-4 hover:cursor-pointer text-[#6F6F6F]'>Wallets! Learn about them by clicking here.</span>
-      </Link>
+      </a>
       <br className='mt-4'/>
       <a target="_blank" href="https://docs.nft.com/profiles/what-is-a-nft.com-profile" rel="noopener noreferrer">
         <p className='underline mt-4 hover:cursor-pointer text-[#6F6F6F]'>Profiles are great! Click here to learn more.</p>
