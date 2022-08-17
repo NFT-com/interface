@@ -1,9 +1,7 @@
-import { Button, ButtonType } from 'components/elements/Button';
 import { Nft } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
-import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
@@ -15,28 +13,29 @@ import { getLooksrareNonce, getOpenseaCollection } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
-import { tw } from 'utils/tw';
 
-import { CartSidebarNft } from './CartSidebarNft';
+import { NFTListingsCartSidebar } from './NFTListingsCartSidebar';
 
 import { MakerOrder } from '@looksrare/sdk';
 import { BigNumberish } from 'ethers';
-import { useRouter } from 'next/router';
-import { XCircle } from 'phosphor-react';
-import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useProvider } from 'wagmi';
 
 export type TargetMarketplace = 'looksrare' | 'seaport';
 
 export type StagedListing = {
-  targets: TargetMarketplace[],
+  // this is the minimum required field
   nft: PartialDeep<Nft>;
+  // these are set in configuration page
+  targets: TargetMarketplace[],
   startingPrice: BigNumberish;
   endingPrice: BigNumberish;
   currency: string;
   duration: BigNumberish;
-  // takerAddress: string;
+  // these are set when finalizing, before triggering the wallet requests
+  looksrareOrder: MakerOrder; // looksrare
+  seaportParameters: SeaportOrderParameters; // seaport
 }
 
 interface NFTListingsContextType {
@@ -44,11 +43,13 @@ interface NFTListingsContextType {
   stageListing: (listing: PartialDeep<StagedListing>) => void;
   clear: () => void;
   listAll: () => void;
+  prepareListings: () => void;
   submitting: boolean;
   toggleCartSidebar: () => void;
   toggleTargetMarketplace: (marketplace: TargetMarketplace) => void;
   setDuration: (duration: SaleDuration) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish) => void;
+  removeListing: (nft: PartialDeep<Nft>) => void;
 }
 
 // initialize with default values
@@ -57,11 +58,13 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   stageListing: () => null,
   clear: () => null,
   listAll: () => null,
+  prepareListings: () => null,
   submitting: false,
   toggleCartSidebar: () => null,
   toggleTargetMarketplace: () => null,
   setDuration: () => null,
   setPrice: () => null,
+  removeListing: () => null,
 });
 
 /**
@@ -76,9 +79,6 @@ export function NFTListingsContextProvider(
 
   const { data: supportedCurrencyData } = useSupportedCurrencies();
 
-  const sidebarRef = useRef();
-  useOutsideClickAlerter(sidebarRef, () => setSidebarVisible(false));
-
   useEffect(() => {
     if (window != null) {
       setToList(JSON.parse(localStorage.getItem('stagedNftListings')) ?? []);
@@ -88,7 +88,6 @@ export function NFTListingsContextProvider(
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const provider = useProvider();
-  const router = useRouter();
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -161,11 +160,10 @@ export function NFTListingsContextProvider(
     }));
   }, [supportedCurrencyData, toList]);
 
-  const listAll = useCallback(async () => {
-    setSubmitting(true);
+  const prepareListings = useCallback(async () => {
     let nonce: number = await getLooksrareNonce(currentAddress);
-    await Promise.all(toList.map(async (listing) => {
-      await Promise.all(listing.targets?.map(async (target: TargetMarketplace) => {
+    const preparedListings = await Promise.all(toList.map(async (listing) => {
+      const listingsPerMarketplace: StagedListing[] = await Promise.all(listing.targets?.map(async (target: TargetMarketplace) => {
         if (target === 'looksrare') {
           const order: MakerOrder = await createLooksrareParametersForNFTListing(
             currentAddress, // offerer
@@ -180,9 +178,10 @@ export function NFTListingsContextProvider(
             // listing.takerAddress
           );
           nonce++;
-          const signature = await signOrderForLooksrare(order);
-          await listNftLooksrare({ ...order, signature });
-          // todo: check success/failure and maybe mutate external listings query.
+          return {
+            ...listing,
+            looksrareOrder: order,
+          };
         } else {
           const contract = await getOpenseaCollection(listing?.nft?.contract);
           const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
@@ -202,8 +201,28 @@ export function NFTListingsContextProvider(
             getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
             // listing.takerAddress
           );
-          const signature = await signOrderForSeaport(parameters, seaportCounter);
-          await listNftSeaport(signature , { ...parameters, counter: seaportCounter });
+          return {
+            ...listing,
+            seaportParameters: parameters,
+          };
+        }
+      }));
+      return listingsPerMarketplace.reduce((acc, curr) => ({ ...acc, ...curr }), listing);
+    }));
+    setToList(preparedListings);
+  }, [chain?.id, currentAddress, looksrareRoyaltyFeeRegistry, looksrareStrategy, toList]);
+
+  const listAll = useCallback(async () => {
+    setSubmitting(true);
+    await Promise.all(toList.map(async (listing: StagedListing) => {
+      await Promise.all(listing.targets?.map(async (target: TargetMarketplace) => {
+        if (target === 'looksrare') {
+          const signature = await signOrderForLooksrare(listing.looksrareOrder);
+          await listNftLooksrare({ ...listing.looksrareOrder, signature });
+          // todo: check success/failure and maybe mutate external listings query.
+        } else {
+          const signature = await signOrderForSeaport(listing.seaportParameters, seaportCounter);
+          await listNftSeaport(signature , { ...listing.seaportParameters, counter: seaportCounter });
           // todo: check success/failure and maybe mutate external listings query.
           localStorage.setItem('stagedNftListings', null);
         }
@@ -214,22 +233,26 @@ export function NFTListingsContextProvider(
   }, [
     listNftSeaport,
     listNftLooksrare,
-    currentAddress,
-    chain?.id,
-    looksrareRoyaltyFeeRegistry,
-    looksrareStrategy,
     seaportCounter,
     signOrderForLooksrare,
     signOrderForSeaport,
     toList,
     clear
   ]);
+
+  const removeListing = useCallback((nft: PartialDeep<Nft>) => {
+    const newToList = toList.slice().filter(l => l.nft?.id !== nft?.id);
+    setToList(newToList);
+    localStorage.setItem('stagedNftListings', JSON.stringify(newToList));
+  }, [toList]);
   
   return <NFTListingsContext.Provider value={{
+    removeListing,
     toList,
     stageListing,
     clear,
     listAll,
+    prepareListings,
     submitting,
     toggleCartSidebar,
     toggleTargetMarketplace,
@@ -240,44 +263,7 @@ export function NFTListingsContextProvider(
     {
       toList.length > 0 &&
       sidebarVisible &&
-      <div ref={sidebarRef} className={tw(
-        'z-50 absolute pt-20 right-0 w-full h-full max-w-md bg-white flex flex-col grow',
-        'drop-shadow-md'
-      )}>
-        <div className='flex flex-row items-center px-8 my-8'>
-          <p className='w-full text-2xl'>
-            Listings
-          </p>
-          <XCircle onClick={() => setSidebarVisible(false)} className='hover:cursor-pointer' size={32} color="black" weight="fill" />
-        </div>
-        <div className='flex px-8 mb-4'>
-          <span>
-            {filterNulls(toList).length} NFT{filterNulls(toList).length > 1 ? 's' : ''}
-          </span>
-          <span
-            className='ml-8 cursor-pointer hover:underline text-link'
-            onClick={() => {
-              clear();
-            }}
-          >
-            Clear
-          </span>
-        </div>
-        {filterNulls(toList).map((listing, index) => {
-          return <CartSidebarNft nft={listing?.nft} key={index} />;
-        })}
-        <div className="mx-8 my-4 flex">
-          <Button
-            stretch
-            label={'List Now'}
-            onClick={() => {
-              setSidebarVisible(false);
-              router.push('/app/list');
-            }}
-            type={ButtonType.PRIMARY}
-          />
-        </div>
-      </div>
+      <NFTListingsCartSidebar />
     }
     {props.children}
   </NFTListingsContext.Provider>;

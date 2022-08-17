@@ -14,7 +14,8 @@ export function ListingCheckout() {
     toList,
     setDuration,
     toggleTargetMarketplace,
-    toggleCartSidebar
+    toggleCartSidebar,
+    prepareListings
   } = useContext(NFTListingsContext);
     
   const openseaFullyEnabled = toList.find(listing => listing.targets?.includes('seaport')) != null;
@@ -84,7 +85,7 @@ export function ListingCheckout() {
           }
         </div>
       </div>
-      <div className='mt-8 border-t border-black dark:border-white w-full'>
+      <div className='my-8 border-t border-black dark:border-white w-full'>
         {filterNulls(toList).map((listing, index) => {
           return <ListingCheckoutNft key={index} listing={listing} />;
         })}
@@ -98,6 +99,7 @@ export function ListingCheckout() {
         disabled={!allListingsConfigured()}
         label={'Proceed to List'}
         onClick={() => {
+          prepareListings();
           toggleCartSidebar();
         }}
         type={ButtonType.PRIMARY} />
