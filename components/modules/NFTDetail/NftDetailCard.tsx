@@ -9,6 +9,7 @@ export interface NftDetailCardProps {
   valueClasses?: string;
   center?: boolean;
   onClick?: () => void;
+  copy?: boolean
 }
 
 export function NftDetailCard(props: NftDetailCardProps) {
