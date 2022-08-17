@@ -30,6 +30,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
   const { nftResolver } = useAllContracts();
   const { chain } = useNetwork();
   const [removeModalVisible, setRemoveModalVisible] = useState(false);
+  const [txPending, setTxPending] = useState(false);
 
   const removeHandler = async () => {
     if(rejected){
@@ -40,12 +41,15 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
         })
         .catch(() => toast.error('Error'));
     } else {
-      await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: address }, selectedProfile)
-        .then(() => {
+      const tx = await nftResolver.removeAssociatedAddress({ cid: 0, chainAddr: address }, selectedProfile);
+      setTxPending(true);
+      if(tx){
+        await tx.wait(1).then(() => {
           toast.success('Removed');
+          setTxPending(false);
           setRemoveModalVisible(false);
-        })
-        .catch(() => toast.error('Error'));
+        }).catch(() => toast.error('Error'));
+      }
     }
   };
 
@@ -136,7 +140,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
           </DropdownPickerModal>
         </div>
       </div>
-      <RemoveModal {...{ address }} remove={removeHandler} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />
+      <RemoveModal {...{ address }} isTxPending={txPending} remove={removeHandler} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />
     </>
   );
 }
