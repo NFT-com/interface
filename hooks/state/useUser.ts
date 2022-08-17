@@ -1,8 +1,8 @@
+import { UserNotifications } from 'types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback,useEffect } from 'react';
 import useSWR from 'swr';
-import { UserNotifications } from 'types';
 
 export interface UserState {
   currentProfileUrl: string

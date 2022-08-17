@@ -11,11 +11,12 @@ import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 import RemoveModal from './RemoveModal';
 
 import { ArrowsClockwise, CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { toast } from 'react-toastify';
 import { ExternalLink } from 'styles/theme';
-import { useNetwork } from 'wagmi';
+import { mutate } from 'swr';
+import { useAccount, useNetwork } from 'wagmi';
 
 type AssociatedProfileProps = {
   profile: {
@@ -42,36 +43,35 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
   const { setUserNotificationActive } = useUser();
+  const { address: currentAddress } = useAccount();
   const { updateHidden } = useUpdateHiddenMutation();
 
-  const acceptPendingProfile = async (e, url) => {
+  const acceptPendingProfile = useCallback(async (e, url) => {
     e.preventDefault();
 
     const tx = await nftResolver.associateSelfWithUsers([url]);
     setTransactionPending(true);
-    if(tx){
-      tx.wait(1).then(() => {
+    if (tx) {
+      await tx.wait(1).then(() => {
         setAccepted(true);
         setTransactionPending(false);
       }).catch(() => toast.error('Error'));
       setUserNotificationActive('associatedProfileAdded', true);
     }
-  };
+  }, [nftResolver, setUserNotificationActive]);
 
-  const removeHandler = async () => {
-    if(pending){
+  const removeHandler = useCallback(async () => {
+    if (pending) {
       await ignoreAssociations({ eventIdArray: [profile.id] })
         .then(() => {
           setVisible(true);
-          setRemoveModalVisible(false);
           setAssociationRejected(true);
           toast.success('Rejected');
         })
         .catch(() => toast.warning('Error. Please try again'));
-    } else if (isRemoved){
+    } else if (isRemoved) {
       updateHidden({ eventIdArray: [profile.id], hidden: true }).then(() =>{
         toast.success('Removed');
-        setRemoveModalVisible(false);
         setVisible(true);
         setAssociationRejected(true);
       });
@@ -79,9 +79,8 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       const tx = await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url);
       setVisible(true);
       setTransactionPending(true);
-      setRemoveModalVisible(false);
-      if(tx){
-        tx.wait(1).then(() => {
+      if (tx) {
+        await tx.wait(1).then(() => {
           setTransactionPending(false);
           toast.success('Removed');
           setUserNotificationActive('associatedProfileRemoved', true);
@@ -89,18 +88,19 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         }).catch(() => toast.warning('Error. Please try again'));
       }
     }
-  };
+  }, [ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden]);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     if(associationRejected){
       setAssociationRejected(false);
     }
     if(accepted){
       setAccepted(false);
     }
+    mutate('SettingsAssociatedProfiles' + currentAddress);
     mutatePending();
     setVisible(false);
-  };
+  }, [accepted, associationRejected, mutatePending, currentAddress]);
   
   return (
     <>
@@ -273,13 +273,13 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                           </ExternalLink>
 
                           <p className='text-[#6F6F6F]'>
-                            If you approve this request, your NFTs will be available to display on their profile’s gallery.
+                            If you approve this request, your NFTs will be available to display on their profile{'\''}s gallery.
                             <span className='text-black font-bold tracking-wide'>
-                              {profile.profileUrl || profile.url}{' '}
+                              {' '}{profile.profileUrl || profile.url}{' '}
                             </span>
-                              will
+                            {' '}will{' '}
                             <span className='text-black font-bold tracking-wide'>
-                                NOT
+                                NOT {' '}
                             </span>
                                 be able to make any changes to your address or its contents. You can change this connection at any time in your account’s settings.
                           </p>
@@ -315,7 +315,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                           <p className='text-[#6F6F6F]'>
                             You can change this association at any time in your account’s settings.
                           </p>
-                          <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+                          <button onClick={closeModal} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                             Return to NFT.com
                           </button>
                         </div>
@@ -331,7 +331,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                       </p>
                       <p className='text-[#6F6F6F]'>Your NFTs will not display on their NFT Profile`&apos;`s gallery.</p>
                   
-                      <button onClick={() => closeModal()} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+                      <button onClick={closeModal} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
                         Return to NFT.com
                       </button>
                     </div>
