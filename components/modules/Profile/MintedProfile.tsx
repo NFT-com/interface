@@ -23,11 +23,11 @@ import { ProfileScrollContextProvider } from './ProfileScrollContext';
 import { BigNumber } from 'ethers';
 import cameraIcon from 'public/camera.png';
 import PencilIconRounded from 'public/pencil-icon-rounded.svg';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import useSWR from 'swr';
-import { useAccount, useNetwork, useSigner } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface MintedProfileProps {
   profileURI: string;
@@ -56,24 +56,28 @@ export function MintedProfile(props: MintedProfileProps) {
   const { profileData } = useProfileQuery(profileURI);
 
   const { nftResolver } = useAllContracts();
-  const { data: signer } = useSigner();
+
+  const fetchAssociatedContract = useCallback(async () => {
+    if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
+      return null;
+    }
+    return await nftResolver.associatedContract(profileURI).catch(() => null);
+  }, [nftResolver, profileData?.profile?.profileView, profileURI]);
+
+  const fetchAssociatedAddress = useCallback(async () => {
+    if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
+      return null;
+    }
+    return await nftResolver.associatedAddresses(profileURI).catch(() => null);
+  }, [nftResolver, profileData?.profile?.profileView, profileURI]);
+
   const { data: associatedContract } = useSWR<AddressTupleStructOutput>(
     'AssociatedCollection' + profileURI + profileData?.profile?.profileView,
-    async () => {
-      if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
-        return null;
-      }
-      return await nftResolver.connect(signer).associatedContract(profileURI).catch(() => null);
-    }
+    fetchAssociatedContract
   );
   const { data: associatedAddresses } = useSWR<AddressTupleStructOutput[]>(
     'AssociatedAddresses' + profileURI + profileData?.profile?.profileView,
-    async () => {
-      if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
-        return null;
-      }
-      return await nftResolver.connect(signer).associatedAddresses(profileURI).catch(() => null);
-    }
+    fetchAssociatedAddress
   );
   const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
 
