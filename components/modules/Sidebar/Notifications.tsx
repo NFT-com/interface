@@ -10,7 +10,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { NotificationButton } from './NotificationButton';
 
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useAccount, useNetwork, useSigner } from 'wagmi';
 
@@ -30,18 +30,26 @@ export const Notifications = () => {
   const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
   const [pendingAssociationCount, setPendingAssociationCount] = useState(null);
 
-  const { data: acceptedAssociatedProfiles } = useSWR(
-    'AcceptedAssociatedProfiles' + currentAddress + user,
+  const fetchAssociatedProfiles = useCallback(
     async () => {
       if (!currentAddress) {
         return null;
       }
       return await nftResolver.connect(signer).getApprovedEvm(currentAddress).catch(() => null);
     }
+    , [currentAddress, nftResolver, signer]
   );
+
+  const { data: acceptedAssociatedProfiles } = useSWR(
+    'AcceptedAssociatedProfiles' + currentAddress + user,
+    fetchAssociatedProfiles
+  );
+
   useEffect(() => {
-    const filterAccepted = pendingAssociatedProfiles?.getMyPendingAssociations?.filter(a => !acceptedAssociatedProfiles?.some(b => a.url === b.profileUrl));
-    setPendingAssociationCount(filterAccepted?.length || null);
+    if(!isNullOrEmpty(pendingAssociatedProfiles?.getMyPendingAssociations) && acceptedAssociatedProfiles !== null){
+      const filterAccepted = pendingAssociatedProfiles?.getMyPendingAssociations?.filter(a => !acceptedAssociatedProfiles?.some(b => a.url === b.profileUrl));
+      setPendingAssociationCount(filterAccepted?.length || null);
+    }
   }, [acceptedAssociatedProfiles, pendingAssociatedProfiles]);
 
   useEffect(() => {
@@ -54,13 +62,13 @@ export const Notifications = () => {
     if(hasUnclaimedProfiles && !user?.activeNotifications.hasUnclaimedProfiles) {
       setUserNotificationActive('hasUnclaimedProfiles', true);
     }
-    if(pendingAssociatedProfiles && pendingAssociatedProfiles.getMyPendingAssociations.length > 0 && !user?.activeNotifications.hasPendingAssociatedProfiles ) {
+    if(pendingAssociationCount && pendingAssociationCount > 0 && !user?.activeNotifications.hasPendingAssociatedProfiles ) {
       setUserNotificationActive('hasPendingAssociatedProfiles', true);
     }
     if(profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized && !user?.activeNotifications.profileNeedsCustomization) {
       setUserNotificationActive('profileNeedsCustomization', true);
     }
-  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, user?.activeNotifications, currentAddress, user]);
+  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, user?.activeNotifications, currentAddress, user, pendingAssociationCount]);
 
   return (
     <>
