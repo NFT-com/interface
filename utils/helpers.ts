@@ -23,7 +23,6 @@ export function sameAddress(first: Maybe<string>, second: Maybe<string>) {
   try {
     return ethers.utils.getAddress(first) === ethers.utils.getAddress(second);
   } catch (error) {
-    console.log('Invalid addresses');
     return false;
   }
 }

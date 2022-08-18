@@ -77,11 +77,11 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       });
     } else {
       const tx = await nftResolver.removeAssociatedProfile(profile[1] || profile.profileUrl || profile.url);
-      setVisible(true);
       setTransactionPending(true);
       if (tx) {
         await tx.wait(1).then(() => {
           setTransactionPending(false);
+          setRemoveModalVisible(false);
           toast.success('Removed');
           setUserNotificationActive('associatedProfileRemoved', true);
           setAssociationRejected(true);
@@ -336,7 +336,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           </div>
         </div>
       </Modal>
-      <RemoveModal isProfile isRemoved={isRemoved} rejected={pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner || profile.addr} remove={removeHandler} />
+      <RemoveModal isTxPending={transactionPending} isProfile isRemoved={isRemoved} rejected={pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner || profile.addr} remove={removeHandler} />
     </>
   );
 }
