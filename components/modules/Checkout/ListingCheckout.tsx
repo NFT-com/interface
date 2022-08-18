@@ -98,8 +98,8 @@ export function ListingCheckout() {
       <Button
         disabled={!allListingsConfigured()}
         label={'Proceed to List'}
-        onClick={() => {
-          prepareListings();
+        onClick={async () => {
+          await prepareListings();
           toggleCartSidebar();
         }}
         type={ButtonType.PRIMARY} />

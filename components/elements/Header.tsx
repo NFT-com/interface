@@ -14,6 +14,7 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 import { SearchIcon } from '@heroicons/react/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { ShoppingCartSimple } from 'phosphor-react';
 import LightNavLogo from 'public/hero_corner.svg';
 import NavLogo from 'public/hero_corner_dark.svg';
@@ -34,6 +35,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
   const { toggleSearchModal } = useSearchModal();
   const { primaryIcon } = useThemeColors();
   const { toggleCartSidebar } = useContext(NFTListingsContext);
+  const router = useRouter();
 
   const { setDarkMode, user } = useUser();
 
@@ -123,13 +125,14 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
             }
             {
               getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
+              !router.pathname.includes('/app/list') &&
               <button
                 className='cursor-pointer mr-2 h-full w-7'
                 onClick={() => {
                   toggleCartSidebar();
                 }}
               >
-                <ShoppingCartSimple size={28} color={primaryIcon} />
+                <ShoppingCartSimple size={28} color={useDarkMode ? primaryIcon : 'black'} />
               </button>
             }
             {
@@ -141,7 +144,9 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
                 }}
               >
                 {
-                  user.isDarkMode ? <SunIcon color={primaryIcon} /> : <MoonIcon color={primaryIcon} />
+                  user.isDarkMode ?
+                    <SunIcon color={useDarkMode ? primaryIcon : 'black'} /> :
+                    <MoonIcon color={useDarkMode ? primaryIcon : 'black'} />
                 }
               </button>
             }

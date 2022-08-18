@@ -27,6 +27,7 @@ export type TargetMarketplace = 'looksrare' | 'seaport';
 export type StagedListing = {
   // this is the minimum required field
   nft: PartialDeep<Nft>;
+  collectionName: string;
   // these are set in configuration page
   targets: TargetMarketplace[],
   startingPrice: BigNumberish;
@@ -36,6 +37,11 @@ export type StagedListing = {
   // these are set when finalizing, before triggering the wallet requests
   looksrareOrder: MakerOrder; // looksrare
   seaportParameters: SeaportOrderParameters; // seaport
+  // approval-related data
+  isApprovedForSeaport: boolean;
+  isApprovedForLooksrare: boolean;
+  approveForSeaport: () => Promise<void>
+  approveForLooksrare: () => Promise<void>
 }
 
 interface NFTListingsContextType {
@@ -43,7 +49,7 @@ interface NFTListingsContextType {
   stageListing: (listing: PartialDeep<StagedListing>) => void;
   clear: () => void;
   listAll: () => void;
-  prepareListings: () => void;
+  prepareListings: () => Promise<void>;
   submitting: boolean;
   toggleCartSidebar: () => void;
   toggleTargetMarketplace: (marketplace: TargetMarketplace) => void;
@@ -81,7 +87,8 @@ export function NFTListingsContextProvider(
 
   useEffect(() => {
     if (window != null) {
-      setToList(JSON.parse(localStorage.getItem('stagedNftListings')) ?? []);
+      const initialValue = JSON.parse(localStorage.getItem('stagedNftListings')) ?? [];
+      setToList(initialValue);
     }
   }, []);
 
@@ -224,7 +231,6 @@ export function NFTListingsContextProvider(
           const signature = await signOrderForSeaport(listing.seaportParameters, seaportCounter);
           await listNftSeaport(signature , { ...listing.seaportParameters, counter: seaportCounter });
           // todo: check success/failure and maybe mutate external listings query.
-          localStorage.setItem('stagedNftListings', null);
         }
       }));
     }));

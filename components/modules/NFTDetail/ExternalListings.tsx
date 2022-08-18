@@ -2,6 +2,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Nft } from 'graphql/generated/types';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -15,12 +16,31 @@ import { useAccount } from 'wagmi';
 
 export interface ExternalListingsProps {
   nft: PartialDeep<Nft>;
+  collectionName: string;
 }
 
 export function ExternalListings(props: ExternalListingsProps) {
   const { address: currentAddress } = useAccount();
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
   const { data: listings } = useExternalListingsQuery(props?.nft?.contract, props?.nft?.tokenId, String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
+
+  const {
+    allowedAll: openseaAllowed,
+    requestAllowance: requestOpensea
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.Opensea
+  );
+
+  const {
+    allowedAll: looksRareAllowed,
+    requestAllowance: requestLooksrare
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.LooksRare
+  );
   
   if (isNullOrEmpty(listings?.filter((l) => !isNullOrEmpty(l.url)))) {
     return (
@@ -35,6 +55,15 @@ export function ExternalListings(props: ExternalListingsProps) {
               onClick={() => {
                 stageListing({
                   nft: props.nft,
+                  collectionName: props.collectionName,
+                  isApprovedForSeaport: openseaAllowed,
+                  isApprovedForLooksrare: looksRareAllowed,
+                  approveForSeaport: async () => {
+                    await requestOpensea();
+                  },
+                  approveForLooksrare: async () => {
+                    await requestLooksrare();
+                  },
                   targets: []
                 });
                 if (!isMobile) {

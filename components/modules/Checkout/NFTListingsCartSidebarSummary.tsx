@@ -3,6 +3,7 @@ import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrate
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
+import { VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { useCallback, useContext, useState } from 'react';
@@ -72,20 +73,83 @@ export function NFTListingsCartSidebarSummary() {
     }, BigNumber.from(0));
   }, [looksrareProtocolFeeBps, toList]);
 
+  const getTotalListings = useCallback(() => {
+    return toList?.reduce((total, stagedListing) => {
+      return total + stagedListing?.targets.length ?? 0;
+    }, 0);
+  }, [toList]);
+
+  const getTotalProfit = useCallback(() => {
+    const total = toList?.reduce((cartTotal, stagedListing) => {
+      const totalFees = stagedListing.targets.reduce((nftTotal, marketplace) => {
+        let newFee: BigNumberish;
+        if (marketplace === 'looksrare') {
+          newFee = BigNumber.from(stagedListing?.looksrareOrder?.minPercentageToAsk ?? 0)
+            .div(10000)
+            .mul(BigNumber.from(stagedListing?.looksrareOrder?.price ?? 0));
+        } else {
+          newFee = stagedListing?.seaportParameters?.consideration[0].startAmount;
+        }
+        return BigNumber.from(nftTotal).add(newFee);
+      }, BigNumber.from(0));
+      return totalFees.add(cartTotal);
+    }, BigNumber.from(0));
+
+    return total;
+  } , [toList]);
+
   return (
     <>
-      <div className="mx-8 my-4 flex items-center">
-        <span>Total marketplace fees: {' '}</span>
-        <span className='ml-2'>
-          {ethers.utils.formatEther(getTotalMarketplaceFees() ?? 0) + ' WETH'}
-        </span>
-      </div>
-      <div className="mx-8 my-4 flex items-center">
-        <span>Total royalties: </span>
-        <span className='ml-2'>
-          {ethers.utils.formatEther(getTotalRoyaltyFees() ?? 0) + ' WETH'}
-        </span>
-      </div>
+      {
+        showProgressBar
+          ? (
+            <div className="mx-8">
+              <VerticalProgressBar
+                activeNodeIndex={1}
+                nodes={[
+                  {
+                    label: 'Initialize Wallet',
+                  },
+                  {
+                    label: 'Approve Collections for Sale',
+                    items: toList?.map((stagedListing) => {
+                      return stagedListing.targets.map((marketplace) => {
+                        return {
+                          label: 'Approve ' + stagedListing?.collectionName + ' for ' + marketplace,
+                        };
+                      });
+                    }).flat()
+                  },
+                  {
+                    label: `Confirm ${getTotalListings()} Listings`,
+                  }
+                ]}
+              />
+            </div>
+          )
+          : (
+            <>
+              <div className="mx-8 my-4 flex items-center">
+                <span>Total marketplace fees: {' '}</span>
+                <span className='ml-2'>
+                  {ethers.utils.formatEther(getTotalMarketplaceFees() ?? 0) + ' WETH'}
+                </span>
+              </div>
+              <div className="mx-8 my-4 flex items-center">
+                <span>Total royalties: </span>
+                <span className='ml-2'>
+                  {ethers.utils.formatEther(getTotalRoyaltyFees() ?? 0) + ' WETH'}
+                </span>
+              </div>
+              <div className="mx-8 my-4 flex items-center">
+                <span>Total profit: </span>
+                <span className='ml-2'>
+                  {ethers.utils.formatEther(getTotalProfit() ?? 0) + ' WETH'}
+                </span>
+              </div>
+            </>
+          )
+      }
       <div className="mx-8 my-4 flex">
         <Button
           stretch
@@ -94,7 +158,7 @@ export function NFTListingsCartSidebarSummary() {
           label={'List Now'}
           onClick={() => {
             setShowProgressBar(true);
-            listAll();
+            // listAll();
           }}
           type={ButtonType.PRIMARY}
         />

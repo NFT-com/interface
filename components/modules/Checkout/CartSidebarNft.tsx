@@ -17,7 +17,7 @@ export interface CartSidebarNftProps {
 
 export function CartSidebarNft(props: CartSidebarNftProps) {
   const { chain } = useNetwork();
-  const { data: collection } = useSWR('CartSidebarNftCollectionDetail' + props.nft.contract, async () => {
+  const { data: collection } = useSWR('ContractMetadata' + props.nft.contract, async () => {
     return await getContractMetadata(props.nft?.contract, chain?.id);
   });
 
