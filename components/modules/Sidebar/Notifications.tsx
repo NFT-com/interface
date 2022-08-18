@@ -62,6 +62,9 @@ export const Notifications = () => {
     if(hasUnclaimedProfiles && !user?.activeNotifications.hasUnclaimedProfiles) {
       setUserNotificationActive('hasUnclaimedProfiles', true);
     }
+    if(isNullOrEmpty(pendingAssociationCount) && user?.activeNotifications.hasPendingAssociatedProfiles){
+      setUserNotificationActive('hasPendingAssociatedProfiles', false);
+    }
     if(pendingAssociationCount && pendingAssociationCount > 0 && !user?.activeNotifications.hasPendingAssociatedProfiles ) {
       setUserNotificationActive('hasPendingAssociatedProfiles', true);
     }
