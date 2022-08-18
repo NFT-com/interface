@@ -4,6 +4,6 @@ import { Nft_resolver__factory } from 'constants/typechain/factories/Nft_resolve
 import { Provider } from '@ethersproject/providers';
 import { Signer } from 'ethers/lib/ethers';
 
-export function getNftResolverContract(address: string, signer: Signer): Nft_resolver {
-  return Nft_resolver__factory.connect(address, signer);
+export function getNftResolverContract(address: string, signer: Signer, provider: Provider): Nft_resolver {
+  return Nft_resolver__factory.connect(address, signer ? signer : provider);
 }
