@@ -1,4 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
+import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
@@ -6,6 +7,7 @@ import { NFTListingsContext } from './NFTListingsContext';
 import { VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
 import { useProvider } from 'wagmi';
@@ -13,12 +15,17 @@ import { useProvider } from 'wagmi';
 export function NFTListingsCartSidebarSummary() {
   const {
     toList,
-    listAll
+    listAll,
+    approveCollection,
+    toggleCartSidebar,
+    clear
   } = useContext(NFTListingsContext);
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
 
   const [showProgressBar, setShowProgressBar] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<Maybe<'ApprovalError' | 'ListingError'>>(null);
 
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
@@ -98,6 +105,13 @@ export function NFTListingsCartSidebarSummary() {
     return total;
   } , [toList]);
 
+  const getNeedsApprovals = useCallback(() => {
+    return toList?.some(stagedListing =>
+      (stagedListing.targets.includes('looksrare') && !stagedListing?.isApprovedForLooksrare) ||
+      (stagedListing.targets.includes('seaport') && !stagedListing?.isApprovedForSeaport)
+    );
+  }, [toList]);
+
   return (
     <>
       {
@@ -105,23 +119,33 @@ export function NFTListingsCartSidebarSummary() {
           ? (
             <div className="mx-8">
               <VerticalProgressBar
-                activeNodeIndex={1}
+                activeNodeIndex={getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2}
                 nodes={[
                   {
                     label: 'Initialize Wallet',
                   },
                   {
                     label: 'Approve Collections for Sale',
+                    error: error === 'ApprovalError',
                     items: toList?.map((stagedListing) => {
                       return stagedListing.targets.map((marketplace) => {
+                        const approved = marketplace === 'looksrare' ?
+                          stagedListing?.isApprovedForLooksrare :
+                          stagedListing?.isApprovedForSeaport;
                         return {
                           label: 'Approve ' + stagedListing?.collectionName + ' for ' + marketplace,
+                          icon: approved ?
+                            <CheckCircle size={16} className="text-green-500" /> :
+                            error === 'ApprovalError' ?
+                              <X size={16} className="text-red-400" /> :
+                              <SpinnerGap size={16} className="text-yellow-500 animate-spin" />,
                         };
                       });
                     }).flat()
                   },
                   {
                     label: `Confirm ${getTotalListings()} Listings`,
+                    error: error === 'ListingError',
                   }
                 ]}
               />
@@ -153,12 +177,71 @@ export function NFTListingsCartSidebarSummary() {
       <div className="mx-8 my-4 flex">
         <Button
           stretch
-          loading={showProgressBar}
-          disabled={showProgressBar}
-          label={'List Now'}
-          onClick={() => {
+          loading={showProgressBar && !error && !success}
+          disabled={showProgressBar && !error && !success}
+          label={success ? 'Finish' : 'List Now'}
+          onClick={async () => {
+            if (success) {
+              clear();
+              setSuccess(false);
+              toggleCartSidebar();
+            }
+
             setShowProgressBar(true);
-            // listAll();
+            setError(null);
+            setSuccess(false);
+
+            if (getNeedsApprovals()) {
+              for (let i = 0; i < toList.length; i++) {
+                const stagedListing = toList[i];
+                for (let j = 0; j < toList[i].targets.length; j++) {
+                  const marketplace = toList[i].targets[j];
+                  const approved = marketplace === 'looksrare' ?
+                    stagedListing?.isApprovedForLooksrare :
+                    stagedListing?.isApprovedForSeaport;
+                  if (!approved && marketplace === 'looksrare') {
+                    const result = await approveCollection(stagedListing, 'looksrare')
+                      .then(result => {
+                        if (!result) {
+                          setError('ApprovalError');
+                          return false;
+                        }
+                        return true;
+                      })
+                      .catch(() => {
+                        setError('ApprovalError');
+                        return false;
+                      });
+                    stagedListing.isApprovedForLooksrare = result;
+                    if (!result) {
+                      break;
+                    }
+                  } else if (!approved && marketplace === 'seaport') {
+                    const result = await approveCollection(stagedListing, 'seaport')
+                      .then(result => {
+                        if (!result) {
+                          setError('ApprovalError');
+                          return false;
+                        }
+                        return true;
+                      })
+                      .catch(() => {
+                        setError('ApprovalError');
+                        return false;
+                      });
+                    stagedListing.isApprovedForSeaport = result;
+                    if (!result) {
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+
+            const result = await listAll();
+            if (result) {
+              setSuccess(true);
+            }
           }}
           type={ButtonType.PRIMARY}
         />

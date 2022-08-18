@@ -5,7 +5,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 
 import { Provider } from '@ethersproject/providers';
 
-export function use721Contract(tokenAddress: string, provider: Provider): Maybe<Erc721> {
+export function get721Contract(tokenAddress: string, provider: Provider): Maybe<Erc721> {
   if (isNullOrEmpty(tokenAddress)) {
     return null;
   }

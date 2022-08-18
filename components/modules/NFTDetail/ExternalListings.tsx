@@ -10,7 +10,6 @@ import { tw } from 'utils/tw';
 import { ExternalListingTile } from './ExternalListingTile';
 
 import { useContext } from 'react';
-import { isMobile } from 'react-device-detect';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -26,7 +25,6 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const {
     allowedAll: openseaAllowed,
-    requestAllowance: requestOpensea
   } = useNftCollectionAllowance(
     props.nft?.contract,
     currentAddress,
@@ -35,7 +33,6 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const {
     allowedAll: looksRareAllowed,
-    requestAllowance: requestLooksrare
   } = useNftCollectionAllowance(
     props.nft?.contract,
     currentAddress,
@@ -58,17 +55,9 @@ export function ExternalListings(props: ExternalListingsProps) {
                   collectionName: props.collectionName,
                   isApprovedForSeaport: openseaAllowed,
                   isApprovedForLooksrare: looksRareAllowed,
-                  approveForSeaport: async () => {
-                    await requestOpensea();
-                  },
-                  approveForLooksrare: async () => {
-                    await requestLooksrare();
-                  },
                   targets: []
                 });
-                if (!isMobile) {
-                  toggleCartSidebar();
-                }
+                toggleCartSidebar();
               }}
               type={ButtonType.PRIMARY}
             />
