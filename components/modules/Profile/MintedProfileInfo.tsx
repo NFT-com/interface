@@ -41,7 +41,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   } = useContext(ProfileContext);
 
   const getProfileButton = useCallback(() => {
-    if (!userIsAdmin) {
+    if (!userIsAdmin || !hasGks) {
       return null;
     }
     
@@ -94,7 +94,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
         className="flex items-center mt-3 minlg:mt-6 "
         style={{ zIndex: 49 }}
       >
-        {hasGks && <div>
+        <div>
           <Button
             type={ButtonType.PRIMARY}
             label={'Edit Profile'}
@@ -102,7 +102,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               setEditMode(true);
             }}
           />
-        </div>}
+        </div>
         {getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && <div className='ml-4'>
           <Button
             type={ButtonType.SECONDARY}
