@@ -59,6 +59,9 @@ export const Notifications = () => {
     if(addedAssociatedNotifClicked) {
       setUserNotificationActive('associatedProfileAdded', false);
     }
+    if(!hasUnclaimedProfiles && user?.activeNotifications.hasUnclaimedProfiles) {
+      setUserNotificationActive('hasUnclaimedProfiles', false);
+    }
     if(hasUnclaimedProfiles && !user?.activeNotifications.hasUnclaimedProfiles) {
       setUserNotificationActive('hasUnclaimedProfiles', true);
     }
