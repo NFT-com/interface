@@ -5,13 +5,14 @@ import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { Doppler, getEnv } from 'utils/env';
-import { shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import router from 'next/router';
 import CopyIcon from 'public/arrow_square_out.svg';
 import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
@@ -28,7 +29,20 @@ export function Collection(props: CollectionProps) {
   const [found, setFound] = useState(0);
   const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
-  
+  const { data: imgUrl } = useSWR('imageurl', async() => {
+    let imgUrl;
+    if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
+      imgUrl = null;
+    } else {
+      imgUrl = await fetch(`${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}`)
+        .then(
+          (data) => data.status === 200 ? `${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null
+        );
+    }
+
+    return imgUrl;
+  } );
+
   useEffect(() => {
     currentPage === 1 && props.contract && client.collections('nfts')
       .documents()
@@ -41,7 +55,6 @@ export function Collection(props: CollectionProps) {
       .then(function (nftsResults) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
-        console.log(currentPage, 'useEffect1 fdo');
       });
   }, [client, currentPage, props.contract]);
 
@@ -58,7 +71,6 @@ export function Collection(props: CollectionProps) {
         .then(function (nftsResults) {
           setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
           setFound(nftsResults.found);
-          console.log(currentPage, 'useEffect2 fdo');
         });
     }
   }, [client, collectionNfts, currentPage, prevVal, props.contract]);
@@ -67,7 +79,7 @@ export function Collection(props: CollectionProps) {
     <>
       <div className="mt-20">
         <BannerWrapper
-          imageOverride={collectionData?.ubiquityResults?.collection?.banner ? `${collectionData?.ubiquityResults?.collection?.banner} + ?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null}/>
+          imageOverride={imgUrl}/>
       </div>
       <div className={tw(
         'pt-7 px-8 minmd:px-[5%] minxl:mx-auto pb-16 w-full',
