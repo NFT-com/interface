@@ -119,6 +119,7 @@ export default function LoginResults({ profileValue, hiddenProfile }: LoginResul
             }
           })}
         </div>
+        {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
         {allProfiles.length > profilesToShow.length
           ?
           (
