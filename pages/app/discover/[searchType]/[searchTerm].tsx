@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import Vector from 'public/Vector.svg';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
 
 function usePrevious(value) {
@@ -29,7 +29,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage() {
-  const { setSearchModalOpen, sideNavOpen, setSearchFilters } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
@@ -43,7 +43,7 @@ export default function ResultsPage() {
   useEffect(() => {
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
       facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
-      max_facet_values: 100,
+      max_facet_values: 200,
       collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
@@ -61,7 +61,7 @@ export default function ResultsPage() {
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
         facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
-        max_facet_values: 100,
+        max_facet_values: 200,
         collection: searchType?.toString(),
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
         q: searchTerm?.toString(),
@@ -117,8 +117,7 @@ export default function ResultsPage() {
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {
                   console.log(filters, 'filters fdo');
-                  setSearchFilters([...filters]);
-                  setSearchModalOpen(true, 'filters');
+                  setSearchModalOpen(true, 'filters', filters );
                 }}>
                 <FunnelSimple className="h-8 w-8" />
                 Filter
@@ -126,9 +125,7 @@ export default function ResultsPage() {
               <div
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {
-                  console.log(filters, 'filters fdo');
-                  setSearchFilters([...filters]);
-                  setSearchModalOpen(true, 'filters');
+                  setSearchModalOpen(true, 'filters', filters );
                 }}>
                 Sort
                 <ChevronDown className="h-10 w-10" />

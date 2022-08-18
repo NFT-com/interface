@@ -1,137 +1,66 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
-import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { tw } from 'utils/tw';
-import { SearchableFields } from 'utils/typeSenseAdapters';
+import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
+import { CheckBox } from 'components/elements/CheckBox';
 
-import { useRouter } from 'next/router';
+import { motion } from 'framer-motion';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useRef, useState } from 'react';
+import { ChevronsUp } from 'react-feather';
+import { Properties } from '../NFTDetail/Properties';
 
 export const FiltersContent = () => {
   const { setSearchModalOpen, searchFilters, modalType } = useSearchModal();
-  const [showHits, setShowHits] = useState(false);
-  const [keyword, setKeyword] = useState('0');
-  const [searchResults, setSearchResults] = useState([]);
-  const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
-  const router = useRouter();
   const resultsRef = useRef();
   console.log(searchFilters, modalType, 'searcfilters fdo');
 
   useOutsideClickAlerter(resultsRef, () => {
-    setShowHits(false);
     setSearchModalOpen(false);
   });
 
-  const goTo = (document) => {
-    if (!document.nftName) {
-      router.push(`/app/collection/${document.contractAddr}/`);
-    } else {
-      router.push(`/app/nft/${document.contractAddr}/${document.tokenId}`);
-    }
-  };
-
-  const search = (event) => {
-    const target = event.target as HTMLInputElement;
-    setKeyword(target.value);
-
-    if (target.value.length < 3) {
-      setShowHits(false);
-      return;
-    }
-
-    const searchRequests = {
-      'searches': [
-        {
-          'collection': 'nfts',
-          'q': target.value,
-          'query_by': SearchableFields.NFTS_INDEX_FIELDS,
-          'per_page': 3,
-          'page':1,
-        },
-        {
-          'collection': 'collections',
-          'q': target.value,
-          'query_by': SearchableFields.COLLECTIONS_INDEX_FIELDS,
-          'per_page': 3,
-          'page':1,
-        },
-      ]
-    };
-
-    fetchTypesenseMultiSearch(searchRequests)
-      .then((data) => {
-        setSearchResults([...data.results]);
-      })
-      .catch((error) => {
-        console.log(error);
-        setShowHits(false);
-      });
-
-    setShowHits(true);
-
-    if (event.keyCode === 13) {
-      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '0'}`);
-      setSearchModalOpen(false);
-    }
-  };
-
-  const resultTitle = (found, collectionName) => {
-    let title = '';
-    if (found < 1)
-      title = 'O ' + collectionName.toUpperCase();
-    else if (found > 3) {
-      title = 'TOP 3 ' + collectionName.toUpperCase();
-    } else {
-      title = found + ' ' + collectionName.toUpperCase();
-    }
-
+  const FIlterOption = (props) => {
+    const [selected, setSelected] = useState(false);
     return (
-      <div className={tw(
-        `flex justify-${ found > 0 ? 'between' : 'start'}`,
-        'text-xs text-blog-text-reskin font-medium bg-gray-200 py-3 px-5')}>
-        <span>{title}</span>
-        <span
-          className="cursor-pointer hover:font-semibold"
-          onClick={() => {
-            router.push(`/app/discover/${collectionName}/${keyword}`);
-            setSearchModalOpen(false);
+      <div className="flex items-center">
+        <CheckBox
+          checked={selected}
+          onToggle={(selected: boolean) => {
+            setSelected(selected);
           }}
-        >
-          {found < 1 ? '': found > 1 ? 'SEE ALL ' + found : 'SEE ' + found }
-        </span>
+        />
+        <div>{Properties.item.value}</div>
       </div>
     );
   };
 
-  const ResultsContent = (data) => {
-    return data.searchResults && data.searchResults.length > 0 && data.searchResults.map((item, index) => {
-      return (
-        <>
-          {resultTitle(item.found, item?.request_params?.collection_name)}
-          <div className="flex flex-col items-start py-3 px-5" key={index}>
-            {item.found === 0 ?
-              <div className={tw('text-sm p-3 text-gray-500')}>
-              No {item?.request_params?.collection_name?.toLowerCase()} results
-              </div>
-              : (item?.hits?.map((hit, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={tw(
-                      'flex flex-col items-start my-1 py-3',
-                      'text-sm font-semibold text-black')}
-                    onClick={() => goTo(hit.document)}>
-                    <span>{hit.document.nftName ?? hit.document.contractName}</span>
-                  </div>
-                );
-              }))}
-          </div>
-        </>
-      );
-    });
+  const Filter = (props: any) => {
+    const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
+    console.log(props, 'filter fdo');
+    return (
+      <div className="my-2 border border-grey-500">
+        <div className="flex justify-between">
+          <div className="font-black">{props.filter.field_name}</div>
+          <ChevronsUp
+            onClick={() => {
+              setIsFilterCollapsed(!isFilterCollapsed);
+            }}
+            className={tw('cursor-pointer transition-transform', isFilterCollapsed ? 'rotate-180' : '')}
+          />
+        </div>
+        <motion.div
+          animate={{
+            height: isFilterCollapsed ? 0 : 'auto' }}
+          transition={{ duration: 0.2 }}
+          className={tw('overflow-hidden mx-5')}
+        >
+          {props.filter.counts.slice(0,3).map((item, index) => (
+            <div key={index} ><FIlterOption item={item} /></div>
+          ))}
+          
+        </motion.div>
+      </div>
+    );
   };
 
   return (
@@ -151,9 +80,7 @@ export const FiltersContent = () => {
                 spellCheck="false"
                 autoFocus
                 required maxLength={512}
-                className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-                onKeyUp={(event) => search(event)}
-                onFocus={(event) => search(event)}/>
+                className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0" />
             </div>
           </div>
           <div className='flex items-center cursor-pointer' onClick={() => {
@@ -162,37 +89,13 @@ export const FiltersContent = () => {
             <EllipseX />
           </div>
         </div>
-        {showHits
-          ? (
-            <div
-              ref={resultsRef}
-              className={tw(
-                'bg-always-white flex flex-col w-full py-4 text-rubik')}>
-              {searchResults.length > 0 && <>
-                {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                  (<div className="mt-10 text-base font-grotesk font-medium text-gray-500">
-                No results found. Please try another keyword.
-                  </div>):
-                  <>
-                    <ResultsContent searchResults={searchResults} />
-                    <div className="mx-auto absolute bottom-0 w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-                      <Button
-                        color={'black'}
-                        accent={AccentType.SCALE}
-                        stretch={true}
-                        label={'Search'}
-                        onClick={() => {
-                          router.push(`/app/discover/allResults/${keyword}`);
-                          setSearchModalOpen(false);
-                        }}
-                        type={ButtonType.PRIMARY}
-                      />
-                    </div>
-                  </>
-                }
-              </>}
-            </div>)
-          :<div className="mt-14 text-base font-grotesk font-medium text-gray-500">Enter a keyword to begin searching.</div>}
+        <div>
+          {searchFilters && searchFilters.map((item, index) =>(
+            <div key={index}>
+              <Filter filter={item}/>
+            </div>
+          ))}
+        </div>
       </div>
     </>);
 };

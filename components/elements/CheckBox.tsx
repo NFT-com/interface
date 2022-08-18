@@ -28,7 +28,7 @@ export function CheckBox(props: CheckBoxProps) {
         props.onToggle(!props.checked);
       }}
     >
-      {props.checked ? <Check color="white" className="h-4 w-4" /> : null}
+      {props.checked ? <Check color="black" className="h-4 w-4" /> : null}
     </div>
   );
 }

@@ -20,11 +20,12 @@ export function useSearchModal() {
     });
   };
 
-  const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search') => {
+  const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search', searchFilters?: any) => {
     mutate({
       ...data,
       searchModalOpen,
-      modalType
+      modalType,
+      searchFilters
     });
   }, [data, mutate]);
 
@@ -42,13 +43,6 @@ export function useSearchModal() {
     });
   }, [data, mutate]);
 
-  const setSearchFilters = useCallback((searchFilters: any) => {
-    mutate({
-      ...data,
-      searchFilters: [...searchFilters],
-    });
-  }, [data, mutate]);
-
   return {
     loading,
     modalType: data.modalType,
@@ -59,7 +53,6 @@ export function useSearchModal() {
     setSearchModalOpen,
     setModalType,
     setSideNavOpen,
-    setSearchFilters,
   };
 }
 
