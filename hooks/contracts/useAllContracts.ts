@@ -63,7 +63,7 @@ export function useAllContracts(): Contracts {
     useState(getNftTokenContract(getAddress('nft', chainId), provider));
   const [nftProfileContract, setNftProfileContract] =
     useState(getNftProfileContract(getAddress('nftProfile', chainId), provider, signer));
-    useState(getNftProfileContract(getAddress('nftProfile', chainId), provider));
+  useState(getNftProfileContract(getAddress('nftProfile', chainId), provider));
   const [maxProfilesContract, setMaxProfilesContract] = useState(
     getMaxProfilesContract(getAddress('profileAuction', chainId), provider)
   );
@@ -83,8 +83,9 @@ export function useAllContracts(): Contracts {
   const [genesisKeyTeamClaim, setGenesisKeyTeamClaim] = useState(
     getGenesisKeyTeamClaimContract(getAddress('genesisKeyTeamClaim', chainId), provider)
   );
-  const [nftResolverContract, setNftResolverContract] =
-  useState(getNftResolverContract(getAddress('nftResolver', chainId), signer));
+  const [nftResolverContract, setNftResolverContract] = useState(
+    getNftResolverContract(getAddress('nftResolver', chainId), signer, provider)
+  );
 
   useEffect(() => {
     setDaiContract(getDaiContract(getAddress('dai', chainId), provider));
@@ -108,7 +109,7 @@ export function useAllContracts(): Contracts {
       getGenesisKeyTeamClaimContract(getAddress('genesisKeyTeamClaim', chainId), provider)
     );
     setNftResolverContract(
-      getNftResolverContract(getAddress('nftResolver', chainId), signer)
+      getNftResolverContract(getAddress('nftResolver', chainId), signer, provider)
     );
   }, [chainId, provider, signer]);
   

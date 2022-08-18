@@ -110,7 +110,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         return (
           <>
             {(getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && getNotificationCount() > 0) && (
-              <span className="flex h-5 w-5 -mb-3">
+              <span className="flex h-5 w-5 -mb-3 relative z-50">
                 <span className="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-[#F9D963] opacity-75"></span>
                 <span className="relative bg-[#F9D963] w-5 h-5 flex items-center rounded-full px-[5px]">{getNotificationCount()}</span>
               </span>
