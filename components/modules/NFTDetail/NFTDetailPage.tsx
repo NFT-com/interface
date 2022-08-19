@@ -1,5 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { PageWrapper } from 'components/layouts/PageWrapper';
+import { LineChart } from 'components/modules/Analytics/LineChart';
+import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { Doppler, getEnvBool } from 'utils/env';
 
@@ -12,7 +14,6 @@ import { Properties } from './Properties';
 
 import { useContext } from 'react';
 import { useAccount } from 'wagmi';
-
 export interface NFTDetailPageProps {
   collection: string;
   tokenId: string;
@@ -47,6 +48,11 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             </div>
           </div>
         }
+        {
+          //TODO: @anthony - add in memo functionality
+          getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+          <NftMemo nft={nft} />
+        }
         <ExternalListings nft={nft} />
         <div className='w-full flex flex-col minlg:flex-row p-4'>
           <div className='flex flex-col minlg:w-1/2 w-full minlg:pr-4 pr-0'>
@@ -60,6 +66,13 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           <div className="minlg:w-1/2 w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
             <Properties nft={nft} />
           </div>
+          {
+            //TODO: @anthony - get data from indexer
+            getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+            <div className="minlg:w-1/2 w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
+              <LineChart />
+            </div>
+          }
         </div>
       </div>
     </PageWrapper>
