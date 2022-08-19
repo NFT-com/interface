@@ -11,8 +11,8 @@ import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { Fee, SeaportOrderParameters } from 'types';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getChainIdString } from 'utils/helpers';
-import { getLooksrareNonce, getOpenseaCollection } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
+import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 

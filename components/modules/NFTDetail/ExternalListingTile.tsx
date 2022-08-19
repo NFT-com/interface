@@ -51,14 +51,29 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         </div>
       </div>
     </div>
-    <Button
-      stretch
-      color="white"
-      label={'View Listing'}
-      onClick={() => {
-        window.open(listing?.url, '_blank');
-      }}
-      type={ButtonType.PRIMARY}
-    />
+    <div className='flex items-center'>
+      <div className='flex items-center basis-1 grow px-2'>
+        <Button
+          stretch
+          color="white"
+          label={'View Listing'}
+          onClick={() => {
+            window.open(listing?.url, '_blank');
+          }}
+          type={ButtonType.PRIMARY}
+        />
+      </div>
+      <div className='flex items-center basis-1 grow px-2'>
+        <Button
+          stretch
+          color="white"
+          label={'Add to Cart'}
+          onClick={() => {
+          // todo!
+          }}
+          type={ButtonType.PRIMARY}
+        />
+      </div>
+    </div>
   </div>;
 }
