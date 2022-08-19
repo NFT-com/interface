@@ -21,6 +21,13 @@ export const AnalyticsContainer = ({ data }:AnalyticsContainerProps) => {
   
   const [selectedChartType, setSelectedChartType] = useState(chartTypes[0]);
 
+  const marketplaces = {
+    0: 'OpenSea',
+    1: 'LooksRare'
+  };
+
+  const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
+
   return (
     <div className="bg-transparent">
       <div className="w-full max-w-md px-2 sm:px-0">
@@ -46,7 +53,22 @@ export const AnalyticsContainer = ({ data }:AnalyticsContainerProps) => {
         </Tab.Group>
       </div>
 
-      {(selectedChartType === 'Price' || selectedChartType === 'Volume') && <LineChart data={data} />}
+      {selectedChartType === 'Price' &&
+        <LineChart data={data}
+          currentMarketplace={selectedMarketplace}
+          setCurrentMarketplace={(selectedMarketplace: string) => {
+            setSelectedMarketplace(selectedMarketplace);
+          }}
+        />
+      }
+      {selectedChartType === 'Volume' &&
+        <LineChart data={data}
+          currentMarketplace={selectedMarketplace}
+          setCurrentMarketplace={(selectedMarketplace: string) => {
+            setSelectedMarketplace(selectedMarketplace);
+          }}
+        />
+      }
       {selectedChartType === 'Activity' && <TxHistory />}
     </div>
   );

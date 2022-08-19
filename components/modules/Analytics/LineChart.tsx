@@ -3,7 +3,7 @@ import { Collection, Nft } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
 import { RadioGroup, Tab } from '@headlessui/react';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -40,9 +40,11 @@ const chartData = [
 
 export type LineChartProps = {
   data: PartialDeep<Nft> | Collection;
+  currentMarketplace: string;
+  setCurrentMarketplace?: Dispatch<SetStateAction<string>>,
 };
 
-export const LineChart = ({ data }: LineChartProps) => {
+export const LineChart = ({ data, currentMarketplace, setCurrentMarketplace }: LineChartProps) => {
   const timeFrames = {
     0: '7D',
     1: '1M',
@@ -58,15 +60,7 @@ export const LineChart = ({ data }: LineChartProps) => {
     1: 'LooksRare'
   };
 
-  const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
-
-  const chartTypes = {
-    0: 'Price',
-    1: 'Volume',
-    2: 'Activity'
-  };
-  
-  const [selectedChartType, setSelectedChartType] = useState(chartTypes[0]);
+  const [selectedMarketplace, setSelectedMarketplace] = useState(currentMarketplace);
   
   return (
     <div className="bg-transparent">
@@ -95,7 +89,7 @@ export const LineChart = ({ data }: LineChartProps) => {
         </Tab.List>
       </Tab.Group>
       <div className="w-full max-w-md px-2 py-2 sm:px-0">
-        <RadioGroup value={selectedMarketplace} onChange={(index) => {setSelectedMarketplace(marketplaces[index]);}}>
+        <RadioGroup value={selectedMarketplace} onChange={(index) => {setSelectedMarketplace(marketplaces[index]); setCurrentMarketplace(marketplaces[index]); }}>
           <div className="flex flex-row items-center justify-end space-x-2">
             {Object.keys(marketplaces).map((marketplace) => (
               <RadioGroup.Option
