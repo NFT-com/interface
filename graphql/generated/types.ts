@@ -2100,6 +2100,14 @@ export type UpdateMeMutationVariables = Exact<{
 
 export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string, email?: string | null, avatarURL?: string | null } };
 
+export type UpdateNftMemoMutationVariables = Exact<{
+  nftId: Scalars['ID'];
+  memo: Scalars['String'];
+}>;
+
+
+export type UpdateNftMemoMutation = { __typename?: 'Mutation', updateNFTMemo: { __typename?: 'NFT', memo?: string | null, tokenId: any } };
+
 export type UpdateNftProfileIdMutationVariables = Exact<{
   nftId: Scalars['ID'];
   profileId: Scalars['ID'];
@@ -2650,6 +2658,14 @@ export const UpdateMeDocument = gql`
     id
     email
     avatarURL
+  }
+}
+    `;
+export const UpdateNftMemoDocument = gql`
+    mutation UpdateNFTMemo($nftId: ID!, $memo: String!) {
+  updateNFTMemo(nftId: $nftId, memo: $memo) {
+    memo
+    tokenId
   }
 }
     `;
@@ -3692,6 +3708,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UpdateMe(variables: UpdateMeMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateMeMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateMeMutation>(UpdateMeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateMe', 'mutation');
+    },
+    UpdateNFTMemo(variables: UpdateNftMemoMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNftMemoMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateNftMemoMutation>(UpdateNftMemoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateNFTMemo', 'mutation');
     },
     UpdateNFTProfileId(variables: UpdateNftProfileIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNftProfileIdMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateNftProfileIdMutation>(UpdateNftProfileIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateNFTProfileId', 'mutation');

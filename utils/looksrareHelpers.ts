@@ -18,6 +18,7 @@ export async function createLooksrareParametersForNFTListing(
   // takerAddress: string,
 ): Promise<MakerOrder> {
   const addresses: Addresses = addressesByNetwork[chainId];
+  // Get protocolFees and creatorFees from the contracts
   const protocolFees = await looksrareStrategy.viewProtocolFee();
   const [
     , // setter
@@ -25,7 +26,6 @@ export async function createLooksrareParametersForNFTListing(
     fee
   ]: [string, string, BigNumber] = await looksrareRoyaltyFeeRegistry.royaltyFeeInfoCollection(nft.contract);
 
-  // Get protocolFees and creatorFees from the contracts
   const netPriceRatio = BigNumber.from(10000).sub(protocolFees.add(fee)).toNumber();
   // This variable is used to enforce a max slippage of 25% on all orders, if a collection change the fees to be >25%, the order will become invalid
   const minNetPriceRatio = 7500;

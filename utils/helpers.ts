@@ -163,7 +163,7 @@ export function getEtherscanLink(
   }
 }
 
-export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
+export function getChainIdString(chainId: Maybe<number | string>): Maybe<string> {
   return (chainId == null ? null : String(chainId));
 }
 
@@ -203,4 +203,11 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen: bool
     }
   }
   return perPage;
+}
+
+export function max(...args: BigNumberish[]) {
+  if (isNullOrEmpty(args)) {
+    return null;
+  }
+  return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MIN_VALUE).gt(val) ? acc : val);
 }

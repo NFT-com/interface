@@ -300,8 +300,9 @@ describe('Unit test our seaport functions', () => {
         ethers.utils.parseEther('10'),
         ethers.utils.parseEther('10'),
         NULL_ADDRESS,
-        convertDurationToSec('1 Week'),
-        null
+        convertDurationToSec('7 Days'),
+        null,
+        '1'
       );
 
       expect(params).to.deep.eq({
@@ -317,7 +318,7 @@ describe('Unit test our seaport functions', () => {
           endAmount: '250000000000000000',
           identifierOrCriteria: '0',
           itemType: 0,
-          recipient: '0x8De9C5A032463C561423387a9648c5C7BCC5BC90',
+          recipient: '0x0000a26b00c1f0df003000390027140000faa719',
           startAmount: '250000000000000000',
           token: '0x0000000000000000000000000000000000000000'
         }],
@@ -351,11 +352,12 @@ describe('Unit test our seaport functions', () => {
         ethers.utils.parseEther('10'),
         ethers.utils.parseEther('10'),
         NULL_ADDRESS,
-        convertDurationToSec('1 Week'),
+        convertDurationToSec('7 Days'),
         {
           basisPoints: 10,
           recipient: 'test_fee_collection'
-        }
+        },
+        '1'
       );
 
       expect(params).to.deep.eq({
@@ -372,7 +374,7 @@ describe('Unit test our seaport functions', () => {
           endAmount: '250000000000000000',
           identifierOrCriteria: '0',
           itemType: 0,
-          recipient: '0x8De9C5A032463C561423387a9648c5C7BCC5BC90',
+          recipient: '0x0000a26b00c1f0df003000390027140000faa719',
           startAmount: '250000000000000000',
           token: '0x0000000000000000000000000000000000000000'
         },
