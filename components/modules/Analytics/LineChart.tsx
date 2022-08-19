@@ -91,7 +91,7 @@ export const LineChart = () => {
           ))}
         </Tab.List>
       </Tab.Group>
-      <div className="w-full max-w-md px-2 py-4 sm:px-0">
+      <div className="w-full max-w-md px-2 py-2 sm:px-0">
         <RadioGroup value={selectedMarketplace} onChange={(index) => {setSelectedMarketplace(marketplaces[index]);}}>
           <div className="flex flex-row items-center justify-end space-x-2">
             {Object.keys(marketplaces).map((marketplace) => (
@@ -134,7 +134,7 @@ export const LineChart = () => {
         </RadioGroup>
       </div>
 
-      <div className="w-full max-w-md px-2 py-4 sm:px-0">
+      <div className="w-full max-w-md px-2 sm:px-0">
         <Tab.Group onChange={(index) => {setSelectedChartType(chartTypes[index]);}}>
           <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
             {Object.keys(chartTypes).map((chartType) => (
