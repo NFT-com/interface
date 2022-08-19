@@ -23,24 +23,24 @@ export const TxHistory = () => {
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">0x0</td>
-            <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">1.5 ETH</td>
+            <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">OpenSea</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">08/18/2022 18:00PST</td>
           </tr>
           <tr>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">0x0</td>
-            <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">1.5 ETH</td>
+            <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">LooksRare</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">08/18/2022 18:00PST</td>
           </tr>
           <tr>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">0x0</td>
-            <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">0x0</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">1.5 ETH</td>
+            <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">OpenSea</td>
             <td className="border-b border-slate-100 dark:border-slate-700 p-4  text-slate-500 dark:text-slate-400">08/18/2022 18:00PST</td>
           </tr>
         </tbody>
