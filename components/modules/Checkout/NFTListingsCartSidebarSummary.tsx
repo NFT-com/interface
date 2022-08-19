@@ -178,7 +178,7 @@ export function NFTListingsCartSidebarSummary() {
           stretch
           loading={showProgressBar && !error && !success}
           disabled={showProgressBar && !error && !success}
-          label={success ? 'Finish' : 'List Now'}
+          label={success ? 'Finish' : error ? 'Try Again' : 'List Now'}
           onClick={async () => {
             if (success) {
               clear();
@@ -240,6 +240,8 @@ export function NFTListingsCartSidebarSummary() {
             const result = await listAll();
             if (result) {
               setSuccess(true);
+            } else {
+              setError('ListingError');
             }
           }}
           type={ButtonType.PRIMARY}
