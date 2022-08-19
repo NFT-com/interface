@@ -29,14 +29,14 @@ export function useListNFTMutations(): ListNftResult {
       parameters: SeaportOrderComponents
     ) => {
       try {
-        await sdk.ListNftSeaport({
+        const result = await sdk.ListNftSeaport({
           input: {
             seaportSignature: signature,
             seaportParams: JSON.stringify(parameters),
             chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
           }
         });
-        return true;
+        return result?.listNFTSeaport ?? false;
       } catch (err) {
         Sentry.captureException(err);
         return false;
@@ -48,13 +48,13 @@ export function useListNFTMutations(): ListNftResult {
   const listNftLooksrare = useCallback(
     async (order: MakerOrderWithSignature) => {
       try {
-        await sdk.ListNftLooksrare({
+        const result = await sdk.ListNftLooksrare({
           input: {
             looksrareOrder: JSON.stringify(order),
             chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
           }
         });
-        return true;
+        return result?.listNFTLooksrare ?? false;
       } catch (err) {
         Sentry.captureException(err);
         return false;

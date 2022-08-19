@@ -20,7 +20,7 @@ export interface ListingCheckoutNftProps {
 
 export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
   const { chain } = useNetwork();
-  const { data: collection } = useSWR('CartSidebarNftCollectionDetail' + props.listing?.nft?.contract, async () => {
+  const { data: collection } = useSWR('ContractMetadata' + props.listing?.nft?.contract, async () => {
     return await getContractMetadata(props.listing?.nft?.contract, chain?.id);
   });
   const { setPrice, removeListing } = useContext(NFTListingsContext);

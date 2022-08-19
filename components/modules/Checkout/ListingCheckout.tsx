@@ -47,7 +47,7 @@ export function ListingCheckout() {
               openseaFullyEnabled ? 'bg-opensea-blue text-white' : ''
             )}
           >
-                Opensea
+            Opensea
           </div>
           <div
             onClick={() => {
@@ -59,7 +59,7 @@ export function ListingCheckout() {
               looksrareFullyEnabled ? 'bg-looksrare-green text-white' : ''
             )}
           >
-                Looksrare
+            Looksrare
           </div>
         </div>
       </div>
@@ -98,8 +98,8 @@ export function ListingCheckout() {
       <Button
         disabled={!allListingsConfigured()}
         label={'Proceed to List'}
-        onClick={() => {
-          prepareListings();
+        onClick={async () => {
+          await prepareListings();
           toggleCartSidebar();
         }}
         type={ButtonType.PRIMARY} />

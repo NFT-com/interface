@@ -1,4 +1,4 @@
-import { use721Contract } from 'hooks/contracts/use721Contract';
+import { get721Contract } from 'hooks/contracts/get721Contract';
 
 import { useCallback } from 'react';
 import useSWR from 'swr';
@@ -22,7 +22,7 @@ export function useNftCollectionAllowance(
   const { data: signer } = useSigner();
   const { chain } = useNetwork();
   const provider = useProvider({ chainId: chain?.id });
-  const collection = use721Contract(collectionAddress, provider);
+  const collection = get721Contract(collectionAddress, provider);
 
   const keyString = `${chain?.id}_${collectionAddress}_allowance_${currentAddress}_${target}`;
 
