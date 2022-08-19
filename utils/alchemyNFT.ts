@@ -1,4 +1,7 @@
+import { Maybe } from 'graphql/generated/types';
+
 import { Doppler,getEnv } from './env';
+import { getChainIdString } from './helpers';
 
 import { BigNumber, BigNumberish } from 'ethers';
 
@@ -35,10 +38,14 @@ export async function getNftsByContractAndOwner(
 
 export async function getContractMetadata(
   contract: string,
+  chainId?: Maybe<string | number>,
 ) {
   const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('contractAddress', contract);
-  url.searchParams.set('action', 'getContractMetadata'); 
+  url.searchParams.set('action', 'getContractMetadata');
+  url.searchParams.set('chainId', getChainIdString(chainId) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID));
+  const result = await fetch(url.toString()).then(res => res.json());
+  return result;
 }
 
 export async function getNftsForCollection(

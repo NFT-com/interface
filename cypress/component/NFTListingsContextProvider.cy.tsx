@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { NFTListingsContext, NFTListingsContextProvider } from '../../components/modules/NFTDetail/NFTListingsContext';
+import { NFTListingsContext, NFTListingsContextProvider } from '../../components/modules/Checkout/NFTListingsContext';
 import { NULL_ADDRESS } from '../../constants/addresses';
 import { setupWagmiClient } from '../util/wagmi';
 
