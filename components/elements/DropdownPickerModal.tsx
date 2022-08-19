@@ -3,6 +3,7 @@ import { tw } from 'utils/tw';
 
 import { Modal } from './Modal';
 
+import { XIcon } from '@heroicons/react/solid';
 import { PropsWithChildren, useCallback, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
@@ -118,7 +119,11 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
           setExpanded(false);
         }}
         bgColor={'bg-pagebg dark:bg-secondary-bg-dk'}
+        hideX
       >
+        <XIcon onClick={() => {
+          setExpanded(false);
+        }} className='absolute top-14 right-3 hover:cursor-pointer w-7 h-7' color="white" />
         {props.options?.map((item, index) => {
           return getOptionRow(item, index, props.forceLightMode);
         })}
