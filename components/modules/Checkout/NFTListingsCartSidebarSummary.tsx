@@ -1,12 +1,13 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { max } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
 import { VerticalProgressBar } from './VerticalProgressBar';
 
-import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -37,29 +38,26 @@ export function NFTListingsCartSidebarSummary() {
       revalidateOnFocus: false,
     });
 
-  const getTotalMarketplaceFees = useCallback(() => {
+  const getMaxMarketplaceFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
-      const totalFees = stagedListing.targets.reduce((nftTotal, marketplace) => {
-        let newFee: BigNumberish;
+      const feesByMarketplace = stagedListing.targets.map((marketplace) => {
         if (marketplace === 'looksrare') {
           // Looksrare fee is fetched from the smart contract.
-          newFee = looksrareProtocolFeeBps == null
+          return BigNumber.from(looksrareProtocolFeeBps == null
             ? 0
-            : multiplyBasisPoints(stagedListing?.startingPrice ?? 0, looksrareProtocolFeeBps);
+            : multiplyBasisPoints(stagedListing?.startingPrice ?? 0, looksrareProtocolFeeBps));
         } else {
           // Seaport fee is hard-coded in our codebase and not expected to change.
-          newFee = multiplyBasisPoints(stagedListing?.startingPrice ?? 0, 250);
+          return BigNumber.from(multiplyBasisPoints(stagedListing?.startingPrice ?? 0, 250));
         }
-        return BigNumber.from(nftTotal).add(newFee);
-      }, BigNumber.from(0));
-      return totalFees.add(cartTotal);
+      });
+      return cartTotal.add(max(...feesByMarketplace));
     }, BigNumber.from(0));
   }, [toList, looksrareProtocolFeeBps]);
  
-  const getTotalRoyaltyFees = useCallback(() => {
+  const getMaxRoyaltyFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
-      const totalFees = stagedListing.targets.reduce((nftTotal, marketplace) => {
-        let newFee: BigNumberish;
+      const royaltiesByMarketplace = stagedListing.targets.map((marketplace) => {
         if (marketplace === 'looksrare') {
           const minAskAmount = BigNumber.from(stagedListing?.looksrareOrder?.minPercentageToAsk ?? 0)
             .div(10000)
@@ -67,15 +65,14 @@ export function NFTListingsCartSidebarSummary() {
           const marketplaceFeeAmount = BigNumber.from(looksrareProtocolFeeBps ?? 0)
             .div(10000)
             .mul(BigNumber.from(stagedListing?.looksrareOrder?.price ?? 0));
-          newFee = minAskAmount.sub(marketplaceFeeAmount);
+          return minAskAmount.sub(marketplaceFeeAmount);
         } else {
-          newFee = stagedListing?.seaportParameters?.consideration.length === 3 ?
+          return BigNumber.from(stagedListing?.seaportParameters?.consideration.length === 3 ?
             stagedListing?.seaportParameters?.consideration[2].startAmount :
-            0;
+            0);
         }
-        return BigNumber.from(nftTotal).add(newFee);
-      }, BigNumber.from(0));
-      return totalFees.add(cartTotal);
+      });
+      return cartTotal.add(max(...royaltiesByMarketplace));
     }, BigNumber.from(0));
   }, [looksrareProtocolFeeBps, toList]);
 
@@ -87,22 +84,11 @@ export function NFTListingsCartSidebarSummary() {
 
   const getTotalProfit = useCallback(() => {
     const total = toList?.reduce((cartTotal, stagedListing) => {
-      const totalFees = stagedListing.targets.reduce((nftTotal, marketplace) => {
-        let newFee: BigNumberish;
-        if (marketplace === 'looksrare') {
-          newFee = BigNumber.from(stagedListing?.looksrareOrder?.minPercentageToAsk ?? 0)
-            .div(10000)
-            .mul(BigNumber.from(stagedListing?.looksrareOrder?.price ?? 0));
-        } else {
-          newFee = stagedListing?.seaportParameters?.consideration[0].startAmount;
-        }
-        return BigNumber.from(nftTotal).add(newFee);
-      }, BigNumber.from(0));
-      return totalFees.add(cartTotal);
+      return BigNumber.from(stagedListing?.startingPrice).add(cartTotal);
     }, BigNumber.from(0));
 
-    return total;
-  } , [toList]);
+    return total.sub(getMaxMarketplaceFees()).sub(getMaxRoyaltyFees());
+  } , [getMaxMarketplaceFees, getMaxRoyaltyFees, toList]);
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
@@ -153,19 +139,19 @@ export function NFTListingsCartSidebarSummary() {
           : (
             <>
               <div className="mx-8 my-4 flex items-center">
-                <span>Total marketplace fees: {' '}</span>
+                <span>Max marketplace fees: {' '}</span>
                 <span className='ml-2'>
-                  {ethers.utils.formatEther(getTotalMarketplaceFees() ?? 0) + ' WETH'}
+                  {ethers.utils.formatEther(getMaxMarketplaceFees() ?? 0) + ' WETH'}
                 </span>
               </div>
               <div className="mx-8 my-4 flex items-center">
-                <span>Total royalties: </span>
+                <span>Max royalties: </span>
                 <span className='ml-2'>
-                  {ethers.utils.formatEther(getTotalRoyaltyFees() ?? 0) + ' WETH'}
+                  {ethers.utils.formatEther(getMaxRoyaltyFees() ?? 0) + ' WETH'}
                 </span>
               </div>
               <div className="mx-8 my-4 flex items-center">
-                <span>Total profit: </span>
+                <span>Minimum profit: </span>
                 <span className='ml-2'>
                   {ethers.utils.formatEther(getTotalProfit() ?? 0) + ' WETH'}
                 </span>
@@ -184,6 +170,7 @@ export function NFTListingsCartSidebarSummary() {
               clear();
               setSuccess(false);
               toggleCartSidebar();
+              return;
             }
 
             setShowProgressBar(true);

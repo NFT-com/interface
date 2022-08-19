@@ -231,17 +231,15 @@ export function NFTListingsContextProvider(
           if (signature == null) {
             return false;
           }
-          await listNftLooksrare({ ...listing.looksrareOrder, signature });
-          // todo: check success/failure and maybe mutate external listings query.
-          return true;
+          const result = await listNftLooksrare({ ...listing.looksrareOrder, signature });
+          return result;
         } else {
           const signature = await signOrderForSeaport(listing.seaportParameters, seaportCounter).catch(() => null);
           if (signature == null) {
             return false;
           }
-          await listNftSeaport(signature , { ...listing.seaportParameters, counter: seaportCounter });
-          // todo: check success/failure and maybe mutate external listings query.
-          return true;
+          const result = await listNftSeaport(signature , { ...listing.seaportParameters, counter: seaportCounter });
+          return result;
         }
       }));
       return results.every(r => r);
