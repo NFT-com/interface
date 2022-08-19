@@ -2,6 +2,7 @@ import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
+import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
@@ -123,7 +124,9 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
               <GraphQLProvider>
                 <NotificationContextProvider>
                   <NFTListingsContextProvider>
-                    <Component {...pageProps} key={router.pathname} />
+                    <NFTPurchaseContextProvider>
+                      <Component {...pageProps} key={router.pathname} />
+                    </NFTPurchaseContextProvider>
                   </NFTListingsContextProvider>
                 </NotificationContextProvider>
               </GraphQLProvider>
