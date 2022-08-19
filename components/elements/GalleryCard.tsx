@@ -17,10 +17,10 @@ function GalleryCard(props: GalleryCardProps) {
       className={tw(
         'relative',
         'py-4',
-        'drop-shadow-md rounded-2xl flex flex-col',
+        'drop-shadow-md rounded-xl flex flex-col',
         'w-full aspect-square',
         'justify-between cursor-pointer transform hover:scale-105',
-        'overflow-hidden h-max',
+        'overflow-hidden',
       )}
       onClick={props.onClick}
     >
