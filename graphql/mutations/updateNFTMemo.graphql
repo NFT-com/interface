@@ -1,0 +1,6 @@
+mutation UpdateNFTMemo($input: MutationUpdateNftMemoArgs!) {
+  updateNFTMemo(input: $input) {
+    memo
+    tokenId
+  }
+}

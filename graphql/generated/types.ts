@@ -13,11 +13,17 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** Equivalent to solidity's address type */
   Address: any;
+  /** Equivalent to solidity's bytes type */
   Bytes: any;
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
+  /** Equivalent to solidity's uint256 type */
   Uint256: any;
+  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -179,10 +185,15 @@ export type ClearGkIconVisibleOutput = {
 
 export type Collection = {
   __typename?: 'Collection';
+  bannerUrl?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['String']>;
   contract?: Maybe<Scalars['Address']>;
   deployer?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
+  isCurated?: Maybe<Scalars['Boolean']>;
+  isSpam?: Maybe<Scalars['Boolean']>;
+  logoUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -635,6 +646,7 @@ export type Mutation = {
   unfollowProfile: Profile;
   updateAssociatedAddresses: UpdateAssociatedAddressesOutput;
   updateAssociatedContract: UpdateAssociatedContractOutput;
+  updateCollectionImageUrls: UpdateCollectionImageUrlsOutput;
   /** AUTHENTICATED */
   updateCuration: Curation;
   updateEmail: User;
@@ -653,6 +665,9 @@ export type Mutation = {
   updateProfile: Profile;
   /** AUTHENTICATED */
   updateProfileView: Profile;
+  /** AUTHETICATED */
+  updateReadByIds: UpdateReadOutput;
+  updateSpamStatus: UpdateSpamStatusOutput;
   /** AUTHENTICATED */
   updateWalletProfileId: Wallet;
   /** AUTHENTICATED */
@@ -853,6 +868,11 @@ export type MutationUpdateAssociatedContractArgs = {
 };
 
 
+export type MutationUpdateCollectionImageUrlsArgs = {
+  count: Scalars['Int'];
+};
+
+
 export type MutationUpdateCurationArgs = {
   input: UpdateCurationInput;
 };
@@ -905,6 +925,17 @@ export type MutationUpdateProfileViewArgs = {
 };
 
 
+export type MutationUpdateReadByIdsArgs = {
+  ids: Array<InputMaybe<Scalars['String']>>;
+};
+
+
+export type MutationUpdateSpamStatusArgs = {
+  contracts: Array<Scalars['Address']>;
+  isSpam: Scalars['Boolean'];
+};
+
+
 export type MutationUpdateWalletProfileIdArgs = {
   profileId: Scalars['ID'];
 };
@@ -917,6 +948,7 @@ export type MutationUploadProfileImagesArgs = {
 export type Nft = {
   __typename?: 'NFT';
   chainId?: Maybe<Scalars['String']>;
+  collection?: Maybe<Collection>;
   contract?: Maybe<Scalars['Address']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
@@ -1184,6 +1216,7 @@ export type Query = {
   filterAsks: GetMarketAsk;
   getActivitiesByType?: Maybe<Array<Maybe<TxActivity>>>;
   getActivitiesByWalletId?: Maybe<Array<Maybe<TxActivity>>>;
+  /** AUTHETICATED */
   getActivitiesByWalletIdAndType?: Maybe<Array<Maybe<TxActivity>>>;
   /** AUTHENTICATED */
   getApprovedAssociations: Array<Maybe<ApprovedAssociationOutput>>;
@@ -1711,6 +1744,11 @@ export type UpdateAssociatedContractOutput = {
   message?: Maybe<Scalars['String']>;
 };
 
+export type UpdateCollectionImageUrlsOutput = {
+  __typename?: 'UpdateCollectionImageUrlsOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type UpdateCurationInput = {
   id: Scalars['ID'];
   items: Array<CurationItemInput>;
@@ -1765,6 +1803,17 @@ export type UpdateProfileInput = {
 export type UpdateProfileViewInput = {
   profileViewType: ProfileViewType;
   url: Scalars['String'];
+};
+
+export type UpdateReadOutput = {
+  __typename?: 'UpdateReadOutput';
+  idsNotFoundOrFailed: Array<Maybe<Scalars['String']>>;
+  updatedIdsSuccess: Array<Maybe<Scalars['String']>>;
+};
+
+export type UpdateSpamStatusOutput = {
+  __typename?: 'UpdateSpamStatusOutput';
+  message?: Maybe<Scalars['String']>;
 };
 
 export type UpdateUserInput = {
@@ -2050,6 +2099,14 @@ export type UpdateMeMutationVariables = Exact<{
 
 
 export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string, email?: string | null, avatarURL?: string | null } };
+
+export type UpdateNftMemoMutationVariables = Exact<{
+  nftId: Scalars['ID'];
+  memo: Scalars['String'];
+}>;
+
+
+export type UpdateNftMemoMutation = { __typename?: 'Mutation', updateNFTMemo: { __typename?: 'NFT', memo?: string | null, tokenId: any } };
 
 export type UpdateNftProfileIdMutationVariables = Exact<{
   nftId: Scalars['ID'];
@@ -2601,6 +2658,14 @@ export const UpdateMeDocument = gql`
     id
     email
     avatarURL
+  }
+}
+    `;
+export const UpdateNftMemoDocument = gql`
+    mutation UpdateNFTMemo($nftId: ID!, $memo: String!) {
+  updateNFTMemo(nftId: $nftId, memo: $memo) {
+    memo
+    tokenId
   }
 }
     `;
@@ -3639,6 +3704,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UpdateMe(variables: UpdateMeMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateMeMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateMeMutation>(UpdateMeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateMe', 'mutation');
+    },
+    UpdateNFTMemo(variables: UpdateNftMemoMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNftMemoMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateNftMemoMutation>(UpdateNftMemoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateNFTMemo', 'mutation');
     },
     UpdateNFTProfileId(variables: UpdateNftProfileIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNftProfileIdMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateNftProfileIdMutation>(UpdateNftProfileIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateNFTProfileId', 'mutation');
