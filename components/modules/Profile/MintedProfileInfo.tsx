@@ -103,7 +103,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             }}
           />
         </div>
-        {getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && <div className='ml-4'>
+        <div className='ml-4'>
           <Button
             type={ButtonType.SECONDARY}
             label={'Settings'}
@@ -111,7 +111,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               router.push('/app/settings');
             }}
           />
-        </div>}
+        </div>
       </div>;
   }, [
     hasGks,

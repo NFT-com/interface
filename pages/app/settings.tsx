@@ -119,10 +119,6 @@ export default function Settings() {
       router.push('/');
     }
   }, [currentAddress, router]);
-  
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
-    return <NotFoundPage />;
-  }
 
   const ownsProfilesAndSelectedProfile = myOwnedProfileTokens.length && myOwnedProfileTokens.some(t => t.title === selectedProfile);
   

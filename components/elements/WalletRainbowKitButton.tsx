@@ -70,9 +70,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 </button>
                 :
                 <button
-                  onClick={() => {
-                    !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) ? openConnectModal() : toggleSidebar();
-                  }}
+                  onClick={() => toggleSidebar()}
                   className={tw(
                     `${props?.signInButton ? 'block' : 'hidden'}`,
                     'font-header',
@@ -110,7 +108,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         }
         return (
           <>
-            {(getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && getNotificationCount() > 0) && (
+            {(getNotificationCount() > 0) && (
               <NotificationBadge count={getNotificationCount()} />
             )
             }
@@ -135,18 +133,16 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 toggleSidebar();
               }} type="button">
                 
-                {!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
-                  ? shortenAddress(currentAddress, 3) :
-                  myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
-                    <>
-                      <UserCircle className="h-6 w-6 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                      {user.currentProfileUrl}
-                    </>
-                    :
-                    <>
-                      <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                      {shortenAddress(currentAddress, 3)}
-                    </>
+                {myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
+                  <>
+                    <UserCircle className="h-6 w-6 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                    {user.currentProfileUrl}
+                  </>
+                  :
+                  <>
+                    <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                    {shortenAddress(currentAddress, 3)}
+                  </>
                 }
               </button>
             </div>

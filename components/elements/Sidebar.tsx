@@ -217,65 +217,61 @@ export const Sidebar = () => {
       );
     }
   }, [currentAddress, getSidebarContent]);
-
-  if(!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
-    return <HeroSidebar />;
-  } else {
-    return (
-      <AnimatePresence>
-        {sidebarOpen && (
-          <Dialog
+  
+  return (
+    <AnimatePresence>
+      {sidebarOpen && (
+        <Dialog
+          layout
+          key='sidebarDialog'
+          static
+          as={motion.div}
+          open={sidebarOpen}
+          className="fixed inset-0 overflow-hidden"
+          onClose={() => {
+            !addFundsDialogOpen && setSidebarOpen(false);
+          }}
+          style={{ zIndex: getZIndex('sidebar') }}
+        >
+          <Dialog.Overlay
             layout
-            key='sidebarDialog'
-            static
+            key='sidebarDialogOverlay'
             as={motion.div}
-            open={sidebarOpen}
-            className="fixed inset-0 overflow-hidden"
-            onClose={() => {
-              !addFundsDialogOpen && setSidebarOpen(false);
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              ease: 'backInOut',
+              duration: 0.4
             }}
-            style={{ zIndex: getZIndex('sidebar') }}
+            className={tw(
+              'absolute inset-0',
+              'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
+            )}
+          />
+          <motion.div
+            key='sidebarWrapperPanel'
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{
+              type: 'spring',
+              bounce: 0,
+              duration: 0.4
+            }}
+            className={
+              tw(
+                'flex flex-col fixed inset-y-0 right-0',
+                'w-screen max-w-md h-full',
+                'shadow-xl overflow-y-auto overflow-x-hidden',
+                'bg-white',
+                'font-grotesk')
+            }
           >
-            <Dialog.Overlay
-              layout
-              key='sidebarDialogOverlay'
-              as={motion.div}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                ease: 'backInOut',
-                duration: 0.4
-              }}
-              className={tw(
-                'absolute inset-0',
-                'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
-              )}
-            />
-            <motion.div
-              key='sidebarWrapperPanel'
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{
-                type: 'spring',
-                bounce: 0,
-                duration: 0.4
-              }}
-              className={
-                tw(
-                  'flex flex-col fixed inset-y-0 right-0',
-                  'w-screen max-w-md h-full',
-                  'shadow-xl overflow-y-auto overflow-x-hidden',
-                  'bg-white',
-                  'font-grotesk')
-              }
-            >
-              {getSidebarPanel()}
-            </motion.div>
-          </Dialog>
-        )}
-      </AnimatePresence>
-    );
-  }
+            {getSidebarPanel()}
+          </motion.div>
+        </Dialog>
+      )}
+    </AnimatePresence>
+  );
 };

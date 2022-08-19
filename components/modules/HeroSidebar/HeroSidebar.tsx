@@ -57,7 +57,6 @@ export const HeroSidebar = () => {
       || currentAddress && !myOwnedProfileTokens.length
       || myOwnedProfileTokens.length === 1
       && myOwnedProfileTokens.some(e => e.title === hiddenProfile)
-      || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
     ) {
       return (
         <motion.div
@@ -172,7 +171,7 @@ export const HeroSidebar = () => {
         </motion.div>
       );}
 
-    if(!myOwnedProfileTokens.some(e => e.title === profileValue) && getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)){
+    if(!myOwnedProfileTokens.some(e => e.title === profileValue)){
       return (
         <LoginResults
           {...{ hiddenProfile, profileValue }}
