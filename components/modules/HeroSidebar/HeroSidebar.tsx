@@ -12,7 +12,6 @@ import { useUser } from 'hooks/state/useUser';
 import useENSName from 'hooks/useENSName';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 

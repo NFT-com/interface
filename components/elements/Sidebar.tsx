@@ -1,4 +1,3 @@
-import { HeroSidebar } from 'components/modules/HeroSidebar/HeroSidebar';
 import NftOwner from 'components/modules/Settings/NftOwner';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
 import { Notifications } from 'components/modules/Sidebar/Notifications';
@@ -10,7 +9,6 @@ import { useUser } from 'hooks/state/useUser';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, prettify, shortenAddress } from 'utils/helpers';
 import { randomLabelGenerator } from 'utils/randomLabelGenerator';
 import { tw } from 'utils/tw';

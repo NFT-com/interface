@@ -2,11 +2,10 @@ import { NotificationBadge } from 'components/modules/Notifications/Notification
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import { useChainModal } from '@rainbow-me/rainbowkit';
 import { UserCircle, Wallet } from 'phosphor-react';
 import { useCallback } from 'react';
 import { Menu } from 'react-feather';
@@ -40,7 +39,6 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   });
   const { disconnect } = useDisconnect();
   const { primaryIcon } = useThemeColors();
-  const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
   const { chain } = useNetwork();
 
