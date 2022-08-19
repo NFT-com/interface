@@ -33,7 +33,7 @@ describe('looksrareHelpers', () => {
         99, // nonce
         mockStrategy,
         mockFeeRegistry,
-        convertDurationToSec('1 Week')
+        convertDurationToSec('7 Days')
       );
 
       expect(result).to.deep.equal({

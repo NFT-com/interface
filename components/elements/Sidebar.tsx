@@ -118,9 +118,6 @@ export const Sidebar = () => {
             Sign out
           </button>
 
-          <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 mb-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
-            Notifications
-          </div>
           <Notifications />
 
           {/*TODO: MOAR TOKENS*/}

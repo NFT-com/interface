@@ -76,7 +76,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   };
 
   useEffect(() => {
-    if(associatedAddresses.pending.find(element => element.chainAddr === inputVal) || associatedAddresses.accepted.find(element => element.chainAddr === inputVal)){
+    if(associatedAddresses?.pending.find(element => element.chainAddr === inputVal) || associatedAddresses?.accepted.find(element => element.chainAddr === inputVal)){
       setIsAssociatedOrPending(true);
     } else {
       setIsAssociatedOrPending(false);

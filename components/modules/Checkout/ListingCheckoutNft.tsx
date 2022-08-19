@@ -41,7 +41,7 @@ export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
             autoPlay
             muted
             loop
-            key={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
+            key={props.listing.nft?.metadata?.imageURL}
             src={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
             poster={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
             className={tw(

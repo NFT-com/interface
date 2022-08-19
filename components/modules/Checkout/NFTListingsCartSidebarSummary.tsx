@@ -35,7 +35,6 @@ export function NFTListingsCartSidebarSummary() {
     {
       refreshInterval: 0,
       revalidateOnFocus: false,
-      revalidateOnReconnect: false,
     });
 
   const getTotalMarketplaceFees = useCallback(() => {

@@ -248,14 +248,7 @@ export function NFTListingsContextProvider(
     }));
     setSubmitting(false);
     return results.every(r => r);
-  }, [
-    listNftSeaport,
-    listNftLooksrare,
-    seaportCounter,
-    signOrderForLooksrare,
-    signOrderForSeaport,
-    toList,
-  ]);
+  }, [listNftSeaport, listNftLooksrare, seaportCounter, signOrderForLooksrare, signOrderForSeaport, toList]);
 
   const removeListing = useCallback((nft: PartialDeep<Nft>) => {
     const newToList = toList.slice().filter(l => l.nft?.id !== nft?.id);

@@ -25,7 +25,7 @@ describe('ListingBuilder', () => {
     );
     cy.findByText('WETH').should('exist');
     cy.findByPlaceholderText('e.g. 1 WETH').should('exist');
-    cy.findByText('1 Week').should('exist');
+    cy.findByText('7 Days').should('exist');
   });
 
   it('should have the correct looksrare currency options', () => {
@@ -87,14 +87,14 @@ describe('ListingBuilder', () => {
         />
       </WagmiConfig>
     );
-    cy.findByText('1 Week').click().then(() => {
+    cy.findByText('7 Days').click().then(() => {
       cy.findByText('1 Day').should('exist');
-      cy.findByText('3 Days').should('exist');
+      cy.findByText('1 Hour').should('exist');
     }).then(() => {
       cy.findByText('1 Day').click();
     }).then(() => {
       cy.findByText('1 Day').should('exist');
-      cy.findByText('1 Week').should('not.exist');
+      cy.findByText('7 Days').should('not.exist');
     });
   });
 

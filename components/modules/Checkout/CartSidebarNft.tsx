@@ -38,7 +38,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
           autoPlay
           muted
           loop
-          key={processIPFSURL(props.nft?.metadata?.imageURL)}
+          key={props.nft?.metadata?.imageURL}
           src={processIPFSURL(props.nft?.metadata?.imageURL)}
           poster={processIPFSURL(props.nft?.metadata?.imageURL)}
           className={tw(
