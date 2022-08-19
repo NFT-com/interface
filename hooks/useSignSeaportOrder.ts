@@ -1,18 +1,23 @@
+import { EIP_712_ORDER_TYPE, SeaportOrderComponents, SeaportOrderParameters } from 'types';
 import { getTypedDataDomain } from 'utils/seaportHelpers';
 
 import { SignTypedDataArgs } from '@wagmi/core';
 import { useCallback } from 'react';
-import { EIP_712_ORDER_TYPE, SeaportOrderComponents, SeaportOrderParameters } from 'types';
-import { useNetwork, useSignTypedData } from 'wagmi';
+import { useNetwork, useSigner, useSignTypedData } from 'wagmi';
 
 export function useSignSeaportOrder() {
   const { chain } = useNetwork();
   const { signTypedDataAsync } = useSignTypedData();
-
+  const signer = useSigner();
+  
   const signOrder = useCallback(async (
     orderParameters: SeaportOrderParameters,
     counter: string,
   ) => {
+    if (!signer) {
+      console.log('No Signer connected');
+      return '';
+    }
     const data: SignTypedDataArgs = {
       domain: getTypedDataDomain(chain?.id ?? 1),
       types: EIP_712_ORDER_TYPE,
@@ -31,7 +36,7 @@ export function useSignSeaportOrder() {
       return '';
     }
     return signature;
-  }, [chain, signTypedDataAsync]);
+  }, [chain?.id, signTypedDataAsync, signer]);
 
   return signOrder;
 }

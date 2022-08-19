@@ -1,5 +1,7 @@
 import { Nft } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
+import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
+import { get721Contract } from 'hooks/contracts/get721Contract';
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
@@ -20,13 +22,14 @@ import { MakerOrder } from '@looksrare/sdk';
 import { BigNumberish } from 'ethers';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork, useProvider } from 'wagmi';
+import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 
 export type TargetMarketplace = 'looksrare' | 'seaport';
 
 export type StagedListing = {
   // this is the minimum required field
   nft: PartialDeep<Nft>;
+  collectionName: string;
   // these are set in configuration page
   targets: TargetMarketplace[],
   startingPrice: BigNumberish;
@@ -36,20 +39,24 @@ export type StagedListing = {
   // these are set when finalizing, before triggering the wallet requests
   looksrareOrder: MakerOrder; // looksrare
   seaportParameters: SeaportOrderParameters; // seaport
+  // approval-related data
+  isApprovedForSeaport: boolean;
+  isApprovedForLooksrare: boolean;
 }
 
 interface NFTListingsContextType {
   toList: StagedListing[];
   stageListing: (listing: PartialDeep<StagedListing>) => void;
   clear: () => void;
-  listAll: () => void;
-  prepareListings: () => void;
+  listAll: () => Promise<boolean>;
+  prepareListings: () => Promise<void>;
   submitting: boolean;
   toggleCartSidebar: () => void;
   toggleTargetMarketplace: (marketplace: TargetMarketplace) => void;
   setDuration: (duration: SaleDuration) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
+  approveCollection: (listing: PartialDeep<StagedListing>, target: TargetMarketplace) => Promise<boolean>;
 }
 
 // initialize with default values
@@ -65,6 +72,7 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   setDuration: () => null,
   setPrice: () => null,
   removeListing: () => null,
+  approveCollection: () => null,
 });
 
 /**
@@ -81,13 +89,15 @@ export function NFTListingsContextProvider(
 
   useEffect(() => {
     if (window != null) {
-      setToList(JSON.parse(localStorage.getItem('stagedNftListings')) ?? []);
+      const initialValue = JSON.parse(localStorage.getItem('stagedNftListings')) ?? [];
+      setToList(initialValue);
     }
   }, []);
 
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const provider = useProvider();
+  const { data: signer } = useSigner();
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -214,39 +224,66 @@ export function NFTListingsContextProvider(
 
   const listAll = useCallback(async () => {
     setSubmitting(true);
-    await Promise.all(toList.map(async (listing: StagedListing) => {
-      await Promise.all(listing.targets?.map(async (target: TargetMarketplace) => {
+    const results = await Promise.all(toList.map(async (listing: StagedListing) => {
+      const results = await Promise.all(listing.targets?.map(async (target: TargetMarketplace) => {
         if (target === 'looksrare') {
-          const signature = await signOrderForLooksrare(listing.looksrareOrder);
-          await listNftLooksrare({ ...listing.looksrareOrder, signature });
-          // todo: check success/failure and maybe mutate external listings query.
+          const signature = await signOrderForLooksrare(listing.looksrareOrder).catch(() => null);
+          if (signature == null) {
+            return false;
+          }
+          const result = await listNftLooksrare({ ...listing.looksrareOrder, signature });
+          return result;
         } else {
-          const signature = await signOrderForSeaport(listing.seaportParameters, seaportCounter);
-          await listNftSeaport(signature , { ...listing.seaportParameters, counter: seaportCounter });
-          // todo: check success/failure and maybe mutate external listings query.
-          localStorage.setItem('stagedNftListings', null);
+          const signature = await signOrderForSeaport(listing.seaportParameters, seaportCounter).catch(() => null);
+          if (signature == null) {
+            return false;
+          }
+          const result = await listNftSeaport(signature , { ...listing.seaportParameters, counter: seaportCounter });
+          return result;
         }
       }));
+      return results.every(r => r);
     }));
     setSubmitting(false);
-    clear();
-  }, [
-    listNftSeaport,
-    listNftLooksrare,
-    seaportCounter,
-    signOrderForLooksrare,
-    signOrderForSeaport,
-    toList,
-    clear
-  ]);
+    return results.every(r => r);
+  }, [listNftSeaport, listNftLooksrare, seaportCounter, signOrderForLooksrare, signOrderForSeaport, toList]);
 
   const removeListing = useCallback((nft: PartialDeep<Nft>) => {
     const newToList = toList.slice().filter(l => l.nft?.id !== nft?.id);
     setToList(newToList);
     localStorage.setItem('stagedNftListings', JSON.stringify(newToList));
   }, [toList]);
+
+  const approveCollection = useCallback(async (listing: StagedListing, target: TargetMarketplace) => {
+    const collection = get721Contract(listing?.nft?.contract, provider);
+    if (collection == null) {
+      return false;
+    }
+    const tx = await collection
+      .connect(signer)
+      .setApprovalForAll(target === 'looksrare' ? TransferProxyTarget.LooksRare : TransferProxyTarget.Opensea, true);
+    if (tx) {
+      return await tx.wait(1).then(() => {
+        const newToList = toList.slice().map(l => {
+          if (listing?.nft?.id === l.nft?.id) {
+            return {
+              ...listing,
+              ...(target === 'looksrare' ? { isApprovedForLooksrare: true } : {}),
+              ...(target === 'seaport' ? { isApprovedForSeaport: true } : {}),
+            };
+          }
+          return l;
+        });
+        setToList(newToList);
+        localStorage.setItem('stagedNftListings', JSON.stringify(newToList));
+        return true;
+      });
+    }
+    return false;
+  }, [provider, signer, toList]);
   
   return <NFTListingsContext.Provider value={{
+    approveCollection,
     removeListing,
     toList,
     stageListing,
