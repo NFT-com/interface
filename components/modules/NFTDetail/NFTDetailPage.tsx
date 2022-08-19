@@ -1,6 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { PageWrapper } from 'components/layouts/PageWrapper';
-import { LineChart } from 'components/modules/Analytics/LineChart';
+import { AnalyticsContainer } from 'components/modules/Analytics/AnalyticsContainer';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -70,7 +70,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             //TODO: @anthony - get data from indexer
             getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
             <div className="minlg:w-1/2 w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
-              <LineChart />
+              <AnalyticsContainer data={nft} />
             </div>
           }
         </div>
