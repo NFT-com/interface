@@ -118,11 +118,11 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
                   (
                     <>
                       <h2 className='text-4xl tracking-wide font-bold mb-10'>Confirm Transfer</h2>
-                      <p className='text-[#6F6F6F]'>You’re about to transfer
+                      <p className='text-[#6F6F6F]'>You’re about to transfer{' '}
                         <span className='font-bold text-black tracking-wide'>
                           {selectedProfile}
                         </span>
-                        to
+                        {' '}to{' '}
                         <span className='font-mono text-black text-xl break-words mt-2'>
                           {inputVal}
                         </span>

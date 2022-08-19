@@ -92,17 +92,19 @@ export const Sidebar = () => {
             {randomLabel}
           </div>
 
-          {//todo: make this do something on click }
-          }
-          <div className='w-full p-4 items-center drop-shadow-xl -mt-10 minlg:-mt-20'>
-            <NftOwner isSidebar selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
+          <div className='w-full p-4 items-center drop-shadow-xl -mt-3 minlg:-mt-3'>
+            {myOwnedProfileTokens.length ?
+              <NftOwner isSidebar selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
+              : <p className='text-2xl text-[#B6B6B6] font-bold'>No Profiles Found</p>
+            }
+           
           </div>
-          
+
           <Link href='/app/settings' passHref>
             <a onClick={() => setSidebarOpen(false)}
               className='flex flex-row w-full items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
             >
-            Settings
+              Settings
             </a>
           </Link>
 
@@ -116,9 +118,6 @@ export const Sidebar = () => {
             Sign out
           </button>
 
-          <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 mb-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
-            Notifications
-          </div>
           <Notifications />
 
           {/*TODO: MOAR TOKENS*/}

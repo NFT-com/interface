@@ -13,7 +13,7 @@ export const NotificationButton = ({ buttonText, onClick }: NotificationButtonPr
         'text-md',
         'leading-6',
         'items-center',
-        'justify-center',
+        'justify-start',
         'bg-[#F9D963]',
         'rounded-lg',
         'p-4'
