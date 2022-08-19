@@ -115,6 +115,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                   {getNotificationCount()}
                   <span className="animate-ping absolute inline-flex h-5 w-full rounded-full bg-[#F9D963] opacity-75"></span>
                 </span>
+              </span>
             )
             }
             <button
