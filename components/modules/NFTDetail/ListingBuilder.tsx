@@ -219,25 +219,25 @@ export function ListingBuilder(props: ListingBuilderProps) {
         <div className='mb-8'>
           <DropdownPicker options={filterNulls([
             {
-              label: '1 Week',
-              onSelect: () => setDuration('7 Days')
+              label: '1 Hour',
+              onSelect: () => setDuration('1 Hour')
             },
             {
               label: '1 Day',
               onSelect: () => setDuration('1 Day')
             },
             {
-              label: '3 Days',
-              onSelect: () => setDuration('1 Hour')
+              label: '7 Days',
+              onSelect: () => setDuration('7 Days')
             },
             saleType === 'fixed' || auctionType === 'highest'
               ? {
-                label: 'Forever',
+                label: '6 Months',
                 onSelect: () => setDuration('6 Months')
               }
               : null
           ])}
-          selectedIndex={['1 Week', '3 Days', '1 Day', 'Forever'].indexOf(duration)}
+          selectedIndex={['1 Hour', '1 Day', '7 Days', '6 Months'].indexOf(duration)}
           />
         </div>
       </div>;
@@ -263,11 +263,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
         <div className='mb-4'>
           <DropdownPicker options={[
             {
-              label: '1 Week',
-              onSelect: () => setDuration('7 Days')
-            },
-            {
-              label: '3 Days',
+              label: '1 Hour',
               onSelect: () => setDuration('1 Hour')
             },
             {
@@ -275,11 +271,15 @@ export function ListingBuilder(props: ListingBuilderProps) {
               onSelect: () => setDuration('1 Day')
             },
             {
-              label: 'Forever',
+              label: '7 Days',
+              onSelect: () => setDuration('7 Days')
+            },
+            {
+              label: '6 Months',
               onSelect: () => setDuration('6 Months')
             }
           ]}
-          selectedIndex={['1 Week', '3 Days', '1 Day', 'Forever'].indexOf(duration)}
+          selectedIndex={['1 Hour', '1 Day', '7 Days', '6 Months'].indexOf(duration)}
           />
         </div>
         {/* TODO: allow owner to specify taker address */}
