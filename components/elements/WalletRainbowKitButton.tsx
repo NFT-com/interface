@@ -6,7 +6,7 @@ import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import { Wallet } from 'phosphor-react';
+import { UserCircle, Wallet } from 'phosphor-react';
 import { useCallback } from 'react';
 import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -80,11 +80,11 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                     'rounded-xl',
                     props.header ? (props.bgLight ? 'text-[#7F7F7F]' : 'text-white') : 'text-[#4d4412]',
                     'flex flex-row items-center font-bold cursor-pointer hover:opacity-80 font-grotesk',
-                    'py-2 px-5'
+                    'py-2 pr-5 pl-[18px]'
                   )}
                   type="button">
-                  <Wallet className={tw(
-                    'h-5 w-5 mr-2',
+                  <UserCircle className={tw(
+                    'h-6 w-6 mr-2',
                     props.header ? (props.bgLight ? 'fill-[#B6B6B6]' : 'fill-white') : 'fill-[#4d4412]',
                   )} weight='fill' color="white" alt={'Logged out wallet'}/>
                       Sign In
@@ -132,17 +132,24 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 'block font-bold rounded-xl text-white',
                 'bg-primary-button-bckg',
                 'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
-                'py-2 px-5',
+                'py-2 pr-5 pl-[18px]',
                 (!props.bgLight && props.header) && 'border-[#6F6F6F] border',
               )} onClick={() => {
                 toggleSidebar();
               }} type="button">
-                <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                
                 {!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
                   ? shortenAddress(currentAddress, 3) :
                   myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
-                    user.currentProfileUrl
-                    : shortenAddress(currentAddress, 3)
+                    <>
+                      <UserCircle className="h-6 w-6 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                      {user.currentProfileUrl}
+                    </>
+                    :
+                    <>
+                      <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                      {shortenAddress(currentAddress, 3)}
+                    </>
                 }
               </button>
             </div>
