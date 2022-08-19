@@ -300,8 +300,9 @@ describe('Unit test our seaport functions', () => {
         ethers.utils.parseEther('10'),
         ethers.utils.parseEther('10'),
         NULL_ADDRESS,
-        convertDurationToSec('1 Week'),
-        null
+        convertDurationToSec('7 Days'),
+        null,
+        '1'
       );
 
       expect(params).to.deep.eq({
@@ -351,11 +352,12 @@ describe('Unit test our seaport functions', () => {
         ethers.utils.parseEther('10'),
         ethers.utils.parseEther('10'),
         NULL_ADDRESS,
-        convertDurationToSec('1 Week'),
+        convertDurationToSec('7 Days'),
         {
           basisPoints: 10,
           recipient: 'test_fee_collection'
-        }
+        },
+        '1'
       );
 
       expect(params).to.deep.eq({

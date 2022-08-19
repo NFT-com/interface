@@ -1,28 +1,21 @@
-import { Button, ButtonType } from 'components/elements/Button';
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { AnalyticsContainer } from 'components/modules/Analytics/AnalyticsContainer';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import { DescriptionDetail } from './DescriptionDetail';
 import { ExternalListings } from './ExternalListings';
 import { NftChainInfo } from './NftChainInfo';
 import { NFTDetail } from './NFTDetail';
-import { NFTListingsContext } from './NFTListingsContext';
 import { Properties } from './Properties';
 
-import { useContext } from 'react';
-import { useAccount } from 'wagmi';
 export interface NFTDetailPageProps {
   collection: string;
   tokenId: string;
 }
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
-  const { address: currentAddress } = useAccount();
   const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
-  const { stageListing } = useContext(NFTListingsContext);
 
   return (
     <PageWrapper
@@ -30,24 +23,6 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     >
       <div className="flex flex-col pt-20 items-center w-full max-w-7xl mx-auto">
         <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
-        {
-          getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-          currentAddress === nft?.wallet?.address &&
-          <div className='w-full'>
-            <div className='flex flex-col m-8 p-4 bg-modal-overlay dark:bg-modal-overlay-dk rounded-lg items-center'>
-              <span className='dark:text-white mb-4'>This item is in your wallet</span>
-              <Button
-                label={'LIST ITEM'}
-                onClick={() => {
-                  stageListing({
-                    nft: nft,
-                  });
-                }}
-                type={ButtonType.PRIMARY}
-              />
-            </div>
-          </div>
-        }
         {
           //TODO: @anthony - add in memo functionality
           getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&

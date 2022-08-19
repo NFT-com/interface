@@ -1,7 +1,7 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { NFTListingsContextProvider } from 'components/modules/NFTDetail/NFTListingsContext';
+import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
 import { getChainIdString } from 'utils/helpers';

@@ -1,11 +1,5 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Maybe, Nft } from 'graphql/generated/types';
-
-import { filterNulls } from './helpers';
-
-import { BigNumber, BigNumberish, ethers } from 'ethers';
-import { _TypedDataEncoder } from 'ethers/lib/utils';
-import { PartialDeep } from 'type-fest';
 import {
   CROSS_CHAIN_SEAPORT_ADDRESS,
   EIP_712_ORDER_TYPE,
@@ -20,6 +14,12 @@ import {
   SeaportConsiderationItem,
   SeaportOrderComponents,
   SeaportOrderParameters } from 'types/seaport';
+
+import { filterNulls } from './helpers';
+
+import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { _TypedDataEncoder } from 'ethers/lib/utils';
+import { PartialDeep } from 'type-fest';
 
 export function getTypedDataDomain(chainId: string | number) {
   return {

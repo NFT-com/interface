@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
+import { NFTListingsContext, TargetMarketplace } from 'components/modules/Checkout/NFTListingsContext';
 import { Maybe, Nft } from 'graphql/generated/types';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
@@ -9,8 +10,6 @@ import {
   SaleDuration,
 } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
-
-import { ListingType, NFTListingsContext } from './NFTListingsContext';
 
 import { BigNumber, ethers } from 'ethers';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -21,7 +20,7 @@ export type LocalAuctionType = 'highest' | 'declining';
 
 export interface ListingBuilderProps {
   nft: PartialDeep<Nft>,
-  type: ListingType,
+  type: TargetMarketplace,
   onCancel: () => void,
   onSuccessfulCreate: () => void,
 }
@@ -38,7 +37,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
   const [endingPriceError, setEndingPriceError] = useState(false);
   const [reservePrice, setReservePrice] = useState<Maybe<BigNumber>>(null);
   const [reservePriceError, setReservePriceError] = useState(false);
-  const [duration, setDuration] = useState<SaleDuration>('1 Week');
+  const [duration, setDuration] = useState<SaleDuration>('7 Days');
   const [takerAddress,] = useState(null);
   const [takerAddressError, setTakerAddressError] = useState(false);
   const [saleCurrency, setSaleCurrency] = useState<SupportedCurrency>('WETH');
@@ -220,25 +219,25 @@ export function ListingBuilder(props: ListingBuilderProps) {
         <div className='mb-8'>
           <DropdownPicker options={filterNulls([
             {
-              label: '1 Week',
-              onSelect: () => setDuration('1 Week')
+              label: '1 Hour',
+              onSelect: () => setDuration('1 Hour')
             },
             {
               label: '1 Day',
               onSelect: () => setDuration('1 Day')
             },
             {
-              label: '3 Days',
-              onSelect: () => setDuration('3 Days')
+              label: '7 Days',
+              onSelect: () => setDuration('7 Days')
             },
             saleType === 'fixed' || auctionType === 'highest'
               ? {
-                label: 'Forever',
-                onSelect: () => setDuration('Forever')
+                label: '6 Months',
+                onSelect: () => setDuration('6 Months')
               }
               : null
           ])}
-          selectedIndex={['1 Week', '3 Days', '1 Day', 'Forever'].indexOf(duration)}
+          selectedIndex={['1 Hour', '1 Day', '7 Days', '6 Months'].indexOf(duration)}
           />
         </div>
       </div>;
@@ -264,23 +263,23 @@ export function ListingBuilder(props: ListingBuilderProps) {
         <div className='mb-4'>
           <DropdownPicker options={[
             {
-              label: '1 Week',
-              onSelect: () => setDuration('1 Week')
-            },
-            {
-              label: '3 Days',
-              onSelect: () => setDuration('3 Days')
+              label: '1 Hour',
+              onSelect: () => setDuration('1 Hour')
             },
             {
               label: '1 Day',
               onSelect: () => setDuration('1 Day')
             },
             {
-              label: 'Forever',
-              onSelect: () => setDuration('Forever')
+              label: '7 Days',
+              onSelect: () => setDuration('7 Days')
+            },
+            {
+              label: '6 Months',
+              onSelect: () => setDuration('6 Months')
             }
           ]}
-          selectedIndex={['1 Week', '3 Days', '1 Day', 'Forever'].indexOf(duration)}
+          selectedIndex={['1 Hour', '1 Day', '7 Days', '6 Months'].indexOf(duration)}
           />
         </div>
         {/* TODO: allow owner to specify taker address */}
@@ -358,7 +357,7 @@ export function ListingBuilder(props: ListingBuilderProps) {
               const currencyAddress = supportedCurrencyData[saleCurrency].contract;
               // Create the listing
               stageListing({
-                type: props.type,
+                targets: [props.type],
                 nft: props.nft,
                 startingPrice,
                 endingPrice,
