@@ -5,7 +5,7 @@ import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { Doppler, getEnv } from 'utils/env';
-import { shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
@@ -29,11 +29,16 @@ export function Collection(props: CollectionProps) {
   const [found, setFound] = useState(0);
   const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
-  const { data: imgUrl } = useSWR('imageurl', () => {
-    const imgUrl = fetch(`${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}`)
-      .then(
-        (data) => data.status === 200 ? `${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null
-      );
+  const { data: imgUrl } = useSWR('imageurl', async() => {
+    let imgUrl;
+    if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
+      imgUrl = null;
+    } else {
+      imgUrl = await fetch(`${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}`)
+        .then(
+          (data) => data.status === 200 ? `${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null
+        );
+    }
 
     return imgUrl;
   } );
