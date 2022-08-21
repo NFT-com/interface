@@ -71,7 +71,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   )}>
     {listings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
       <div className='w-full minlg:w-2/4 pr-2' key={index}>
-        <ExternalListingTile listing={listing} />
+        <ExternalListingTile listing={listing} nft={props.nft} collectionName={props.collectionName} />
       </div>
     ))}
   </div>;

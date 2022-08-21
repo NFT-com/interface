@@ -123,11 +123,11 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
             <AnimatePresence exitBeforeEnter>
               <GraphQLProvider>
                 <NotificationContextProvider>
-                  <NFTListingsContextProvider>
-                    <NFTPurchaseContextProvider>
+                  <NFTPurchaseContextProvider>
+                    <NFTListingsContextProvider>
                       <Component {...pageProps} key={router.pathname} />
-                    </NFTPurchaseContextProvider>
-                  </NFTListingsContextProvider>
+                    </NFTListingsContextProvider>
+                  </NFTPurchaseContextProvider>
                 </NotificationContextProvider>
               </GraphQLProvider>
             </AnimatePresence>

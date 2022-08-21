@@ -16,11 +16,12 @@ import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelper
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 
-import { NFTListingsCartSidebar } from './NFTListingsCartSidebar';
+import { NFTCartSidebar } from './NFTCartSidebar';
+import { NFTPurchasesContext } from './NFTPurchaseContext';
 
 import { MakerOrder } from '@looksrare/sdk';
 import { BigNumberish } from 'ethers';
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 
@@ -84,6 +85,8 @@ export function NFTListingsContextProvider(
   const [toList, setToList] = useState<Array<StagedListing>>([]);
   const [submitting, setSubmitting] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
+
+  const { toBuy } = useContext(NFTPurchasesContext);
 
   const { data: supportedCurrencyData } = useSupportedCurrencies();
 
@@ -303,9 +306,9 @@ export function NFTListingsContextProvider(
   }}>
 
     {
-      toList.length > 0 &&
+      [...(toList ?? []), ...(toBuy ?? [])].length > 0 &&
       sidebarVisible &&
-      <NFTListingsCartSidebar />
+      <NFTCartSidebar />
     }
     {props.children}
   </NFTListingsContext.Provider>;

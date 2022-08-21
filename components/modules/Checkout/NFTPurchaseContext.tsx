@@ -1,18 +1,28 @@
 import { Nft } from 'graphql/generated/types';
 import { filterNulls } from 'utils/helpers';
 
-import { NFTListingsContext } from './NFTListingsContext';
+import { NFTListingsContext, TargetMarketplace } from './NFTListingsContext';
 
+import { BigNumber } from '@ethersproject/bignumber';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
+export type StagedPurchase = {
+  nft: PartialDeep<Nft>;
+  collectionName: string;
+  marketplace: TargetMarketplace;
+  currency: string;
+  price: BigNumber;
+  isApproved: boolean;
+}
+
 interface NFTPurchaseContextType {
-  toBuy: any[];
-  stagePurchase: (listing: PartialDeep<any>) => void;
+  toBuy: StagedPurchase[];
+  stagePurchase: (listing: PartialDeep<StagedPurchase>) => void;
   clear: () => void;
   buyAll: () => void;
     
-  removeListing: (nft: PartialDeep<any>) => void;
+  removePurchase: (nft: PartialDeep<Nft>) => void;
 }
 
 // initialize with default values
@@ -22,13 +32,13 @@ export const NFTPurchasesContext = React.createContext<NFTPurchaseContextType>({
   clear: () => null,
   buyAll: () => null,
 
-  removeListing: () => null,
+  removePurchase: () => null,
 });
 
 export function NFTPurchaseContextProvider(
   props: PropsWithChildren<any>
 ) {
-  const [toBuy, setToBuy] = useState<Array<any>>([]);
+  const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
 
   const { toggleCartSidebar } = useContext(NFTListingsContext);
 
@@ -39,17 +49,17 @@ export function NFTPurchaseContextProvider(
   }, []);
 
   const stagePurchase = useCallback((
-    listing: any
+    purchase: StagedPurchase
   ) => {
-    if (toBuy.find(l => l.nft.id === listing.nft.id)) {
+    if (toBuy.find(l => l.nft.id === purchase.nft.id)) {
       toggleCartSidebar();
       return;
     }
-    setToBuy([...toBuy, listing]);
-    localStorage.setItem('stagedNftPurchases', JSON.stringify(filterNulls([...toBuy, listing])));
+    setToBuy([...toBuy, purchase]);
+    localStorage.setItem('stagedNftPurchases', JSON.stringify(filterNulls([...toBuy, purchase])));
   }, [toBuy, toggleCartSidebar]);
 
-  const removeListing = useCallback((nft: PartialDeep<Nft>) => {
+  const removePurchase = useCallback((nft: PartialDeep<Nft>) => {
     const newToBuy = toBuy.slice().filter(l => l.nft?.id !== nft?.id);
     setToBuy(newToBuy);
     localStorage.setItem('stagedNftPurchases', JSON.stringify(newToBuy));
@@ -65,7 +75,7 @@ export function NFTPurchaseContextProvider(
   }, []);
 
   return <NFTPurchasesContext.Provider value={{
-    removeListing,
+    removePurchase,
     toBuy,
     stagePurchase,
     clear,

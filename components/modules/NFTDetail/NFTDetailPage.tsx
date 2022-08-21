@@ -1,9 +1,10 @@
 import { PageWrapper } from 'components/layouts/PageWrapper';
 import { AnalyticsContainer } from 'components/modules/Analytics/AnalyticsContainer';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
+import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 
 import { DescriptionDetail } from './DescriptionDetail';
 import { ExternalListings } from './ExternalListings';
@@ -20,7 +21,8 @@ export interface NFTDetailPageProps {
 }
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
-  const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
+  const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
+  const { mutate: mutateListings } = useExternalListingsQuery(nft?.contract, nft?.tokenId, String(nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
   const { chain } = useNetwork();
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
     return await getContractMetadata(nft?.contract, chain?.id);
@@ -31,7 +33,10 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       bgColorClasses='bg-pagebg dark:bg-secondary-dk pt-20'
     >
       <div className="flex flex-col pt-20 items-center w-full max-w-7xl mx-auto">
-        <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
+        <NFTDetail nft={nft} onRefreshSuccess={() => {
+          mutateNft();
+          mutateListings();
+        }} key={nft?.id} />
         {
           //TODO: @anthony - add in memo functionality
           getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&

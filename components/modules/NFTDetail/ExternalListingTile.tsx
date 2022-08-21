@@ -1,13 +1,22 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { ExternalListing, SupportedExternalExchange } from 'graphql/generated/types';
+import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
+import { getAddressForChain, nftAggregator } from 'constants/contracts';
+import { WETH } from 'constants/tokens';
+import { ExternalListing, Nft, SupportedExternalExchange } from 'graphql/generated/types';
+import { useWethAllowance } from 'hooks/balances/useWethAllowance';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
+import { useContext } from 'react';
 import { PartialDeep } from 'type-fest';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface ExternalListingTileProps {
   listing: PartialDeep<ExternalListing>;
+  nft: PartialDeep<Nft>;
+  collectionName: string;
 }
 
 const Colors = {
@@ -26,6 +35,22 @@ const Icons = {
 
 export function ExternalListingTile(props: ExternalListingTileProps) {
   const { listing } = props;
+
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
+  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const { allowance } = useWethAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id));
+
+  const marketplace = props.listing?.exchange === SupportedExternalExchange.Looksrare ?
+    'looksrare' :
+    props.listing?.exchange === SupportedExternalExchange.Opensea ?
+      'seaport' :
+      null;
+
+  if (marketplace == null) {
+    // Unsupported marketplace.
+    return null;
+  }
 
   return <div className="flex flex-col bg-white dark:bg-secondary-bg-dk rounded-xl p-5 my-6">
     <div className='flex items-center mb-4'>
@@ -69,7 +94,14 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
           color="white"
           label={'Add to Cart'}
           onClick={() => {
-          // todo!
+            stagePurchase({
+              nft: props.nft,
+              currency: props.listing?.baseCoin?.address ?? WETH.address,
+              price: BigNumber.from(isNullOrEmpty(props.listing?.price) ? 0 : props.listing.price),
+              collectionName: props.collectionName,
+              marketplace,
+              isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0)
+            });
           }}
           type={ButtonType.PRIMARY}
         />

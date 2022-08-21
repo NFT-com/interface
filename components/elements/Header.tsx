@@ -1,4 +1,5 @@
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
@@ -36,6 +37,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
   const { toggleSearchModal } = useSearchModal();
   const { primaryIcon } = useThemeColors();
   const { toggleCartSidebar, toList } = useContext(NFTListingsContext);
+  const { toBuy } = useContext(NFTPurchasesContext);
   const router = useRouter();
 
   const { setDarkMode, user } = useUser();
@@ -128,9 +130,9 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
               getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
               !router.pathname.includes('/app/list') &&
               <div className='h-full flex items-center relative'>
-                {toList?.length > 0 && (
+                {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
                   <div className='absolute right-0 -top-4'>
-                    <NotificationBadge count={toList?.length} />
+                    <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
                   </div>
                 )}
                 <button
