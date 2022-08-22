@@ -8,7 +8,6 @@ import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
 import { tw } from 'utils/tw';
 
-import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { Loader } from 'react-feather';
 
@@ -21,7 +20,6 @@ export interface ProfilePageProps {
  */
 export function ProfilePage(props: ProfilePageProps) {
   const processedProfileURI = props?.uri?.toString().toLowerCase();
-  const router = useRouter();
 
   const { profileTokenId, loading: loadingId } = useProfileTokenQuery(
     processedProfileURI,
@@ -55,9 +53,8 @@ export function ProfilePage(props: ProfilePageProps) {
           primaryMessage='Looking for a NFT.com profile?'
           secondaryMessage={ 'Return to NFT.com'}
           buttonLabel={'Go to NFT.com'}
-          onClick={() => {
-            router.replace('/');
-          }}/>
+          href='/'
+        />
       </div>;
     } else if (loadingId || loadingOwner) {
       return <div className={tw(
@@ -92,8 +89,7 @@ export function ProfilePage(props: ProfilePageProps) {
     loadingOwner,
     processedProfileURI,
     profileOwner,
-    profileTokenId,
-    router
+    profileTokenId
   ]);
   
   return getPageContent();

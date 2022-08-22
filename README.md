@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/NFT-com/interface/branch/main/graph/badge.svg?token=86WU0IMFL0)](https://codecov.io/gh/NFT-com/interface)
+
 ## Getting Started
 
 First, run the development server:
