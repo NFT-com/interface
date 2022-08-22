@@ -66,6 +66,11 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
           setModalVisible(true);
           setTransactionPending(false);
           mutate('SettingsAssociatedAddresses' + selectedProfile + currentAddress);
+          analytics.track('Association Sent', {
+            ethereumAddress: currentAddress,
+            profile: selectedProfile,
+            destinationAddress: address
+          });
         });
       }
     }

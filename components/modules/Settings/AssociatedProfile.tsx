@@ -55,10 +55,14 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       await tx.wait(1).then(() => {
         setAccepted(true);
         setTransactionPending(false);
+        analytics.track('Accepted Profile Association', {
+          ethereumAddress: currentAddress,
+          profile: url,
+        });
       }).catch(() => toast.error('Error'));
       setUserNotificationActive('associatedProfileAdded', true);
     }
-  }, [nftResolver, setUserNotificationActive]);
+  }, [nftResolver, setUserNotificationActive, currentAddress]);
 
   const removeHandler = useCallback(async () => {
     if (pending) {
@@ -67,6 +71,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           setVisible(true);
           setAssociationRejected(true);
           toast.success('Rejected');
+          analytics.track('Reject Profile Association', {
+            ethereumAddress: currentAddress,
+            profile: profile,
+          });
         })
         .catch(() => toast.warning('Error. Please try again'));
     } else if (isRemoved) {
@@ -80,6 +88,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       setTransactionPending(true);
       if (tx) {
         await tx.wait(1).then(() => {
+          analytics.track('Remove Profile Association', {
+            ethereumAddress: currentAddress,
+            profile: profile,
+          });
           setTransactionPending(false);
           setRemoveModalVisible(false);
           toast.success('Removed');
@@ -88,7 +100,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         }).catch(() => toast.warning('Error. Please try again'));
       }
     }
-  }, [ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden]);
+  }, [ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden, currentAddress]);
 
   const closeModal = useCallback(() => {
     if(associationRejected){
