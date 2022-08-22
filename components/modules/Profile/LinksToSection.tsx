@@ -91,7 +91,7 @@ export function LinksToSection(props: LinksToSectionParams) {
                 <a
                   target='_blank'
                   key={item.section}
-                  className="bg-modal-overlay rounded-xl lg:w-full w-52 grow cursor-pointer">
+                  className="bg-footer-bg rounded-xl lg:w-full w-52 grow cursor-pointer">
                   <div className="text-sm minxl:text-lg p-2 minlg:p-4">{item.section}</div>
                   <div className="w-full">
                     <img src={item.image} className="object-center object-cover w-full" alt="link to section" />
