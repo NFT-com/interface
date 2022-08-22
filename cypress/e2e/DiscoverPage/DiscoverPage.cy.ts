@@ -20,7 +20,7 @@ describe('discover page tests mobile', () => {
 
   it('renders next 2 items after clicking load more button', () => {
     cy.fixture('discover_results').then(() => {
-      cy.get('.buttonContainer').should('exist').click().then(() =>{
+      cy.findByText('Load More').should('exist').click().then(() =>{
         cy.get('.DiscoverCollectionItem').should('have.length', 4);
       });
     });
@@ -47,7 +47,7 @@ describe('discover page tests tablet', () => {
 
   it('renders next 4 items after clicking load more button', () => {
     cy.fixture('discover_results').then(() => {
-      cy.get('.buttonContainer').should('exist').click().then(() =>{
+      cy.findByText('Load More').should('exist').click().then(() =>{
         cy.get('.DiscoverCollectionItem').should('have.length', 8);
       });
     });
@@ -74,7 +74,7 @@ describe('discover page tests laptop', () => {
 
   it('renders next 6 items after clicking load more button', () => {
     cy.fixture('discover_results').then(() => {
-      cy.get('.buttonContainer').should('exist').click().then(() =>{
+      cy.findByText('Load More').should('exist').click().then(() =>{
         cy.get('.DiscoverCollectionItem').should('have.length', 12);
       });
     });
