@@ -19,7 +19,6 @@ export function SignatureModal(props: SignatureModalProps) {
       loading={false}
       title={{ topLine:'SIGN THE MESSAGE', bottomLine:'IN YOUR WALLET' }}
       onClose={() => null}
-      pinkTitle
       noCancelBtn
     >
       <div className='w-full flex flex-col items-center pb-4'>

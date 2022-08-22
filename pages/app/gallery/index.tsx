@@ -95,7 +95,7 @@ export default function GalleryPage() {
           />
         </Modal>
         <div className={tw(
-          'flex h-full w-full overflow-hidden pt-20 bg-modal-overlay dark:bg-modal-overlay-dk',
+          'flex h-full w-full overflow-hidden pt-20 bg-pagebg',
           'text-primary-txt-dk absolute'
         )}>
           {/* Desktop Filters - sidebar */}

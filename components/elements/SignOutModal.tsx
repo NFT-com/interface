@@ -14,7 +14,6 @@ export function SignOutModal(props: SignOutModalProps) {
       loading={false}
       title={{ topLine:'DISCONNECT', bottomLine:'YOUR WALLET' }}
       onClose={props.onClose}
-      pinkTitle
     >
       <div className='w-full flex flex-col items-center pb-4'>
         <div className={tw(

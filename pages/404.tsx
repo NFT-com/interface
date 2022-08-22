@@ -13,7 +13,7 @@ export const NotFoundPage: NextPage = () => {
       walletPopupMenu: !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED),
       hideAnalytics: true
     }}
-    bgColorClasses={'bg-pagebg dark:bg-pagebg-dk'}
+    bgColorClasses={'bg-white'}
   >
     <div className="flex flex-col h-full w-full items-center justify-center">
       <NullState

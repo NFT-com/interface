@@ -15,10 +15,10 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
   const { blocked: currentURIBlocked } = useProfileBlocked(profileURI, true);
 
   return (
-    <div className="mt-20 h-screen">
+    <div className="mt-20 h-screen bg-pagebg">
       <BannerWrapper />
       <div
-        className='mb-0 minlg:mb-8 flex justify-center'
+        className='mb-0 minlg:mb-8 mx-16 flex justify-start max-w-nftcom'
         style={{
           zIndex: 103,
         }}
@@ -40,14 +40,14 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
           <div className="flex flex-col minlg:flex-row items-center my-0 minlg:my-6 mx-4 w-full">
             <div className="flex flex-col w-full">
               <div className="font-bold text-2xl minxl:text-4xl text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mb-4 minlg:mb-0">
-                @{profileURI}
+                {profileURI}
               </div>
             </div>
           </div>
 
         </div>
       </div>
-      <main className='justify-start space-y-4 w-full flex flex-col'>
+      <main className='justify-start space-y-4 w-full mx-16 max-w-nftcom flex flex-col'>
         <div className='text-sm minxl:text-xl text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col'>
           <div className="text-center font-bold mx-auto w-full">
             {(notAvailable || currentURIBlocked) ? 'This profile is not available.' : 'This profile is available and is ready to be minted!' }
