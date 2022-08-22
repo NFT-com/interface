@@ -101,8 +101,8 @@ export default function GalleryPage() {
           {/* Desktop Filters - sidebar */}
           {!isMobile &&
             <div className={tw(
-              'minlg:flex flex-col w-1/4 shrink-0 h-full min-h-4/5 border-r border-accent-border-dk',
-              'border-t px-10 pt-6 hidden text-black dark:text-white'
+              'minlg:flex flex-col w-1/4 shrink-0 h-full min-h-4/5',
+              'px-10 pt-6 hidden text-black dark:text-white'
             )}>
               <GenesisKeyGalleryFilters
                 showFilters={true}
@@ -115,7 +115,7 @@ export default function GalleryPage() {
           }
           <div className={tw(
             'flex flex-col flex-grow h-full overflow-auto',
-            'border-t border-accent-border-dk bg-modal-overlay dark:bg-modal-overlay-dk',
+            'bg-modal-overlay dark:bg-modal-overlay-dk',
             'minmd:px-4 px-0 pt-6',
             'hideScroll overflow-y-hidden'
           )}>

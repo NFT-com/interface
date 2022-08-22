@@ -24,7 +24,7 @@ export function SignatureModal(props: SignatureModalProps) {
     >
       <div className='w-full flex flex-col items-center pb-4'>
         <div className={tw(
-          'text-center max-w-md text-primary-txt-dk w-full text-base',
+          'text-center max-w-md text-primary-txt w-full text-base',
           'my-6'
         )}>
           NFT.com uses this signature to verify that you{'\''}re the owner of this Ethereum address.

@@ -123,6 +123,11 @@ export function NFTListingsContextProvider(
     localStorage.setItem('stagedNftListings', null);
   }, []);
 
+  useEffect(() => {
+    // Clear the listing cart if the connected address or network has changed.
+    clear();
+  }, [currentAddress, chain?.id, clear]);
+
   const toggleCartSidebar = useCallback(() => {
     setSidebarVisible(!sidebarVisible);
   }, [sidebarVisible]);

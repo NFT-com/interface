@@ -1,4 +1,5 @@
 import { UserNotifications } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback,useEffect } from 'react';
@@ -14,7 +15,7 @@ export interface UserState {
 export function useUser() {
   const { data, mutate } = useSWR('user', {
     fallbackData: {
-      isDarkMode: true,
+      isDarkMode: false,
       currentProfileUrl: '',
       hiddenProfile: null,
       activeNotifications: {
@@ -29,6 +30,9 @@ export function useUser() {
 
   const loading = !data;
   const setDarkMode = useCallback((darkMode: boolean) => {
+    if (!getEnvBool(Doppler.NEXT_PUBLIC_THEME_TOGGLE_ENABLED)) {
+      return;
+    }
     mutate({
       ...data,
       isDarkMode: darkMode
