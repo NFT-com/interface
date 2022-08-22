@@ -35,6 +35,11 @@ export default function TransferProfile({ selectedProfile }: TransferProfileProp
     if(tx){
       tx.wait(1)
         .then(() => {
+          analytics.track('Profile Transferred', {
+            ethereumAddress: currentAddress,
+            profile: selectedProfile,
+            destinationAddress: inputVal
+          });
           setTransaction(tx.hash);
           setTransactionPending(false);
           setSuccess(true);

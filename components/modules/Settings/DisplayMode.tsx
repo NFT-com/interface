@@ -27,6 +27,10 @@ export default function DisplayMode({ selectedProfile }: DisplayModeProps) {
     toast.success('Saved!');
     setSelected(event.target.value);
     updateProfileView({ profileViewType: event.target.value, url: selectedProfile }).catch(() => toast.error('Error'));
+    analytics.track('Profile View Updated', {
+      profile: selectedProfile,
+      profileViewType: event.target.value
+    });
   };
 
   return (
