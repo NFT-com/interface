@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import Vector from 'public/Vector.svg';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
 
 function usePrevious(value) {
@@ -40,8 +40,22 @@ export default function ResultsPage() {
   const prevVal = usePrevious(page);
   const [filters, setFilters] = useState([]);
 
+  const checkedFiltersString = useCallback(() => {
+    let checkedFiltersString = '';
+    const checkedList = [];
+    if (filtersList) {
+      const checkedArray = filtersList.filter(item => item.values.length > 0);
+      checkedArray.forEach(item => {
+        checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
+      });
+      checkedFiltersString = checkedList.join(' && ');
+    }
+
+    return checkedFiltersString;
+  }, [filtersList]);
+
   useEffect(() => {
-    let checkedString = '';
+/*     let checkedString = '';
     const checkedList = [];
     if (filtersList) {
       const checkedArray = filtersList.filter(item => item.values.length > 0);
@@ -49,7 +63,7 @@ export default function ResultsPage() {
         checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
       });
       checkedString = checkedList.join(' && ');
-    }
+    } */
 
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
       facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
@@ -59,7 +73,7 @@ export default function ResultsPage() {
       q: searchTerm?.toString(),
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
-      filter_by: checkedString,
+      filter_by: checkedFiltersString(),
       sort_by: sortBy,
     }] })
       .then((resp) => {
@@ -67,19 +81,9 @@ export default function ResultsPage() {
         setFound(resp.results[0].found);
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy]);
+  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
 
   useEffect(() => {
-    let checkedString = '';
-    const checkedList = [];
-    if (filtersList) {
-      const checkedArray = filtersList.filter(item => item.values.length > 0);
-      checkedArray.forEach(item => {
-        checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
-      });
-      checkedString = checkedList.join(' && ');
-    }
-
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
         facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
@@ -89,7 +93,7 @@ export default function ResultsPage() {
         q: searchTerm?.toString(),
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
-        filter_by: checkedString,
+        filter_by: checkedFiltersString(),
         sort_by: sortBy,
       }] })
         .then((resp) => {
@@ -98,7 +102,7 @@ export default function ResultsPage() {
           // filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy]);
+  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
   
   return (
     <PageWrapper
@@ -204,8 +208,4 @@ export default function ResultsPage() {
       </div>
     </PageWrapper>
   );
-}
-
-function useCallBack(arg0: () => string) {
-  throw new Error('Function not implemented.');
 }
