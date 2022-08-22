@@ -3,6 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { createNftOwnerMap } from 'utils/createNftOwnerMap';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -106,14 +107,16 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 showNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Show All NFTs', {
                   ethereumAddress: currentAddress,
-                  profile: props.profileURI
+                  profile: props.profileURI,
+                  nftsByOwner: createNftOwnerMap(allOwnerNfts)
                 });
               }}
               onHideAll={() => {
                 hideNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Hide All NFTs', {
                   ethereumAddress: currentAddress,
-                  profile: props.profileURI
+                  profile: props.profileURI,
+                  nftsByOwner: createNftOwnerMap(allOwnerNfts)
                 });
               }}
             />}
@@ -137,7 +140,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                     showNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Show All NFTs', {
                       ethereumAddress: currentAddress,
-                      profile: props.profileURI
+                      profile: props.profileURI,
+                      nftsByOwner: createNftOwnerMap(allOwnerNfts)
                     });
                   },
                   icon: <EyeIcon alt="Show all nfts" />,
@@ -148,7 +152,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                     hideNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Hide All NFTs', {
                       ethereumAddress: currentAddress,
-                      profile: props.profileURI
+                      profile: props.profileURI,
+                      nftsByOwner: createNftOwnerMap(allOwnerNfts)
                     });
                   },
                   icon: <EyeOffIcon alt="Hide all nfts" />,
