@@ -7,7 +7,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 
 import { motion } from 'framer-motion';
 import EllipseX from 'public/ellipse-x.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Plus, X } from 'react-feather';
 
 interface FilterOptionProps {
@@ -22,15 +22,17 @@ interface FilterOptionProps {
 const FilterOption = (props: FilterOptionProps) => {
   const { item, onSelectFilter, isSelected } = props;
   const [selected, setSelected] = useState(isSelected);
+  const { clearedFilters, setClearedFilters } = useSearchModal();
 
   return (
     <div className="flex items-startfont-grotesk">
       <CheckBox
         lightModeForced
-        checked={selected}
+        checked={!clearedFilters && selected}
         onToggle={(selected: boolean) => {
           setSelected(selected);
           onSelectFilter(item.value, selected);
+          setClearedFilters(false);
         }}
       />
       <div className="flex flex-col ml-2">
@@ -47,6 +49,10 @@ const Filter = (props: any) => {
   const { filtersList } = useSearchModal();
   const checkedOptions = filtersList.find(item => item.filter === filter.field_name);
   
+/*   useEffect(() => {
+    console.log(clearedFilters);
+  }, [clearedFilters]); */
+
   const formatTitle = (title) => {
     switch(title){
     case 'listedPx':
@@ -145,7 +151,14 @@ const Filter = (props: any) => {
 };
 
 export const FiltersContent = () => {
-  const { setSearchModalOpen, searchFilters, setCheckedFiltersList, filtersList, setSortBy, sortBy } = useSearchModal();
+  const {
+    setSearchModalOpen,
+    searchFilters,
+    setCheckedFiltersList,
+    filtersList,
+    setSortBy,
+    sortBy,
+    setClearedFilters } = useSearchModal();
   const [modalCheckedFilters, setModalCheckedFilters] = useState([]);
 
   const [selectedIndex, setSelectedIndex] = useState(sortBy === '' || sortBy === 'listedPx:asc' ? 0 : 1);
@@ -199,7 +212,9 @@ export const FiltersContent = () => {
           onClick={ () =>{
             filtersList.forEach((item) => {
               item.values = [];
-            });}
+            });
+            setClearedFilters(true);
+          }
           }
           className="px-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">
           Clear filters

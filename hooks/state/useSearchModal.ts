@@ -12,6 +12,7 @@ export function useSearchModal() {
       filtersList: null,
       checkedFiltersList: '',
       sortBy: '',
+      clearedFilters: true,
     } });
 
   const loading = !data;
@@ -67,6 +68,13 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setClearedFilters = useCallback((clearedFilters: boolean) => {
+    mutate({
+      ...data,
+      clearedFilters
+    });
+  },[data, mutate]);
+
   return {
     loading,
     modalType: data.modalType,
@@ -76,12 +84,14 @@ export function useSearchModal() {
     filtersList: data.filtersList,
     checkedFiltersList: data.checkedFiltersList,
     sortBy:data.sortBy,
+    clearedFilters: data.clearedFilters,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
     setSideNavOpen,
     setCheckedFiltersList,
     setSortBy,
+    setClearedFilters
   };
 }
 
