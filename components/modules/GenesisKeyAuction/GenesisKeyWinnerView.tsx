@@ -279,7 +279,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                   >
                     Privacy Policy
                   </span>.{' '}
-                  Your Genesis Key will allow you to mint two (2) profile names.{' '}
+                  Your Genesis Key will allow you to mint two (4) profile names.{' '}
                   Certain profile names may be unavailable for claiming.{' '}
                   Users are prohibited from selecting a profile name that violates{' '}
                   the rights of any third party (including any trademark rights), that{' '}
