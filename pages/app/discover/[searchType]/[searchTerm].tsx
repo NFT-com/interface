@@ -29,7 +29,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage() {
-  const { setSearchModalOpen, sideNavOpen } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
@@ -41,6 +41,16 @@ export default function ResultsPage() {
   const [filters, setFilters] = useState([]);
 
   useEffect(() => {
+    let checkedString = '';
+    const checkedList = [];
+    if (filtersList) {
+      const checkedArray = filtersList.filter(item => item.values.length > 0);
+      checkedArray.forEach(item => {
+        checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
+      });
+      checkedString = checkedList.join(' && ');
+    }
+
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
       facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
       max_facet_values: 200,
@@ -49,15 +59,27 @@ export default function ResultsPage() {
       q: searchTerm?.toString(),
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
+      filter_by: checkedString,
+      sort_by: sortBy,
     }] })
       .then((resp) => {
         setResults([...resp.results[0].hits]);
         setFound(resp.results[0].found);
-        setFilters([...resp.results[0].facet_counts]);
+        filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen]);
+  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy]);
 
   useEffect(() => {
+    let checkedString = '';
+    const checkedList = [];
+    if (filtersList) {
+      const checkedArray = filtersList.filter(item => item.values.length > 0);
+      checkedArray.forEach(item => {
+        checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
+      });
+      checkedString = checkedList.join(' && ');
+    }
+
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
         facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
@@ -67,14 +89,16 @@ export default function ResultsPage() {
         q: searchTerm?.toString(),
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
+        filter_by: checkedString,
+        sort_by: sortBy,
       }] })
         .then((resp) => {
           setResults([...results,...resp.results[0].hits]);
           setFound(resp.results[0].found);
-          setFilters([...resp.results[0].facet_counts]);
+          // filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen]);
+  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy]);
   
   return (
     <PageWrapper
@@ -116,7 +140,6 @@ export default function ResultsPage() {
               <div
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {
-                  console.log(filters, 'filters fdo');
                   setSearchModalOpen(true, 'filters', filters );
                 }}>
                 <FunnelSimple className="h-8 w-8" />
@@ -181,4 +204,8 @@ export default function ResultsPage() {
       </div>
     </PageWrapper>
   );
+}
+
+function useCallBack(arg0: () => string) {
+  throw new Error('Function not implemented.');
 }

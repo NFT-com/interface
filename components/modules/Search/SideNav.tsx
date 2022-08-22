@@ -2,6 +2,7 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
 import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
+import { FiltersContent } from './FiltersContent';
 import { SearchContent } from './SearchContent';
 
 import { SearchIcon } from '@heroicons/react/outline';
@@ -81,6 +82,14 @@ export const SideNav = (props: {onSideNav: (term: string) => void}) => {
           color={'grey'} />}
         backgroundColor={'bg-[#D5D5D5]'}>
         <SearchContent />
+      </OptionNav>
+      <OptionNav
+        title={'Search'}
+        icon={<SearchIcon
+          className="w-6 h-6"
+          color={'grey'} />}
+        backgroundColor={'bg-[#D5D5D5]'}>
+        <FiltersContent />
       </OptionNav>
     </div>
   );

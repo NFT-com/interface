@@ -8,7 +8,10 @@ export function useSearchModal() {
       modalType: 'search',
       searchModalOpen: false,
       sideNavOpen: false,
-      searchFilters: null,
+      searchFilters: [],
+      filtersList: null,
+      checkedFiltersList: '',
+      sortBy: '',
     } });
 
   const loading = !data;
@@ -21,11 +24,18 @@ export function useSearchModal() {
   };
 
   const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search', searchFilters?: any) => {
+    const filtersList = data.filtersList ?? (searchModalOpen && searchFilters.map((item) => {
+      return {
+        filter: item.field_name,
+        values: []
+      };
+    }));
     mutate({
       ...data,
       searchModalOpen,
       modalType,
-      searchFilters
+      searchFilters,
+      filtersList
     });
   }, [data, mutate]);
 
@@ -43,16 +53,35 @@ export function useSearchModal() {
     });
   }, [data, mutate]);
 
+  const setCheckedFiltersList = useCallback((checkedFiltersList: string) => {
+    mutate({
+      ...data,
+      checkedFiltersList
+    });
+  },[data, mutate]);
+
+  const setSortBy = useCallback((sortBy: string) => {
+    mutate({
+      ...data,
+      sortBy
+    });
+  },[data, mutate]);
+
   return {
     loading,
     modalType: data.modalType,
     searchModalOpen: data.searchModalOpen,
     sideNavOpen: data.sideNavOpen,
     searchFilters: data.searchFilters,
+    filtersList: data.filtersList,
+    checkedFiltersList: data.checkedFiltersList,
+    sortBy:data.sortBy,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
     setSideNavOpen,
+    setCheckedFiltersList,
+    setSortBy,
   };
 }
 

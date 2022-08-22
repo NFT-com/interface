@@ -5,7 +5,6 @@ describe('discover page tests mobile', () => {
     cy.viewport(550, 750);
     cy.intercept('GET', '*search*').as('sercharResults');
     cy.fixture('discover_results').then((json) => {
-      console.log(json, 'json fdo');
       cy.visit('/app/discover/');
 
       cy.wait('@sercharResults').its('response.statusCode').should('eq', 200);
@@ -33,7 +32,6 @@ describe('discover page tests tablet', () => {
     cy.viewport(820, 1180);
     cy.intercept('GET', '*search*').as('sercharResults');
     cy.fixture('discover_results').then((json) => {
-      console.log(json, 'json fdo');
       cy.visit('/app/discover/');
 
       cy.wait('@sercharResults').its('response.statusCode').should('eq', 200);
@@ -61,7 +59,6 @@ describe('discover page tests laptop', () => {
     cy.viewport(1024, 1915);
     cy.intercept('GET', '*search*').as('sercharResults');
     cy.fixture('discover_results').then((json) => {
-      console.log(json, 'json fdo');
       cy.visit('/app/discover/');
 
       cy.wait('@sercharResults').its('response.statusCode').should('eq', 200);
