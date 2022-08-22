@@ -15,6 +15,7 @@ export type StagedPurchase = {
   currency: string;
   price: BigNumber;
   isApproved: boolean;
+  protocolData: any;
 }
 
 interface NFTPurchaseContextType {
@@ -40,7 +41,7 @@ export function NFTPurchaseContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
-
+  console.log(toBuy);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const { toggleCartSidebar } = useContext(NFTListingsContext);

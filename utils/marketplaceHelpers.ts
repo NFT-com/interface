@@ -43,6 +43,5 @@ export async function getLooksrareOrders(contract: string, tokenId: BigNumberish
   url.searchParams.set('contract', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
   const result = await fetch(url.toString()).then(res => res.json());
-  // todo: process the result and return to render the listing.
-  console.log({ looksrareOrders: result });
+  return result?.data ?? [];
 }

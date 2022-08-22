@@ -35,7 +35,8 @@ export function ExternalListings(props: ExternalListingsProps) {
   });
 
   const { data: looksrareListings } = useSWR('LooksrareListings' + props.nft?.contract + props.nft?.tokenId, async () => {
-    return await getLooksrareOrders(props.nft?.contract, BigNumber.from(props.nft?.tokenId));
+    const result = await getLooksrareOrders(props.nft?.contract, BigNumber.from(props.nft?.tokenId));
+    return result ?? [];
   });
 
   const {
@@ -80,13 +81,19 @@ export function ExternalListings(props: ExternalListingsProps) {
         </div>
     );
   }
+  
   return <div className={tw(
     'flex w-full px-4',
     'flex-col minlg:flex-row flex-wrap'
   )}>
     {listings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
       <div className='w-full minlg:w-2/4 pr-2' key={index}>
-        <ExternalListingTile listing={listing} nft={props.nft} collectionName={props.collectionName} />
+        <ExternalListingTile
+          listing={listing}
+          nft={props.nft}
+          collectionName={props.collectionName}
+          protocolData={seaportListings?.length > 0 ? seaportListings[0] : looksrareListings?.length > 0 ? looksrareListings[0] : null} // todo: fix this, get from the backend entity
+        />
       </div>
     ))}
   </div>;

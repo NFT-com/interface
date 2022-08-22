@@ -15,6 +15,7 @@ import { useAccount, useNetwork } from 'wagmi';
 
 export interface ExternalListingTileProps {
   listing: PartialDeep<ExternalListing>;
+  protocolData: any;
   nft: PartialDeep<Nft>;
   collectionName: string;
 }
@@ -100,7 +101,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
               price: BigNumber.from(isNullOrEmpty(props.listing?.price) ? 0 : props.listing.price),
               collectionName: props.collectionName,
               marketplace,
-              isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0)
+              isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0),
+              protocolData: props.protocolData
             });
           }}
           type={ButtonType.PRIMARY}

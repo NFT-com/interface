@@ -1,3 +1,4 @@
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -21,6 +22,7 @@ export function PurchaseCheckoutNft(props: PurchaseCheckoutNftProps) {
   const { chain } = useNetwork();
 
   const { removePurchase } = useContext(NFTPurchasesContext);
+  const { getByContractAddress } = useSupportedCurrencies();
 
   const { data: collection } = useSWR('ContractMetadata' + props.purchase?.nft?.contract, async () => {
     return await getContractMetadata(props.purchase?.nft?.contract, chain?.id);
@@ -70,7 +72,7 @@ export function PurchaseCheckoutNft(props: PurchaseCheckoutNftProps) {
         {getMarketplaceIcon(props.purchase)}
       </div>
       <div className="flex items-center text-lg ml-8">
-        {ethers.utils.formatEther(BigNumber.from(props.purchase?.price ?? 0))}{' WETH'}
+        {ethers.utils.formatEther(BigNumber.from(props.purchase?.price ?? 0))}{' '}{getByContractAddress(props.purchase?.currency)?.name}
       </div>
     </div>
   );
