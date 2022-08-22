@@ -18,9 +18,8 @@ import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQ
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import NotFoundPage from 'pages/404';
 import ClientOnly from 'utils/ClientOnly';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getChainIdString, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 
 import { useRouter } from 'next/router';
@@ -119,10 +118,6 @@ export default function Settings() {
       router.push('/');
     }
   }, [currentAddress, router]);
-  
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
-    return <NotFoundPage />;
-  }
 
   const ownsProfilesAndSelectedProfile = myOwnedProfileTokens.length && myOwnedProfileTokens.some(t => t.title === selectedProfile);
   

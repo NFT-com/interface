@@ -2,7 +2,6 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -103,7 +102,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             }}
           />
         </div>
-        {getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && <div className='ml-4'>
+        <div className='ml-4'>
           <Button
             type={ButtonType.SECONDARY}
             label={'Settings'}
@@ -111,7 +110,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               router.push('/app/settings');
             }}
           />
-        </div>}
+        </div>
       </div>;
   }, [
     hasGks,
@@ -160,7 +159,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           </div>
       }
       {editMode && userIsAdmin &&
-          <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex flex-col">
+          <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
             <textarea
               className={tw(
                 'text-base w-full resize-none mt-4',

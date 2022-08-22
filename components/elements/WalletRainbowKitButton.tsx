@@ -2,11 +2,10 @@ import { NotificationBadge } from 'components/modules/Notifications/Notification
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import { useChainModal } from '@rainbow-me/rainbowkit';
 import { UserCircle, Wallet } from 'phosphor-react';
 import { useCallback } from 'react';
 import { Menu } from 'react-feather';
@@ -40,7 +39,6 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   });
   const { disconnect } = useDisconnect();
   const { primaryIcon } = useThemeColors();
-  const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
   const { chain } = useNetwork();
 
@@ -70,9 +68,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 </button>
                 :
                 <button
-                  onClick={() => {
-                    !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) ? openConnectModal() : toggleSidebar();
-                  }}
+                  onClick={() => toggleSidebar()}
                   className={tw(
                     `${props?.signInButton ? 'block' : 'hidden'}`,
                     'font-header',
@@ -110,7 +106,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         }
         return (
           <>
-            {(getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && getNotificationCount() > 0) && (
+            {(getNotificationCount() > 0) && (
               <NotificationBadge count={getNotificationCount()} />
             )
             }
@@ -135,18 +131,16 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 toggleSidebar();
               }} type="button">
                 
-                {!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
-                  ? shortenAddress(currentAddress, 3) :
-                  myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
-                    <>
-                      <UserCircle className="h-6 w-6 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                      {user.currentProfileUrl}
-                    </>
-                    :
-                    <>
-                      <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                      {shortenAddress(currentAddress, 3)}
-                    </>
+                {myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
+                  <>
+                    <UserCircle className="h-6 w-6 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                    {user.currentProfileUrl}
+                  </>
+                  :
+                  <>
+                    <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                    {shortenAddress(currentAddress, 3)}
+                  </>
                 }
               </button>
             </div>
