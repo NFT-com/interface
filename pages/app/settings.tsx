@@ -2,7 +2,7 @@ import { Footer } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import Toast from 'components/elements/Toast';
-import HomeLayout from 'components/layouts/HomeLayout';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { SearchModal } from 'components/modules/Search/SearchModal';
 import ConnectedAccounts from 'components/modules/Settings/ConnectedAccounts';
 import ConnectedProfiles from 'components/modules/Settings/ConnectedProfiles';
@@ -174,8 +174,8 @@ export default function Settings() {
 
 Settings.getLayout = function getLayout(page) {
   return (
-    <HomeLayout>
+    <DefaultLayout>
       { page }
-    </HomeLayout>
+    </DefaultLayout>
   );
 };
