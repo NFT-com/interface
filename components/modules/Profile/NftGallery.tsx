@@ -67,7 +67,7 @@ export function NftGallery(props: NftGalleryProps) {
       </GridContextProvider>
       {
         (draftLayoutType ?? savedLayoutType) === 'Spotlight' && <div className={tw(
-          'w-full flex items-center col-start-2 justify-around mb-16'
+          'w-full flex items-center col-start-2 justify-around my-16'
         )}>
           <div className='pr-2 w-1/2'>
             <Button
@@ -75,7 +75,7 @@ export function NftGallery(props: NftGalleryProps) {
               color="white"
               label={'Back'}
               onClick={() => {
-                setSpotLightIndex(spotlightIndex === 0 ? displayNFTs.length - 1 : spotlightIndex - 1);
+                setSpotLightIndex(spotlightIndex === 0 ? nftsToShow.length - 1 : spotlightIndex - 1);
               }}
               type={ButtonType.PRIMARY}
             />
@@ -86,7 +86,7 @@ export function NftGallery(props: NftGalleryProps) {
               color="white"
               label={'Next'}
               onClick={() => {
-                setSpotLightIndex(spotlightIndex + 1 > displayNFTs.length - 1 ? 0 : spotlightIndex + 1);
+                setSpotLightIndex(spotlightIndex + 1 > nftsToShow.length - 1 ? 0 : spotlightIndex + 1);
               }}
               type={ButtonType.PRIMARY}
             />

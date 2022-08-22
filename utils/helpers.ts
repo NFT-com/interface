@@ -23,7 +23,6 @@ export function sameAddress(first: Maybe<string>, second: Maybe<string>) {
   try {
     return ethers.utils.getAddress(first) === ethers.utils.getAddress(second);
   } catch (error) {
-    console.log('Invalid addresses');
     return false;
   }
 }
@@ -85,6 +84,10 @@ export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
 export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
 
 export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
+
+export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) => boolean): T[] => {
+  return items.filter((item, index) => items.findIndex((element) => isSame(item, element)) === index);
+};
 
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
   const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
@@ -160,7 +163,7 @@ export function getEtherscanLink(
   }
 }
 
-export function getChainIdString(chainId: Maybe<number>): Maybe<string> {
+export function getChainIdString(chainId: Maybe<number | string>): Maybe<string> {
   return (chainId == null ? null : String(chainId));
 }
 
@@ -189,4 +192,11 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen: bool
     }
   }
   return perPage;
+}
+
+export function max(...args: BigNumberish[]) {
+  if (isNullOrEmpty(args)) {
+    return null;
+  }
+  return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MIN_VALUE).gt(val) ? acc : val);
 }

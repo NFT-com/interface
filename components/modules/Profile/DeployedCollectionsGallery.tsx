@@ -1,4 +1,5 @@
 import { useDeployedCollectionsQuery } from 'graphql/hooks/useDeployedCollectionsQuery';
+import { filterDuplicates } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { DeployedCollectionCard } from './DeployedCollectionCard';
@@ -9,6 +10,7 @@ export interface DeployedCollectionsGalleryProps {
 
 export function DeployedCollectionsGallery(props: DeployedCollectionsGalleryProps) {
   const { collections } = useDeployedCollectionsQuery(props.address?.toLowerCase());
+
   if (collections?.length === 0) {
     return <div className="w-full flex items-center justify-center customHeight">
       <div className="flex flex-col items-center text-primary-txt dark:text-primary-txt-dk">
@@ -18,7 +20,10 @@ export function DeployedCollectionsGallery(props: DeployedCollectionsGalleryProp
   }
   return <div className="w-full px-8">
     <div className={'grid grid-cols-3 lg:grid-cols-2 md:grid-cols-1 w-full'}>
-      {Array.from(collections ?? []).map((collection) => (
+      {filterDuplicates(
+        Array.from(collections ?? []),
+        (first, second) => first?.contract === second?.contract
+      ).map((collection) => (
         <div
           key={collection.contract}
           className={tw(

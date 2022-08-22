@@ -84,6 +84,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
     setSelected(profileTitle);
     if(isSidebar) {
       setCurrentProfileUrl(profileTitle);
+      setVisible(false);
     } else {
       const profileId = myProfiles?.myProfiles?.items?.find((profile) => profile.url === profileTitle)?.id;
       updateWalletProfileId({ profileId: profileId }).then(() => {
@@ -109,6 +110,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
             setVisible(true);
             sortProfiles();
           }}
+          isSidebar={isSidebar}
           opensModal
           showSwitch={myOwnedProfileTokens && myOwnedProfileTokens.length > 1}
           profile={myOwnedProfileTokens?.find(t => t.title === selected)}

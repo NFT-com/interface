@@ -1,3 +1,4 @@
+import { Maybe } from 'graphql/generated/types';
 import { useIgnoredEventsQuery } from 'graphql/hooks/useIgnoredEventsQuery';
 import { useUpdateHideIgnored } from 'graphql/hooks/useUpdateHideIgnored';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
@@ -7,6 +8,8 @@ import RequestModal from './RequestModal';
 import SettingsForm from './SettingsForm';
 
 import { useEffect, useState } from 'react';
+import { mutate } from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
 type Address = {
@@ -22,11 +25,11 @@ export type RejectedEvent = {
 
 type ConnectedAccountsProps = {
   selectedProfile: string;
-  associatedAddresses : {
+  associatedAddresses : Maybe<{
     pending: Address[];
     accepted: Address[];
-    denied: RejectedEvent[]
-  };
+    denied: PartialDeep<RejectedEvent>[]
+  }>;
 };
 
 export default function ConnectedAccounts({ selectedProfile, associatedAddresses }: ConnectedAccountsProps) {
@@ -35,7 +38,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const { nftResolver } = useAllContracts();
   const [inputVal, setInputVal] = useState('');
   const [transaction, setTransaction] = useState('');
-  const [isAssociatedOrSelf, setIsAssociatedOrSelf] = useState(false);
+  const [isAssociatedOrPending, setIsAssociatedOrPending] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionPending, setTransactionPending] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -44,23 +47,30 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   const submitHandler = async (input?: string) => {
     const address = input || inputVal;
     const deniedEvent = associatedAddresses?.denied?.find((evt) => evt.destinationAddress === address);
-    if(deniedEvent){
+    if (deniedEvent) {
       updateHideIgnored({ hideIgnored: false, eventIdArray: [deniedEvent.id] })
         .then(() => {
           mutateHidden();
           setTransaction(deniedEvent.txHash);
           setSuccess(true);
           setModalVisible(true);
+          mutate('SettingsAssociatedAddresses' + selectedProfile + currentAddress);
         });
     } else {
       const tx = await nftResolver.addAssociatedAddresses([{ cid: 0, chainAddr: address }], selectedProfile);
       setTransactionPending(true);
-      if(tx){
-        tx.wait(1).then(() => {
+      if(tx) {
+        await tx.wait(1).then(() => {
           setSuccess(true);
           setTransaction(tx.hash);
           setModalVisible(true);
           setTransactionPending(false);
+          mutate('SettingsAssociatedAddresses' + selectedProfile + currentAddress);
+          analytics.track('Association Sent', {
+            ethereumAddress: currentAddress,
+            profile: selectedProfile,
+            destinationAddress: address
+          });
         });
       }
     }
@@ -71,10 +81,10 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
   };
 
   useEffect(() => {
-    if(associatedAddresses.pending.find(element => element.chainAddr === inputVal) || associatedAddresses.accepted.find(element => element.chainAddr === inputVal) || inputVal === currentAddress){
-      setIsAssociatedOrSelf(true);
+    if(associatedAddresses?.pending.find(element => element.chainAddr === inputVal) || associatedAddresses?.accepted.find(element => element.chainAddr === inputVal)){
+      setIsAssociatedOrPending(true);
     } else {
-      setIsAssociatedOrSelf(false);
+      setIsAssociatedOrPending(false);
     }
   }, [inputVal, associatedAddresses, currentAddress]);
   
@@ -83,7 +93,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
       <h2 className='text-black mb-2 font-bold text-2xl tracking-wide'>Associate Addresses</h2>
       <p className='text-blog-text-reskin mb-4'>The NFTs contained or collections deployed by associated Ethereum addresses will display on this NFT Profile.</p>
       
-      <SettingsForm buttonText='Request Association' submitHandler={openModal} {...{ inputVal, isAssociatedOrSelf }} changeHandler={setInputVal} />
+      <SettingsForm buttonText='Request Association' submitHandler={openModal} {...{ inputVal, isAssociatedOrPending }} changeHandler={setInputVal} />
 
       {associatedAddresses?.accepted?.length || associatedAddresses?.pending?.length || associatedAddresses?.denied?.length
         ? (

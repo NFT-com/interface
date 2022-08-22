@@ -1,4 +1,3 @@
-import { HeroSidebar } from 'components/modules/HeroSidebar/HeroSidebar';
 import NftOwner from 'components/modules/Settings/NftOwner';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
 import { Notifications } from 'components/modules/Sidebar/Notifications';
@@ -10,7 +9,6 @@ import { useUser } from 'hooks/state/useUser';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, prettify, shortenAddress } from 'utils/helpers';
 import { randomLabelGenerator } from 'utils/randomLabelGenerator';
 import { tw } from 'utils/tw';
@@ -92,17 +90,19 @@ export const Sidebar = () => {
             {randomLabel}
           </div>
 
-          {//todo: make this do something on click }
-          }
-          <div className='w-full p-4 items-center drop-shadow-xl -mt-10 minlg:-mt-20'>
-            <NftOwner isSidebar selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
+          <div className='w-full p-4 items-center drop-shadow-xl -mt-3 minlg:-mt-3'>
+            {myOwnedProfileTokens.length ?
+              <NftOwner isSidebar selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
+              : <p className='text-2xl text-[#B6B6B6] font-bold'>No Profiles Found</p>
+            }
+           
           </div>
-          
+
           <Link href='/app/settings' passHref>
             <a onClick={() => setSidebarOpen(false)}
               className='flex flex-row w-full items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
             >
-            Settings
+              Settings
             </a>
           </Link>
 
@@ -116,9 +116,6 @@ export const Sidebar = () => {
             Sign out
           </button>
 
-          <div className='flex flex-row w-full h-8 bg-[#F8F8F8] pr-12 pl-4 mb-4 items-center font-semibold text-base leading-6 text-[#6F6F6F]'>
-            Notifications
-          </div>
           <Notifications />
 
           {/*TODO: MOAR TOKENS*/}
@@ -218,65 +215,61 @@ export const Sidebar = () => {
       );
     }
   }, [currentAddress, getSidebarContent]);
-
-  if(!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
-    return <HeroSidebar />;
-  } else {
-    return (
-      <AnimatePresence>
-        {sidebarOpen && (
-          <Dialog
+  
+  return (
+    <AnimatePresence>
+      {sidebarOpen && (
+        <Dialog
+          layout
+          key='sidebarDialog'
+          static
+          as={motion.div}
+          open={sidebarOpen}
+          className="fixed inset-0 overflow-hidden"
+          onClose={() => {
+            !addFundsDialogOpen && setSidebarOpen(false);
+          }}
+          style={{ zIndex: getZIndex('sidebar') }}
+        >
+          <Dialog.Overlay
             layout
-            key='sidebarDialog'
-            static
+            key='sidebarDialogOverlay'
             as={motion.div}
-            open={sidebarOpen}
-            className="fixed inset-0 overflow-hidden"
-            onClose={() => {
-              !addFundsDialogOpen && setSidebarOpen(false);
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              ease: 'backInOut',
+              duration: 0.4
             }}
-            style={{ zIndex: getZIndex('sidebar') }}
+            className={tw(
+              'absolute inset-0',
+              'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
+            )}
+          />
+          <motion.div
+            key='sidebarWrapperPanel'
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{
+              type: 'spring',
+              bounce: 0,
+              duration: 0.4
+            }}
+            className={
+              tw(
+                'flex flex-col fixed inset-y-0 right-0',
+                'w-screen max-w-md h-full',
+                'shadow-xl overflow-y-auto overflow-x-hidden',
+                'bg-white',
+                'font-grotesk')
+            }
           >
-            <Dialog.Overlay
-              layout
-              key='sidebarDialogOverlay'
-              as={motion.div}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                ease: 'backInOut',
-                duration: 0.4
-              }}
-              className={tw(
-                'absolute inset-0',
-                'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
-              )}
-            />
-            <motion.div
-              key='sidebarWrapperPanel'
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{
-                type: 'spring',
-                bounce: 0,
-                duration: 0.4
-              }}
-              className={
-                tw(
-                  'flex flex-col fixed inset-y-0 right-0',
-                  'w-screen max-w-md h-full',
-                  'shadow-xl overflow-y-auto overflow-x-hidden',
-                  'bg-white',
-                  'font-grotesk')
-              }
-            >
-              {getSidebarPanel()}
-            </motion.div>
-          </Dialog>
-        )}
-      </AnimatePresence>
-    );
-  }
+            {getSidebarPanel()}
+          </motion.div>
+        </Dialog>
+      )}
+    </AnimatePresence>
+  );
 };

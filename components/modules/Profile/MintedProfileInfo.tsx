@@ -1,7 +1,8 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
-import { Doppler, getEnvBool } from 'utils/env';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -22,7 +23,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { address: currentAddress } = useAccount();
   const { user, setCurrentProfileUrl } = useUser();
   const router = useRouter();
-  
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
   const {
@@ -38,66 +40,12 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   } = useContext(ProfileContext);
 
   const getProfileButton = useCallback(() => {
-    if (!userIsAdmin) {
+    if (!userIsAdmin || !hasGks) {
       return null;
     }
-
-    return user?.currentProfileUrl === props.profileURI || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) ?
-      (
-        editMode ?
-          <div
-            className="flex mt-3 minlg:mt-6"
-            style={{ zIndex: 49 }}
-          >
-            <div className='mr-4'>
-              <Button
-                type={ButtonType.PRIMARY}
-                label={'Save'}
-                onClick={() => {
-                  analytics.track('Update Profile', {
-                    ethereumAddress: currentAddress,
-                    profile: profileURI,
-                    newProfile: draftProfileImg?.preview ? true : false,
-                    newHeader: draftHeaderImg?.preview ? true : false,
-                    newDescription: draftBio,
-                  });
-
-                  saveProfile();
-                  setEditMode(false);
-                }}
-              />
-            </div>
-            <Button
-              type={ButtonType.SECONDARY}
-              label={'Cancel'}
-              onClick={clearDrafts}
-            />
-          </div> :
-          <div
-            className="flex items-center mt-3 minlg:mt-6 "
-            style={{ zIndex: 49 }}
-          >
-            <div>
-              <Button
-                type={ButtonType.PRIMARY}
-                label={'Edit Profile'}
-                onClick={() => {
-                  setEditMode(true);
-                }}
-              />
-            </div>
-            {getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && <div className='ml-4'>
-              <Button
-                type={ButtonType.SECONDARY}
-                label={'Settings'}
-                onClick={() => {
-                  router.push('/app/settings');
-                }}
-              />
-            </div>}
-          </div>
-      ) :
-      (
+    
+    if (user?.currentProfileUrl !== props.profileURI) {
+      return (
         <div
           className='mt-3 minlg:mt-6'
         >
@@ -110,7 +58,62 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           />
         </div>
       );
+    }
+
+    return editMode ?
+      <div
+        className="flex mt-3 minlg:mt-6"
+        style={{ zIndex: 49 }}
+      >
+        <div className='mr-4'>
+          <Button
+            type={ButtonType.PRIMARY}
+            label={'Save'}
+            onClick={() => {
+              analytics.track('Update Profile', {
+                ethereumAddress: currentAddress,
+                profile: profileURI,
+                newProfile: draftProfileImg?.preview ? true : false,
+                newHeader: draftHeaderImg?.preview ? true : false,
+                newDescription: draftBio,
+              });
+
+              saveProfile();
+              setEditMode(false);
+            }}
+          />
+        </div>
+        <Button
+          type={ButtonType.SECONDARY}
+          label={'Cancel'}
+          onClick={clearDrafts}
+        />
+      </div> :
+      <div
+        className="flex items-center mt-3 minlg:mt-6 "
+        style={{ zIndex: 49 }}
+      >
+        <div>
+          <Button
+            type={ButtonType.PRIMARY}
+            label={'Edit Profile'}
+            onClick={() => {
+              setEditMode(true);
+            }}
+          />
+        </div>
+        <div className='ml-4'>
+          <Button
+            type={ButtonType.SECONDARY}
+            label={'Settings'}
+            onClick={() => {
+              router.push('/app/settings');
+            }}
+          />
+        </div>
+      </div>;
   }, [
+    hasGks,
     clearDrafts,
     currentAddress,
     draftBio,
@@ -137,8 +140,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   return (
     <div className={tw(
       'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
-      'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 -mt-14 minmd:mt-0 px-4',
-      'w-4/5 minxl:w-3/5 minmd:h-52 h-32')}>
+      'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 px-4',
+      'w-4/5 minxl:w-3/5 minmd:min-h-52 min-h-32')}>
       <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
         <div
           id="MintedProfileNameContainer"
@@ -156,7 +159,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           </div>
       }
       {editMode && userIsAdmin &&
-          <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex flex-col">
+          <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
             <textarea
               className={tw(
                 'text-base w-full resize-none mt-4',

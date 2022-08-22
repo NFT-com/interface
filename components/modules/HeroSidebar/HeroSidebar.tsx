@@ -12,7 +12,6 @@ import { useUser } from 'hooks/state/useUser';
 import useENSName from 'hooks/useENSName';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -57,7 +56,6 @@ export const HeroSidebar = () => {
       || currentAddress && !myOwnedProfileTokens.length
       || myOwnedProfileTokens.length === 1
       && myOwnedProfileTokens.some(e => e.title === hiddenProfile)
-      || !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
     ) {
       return (
         <motion.div
@@ -172,7 +170,7 @@ export const HeroSidebar = () => {
         </motion.div>
       );}
 
-    if(!myOwnedProfileTokens.some(e => e.title === profileValue) && getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)){
+    if(!myOwnedProfileTokens.some(e => e.title === profileValue)){
       return (
         <LoginResults
           {...{ hiddenProfile, profileValue }}

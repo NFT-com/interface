@@ -51,7 +51,7 @@ export function randomLabelGenerator(): string {
   if (random === 69 || random === 420) {
     return ultraRareLabels[Math.floor(Math.random() * ultraRareLabels.length)];
   }
-  if(random === 42 || (random > 69 && random < 420)) {
+  if(random === 42 || (random > 369 && random < 420)) {
     return rareLabels[Math.floor(Math.random() * rareLabels.length)];
   }
   return standardLabels[Math.floor(Math.random() * standardLabels.length)];

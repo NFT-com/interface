@@ -192,6 +192,7 @@ export type Collection = {
   description?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
   isCurated?: Maybe<Scalars['Boolean']>;
+  isSpam?: Maybe<Scalars['Boolean']>;
   logoUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
 };
@@ -666,6 +667,7 @@ export type Mutation = {
   updateProfileView: Profile;
   /** AUTHETICATED */
   updateReadByIds: UpdateReadOutput;
+  updateSpamStatus: UpdateSpamStatusOutput;
   /** AUTHENTICATED */
   updateWalletProfileId: Wallet;
   /** AUTHENTICATED */
@@ -925,6 +927,12 @@ export type MutationUpdateProfileViewArgs = {
 
 export type MutationUpdateReadByIdsArgs = {
   ids: Array<InputMaybe<Scalars['String']>>;
+};
+
+
+export type MutationUpdateSpamStatusArgs = {
+  contracts: Array<Scalars['Address']>;
+  isSpam: Scalars['Boolean'];
 };
 
 
@@ -1803,6 +1811,11 @@ export type UpdateReadOutput = {
   updatedIdsSuccess: Array<Maybe<Scalars['String']>>;
 };
 
+export type UpdateSpamStatusOutput = {
+  __typename?: 'UpdateSpamStatusOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type UpdateUserInput = {
   avatarURL?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
@@ -2087,6 +2100,14 @@ export type UpdateMeMutationVariables = Exact<{
 
 export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'User', id: string, email?: string | null, avatarURL?: string | null } };
 
+export type UpdateNftMemoMutationVariables = Exact<{
+  nftId: Scalars['ID'];
+  memo: Scalars['String'];
+}>;
+
+
+export type UpdateNftMemoMutation = { __typename?: 'Mutation', updateNFTMemo: { __typename?: 'NFT', memo?: string | null, tokenId: any } };
+
 export type UpdateNftProfileIdMutationVariables = Exact<{
   nftId: Scalars['ID'];
   profileId: Scalars['ID'];
@@ -2295,7 +2316,7 @@ export type MyNfTsQueryVariables = Exact<{
 }>;
 
 
-export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', contract?: any | null, tokenId: any, id: string, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
+export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
 
 export type MyPhotoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2644,6 +2665,14 @@ export const UpdateMeDocument = gql`
     id
     email
     avatarURL
+  }
+}
+    `;
+export const UpdateNftMemoDocument = gql`
+    mutation UpdateNFTMemo($nftId: ID!, $memo: String!) {
+  updateNFTMemo(nftId: $nftId, memo: $memo) {
+    memo
+    tokenId
   }
 }
     `;
@@ -3344,6 +3373,10 @@ export const MyNfTsDocument = gql`
     }
     totalItems
     items {
+      isOwnedByMe
+      wallet {
+        address
+      }
       contract
       tokenId
       id
@@ -3704,6 +3737,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UpdateMe(variables: UpdateMeMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateMeMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateMeMutation>(UpdateMeDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateMe', 'mutation');
+    },
+    UpdateNFTMemo(variables: UpdateNftMemoMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNftMemoMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateNftMemoMutation>(UpdateNftMemoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateNFTMemo', 'mutation');
     },
     UpdateNFTProfileId(variables: UpdateNftProfileIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateNftProfileIdMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateNftProfileIdMutation>(UpdateNftProfileIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateNFTProfileId', 'mutation');

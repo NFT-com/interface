@@ -3,48 +3,77 @@ import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
-import { Doppler,getEnv } from 'utils/env';
-import { shortenAddress } from 'utils/helpers';
+import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
+import { Doppler, getEnv } from 'utils/env';
+import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import router from 'next/router';
 import CopyIcon from 'public/arrow_square_out.svg';
-import { useCallback, useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
+  forceLightMode?: boolean
 }
 
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
+  const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [found, setFound] = useState(0);
+  const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
-  const imgUrl = collectionData?.ubiquityResults?.collection?.banner ? `${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null;
-  
-  const loadNFTs = useCallback(() => {
-    props.contract && client.collections('nfts')
+  const { data: imgUrl } = useSWR('imageurl', async() => {
+    let imgUrl;
+    if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
+      imgUrl = null;
+    } else {
+      imgUrl = await fetch(`${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}`)
+        .then(
+          (data) => data.status === 200 ? `${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null
+        );
+    }
+
+    return imgUrl;
+  } );
+
+  useEffect(() => {
+    currentPage === 1 && props.contract && client.collections('nfts')
       .documents()
       .search({
         'q'       : props.contract.toString(),
         'query_by': 'contractAddr',
         'per_page': 8,
-        'page'    : currentPage < 1 ? 1 : currentPage
+        'page'    : currentPage
       })
       .then(function (nftsResults) {
-        setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
+        setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-    setCurrentPage(currentPage + 1);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client, collectionNfts, props.contract]);
+  }, [client, currentPage, props.contract]);
 
   useEffect(() => {
-    props.contract && collectionNfts.length < 1 && loadNFTs();
-  }, [collectionNfts.length, props.contract, loadNFTs]);
+    if (currentPage > 1 && currentPage !== prevVal) {
+      props.contract && client.collections('nfts')
+        .documents()
+        .search({
+          'q'       : props.contract.toString(),
+          'query_by': 'contractAddr',
+          'per_page': 8,
+          'page'    : currentPage
+        })
+        .then(function (nftsResults) {
+          setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
+          setFound(nftsResults.found);
+        });
+    }
+  }, [client, collectionNfts, currentPage, prevVal, props.contract]);
 
   return (
     <>
@@ -52,11 +81,15 @@ export function Collection(props: CollectionProps) {
         <BannerWrapper
           imageOverride={imgUrl}/>
       </div>
-      <div className="mt-7 mx-8 minmd:mx-[5%] minxl:mx-auto max-w-nftcom ">
+      <div className={tw(
+        'pt-7 px-8 minmd:px-[5%] minxl:mx-auto pb-16 w-full',
+        props.forceLightMode && 'bg-white'
+      )}
+      >
         {collectionNfts.length > 0 ?
           <>
-            <div className="font-grotesk font-black text-black text-4xl">{collectionNfts[0].document.contractName}</div>
-            <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F]">
+            <div className="font-grotesk font-black text-black text-4xl max-w-nftcom minxl:mx-auto">{collectionNfts[0].document.contractName}</div>
+            <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F] max-w-nftcom minxl:mx-auto">
               <span>{shortenAddress(props.contract?.toString())}</span>
               <a
                 target="_blank"
@@ -64,7 +97,7 @@ export function Collection(props: CollectionProps) {
                 <CopyIcon />
               </a>
             </div>
-            <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
               {collectionNfts.map((nft, index) => {
                 return (
                   <div className="NftCollectionItem" key={index}>
@@ -91,7 +124,7 @@ export function Collection(props: CollectionProps) {
                 stretch={true}
                 label={'Load More'}
                 onClick={ () => {
-                  loadNFTs();
+                  setCurrentPage(currentPage + 1);
                 }}
                 type={ButtonType.PRIMARY}
               />
@@ -99,7 +132,7 @@ export function Collection(props: CollectionProps) {
           </>:
           <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
       </div>
-      <div className='w-full mt-16'>
+      <div className='w-full'>
         <Footer />
       </div>
     </>
