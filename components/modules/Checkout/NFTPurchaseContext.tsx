@@ -6,6 +6,7 @@ import { NFTListingsContext, TargetMarketplace } from './NFTListingsContext';
 import { BigNumber } from '@ethersproject/bignumber';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
+import { useAccount, useNetwork } from 'wagmi';
 
 export type StagedPurchase = {
   nft: PartialDeep<Nft>;
@@ -40,6 +41,8 @@ export function NFTPurchaseContextProvider(
 ) {
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
 
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const { toggleCartSidebar } = useContext(NFTListingsContext);
 
   useEffect(() => {
@@ -69,6 +72,11 @@ export function NFTPurchaseContextProvider(
     setToBuy([]);
     localStorage.setItem('stagedNftPurchases', null);
   }, []);
+
+  useEffect(() => {
+    // Clear the cart when the connected address or network changes.
+    clear();
+  }, [currentAddress, chain?.id, clear]);
 
   const buyAll = useCallback(() => {
     // todo: trigger the transaction

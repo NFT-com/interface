@@ -5,11 +5,14 @@ import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
+import { getLooksrareOrders, getSeaportOrders } from 'utils/marketplaceHelpers';
 import { tw } from 'utils/tw';
 
 import { ExternalListingTile } from './ExternalListingTile';
 
+import { BigNumber } from 'ethers';
 import { useContext } from 'react';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -21,7 +24,19 @@ export interface ExternalListingsProps {
 export function ExternalListings(props: ExternalListingsProps) {
   const { address: currentAddress } = useAccount();
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
-  const { data: listings } = useExternalListingsQuery(props?.nft?.contract, props?.nft?.tokenId, String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
+  const { data: listings } = useExternalListingsQuery(
+    props?.nft?.contract,
+    props?.nft?.tokenId,
+    String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
+  );
+
+  const { data: seaportListings } = useSWR('SeaportListings' + props.nft?.contract + props.nft?.tokenId, async () => {
+    return await getSeaportOrders(props.nft?.contract, BigNumber.from(props.nft?.tokenId));
+  });
+
+  const { data: looksrareListings } = useSWR('LooksrareListings' + props.nft?.contract + props.nft?.tokenId, async () => {
+    return await getLooksrareOrders(props.nft?.contract, BigNumber.from(props.nft?.tokenId));
+  });
 
   const {
     allowedAll: openseaAllowed,

@@ -22,7 +22,7 @@ export async function getLooksrareNonce(address: string): Promise<number> {
   return BigNumber.from(result?.['data'] ?? 0).toNumber();
 }
 
-export async function getSeaportOrders(contract: string, tokenId: BigNumberish): Promise<any> {
+export async function getSeaportOrders(contract: string, tokenId: BigNumberish): Promise<any[]> {
   if (tokenId == null || isNullOrEmpty(contract)) {
     return [];
   }
@@ -31,7 +31,7 @@ export async function getSeaportOrders(contract: string, tokenId: BigNumberish):
   url.searchParams.set('contract', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
   const result = await fetch(url.toString()).then(res => res.json());
-  console.log({ seaportOrders: result });
+  return result?.orders?.filter(order => !order?.['cancelled'] && !order?.['finalized']) ?? [];
 }
 
 export async function getLooksrareOrders(contract: string, tokenId: BigNumberish): Promise<any> {
@@ -43,5 +43,6 @@ export async function getLooksrareOrders(contract: string, tokenId: BigNumberish
   url.searchParams.set('contract', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
   const result = await fetch(url.toString()).then(res => res.json());
+  // todo: process the result and return to render the listing.
   console.log({ looksrareOrders: result });
 }
