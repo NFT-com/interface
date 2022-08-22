@@ -63,10 +63,10 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
             <LinksToSection isAddressOwner={false} />
           </div>
         </div>
-        <div className='w-full items-center bottom-0'>
-          <Footer />
-        </div>
       </main>
+      <div className='w-full items-center bottom-0 mt-16 minmd:mt-0'>
+        <Footer />
+      </div>
     </div>
   );
 }
