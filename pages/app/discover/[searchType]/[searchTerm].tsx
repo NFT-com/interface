@@ -55,16 +55,6 @@ export default function ResultsPage() {
   }, [filtersList]);
 
   useEffect(() => {
-/*     let checkedString = '';
-    const checkedList = [];
-    if (filtersList) {
-      const checkedArray = filtersList.filter(item => item.values.length > 0);
-      checkedArray.forEach(item => {
-        checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
-      });
-      checkedString = checkedList.join(' && ');
-    } */
-
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
       facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
       max_facet_values: 200,
