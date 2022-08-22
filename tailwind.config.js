@@ -49,7 +49,7 @@ module.exports = {
         'green-summary':'#4FC853',
         'headerbg':'#FFFFFF',
         'headerbg-dk':'#0C0F17',
-        'pagebg':'#f4f6fb',
+        'pagebg':'#FFFFFF',
         'pagebg-dk':'#0C0F17',
         'header-txt':'#6B7082',
         'header-pink':'#FF0078',

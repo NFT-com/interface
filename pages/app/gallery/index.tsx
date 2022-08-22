@@ -115,7 +115,7 @@ export default function GalleryPage() {
           }
           <div className={tw(
             'flex flex-col flex-grow h-full overflow-auto',
-            'bg-modal-overlay dark:bg-modal-overlay-dk',
+            'bg-pagebg dark:bg-pagebg-dk',
             'minmd:px-4 px-0 pt-6',
             'hideScroll overflow-y-hidden'
           )}>
@@ -139,9 +139,9 @@ export default function GalleryPage() {
         <div className={tw(
           'minlg:hidden w-full h-full absolute top-0 left-0',
           !showFilters ? 'hidden' : 'block',
-          'bg-modal-overlay dark:bg-modal-overlay-dk',
+          'bg-pagebg dark:bg-pagebg-dk',
           'mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
-          'border-t border-accent-border-dk text-black dark:text-white'
+          'text-black dark:text-white'
         )}>
           <GenesisKeyGalleryFilters
             showFilters={showFilters}
