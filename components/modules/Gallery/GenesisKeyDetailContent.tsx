@@ -5,13 +5,11 @@ import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { GenesisKeyGalleryDetailView } from './GenesisKeyGalleryDetailView';
 
 import { BigNumber } from 'ethers';
-import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 
 export function GenesisKeyDetailContent(props: { id: string | string[] }) {
   const { address: currentAddress } = useAccount();
   const { isSupported } = useSupportedNetwork();
-  const router = useRouter();
 
   if(currentAddress && !isSupported) {
     return <div className='w-full justify-center flex mt-12'>
@@ -25,9 +23,8 @@ export function GenesisKeyDetailContent(props: { id: string | string[] }) {
         showImage
         primaryMessage='This Genesis Key doesnt exist yet. '
         buttonLabel={'Back to Gallery'}
-        onClick={() => {
-          router.push('/app/gallery');
-        }}/>
+        href='/app/gallery'
+      />
     );
   }
 

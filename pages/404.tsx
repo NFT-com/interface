@@ -3,11 +3,8 @@ import { PageWrapper } from 'components/layouts/PageWrapper';
 import { Doppler, getEnvBool } from 'utils/env';
 
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 
 export const NotFoundPage: NextPage = () => {
-  const router = useRouter();
-
   return <PageWrapper
     headerOptions={{
       removeSummaryBanner: true,
@@ -24,9 +21,8 @@ export const NotFoundPage: NextPage = () => {
         primaryMessage='Looking for a NFT.com profile?'
         secondaryMessage={'Return to NFT.com'}
         buttonLabel={'Go to NFT.com'}
-        onClick={() => {
-          router.replace('/');
-        }}/>
+        href='/'
+      />
     </div>
   </PageWrapper>;
 };
