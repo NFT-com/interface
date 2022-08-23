@@ -25,10 +25,9 @@ import { useAccount } from 'wagmi';
 
 type HeaderProps = {
   removeBg?: boolean
-  bgLight?: boolean
 }
 
-export const Header = ({ removeBg, bgLight } : HeaderProps) => {
+export const Header = ({ removeBg } : HeaderProps) => {
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
@@ -43,8 +42,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
   useMaybeCreateUser();
 
   // We still need to support forced-light mode in this component until we're ready.
-  const useDarkMode = user?.isDarkMode && !bgLight;
-
+  const useDarkMode = user?.isDarkMode;
   return (
     <nav className={tw(
       'fixed z-[104] top-0 w-full h-20 drop-shadow-md',

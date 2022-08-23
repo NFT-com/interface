@@ -203,7 +203,6 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   
         <div className='flex items-center'>
           <DropdownPickerModal
-            forceLightMode
             constrain
             selectedIndex={0}
             options={filterNulls([
