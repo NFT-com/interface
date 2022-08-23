@@ -1,5 +1,5 @@
 import CollectionsSlider from 'components/elements/CollectionsSlider';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { SearchUIFilter } from 'components/modules/Profile/SearchUIFilter';
 import { Hit } from 'components/modules/Search/Hit';
 import { tw } from 'utils/tw';
@@ -78,11 +78,7 @@ export default function ResultsPage() {
   }, [searchTerm]);
 
   return (
-    <PageWrapper
-      bgColorClasses='bg-always-white dark:bg-pagebg-dk'
-      headerOptions={{
-        removeSummaryBanner: true,
-      }}>
+    <>
       {searchTerm ?
         <div
           id="ResultsPageContainer"
@@ -192,6 +188,14 @@ export default function ResultsPage() {
           </InstantSearch>}
         </div>
         : null}
-    </PageWrapper>
+    </>
   );
 }
+
+ResultsPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

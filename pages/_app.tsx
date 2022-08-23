@@ -124,7 +124,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
                 <NFTListingsContextProvider>
                   {getLayout(<Component {...pageProps} key={router.pathname} />)}
                 </NFTListingsContextProvider>
-               <NotificationContextProvider>
+              </NotificationContextProvider>
             </GraphQLProvider>
           </AnimatePresence>
         </RainbowKitProvider>
