@@ -114,7 +114,7 @@ export default function ResultsPage() {
         
         <div className="flex">
           <div className="hidden minlg:block">
-            <SideNav onSideNav={() => null}/>
+            {filters.length > 0 && <SideNav onSideNav={() => null} filtersData={filters}/>}
           </div>
           <div className="mx-6">
             <div className="flex flex-col mt-6">
@@ -130,7 +130,7 @@ export default function ResultsPage() {
                 {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
               </div>
               {searchType?.toString() !== 'collections' &&
-            <div className="my-6 mb-4 flex justify-between font-grotesk font-black text-xl minmd:text-2xl">
+            <div className="my-6 mb-4 flex minlg:hidden justify-between font-grotesk font-black text-xl minmd:text-2xl">
               <div
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {

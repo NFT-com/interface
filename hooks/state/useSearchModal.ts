@@ -40,6 +40,20 @@ export function useSearchModal() {
     });
   }, [data, mutate]);
 
+  const setSearchFilters = useCallback((searchFilters: any) => {
+    const filtersList = data.filtersList ?? (searchFilters.map((item) => {
+      return {
+        filter: item.field_name,
+        values: []
+      };
+    }));
+    mutate({
+      ...data,
+      filtersList,
+      searchFilters
+    });
+  },[data, mutate]);
+
   const setModalType = useCallback((modalType: 'search' | 'filters') => {
     mutate({
       ...data,
@@ -91,7 +105,8 @@ export function useSearchModal() {
     setSideNavOpen,
     setCheckedFiltersList,
     setSortBy,
-    setClearedFilters
+    setClearedFilters,
+    setSearchFilters
   };
 }
 

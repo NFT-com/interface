@@ -103,7 +103,7 @@ const Filter = (props: any) => {
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const { filtersList } = useSearchModal();
   const checkedOptions = filtersList.find(item => item.filter === filter.field_name);
-
+  
   const formatTitle = (title) => {
     switch(title){
     case 'listedPx':
@@ -156,7 +156,7 @@ const Filter = (props: any) => {
                 <FilterOption
                   item={item}
                   onSelectFilter={getCheckedFiltersList}
-                  isSelected={checkedOptions.values.includes(item.value)}
+                  isSelected={checkedOptions?.values.includes(item.value)}
                 />
               </div>);
           })}
@@ -175,15 +175,14 @@ export const FiltersContent = () => {
     sortBy,
     setClearedFilters } = useSearchModal();
   const [modalCheckedFilters, setModalCheckedFilters] = useState([]);
-
   const [selectedIndex, setSelectedIndex] = useState(sortBy === '' || sortBy === 'listedPx:asc' ? 0 : 1);
-  
   const setCheckedFilters = (checkedFiltersString) => { setModalCheckedFilters(checkedFiltersString); };
+
   return (
     <>
       <div className="flex flex-col w-full">
         <div
-          className="flex p-5 justify-end cursor-pointer"
+          className="block minmd:hidden flex p-5 justify-end cursor-pointer"
           onClick={() => {
             filtersList.forEach((item) => {
               item.values = [];
@@ -192,7 +191,7 @@ export const FiltersContent = () => {
           }}>
           <EllipseX />
         </div>
-        <div className="font-grotesk font-black text-4xl self-start px-4">Filters</div>
+        <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
         <div className="px-4 flex flex-col">
           <div className="self-start font-black text-lg font-grotesk">Sort</div>
           <DropdownPicker
