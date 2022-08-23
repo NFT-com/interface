@@ -33,7 +33,7 @@ const seaPortHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       url.searchParams.append('token_ids', tokenId as string);
       // todo: paginate to get all the listings
       const result = await fetch(
-        url,
+        url.toString(),
         options
       ).then(res => res.json());
       res.status(200).json( result );
