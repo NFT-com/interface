@@ -44,6 +44,7 @@ export default function ResultsPage() {
     let checkedFiltersString = '';
     const checkedList = [];
     if (filtersList) {
+      console.log(filtersList, 'filtersList fdo');
       const checkedArray = filtersList.filter(item => item.values.length > 0);
       checkedArray.forEach(item => {
         checkedList.push(item.filter + ': [' + item.values.toString()+ ']');

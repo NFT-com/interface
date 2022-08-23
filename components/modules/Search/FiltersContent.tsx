@@ -27,7 +27,6 @@ const FilterOption = (props: FilterOptionProps) => {
   return (
     <div className="flex items-startfont-grotesk">
       <CheckBox
-        lightModeForced
         checked={!clearedFilters && selected}
         onToggle={(selected: boolean) => {
           setSelected(selected);
