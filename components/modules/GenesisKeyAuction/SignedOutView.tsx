@@ -14,11 +14,11 @@ export function SignedOutView(props: SignedOutViewProps) {
       {
         props.auctionText === true ?
           <>
-            <HeroTitle items={['THE SALE']}/>
-            <HeroTitle items={[props.ended === true ? 'HAS ENDED' : 'HAS STARTED']}/>
+            <HeroTitle color={'black'} items={['THE SALE']}/>
+            <HeroTitle color={'black'} items={[props.ended === true ? 'HAS ENDED' : 'HAS STARTED']}/>
           </>
           : <>
-            <HeroTitle items={['CONNECT YOUR WALLET']}/>
+            <HeroTitle color={'black'} items={['CONNECT YOUR WALLET']}/>
           </>
       }
       <div className="text-base my-5 text-primary-txt-dk">
