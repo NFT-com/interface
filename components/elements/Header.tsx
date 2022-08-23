@@ -144,7 +144,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
               </div>
             }
             {
-              !getEnvBool(Doppler.NEXT_PUBLIC_FORCE_DARK_MODE) &&
+              getEnvBool(Doppler.NEXT_PUBLIC_THEME_TOGGLE_ENABLED) &&
               <button
                 className='cursor-pointer mr-2 h-full w-7'
                 onClick={() => {

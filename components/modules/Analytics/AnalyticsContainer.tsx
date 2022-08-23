@@ -1,4 +1,4 @@
-import { Collection, Nft } from 'graphql/generated/types';
+import { CollectionInfo, Nft } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
 import { LineChart } from './LineChart';
@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export type AnalyticsContainerProps = {
-  data: PartialDeep<Nft> | Collection;
+  data: PartialDeep<Nft> | PartialDeep<CollectionInfo>;
 }
 
 export const AnalyticsContainer = ({ data }:AnalyticsContainerProps) => {

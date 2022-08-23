@@ -19,7 +19,6 @@ export interface ModalProps {
   pure?: boolean;
   // force dark mode
   dark?: boolean;
-  pinkTitle?: boolean;
   longModal?: boolean;
   noCancelBtn?: boolean;
   fullModal?: boolean;
@@ -67,22 +66,22 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
               'min-w-[600px] sm:min-w-[1px] sm:max-w-screen',
               'sm:overflow-x-hidden sm:overflow-y-auto',
               `${props.bgColor ?? 'bg-pagebg dark:bg-pagebg-dk'}`,
-              `${props.pinkTitle && props.longModal ? 'max-h-screen' : '' }`,
-              `${props.pinkTitle && !props.longModal ? 'min4xl:-mt-28 md:h-full' : '' }`,
+              `${props.longModal ? 'max-h-screen' : '' }`,
+              `${!props.longModal ? 'min4xl:-mt-28 md:h-full' : '' }`,
               `${props.fullModal ? 'min-h-screen w-full' : 'min-w-[600px] sm:min-w-[1px] sm:max-w-screen' }`,
             )}
           >
             <div className='items-center'>
               {props.loading ?
                 <Loader /> :
-                <div className={`text-center ${props.pinkTitle && props.longModal ? `px-6 ${props.longModal ? 'pt-8' : 'pt-20' }` : '' }`}>
-                  {(props.pinkTitle && typeof(props.title) !== 'string')
+                <div className={`text-center ${props.longModal ? `px-6 ${props.longModal ? 'pt-8' : 'pt-20' }` : '' }`}>
+                  {(typeof(props.title) !== 'string')
                     ? (
                       <Dialog.Title
                         className={tw(
                           props.pure ? 'hidden' : '',
                           'text-center font-medium text-xl minmd:text-3xl',
-                          'font-hero-heading1 text-hero-pink',
+                          'font-grotesk text-primary-txt',
                           `${props.longModal ? 'minmd:top-[-38%]' : '' }`
                         )}
                       >

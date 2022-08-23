@@ -1,4 +1,4 @@
-import { UserNotifications } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback,useEffect } from 'react';
@@ -8,27 +8,22 @@ export interface UserState {
   currentProfileUrl: string
   isDarkMode: boolean;
   hiddenProfile: string[];
-  activeNotifications: UserNotifications;
 }
 
 export function useUser() {
   const { data, mutate } = useSWR('user', {
     fallbackData: {
-      isDarkMode: true,
+      isDarkMode: false,
       currentProfileUrl: '',
       hiddenProfile: null,
-      activeNotifications: {
-        hasUnclaimedProfiles: false,
-        hasPendingAssociatedProfiles: false,
-        profileNeedsCustomization: false,
-        associatedProfileAdded: false,
-        associatedProfileRemoved: false,
-      }
     }
   });
 
   const loading = !data;
   const setDarkMode = useCallback((darkMode: boolean) => {
+    if (!getEnvBool(Doppler.NEXT_PUBLIC_THEME_TOGGLE_ENABLED)) {
+      return;
+    }
     mutate({
       ...data,
       isDarkMode: darkMode
@@ -75,26 +70,6 @@ export function useUser() {
     return typeof window !== 'undefined' ? localStorage?.getItem('selectedProfileUrl') : '';
   }, []);
 
-  const setUserNotificationActive = useCallback((notification: keyof UserNotifications, notificationValue: boolean) => {
-    mutate({
-      ...data,
-      activeNotifications: {
-        ...data.activeNotifications,
-        [notification]: notificationValue
-      }
-    });
-  } , [data, mutate]);
-
-  const getNotificationCount = useCallback(() => {
-    let count = 0;
-    for (const key in data.activeNotifications) {
-      if (data.activeNotifications[key]) {
-        count++;
-      }
-    }
-    return count;
-  }, [data]);
-
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove(data?.isDarkMode ? 'light' : 'dark');
@@ -115,7 +90,5 @@ export function useUser() {
     getCurrentProfileUrl,
     setHiddenProfileWithExpiry,
     getHiddenProfileWithExpiry,
-    setUserNotificationActive,
-    getNotificationCount,
   };
 }

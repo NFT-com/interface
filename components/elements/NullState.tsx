@@ -3,6 +3,7 @@ import { useUser } from 'hooks/state/useUser';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 const errorImagesLight = [
   'https://cdn.nft.com/404_1.svg',
@@ -25,9 +26,10 @@ export interface NullStateProps {
   primaryMessage?: string;
   secondaryMessage?: string;
   buttonLabel?: string;
-  onClick?: () => void;
   secondaryBtnLabel?: string;
   secondaryOnClick?: () => void;
+  href?: string
+  secondaryHref?: string
 }
 
 export function NullState(props: NullStateProps) {
@@ -41,7 +43,7 @@ export function NullState(props: NullStateProps) {
     <div
       className={tw('flex flex-col',
         'text-center w-full my-10 items-center justify-center rounded-xl py-10',
-        'bg-white dark:bg-black',
+        'bg-pagebg dark:bg-pagebg-dk',
         'text-secondary-txt')}>
       {props.showImage &&
         <Image src={randomErrorImage} width='500' height='500' alt='404' className='mb-10 drop-shadow-2xl'/>}
@@ -58,15 +60,24 @@ export function NullState(props: NullStateProps) {
           {props.secondaryMessage}
         </div>
         <div className={`${props.secondaryBtnLabel && props.secondaryOnClick ? 'flex justify-evenly w-full minmd:w-1/2 items-center': ''} `}>
-          {props.buttonLabel && <div className='drop-shadow-md'>
-            <Button type={ButtonType.PRIMARY} onClick={props.onClick} label={props.buttonLabel} />
-          </div>}
-          {props.secondaryBtnLabel && <div className='drop-shadow-md'>
-            <Button
-              type={ButtonType.PRIMARY}
-              onClick={props.secondaryOnClick}
-              label={props.secondaryBtnLabel} />
-          </div>}
+          {props.buttonLabel &&
+            <Link href={props.href}>
+              <a>
+                <div className='drop-shadow-md'>
+                  <Button type={ButtonType.PRIMARY} onClick={() => null} label={props.buttonLabel} />
+                </div>
+              </a>
+            </Link>
+          }
+          {props.secondaryBtnLabel &&
+            <Link href={props.secondaryHref}>
+              <a>
+                <div className='drop-shadow-md'>
+                  <Button type={ButtonType.PRIMARY} onClick={() => null} label={props.secondaryBtnLabel} />
+                </div>
+              </a>
+            </Link>
+          }
         </div>
       </div>
     </div>

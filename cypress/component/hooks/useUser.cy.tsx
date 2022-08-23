@@ -76,7 +76,7 @@ describe('useUser', () => {
     beforeEach(() => {
       cy.contains('reset state').click();
     });
-    it('should set isDarkMode to false when toggleDarkMode is clicked', () => {
+    it('should not set isDarkMode to true when toggleDarkMode is clicked', () => {
       cy.get('button').contains('toggleDarkMode').click();
       cy.get('div').should('contain', 'isDarkMode: false');
     });

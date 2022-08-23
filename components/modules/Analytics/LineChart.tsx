@@ -1,5 +1,5 @@
 
-import { Collection, Nft } from 'graphql/generated/types';
+import { CollectionInfo, Nft } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
 import { RadioGroup, Tab } from '@headlessui/react';
@@ -39,7 +39,7 @@ const chartData = [
 ];
 
 export type LineChartProps = {
-  data: PartialDeep<Nft> | Collection;
+  data: PartialDeep<Nft> | PartialDeep<CollectionInfo>;
   currentMarketplace: string;
   setCurrentMarketplace?: Dispatch<SetStateAction<string>>,
 };
