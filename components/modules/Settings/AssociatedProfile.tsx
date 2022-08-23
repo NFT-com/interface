@@ -1,17 +1,17 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
+import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useUpdateHiddenMutation } from 'graphql/hooks/useUpdateHiddenMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { useUser } from 'hooks/state/useUser';
 import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
 import { ArrowsClockwise, CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { toast } from 'react-toastify';
 import { ExternalLink } from 'styles/theme';
@@ -42,7 +42,9 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
-  const { setUserNotificationActive } = useUser();
+  const {
+    setUserNotificationActive
+  } = useContext(NotificationContext);
   const { address: currentAddress } = useAccount();
   const { updateHidden } = useUpdateHiddenMutation();
 
