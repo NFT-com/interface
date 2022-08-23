@@ -111,7 +111,6 @@ export function Collection(props: CollectionProps) {
                         }
                       }}
                       description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
-                      customBackground={'#303030'}
                       customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
                     />
                   </div>);}

@@ -36,7 +36,7 @@ module.exports = {
         'primary-green':'#15C666',
         'accent':'#F0F5FF',
         'accent-dk':'#2C3448',
-        'accent-border':'transparent',
+        'accent-border':'#7D8795',
         'accent-border-dk':'#384260',
         'primary-button-txt':'#FFFFFF',
         'primary-button-bckg':'#111111',
