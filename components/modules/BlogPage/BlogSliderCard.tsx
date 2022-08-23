@@ -16,7 +16,7 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
       className="relative flex flex-row md:flex-col flex-none flex-nowrap w-full mx-10 p-3 bg-[#5C542A] rounded-2xl"
       key={post.title}
     >
-      <div className="relative overflow-hidden cursor-pointer minlg:w-2/5 w-full minlg:aspect-square minmd:aspect-video aspect-square object-cover object-center bg-white rounded-lg">
+      <div data-cy="blogSliderCard" className="relative overflow-hidden cursor-pointer minlg:w-2/5 w-full minlg:aspect-square minmd:aspect-video aspect-square object-cover object-center bg-white rounded-lg">
         <Link href={`/articles/${post.slug}`}>
           <a>
             <Image
