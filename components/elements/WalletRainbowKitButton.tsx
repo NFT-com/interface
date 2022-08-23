@@ -1,4 +1,5 @@
 import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
+import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -7,7 +8,7 @@ import { tw } from 'utils/tw';
 
 import { useChainModal } from '@rainbow-me/rainbowkit';
 import { UserCircle, Wallet } from 'phosphor-react';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
@@ -21,9 +22,10 @@ interface WalletRainbowKitButtonProps {
 }
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
+  const { count } = useContext(NotificationContext);
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { toggleSidebar } = useSidebar();
-  const { user, setCurrentProfileUrl, getNotificationCount } = useUser();
+  const { user, setCurrentProfileUrl } = useUser();
   const { address: currentAddress, connector, isConnected } = useAccount({
     onConnect({ isReconnected }) {
       if (isReconnected && !! user?.currentProfileUrl) {
@@ -106,8 +108,8 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         }
         return (
           <>
-            {(getNotificationCount() > 0) && (
-              <NotificationBadge count={getNotificationCount()} />
+            {(count > 0) && (
+              <NotificationBadge count={count} />
             )
             }
             <button

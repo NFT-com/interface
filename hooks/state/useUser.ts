@@ -1,4 +1,3 @@
-import { UserNotifications } from 'types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback,useEffect } from 'react';
@@ -8,7 +7,6 @@ export interface UserState {
   currentProfileUrl: string
   isDarkMode: boolean;
   hiddenProfile: string[];
-  activeNotifications: UserNotifications;
 }
 
 export function useUser() {
@@ -17,13 +15,6 @@ export function useUser() {
       isDarkMode: true,
       currentProfileUrl: '',
       hiddenProfile: null,
-      activeNotifications: {
-        hasUnclaimedProfiles: false,
-        hasPendingAssociatedProfiles: false,
-        profileNeedsCustomization: false,
-        associatedProfileAdded: false,
-        associatedProfileRemoved: false,
-      }
     }
   });
 
@@ -75,26 +66,6 @@ export function useUser() {
     return typeof window !== 'undefined' ? localStorage?.getItem('selectedProfileUrl') : '';
   }, []);
 
-  const setUserNotificationActive = useCallback((notification: keyof UserNotifications, notificationValue: boolean) => {
-    mutate({
-      ...data,
-      activeNotifications: {
-        ...data.activeNotifications,
-        [notification]: notificationValue
-      }
-    });
-  } , [data, mutate]);
-
-  const getNotificationCount = useCallback(() => {
-    let count = 0;
-    for (const key in data.activeNotifications) {
-      if (data.activeNotifications[key]) {
-        count++;
-      }
-    }
-    return count;
-  }, [data]);
-
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove(data?.isDarkMode ? 'light' : 'dark');
@@ -115,7 +86,5 @@ export function useUser() {
     getCurrentProfileUrl,
     setHiddenProfileWithExpiry,
     getHiddenProfileWithExpiry,
-    setUserNotificationActive,
-    getNotificationCount,
   };
 }
