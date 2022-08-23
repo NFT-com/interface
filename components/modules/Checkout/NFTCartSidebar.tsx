@@ -10,15 +10,20 @@ import { NFTPurchasesContext, StagedPurchase } from './NFTPurchaseContext';
 
 import { useRouter } from 'next/router';
 import { XCircle } from 'phosphor-react';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useRef } from 'react';
 
-export function NFTCartSidebar() {
+export type CartSidebarTab = 'buy' | 'sell';
+
+export interface NFTCartSidebarProps {
+  selectedTab: CartSidebarTab;
+  onChangeTab: (selectedTab: CartSidebarTab) => void;
+}
+
+export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const router = useRouter();
 
   // todo: remove this page-specific logic, we want to move the summary out of the cart to the main page content now.
   const showSummary = router.pathname.includes('/list');
-
-  const [selectedTab, setSelectedTab] = useState<'sell' | 'buy'>('buy');
   
   const {
     toggleCartSidebar,
@@ -33,7 +38,7 @@ export function NFTCartSidebar() {
     removePurchase
   } = useContext(NFTPurchasesContext);
 
-  const stagedNFTs = filterNulls<StagedListing | StagedPurchase>(selectedTab === 'sell' ? toList : toBuy);
+  const stagedNFTs = filterNulls<StagedListing | StagedPurchase>(props.selectedTab === 'sell' ? toList : toBuy);
 
   const sidebarRef = useRef();
   useOutsideClickAlerter(sidebarRef, () => toggleCartSidebar());
@@ -46,18 +51,18 @@ export function NFTCartSidebar() {
       <div className='flex flex-row items-center px-8 my-8'>
         <div className='flex items-center w-full'>
           <p
-            onClick={() => {setSelectedTab('buy');}}
+            onClick={() => {props.onChangeTab('buy');}}
             className={tw(
               'text-2xl mr-4 cursor-pointer',
-              selectedTab === 'buy' ? 'text-primary-txt underline' : 'text-secondary-txt'
+              props.selectedTab === 'buy' ? 'text-primary-txt underline' : 'text-secondary-txt'
             )}>
             Buy
           </p>
           <p
-            onClick={() => {setSelectedTab('sell');}}
+            onClick={() => {props.onChangeTab('sell');}}
             className={tw(
               'text-2xl cursor-pointer',
-              selectedTab === 'sell' ? 'text-primary-txt underline' : 'text-secondary-txt'
+              props.selectedTab === 'sell' ? 'text-primary-txt underline' : 'text-secondary-txt'
             )}>
             Sell
           </p>
@@ -71,7 +76,7 @@ export function NFTCartSidebar() {
         {!showSummary && stagedNFTs?.length > 0 && <span
           className='ml-8 cursor-pointer hover:underline text-link'
           onClick={() => {
-            if (selectedTab === 'sell') {
+            if (props.selectedTab === 'sell') {
               clearListings();
             } else {
               clearPurchases();
@@ -89,7 +94,7 @@ export function NFTCartSidebar() {
               nft={stagedItem?.nft}
               key={index}
               onRemove={() => {
-                if (selectedTab === 'sell') {
+                if (props.selectedTab === 'sell') {
                   removeListing(stagedItem.nft);
                 } else {
                   removePurchase(stagedItem.nft);
@@ -100,10 +105,10 @@ export function NFTCartSidebar() {
           {(stagedNFTs.length > 0) && <div className="mx-8 my-4 flex">
             <Button
               stretch
-              label={`Proceed to ${selectedTab === 'sell' ? 'List' : 'Buy'}`}
+              label={`Proceed to ${props.selectedTab === 'sell' ? 'List' : 'Buy'}`}
               onClick={() => {
                 toggleCartSidebar();
-                router.push(selectedTab === 'sell' ? '/app/list' : '/app/buy');
+                router.push(props.selectedTab === 'sell' ? '/app/list' : '/app/buy');
               }}
               type={ButtonType.PRIMARY}
             />

@@ -6,7 +6,6 @@ import { NFTListingsContext, TargetMarketplace } from './NFTListingsContext';
 import { BigNumber } from '@ethersproject/bignumber';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork } from 'wagmi';
 
 export type StagedPurchase = {
   nft: PartialDeep<Nft>;
@@ -23,7 +22,7 @@ interface NFTPurchaseContextType {
   stagePurchase: (listing: PartialDeep<StagedPurchase>) => void;
   clear: () => void;
   buyAll: () => void;
-    
+  updateCurrencyApproval: (currency: string, approved: boolean) => void;
   removePurchase: (nft: PartialDeep<Nft>) => void;
 }
 
@@ -33,7 +32,7 @@ export const NFTPurchasesContext = React.createContext<NFTPurchaseContextType>({
   stagePurchase: () => null,
   clear: () => null,
   buyAll: () => null,
-
+  updateCurrencyApproval: () => null,
   removePurchase: () => null,
 });
 
@@ -41,9 +40,7 @@ export function NFTPurchaseContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
-  console.log(toBuy);
-  const { address: currentAddress } = useAccount();
-  const { chain } = useNetwork();
+  
   const { toggleCartSidebar } = useContext(NFTListingsContext);
 
   useEffect(() => {
@@ -74,10 +71,17 @@ export function NFTPurchaseContextProvider(
     localStorage.setItem('stagedNftPurchases', null);
   }, []);
 
-  useEffect(() => {
-    // Clear the cart when the connected address or network changes.
-    clear();
-  }, [currentAddress, chain?.id, clear]);
+  const updateCurrencyApproval = useCallback((currency: string, approved: boolean) => {
+    setToBuy(toBuy.slice().map(item => {
+      if (item?.currency === currency) {
+        return {
+          ...item,
+          isApproved: approved
+        };
+      }
+      return item;
+    }));
+  }, [toBuy]);
 
   const buyAll = useCallback(() => {
     // todo: trigger the transaction
@@ -89,6 +93,7 @@ export function NFTPurchaseContextProvider(
     stagePurchase,
     clear,
     buyAll,
+    updateCurrencyApproval
   }}>
     {props.children}
   </NFTPurchasesContext.Provider>;

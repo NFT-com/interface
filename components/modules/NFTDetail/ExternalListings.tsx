@@ -73,7 +73,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   isApprovedForLooksrare: looksRareAllowed,
                   targets: []
                 });
-                toggleCartSidebar();
+                toggleCartSidebar('sell');
               }}
               type={ButtonType.PRIMARY}
             />

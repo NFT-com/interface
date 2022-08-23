@@ -5,23 +5,21 @@ import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { MAX_UINT_256 } from 'utils/marketplaceUtils';
 
-import { TransferProxyTarget } from './balances/useNftCollectionAllowance';
-
 import { BigNumberish } from '@ethersproject/bignumber';
 import DAI_LOGO from 'public/dai.svg';
 import ETH_LOGO from 'public/eth.svg';
 import USDC_LOGO from 'public/usdc.svg';
 import WETH_LOGO from 'public/weth.svg';
 import { useCallback, useMemo } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 
 export type NFTSupportedCurrency = {
   name: string;
   logo: string;
   contract: string;
   usd: (val: number) => number;
-  allowance: (address: string, proxy: TransferProxyTarget) => Promise<BigNumberish>;
-  setAllowance: (address: string, proxy: TransferProxyTarget) => Promise<boolean>;
+  allowance: (address: string, proxy: string) => Promise<BigNumberish>;
+  setAllowance: (address: string, proxy: string) => Promise<boolean>;
   balance: BigNumberish;
 }
 
@@ -43,16 +41,17 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
     dai,
     usdc,
   } = useAllContracts();
-  const { address, connector } = useAccount();
+  const { address } = useAccount();
+  const { data: signer } = useSigner();
   const balances = useBalances(address);
 
   const setAllowanceForContract = useCallback(async (
     contract: Dai | Weth | Usdc,
     currentAddress: string,
-    proxy: TransferProxyTarget
+    proxy: string
   ): Promise<boolean> => {
     return contract
-      .connect(await connector?.getSigner() ?? currentAddress)
+      .connect(signer ?? currentAddress)
       .approve(proxy, MAX_UINT_256)
       .then((tx) => tx.wait(1))
       .then(() => true)
@@ -60,7 +59,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         console.log('Failed to get currency approval. Please connect wallet.');
         return false;
       });
-  }, [connector]);
+  }, [signer]);
 
   const data: NFTSupportedCurrencies = useMemo(() => {
     return {
@@ -69,11 +68,11 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         logo: WETH_LOGO,
         contract: weth.address,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
-        allowance: async (currentAddress: string, proxy: TransferProxyTarget) => {
+        allowance: async (currentAddress: string, proxy: string) => {
           const wethAllowance = await weth.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return wethAllowance;
         },
-        setAllowance: (currentAddress: string, proxy: TransferProxyTarget) => setAllowanceForContract(weth, currentAddress, proxy),
+        setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(weth, currentAddress, proxy),
         // balance: balances.weth?.balance ?? 0,
         balance: 0,
       },
@@ -95,11 +94,11 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         logo: DAI_LOGO,
         contract: dai.address,
         usd: (val: number) => val,
-        allowance: async (currentAddress: string, proxy: TransferProxyTarget) => {
+        allowance: async (currentAddress: string, proxy: string) => {
           const daiAllowance = await dai.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return daiAllowance;
         },
-        setAllowance: (currentAddress: string, proxy: TransferProxyTarget) => setAllowanceForContract(dai, currentAddress, proxy),
+        setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(dai, currentAddress, proxy),
         // balance: balances.dai?.balance ?? 0,
         balance: 0,
       },
@@ -108,11 +107,11 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         logo: USDC_LOGO,
         contract: usdc.address,
         usd: (val: number) => val,
-        allowance: async (currentAddress: string, proxy: TransferProxyTarget) => {
+        allowance: async (currentAddress: string, proxy: string) => {
           const usdcAllowance = await usdc.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return usdcAllowance;
         },
-        setAllowance: (currentAddress: string, proxy: TransferProxyTarget) => setAllowanceForContract(usdc, currentAddress, proxy),
+        setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(usdc, currentAddress, proxy),
         // balance: balances.usdc?.balance ?? 0,
         balance: 0,
       }

@@ -1,4 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
+import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
@@ -40,6 +41,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const { stagePurchase } = useContext(NFTPurchasesContext);
+  const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { allowance } = useWethAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id));
 
   const marketplace = props.listing?.exchange === SupportedExternalExchange.Looksrare ?
@@ -101,9 +103,11 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
               price: BigNumber.from(isNullOrEmpty(props.listing?.price) ? 0 : props.listing.price),
               collectionName: props.collectionName,
               marketplace,
+              // todo: check approval for any currency, not just WETH
               isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0),
               protocolData: props.protocolData
             });
+            toggleCartSidebar('buy');
           }}
           type={ButtonType.PRIMARY}
         />

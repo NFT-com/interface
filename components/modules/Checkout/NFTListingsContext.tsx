@@ -16,7 +16,7 @@ import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelper
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 
-import { NFTCartSidebar } from './NFTCartSidebar';
+import { CartSidebarTab, NFTCartSidebar } from './NFTCartSidebar';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 
 import { MakerOrder } from '@looksrare/sdk';
@@ -52,7 +52,7 @@ interface NFTListingsContextType {
   listAll: () => Promise<boolean>;
   prepareListings: () => Promise<void>;
   submitting: boolean;
-  toggleCartSidebar: () => void;
+  toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: TargetMarketplace) => void;
   setDuration: (duration: SaleDuration) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish) => void;
@@ -102,6 +102,8 @@ export function NFTListingsContextProvider(
   const provider = useProvider();
   const { data: signer } = useSigner();
 
+  const [selectedTab, setSelectedTab] = useState<CartSidebarTab>('buy');
+
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
   const looksrareStrategy = useLooksrareStrategyContract(provider);
@@ -125,14 +127,10 @@ export function NFTListingsContextProvider(
     setToList([]);
     localStorage.setItem('stagedNftListings', null);
   }, []);
-
-  useEffect(() => {
-    // Clear the listing cart if the connected address or network has changed.
-    clear();
-  }, [currentAddress, chain?.id, clear]);
-
-  const toggleCartSidebar = useCallback(() => {
+  
+  const toggleCartSidebar = useCallback((selectedTab?: 'buy' | 'sell') => {
     setSidebarVisible(!sidebarVisible);
+    setSelectedTab(selectedTab ?? 'buy');
   }, [sidebarVisible]);
 
   const toggleTargetMarketplace = useCallback((targetMarketplace: TargetMarketplace) => {
@@ -308,7 +306,7 @@ export function NFTListingsContextProvider(
     {
       [...(toList ?? []), ...(toBuy ?? [])].length > 0 &&
       sidebarVisible &&
-      <NFTCartSidebar />
+      <NFTCartSidebar selectedTab={selectedTab} onChangeTab={setSelectedTab} />
     }
     {props.children}
   </NFTListingsContext.Provider>;
