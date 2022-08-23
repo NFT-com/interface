@@ -173,6 +173,7 @@ export const FiltersContent = () => {
     filtersList,
     setSortBy,
     sortBy,
+    sideNavOpen,
     setClearedFilters } = useSearchModal();
   const [modalCheckedFilters, setModalCheckedFilters] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(sortBy === '' || sortBy === 'listedPx:asc' ? 0 : 1);
@@ -217,11 +218,13 @@ export const FiltersContent = () => {
           />
         </div>
         <div>
-          {searchFilters?.length > 0 && searchFilters?.map((item, index) =>(
-            <div key={index}>
-              <Filter filter={item} onGetCheckedFilters={setCheckedFilters}/>
-            </div>
-          ))}
+          {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
+            if (['contractName', 'marketplace', 'listedPx', 'nftType'].includes(item.field_name)) {
+              return (<div key={index}>
+                <Filter filter={item} onGetCheckedFilters={setCheckedFilters}/>
+              </div>);
+            }
+          })}
         </div>
         <div
           onClick={ () =>{
@@ -249,7 +252,7 @@ export const FiltersContent = () => {
               const checkedFiltersString = checkedFiltersList.join(' && ');
               setCheckedFiltersList(checkedFiltersString);
               
-              setTimeout(() => {
+              !sideNavOpen && setTimeout(() => {
                 setSearchModalOpen(false);
               }, 500);
             }}
