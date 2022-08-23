@@ -66,7 +66,7 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
   );
 }
 
-export const SideNav = (props: {onSideNav: (term: string) => void, filtersData: any}) => {
+export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?: any}) => {
   const { sideNavOpen, setSearchFilters } = useSearchModal();
   const setFilters = () => {
     setSearchFilters(props.filtersData);
