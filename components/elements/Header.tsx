@@ -41,7 +41,6 @@ export const Header = ({ removeBg } : HeaderProps) => {
 
   useMaybeCreateUser();
 
-  // We still need to support forced-light mode in this component until we're ready.
   const useDarkMode = user?.isDarkMode;
   return (
     <nav className={tw(
