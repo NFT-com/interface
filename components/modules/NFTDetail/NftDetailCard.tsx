@@ -20,7 +20,7 @@ export function NftDetailCard(props: NftDetailCardProps) {
       className={tw(
         'NftDetailCard',
         'flex w-full h-full',
-        'bg-white dark:bg-secondary-bg-dk rounded-lg',
+        'bg-footer-bg dark:bg-secondary-bg-dk rounded-lg',
         'overflow-hidden cursor-pointer',
         props.onClick &&
        'cursor-pointer transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out'

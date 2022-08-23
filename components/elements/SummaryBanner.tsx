@@ -95,7 +95,7 @@ export const SummaryBanner = (props: SummaryBannerProps) => {
                 </div>
               </>
           }
-          {(!getEnvBool(Doppler.NEXT_PUBLIC_FORCE_DARK_MODE)) && <div className="ml-2 mr-7">
+          {getEnvBool(Doppler.NEXT_PUBLIC_THEME_TOGGLE_ENABLED) && <div className="ml-2 mr-7">
             <HeaderNavItem
               alt="Dark/Light Toggle"
               active={false}
