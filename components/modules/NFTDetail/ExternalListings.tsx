@@ -24,16 +24,16 @@ export interface ExternalListingsProps {
 export function ExternalListings(props: ExternalListingsProps) {
   const { address: currentAddress } = useAccount();
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
+  
+  // TODO: consolidate these queries to hit one gQL endpoint once it's ready.
   const { data: listings } = useExternalListingsQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
     String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
   );
-
   const { data: seaportListings } = useSWR('SeaportListings' + props.nft?.contract + props.nft?.tokenId, async () => {
     return await getSeaportOrders(props.nft?.contract, BigNumber.from(props.nft?.tokenId));
   });
-
   const { data: looksrareListings } = useSWR('LooksrareListings' + props.nft?.contract + props.nft?.tokenId, async () => {
     const result = await getLooksrareOrders(props.nft?.contract, BigNumber.from(props.nft?.tokenId));
     return result ?? [];
