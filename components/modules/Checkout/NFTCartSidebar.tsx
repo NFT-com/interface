@@ -1,10 +1,9 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { CartSidebarNft } from './CartSidebarNft';
-import { NFTListingsCartSidebarSummary } from './NFTListingsCartSidebarSummary';
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { NFTPurchasesContext, StagedPurchase } from './NFTPurchaseContext';
 
@@ -21,9 +20,6 @@ export interface NFTCartSidebarProps {
 
 export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const router = useRouter();
-
-  // todo: remove this page-specific logic, we want to move the summary out of the cart to the main page content now.
-  const showSummary = router.pathname.includes('/list');
   
   const {
     toggleCartSidebar,
@@ -70,10 +66,8 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
         <XCircle onClick={() => toggleCartSidebar()} className='hover:cursor-pointer' size={32} color="black" weight="fill" />
       </div>
       <div className='flex px-8 mb-4'>
-        <span>
-          {showSummary && 'Summary and fees for '}{stagedNFTs.length} NFT{stagedNFTs.length > 1 || stagedNFTs.length === 0 ? 's' : ''}
-        </span>
-        {!showSummary && stagedNFTs?.length > 0 && <span
+        {isNullOrEmpty(stagedNFTs) ? <span>No NFTs in cart</span> : stagedNFTs?.length + ' NFT' + (stagedNFTs.length === 1 ? '' : 's')}
+        {stagedNFTs?.length > 0 && <span
           className='ml-8 cursor-pointer hover:underline text-link'
           onClick={() => {
             if (props.selectedTab === 'sell') {
@@ -86,34 +80,32 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           Clear
         </span>}
       </div>
-      {showSummary
-        ? <NFTListingsCartSidebarSummary />
-        : <>
-          {stagedNFTs.map((stagedItem, index) => {
-            return <CartSidebarNft
-              nft={stagedItem?.nft}
-              key={index}
-              onRemove={() => {
-                if (props.selectedTab === 'sell') {
-                  removeListing(stagedItem.nft);
-                } else {
-                  removePurchase(stagedItem.nft);
-                }
-              }}
-            />;
-          })}
-          {(stagedNFTs.length > 0) && <div className="mx-8 my-4 flex">
-            <Button
-              stretch
-              label={`Proceed to ${props.selectedTab === 'sell' ? 'List' : 'Buy'}`}
-              onClick={() => {
-                toggleCartSidebar();
-                router.push(props.selectedTab === 'sell' ? '/app/list' : '/app/buy');
-              }}
-              type={ButtonType.PRIMARY}
-            />
-          </div>}
-        </>}
+      {stagedNFTs.map((stagedItem, index) => {
+        return <CartSidebarNft
+          nft={stagedItem?.nft}
+          key={index}
+          onRemove={() => {
+            if (props.selectedTab === 'sell') {
+              removeListing(stagedItem.nft);
+            } else {
+              removePurchase(stagedItem.nft);
+            }
+          }}
+        />;
+      })}
+      {(stagedNFTs.length > 0 &&
+        !(router.pathname.includes('/app/list') && props.selectedTab === 'sell')
+      ) && <div className="mx-8 my-4 flex">
+        <Button
+          stretch
+          label={`Proceed to ${props.selectedTab === 'sell' ? 'List' : 'Buy'}`}
+          onClick={() => {
+            toggleCartSidebar();
+            router.push(props.selectedTab === 'sell' ? '/app/list' : '/app/buy');
+          }}
+          type={ButtonType.PRIMARY}
+        />
+      </div>}
     </div>
   );
 }

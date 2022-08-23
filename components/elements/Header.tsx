@@ -16,7 +16,6 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 import { SearchIcon } from '@heroicons/react/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { ShoppingCartSimple } from 'phosphor-react';
 import LightNavLogo from 'public/hero_corner.svg';
 import NavLogo from 'public/hero_corner_dark.svg';
@@ -38,7 +37,6 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
   const { primaryIcon } = useThemeColors();
   const { toggleCartSidebar, toList } = useContext(NFTListingsContext);
   const { toBuy } = useContext(NFTPurchasesContext);
-  const router = useRouter();
 
   const { setDarkMode, user } = useUser();
 
@@ -128,8 +126,7 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
             }
             {
               getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-              !router.pathname.includes('/app/list') &&
-              <div className='h-full flex items-center relative'>
+              <div className='h-full flex items-center relative mr-4'>
                 {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
                   <div className='absolute right-0 -top-4'>
                     <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />

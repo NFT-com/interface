@@ -51,6 +51,7 @@ interface NFTListingsContextType {
   clear: () => void;
   listAll: () => Promise<boolean>;
   prepareListings: () => Promise<void>;
+  
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: TargetMarketplace) => void;
@@ -130,8 +131,8 @@ export function NFTListingsContextProvider(
   
   const toggleCartSidebar = useCallback((selectedTab?: 'buy' | 'sell') => {
     setSidebarVisible(!sidebarVisible);
-    setSelectedTab(selectedTab ?? 'buy');
-  }, [sidebarVisible]);
+    setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'buy' : 'sell'));
+  }, [sidebarVisible, toBuy]);
 
   const toggleTargetMarketplace = useCallback((targetMarketplace: TargetMarketplace) => {
     const targetFullyEnabled = toList.find(listing => listing.targets?.includes(targetMarketplace)) != null;

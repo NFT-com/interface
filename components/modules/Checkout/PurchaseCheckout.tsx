@@ -12,7 +12,7 @@ import { VerticalProgressBar } from './VerticalProgressBar';
 import { BigNumber, ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSigner } from 'wagmi';
 
 export function PurchaseCheckout() {
   const {
@@ -23,10 +23,11 @@ export function PurchaseCheckout() {
   const { getByContractAddress } = useSupportedCurrencies();
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
+  const { data: signer } = useSigner();
 
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseError'>>(null);
+  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseError' | 'ConnectionError'>>(null);
 
   const getNeedsApprovals = useCallback(() => {
     return filterDuplicates(
@@ -115,6 +116,11 @@ export function PurchaseCheckout() {
             setError(null);
             setSuccess(false);
             setLoading(true);
+
+            if (signer == null) {
+              setError('ConnectionError');
+              return;
+            }
 
             if (getNeedsApprovals()) {
               const missingApprovals = filterDuplicates(
