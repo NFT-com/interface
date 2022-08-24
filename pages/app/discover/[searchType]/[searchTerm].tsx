@@ -1,6 +1,5 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
-import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
@@ -200,4 +199,3 @@ export default function ResultsPage() {
     </div>
   );
 }
-
