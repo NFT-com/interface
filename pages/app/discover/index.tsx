@@ -56,7 +56,7 @@ export default function DiscoverPage() {
       index:'collections',
       query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm,
-      per_page: getPerPage(SearchableFields.COLLECTIONS_INDEX_FIELDS, screenWidth, sideNavOpen),
+      per_page: getPerPage('collections', screenWidth, sideNavOpen),
       page: 1,
     })
       .then((results) => {

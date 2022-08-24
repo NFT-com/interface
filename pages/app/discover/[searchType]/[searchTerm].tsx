@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import Vector from 'public/Vector.svg';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
 
 function usePrevious(value) {
@@ -29,45 +29,72 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage() {
-  const { setSearchModalOpen, sideNavOpen } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
-  const { fetchTypesenseSearch } = useFetchTypesenseSearch();
+  const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const { width: screenWidth } = useWindowDimensions();
   const [results, setResults] = useState([]);
   const [found, setFound] = useState(0);
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
+  const [filters, setFilters] = useState([]);
+
+  const checkedFiltersString = useCallback(() => {
+    let checkedFiltersString = '';
+    const checkedList = [];
+    if (filtersList) {
+      const checkedArray = filtersList.filter(item => item.values.length > 0);
+      checkedArray.forEach(item => {
+        item.filter !== 'listedPx' && checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
+      });
+      
+      const priceOptions = filtersList.find(i => i.filter === 'listedPx');
+      checkedFiltersString = checkedList.join(' && ') + (priceOptions && priceOptions.values ? (' && ' + priceOptions.values) : '');
+    }
+
+    return checkedFiltersString;
+  }, [filtersList]);
 
   useEffect(() => {
-    page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseSearch({
-      index: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
+    page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
+      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
+      max_facet_values: 200,
+      collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
-    })
+      filter_by: checkedFiltersString(),
+      sort_by: sortBy,
+    }] })
       .then((resp) => {
-        setResults([...resp.hits]);
-        setFound(resp.found);
+        setResults([...resp.results[0].hits]);
+        setFound(resp.results[0].found);
+        setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseSearch, page, screenWidth, searchTerm, searchType, sideNavOpen]);
+  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
-      screenWidth && fetchTypesenseSearch({
-        index: searchType?.toString(),
+      screenWidth && fetchTypesenseMultiSearch({ searches: [{
+        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
+        max_facet_values: 200,
+        collection: searchType?.toString(),
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
         q: searchTerm?.toString(),
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
-      })
+        filter_by: checkedFiltersString(),
+        sort_by: sortBy,
+      }] })
         .then((resp) => {
-          setResults([...results,...resp.hits]);
-          setFound(resp.found);
+          setResults([...results,...resp.results[0].hits]);
+          setFound(resp.results[0].found);
+          setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen]);
+  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
   
   return (
     <div className="mt-20">
@@ -81,6 +108,12 @@ export default function ResultsPage() {
             <div className="text-2xl font-semibold pt-1">
               <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
             </div>
+          </a>
+        </Link>
+        
+        <div className="flex">
+          <div className="hidden minlg:block">
+            {filters.length > 0 && <SideNav onSideNav={() => null} filtersData={filters}/>}
           </div>
           {searchType?.toString() === 'collections' && <CuratedCollectionsFilter onClick={() => null} />}
           <div>
@@ -88,12 +121,18 @@ export default function ResultsPage() {
             <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
               {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
             </div>
-            {searchType?.toString() !== 'collections' &&
-            <div className="my-6 mb-4 flex justify-between font-grotesk font-black text-xl minmd:text-2xl">
+            {searchType?.toString() === 'collections' && <CuratedCollectionsFilter onClick={() => null} />}
+            <div>
+              {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
+              <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
+                {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
+              </div>
+              {searchType?.toString() !== 'collections' &&
+            <div className="my-6 mb-4 flex minlg:hidden justify-between font-grotesk font-black text-xl minmd:text-2xl">
               <div
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {
-                  setSearchModalOpen(true, 'filters');
+                  setSearchModalOpen(true, 'filters', filters );
                 }}>
                 <FunnelSimple className="h-8 w-8" />
                 Filter
@@ -101,7 +140,7 @@ export default function ResultsPage() {
               <div
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {
-                  setSearchModalOpen(true, 'filters');
+                  setSearchModalOpen(true, 'filters', filters );
                 }}>
                 Sort
                 <ChevronDown className="h-10 w-10" />
@@ -164,4 +203,4 @@ ResultsPage.getLayout = function getLayout(page) {
       { page }
     </DefaultLayout>
   );
-};
+}
