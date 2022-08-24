@@ -42,7 +42,7 @@ export default function BlogSlider({ posts }:BlogSliderProps) {
   }, [embla, setScrollSnaps, onSelect]);
 
   return (
-    <div className="relative mx-auto px-2.5 bg-[#4C4313] p-3 rounded-2xl overflow-hidden">
+    <div data-cy="blogSlider" className="relative mx-auto px-2.5 bg-[#4C4313] p-3 rounded-2xl overflow-hidden">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {posts?.map((post) => (

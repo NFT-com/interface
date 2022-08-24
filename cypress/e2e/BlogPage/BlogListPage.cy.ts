@@ -2,7 +2,7 @@ describe('Blog List Page Tests', () => {
   it('Slider click navigates to valid post', () => {
     cy.visit('/articles');
     cy.wait(5000);
-    cy.get('[data-cy="blogSliderCard"]').click('center', { multiple: true, waitForAnimations: false });
+    cy.get('[data-cy="blogSlider"]').click('center');
     cy.url().should('not.eq', '/articles');
   });
 
