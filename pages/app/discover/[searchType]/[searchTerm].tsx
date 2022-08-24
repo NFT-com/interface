@@ -44,12 +44,13 @@ export default function ResultsPage() {
     let checkedFiltersString = '';
     const checkedList = [];
     if (filtersList) {
-      console.log(filtersList, 'filtersList fdo');
       const checkedArray = filtersList.filter(item => item.values.length > 0);
       checkedArray.forEach(item => {
-        checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
+        item.filter !== 'listedPx' && checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
       });
-      checkedFiltersString = checkedList.join(' && ');
+      
+      const priceOptions = filtersList.find(i => i.filter === 'listedPx');
+      checkedFiltersString = checkedList.join(' && ') + (priceOptions && priceOptions.values ? (' && ' + priceOptions.values) : '');
     }
 
     return checkedFiltersString;
@@ -70,7 +71,7 @@ export default function ResultsPage() {
       .then((resp) => {
         setResults([...resp.results[0].hits]);
         setFound(resp.results[0].found);
-        filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+        setFilters([...resp.results[0].facet_counts]);
       });
   },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
 
@@ -90,7 +91,7 @@ export default function ResultsPage() {
         .then((resp) => {
           setResults([...results,...resp.results[0].hits]);
           setFound(resp.results[0].found);
-          // filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          setFilters([...resp.results[0].facet_counts]);
         });
     }
   }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);

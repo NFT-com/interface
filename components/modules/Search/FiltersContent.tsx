@@ -7,6 +7,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 
 import { motion } from 'framer-motion';
 import EllipseX from 'public/ellipse-x.svg';
+import SearchIcon from 'public/search.svg';
 import { useEffect, useState } from 'react';
 import { Plus, X } from 'react-feather';
 
@@ -42,7 +43,87 @@ const FilterOption = (props: FilterOptionProps) => {
   );
 };
 
-const CurrencyPriceFilter = () => {
+const ContractNameFilter = (props: any) => {
+  const { filterOptions, getCheckedFiltersList, checkedOptions } = props;
+  const [searchVal, setSearchVal] = useState('');
+  const [filteredContracts, setFilteredContracts] = useState([]);
+
+  useEffect(() => {
+    const filteredContracts = filterOptions.filter((contract) => {
+      return contract.value?.includes(searchVal);
+    });
+
+    setFilteredContracts([...filteredContracts]);
+  },[filterOptions, searchVal]);
+
+  return (
+    <div>
+      <div className={tw(
+        'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black')}>
+        <SearchIcon className='mr-2 shrink-0 aspect-square' />
+        <div className="w-full">
+          <input
+            type="search"
+            placeholder="Keyword"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+            autoFocus
+            value={searchVal}
+            required maxLength={512}
+            className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
+            onChange={(event) => setSearchVal(event.target.value)}/>
+        </div>
+      </div>
+      {filteredContracts.map((item, index) => {
+        return (
+          <div key={index} className="mt-3 overflow-y-hidden">
+            <FilterOption
+              item={item}
+              onSelectFilter={getCheckedFiltersList}
+              isSelected={checkedOptions?.values.includes(item.value)}
+            />
+          </div>);
+      })}
+    </div>
+  );
+};
+
+const CurrencyPriceFilter = (props: any) => {
+  const { filtersList, clearedFilters, setClearedFilters } = useSearchModal();
+  const [min, setMin] = useState('');
+  const [max, setMax] = useState('');
+
+  const priceOptions = filtersList.find(i => i.filter === 'listedPx');
+
+  useEffect(() => {
+    let stringValue = '';
+    if (Number(min) > Number(max)) return;
+    if (Number(min) < 0 || Number(max) < 0) return;
+
+    if (min !== '' && max === '') {
+      stringValue = 'listedPx:>=' + (min);
+    } else if (min === '' && max !== '') {
+      stringValue = 'listedPx:<=' + (max);
+    } else if (min !== '' && max !== '') {
+      stringValue ='listedPx:['+ (min) + '..' + (max) + ']';
+    }
+
+    if (priceOptions){
+      priceOptions.values = stringValue;
+    }
+
+    props.onGetCheckedFilters(filtersList);
+  }, [filtersList, max, min, priceOptions, props]);
+
+  useEffect(() => {
+    if (clearedFilters) {
+      setMin('');
+      setMax('');
+    }
+  },[clearedFilters]);
+
   return(
     <div className="flex flex-col space-y-2">
       <DropdownPicker
@@ -71,9 +152,15 @@ const CurrencyPriceFilter = () => {
               autoCapitalize="off"
               spellCheck="false"
               autoFocus
+              min="0"
+              value={min}
               required maxLength={512}
               className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-              onKeyUp={(event) => null}/>
+              onChange={(event) => {
+                setMin(event.target.value);
+                setClearedFilters(false);}}
+              onFocus={(event) => setMin(event.target.value)}
+            />
           </div>
         </div>
         <div className={tw(
@@ -87,9 +174,16 @@ const CurrencyPriceFilter = () => {
               autoCapitalize="off"
               spellCheck="false"
               autoFocus
+              min="0"
+              value={max}
               required maxLength={512}
               className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-              onKeyUp={(event) => null}/>
+              onChange={(event) => {
+                setMax(event.target.value);
+                setClearedFilters(false);
+              }}
+              onFocus={(event) => setMax(event.target.value)}
+            />
           </div>
         </div>
       </div>
@@ -145,20 +239,22 @@ const Filter = (props: any) => {
         animate={{
           height: isFilterCollapsed ? 0 : 'auto' }}
         transition={{ duration: 0.2 }}
-        className={tw('overflow-hidden')}
+        className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-scroll max-h-[10rem] filter-scrollbar')}
       >
         { filter.field_name === 'listedPx' ?
-          ( <CurrencyPriceFilter /> ) :
-          filter.counts.slice(0,3).map((item, index) => {
-            return (
-              <div key={index} className="mt-3">
-                <FilterOption
-                  item={item}
-                  onSelectFilter={getCheckedFiltersList}
-                  isSelected={checkedOptions?.values.includes(item.value)}
-                />
-              </div>);
-          })}
+          ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) :
+          filter.field_name === 'contractName' ?
+            (<ContractNameFilter filterOptions={filter.counts} checkedOptions={checkedOptions} getCheckedFiltersList={getCheckedFiltersList} />) :
+            filter.counts.map((item, index) => {
+              return (
+                <div key={index} className="mt-3 overflow-y-hidden">
+                  <FilterOption
+                    item={item}
+                    onSelectFilter={getCheckedFiltersList}
+                    isSelected={checkedOptions?.values.includes(item.value)}
+                  />
+                </div>);
+            })}
       </motion.div>
     </div>
   );

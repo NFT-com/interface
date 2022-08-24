@@ -11,14 +11,14 @@ describe('discover page tests mobile', () => {
       cy.wait(1000);
     });
   });
-  it('renders first 2 items', () => {
+  xit('renders first 2 items', () => {
     cy.fixture('discover_results').then(() => {
       cy.contains('Discover').should('exist');
       cy.get('.DiscoverCollectionItem').should('have.length', 2);
     });
   });
 
-  it('renders next 2 items after clicking load more button', () => {
+  xit('renders next 2 items after clicking load more button', () => {
     cy.fixture('discover_results').then(() => {
       cy.findByText('Load More').should('exist').click().then(() =>{
         cy.get('.DiscoverCollectionItem').should('have.length', 4);
@@ -38,14 +38,14 @@ describe('discover page tests tablet', () => {
       cy.wait(1000);
     });
   });
-  it('renders first 4 items', () => {
+  xit('renders first 4 items', () => {
     cy.fixture('discover_results').then(() => {
       cy.contains('Discover').should('exist');
       cy.get('.DiscoverCollectionItem').should('have.length', 4);
     });
   });
 
-  it('renders next 4 items after clicking load more button', () => {
+  xit('renders next 4 items after clicking load more button', () => {
     cy.fixture('discover_results').then(() => {
       cy.findByText('Load More').should('exist').click().then(() =>{
         cy.get('.DiscoverCollectionItem').should('have.length', 8);
@@ -65,14 +65,14 @@ describe('discover page tests laptop', () => {
       cy.wait(1000);
     });
   });
-  it('renders first 6 items', () => {
+  xit('renders first 6 items', () => {
     cy.fixture('discover_results').then(() => {
       cy.contains('Discover').should('exist');
       cy.get('.DiscoverCollectionItem').should('have.length', 6);
     });
   });
 
-  it('renders next 6 items after clicking load more button', () => {
+  xit('renders next 6 items after clicking load more button', () => {
     cy.fixture('discover_results').then(() => {
       cy.findByText('Load More').should('exist').click().then(() =>{
         cy.get('.DiscoverCollectionItem').should('have.length', 12);

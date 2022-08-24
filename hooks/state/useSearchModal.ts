@@ -83,8 +83,17 @@ export function useSearchModal() {
   },[data, mutate]);
 
   const setClearedFilters = useCallback((clearedFilters: boolean) => {
+    const filtersList = !clearedFilters
+      ? data.filtersList
+      : data.filtersList.map((item) => {
+        return {
+          filter: item.field_name,
+          values: []
+        };
+      });
     mutate({
       ...data,
+      filtersList,
       clearedFilters
     });
   },[data, mutate]);
