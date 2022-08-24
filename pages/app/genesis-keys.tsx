@@ -1,9 +1,8 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Footer } from 'components/elements/Footer';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { Modal } from 'components/elements/Modal';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { GalleryPageTitle } from 'components/modules/Gallery/GalleryPageTitle';
 import { GenesisKeyGalleryDetailView } from 'components/modules/Gallery/GenesisKeyGalleryDetailView';
 import { GenesisKeyGalleryFilters } from 'components/modules/Gallery/GenesisKeyGalleryFilters';
@@ -69,11 +68,7 @@ export default function GenesisKeysPage() {
   }, [currentFilter, galleryItemType, showMyStuff, signedIn]);
 
   return (
-    <PageWrapper headerOptions={{
-      walletOnly: true,
-      removeSummaryBanner: true,
-      walletPopupMenu: true,
-    }}>
+    <>
       <Modal
         dark
         pure
@@ -158,7 +153,14 @@ export default function GenesisKeysPage() {
           type={ButtonType.PRIMARY}
         />
       </div>
-      <Footer />
-    </PageWrapper>
+    </>
   );
 }
+
+GenesisKeysPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout hideFooter>
+      { page }
+    </DefaultLayout>
+  );
+};

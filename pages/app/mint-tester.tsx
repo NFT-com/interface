@@ -1,5 +1,5 @@
 import { ProfileMinter } from 'components/elements/ProfileMinter';
-import HomeLayout from 'components/layouts/HomeLayout';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NextPageWithLayout } from 'pages/_app';
 import { Doppler,getEnvBool } from 'utils/env';
 
@@ -24,9 +24,9 @@ const MintTester_ProfileFactory: NextPageWithLayout = () => {
 MintTester_ProfileFactory.getLayout = function getLayout(page) {
   if (getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
     return (
-      <HomeLayout>
+      <DefaultLayout>
         { page }
-      </HomeLayout>
+      </DefaultLayout>
     );
   } else {
     return page;

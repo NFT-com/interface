@@ -1,7 +1,6 @@
-
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
@@ -97,41 +96,36 @@ export default function ResultsPage() {
   }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
   
   return (
-    <PageWrapper
-      bgColorClasses="bg-always-white"
-      headerOptions={{
-        removeSummaryBanner: true,
-      }}>
-      <div className="mt-20">
-        <Link href='/app/auctions' passHref>
-          <a>
-            <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
-              <span>Mint yourself! Get a free profile</span>
-              <div className='flex flex-col rounded items-center p-[1px] ml-2'>
-                <Vector />
-              </div>
+    <div className="mt-20">
+      <Link href='/app/auctions' passHref>
+        <a>
+          <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
+            <span>Mint yourself! Get a free profile</span>
+            <div className='flex flex-col rounded items-center p-[1px] ml-2'>
+              <Vector />
             </div>
-          </a>
-        </Link>
-        
-        <div className="flex">
-          <div className="hidden minlg:block">
-            {filters.length > 0 && <SideNav onSideNav={() => null} filtersData={filters}/>}
           </div>
-          <div className="mx-6">
-            <div className="flex flex-col mt-6">
-              <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
-              <div className="text-2xl font-semibold pt-1">
-                <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
-              </div>
+        </a>
+      </Link>
+        
+      <div className="flex">
+        <div className="hidden minlg:block">
+          {filters.length > 0 && <SideNav onSideNav={() => null} filtersData={filters}/>}
+        </div>
+        <div className="mx-6">
+          <div className="flex flex-col mt-6">
+            <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
+            <div className="text-2xl font-semibold pt-1">
+              <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
             </div>
-            {searchType?.toString() === 'collections' && <CuratedCollectionsFilter onClick={() => null} />}
-            <div>
-              {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
-              <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
-                {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
-              </div>
-              {searchType?.toString() !== 'collections' &&
+          </div>
+          {searchType?.toString() === 'collections' && <CuratedCollectionsFilter onClick={() => null} />}
+          <div>
+            {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
+            <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
+              {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
+            </div>
+            {searchType?.toString() !== 'collections' &&
             <div className="my-6 mb-4 flex minlg:hidden justify-between font-grotesk font-black text-xl minmd:text-2xl">
               <div
                 className="cursor-pointer flex flex-row items-center"
@@ -150,54 +144,61 @@ export default function ResultsPage() {
                 <ChevronDown className="h-10 w-10" />
               </div>
             </div>}
-              <div className={tw(
-                'mt-6',
-                searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-4' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
-                searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
-                {results && results.map((item, index) => {
-                  return (
-                    <div key={index}
-                      className={tw(
-                        'DiscoverCollectionItem',
-                        searchType?.toString() === 'collections' ? 'min-h-[10.5rem] minmd:min-h-[13rem]' : '')}
-                    >
-                      {searchType?.toString() === 'collections' ?
-                        <CollectionItem
-                          contractAddr={item.document.contractAddr}
-                          contractName={item.document.contractName}
-                        />:
-                        <NFTCard
-                          title={item.document.nftName}
-                          subtitle={'#'+ item.document.tokenId}
-                          images={[item.document.imageURL]}
-                          onClick={() => {
-                            if (item.document.nftName) {
-                              router.push(`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`);
-                            }
-                          }}
-                          description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-                          customBackground={'white'}
-                          lightModeForced
-                          customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
-                        />}
-                    </div>);
-                })}
-              </div>
-              {results.length < found && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-                <Button
-                  color={'black'}
-                  accent={AccentType.SCALE}
-                  stretch={true}
-                  label={'Load More'}
-                  onClick={() => setPage(page + 1)}
-                  type={ButtonType.PRIMARY}
-                />
-              </div>}
+            <div className={tw(
+              'mt-6',
+              searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-4' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
+              searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
+              {results && results.map((item, index) => {
+                return (
+                  <div key={index}
+                    className={tw(
+                      'DiscoverCollectionItem',
+                      searchType?.toString() === 'collections' ? 'min-h-[10.5rem] minmd:min-h-[13rem]' : '')}
+                  >
+                    {searchType?.toString() === 'collections' ?
+                      <CollectionItem
+                        contractAddr={item.document.contractAddr}
+                        contractName={item.document.contractName}
+                      />:
+                      <NFTCard
+                        title={item.document.nftName}
+                        subtitle={'#'+ item.document.tokenId}
+                        images={[item.document.imageURL]}
+                        onClick={() => {
+                          if (item.document.nftName) {
+                            router.push(`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`);
+                          }
+                        }}
+                        description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
+                        customBackground={'white'}
+                        lightModeForced
+                        customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+                      />}
+                  </div>);
+              })}
             </div>
+            {results.length < found && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+              <Button
+                color={'black'}
+                accent={AccentType.SCALE}
+                stretch={true}
+                label={'Load More'}
+                onClick={() => setPage(page + 1)}
+                type={ButtonType.PRIMARY}
+              />
+            </div>}
           </div>
-        
         </div>
+        
       </div>
-    </PageWrapper>
+    </div>
   );
 }
+
+ResultsPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

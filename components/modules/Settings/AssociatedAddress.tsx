@@ -120,7 +120,6 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
         <div className='flex items-center w-1/2 justify-between'>
           <p>Ethereum</p>
           <DropdownPickerModal
-            forceLightMode
             constrain
             selectedIndex={0}
             options={filterNulls([
