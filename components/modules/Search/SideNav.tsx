@@ -2,24 +2,28 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
 import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
+import { FiltersContent } from './FiltersContent';
 import { SearchContent } from './SearchContent';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import { motion } from 'framer-motion';
+import { FunnelSimple } from 'phosphor-react';
 import CaretCircle from 'public/caret_circle.svg';
 import Flask from 'public/flask.svg';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 export interface OptionNavProps {
   title?: string;
   icon: string | any;
-  onOptionNav?: (boolean) => void
+  onOptionNav?: () => void
   backgroundColor?: string;
+  filtersData?: any;
 }
 
 export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const { sideNavOpen, setSideNavOpen } = useSearchModal();
+
   return(
     <>
       <div className={tw(
@@ -29,6 +33,7 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
           className="flex items-center pl-1 cursor-pointer"
           onClick={() => {
             setIsFilterCollapsed(!isFilterCollapsed);
+            props.onOptionNav && props.onOptionNav();
           }}>
           {props.icon}
           <span className="text-black text-lg minmd:text-xl font-medium ml-2">{props.title}</span>
@@ -61,8 +66,15 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
   );
 }
 
-export const SideNav = (props: {onSideNav: (term: string) => void}) => {
-  const { sideNavOpen } = useSearchModal();
+export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?: any}) => {
+  const { sideNavOpen, setSearchFilters } = useSearchModal();
+  const setFilters = () => {
+    setSearchFilters(props.filtersData);
+  };
+
+  useEffect(() => {
+    setSearchFilters(props.filtersData);
+  }, [props.filtersData, setSearchFilters]);
   return(
     <div
       className={tw(
@@ -81,6 +93,15 @@ export const SideNav = (props: {onSideNav: (term: string) => void}) => {
           color={'grey'} />}
         backgroundColor={'bg-[#D5D5D5]'}>
         <SearchContent />
+      </OptionNav>
+      <OptionNav
+        title={'NFT Filters'}
+        icon={<FunnelSimple
+          className="w-6 h-6"
+          color={'grey'} />}
+        backgroundColor={'bg-[#C2C2C2]'}
+        onOptionNav={setFilters}>
+        <FiltersContent />
       </OptionNav>
     </div>
   );
