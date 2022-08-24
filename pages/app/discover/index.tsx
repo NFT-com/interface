@@ -1,6 +1,5 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
-import { Footer } from 'components/elements/Footer';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { SideNav } from 'components/modules/Search/SideNav';
@@ -57,7 +56,7 @@ export default function DiscoverPage() {
       index:'collections',
       query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm,
-      per_page: getPerPage(SearchableFields.COLLECTIONS_INDEX_FIELDS, screenWidth, sideNavOpen),
+      per_page: getPerPage('collections', screenWidth, sideNavOpen),
       page: 1,
     })
       .then((results) => {
@@ -77,23 +76,7 @@ export default function DiscoverPage() {
   };
 
   return(
-    <PageWrapper
-      bgColorClasses="bg-always-white"
-      headerOptions={{
-        removeSummaryBanner: true,
-      }}>
-      <div className="mt-20">
-        <Link href='/app/auctions' passHref>
-          <a>
-            <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
-              <span>Mint yourself! Get a free profile</span>
-              <div className='flex flex-col rounded items-center p-[1px] ml-2'>
-                <Vector />
-              </div>
-            </div>
-          </a>
-        </Link>
-      </div>
+    <>
       <div className="my-10 minlg:mb-10 minlg:mt-0 max-w-lg minmd:max-w-full mx-[4%] minmd:mx-[2%] minlg:mr-[2%] minlg:ml-0 self-center minmd:self-stretch">
         <div className="flex">
           <div className="hidden minlg:block">
@@ -142,9 +125,14 @@ export default function DiscoverPage() {
           </div>
         </div>
       </div>
-      <div className='w-full'>
-        <Footer />
-      </div>
-    </PageWrapper>
+    </>
   );
 }
+
+DiscoverPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

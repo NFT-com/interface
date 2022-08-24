@@ -1,15 +1,11 @@
-import { Footer } from 'components/elements/Footer';
-import { Header } from 'components/elements/Header';
 import PreviewBanner from 'components/elements/PreviewBanner';
-import { Sidebar } from 'components/elements/Sidebar';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
-import { SearchModal } from 'components/modules/Search/SearchModal';
 import NotFoundPage from 'pages/404';
 import { PostData } from 'types/blogs';
-import ClientOnly from 'utils/ClientOnly';
 
 import { getPost } from 'lib/contentful/api';
 import Link from 'next/link';
@@ -31,11 +27,6 @@ export default function Post({ post, preview }: PostProps) {
 
   return (
     <>
-      <ClientOnly>
-        <Header bgLight />
-        <Sidebar />
-        <SearchModal />
-      </ClientOnly>
       <NextSeo
         title={post.title}
         description={post.description}
@@ -94,11 +85,18 @@ export default function Post({ post, preview }: PostProps) {
             : null}
         </div>
       </div>
-      <Footer />
       {preview && <PreviewBanner />}
     </>
   );
 }
+
+Post.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};
 
 export async function getServerSideProps({ params, preview = false }) {
   const data = await getPost(params.slug, preview);

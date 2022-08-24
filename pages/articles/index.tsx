@@ -1,6 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import PreviewBanner from 'components/elements/PreviewBanner';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
@@ -33,9 +33,9 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
     return <NotFoundPage />;
   }
   return (
-    <PageWrapper bgLight >
+    <>
       <div className='bg-white'>
-        <div className='px-6 px-2.5 pt-28 max-w-nftcom mx-auto'>
+        <div className='px-2.5 pt-28 max-w-nftcom mx-auto'>
           <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
           {posts && <BlogSlider posts={data?.blogSlidesCollection.items} />}
       
@@ -60,9 +60,17 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
         )}
       </div>
       {preview && <PreviewBanner />}
-    </PageWrapper>
+    </>
   );
 }
+
+BlogListPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};
 
 export async function getServerSideProps({ preview = false }) {
   const homeData = await getCollection(preview, 1, 'blogHomePageCollection', BLOG_LIST_HOME_FIELDS);
