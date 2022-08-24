@@ -1,4 +1,3 @@
-
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import DefaultLayout from 'components/layouts/DefaultLayout';
@@ -98,9 +97,20 @@ export default function ResultsPage() {
   
   return (
     <div className="mt-20">
+      <Link href='/app/auctions' passHref>
+        <a>
+          <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
+            <span>Mint yourself! Get a free profile</span>
+            <div className='flex flex-col rounded items-center p-[1px] ml-2'>
+              <Vector />
+            </div>
+          </div>
+        </a>
+      </Link>
+        
       <div className="flex">
         <div className="hidden minlg:block">
-          <SideNav onSideNav={() => null}/>
+          {filters.length > 0 && <SideNav onSideNav={() => null} filtersData={filters}/>}
         </div>
         <div className="mx-6">
           <div className="flex flex-col mt-6">
@@ -108,12 +118,6 @@ export default function ResultsPage() {
             <div className="text-2xl font-semibold pt-1">
               <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
             </div>
-          </a>
-        </Link>
-        
-        <div className="flex">
-          <div className="hidden minlg:block">
-            {filters.length > 0 && <SideNav onSideNav={() => null} filtersData={filters}/>}
           </div>
           {searchType?.toString() === 'collections' && <CuratedCollectionsFilter onClick={() => null} />}
           <div>
@@ -121,13 +125,7 @@ export default function ResultsPage() {
             <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
               {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
             </div>
-            {searchType?.toString() === 'collections' && <CuratedCollectionsFilter onClick={() => null} />}
-            <div>
-              {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
-              <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
-                {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
-              </div>
-              {searchType?.toString() !== 'collections' &&
+            {searchType?.toString() !== 'collections' &&
             <div className="my-6 mb-4 flex minlg:hidden justify-between font-grotesk font-black text-xl minmd:text-2xl">
               <div
                 className="cursor-pointer flex flex-row items-center"
@@ -203,4 +201,4 @@ ResultsPage.getLayout = function getLayout(page) {
       { page }
     </DefaultLayout>
   );
-}
+};
