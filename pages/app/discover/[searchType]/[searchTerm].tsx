@@ -9,6 +9,8 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import NotFoundPage from 'pages/404';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
@@ -95,6 +97,10 @@ export default function ResultsPage() {
         });
     }
   }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
+  
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
+    return <NotFoundPage />;
+  }
   
   return (
     <PageWrapper
