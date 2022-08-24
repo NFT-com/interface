@@ -1,4 +1,3 @@
-import { WETH } from 'constants/tokens';
 import { Nft } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { filterNulls } from 'utils/helpers';

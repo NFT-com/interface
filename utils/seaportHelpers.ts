@@ -1,4 +1,6 @@
 import { NULL_ADDRESS } from 'constants/addresses';
+import { Seaport } from 'constants/typechain';
+import { OrderComponentsStruct } from 'constants/typechain/Seaport';
 import { Maybe, Nft } from 'graphql/generated/types';
 import {
   CROSS_CHAIN_SEAPORT_ADDRESS,
@@ -157,4 +159,11 @@ export function createSeaportParametersForNFTListing(
     salt: generateRandomSalt(),
     conduitKey: OPENSEA_CONDUIT_KEY,
   };
+}
+
+export async function cancelSeaportListing(
+  order: OrderComponentsStruct,
+  seaportExchange: Seaport
+) {
+  await seaportExchange.cancel([order]);
 }

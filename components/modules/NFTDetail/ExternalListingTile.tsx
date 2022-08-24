@@ -5,14 +5,18 @@ import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { ExternalListing, Nft, SupportedExternalExchange } from 'graphql/generated/types';
 import { useWethAllowance } from 'hooks/balances/useWethAllowance';
-import { isNullOrEmpty } from 'utils/helpers';
+import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
+import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
+import { isNullOrEmpty, sameAddress } from 'utils/helpers';
+import { cancelLooksrareListing } from 'utils/looksrareHelpers';
+import { cancelSeaportListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useContext } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSigner } from 'wagmi';
 
 export interface ExternalListingTileProps {
   listing: PartialDeep<ExternalListing>;
@@ -39,10 +43,13 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const { listing } = props;
 
   const { address: currentAddress } = useAccount();
+  const { data: signer } = useSigner();
   const { chain } = useNetwork();
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { allowance } = useWethAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id));
+  const looksrareExchange = useLooksrareExchangeContract(signer);
+  const seaportExchange = useSeaportContract(signer);
 
   const marketplace = props.listing?.exchange === SupportedExternalExchange.Looksrare ?
     'looksrare' :
@@ -54,6 +61,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     // Unsupported marketplace.
     return null;
   }
+
+  console.log(marketplace, props.protocolData);
 
   return <div className="flex flex-col bg-white dark:bg-secondary-bg-dk rounded-xl p-5 my-6">
     <div className='flex items-center mb-4'>
@@ -92,25 +101,41 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         />
       </div>
       <div className='flex items-center basis-1 grow px-2'>
-        <Button
-          stretch
-          color="white"
-          label={'Add to Cart'}
-          onClick={() => {
-            stagePurchase({
-              nft: props.nft,
-              currency: props.listing?.baseCoin?.address ?? WETH.address,
-              price: BigNumber.from(isNullOrEmpty(props.listing?.price) ? 0 : props.listing.price),
-              collectionName: props.collectionName,
-              marketplace,
-              // todo: check approval for any currency, not just WETH
-              isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0),
-              protocolData: props.protocolData
-            });
-            toggleCartSidebar('buy');
-          }}
-          type={ButtonType.PRIMARY}
-        />
+        {sameAddress(currentAddress, props.nft?.wallet?.address) ?
+          <Button
+            stretch
+            type={ButtonType.PRIMARY}
+            color="white"
+            label={'Cancel Listing'}
+            onClick={async () => {
+              if (listing?.exchange === SupportedExternalExchange.Looksrare) {
+                await cancelLooksrareListing(props.protocolData?.nonce, looksrareExchange);
+                // todo: notify backend of cancellation
+              } else if (listing?.exchange === SupportedExternalExchange.Opensea) {
+                await cancelSeaportListing(props.protocolData, seaportExchange);
+                // todo: notify backend of cancellation
+              }
+            }}
+          />:
+          <Button
+            stretch
+            color="white"
+            label={'Add to Cart'}
+            onClick={() => {
+              stagePurchase({
+                nft: props.nft,
+                currency: props.listing?.baseCoin?.address ?? WETH.address,
+                price: BigNumber.from(isNullOrEmpty(props.listing?.price) ? 0 : props.listing.price),
+                collectionName: props.collectionName,
+                marketplace,
+                // todo: check approval for any currency, not just WETH
+                isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0),
+                protocolData: props.protocolData
+              });
+              toggleCartSidebar('buy');
+            }}
+            type={ButtonType.PRIMARY}
+          />}
       </div>
     </div>
   </div>;

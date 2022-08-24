@@ -117,7 +117,11 @@ export function NFTListingsCartSummary() {
           ? (
             <div className="mx-8">
               <VerticalProgressBar
-                activeNodeIndex={getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2}
+                activeNodeIndex={
+                  error === 'ConnectionError' ?
+                    0 :
+                    getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2
+                }
                 nodes={[
                   {
                     label: 'Initialize Wallet',
@@ -187,14 +191,14 @@ export function NFTListingsCartSummary() {
               return;
             }
 
+            setShowProgressBar(true);
+            setError(null);
+            setSuccess(false);
+            
             if (signer == null) {
               setError('ConnectionError');
               return;
             }
-
-            setShowProgressBar(true);
-            setError(null);
-            setSuccess(false);
 
             if (getNeedsApprovals()) {
               for (let i = 0; i < toList.length; i++) {

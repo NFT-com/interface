@@ -1,6 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { Nft } from 'graphql/generated/types';
+import { Nft, SupportedExternalExchange } from 'graphql/generated/types';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
@@ -92,7 +92,13 @@ export function ExternalListings(props: ExternalListingsProps) {
           listing={listing}
           nft={props.nft}
           collectionName={props.collectionName}
-          protocolData={seaportListings?.length > 0 ? seaportListings[0] : looksrareListings?.length > 0 ? looksrareListings[0] : null} // todo: fix this, get from the backend entity
+          protocolData={
+            seaportListings?.length > 0 && listing?.exchange === SupportedExternalExchange.Opensea ?
+              seaportListings[0] :
+              looksrareListings?.length > 0 ?
+                looksrareListings[0]
+                : null
+          } // todo: fix this, get from the backend entity
         />
       </div>
     ))}
