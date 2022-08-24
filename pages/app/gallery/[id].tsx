@@ -1,6 +1,5 @@
-import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { GenesisKeyDetailContent } from 'components/modules/Gallery/GenesisKeyDetailContent';
 import { tw } from 'utils/tw';
 
@@ -24,17 +23,16 @@ export default function GalleryDetailPage() {
   }
   
   return (
-    <PageWrapper headerOptions={{
-      walletOnly: true,
-      removeSummaryBanner: true,
-      walletPopupMenu: true,
-    }}>
-      <div className='w-full mt-24 flex flex-col items-center'>
-        <GenesisKeyDetailContent id={id} />
-        <div className='w-full'>
-          <Footer />
-        </div>
-      </div>
-    </PageWrapper>
+    <div className='w-full mt-24 flex flex-col items-center'>
+      <GenesisKeyDetailContent id={id} />
+    </div>
   );
 }
+
+GalleryDetailPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

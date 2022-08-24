@@ -1,21 +1,16 @@
 import { FeaturedProfile } from 'components/elements/FeaturedProfile';
-import { Footer } from 'components/elements/Footer';
-import { Header } from 'components/elements/Header';
 import HomePageTicker from 'components/elements/HomePageTicker';
 import { LearnCards } from 'components/elements/LearnCards';
 import PreviewBanner from 'components/elements/PreviewBanner';
 import { ProfileFeed } from 'components/elements/ProfileFeed';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { Sidebar } from 'components/elements/Sidebar';
 import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
-import HomeLayout from 'components/layouts/HomeLayout';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
-import { SearchModal } from 'components/modules/Search/SearchModal';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { TickerStat } from 'types';
-import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
 import { NextPageWithLayout } from './_app';
@@ -106,11 +101,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   }, [data?.featuredProfile, data.learnCards, data.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data.learnCardImagesCollection.items, data.learnCardImagesCollection, data.subheroTitle]);
   return (
     <>
-      <ClientOnly>
-        <Header bgLight />
-        <Sidebar />
-        <SearchModal />
-      </ClientOnly>
       <main className='flex flex-col mt-20 font-grotesk not-italic'>
         <Link href='/app/auctions' passHref>
           <a>
@@ -320,7 +310,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
         </div>
       </main>
-      <Footer />
       {preview && <PreviewBanner />}
     </>
   );
@@ -328,9 +317,9 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
 Index.getLayout = function getLayout(page) {
   return (
-    <HomeLayout>
+    <DefaultLayout>
       { page }
-    </HomeLayout>
+    </DefaultLayout>
   );
 };
 

@@ -2,7 +2,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { Modal } from 'components/elements/Modal';
 import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { GalleryPageTitle } from 'components/modules/Gallery/GalleryPageTitle';
 import { GenesisKeyGalleryDetailView } from 'components/modules/Gallery/GenesisKeyGalleryDetailView';
 import { GenesisKeyGalleryFilters } from 'components/modules/Gallery/GenesisKeyGalleryFilters';
@@ -73,33 +73,28 @@ export default function GalleryPage() {
 
   return (
     <ClientOnly>
-      <PageWrapper headerOptions={{
-        walletOnly: true,
-        removeSummaryBanner: true,
-        walletPopupMenu: true,
-      }}>
-        <Modal
-          dark={user.isDarkMode}
-          pure
-          visible={detailId != null}
-          loading={false}
-          title={''}
+      <Modal
+        dark={user.isDarkMode}
+        pure
+        visible={detailId != null}
+        loading={false}
+        title={''}
+        onClose={() => {
+          setDetailId(null);
+        }}>
+        <GenesisKeyGalleryDetailView
+          id={detailId}
           onClose={() => {
             setDetailId(null);
-          }}>
-          <GenesisKeyGalleryDetailView
-            id={detailId}
-            onClose={() => {
-              setDetailId(null);
-            }}
-          />
-        </Modal>
-        <div className={tw(
-          'flex h-full w-full overflow-hidden pt-20 bg-pagebg',
-          'text-primary-txt-dk absolute'
-        )}>
-          {/* Desktop Filters - sidebar */}
-          {!isMobile &&
+          }}
+        />
+      </Modal>
+      <div className={tw(
+        'flex h-full w-full overflow-hidden pt-20 bg-pagebg',
+        'text-primary-txt-dk absolute'
+      )}>
+        {/* Desktop Filters - sidebar */}
+        {!isMobile &&
             <div className={tw(
               'minlg:flex flex-col w-1/4 shrink-0 h-full min-h-4/5',
               'px-10 pt-6 hidden text-black dark:text-white'
@@ -112,59 +107,66 @@ export default function GalleryPage() {
                 }}
               />
             </div>
-          }
-          <div className={tw(
-            'flex flex-col flex-grow h-full overflow-auto',
-            'bg-pagebg dark:bg-pagebg-dk',
-            'minmd:px-4 px-0 pt-6',
-            'hideScroll overflow-y-hidden'
-          )}>
-            <GalleryPageTitle
-              showMyStuff={showMyStuff}
-              itemType={galleryItemType}
-              currentFilter={currentFilter}
-              totalGKSupply={BigNumber.from(10000)}
-            />
-            {currentAddress && !isSupported && <div className='w-full justify-center flex mt-12'>
-              <NetworkErrorTile />
-            </div>}
-            <LoadedContainer loaded={true} fitToParent>
-              <div ref={parentRef} className='ProfileGalleryScrollContainer w-full h-full flex flex-wrap items-start mt-4 overflow-y-scroll'>
-                {getGalleryContent()}
-              </div>
-            </LoadedContainer>
-          </div>
-        </div>
-        {/* mobile filters */}
+        }
         <div className={tw(
-          'minlg:hidden w-full h-full absolute top-0 left-0',
-          !showFilters ? 'hidden' : 'block',
+          'flex flex-col flex-grow h-full overflow-auto',
           'bg-pagebg dark:bg-pagebg-dk',
-          'mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
-          'text-black dark:text-white'
+          'minmd:px-4 px-0 pt-6',
+          'hideScroll overflow-y-hidden'
         )}>
-          <GenesisKeyGalleryFilters
-            showFilters={showFilters}
+          <GalleryPageTitle
+            showMyStuff={showMyStuff}
+            itemType={galleryItemType}
             currentFilter={currentFilter}
-            setCurrentFilter={(filter: string) => {
-              setCurrentFilter(filter);
-            }}
+            totalGKSupply={BigNumber.from(10000)}
           />
+          {currentAddress && !isSupported && <div className='w-full justify-center flex mt-12'>
+            <NetworkErrorTile />
+          </div>}
+          <LoadedContainer loaded={true} fitToParent>
+            <div ref={parentRef} className='ProfileGalleryScrollContainer w-full h-full flex flex-wrap items-start mt-4 overflow-y-scroll'>
+              {getGalleryContent()}
+            </div>
+          </LoadedContainer>
         </div>
-        <div className={tw(
-          'absolute bottom-20 mb-2 left-0 minlg:hidden w-full flex justify-center',
-          'drop-shadow-md px-8'
-        )}>
-          <Button
-            stretch
-            label={showFilters ? 'Close' : 'Filter'}
-            onClick={() => {
-              setShowFilters(!showFilters);
-            }}
-            type={ButtonType.PRIMARY}
-          />
-        </div>
-      </PageWrapper>
+      </div>
+      {/* mobile filters */}
+      <div className={tw(
+        'minlg:hidden w-full h-full absolute top-0 left-0',
+        !showFilters ? 'hidden' : 'block',
+        'bg-pagebg dark:bg-pagebg-dk',
+        'mt-20 pt-8 px-8 flex flex-col text-primary-txt-dk',
+        'text-black dark:text-white'
+      )}>
+        <GenesisKeyGalleryFilters
+          showFilters={showFilters}
+          currentFilter={currentFilter}
+          setCurrentFilter={(filter: string) => {
+            setCurrentFilter(filter);
+          }}
+        />
+      </div>
+      <div className={tw(
+        'absolute bottom-20 mb-2 left-0 minlg:hidden w-full flex justify-center',
+        'drop-shadow-md px-8'
+      )}>
+        <Button
+          stretch
+          label={showFilters ? 'Close' : 'Filter'}
+          onClick={() => {
+            setShowFilters(!showFilters);
+          }}
+          type={ButtonType.PRIMARY}
+        />
+      </div>
     </ClientOnly>
   );
 }
+
+GalleryPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout hideFooter>
+      { page }
+    </DefaultLayout>
+  );
+};

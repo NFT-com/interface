@@ -20,7 +20,6 @@ import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
-  forceLightMode?: boolean
 }
 
 export function Collection(props: CollectionProps) {
@@ -94,7 +93,6 @@ export function Collection(props: CollectionProps) {
       </div>
       <div className={tw(
         'pt-7 px-8 minmd:px-[5%] minxl:mx-auto pb-16 w-full',
-        props.forceLightMode && 'bg-white'
       )}
       >
         {collectionNfts.length > 0 ?
