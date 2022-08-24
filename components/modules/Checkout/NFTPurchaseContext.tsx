@@ -1,4 +1,6 @@
+import { WETH } from 'constants/tokens';
 import { Nft } from 'graphql/generated/types';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { filterNulls } from 'utils/helpers';
 
 import { NFTListingsContext, TargetMarketplace } from './NFTListingsContext';
@@ -21,7 +23,7 @@ interface NFTPurchaseContextType {
   toBuy: StagedPurchase[];
   stagePurchase: (listing: PartialDeep<StagedPurchase>) => void;
   clear: () => void;
-  buyAll: () => void;
+  buyAll: () => Promise<boolean>;
   updateCurrencyApproval: (currency: string, approved: boolean) => void;
   removePurchase: (nft: PartialDeep<Nft>) => void;
 }
@@ -42,6 +44,8 @@ export function NFTPurchaseContextProvider(
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
   
   const { toggleCartSidebar } = useContext(NFTListingsContext);
+
+  const { aggregator } = useAllContracts();
 
   useEffect(() => {
     if (window != null) {
@@ -83,9 +87,24 @@ export function NFTPurchaseContextProvider(
     }));
   }, [toBuy]);
 
-  const buyAll = useCallback(() => {
-    // todo: trigger the transaction
-  }, []);
+  const buyAll = useCallback(async () => {
+    const result = await aggregator.batchTrade(
+      {
+        tokenAddrs: toBuy?.map(purchase => purchase?.currency),
+        amounts: toBuy?.map(purchase => BigNumber.from(purchase?.currency ?? 0))
+      },
+      toBuy?.map(purchase => ({
+        marketId: purchase?.marketplace === 'seaport' ? BigNumber.from(1) : BigNumber.from(0),
+        value: BigNumber.from(0),
+        tradeData: JSON.stringify(purchase?.protocolData),
+      })),
+      [] // dustTokens
+    ).catch(() => null);
+    if (result) {
+      return await result.wait(1).then(() => true);
+    }
+    return false;
+  }, [aggregator, toBuy]);
 
   return <NFTPurchasesContext.Provider value={{
     removePurchase,
