@@ -116,7 +116,7 @@ export default function ResultsPage() {
         
         <div className="flex">
           <div className="hidden minlg:block">
-            {filters.length > 0 && <SideNav onSideNav={() => null} filtersData={filters}/>}
+            <SideNav onSideNav={() => null} filtersData={filters}/>
           </div>
           <div className="mx-6">
             <div className="flex flex-col mt-6">
@@ -152,7 +152,7 @@ export default function ResultsPage() {
             </div>}
               <div className={tw(
                 'mt-6',
-                searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-4' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
+                searchType?.toString() === 'collections' ? `minmd:grid minmd:grid-cols-2 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : 'minlg:grid-cols-4'}` : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-4' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
                 searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
                 {results && results.map((item, index) => {
                   return (
