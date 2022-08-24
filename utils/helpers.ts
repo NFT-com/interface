@@ -1,4 +1,5 @@
 import { Maybe } from 'graphql/generated/types';
+import { ValidTimeFrame } from 'types';
 
 import { Doppler, getEnv } from './env';
 
@@ -210,4 +211,30 @@ export function max(...args: BigNumberish[]) {
     return null;
   }
   return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MIN_VALUE).gt(val) ? acc : val);
+}
+
+export function formatDateForIndexer(dateToFormat: Date): string {
+  return (dateToFormat.getFullYear() + '-' + ((dateToFormat.getMonth() + 1)) + '-' + dateToFormat.getDate());
+}
+
+export function fetcher(url: string): Promise<any> {
+  return fetch(url).then((res) => res.json());
+}
+
+export function getDateFromTimeFrame(currentDate: Date, timeFrame: string) {
+  if(timeFrame === '1D') {
+    return new Date(currentDate.setDate(currentDate.getDate() - 1));
+  }
+  if(timeFrame === '7D') {
+    return new Date(currentDate.setDate(currentDate.getDate() - 7));
+  }
+  if(timeFrame === '1M') {
+    return new Date(currentDate.setMonth(currentDate.getMonth() - 1));
+  }
+  if(timeFrame === '3M') {
+    return new Date(currentDate.setMonth(currentDate.getMonth() - 3));
+  }
+  if(timeFrame === '1Y') {
+    return new Date(currentDate.setFullYear(currentDate.getFullYear() - 1));
+  }
 }

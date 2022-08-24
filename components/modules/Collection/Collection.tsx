@@ -1,7 +1,8 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
-import { AnalyticsContainer } from 'components/modules/Analytics/AnalyticsContainer';
+import { TxHistory } from 'components/modules/Analytics/TxHistory';
+import { CollectionAnalyticsContainer } from 'components/modules/Collection/CollectionAnalyticsContainer';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
@@ -47,7 +48,8 @@ export function Collection(props: CollectionProps) {
 
   const tabs = {
     0: 'NFTs',
-    1: 'Analytics'
+    1: 'Activity',
+    2: 'Analytics'
   };
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -99,17 +101,15 @@ export function Collection(props: CollectionProps) {
           <>
             {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
             <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
-              <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+              <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
                 {Object.keys(tabs).map((tab) => (
                   <Tab
                     key={tab}
                     className={({ selected }) =>
                       tw(
-                        'w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700',
-                        'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
+                        'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
                         selected
-                          ? 'bg-white shadow'
-                          : 'text-blue-100 hover:bg-white/[0.12] hover:text-white'
+                        && 'bg-black text-[#F8F8F8]'
                       )
                     }
                   >
@@ -163,8 +163,11 @@ export function Collection(props: CollectionProps) {
               </div>}
             </>
             }
+            {selectedTab === 'Activity' &&
+              <TxHistory />
+            }
             {selectedTab === 'Analytics' &&
-              <AnalyticsContainer data={collectionData} />
+              <CollectionAnalyticsContainer data={collectionData} />
             }
           </>:
           <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
