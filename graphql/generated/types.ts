@@ -2346,6 +2346,13 @@ export type NftByIdQueryVariables = Exact<{
 
 export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
+export type NftsForCollectionsQueryVariables = Exact<{
+  input: NftsForCollectionsInput;
+}>;
+
+
+export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
+
 export type MyPreferencesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3476,6 +3483,28 @@ export const NftByIdDocument = gql`
   }
 }
     `;
+export const NftsForCollectionsDocument = gql`
+    query NftsForCollections($input: NftsForCollectionsInput!) {
+  nftsForCollections(input: $input) {
+    nfts {
+      id
+      tokenId
+      type
+      isOwnedByMe
+      metadata {
+        name
+        description
+        imageURL
+        traits {
+          type
+          value
+        }
+      }
+    }
+    collectionAddress
+  }
+}
+    `;
 export const MyPreferencesDocument = gql`
     query MyPreferences {
   me {
@@ -3813,6 +3842,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     NftById(variables: NftByIdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NftByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<NftByIdQuery>(NftByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NftById', 'query');
+    },
+    NftsForCollections(variables: NftsForCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NftsForCollectionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<NftsForCollectionsQuery>(NftsForCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NftsForCollections', 'query');
     },
     MyPreferences(variables?: MyPreferencesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyPreferencesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MyPreferencesQuery>(MyPreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyPreferences', 'query');
