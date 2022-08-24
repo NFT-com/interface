@@ -1,5 +1,3 @@
-
-import { AnalyticsContainer } from 'components/modules/Analytics/AnalyticsContainer';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
