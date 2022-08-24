@@ -3,7 +3,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { ExternalListing, Nft, SupportedExternalExchange } from 'graphql/generated/types';
+import { Nft, SupportedExternalExchange, TxActivity } from 'graphql/generated/types';
 import { useWethAllowance } from 'hooks/balances/useWethAllowance';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
@@ -12,15 +12,14 @@ import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 import Image from 'next/image';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useSigner } from 'wagmi';
 
 export interface ExternalListingTileProps {
-  listing: PartialDeep<ExternalListing>;
-  protocolData: any;
+  listing: PartialDeep<TxActivity>;
   nft: PartialDeep<Nft>;
   collectionName: string;
 }
@@ -51,39 +50,46 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
 
-  const marketplace = props.listing?.exchange === SupportedExternalExchange.Looksrare ?
+  const marketplace = props.listing?.order?.exchange === SupportedExternalExchange.Looksrare ?
     'looksrare' :
-    props.listing?.exchange === SupportedExternalExchange.Opensea ?
+    props.listing?.order?.exchange === SupportedExternalExchange.Opensea ?
       'seaport' :
       null;
+
+  const getPrice = useCallback(() => {
+    // todo: get price from protocol data
+    const price = JSON.parse(listing?.order?.protocolData?.[0])?.current_price;
+    return BigNumber.from(isNullOrEmpty(price) ? 0 : price);
+  }, [listing?.order?.protocolData]);
+
+  const getCurrency = useCallback(() => {
+    // todo: get currency from protocol data
+    return JSON.parse(listing?.order?.protocolData?.[0])?.maker_asset_bundle?.asset_contract?.address;
+  }, [listing?.order?.protocolData]);
 
   if (marketplace == null) {
     // Unsupported marketplace.
     return null;
   }
 
-  console.log(marketplace, props.protocolData);
-
   return <div className="flex flex-col bg-white dark:bg-secondary-bg-dk rounded-xl p-5 my-6">
     <div className='flex items-center mb-4'>
       <div className={tw(
         'relative flex items-center justify-center',
         'aspect-square h-8 w-8 rounded-full',
-        Colors[listing.exchange]
+        Colors[listing?.order?.exchange]
       )}>
         <div className='relative h-6 w-6 shrink-0 flex'>
-          <Image src={Icons[listing.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
+          <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
         </div>
       </div>
       <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
         <span className='text-sm'>
-            Listed on <span className='text-link'>{listing.exchange}</span>
+            Listed on <span className='text-link'>{listing?.order?.exchange}</span>
         </span>
         <div className='flex items-center'>
           <span className='text-base font-medium'>
-            {ethers.utils.formatUnits(
-              (listing?.price?.split('.')[0] ?? listing?.highestOffer ?? 0),
-              listing?.baseCoin?.decimals ?? 18)}{listing?.baseCoin?.symbol ?? 'ETH'}
+            {/* todo: get price and currency from protocol data */}
           </span>
         </div>
       </div>
@@ -95,7 +101,9 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
           color="white"
           label={'View Listing'}
           onClick={() => {
-            window.open(listing?.url, '_blank');
+            // todo: get permalink from protocol data
+            const permalink = JSON.parse(listing?.order?.protocolData?.[0])?.permalink;
+            window.open(permalink, '_blank');
           }}
           type={ButtonType.PRIMARY}
         />
@@ -108,11 +116,14 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             color="white"
             label={'Cancel Listing'}
             onClick={async () => {
-              if (listing?.exchange === SupportedExternalExchange.Looksrare) {
-                await cancelLooksrareListing(props.protocolData?.nonce, looksrareExchange);
+              if (listing?.order?.exchange === SupportedExternalExchange.Looksrare) {
+                // todo: get nonce from protocol data
+                const nonce = JSON.parse(listing?.order?.protocolData?.[0])?.nonce;
+                await cancelLooksrareListing(nonce, looksrareExchange);
                 // todo: notify backend of cancellation
-              } else if (listing?.exchange === SupportedExternalExchange.Opensea) {
-                await cancelSeaportListing(props.protocolData, seaportExchange);
+              } else if (listing?.order?.exchange === SupportedExternalExchange.Opensea) {
+                // todo: get order from protocol data
+                await cancelSeaportListing(JSON.parse(listing?.order?.protocolData[0]), seaportExchange);
                 // todo: notify backend of cancellation
               }
             }}
@@ -124,13 +135,13 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             onClick={() => {
               stagePurchase({
                 nft: props.nft,
-                currency: props.listing?.baseCoin?.address ?? WETH.address,
-                price: BigNumber.from(isNullOrEmpty(props.listing?.price) ? 0 : props.listing.price),
+                currency: getCurrency() ?? WETH.address,
+                price: getPrice(),
                 collectionName: props.collectionName,
                 marketplace,
                 // todo: check approval for any currency, not just WETH
                 isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0),
-                protocolData: props.protocolData
+                protocolData: listing?.order?.protocolData
               });
               toggleCartSidebar('buy');
             }}

@@ -2268,6 +2268,13 @@ export type UploadProfileImagesMutationVariables = Exact<{
 
 export type UploadProfileImagesMutation = { __typename?: 'Mutation', uploadProfileImages: { __typename?: 'Profile', id: string } };
 
+export type ActivitiesQueryVariables = Exact<{
+  input?: InputMaybe<TxActivitiesInput>;
+}>;
+
+
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', chainId?: string | null, activityType: string, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: Array<string | null> | null, chainId: string } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
+
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
 }>;
@@ -2953,6 +2960,37 @@ export const UploadProfileImagesDocument = gql`
     mutation UploadProfileImages($input: UploadProfileImagesInput!) {
   uploadProfileImages(input: $input) {
     id
+  }
+}
+    `;
+export const ActivitiesDocument = gql`
+    query Activities($input: TxActivitiesInput) {
+  getActivities(input: $input) {
+    totalItems
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    items {
+      chainId
+      activityType
+      activityTypeId
+      timestamp
+      walletAddress
+      order {
+        chainId: exchange
+        orderHash
+        orderType
+        makerAddress
+        takerAddress
+        protocol
+        protocolData
+      }
+      cancel {
+        exchange
+        transactionHash
+      }
+    }
   }
 }
     `;
@@ -3888,6 +3926,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UploadProfileImages(variables: UploadProfileImagesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadProfileImagesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UploadProfileImagesMutation>(UploadProfileImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadProfileImages', 'mutation');
+    },
+    Activities(variables?: ActivitiesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ActivitiesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ActivitiesQuery>(ActivitiesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Activities', 'query');
     },
     AssociatedAddressesForContract(variables: AssociatedAddressesForContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedAddressesForContractQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AssociatedAddressesForContractQuery>(AssociatedAddressesForContractDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedAddressesForContract', 'query');

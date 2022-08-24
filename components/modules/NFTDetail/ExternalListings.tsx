@@ -1,18 +1,15 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { Nft, SupportedExternalExchange } from 'graphql/generated/types';
-import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { ActivityType, Nft, TxActivity } from 'graphql/generated/types';
+import { useActivitiesQuery } from 'graphql/hooks/useActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
-import { getLooksrareOrders, getSeaportOrders } from 'utils/marketplaceHelpers';
 import { tw } from 'utils/tw';
 
 import { ExternalListingTile } from './ExternalListingTile';
 
-import { BigNumber } from 'ethers';
 import { useContext } from 'react';
-import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -26,17 +23,14 @@ export function ExternalListings(props: ExternalListingsProps) {
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
   
   // TODO: consolidate these queries to hit one gQL endpoint once it's ready.
-  const { data: listings } = useExternalListingsQuery(
-    props?.nft?.contract,
-    props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
-  );
-  const { data: seaportListings } = useSWR('SeaportListings' + props.nft?.contract + props.nft?.tokenId, async () => {
-    return await getSeaportOrders(props.nft?.contract, BigNumber.from(props.nft?.tokenId));
-  });
-  const { data: looksrareListings } = useSWR('LooksrareListings' + props.nft?.contract + props.nft?.tokenId, async () => {
-    const result = await getLooksrareOrders(props.nft?.contract, BigNumber.from(props.nft?.tokenId));
-    return result ?? [];
+  const { data: listings } = useActivitiesQuery({
+    pageInput: {
+      first: 50,
+    },
+    activityType: ActivityType.Listing,
+    contract: props?.nft?.contract,
+    tokenId: props?.nft?.tokenId,
+    chainId: String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
   });
 
   const {
@@ -55,7 +49,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     TransferProxyTarget.LooksRare
   );
   
-  if (isNullOrEmpty(listings?.filter((l) => !isNullOrEmpty(l.url)))) {
+  if (isNullOrEmpty(listings)) {
     return (
       getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
         currentAddress === props.nft?.wallet?.address &&
@@ -86,19 +80,12 @@ export function ExternalListings(props: ExternalListingsProps) {
     'flex w-full px-4',
     'flex-col minlg:flex-row flex-wrap'
   )}>
-    {listings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
+    {listings?.map((listing: PartialDeep<TxActivity>, index) => (
       <div className='w-full minlg:w-2/4 pr-2' key={index}>
         <ExternalListingTile
           listing={listing}
           nft={props.nft}
           collectionName={props.collectionName}
-          protocolData={
-            seaportListings?.length > 0 && listing?.exchange === SupportedExternalExchange.Opensea ?
-              seaportListings[0] :
-              looksrareListings?.length > 0 ?
-                looksrareListings[0]
-                : null
-          } // todo: fix this, get from the backend entity
         />
       </div>
     ))}

@@ -1,0 +1,30 @@
+query Activities($input: TxActivitiesInput) {
+    getActivities(input: $input) {
+        totalItems
+        pageInfo {
+            firstCursor
+            lastCursor
+        }
+        items {
+            chainId
+            activityType
+            activityTypeId
+            timestamp
+            walletAddress
+            order {
+                chainId:
+                exchange
+                orderHash
+                orderType
+                makerAddress
+                takerAddress
+                protocol
+                protocolData
+            }
+            cancel {
+                exchange
+                transactionHash
+            }
+        }
+    }
+}
