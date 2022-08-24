@@ -44,12 +44,12 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   }, []);
 
   const dateFromTimeFrame = useMemo(() => {
-    return getDateFromTimeFrame(currentDate, selectedTimeFrame);
-  }, [currentDate, selectedTimeFrame]);
+    return getDateFromTimeFrame(selectedTimeFrame);
+  }, [selectedTimeFrame]);
 
-  const nftId = useGetNftByTokenId(data?.contract, data?.tokenId);
-
+  const nftId = useGetNftByTokenId(data?.contract, parseInt(data?.tokenId, 16).toString())?.nft_by_token_id?.id;
   const nftPriceHistory = useGetNftPriceHistory(nftId, dateFromTimeFrame, currentDate);
+  console.log(nftPriceHistory);
 
   return (
     <div className="bg-transparent">

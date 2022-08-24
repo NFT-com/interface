@@ -221,20 +221,44 @@ export function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-export function getDateFromTimeFrame(currentDate: Date, timeFrame: string) {
+export function getDateFromTimeFrame(timeFrame: string) {
+  const d = new Date();
   if(timeFrame === '1D') {
-    return new Date(currentDate.setDate(currentDate.getDate() - 1));
+    return new Date(d.setDate(d.getDate() - 1));
   }
   if(timeFrame === '7D') {
-    return new Date(currentDate.setDate(currentDate.getDate() - 7));
+    return new Date(d.setDate(d.getDate() - 7));
   }
   if(timeFrame === '1M') {
-    return new Date(currentDate.setMonth(currentDate.getMonth() - 1));
+    return new Date(d.setDate(d.getMonth() - 1));
   }
   if(timeFrame === '3M') {
-    return new Date(currentDate.setMonth(currentDate.getMonth() - 3));
+    return new Date(d.setDate(d.getMonth() - 3));
   }
   if(timeFrame === '1Y') {
-    return new Date(currentDate.setFullYear(currentDate.getFullYear() - 1));
+    return new Date(d.setDate(d.getFullYear() - 1));
+  }
+}
+
+export function getAnalyticsEndpoint(api: string) {
+  if(api === 'GQL') {
+    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+      return 'https://xbutmk6nl7.execute-api.us-east-1.amazonaws.com/graphql';
+    }
+  }
+  if(api === 'Graph') {
+    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+      return 'https://p35hl729o9.execute-api.us-east-1.amazonaws.com/graphql';
+    }
+  }
+  if(api === 'Event') {
+    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+      return 'https://p35hl729o9.execute-api.us-east-1.amazonaws.com';
+    }
+  }
+  if(api === 'Aggregation') {
+    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+      return 'https://kndkb2ud5l.execute-api.us-east-1.amazonaws.com';
+    }
   }
 }

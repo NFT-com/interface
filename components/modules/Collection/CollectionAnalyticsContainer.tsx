@@ -30,14 +30,15 @@ export const CollectionAnalyticsContainer = ({ data }: CollectionAnalyticsContai
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
   const collectionId = useGetCollectionByAddress(data?.collection?.contract);
+  console.log(collectionId);
   
   const currentDate = useMemo(() => {
     return new Date();
   }, []);
 
   const dateFromTimeFrame = useMemo(() => {
-    return getDateFromTimeFrame(currentDate, selectedTimeFrame);
-  }, [currentDate, selectedTimeFrame]);
+    return getDateFromTimeFrame(selectedTimeFrame);
+  }, [selectedTimeFrame]);
 
   const collectionSalesHistory = useGetCollectionSalesHistory(collectionId, dateFromTimeFrame, currentDate);
 

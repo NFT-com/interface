@@ -7,7 +7,7 @@ export function useGetCollectionLowestPriceHistory(collectionId: string, dateFro
   const dateFromFormatted = formatDateForIndexer(dateFrom);
 
   const { data, error } = useSWR(
-    `https://dev-analytics-aggregation:443/collection/${collectionId}/lowest_price/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
+    `https://xbutmk6nl7.execute-api.us-east-1.amazonaws.com:443/collection/${collectionId}/lowest_price/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
     fetcher
   );
 

@@ -1,10 +1,11 @@
 import { request } from 'graphql-request';
+import { getAnalyticsEndpoint } from 'utils/helpers';
 
 import useSWR from 'swr';
 
 const fetcher = (query, variables) => {
   console.log(query, variables);
-  return request('https://dev-analytics-graph.nft.com/graphql', query, variables);
+  return request(getAnalyticsEndpoint('GQL'), query, variables);
 };
 
 export function useGetCollectionByAddress(contractAddress: string) {

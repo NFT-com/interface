@@ -1,4 +1,4 @@
-import { fetcher, formatDateForIndexer } from 'utils/helpers';
+import { fetcher, formatDateForIndexer, getAnalyticsEndpoint } from 'utils/helpers';
 
 import useSWR from 'swr';
 
@@ -14,7 +14,7 @@ export function useGetCollectionSalesHistory(collectionId: string, dateFrom: Dat
   const dateFromFormatted = formatDateForIndexer(dateFrom);
 
   const { data, error } = useSWR(
-    `https://dev-analytics-aggregation:443/collection/${collectionId}/sales/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
+    `${getAnalyticsEndpoint('Aggregation')}:443/collection/${collectionId}/sales/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
     fetcher
   );
 
