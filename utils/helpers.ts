@@ -1,4 +1,5 @@
 import { Maybe } from 'graphql/generated/types';
+import { ValidTimeFrame } from 'types';
 
 import { Doppler, getEnv } from './env';
 
@@ -199,4 +200,54 @@ export function max(...args: BigNumberish[]) {
     return null;
   }
   return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MIN_VALUE).gt(val) ? acc : val);
+}
+
+export function formatDateForIndexer(dateToFormat: Date): string {
+  return (dateToFormat.getFullYear() + '-' + ((dateToFormat.getMonth() + 1)) + '-' + dateToFormat.getDate());
+}
+
+export function fetcher(url: string): Promise<any> {
+  return fetch(url).then((res) => res.json());
+}
+
+export function getDateFromTimeFrame(timeFrame: string) {
+  const d = new Date();
+  if(timeFrame === '1D') {
+    return new Date(d.setDate(d.getDate() - 1));
+  }
+  if(timeFrame === '7D') {
+    return new Date(d.setDate(d.getDate() - 7));
+  }
+  if(timeFrame === '1M') {
+    return new Date(d.setDate(d.getMonth() - 1));
+  }
+  if(timeFrame === '3M') {
+    return new Date(d.setDate(d.getMonth() - 3));
+  }
+  if(timeFrame === '1Y') {
+    return new Date(d.setDate(d.getFullYear() - 1));
+  }
+}
+
+export function getAnalyticsEndpoint(api: string) {
+  if(api === 'GQL') {
+    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+      return 'https://xbutmk6nl7.execute-api.us-east-1.amazonaws.com/graphql';
+    }
+  }
+  if(api === 'Graph') {
+    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+      return 'https://p35hl729o9.execute-api.us-east-1.amazonaws.com/graphql';
+    }
+  }
+  if(api === 'Event') {
+    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+      return 'https://p35hl729o9.execute-api.us-east-1.amazonaws.com';
+    }
+  }
+  if(api === 'Aggregation') {
+    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+      return 'https://kndkb2ud5l.execute-api.us-east-1.amazonaws.com';
+    }
+  }
 }
