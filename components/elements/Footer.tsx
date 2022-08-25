@@ -1,4 +1,3 @@
-import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
@@ -6,8 +5,7 @@ import { tw } from 'utils/tw';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import NavLogo from 'public/Logo.svg';
-import LightNavLogo from 'public/LogoLight.svg';
+import Logo from 'public/LogoFooterBlack.svg';
 import { useAccount } from 'wagmi';
 
 export const Footer = () => {
@@ -15,7 +13,6 @@ export const Footer = () => {
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
-  const { user } = useUser();
 
   const footerData = [
     {
@@ -131,7 +128,7 @@ export const Footer = () => {
   ];
 
   return (
-    <div id="FooterContainer" className='bg-footer-bg-dk pb-6 font-grotesk text-primary-txt-dk'>
+    <div id="FooterContainer" className='bg-[#222222] pb-6 font-grotesk text-primary-txt-dk'>
       <div className={tw(
         'flex flex-col minlg:flex-row relative content-between minlg:content-center pt-12'
       )}>
@@ -145,7 +142,7 @@ export const Footer = () => {
             )}>
               <Link href='/' passHref>
                 <div className='w-10 h-10'>
-                  <LightNavLogo className='w-10 h-10 justify-start' />
+                  <Logo className='w-10 h-10 justify-start' />
                 </div>
               </Link>
             </div>
