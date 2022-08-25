@@ -41,7 +41,7 @@ export function useSearchModal() {
   }, [data, mutate]);
 
   const setSearchFilters = useCallback((searchFilters: any) => {
-    const filtersList = data.filtersList ?? (searchFilters.map((item) => {
+    const filtersList = data.filtersList ?? (searchFilters?.map((item) => {
       return {
         filter: item.field_name,
         values: []
