@@ -9,6 +9,7 @@ import { useUpdateWalletProfileIdMutation } from 'graphql/hooks/useUpdateWalletP
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler, getEnvBool } from 'utils/env';
+import { tw } from 'utils/tw';
 
 import { XCircle } from 'phosphor-react';
 import { useEffect, useState } from 'react';
@@ -94,7 +95,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
   };
 
   return (
-    <div id="owner" className='font-grotesk mb-10'>
+    <div id="owner" className='font-grotesk'>
       {showToastOnSuccess && <Toast />}
       {!isSidebar &&
       <>
@@ -105,6 +106,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
       </>
       }
       {selected !== '' &&
+      <div className={tw(!isSidebar && 'mb-4')}>
         <ProfileCard
           onClick={() => {
             setVisible(true);
@@ -115,6 +117,7 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
           showSwitch={myOwnedProfileTokens && myOwnedProfileTokens.length > 1}
           profile={myOwnedProfileTokens?.find(t => t.title === selected)}
         />
+      </div>
       }
 
       {isSidebar ?
@@ -142,7 +145,9 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
                 <div>
                   {profilesToShow && profilesToShow?.map((profile) => {
                     return (
-                      <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Profile'} key={profile?.title} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
+                      <div className='mb-4' key={profile?.title} >
+                        <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Profile'} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
+                      </div>
                     );
                   })}
                 </div>
@@ -198,7 +203,9 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
                 <div>
                   {profilesToShow && profilesToShow?.map((profile) => {
                     return (
-                      <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} key={profile?.title} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
+                      <div className='mb-4' key={profile?.title} >
+                        <ProfileCard isSelected={selected === profile.title} message={selected === profile.title && 'Current Owner'} onClick={selected !== profile.title && updateOwnerProfile} profile={profile} />
+                      </div>
                     );
                   })}
                 </div>
