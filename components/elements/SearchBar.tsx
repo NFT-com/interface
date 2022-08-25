@@ -45,7 +45,7 @@ export const SearchBar = (props: SearchBarProps) => {
   const search = (event) => {
     const target = event.target as HTMLInputElement;
 
-    if (target.value.length < 3 ) {
+    if (target.value.length < 3) {
       setShowHits(false);
     }
 

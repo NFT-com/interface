@@ -34,8 +34,6 @@ export default function DiscoverPage() {
   const { width: screenWidth } = useWindowDimensions();
   const prevVal = usePrevious(page);
   const { sideNavOpen } = useSearchModal();
-  //const post = getCuratedCollections();
-  //console.log(post, 'post fdo');
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
