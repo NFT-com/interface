@@ -114,14 +114,14 @@ export async function getCollection(preview, limit, type, schema) {
 export async function getCuratedCollections() {
   const entry = await fetchGraphQL(
     `query {
-      curatedCollectionsCollection() {
+      curatedCollectionsCollection(preview:false) {
         items {
           tabTitle
           contractAddresses
         }
       }
     }`,
-    true
+    false
   );
   return entry;
 }

@@ -14,7 +14,6 @@ import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
-import { getCuratedCollections } from 'lib/contentful/api';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
@@ -41,8 +40,6 @@ export default function ResultsPage() {
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
   const [filters, setFilters] = useState([]);
-  const res = getCuratedCollections();
-  res.then(resp => console.log(resp, 'resp fdo'));
 
   const checkedFiltersString = useCallback(() => {
     let checkedFiltersString = '';
