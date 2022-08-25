@@ -192,7 +192,7 @@ export const Footer = () => {
           })}
         </div>
       </div>
-      <div className="w-full mx-auto text-xs text-center minlg:text-left minlg:ml-4 mt-9 minlg:mt-4">
+      <div className="w-full mx-auto text-xs text-center minlg:text-left minlg:pl-4 mt-9 minlg:mt-4">
             © {new Date().getFullYear()} NFT.com. All rights reserved
       </div>
     </div>
