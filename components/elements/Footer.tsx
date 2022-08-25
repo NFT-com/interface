@@ -6,8 +6,8 @@ import { tw } from 'utils/tw';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import LightNavLogo from 'public/hero_corner.svg';
-import NavLogo from 'public/hero_corner_dark.svg';
+import NavLogo from 'public/Logo.svg';
+import LightNavLogo from 'public/LogoLight.svg';
 import { useAccount } from 'wagmi';
 
 export const Footer = () => {
@@ -21,6 +21,12 @@ export const Footer = () => {
     {
       title: 'Learn',
       links: filterNulls([
+        {
+          name: 'Gallery',
+          onClick: () => {
+            router.push('/app/gallery');
+          },
+        },
         !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(profileTokens)
           ? {
             name: 'Vault',
@@ -30,12 +36,6 @@ export const Footer = () => {
             stylize: true,
           }
           : null,
-        {
-          name: 'Gallery',
-          onClick: () => {
-            router.push('/app/gallery');
-          },
-        },
         {
           name: 'Docs',
           onClick: () => {
@@ -131,67 +131,69 @@ export const Footer = () => {
   ];
 
   return (
-    <div id="FooterContainer" className={tw(
-      'flex flex-col minlg:flex-row relative content-between minlg:content-center py-12 bg-footer-bg dark:bg-footer-bg-dk',
-      'dark:text-primary-txt-dk text-primary-txt'
-    )}>
+    <div id="FooterContainer" className='bg-footer-bg dark:bg-footer-bg-dk pb-6 font-grotesk'>
       <div className={tw(
-        'minlg:w-2/5 w-full flex-shrink-0 flex',
-        'items-start justify-between flex-col text-base minlg:pl-24 pl-0 items-center minlg:items-start'
+        'flex flex-col minlg:flex-row relative content-between minlg:content-center pt-12',
+        'dark:text-primary-txt-dk text-primary-txt'
       )}>
-        <Link href="/">
-          <div className={tw(
-            'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
-          )}>
-            <Link href='/' passHref>
-              <div>
-                {
-                  user.isDarkMode ?
-                    <LightNavLogo className='h-8 w-8 justify-start' /> :
-                    <NavLogo className='h-8 w-8 justify-start' />
-                }
-              </div>
-            </Link>
-          </div>
-        </Link>
-        <div className="hidden minlg:block h-1/5 mt-3 minmd:mt-0">
-          © {new Date().getFullYear()} NFT.com. All rights reserved
+        <div className={tw(
+          'minlg:w-max w-full flex-shrink-0 flex',
+          'items-start justify-between flex-col text-base minlg:pl-5 pl-0 items-center minlg:items-start'
+        )}>
+          <Link href="/">
+            <div className={tw(
+              'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
+            )}>
+              <Link href='/' passHref>
+                <div className='w-10 h-10'>
+                  {
+                    user.isDarkMode ?
+                      <LightNavLogo className='justify-start' /> :
+                      <NavLogo className='w-10 h-10 justify-start' />
+                  }
+                </div>
+              </Link>
+            </div>
+          </Link>
+        </div>
+        <div className="w-full grid minlg:grid-cols-4 minmd:grid-cols-3 grid-cols-2 minlg:ml-20 minxl:pl-24">
+          {filterNulls(footerData).map((item, index) => {
+            return (
+              <div className={tw(
+                'text-base mt-12 minlg:mt-0 pl-[30%] minmd:pl-[35%] minlg:pl-0',
+                index === 3 && 'col-start-2 minlg:row-auto minlg:col-auto',
+              )} key={index}>
+                <span className="font-medium">
+                  <b>{item.title}</b>
+                </span>
+                <div className='flex flex-col'>
+                  {item.links?.map((item, index) => {
+                    return (
+                      <span
+                        key={index}
+                        className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
+                        onClick={item.onClick}
+                        style={item?.stylize
+                          ? {
+                            background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
+                            backgroundSize: '200% 200%',
+                            animation: 'gradient 20s ease infinite',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                          }
+                          : null}
+                      >
+                        {item.name}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>);
+          })}
         </div>
       </div>
-      <div className="minlg:w-3/5 w-full grid minlg:grid-cols-4 grid-cols-2">
-        {filterNulls(footerData).map((item, index) => {
-          return (
-            <div className="text-base mt-12 minlg:mt-0 pl-[30%] minmd:pl-[35%] minlg:pl-0" key={index}>
-              <span className="font-medium">
-                <b>{item.title}</b>
-              </span>
-              <div className='flex flex-col'>
-                {item.links?.map((item, index) => {
-                  return (
-                    <span
-                      key={index}
-                      className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
-                      onClick={item.onClick}
-                      style={item?.stylize
-                        ? {
-                          background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
-                          backgroundSize: '200% 200%',
-                          animation: 'gradient 20s ease infinite',
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent'
-                        }
-                        : null}
-                    >
-                      {item.name}
-                    </span>
-                  );
-                })}
-              </div>
-            </div>);
-        })}
-      </div>
-      <div className="block minlg:hidden mx-auto align-items text-grey-txt h-1/5 mt-10 minlg:mt-0">
-        © {new Date().getFullYear()} NFT.com. All rights reserved
+      <div className="w-full mx-auto text-xs text-center minlg:text-left minlg:ml-4 mt-9 minlg:mt-4">
+            © {new Date().getFullYear()} NFT.com. All rights reserved
       </div>
     </div>
   );
