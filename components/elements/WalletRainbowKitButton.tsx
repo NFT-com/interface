@@ -40,7 +40,6 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
     },
   });
   const { disconnect } = useDisconnect();
-  const { primaryIcon } = useThemeColors();
   const { openChainModal } = useChainModal();
   const { chain } = useNetwork();
 

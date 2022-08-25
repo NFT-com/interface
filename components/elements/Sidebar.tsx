@@ -1,5 +1,6 @@
 import NftOwner from 'components/modules/Settings/NftOwner';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
+import MobileNoAccount from 'components/modules/Sidebar/MobileNoAccount';
 import { Notifications } from 'components/modules/Sidebar/Notifications';
 import SignIn from 'components/modules/Sidebar/SignIn';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
@@ -47,6 +48,7 @@ export const Sidebar = () => {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
 
   const [hiddenProfile, setHiddenProfile] = useState(null);
+  const [signIn, setSignIn] = useState(false);
 
   useEffect(() => {
     sidebarOpen && promoteZIndex('sidebar');
@@ -215,7 +217,13 @@ export const Sidebar = () => {
           }}
           className='h-full'
         >
-          <SignIn />
+          <div className='block minlg:hidden'>
+            {signIn ? <SignIn /> : <MobileNoAccount setSignIn={setSignIn} />}
+          </div>
+
+          <div className='hidden minlg:block'>
+            <SignIn />
+          </div>
         </motion.div>
       );
     } else {
@@ -240,7 +248,7 @@ export const Sidebar = () => {
         </motion.div>
       );
     }
-  }, [currentAddress, getSidebarContent]);
+  }, [currentAddress, getSidebarContent, signIn]);
   
   return (
     <AnimatePresence>
