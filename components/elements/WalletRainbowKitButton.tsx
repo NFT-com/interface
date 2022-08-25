@@ -10,7 +10,6 @@ import { useChainModal } from '@rainbow-me/rainbowkit';
 import { UserCircle, Wallet } from 'phosphor-react';
 import { useCallback, useContext } from 'react';
 import { Menu } from 'react-feather';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 
 interface WalletRainbowKitButtonProps {

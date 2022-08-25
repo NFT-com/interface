@@ -131,10 +131,9 @@ export const Footer = () => {
   ];
 
   return (
-    <div id="FooterContainer" className='bg-footer-bg dark:bg-footer-bg-dk pb-6 font-grotesk'>
+    <div id="FooterContainer" className='bg-footer-bg-dk pb-6 font-grotesk text-primary-txt-dk'>
       <div className={tw(
-        'flex flex-col minlg:flex-row relative content-between minlg:content-center pt-12',
-        'dark:text-primary-txt-dk text-primary-txt'
+        'flex flex-col minlg:flex-row relative content-between minlg:content-center pt-12'
       )}>
         <div className={tw(
           'minlg:w-max w-full flex-shrink-0 flex',
@@ -146,11 +145,7 @@ export const Footer = () => {
             )}>
               <Link href='/' passHref>
                 <div className='w-10 h-10'>
-                  {
-                    user.isDarkMode ?
-                      <LightNavLogo className='justify-start' /> :
-                      <NavLogo className='w-10 h-10 justify-start' />
-                  }
+                  <LightNavLogo className='w-10 h-10 justify-start' />
                 </div>
               </Link>
             </div>
