@@ -30,19 +30,7 @@ function usePrevious(value) {
   return ref.current;
 }
 
-type CuratedCollection = {
-  tabTitle: string;
-  contractAddresses: string[]
-}
-
-type ResultsPageProps = {
-  data: CuratedCollection[]
-};
-
-export default function ResultsPage({ data }: ResultsPageProps) {
-  //remove this
-  console.log('🚀 ~ file: [searchTerm].tsx ~ line 38 ~ ResultsPage ~ data', data);
-  //
+export default function ResultsPage() {
   const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;

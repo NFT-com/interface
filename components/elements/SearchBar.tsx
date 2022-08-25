@@ -19,12 +19,12 @@ export const SearchBar = (props: SearchBarProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!router.route.includes('discover/')) {
+    if (!router.pathname.includes('discover/')) {
       inputRef.current.value = '';
       setShowHits(false);
       setSearchResults([]);
     }
-  },[router.route]);
+  },[router.pathname]);
 
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
