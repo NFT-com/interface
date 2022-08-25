@@ -3,16 +3,18 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { Nft, SupportedExternalExchange, TxActivity } from 'graphql/generated/types';
-import { useWethAllowance } from 'hooks/balances/useWethAllowance';
+import { Maybe, Nft, SupportedExternalExchange, SupportedExternalProtocol, TxActivity } from 'graphql/generated/types';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
-import { isNullOrEmpty, sameAddress } from 'utils/helpers';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { SeaportOrderComponents } from 'types';
+import { sameAddress } from 'utils/helpers';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
-import { BigNumber } from 'ethers';
+import { MakerOrder } from '@looksrare/sdk';
+import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -25,17 +27,13 @@ export interface ExternalListingTileProps {
 }
 
 const Colors = {
-  [SupportedExternalExchange.Looksrare]: 'bg-looksrare-green',
-  [SupportedExternalExchange.Opensea]: 'bg-opensea-blue',
-  [SupportedExternalExchange.X2y2]: 'bg-x2y2-orange',
-  [SupportedExternalExchange.Rarible]: 'bg-rarible-red',
+  [SupportedExternalExchange.LooksRare]: 'bg-looksrare-green',
+  [SupportedExternalExchange.Opensea]: 'bg-opensea-blue'
 };
 
 const Icons = {
-  [SupportedExternalExchange.Looksrare]: '/looksrare_black.svg',
+  [SupportedExternalExchange.LooksRare]: '/looksrare_black.svg',
   [SupportedExternalExchange.Opensea]: '/opensea_blue.png',
-  [SupportedExternalExchange.X2y2]: '/opensea_blue.png',
-  [SupportedExternalExchange.Rarible]: '/opensea_blue.png',
 };
 
 export function ExternalListingTile(props: ExternalListingTileProps) {
@@ -46,28 +44,40 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const { chain } = useNetwork();
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
-  const { allowance } = useWethAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id));
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
+  const { getByContractAddress } = useSupportedCurrencies();
 
-  const marketplace = props.listing?.order?.exchange === SupportedExternalExchange.Looksrare ?
-    'looksrare' :
-    props.listing?.order?.exchange === SupportedExternalExchange.Opensea ?
-      'seaport' :
-      null;
+  const listingProtocol = props.listing?.order?.protocol;
 
   const getPrice = useCallback(() => {
-    // todo: get price from protocol data
-    const price = JSON.parse(listing?.order?.protocolData?.[0])?.current_price;
-    return BigNumber.from(isNullOrEmpty(price) ? 0 : price);
-  }, [listing?.order?.protocolData]);
+    switch(listing?.order?.protocol) {
+    case (SupportedExternalProtocol.LooksRare): {
+      const order = listing?.order?.protocolData as Maybe<PartialDeep<MakerOrder>>;
+      return BigNumber.from(order?.price ?? 0);
+    }
+    case (SupportedExternalProtocol.Seaport): {
+      const orderParameters = listing?.order?.protocolData as Maybe<PartialDeep<SeaportOrderComponents>>;
+      return orderParameters?.consideration
+        ?.reduce((total, consideration) => total.add(BigNumber.from(consideration?.startAmount ?? 0)), BigNumber.from(0));
+    }
+    }
+  }, [listing?.order?.protocol, listing?.order?.protocolData]);
 
   const getCurrency = useCallback(() => {
-    // todo: get currency from protocol data
-    return JSON.parse(listing?.order?.protocolData?.[0])?.maker_asset_bundle?.asset_contract?.address;
-  }, [listing?.order?.protocolData]);
+    switch(listing?.order?.protocol) {
+    case (SupportedExternalProtocol.LooksRare): {
+      const order = listing?.order?.protocolData as Maybe<PartialDeep<MakerOrder>>;
+      return order?.currency ?? order?.['currencyAddress'];
+    }
+    case (SupportedExternalProtocol.Seaport): {
+      const orderParameters = listing?.order?.protocolData as Maybe<PartialDeep<SeaportOrderComponents>>;
+      return orderParameters?.consideration?.[0]?.token;
+    }
+    }
+  }, [listing?.order?.protocol, listing?.order?.protocolData]);
 
-  if (marketplace == null) {
+  if (![SupportedExternalProtocol.LooksRare, SupportedExternalProtocol.Seaport].includes(listingProtocol as SupportedExternalProtocol)) {
     // Unsupported marketplace.
     return null;
   }
@@ -89,7 +99,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         </span>
         <div className='flex items-center'>
           <span className='text-base font-medium'>
-            {/* todo: get price and currency from protocol data */}
+            {ethers.utils.formatUnits(getPrice(), getByContractAddress(getCurrency())?.decimals ?? 18)}
+            {getByContractAddress(getCurrency())?.name ?? 'ETH'}
           </span>
         </div>
       </div>
@@ -101,9 +112,18 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
           color="white"
           label={'View Listing'}
           onClick={() => {
-            // todo: get permalink from protocol data
-            const permalink = JSON.parse(listing?.order?.protocolData?.[0])?.permalink;
-            window.open(permalink, '_blank');
+            switch(listingProtocol) {
+            case SupportedExternalProtocol.LooksRare: {
+              const orderParameters = listing?.order?.protocolData as Maybe<PartialDeep<SeaportOrderComponents>>;
+              window.open(`https://opensea.io/assets/ethereum/${orderParameters?.offer?.[0]?.token}/${orderParameters?.offer?.[0]?.identifierOrCriteria}`, '_blank');
+              break;
+            }
+            case SupportedExternalProtocol.Seaport: {
+              const order = listing?.order?.protocolData as Maybe<PartialDeep<MakerOrder>>;
+              window.open(`https://looksrare.org/collections/${order?.collection ?? order?.['collectionAddress']}/${order?.tokenId}`, '_blank');
+              break;
+            }
+            }
           }}
           type={ButtonType.PRIMARY}
         />
@@ -116,14 +136,16 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             color="white"
             label={'Cancel Listing'}
             onClick={async () => {
-              if (listing?.order?.exchange === SupportedExternalExchange.Looksrare) {
-                // todo: get nonce from protocol data
-                const nonce = JSON.parse(listing?.order?.protocolData?.[0])?.nonce;
-                await cancelLooksrareListing(nonce, looksrareExchange);
+              if (listingProtocol === SupportedExternalProtocol.LooksRare) {
+                const order = listing?.order?.protocolData as Maybe<PartialDeep<MakerOrder>>;
+                if (order == null) {
+                  return;
+                }
+                await cancelLooksrareListing(BigNumber.from(order.nonce), looksrareExchange);
                 // todo: notify backend of cancellation
-              } else if (listing?.order?.exchange === SupportedExternalExchange.Opensea) {
-                // todo: get order from protocol data
-                await cancelSeaportListing(JSON.parse(listing?.order?.protocolData[0]), seaportExchange);
+              } else if (listingProtocol === SupportedExternalProtocol.Seaport) {
+                const orderParameters = JSON.parse(listing?.order?.protocolData?.[0]) as SeaportOrderComponents;
+                await cancelSeaportListing(orderParameters, seaportExchange);
                 // todo: notify backend of cancellation
               }
             }}
@@ -132,15 +154,17 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             stretch
             color="white"
             label={'Add to Cart'}
-            onClick={() => {
+            onClick={async () => {
+              const currencyData = getByContractAddress(getCurrency() ?? WETH.address);
+              const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chain?.id ?? 1));
+              const price = getPrice();
               stagePurchase({
                 nft: props.nft,
                 currency: getCurrency() ?? WETH.address,
-                price: getPrice(),
+                price: price,
                 collectionName: props.collectionName,
-                marketplace,
-                // todo: check approval for any currency, not just WETH
-                isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0),
+                protocol: listingProtocol as SupportedExternalProtocol,
+                isApproved: BigNumber.from(allowance ?? 0).gt(price),
                 protocolData: listing?.order?.protocolData
               });
               toggleCartSidebar('buy');

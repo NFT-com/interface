@@ -17,6 +17,7 @@ export type NFTSupportedCurrency = {
   name: string;
   logo: string;
   contract: string;
+  decimals: number;
   usd: (val: number) => number;
   allowance: (address: string, proxy: string) => Promise<BigNumberish>;
   setAllowance: (address: string, proxy: string) => Promise<boolean>;
@@ -67,6 +68,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         name: 'WETH',
         logo: WETH_LOGO,
         contract: weth.address,
+        decimals: 18,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
         allowance: async (currentAddress: string, proxy: string) => {
           const wethAllowance = await weth.allowance(currentAddress, proxy ?? NULL_ADDRESS);
@@ -80,6 +82,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         name: 'ETH',
         logo: ETH_LOGO,
         contract: NULL_ADDRESS,
+        decimals: 18,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
         allowance: async () => {
           // ETH doesn't have allowances - just need to include ETH
@@ -94,6 +97,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         logo: DAI_LOGO,
         contract: dai.address,
         usd: (val: number) => val,
+        decimals: 18,
         allowance: async (currentAddress: string, proxy: string) => {
           const daiAllowance = await dai.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return daiAllowance;
@@ -107,6 +111,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         logo: USDC_LOGO,
         contract: usdc.address,
         usd: (val: number) => val,
+        decimals: 18,
         allowance: async (currentAddress: string, proxy: string) => {
           const usdcAllowance = await usdc.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return usdcAllowance;

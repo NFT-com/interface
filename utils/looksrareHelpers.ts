@@ -1,8 +1,6 @@
 import { IExecutionStrategy, LooksRareExchange, RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
 import { Nft } from 'graphql/generated/types';
 
-import { isNullOrEmpty } from './helpers';
-
 import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
 import { BigNumber, BigNumberish } from 'ethers';
 import { PartialDeep } from 'type-fest';
@@ -49,10 +47,10 @@ export async function createLooksrareParametersForNFTListing(
 }
 
 export async function cancelLooksrareListing(
-  orderNonce: string,
+  orderNonce: BigNumberish,
   looksrareExchange: LooksRareExchange
 ) {
-  if (isNullOrEmpty(orderNonce) || looksrareExchange == null) {
+  if (orderNonce == null || looksrareExchange == null) {
     return;
   }
   await looksrareExchange.cancelMultipleMakerOrders([orderNonce]);

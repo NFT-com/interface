@@ -1,5 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Maybe } from 'graphql/generated/types';
+import { Maybe, SupportedExternalProtocol } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { isNullOrEmpty, max } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
@@ -53,8 +53,8 @@ export function NFTListingsCartSummary() {
 
   const getMaxMarketplaceFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
-      const feesByMarketplace = stagedListing.targets.map((marketplace) => {
-        if (marketplace === 'looksrare') {
+      const feesByMarketplace = stagedListing.targets.map((protocol) => {
+        if (protocol === SupportedExternalProtocol.LooksRare) {
           // Looksrare fee is fetched from the smart contract.
           return BigNumber.from(looksrareProtocolFeeBps == null
             ? 0
@@ -70,8 +70,8 @@ export function NFTListingsCartSummary() {
  
   const getMaxRoyaltyFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
-      const royaltiesByMarketplace = stagedListing.targets.map((marketplace) => {
-        if (marketplace === 'looksrare') {
+      const royaltiesByMarketplace = stagedListing.targets.map((protocol) => {
+        if (protocol === SupportedExternalProtocol.LooksRare) {
           const minAskAmount = BigNumber.from(stagedListing?.looksrareOrder?.minPercentageToAsk ?? 0)
             .div(10000)
             .mul(BigNumber.from(stagedListing?.looksrareOrder?.price ?? 0));
@@ -105,8 +105,8 @@ export function NFTListingsCartSummary() {
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
-      (stagedListing.targets.includes('looksrare') && !stagedListing?.isApprovedForLooksrare) ||
-      (stagedListing.targets.includes('seaport') && !stagedListing?.isApprovedForSeaport)
+      (stagedListing.targets.includes(SupportedExternalProtocol.LooksRare) && !stagedListing?.isApprovedForLooksrare) ||
+      (stagedListing.targets.includes(SupportedExternalProtocol.Seaport) && !stagedListing?.isApprovedForSeaport)
     );
   }, [toList]);
 
@@ -131,12 +131,12 @@ export function NFTListingsCartSummary() {
                     label: 'Approve Collections for Sale',
                     error: error === 'ApprovalError',
                     items: toList?.map((stagedListing) => {
-                      return stagedListing.targets.map((marketplace) => {
-                        const approved = marketplace === 'looksrare' ?
+                      return stagedListing.targets.map((protocol) => {
+                        const approved = protocol === SupportedExternalProtocol.LooksRare ?
                           stagedListing?.isApprovedForLooksrare :
                           stagedListing?.isApprovedForSeaport;
                         return {
-                          label: 'Approve ' + stagedListing?.collectionName + ' for ' + marketplace,
+                          label: 'Approve ' + stagedListing?.collectionName + ' for ' + protocol,
                           icon: approved ?
                             <CheckCircle size={16} className="text-green-500" /> :
                             error === 'ApprovalError' ?
@@ -188,6 +188,7 @@ export function NFTListingsCartSummary() {
               clear();
               setSuccess(false);
               toggleCartSidebar();
+              setShowProgressBar(false);
               return;
             }
 
@@ -204,12 +205,12 @@ export function NFTListingsCartSummary() {
               for (let i = 0; i < toList.length; i++) {
                 const stagedListing = toList[i];
                 for (let j = 0; j < toList[i].targets.length; j++) {
-                  const marketplace = toList[i].targets[j];
-                  const approved = marketplace === 'looksrare' ?
+                  const protocol = toList[i].targets[j];
+                  const approved = protocol === SupportedExternalProtocol.LooksRare ?
                     stagedListing?.isApprovedForLooksrare :
                     stagedListing?.isApprovedForSeaport;
-                  if (!approved && marketplace === 'looksrare') {
-                    const result = await approveCollection(stagedListing, 'looksrare')
+                  if (!approved && protocol === SupportedExternalProtocol.LooksRare) {
+                    const result = await approveCollection(stagedListing, SupportedExternalProtocol.LooksRare)
                       .then(result => {
                         if (!result) {
                           setError('ApprovalError');
@@ -225,8 +226,8 @@ export function NFTListingsCartSummary() {
                     if (!result) {
                       break;
                     }
-                  } else if (!approved && marketplace === 'seaport') {
-                    const result = await approveCollection(stagedListing, 'seaport')
+                  } else if (!approved && protocol === SupportedExternalProtocol.Seaport) {
+                    const result = await approveCollection(stagedListing, SupportedExternalProtocol.Seaport)
                       .then(result => {
                         if (!result) {
                           setError('ApprovalError');

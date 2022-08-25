@@ -1,8 +1,8 @@
-import { Nft } from 'graphql/generated/types';
+import { Nft, SupportedExternalProtocol } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { filterNulls } from 'utils/helpers';
 
-import { NFTListingsContext, TargetMarketplace } from './NFTListingsContext';
+import { NFTListingsContext } from './NFTListingsContext';
 
 import { BigNumber } from '@ethersproject/bignumber';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
@@ -11,7 +11,7 @@ import { PartialDeep } from 'type-fest';
 export type StagedPurchase = {
   nft: PartialDeep<Nft>;
   collectionName: string;
-  marketplace: TargetMarketplace;
+  protocol: SupportedExternalProtocol;
   currency: string;
   price: BigNumber;
   isApproved: boolean;
@@ -93,7 +93,7 @@ export function NFTPurchaseContextProvider(
         amounts: toBuy?.map(purchase => BigNumber.from(purchase?.currency ?? 0))
       },
       toBuy?.map(purchase => ({
-        marketId: purchase?.marketplace === 'seaport' ? BigNumber.from(1) : BigNumber.from(0),
+        marketId: purchase?.protocol === SupportedExternalProtocol.Seaport ? BigNumber.from(1) : BigNumber.from(0),
         value: BigNumber.from(0),
         tradeData: JSON.stringify(purchase?.protocolData),
       })),

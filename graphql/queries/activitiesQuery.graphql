@@ -12,7 +12,7 @@ query Activities($input: TxActivitiesInput) {
             timestamp
             walletAddress
             order {
-                chainId:
+                chainId
                 exchange
                 orderHash
                 orderType

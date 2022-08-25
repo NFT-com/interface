@@ -1683,10 +1683,13 @@ export type SignatureInput = {
 };
 
 export enum SupportedExternalExchange {
-  Looksrare = 'looksrare',
-  Opensea = 'opensea',
-  Rarible = 'rarible',
-  X2y2 = 'x2y2'
+  LooksRare = 'LooksRare',
+  Opensea = 'Opensea',
+}
+
+export enum SupportedExternalProtocol {
+  Seaport = 'Seaport',
+  LooksRare = "LooksRare",
 }
 
 export type SwapNftInput = {
@@ -2273,7 +2276,7 @@ export type ActivitiesQueryVariables = Exact<{
 }>;
 
 
-export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', chainId?: string | null, activityType: string, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: Array<string | null> | null, chainId: string } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', chainId?: string | null, activityType: string, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: Array<string | null> | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
 
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2978,7 +2981,8 @@ export const ActivitiesDocument = gql`
       timestamp
       walletAddress
       order {
-        chainId: exchange
+        chainId
+        exchange
         orderHash
         orderType
         makerAddress

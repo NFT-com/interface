@@ -162,8 +162,8 @@ export function createSeaportParametersForNFTListing(
 }
 
 export async function cancelSeaportListing(
-  order: OrderComponentsStruct,
+  order: SeaportOrderComponents,
   seaportExchange: Seaport
 ) {
-  await seaportExchange.cancel([order]);
+  await seaportExchange.cancel([order as OrderComponentsStruct]);
 }

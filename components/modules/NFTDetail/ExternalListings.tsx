@@ -22,8 +22,8 @@ export function ExternalListings(props: ExternalListingsProps) {
   const { address: currentAddress } = useAccount();
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
   
-  // TODO: consolidate these queries to hit one gQL endpoint once it's ready.
   const { data: listings } = useActivitiesQuery({
+    // todo: paginate to get all the listings
     pageInput: {
       first: 50,
     },

@@ -1,3 +1,4 @@
+import { SupportedExternalProtocol } from 'graphql/generated/types';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { processIPFSURL } from 'utils/helpers';
@@ -29,10 +30,10 @@ export function PurchaseCheckoutNft(props: PurchaseCheckoutNftProps) {
   });
 
   const getMarketplaceIcon = useCallback((purchase: PartialDeep<StagedPurchase>) => {
-    switch(purchase.marketplace) {
-    case 'seaport':
+    switch(purchase.protocol) {
+    case SupportedExternalProtocol.Seaport:
       return <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>;
-    case 'looksrare':
+    case SupportedExternalProtocol.LooksRare:
       return <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>;
     default:
       return null;
