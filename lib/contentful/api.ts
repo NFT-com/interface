@@ -111,17 +111,17 @@ export async function getCollection(preview, limit, type, schema) {
   return entries.data[type].items;
 }
 
-export async function getCuratedCollections() {
+export async function getCuratedCollections(preview = false) {
   const entry = await fetchGraphQL(
     `query {
-      curatedCollectionsCollection(preview:false) {
+      curatedCollectionsCollection(preview: false) {
         items {
           tabTitle
           contractAddresses
         }
       }
     }`,
-    false
+    preview
   );
   return entry;
 }

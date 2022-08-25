@@ -143,3 +143,8 @@ export const HOME_PAGE_FIELDS = `
   featuredProfile
   entryTitle
 `;
+
+export const CURATED_COLLECTIONS_FIELDS = `
+  tabTitle
+  contractAddresses
+`;

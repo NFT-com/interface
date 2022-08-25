@@ -14,6 +14,7 @@ import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
+import { getCollection } from 'lib/contentful/api';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
@@ -40,6 +41,20 @@ export default function ResultsPage() {
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
   const [filters, setFilters] = useState([]);
+
+  async function getServerSideProps({ preview = false }) {
+    const curData = await getCollection(false, 1, 'curatedCollectionsCollection', 'tabTitle contractAddresses');
+    console.log(curData, 'homeDatafdo fdo');
+    return {
+      props: {
+        preview,
+        data: curData[0] ?? null,
+      }
+    };
+  }
+    
+  const respCur = getServerSideProps({ preview: false });
+  console.log(respCur, 'homeDatafdo fdo');
 
   const checkedFiltersString = useCallback(() => {
     let checkedFiltersString = '';
@@ -207,3 +222,5 @@ ResultsPage.getLayout = function getLayout(page) {
     </DefaultLayout>
   );
 };
+
+
