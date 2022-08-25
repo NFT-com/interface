@@ -110,3 +110,20 @@ export async function getCollection(preview, limit, type, schema) {
   );
   return entries.data[type].items;
 }
+
+export async function getCuratedCollections() {
+  const entry = await fetchGraphQL(
+    `query {
+      curatedCollectionsCollection() {
+        items {
+          tabTitle
+          contractAddresses
+        }
+      }
+    }`,
+    true
+  );
+
+  // console.log(entry, 'entry fdo');
+  return entry;
+}

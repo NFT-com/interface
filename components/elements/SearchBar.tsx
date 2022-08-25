@@ -4,7 +4,7 @@ import { getTypesenseInstantsearchAdapterRaw, SearchableFields } from 'utils/typ
 
 import { useRouter } from 'next/router';
 import SearchIcon from 'public/search.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type SearchBarProps = {
   bgLight?: boolean
@@ -16,9 +16,19 @@ export const SearchBar = (props: SearchBarProps) => {
   const router = useRouter();
   const resultsRef = useRef();
   const cliente = getTypesenseInstantsearchAdapterRaw;
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!router.route.includes('discover/')) {
+      inputRef.current.value = '';
+      setShowHits(false);
+      setSearchResults([]);
+    }
+  },[router.route]);
 
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
+    setSearchResults([]);
   });
 
   const goTo = (document) => {
@@ -35,9 +45,8 @@ export const SearchBar = (props: SearchBarProps) => {
   const search = (event) => {
     const target = event.target as HTMLInputElement;
 
-    if (target.value.length < 3) {
+    if (target.value.length < 3 ) {
       setShowHits(false);
-      return;
     }
 
     const searchRequests = {
@@ -63,19 +72,21 @@ export const SearchBar = (props: SearchBarProps) => {
       ]
     };
 
-    cliente.multiSearch.perform(searchRequests)
-      .then((data) => {
-        setSearchResults([...data.results]);
-      })
-      .catch((error) => {
-        console.log(error);
-        setShowHits(false);
-      });
+    if (target.value !== '') {
+      cliente.multiSearch.perform(searchRequests)
+        .then((data) => {
+          setSearchResults([...data.results]);
+        })
+        .catch((error) => {
+          console.log(error);
+          setShowHits(false);
+        });
 
-    setShowHits(true);
+      setShowHits(true);
+    }
 
     if (event.keyCode === 13) {
-      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '0'}`);
+      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '*'}`);
       setShowHits(false);
       target.click();
     }
@@ -91,6 +102,7 @@ export const SearchBar = (props: SearchBarProps) => {
           <SearchIcon className='mr-2 shrink-0 aspect-square' />
           <div className="w-full">
             <input
+              ref={inputRef}
               type="search"
               placeholder="Search here…"
               autoComplete="off"
@@ -133,8 +145,6 @@ export const SearchBar = (props: SearchBarProps) => {
                             'hover:cursor-pointer hover:opacity-70')}
                           onClick={() => goTo(hit.document)}>
                           <span>{hit.document.contractName}</span>
-                          <span>{hit.document.url}</span>
-                          <span className="text-[0.7rem]">{hit.document.contractAddr}</span>
                         </div>
                       );
                     }))}

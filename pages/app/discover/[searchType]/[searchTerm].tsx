@@ -8,6 +8,8 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import NotFoundPage from 'pages/404';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
@@ -61,7 +63,7 @@ export default function ResultsPage() {
       max_facet_values: 200,
       collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
-      q: searchTerm?.toString(),
+      q: searchTerm?.toString() !== '*' ? searchTerm?.toString() : '',
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
       filter_by: checkedFiltersString(),
@@ -70,7 +72,7 @@ export default function ResultsPage() {
       .then((resp) => {
         setResults([...resp.results[0].hits]);
         setFound(resp.results[0].found);
-        setFilters([...resp.results[0].facet_counts]);
+        filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
   },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
 
@@ -81,7 +83,7 @@ export default function ResultsPage() {
         max_facet_values: 200,
         collection: searchType?.toString(),
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
-        q: searchTerm?.toString(),
+        q: searchTerm?.toString() !== '*' ? searchTerm?.toString() : '',
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
         filter_by: checkedFiltersString(),
@@ -90,16 +92,20 @@ export default function ResultsPage() {
         .then((resp) => {
           setResults([...results,...resp.results[0].hits]);
           setFound(resp.results[0].found);
-          setFilters([...resp.results[0].facet_counts]);
+          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
   }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
   
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
+    return <NotFoundPage />;
+  }
+
   return (
     <div className="mt-20">
       <Link href='/app/auctions' passHref>
         <a>
-          <div className='mx-auto flex flex-row items-center justify-center w-screen h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
+          <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
             <span>Mint yourself! Get a free profile</span>
             <div className='flex flex-col rounded items-center p-[1px] ml-2'>
               <Vector />
@@ -119,7 +125,7 @@ export default function ResultsPage() {
               <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
             </div>
           </div>
-          {searchType?.toString() === 'collections' && <CuratedCollectionsFilter onClick={() => null} />}
+          {searchType?.toString() === 'collections' && <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>}
           <div>
             {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
             <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
@@ -146,7 +152,7 @@ export default function ResultsPage() {
             </div>}
             <div className={tw(
               'mt-6',
-              searchType?.toString() === 'collections' ? 'minmd:grid minmd:grid-cols-2' : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-4' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
+              searchType?.toString() === 'collections' ? `minmd:grid minmd:grid-cols-2 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : 'minlg:grid-cols-3 minxl:grid-cols-4'}` : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-4' : 'minmd:grid-cols-3 minlg:grid-cols-4'} `,
               searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
               {results && results.map((item, index) => {
                 return (
@@ -162,7 +168,6 @@ export default function ResultsPage() {
                       />:
                       <NFTCard
                         title={item.document.nftName}
-                        subtitle={'#'+ item.document.tokenId}
                         images={[item.document.imageURL]}
                         onClick={() => {
                           if (item.document.nftName) {

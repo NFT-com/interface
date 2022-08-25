@@ -12,6 +12,7 @@ import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
+import { getCuratedCollections } from 'lib/contentful/api';
 import Link from 'next/link';
 import Vector from 'public/Vector.svg';
 import { useEffect, useRef, useState } from 'react';
@@ -34,6 +35,8 @@ export default function DiscoverPage() {
   const { width: screenWidth } = useWindowDimensions();
   const prevVal = usePrevious(page);
   const { sideNavOpen } = useSearchModal();
+  //const post = getCuratedCollections();
+  //console.log(post, 'post fdo');
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -77,7 +80,17 @@ export default function DiscoverPage() {
 
   return(
     <>
-      <div className="my-10 minlg:mb-10 minlg:mt-0 max-w-lg minmd:max-w-full mx-[4%] minmd:mx-[2%] minlg:mr-[2%] minlg:ml-0 self-center minmd:self-stretch">
+      <div className="my-10 minlg:mb-10 minlg:mt-20 max-w-lg minmd:max-w-full mx-[4%] minmd:mx-[2%] minlg:mr-[2%] minlg:ml-0 self-center minmd:self-stretch">
+        <Link href='/app/auctions' passHref>
+          <a>
+            <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
+              <span>Mint yourself! Get a free profile</span>
+              <div className='flex flex-col rounded items-center p-[1px] ml-2'>
+                <Vector />
+              </div>
+            </div>
+          </a>
+        </Link>
         <div className="flex">
           <div className="hidden minlg:block">
             <SideNav onSideNav={changeCurated}/>
