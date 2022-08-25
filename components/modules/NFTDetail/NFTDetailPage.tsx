@@ -1,5 +1,5 @@
-import { AnalyticsContainer } from 'components/modules/Analytics/AnalyticsContainer';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
+import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -50,7 +50,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           //TODO: @anthony - get data from indexer
           getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
             <div className="minlg:w-1/2 w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
-              <AnalyticsContainer data={nft} />
+              <NFTAnalyticsContainer data={nft} />
             </div>
         }
       </div>
