@@ -57,14 +57,14 @@ const ContractNameFilter = (props: any) => {
   },[filterOptions, searchVal]);
 
   return (
-    <div>
+    <div className="mt-3">
       <div className={tw(
-        'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black')}>
+        'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black bg-gray-200')}>
         <SearchIcon className='mr-2 shrink-0 aspect-square' />
         <div className="w-full">
           <input
             type="search"
-            placeholder="Keyword"
+            placeholder="Search"
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
@@ -125,7 +125,7 @@ const CurrencyPriceFilter = (props: any) => {
   },[clearedFilters]);
 
   return(
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col space-y-2 mt-3">
       <DropdownPicker
         placeholder={'Currency'}
         selectedIndex={0}
@@ -232,8 +232,8 @@ const Filter = (props: any) => {
         onClick={() => { setIsFilterCollapsed(!isFilterCollapsed); }}
         className="flex justify-between cursor-pointer">
         <div className="font-black text-base font-grotesk">{formatTitle(filter.field_name)}</div>
-        {!isFilterCollapsed && <X />}
-        {isFilterCollapsed && <Plus />}
+        {!isFilterCollapsed && <X className="h-4 w-4"/>}
+        {isFilterCollapsed && <Plus className="h-4 w-4"/>}
       </div>
       <motion.div
         animate={{
@@ -289,7 +289,7 @@ export const FiltersContent = () => {
         </div>
         <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
         <div className="px-4 flex flex-col">
-          <div className="self-start font-black text-lg font-grotesk">Sort</div>
+          <div className="self-start font-black text-lg font-grotesk mb-3">Sort</div>
           <DropdownPicker
             selectedIndex={selectedIndex}
             lightModeForced
