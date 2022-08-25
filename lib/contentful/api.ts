@@ -123,7 +123,5 @@ export async function getCuratedCollections() {
     }`,
     true
   );
-
-  // console.log(entry, 'entry fdo');
   return entry;
 }

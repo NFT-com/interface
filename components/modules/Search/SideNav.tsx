@@ -3,9 +3,7 @@ import { tw } from 'utils/tw';
 
 import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
 import { FiltersContent } from './FiltersContent';
-import { SearchContent } from './SearchContent';
 
-import { SearchIcon } from '@heroicons/react/outline';
 import { motion } from 'framer-motion';
 import { FunnelSimple } from 'phosphor-react';
 import CaretCircle from 'public/caret_circle.svg';

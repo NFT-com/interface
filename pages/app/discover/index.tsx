@@ -12,7 +12,6 @@ import { getPerPage } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
-import { getCuratedCollections } from 'lib/contentful/api';
 import Link from 'next/link';
 import Vector from 'public/Vector.svg';
 import { useEffect, useRef, useState } from 'react';
