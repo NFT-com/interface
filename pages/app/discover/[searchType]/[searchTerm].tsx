@@ -116,7 +116,7 @@ export default function ResultsPage() {
         
       <div className="flex">
         <div className="hidden minlg:block">
-          {filters.length > 0 && <SideNav onSideNav={() => null} filtersData={filters}/>}
+          <SideNav onSideNav={() => null} filtersData={filters}/>
         </div>
         <div className="mx-6">
           <div className="flex flex-col mt-6">
