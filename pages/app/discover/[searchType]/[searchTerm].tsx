@@ -30,7 +30,19 @@ function usePrevious(value) {
   return ref.current;
 }
 
-export default function ResultsPage() {
+type CuratedCollection = {
+  tabTitle: string;
+  contractAddresses: string[]
+}
+
+type ResultsPageProps = {
+  data: CuratedCollection[]
+};
+
+export default function ResultsPage({ data }: ResultsPageProps) {
+  //remove this
+  console.log('🚀 ~ file: [searchTerm].tsx ~ line 38 ~ ResultsPage ~ data', data);
+  //
   const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
@@ -41,20 +53,6 @@ export default function ResultsPage() {
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
   const [filters, setFilters] = useState([]);
-
-  async function getServerSideProps({ preview = false }) {
-    const curData = await getCollection(false, 1, 'curatedCollectionsCollection', 'tabTitle contractAddresses');
-    console.log(curData, 'homeDatafdo fdo');
-    return {
-      props: {
-        preview,
-        data: curData[0] ?? null,
-      }
-    };
-  }
-    
-  const respCur = getServerSideProps({ preview: false });
-  console.log(respCur, 'homeDatafdo fdo');
 
   const checkedFiltersString = useCallback(() => {
     let checkedFiltersString = '';
@@ -223,4 +221,12 @@ ResultsPage.getLayout = function getLayout(page) {
   );
 };
 
-
+export async function getServerSideProps({ preview = false }) {
+  const curData = await getCollection(false, 10, 'curatedCollectionsCollection', 'tabTitle contractAddresses');
+  return {
+    props: {
+      preview,
+      data: curData ?? null,
+    }
+  };
+}
