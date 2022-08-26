@@ -87,7 +87,7 @@ export function NFTPurchaseContextProvider(
   }, []);
 
   const updateCurrencyApproval = useCallback((currency: string, approved: boolean) => {
-    setToBuy(toBuy.slice().map(item => {
+    const newToBuy = toBuy.slice().map(item => {
       if (item?.currency === currency) {
         return {
           ...item,
@@ -95,7 +95,9 @@ export function NFTPurchaseContextProvider(
         };
       }
       return item;
-    }));
+    });
+    setToBuy(newToBuy);
+    localStorage.setItem('stagedNftPurchases', JSON.stringify(newToBuy));
   }, [toBuy]);
 
   const buyAll = useCallback(async () => {
@@ -118,23 +120,18 @@ export function NFTPurchaseContextProvider(
         null
     ]);
 
-    const result = await aggregator.connect(signer).batchTrade(
+    const tx = await aggregator.batchTrade(
       tokenAmounts,
       orderDetails,
       [] // dustTokens
-    )
-      .then(tx => {
-        return tx.wait(1).then(() => true).catch(() => false);
-      })
-      .catch((e) => {
-        console.log(e);
-        return null;
-      });
-    if (result) {
-      return await result.wait(1).then(() => true);
+    ).catch(() => {
+      return null;
+    });
+    if (tx) {
+      return await tx.wait(1).then(() => true).catch(() => false);
     }
     return false;
-  }, [aggregator, currentAddress, looksrareExchange, signer, toBuy]);
+  }, [aggregator, currentAddress, looksrareExchange, toBuy]);
 
   return <NFTPurchasesContext.Provider value={{
     removePurchase,

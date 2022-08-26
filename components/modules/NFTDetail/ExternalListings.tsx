@@ -32,7 +32,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     tokenId: props?.nft?.tokenId,
     chainId: String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
   });
-
+  
   const {
     allowedAll: openseaAllowed,
   } = useNftCollectionAllowance(

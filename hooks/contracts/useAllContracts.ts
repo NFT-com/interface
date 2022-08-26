@@ -89,7 +89,7 @@ export function useAllContracts(): Contracts {
   const [nftResolverContract, setNftResolverContract] = useState(
     getNftResolverContract(getAddress('nftResolver', chainId), signer, provider)
   );
-  const [aggregator, setAggregator] = useState(
+  const [aggregator, setAggregator] = useState<Nft_aggregator>(
     getNftAggregatorContract(getAddress('aggregator', chainId), signer ?? provider)
   );
 

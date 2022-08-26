@@ -105,8 +105,8 @@ export function PurchaseCheckout() {
       </div>
       {toBuy?.length > 0 && <div className='mt-16'>
         <Button
-          disabled={loading && !error}
-          loading={loading && !error}
+          disabled={loading && !error && !success}
+          loading={loading && !error && !success}
           label={success ? 'Finish' : error ? 'Try Again' : 'Buy Now'}
           onClick={async () => {
             if (success) {
