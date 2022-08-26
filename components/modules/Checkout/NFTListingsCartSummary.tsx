@@ -193,6 +193,11 @@ export function NFTListingsCartSummary() {
               return;
             }
 
+            if (signer == null) {
+              setError('ConnectionError');
+              return;
+            }
+
             setShowProgressBar(true);
             setError(null);
             setSuccess(false);
