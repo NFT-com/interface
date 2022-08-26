@@ -226,24 +226,39 @@ export function getDateFromTimeFrame(timeFrame: string) {
 }
 
 export function getAnalyticsEndpoint(api: string) {
+  const env = getEnv(Doppler.NEXT_PUBLIC_ENV);
   if(api === 'GQL') {
-    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+    switch(env) {
+    case 'DEBUG':
       return 'https://xbutmk6nl7.execute-api.us-east-1.amazonaws.com/graphql';
+    case 'SANDBOX':
+      return 'https://dev-api.nft.com/graphql';
+    case 'STAGING':
+      return 'https://staging-api.nft.com/graphql';
     }
   }
   if(api === 'Graph') {
-    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+    switch(env) {
+    case 'DEBUG':
       return 'https://p35hl729o9.execute-api.us-east-1.amazonaws.com/graphql';
+    case 'SANDBOX':
+      return 'https://dev-analytics-graph.nft.com/graphql';
     }
   }
   if(api === 'Event') {
-    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+    switch(env) {
+    case 'DEBUG':
       return 'https://oqsslkak4c.execute-api.us-east-1.amazonaws.com';
+    case 'SANDBOX':
+      return 'https://dev-analytics-events.nft.com';
     }
   }
   if(api === 'Aggregation') {
-    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
+    switch(env) {
+    case 'DEBUG':
       return 'https://2rx187aj95.execute-api.us-east-1.amazonaws.com';
+    case 'SANDBOX':
+      return 'https://dev-analytics-aggregation.nft.com';
     }
   }
 }

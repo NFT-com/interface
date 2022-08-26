@@ -82,9 +82,6 @@ export const CollectionAnalyticsContainer = ({ data }: CollectionAnalyticsContai
           label={'Volume'}
           data={data}
           currentMarketplace={selectedMarketplace}
-          setCurrentMarketplace={(selectedMarketplace: string) => {
-            setSelectedMarketplace(selectedMarketplace);
-          }}
         />
       </div>
     </>
