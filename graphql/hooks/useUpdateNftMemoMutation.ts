@@ -9,7 +9,7 @@ export interface UpdateNftMemoResult {
   updateNftmemo: (input: MutationUpdateNftMemoArgs) => Promise<boolean>;
 }
 
-export function useUpdateNftMemoResult(): UpdateNftMemoResult {
+export function useUpdateNftMemoMutation(): UpdateNftMemoResult {
   const sdk = useGraphQLSDK();
 
   const [error, setError] = useState<Maybe<string>>(null);
