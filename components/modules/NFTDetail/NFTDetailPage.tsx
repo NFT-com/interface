@@ -32,7 +32,6 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     <div className="flex flex-col pt-20 items-center w-full max-w-7xl mx-auto">
       <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
       {
-        //TODO: @anthony - add in memo functionality
         ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
         (currentAddress === nft?.wallet?.address) ||
         (currentAddress !== nft?.wallet?.address && !isNullOrEmpty(nft?.memo)))

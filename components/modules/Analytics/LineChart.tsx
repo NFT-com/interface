@@ -65,7 +65,7 @@ export const LineChart = ({ data, label, currentMarketplace, setCurrentMarketpla
         <div className="flex flex-row items-center justify-end space-x-2">
           {Object.keys(marketplaces).map((marketplace) => (
             <div key={marketplace} className='group'>
-              {marketplaces[marketplace] === marketplaces[1] &&
+              {marketplaces[marketplace] === 'LooksRare' &&
               <div
                 className={tw('group-hover:opacity-100 transition-opacity bg-[#1F2127]',
                   'p-3 rounded-md absolute left-full -translate-x-full',
