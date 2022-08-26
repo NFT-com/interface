@@ -1,5 +1,5 @@
 import { LoadedContainer } from 'components/elements/LoadedContainer';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { AuctionType } from 'components/modules/GenesisKeyAuction/GenesisKeyAuction';
 import { GenesisKeyLoserView } from 'components/modules/GenesisKeyAuction/GenesisKeyLoserView';
 import { GenesisKeyWinnerView } from 'components/modules/GenesisKeyAuction/GenesisKeyWinnerView';
@@ -65,13 +65,7 @@ export default function ClaimGenesisKeyPage() {
   }, [insiderMerkleData, shouldShowClaim, currentAddress]);
 
   return (
-    <PageWrapper
-      headerOptions={{
-        walletOnly: true,
-        removeBackground: true,
-        walletPopupMenu: true,
-        removeSummaryBanner: true,
-      }}>
+    <>
       {!isMobile &&
             <div
               className={tw(
@@ -103,6 +97,14 @@ export default function ClaimGenesisKeyPage() {
           {getContent()}
         </LoadedContainer>
       </div>
-    </PageWrapper>
+    </>
   );
 }
+
+ClaimGenesisKeyPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

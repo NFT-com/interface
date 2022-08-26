@@ -1,6 +1,6 @@
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { Collection } from 'components/modules/Collection/Collection';
-import { NotFoundPage } from 'pages/404';
+import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
@@ -51,14 +51,14 @@ export default function CollectionPage() {
   }
 
   return (
-    <PageWrapper
-      bgColorClasses={tw(
-        'bg-always-white',
-      )}
-      headerOptions={{
-        removeSummaryBanner: true,
-      }}>
-      <Collection contract={contractAddr as string} />
-    </PageWrapper>
+    <Collection contract={contractAddr as string} />
   );
 }
+
+CollectionPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

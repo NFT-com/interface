@@ -5,6 +5,7 @@ query Nft($contract: Address!, $id: String!, $chainId: String) {
     price
     contract
     tokenId
+    memo
     type
     wallet {
       address

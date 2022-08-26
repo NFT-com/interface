@@ -4,7 +4,7 @@ import { getTypesenseInstantsearchAdapterRaw, SearchableFields } from 'utils/typ
 
 import { useRouter } from 'next/router';
 import SearchIcon from 'public/search.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type SearchBarProps = {
   bgLight?: boolean
@@ -16,9 +16,19 @@ export const SearchBar = (props: SearchBarProps) => {
   const router = useRouter();
   const resultsRef = useRef();
   const cliente = getTypesenseInstantsearchAdapterRaw;
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!router.pathname.includes('discover/')) {
+      inputRef.current.value = '';
+      setShowHits(false);
+      setSearchResults([]);
+    }
+  },[router.pathname]);
 
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
+    setSearchResults([]);
   });
 
   const goTo = (document) => {
@@ -37,7 +47,6 @@ export const SearchBar = (props: SearchBarProps) => {
 
     if (target.value.length < 3) {
       setShowHits(false);
-      return;
     }
 
     const searchRequests = {
@@ -63,19 +72,21 @@ export const SearchBar = (props: SearchBarProps) => {
       ]
     };
 
-    cliente.multiSearch.perform(searchRequests)
-      .then((data) => {
-        setSearchResults([...data.results]);
-      })
-      .catch((error) => {
-        console.log(error);
-        setShowHits(false);
-      });
+    if (target.value !== '') {
+      cliente.multiSearch.perform(searchRequests)
+        .then((data) => {
+          setSearchResults([...data.results]);
+        })
+        .catch((error) => {
+          console.log(error);
+          setShowHits(false);
+        });
 
-    setShowHits(true);
+      setShowHits(true);
+    }
 
     if (event.keyCode === 13) {
-      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '0'}`);
+      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '*'}`);
       setShowHits(false);
       target.click();
     }
@@ -83,22 +94,23 @@ export const SearchBar = (props: SearchBarProps) => {
 
   return (
     <>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col minlg:w-[90%] minxl:w-full">
         <div className={tw(
-          'relative minlg:flex items-center border rounded-xl py-2 px-3',
-          'mr-4 hidden w-full',
+          'relative minlg:flex items-center rounded-xl py-2 px-3',
+          'mr-4 hidden w-full h-10 bg-[#F8F8F8]',
           props.bgLight ? 'text-black':'text-white')}>
-          <SearchIcon className='mr-2 shrink-0 aspect-square' />
+          <SearchIcon className='shrink-0 aspect-square' />
           <div className="w-full">
             <input
+              ref={inputRef}
               type="search"
-              placeholder="Search here…"
+              placeholder="Search profiles and nfts by name..."
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
               required maxLength={512}
-              className="bg-inherit w-full border-none focus:border-transparent focus:ring-0"
+              className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 placeholder:text-[#B6B6B6] placeholder:text-sm"
               onKeyUp={(event) => search(event)}
               onFocus={(event) => search(event)}/>
           </div>
@@ -133,8 +145,6 @@ export const SearchBar = (props: SearchBarProps) => {
                             'hover:cursor-pointer hover:opacity-70')}
                           onClick={() => goTo(hit.document)}>
                           <span>{hit.document.contractName}</span>
-                          <span>{hit.document.url}</span>
-                          <span className="text-[0.7rem]">{hit.document.contractAddr}</span>
                         </div>
                       );
                     }))}

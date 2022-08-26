@@ -1,6 +1,7 @@
 import Loader from 'components/elements/Loader';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NFTDetailPage } from 'components/modules/NFTDetail/NFTDetailPage';
-import { NotFoundPage } from 'pages/404';
+import NotFoundPage from 'pages/404';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -32,3 +33,11 @@ export default function ProfileURI() {
     return <NFTDetailPage collection={collection as string} tokenId={BigNumber.from(tokenId).toHexString()} />;
   }
 }
+
+ProfileURI.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

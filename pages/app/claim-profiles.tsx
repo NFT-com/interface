@@ -1,5 +1,5 @@
 import { LoadedContainer } from 'components/elements/LoadedContainer';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { GenesisFooter } from 'components/modules/GenesisKeyAuction/GenesisFooter';
 import { SignedOutView } from 'components/modules/GenesisKeyAuction/SignedOutView';
 import { InsiderProfileClaim } from 'components/modules/ProfilePreferences/InsiderProfileClaim';
@@ -49,45 +49,45 @@ export default function ProfilePreferencesPage() {
   ]);
 
   return (
-    <PageWrapper
-      headerOptions={{
-        walletOnly: true,
-        removeBackground: true,
-        walletPopupMenu: true,
-        removeSummaryBanner: true,
-      }}>
+    <div
+      className={tw(
+        'flex flex-col relative w-screen h-screen items-center',
+        'justify-center overflow-y-auto overflow-x-hidden'
+      )}
+    >
+      <Image
+        src={keySplash}
+        className="h-full"
+        alt="key Splash"
+        layout="fill"
+        objectFit="contain"
+      />
       <div
         className={tw(
-          'flex flex-col relative w-screen h-screen items-center',
-          'justify-center overflow-y-auto overflow-x-hidden'
-        )}
-      >
-        <Image
-          src={keySplash}
-          className="h-full"
-          alt="key Splash"
-          layout="fill"
-          objectFit="contain"
-        />
-        <div
-          className={tw(
-            'z-20 absolute h-full w-full flex flex-col justify-center items-center',
-            'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-black bg-opacity-80'
-          )}>
-          <LoadedContainer loaded={firstLoaded}>
-            {
-              !currentAddress ?
-                <SignedOutView /> :
-                showInsiderReservedProfiles ?
-                  <InsiderProfileClaim /> :
-                  <ProfilePreferencesSearch />
-            }
-          </LoadedContainer>
-          <div className='flex items-center'>
-            <GenesisFooter />
-          </div>
+          'z-20 absolute h-full w-full flex flex-col justify-center items-center',
+          'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-black bg-opacity-80'
+        )}>
+        <LoadedContainer loaded={firstLoaded}>
+          {
+            !currentAddress ?
+              <SignedOutView /> :
+              showInsiderReservedProfiles ?
+                <InsiderProfileClaim /> :
+                <ProfilePreferencesSearch />
+          }
+        </LoadedContainer>
+        <div className='flex items-center'>
+          <GenesisFooter />
         </div>
       </div>
-    </PageWrapper>
+    </div>
   );
 }
+
+ProfilePreferencesPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

@@ -19,7 +19,6 @@ export interface DropdownPickerModalProps {
   selectedIndex: number;
   constrain?: boolean;
   placeholder?: string;
-  forceLightMode?: boolean
 }
 
 /**
@@ -44,13 +43,13 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
     !isMobile && setExpanded(false);
   });
 
-  const getOptionRow = useCallback((item: PickerOption, index: number, forceLightMode: boolean) => {
+  const getOptionRow = useCallback((item: PickerOption, index: number) => {
     return (item &&
       <div
         key={item.label}
         style={{ height: '10%' }}
         className={`flex flex-row w-full px-3 py-3 items-center justiry-evenly 
-        ${forceLightMode ? index === optionHoverIndex ? 'text-primary-txt font-medium' : 'text-secondary-txt' : index === optionHoverIndex ? 'dark:text-always-white text-primary-txt font-medium' : 'dark:text-always-white text-secondary-txt' }`}
+        ${index === optionHoverIndex ? 'dark:text-always-white text-primary-txt font-medium' : 'dark:text-always-white text-secondary-txt' }`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
@@ -72,7 +71,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
           'cursor-pointer flex flex-col items-end rounded-xl',
           'text-base',
           props.constrain ? '' : 'w-full h-full shrink-0',
-          props.forceLightMode ? 'text-primary-txt' : 'dark:text-always-white text-primary-txt',
+          'dark:text-always-white text-primary-txt',
           'whitespace-nowrap justify-between',
         )}
       >
@@ -80,7 +79,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
           ref={anchorRef}
           className={tw(
             'flex flex-row items-end px-2.5',
-            props.forceLightMode ? 'bg-transparent' : 'bg-white dark:bg-secondary-dk',
+            'bg-transparent dark:bg-secondary-dk',
             'py-2 h-full',
             'justify-between rounded-xl w-full',
           )}
@@ -99,13 +98,13 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
           }}
           className={tw(
             'rounded-xl',
-            props.forceLightMode ? 'bg-white' : 'bg-white dark:bg-secondary-dk',
+            'bg-white dark:bg-secondary-dk',
             'absolute z-50',
             'min-w-[14rem] drop-shadow-md',
           )}
         >
           {props.options?.map((item, index) => {
-            return getOptionRow(item, index, props.forceLightMode);
+            return getOptionRow(item, index);
           })}
         </div>
         }
@@ -125,7 +124,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
           setExpanded(false);
         }} className='absolute top-14 right-3 hover:cursor-pointer w-7 h-7' color="white" />
         {props.options?.map((item, index) => {
-          return getOptionRow(item, index, props.forceLightMode);
+          return getOptionRow(item, index);
         })}
       </Modal>
     </>

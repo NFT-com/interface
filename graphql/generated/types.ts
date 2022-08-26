@@ -27,6 +27,14 @@ export type Scalars = {
   Upload: any;
 };
 
+export enum ActivityType {
+  Bid = 'Bid',
+  Cancel = 'Cancel',
+  Listing = 'Listing',
+  Sale = 'Sale',
+  Transfer = 'Transfer'
+}
+
 export type Approval = {
   __typename?: 'Approval';
   amount: Scalars['Uint256'];
@@ -447,6 +455,7 @@ export type InsiderReservedProfilesInput = {
 export type LatestProfilesInput = {
   chainId?: InputMaybe<Scalars['String']>;
   pageInput?: InputMaybe<PageInput>;
+  sortBy?: InputMaybe<ProfileSortType>;
 };
 
 export type LeaderboardInput = {
@@ -482,6 +491,26 @@ export type ListNftSeaportInput = {
   chainId?: InputMaybe<Scalars['String']>;
   seaportParams?: InputMaybe<Scalars['String']>;
   seaportSignature?: InputMaybe<Scalars['String']>;
+};
+
+export type LooksrareProtocolData = {
+  __typename?: 'LooksrareProtocolData';
+  amount?: Maybe<Scalars['String']>;
+  collectionAddress?: Maybe<Scalars['String']>;
+  currencyAddress?: Maybe<Scalars['String']>;
+  endTime?: Maybe<Scalars['String']>;
+  isOrderAsk?: Maybe<Scalars['Boolean']>;
+  minPercentageToAsk?: Maybe<Scalars['String']>;
+  nonce?: Maybe<Scalars['String']>;
+  params?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  r?: Maybe<Scalars['String']>;
+  s?: Maybe<Scalars['String']>;
+  signer?: Maybe<Scalars['String']>;
+  startTime?: Maybe<Scalars['String']>;
+  strategy?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
+  v?: Maybe<Scalars['String']>;
 };
 
 export type MarketAsk = {
@@ -628,6 +657,8 @@ export type Mutation = {
   /** AUTHENTICATED */
   resendEmailConfirm: User;
   saveCollectionForContract: SaveCollectionForContractOutput;
+  /** AUTHENTICATED */
+  saveNFTVisibilityForProfiles: SaveNftVisibilityForProfilesOutput;
   /** AUTHENTICATED */
   saveScoreForProfiles: SaveScoreForProfilesOutput;
   /** AUTHETICATED - set by curation + profile owner */
@@ -810,6 +841,11 @@ export type MutationRemoveDuplicatesArgs = {
 
 export type MutationSaveCollectionForContractArgs = {
   contract: Scalars['Address'];
+};
+
+
+export type MutationSaveNftVisibilityForProfilesArgs = {
+  count: Scalars['Int'];
 };
 
 
@@ -1144,6 +1180,7 @@ export type Profile = {
   followersCount?: Maybe<Scalars['Int']>;
   gkIconVisible?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
+  index?: Maybe<Scalars['Int']>;
   isFollowedByMe?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
   layoutType?: Maybe<ProfileLayoutType>;
@@ -1154,6 +1191,7 @@ export type Profile = {
   status?: Maybe<ProfileStatus>;
   tokenId?: Maybe<Scalars['String']>;
   url: Scalars['String'];
+  visibleNFTs?: Maybe<Scalars['Int']>;
   winningBid?: Maybe<Bid>;
 };
 
@@ -1179,6 +1217,12 @@ export type ProfilePreferenceInput = {
   urls: Array<Scalars['String']>;
 };
 
+export enum ProfileSortType {
+  MostVisibleNfTs = 'MostVisibleNFTs',
+  RecentMinted = 'RecentMinted',
+  RecentUpdated = 'RecentUpdated'
+}
+
 export enum ProfileStatus {
   Available = 'Available',
   Owned = 'Owned',
@@ -1202,6 +1246,8 @@ export type ProfilesOutput = {
   totalItems?: Maybe<Scalars['Int']>;
 };
 
+export type ProtocolData = LooksrareProtocolData | SeaportProtocolData;
+
 export type Query = {
   __typename?: 'Query';
   associatedAddressesForContract: AssociatedAddressesForContractOutput;
@@ -1214,10 +1260,12 @@ export type Query = {
   curationNFTs: CurationNfTsOutput;
   externalListings?: Maybe<ExternalListingsOutput>;
   filterAsks: GetMarketAsk;
+  getActivities: TxActivitiesOutput;
   getActivitiesByType?: Maybe<Array<Maybe<TxActivity>>>;
-  getActivitiesByWalletId?: Maybe<Array<Maybe<TxActivity>>>;
   /** AUTHETICATED */
-  getActivitiesByWalletIdAndType?: Maybe<Array<Maybe<TxActivity>>>;
+  getActivitiesByWalletAddress?: Maybe<Array<Maybe<TxActivity>>>;
+  /** AUTHETICATED */
+  getActivitiesByWalletAddressAndType?: Maybe<Array<Maybe<TxActivity>>>;
   /** AUTHENTICATED */
   getApprovedAssociations: Array<Maybe<ApprovedAssociationOutput>>;
   getAsks: GetMarketAsk;
@@ -1323,20 +1371,25 @@ export type QueryFilterAsksArgs = {
 };
 
 
+export type QueryGetActivitiesArgs = {
+  input?: InputMaybe<TxActivitiesInput>;
+};
+
+
 export type QueryGetActivitiesByTypeArgs = {
   activityType?: InputMaybe<Scalars['String']>;
   chainId?: InputMaybe<Scalars['String']>;
 };
 
 
-export type QueryGetActivitiesByWalletIdArgs = {
+export type QueryGetActivitiesByWalletAddressArgs = {
   chainId?: InputMaybe<Scalars['String']>;
-  walletId?: InputMaybe<Scalars['ID']>;
+  walletAddress?: InputMaybe<Scalars['String']>;
 };
 
 
-export type QueryGetActivitiesByWalletIdAndTypeArgs = {
-  input?: InputMaybe<TxWalletIdAndTypeInput>;
+export type QueryGetActivitiesByWalletAddressAndTypeArgs = {
+  input?: InputMaybe<TxWalletAddressAndTypeInput>;
 };
 
 
@@ -1537,6 +1590,11 @@ export type RemovedAssociationsForSenderOutput = {
   receiver: Scalars['String'];
 };
 
+export type SaveNftVisibilityForProfilesOutput = {
+  __typename?: 'SaveNFTVisibilityForProfilesOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type SaveScoreForProfilesInput = {
   count?: InputMaybe<Scalars['Int']>;
   nullOnly?: InputMaybe<Scalars['Boolean']>;
@@ -1545,6 +1603,47 @@ export type SaveScoreForProfilesInput = {
 export type SaveScoreForProfilesOutput = {
   __typename?: 'SaveScoreForProfilesOutput';
   message?: Maybe<Scalars['String']>;
+};
+
+export type SeaportConsideration = {
+  __typename?: 'SeaportConsideration';
+  endAmount?: Maybe<Scalars['String']>;
+  identifierOrCriteria?: Maybe<Scalars['String']>;
+  itemType?: Maybe<Scalars['Int']>;
+  recipient?: Maybe<Scalars['String']>;
+  startAmount?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+};
+
+export type SeaportOffer = {
+  __typename?: 'SeaportOffer';
+  endAmount?: Maybe<Scalars['String']>;
+  identifierOrCriteria?: Maybe<Scalars['String']>;
+  itemType?: Maybe<Scalars['Int']>;
+  startAmount?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+};
+
+export type SeaportProtocolData = {
+  __typename?: 'SeaportProtocolData';
+  parameters?: Maybe<SeaportProtocolDataParams>;
+  signature?: Maybe<Scalars['String']>;
+};
+
+export type SeaportProtocolDataParams = {
+  __typename?: 'SeaportProtocolDataParams';
+  conduitKey?: Maybe<Scalars['String']>;
+  consideration?: Maybe<Array<Maybe<SeaportConsideration>>>;
+  counter?: Maybe<Scalars['Int']>;
+  endTime?: Maybe<Scalars['String']>;
+  offer?: Maybe<Array<Maybe<SeaportOffer>>>;
+  offerer?: Maybe<Scalars['String']>;
+  orderType?: Maybe<Scalars['Int']>;
+  salt?: Maybe<Scalars['String']>;
+  startTime?: Maybe<Scalars['String']>;
+  totalOriginalConsiderationItems?: Maybe<Scalars['Int']>;
+  zone?: Maybe<Scalars['String']>;
+  zoneHash?: Maybe<Scalars['String']>;
 };
 
 export type SetCurationInput = {
@@ -1619,6 +1718,24 @@ export type TopBidsInput = {
   status?: InputMaybe<BidStatus>;
 };
 
+export type TxActivitiesInput = {
+  activityType?: InputMaybe<ActivityType>;
+  chainId?: InputMaybe<Scalars['String']>;
+  contract?: InputMaybe<Scalars['String']>;
+  pageInput: PageInput;
+  read?: InputMaybe<Scalars['Boolean']>;
+  skipRelations?: InputMaybe<Scalars['Boolean']>;
+  tokenId?: InputMaybe<Scalars['String']>;
+  walletAddress?: InputMaybe<Scalars['String']>;
+};
+
+export type TxActivitiesOutput = {
+  __typename?: 'TxActivitiesOutput';
+  items?: Maybe<Array<Maybe<TxActivity>>>;
+  pageInfo?: Maybe<PageInfo>;
+  totalItems?: Maybe<Scalars['Int']>;
+};
+
 export type TxActivity = {
   __typename?: 'TxActivity';
   activityType: Scalars['String'];
@@ -1628,9 +1745,8 @@ export type TxActivity = {
   id: Scalars['ID'];
   order?: Maybe<TxOrder>;
   read: Scalars['Boolean'];
-  timestamp: Scalars['String'];
-  transaction?: Maybe<TxTransaction>;
-  walletId: Scalars['String'];
+  timestamp: Scalars['Date'];
+  walletAddress: Scalars['String'];
 };
 
 export type TxCancel = {
@@ -1668,7 +1784,7 @@ export type TxOrder = {
   orderHash: Scalars['String'];
   orderType: Scalars['String'];
   protocol: Scalars['String'];
-  protocolData?: Maybe<Array<Maybe<Scalars['String']>>>;
+  protocolData?: Maybe<ProtocolData>;
   takerAddress?: Maybe<Scalars['String']>;
 };
 
@@ -1684,10 +1800,11 @@ export type TxTransaction = {
   transactionHash: Scalars['String'];
 };
 
-export type TxWalletIdAndTypeInput = {
+export type TxWalletAddressAndTypeInput = {
   activityType: Scalars['String'];
   chainId?: InputMaybe<Scalars['String']>;
-  walletId: Scalars['ID'];
+  pageInput?: InputMaybe<PageInput>;
+  walletAddress: Scalars['String'];
 };
 
 export type UbiquityCollection = {
@@ -2344,7 +2461,7 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, memo?: string | null, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -2352,6 +2469,13 @@ export type NftByIdQueryVariables = Exact<{
 
 
 export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+
+export type NftsForCollectionsQueryVariables = Exact<{
+  input: NftsForCollectionsInput;
+}>;
+
+
+export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
 
 export type MyPreferencesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3443,6 +3567,7 @@ export const NftDocument = gql`
     price
     contract
     tokenId
+    memo
     type
     wallet {
       address
@@ -3485,6 +3610,28 @@ export const NftByIdDocument = gql`
         value
       }
     }
+  }
+}
+    `;
+export const NftsForCollectionsDocument = gql`
+    query NftsForCollections($input: NftsForCollectionsInput!) {
+  nftsForCollections(input: $input) {
+    nfts {
+      id
+      tokenId
+      type
+      isOwnedByMe
+      metadata {
+        name
+        description
+        imageURL
+        traits {
+          type
+          value
+        }
+      }
+    }
+    collectionAddress
   }
 }
     `;
@@ -3828,6 +3975,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     NftById(variables: NftByIdQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NftByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<NftByIdQuery>(NftByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NftById', 'query');
+    },
+    NftsForCollections(variables: NftsForCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NftsForCollectionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<NftsForCollectionsQuery>(NftsForCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NftsForCollections', 'query');
     },
     MyPreferences(variables?: MyPreferencesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyPreferencesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MyPreferencesQuery>(MyPreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MyPreferences', 'query');
