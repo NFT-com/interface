@@ -1,3 +1,5 @@
+import { Maybe } from 'graphql/generated/types';
+
 import { BigNumber } from 'ethers';
 
 export const SEAPORT_CONTRACT_NAME = 'Seaport';
@@ -127,3 +129,52 @@ export type Fee = {
   recipient: string;
   basisPoints: number;
 };
+
+export type SeaportListingData = {
+  created_date: string,
+  closing_date: string,
+  listing_time: number,
+  expiration_time: number,
+  order_hash: string,
+  protocol_data: {
+    parameters: SeaportOrderComponents,
+    signature: string
+  },
+  protocol_address: string,
+  maker: {
+    user: number,
+    profile_img_url: string,
+    address: string,
+    config: string
+  },
+  taker: Maybe<string>,
+  current_price: string, // BigNumber
+  maker_fees: Array<{
+    account: {
+      user: number,
+      profile_img_url: string,
+      address: string,
+      config: string
+    },
+    basis_points: number
+  }>,
+  taker_fees: Array<{
+    account: {
+      user: number,
+      profile_img_url: string,
+      address: string,
+      config: string
+    },
+    basis_points: number
+  }>,
+  side: string,
+  order_type: string,
+  cancelled: boolean,
+  finalized: boolean,
+  marked_invalid: boolean,
+  client_signature: string,
+  relay_id: string,
+  criteria_proof: string,
+  maker_asset_bundle: any,
+  taker_asset_bundle: any
+}

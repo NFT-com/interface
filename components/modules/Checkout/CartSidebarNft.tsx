@@ -3,16 +3,14 @@ import { getContractMetadata } from 'utils/alchemyNFT';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { NFTListingsContext } from './NFTListingsContext';
-
 import { MinusCircle } from 'phosphor-react';
-import { useContext } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
 export interface CartSidebarNftProps {
-  nft: PartialDeep<Nft>
+  nft: PartialDeep<Nft>;
+  onRemove: () => void;
 }
 
 export function CartSidebarNft(props: CartSidebarNftProps) {
@@ -21,8 +19,6 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     return await getContractMetadata(props.nft?.contract, chain?.id);
   });
 
-  const { removeListing } = useContext(NFTListingsContext);
-
   return (
     <div className='flex items-center w-full h-32 px-8'>
       <div className='relative h-2/4 aspect-square'>
@@ -30,9 +26,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
           size={20}
           color={'red'}
           className="absolute right-1 top-1 cursor-pointer z-40"
-          onClick={() => {
-            removeListing(props.nft);
-          }}
+          onClick={props.onRemove}
         />
         <video
           autoPlay

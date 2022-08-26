@@ -2,6 +2,7 @@
 import { Nft, Profile } from 'graphql/generated/types';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { getEtherscanLink, isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -31,15 +32,17 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
 
   const { refreshNft, loading } = useRefreshNftMutation();
+  const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
   const refreshNftCallback = useCallback(() => {
     (async () => {
       const result = await refreshNft(props.nft?.id);
+      await refreshNftOrders(props.nft?.id);
       if (result) {
         props.onRefreshSuccess && props.onRefreshSuccess();
       }
     })();
-  }, [props, refreshNft]);
+  }, [props, refreshNft, refreshNftOrders]);
   
   return (
     <div className="flex flex-col minmd:flex-row w-full" id="NFTDetailContainer" key={props.nft?.id}>

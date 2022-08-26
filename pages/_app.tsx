@@ -2,6 +2,7 @@ import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
+import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
@@ -107,7 +108,6 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
         <title>NFT.com</title>
       </Head>
       <Script strategy="afterInteractive" src="/js/pageScripts.js" />
-        
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider
           appInfo={{
@@ -121,9 +121,11 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           <AnimatePresence exitBeforeEnter>
             <GraphQLProvider>
               <NotificationContextProvider>
-                <NFTListingsContextProvider>
-                  {getLayout(<Component {...pageProps} key={router.pathname} />)}
-                </NFTListingsContextProvider>
+                <NFTPurchaseContextProvider>
+                  <NFTListingsContextProvider>
+                    {getLayout(<Component {...pageProps} key={router.pathname} />)}
+                  </NFTListingsContextProvider>
+                </NFTPurchaseContextProvider>
               </NotificationContextProvider>
             </GraphQLProvider>
           </AnimatePresence>
