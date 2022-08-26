@@ -15,32 +15,38 @@ export enum RoundedCornerVariant {
   None = 'none',
 }
 
+export enum RoundedCornerAmount {
+  Medium = 'Medium',
+  Default = 'Default'
+}
+
 export interface RoundedCornerMediaProps {
   src: string;
   variant: RoundedCornerVariant;
+  amount?: RoundedCornerAmount;
   extraClasses?: string;
   containerClasses?: string;
   onClick?: () => void;
 }
 
-const getRoundedClass = (variant: RoundedCornerVariant): string => {
+const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmount): string => {
   switch (variant) {
   case RoundedCornerVariant.TopOnly:
-    return 'rounded-t-3xl object-cover';
+    return `${amount === RoundedCornerAmount.Medium ? 'rounded-t-md' : 'rounded-t-3xl'} object-cover`;
   case RoundedCornerVariant.TopLeft:
-    return 'rounded-tl-3xl';
+    return amount === RoundedCornerAmount.Medium ? 'rounded-tl-md' : 'rounded-tl-3xl';
   case RoundedCornerVariant.TopRight:
-    return 'rounded-tr-3xl';
+    return amount === RoundedCornerAmount.Medium ? 'rounded-tr-md' : 'rounded-tr-3xl';
   case RoundedCornerVariant.BottomLeft:
-    return 'rounded-bl-3xl';
+    return amount === RoundedCornerAmount.Medium ? 'rounded-bl-md' : 'rounded-bl-3xl';
   case RoundedCornerVariant.BottomRight:
-    return 'rounded-br-3xl';
+    return amount === RoundedCornerAmount.Medium ? 'rounded-br-md' : 'rounded-br-3xl';
   case RoundedCornerVariant.Right:
-    return 'rounded-r-3xl';
+    return amount === RoundedCornerAmount.Medium ? 'rounded-r-md' : 'rounded-r-3xl';
   case RoundedCornerVariant.Left:
-    return 'rounded-l-3xl';
+    return amount === RoundedCornerAmount.Medium ? 'rounded-l-md' : 'rounded-l-3xl';
   case RoundedCornerVariant.All:
-    return 'rounded-3xl object-cover';
+    return `${amount === RoundedCornerAmount.Medium ? 'rounded-md' : 'rounded-3xl'} object-cover`;
   case RoundedCornerVariant.None:
   default:
     return '';
@@ -51,7 +57,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   return (
     <div className={tw(
       'flex object-cover aspect-square',
-      getRoundedClass(props.variant),
+      getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
       props.containerClasses
     )}
     onClick={props?.onClick}
@@ -65,7 +71,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
         poster={props.src}
         className={tw(
           'flex object-fit w-full justify-center',
-          getRoundedClass(props.variant),
+          getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
           props.extraClasses
         )}
       />
