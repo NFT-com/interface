@@ -26,7 +26,11 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
     return selectedCuratedCollection?.contractAddresses.addresses ?? [];
   }, [selectedCuratedCollection?.contractAddresses.addresses]);
 
-  setCuratedCollections(data);
+  useEffect(() => {
+    if(isNullOrEmpty(curatedCollections)) {
+      setCuratedCollections(data);
+    }
+  },[curatedCollections, data, setCuratedCollections]);
 
   useEffect(() => {
     setPage(1);
@@ -34,7 +38,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
 
   useEffect(() => {
     if(isNullOrEmpty(selectedCuratedCollection)) {
-      setSelectedCuratedCollection(curatedCollections[0]);
+      curatedCollections && curatedCollections.length > 0 && setSelectedCuratedCollection(curatedCollections[0]);
     }
   },[curatedCollections, selectedCuratedCollection, setSelectedCuratedCollection]);
 
