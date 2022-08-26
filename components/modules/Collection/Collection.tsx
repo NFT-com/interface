@@ -14,6 +14,7 @@ import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';
+import Image from 'next/image';
 import router from 'next/router';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
@@ -22,6 +23,7 @@ import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
+  profile?: any
 }
 
 export function Collection(props: CollectionProps) {
@@ -44,7 +46,6 @@ export function Collection(props: CollectionProps) {
           (data) => data.status === 200 ? `${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null
         );
     }
-
     return imgUrl;
   } );
 
@@ -98,23 +99,39 @@ export function Collection(props: CollectionProps) {
       </div>
       <div className='font-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
         <h2 className="text-3xl font-bold">
-          {/* {collectionNfts[0].document.contractName} */}
-            NFT.com Genesis Key
+          {collectionData?.collection?.name}
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
-          <div className='flex flex-col'>
-            <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
-            <div className='flex mt-1 text-[#B59007] font-medium font-mono'>
-              {/* get creator address */}
-              <span>{shortenAddress(props.contract?.toString(), 4)}</span>
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={`https://etherscan.io/address/${props.contract?.toString()}`}
-                className='font-bold underline tracking-wide'
-              >
-                <LinkIcon size={20} className='ml-1' />
-              </a>
+          <div className='flex'>
+            {props.profile &&
+              <div className='relative h-10 w-10'>
+                <Image src={props.profile?.photoURL || 'https://cdn.nft.com/profile-image-default.svg'} alt='test' className='rounded-[10px] mr-2' layout='fill' objectFit='cover' />
+              </div>
+            }
+            <div className={tw(
+              'flex flex-col justify-between',
+              props.profile && 'ml-2'
+            )}>
+              <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
+              {props.profile
+                ? (
+                  <p className='font-bold underline decoration-[#F9D963] underline-offset-4'>{props.profile.url}</p>
+                )
+                : (
+                  <div className='flex mt-1 text-[#B59007] font-medium font-mono'>
+                    <span>{shortenAddress(props.contract?.toString(), 4)}</span>
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      href={`https://etherscan.io/address/${props.contract?.toString()}`}
+                      className='font-bold underline tracking-wide'
+                    >
+                      <LinkIcon size={20} className='ml-1' />
+                    </a>
+                  </div>
+                )
+              }
+            
             </div>
           </div>
 
@@ -133,12 +150,13 @@ export function Collection(props: CollectionProps) {
             </div>
           </div>
         </div>
-        <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row'>
+        <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
+          {collectionData?.ubiquityResults?.collection.description &&
           <div className='minmd:w-1/2'>
             <h3 className='text-[#6F6F6F] font-semibold'>
             Description
             </h3>
-            <div className='mt-1 minlg:pr-4'>
+            <div className='mt-1 mb-10 minlg:mb-0 minlg:pr-4'>
               {descriptionExpanded ?
                 <>
                   <p className='inline'>
@@ -149,16 +167,17 @@ export function Collection(props: CollectionProps) {
                 :
                 <>
                   <p className='inline'>
-                  War pinnacle gains strong disgust. Good god society overcome overcome philosophy battle.
+                War pinnacle gains strong disgust. Good god society overcome overcome philosophy battle.
                   </p>
                   <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(true)}>
-                  Show more
+                Show more
                   </p>
                 </>
               }
             </div>
           </div>
-          <div className='mb-10 w-full minlg:w-1/2'>
+          }
+          <div className='w-full minlg:w-1/2'>
             <CollectionInfo />
           </div>
         </div>
@@ -230,8 +249,10 @@ export function Collection(props: CollectionProps) {
             {selectedTab === 'Analytics' &&
               <CollectionAnalyticsContainer data={collectionData} />
             }
-          </>:
-          <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
+          </>
+          :
+          <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>
+        }
       </div>
       <div className='w-full'>
         <Footer />

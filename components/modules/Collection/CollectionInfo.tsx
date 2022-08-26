@@ -9,7 +9,7 @@ export type CollectionInfoProps = {
 export const CollectionInfo = ({ data }: CollectionInfoProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <div className="bg-[#F8F8F8] px-6 pt-6 pb-4 minmd:pb-6 rounded-[10px] mt-10 minlg:mt-0 font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minxl:gap-12">
+    <div className="bg-[#F8F8F8] px-6 pt-6  pb-4 minmd:pb-6 rounded-[10px] font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minxl:gap-12">
       <div className='flex flex-col'>
         <div className="flex justify-between h-10">
           <p className='self-center font-medium text-[#6F6F6F] flex items-center'><Info className='mr-1' />Floor</p>
