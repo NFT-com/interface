@@ -160,18 +160,24 @@ export function Collection(props: CollectionProps) {
               {descriptionExpanded ?
                 <>
                   <p className='inline'>
-                  War pinnacle gains strong disgust. Good god society overcome overcome philosophy battle. Deceptions inexpedient enlightenment victorious grandeur pinnacle value dead ultimate free of contradict intentions chaos. Pinnacle free strong intentions play value law against abstract transvaluation depths strong oneself.
+                    {collectionData?.ubiquityResults?.collection.description}
                   </p>
                   <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(false)}>Show less</p>
                 </>
                 :
                 <>
-                  <p className='inline'>
-                War pinnacle gains strong disgust. Good god society overcome overcome philosophy battle.
+                  <p className='inline minlg:hidden'>
+                    {collectionData?.ubiquityResults?.collection.description.length > 87 ? collectionData?.ubiquityResults?.collection.description.substring(0, 87) + '...' : collectionData?.ubiquityResults?.collection.description}
                   </p>
-                  <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(true)}>
-                Show more
+                  <p className=' hidden minlg:inline'>
+                    {collectionData?.ubiquityResults?.collection.description.length > 200 ? collectionData?.ubiquityResults?.collection.description.substring(0, 200) + '...' : collectionData?.ubiquityResults?.collection.description}
                   </p>
+                  {
+                    collectionData?.ubiquityResults?.collection.description.length > 87 &&
+                      <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(true)}>
+                        Show more
+                      </p>
+                  }
                 </>
               }
             </div>
@@ -184,13 +190,14 @@ export function Collection(props: CollectionProps) {
       </div>
       <div className={tw(
         'px-4 pb-16 w-full',
+        'max-w-nftcom mx-auto'
       )}
       >
         {collectionNfts.length > 0 ?
           <>
             {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
             <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
-              <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk mb-6">
+              <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk mb-6 minlg:max-w-md">
                 {Object.keys(tabs).map((tab) => (
                   <Tab
                     key={tab}
@@ -253,9 +260,6 @@ export function Collection(props: CollectionProps) {
           :
           <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>
         }
-      </div>
-      <div className='w-full'>
-        <Footer />
       </div>
     </>
   );
