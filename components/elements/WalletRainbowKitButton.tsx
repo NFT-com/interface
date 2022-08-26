@@ -10,7 +10,6 @@ import { useChainModal } from '@rainbow-me/rainbowkit';
 import { UserCircle, Wallet } from 'phosphor-react';
 import { useCallback, useContext } from 'react';
 import { Menu } from 'react-feather';
-import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
 
 interface WalletRainbowKitButtonProps {
@@ -40,7 +39,6 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
     },
   });
   const { disconnect } = useDisconnect();
-  const { primaryIcon } = useThemeColors();
   const { openChainModal } = useChainModal();
   const { chain } = useNetwork();
 
@@ -59,36 +57,33 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         if (!isConnected || !currentAddress) {
           return (
             <div>
-              { !props?.signInButton ?
-                <button
-                  className='sm:block hidden cursor-pointer'
-                  onClick={() => {
-                    toggleSidebar();
-                  }}
-                >
-                  <Menu color={primaryIcon} />
-                </button>
-                :
-                <button
-                  onClick={() => toggleSidebar()}
-                  className={tw(
-                    `${props?.signInButton ? 'block' : 'hidden'}`,
-                    'font-header',
-                    `${props?.headerButtonColor ? props.bgLight && props.header ? 'bg-[#F8F8F8]' : 'bg-black' : 'bg-[#F9D963]'}`,
-                    !props.bgLight && props.header && 'border-[#6F6F6F] border',
-                    'rounded-xl',
-                    props.header ? (props.bgLight ? 'text-[#7F7F7F]' : 'text-white') : 'text-[#4d4412]',
-                    'flex flex-row items-center font-bold cursor-pointer hover:opacity-80 font-grotesk',
-                    'py-2 pr-5 pl-[18px]'
-                  )}
-                  type="button">
-                  <UserCircle className={tw(
-                    'h-6 w-6 mr-2',
-                    props.header ? (props.bgLight ? 'fill-[#B6B6B6]' : 'fill-white') : 'fill-[#4d4412]',
-                  )} weight='fill' color="white" alt={'Logged out wallet'}/>
-                      Sign In
-                </button>
-              }
+              <button
+                className='block minlg:hidden cursor-pointer'
+                onClick={() => {
+                  toggleSidebar();
+                }}
+              >
+                <Menu color='#6F6F6F' />
+              </button>
+              <button
+                onClick={() => toggleSidebar()}
+                className={tw(
+                  `${props?.signInButton ? 'block' : 'hidden'}`,
+                  'font-header',
+                  `${props?.headerButtonColor ? props.bgLight && props.header ? 'bg-[#F8F8F8]' : 'bg-black' : 'bg-[#F9D963]'}`,
+                  !props.bgLight && props.header && 'border-[#6F6F6F] border',
+                  'rounded-xl',
+                  props.header ? (props.bgLight ? 'text-[#7F7F7F]' : 'text-white') : 'text-[#4d4412]',
+                  'hidden minlg:block minlg:flex flex-row items-center font-bold cursor-pointer hover:opacity-80 font-grotesk',
+                  'py-2 pr-5 pl-[18px] '
+                )}
+                type="button">
+                <UserCircle className={tw(
+                  'h-6 w-6 mr-2',
+                  props.header ? (props.bgLight ? 'fill-[#B6B6B6]' : 'fill-white') : 'fill-[#4d4412]',
+                )} weight='fill' color="white" alt={'Logged out wallet'}/>
+                    Sign in
+              </button>
             </div>
           );
         }
@@ -113,15 +108,15 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
             )
             }
             <button
-              className='sm:block hidden cursor-pointer z-[51] relative'
+              className='block minlg:hidden cursor-pointer z-[51] relative'
               onClick={() => {
                 toggleSidebar();
               }}
             >
-              <Menu color={props.bgLight ? '#7F7F7F' : primaryIcon} />
+              <Menu color='#6F6F6F' />
             </button>
             <div
-              className="gap-3 sm:hidden block cursor-pointer"
+              className="gap-3 hidden minlg:block cursor-pointer"
             >
               <button className={tw(
                 'block font-bold rounded-xl text-white',

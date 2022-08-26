@@ -114,7 +114,9 @@ export default function LoginResults({ profileValue, hiddenProfile }: LoginResul
           {myOwnedProfileTokens.length > 0 && profilesToShow?.map((profile) => {
             if(!hiddenProfile || profile.title !== hiddenProfile){
               return (
-                <ProfileCard key={profile?.title} onClick={selectProfileHandler} profile={profile} />
+                <div key={profile?.title} className='mb-4'>
+                  <ProfileCard onClick={selectProfileHandler} profile={profile} />
+                </div>
               );
             }
           })}
