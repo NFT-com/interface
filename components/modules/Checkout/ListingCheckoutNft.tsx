@@ -1,5 +1,5 @@
 import { PriceInput } from 'components/elements/PriceInput';
-import { SupportedExternalProtocol } from 'graphql/generated/types';
+import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -58,8 +58,8 @@ export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
       </div>
       <div className='flex items-center'>
         <div className='flex flex-col ml-4'>
-          {props.listing.targets?.includes(SupportedExternalProtocol.Seaport) && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-          {props.listing.targets?.includes(SupportedExternalProtocol.LooksRare) && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+          {props.listing.targets?.includes(ExternalProtocol.Seaport) && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+          {props.listing.targets?.includes(ExternalProtocol.LooksRare) && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
         </div>
         <PriceInput
           currency={'WETH'}

@@ -18,6 +18,7 @@ export function PurchaseCheckout() {
   const {
     toBuy,
     clear,
+    buyAll,
     updateCurrencyApproval
   } = useContext(NFTPurchasesContext);
   const { getByContractAddress } = useSupportedCurrencies();
@@ -144,7 +145,12 @@ export function PurchaseCheckout() {
               }
             }
 
-            // todo complete the purchase transaction
+            const result = await buyAll();
+            if (result) {
+              setSuccess(true);
+            } else {
+              setError('PurchaseError');
+            }
           }}
           type={ButtonType.PRIMARY} />
       </div>}

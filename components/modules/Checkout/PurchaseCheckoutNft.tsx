@@ -1,5 +1,5 @@
-import { SupportedExternalProtocol } from 'graphql/generated/types';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -31,9 +31,9 @@ export function PurchaseCheckoutNft(props: PurchaseCheckoutNftProps) {
 
   const getMarketplaceIcon = useCallback((purchase: PartialDeep<StagedPurchase>) => {
     switch(purchase.protocol) {
-    case SupportedExternalProtocol.Seaport:
+    case ExternalProtocol.Seaport:
       return <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>;
-    case SupportedExternalProtocol.LooksRare:
+    case ExternalProtocol.LooksRare:
       return <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>;
     default:
       return null;

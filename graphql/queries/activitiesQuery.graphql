@@ -19,7 +19,56 @@ query Activities($input: TxActivitiesInput) {
                 makerAddress
                 takerAddress
                 protocol
-                protocolData
+                protocolData {
+                    ... on LooksrareProtocolData {
+                        isOrderAsk
+                        signer
+                        collectionAddress
+                        price
+                        tokenId
+                        amount
+                        strategy
+                        currencyAddress
+                        nonce
+                        startTime
+                        endTime
+                        minPercentageToAsk
+                        params
+                        v
+                        r
+                        s
+                    }
+                    ... on SeaportProtocolData {
+                        signature
+                        parameters {
+                            offerer
+                            offer {
+                                itemType
+                                token
+                                identifierOrCriteria
+                                startAmount
+                                endAmount
+                            }
+                            consideration {
+                                itemType
+                                token
+                                identifierOrCriteria
+                                startAmount
+                                endAmount
+                                recipient
+                            }
+                            startTime
+                            endTime
+                            orderType
+                            zone
+                            zoneHash
+                            salt
+                            conduitKey
+                            totalOriginalConsiderationItems
+                            counter
+                        }
+                    }
+                }
             }
             cancel {
                 exchange

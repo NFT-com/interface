@@ -72,7 +72,7 @@ export const nftResolver: DeployedContract = {
 
 export const nftAggregator: DeployedContract = {
   goerli: '0x165699Cf79Aaf3D15746c16fb63ef7dDCcb8dF10',
-  mainnet: '0x165699Cf79Aaf3D15746c16fb63ef7dDCcb8dF10', // todo: use mainnet address
+  mainnet: '0xc7Ce15B068f96D8079Af45A5bab225e628bF96e6',
   rinkeby: '0x3F15E5e9cCE275213365e5109168eD7B368f67Fe', // todo: remove this
 };
 

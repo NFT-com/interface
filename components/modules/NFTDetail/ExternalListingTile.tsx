@@ -3,20 +3,19 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { Maybe, Nft, SupportedExternalExchange, SupportedExternalProtocol, TxActivity } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { SeaportOrderComponents } from 'types';
+import { ExternalExchange, ExternalProtocol } from 'types';
 import { sameAddress } from 'utils/helpers';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
-import { MakerOrder } from '@looksrare/sdk';
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useSigner } from 'wagmi';
 
@@ -27,17 +26,19 @@ export interface ExternalListingTileProps {
 }
 
 const Colors = {
-  [SupportedExternalExchange.LooksRare]: 'bg-looksrare-green',
-  [SupportedExternalExchange.Opensea]: 'bg-opensea-blue'
+  [ExternalExchange.LooksRare]: 'bg-looksrare-green',
+  [ExternalExchange.Opensea]: 'bg-opensea-blue'
 };
 
 const Icons = {
-  [SupportedExternalExchange.LooksRare]: '/looksrare_black.svg',
-  [SupportedExternalExchange.Opensea]: '/opensea_blue.png',
+  [ExternalExchange.LooksRare]: '/looksrare_black.svg',
+  [ExternalExchange.Opensea]: '/opensea_blue.png',
 };
 
 export function ExternalListingTile(props: ExternalListingTileProps) {
   const { listing } = props;
+
+  const [cancelling, setCancelling] = useState(false);
 
   const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
@@ -52,13 +53,13 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
 
   const getPrice = useCallback(() => {
     switch(listing?.order?.protocol) {
-    case (SupportedExternalProtocol.LooksRare): {
-      const order = listing?.order?.protocolData as Maybe<PartialDeep<MakerOrder>>;
+    case (ExternalProtocol.LooksRare): {
+      const order = listing?.order?.protocolData as LooksrareProtocolData;
       return BigNumber.from(order?.price ?? 0);
     }
-    case (SupportedExternalProtocol.Seaport): {
-      const orderParameters = listing?.order?.protocolData as Maybe<PartialDeep<SeaportOrderComponents>>;
-      return orderParameters?.consideration
+    case (ExternalProtocol.Seaport): {
+      const order = listing?.order?.protocolData as SeaportProtocolData;
+      return order?.parameters?.consideration
         ?.reduce((total, consideration) => total.add(BigNumber.from(consideration?.startAmount ?? 0)), BigNumber.from(0));
     }
     }
@@ -66,18 +67,18 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
 
   const getCurrency = useCallback(() => {
     switch(listing?.order?.protocol) {
-    case (SupportedExternalProtocol.LooksRare): {
-      const order = listing?.order?.protocolData as Maybe<PartialDeep<MakerOrder>>;
-      return order?.currency ?? order?.['currencyAddress'];
+    case (ExternalProtocol.LooksRare): {
+      const order = listing?.order?.protocolData as LooksrareProtocolData;
+      return order?.currencyAddress ?? order?.['currency'];
     }
-    case (SupportedExternalProtocol.Seaport): {
-      const orderParameters = listing?.order?.protocolData as Maybe<PartialDeep<SeaportOrderComponents>>;
-      return orderParameters?.consideration?.[0]?.token;
+    case (ExternalProtocol.Seaport): {
+      const order = listing?.order?.protocolData as SeaportProtocolData;
+      return order?.parameters?.consideration?.[0]?.token;
     }
     }
   }, [listing?.order?.protocol, listing?.order?.protocolData]);
 
-  if (![SupportedExternalProtocol.LooksRare, SupportedExternalProtocol.Seaport].includes(listingProtocol as SupportedExternalProtocol)) {
+  if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
     return null;
   }
@@ -99,7 +100,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         </span>
         <div className='flex items-center'>
           <span className='text-base font-medium'>
-            {ethers.utils.formatUnits(getPrice(), getByContractAddress(getCurrency())?.decimals ?? 18)}
+            {ethers.utils.formatUnits(getPrice(), getByContractAddress(getCurrency())?.decimals ?? 18)}{' '}
             {getByContractAddress(getCurrency())?.name ?? 'ETH'}
           </span>
         </div>
@@ -113,14 +114,14 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
           label={'View Listing'}
           onClick={() => {
             switch(listingProtocol) {
-            case SupportedExternalProtocol.LooksRare: {
-              const orderParameters = listing?.order?.protocolData as Maybe<PartialDeep<SeaportOrderComponents>>;
-              window.open(`https://opensea.io/assets/ethereum/${orderParameters?.offer?.[0]?.token}/${orderParameters?.offer?.[0]?.identifierOrCriteria}`, '_blank');
+            case ExternalProtocol.Seaport: {
+              const order = listing?.order?.protocolData as SeaportProtocolData;
+              window.open(`https://opensea.io/assets/ethereum/${order?.parameters?.offer?.[0]?.token}/${order?.parameters?.offer?.[0]?.identifierOrCriteria}`, '_blank');
               break;
             }
-            case SupportedExternalProtocol.Seaport: {
-              const order = listing?.order?.protocolData as Maybe<PartialDeep<MakerOrder>>;
-              window.open(`https://looksrare.org/collections/${order?.collection ?? order?.['collectionAddress']}/${order?.tokenId}`, '_blank');
+            case ExternalProtocol.LooksRare: {
+              const order = listing?.order?.protocolData as LooksrareProtocolData;
+              window.open(`https://looksrare.org/collections/${order?.collectionAddress ?? order?.['collection']}/${order?.tokenId}`, '_blank');
               break;
             }
             }
@@ -135,18 +136,32 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             type={ButtonType.PRIMARY}
             color="white"
             label={'Cancel Listing'}
+            disabled={cancelling}
+            loading={cancelling}
             onClick={async () => {
-              if (listingProtocol === SupportedExternalProtocol.LooksRare) {
-                const order = listing?.order?.protocolData as Maybe<PartialDeep<MakerOrder>>;
+              setCancelling(true);
+              if (listingProtocol === ExternalProtocol.LooksRare) {
+                const order = listing?.order?.protocolData as LooksrareProtocolData;
                 if (order == null) {
+                  setCancelling(false);
                   return;
                 }
-                await cancelLooksrareListing(BigNumber.from(order.nonce), looksrareExchange);
-                // todo: notify backend of cancellation
-              } else if (listingProtocol === SupportedExternalProtocol.Seaport) {
-                const orderParameters = JSON.parse(listing?.order?.protocolData?.[0]) as SeaportOrderComponents;
-                await cancelSeaportListing(orderParameters, seaportExchange);
-                // todo: notify backend of cancellation
+                const result = await cancelLooksrareListing(BigNumber.from(order.nonce), looksrareExchange);
+                if (result) {
+                  // todo: notify backend of cancellation
+                }
+                setCancelling(false);
+              } else if (listingProtocol === ExternalProtocol.Seaport) {
+                const order = listing?.order?.protocolData as SeaportProtocolData;
+                if (order == null) {
+                  setCancelling(false);
+                  return;
+                }
+                const result = await cancelSeaportListing(order?.parameters, seaportExchange);
+                if (result) {
+                  // todo: notify backend of cancellation
+                }
+                setCancelling(false);
               }
             }}
           />:
@@ -163,9 +178,11 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
                 currency: getCurrency() ?? WETH.address,
                 price: price,
                 collectionName: props.collectionName,
-                protocol: listingProtocol as SupportedExternalProtocol,
+                protocol: listingProtocol as ExternalProtocol,
                 isApproved: BigNumber.from(allowance ?? 0).gt(price),
-                protocolData: listing?.order?.protocolData
+                protocolData: listingProtocol === ExternalProtocol.Seaport ?
+                  listing?.order?.protocolData as SeaportProtocolData :
+                  listing?.order?.protocolData as LooksrareProtocolData
               });
               toggleCartSidebar('buy');
             }}

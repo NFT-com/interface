@@ -1,6 +1,7 @@
 export * from './alchemy';
 export * from './balanceData';
 export * from './blogs';
+export * from './marketplaces';
 export * from './seaport';
 
 export type TickerStat = {

@@ -126,7 +126,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
   const getByContractAddress = useCallback((
     contractAddress: string
   ): NFTSupportedCurrency | null => {
-    switch(contractAddress.toLowerCase()) {
+    switch(contractAddress?.toLowerCase()) {
     case dai.address.toLowerCase():
       return data.DAI;
     case usdc.address.toLowerCase():

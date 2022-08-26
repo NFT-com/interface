@@ -1,7 +1,8 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Seaport } from 'constants/typechain';
 import { OrderComponentsStruct } from 'constants/typechain/Seaport';
-import { Maybe, Nft } from 'graphql/generated/types';
+import { Maybe, Nft, SeaportConsideration, SeaportProtocolData, SeaportProtocolDataParams } from 'graphql/generated/types';
+import { AggregatorResponse } from 'types';
 import {
   CROSS_CHAIN_SEAPORT_ADDRESS,
   EIP_712_ORDER_TYPE,
@@ -18,6 +19,7 @@ import {
   SeaportOrderParameters } from 'types/seaport';
 
 import { filterNulls } from './helpers';
+import { libraryCall, seaportLib } from './marketplaceHelpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { _TypedDataEncoder } from 'ethers/lib/utils';
@@ -162,8 +164,114 @@ export function createSeaportParametersForNFTListing(
 }
 
 export async function cancelSeaportListing(
-  order: SeaportOrderComponents,
+  order: SeaportProtocolDataParams,
   seaportExchange: Seaport
 ) {
-  await seaportExchange.cancel([order as OrderComponentsStruct]);
+  return await seaportExchange.cancel([order as OrderComponentsStruct])
+    .then((tx) => {
+      return tx.wait(1).then(() => true).catch(() => false);
+    })
+    .catch(() => false);
 }
+
+const generateOfferArray = (array: any) => {
+  return array.map((item: any, index: string) => [
+    {
+      orderIndex: index,
+      itemIndex: item.length - 1,
+    },
+  ]);
+};
+
+interface ConsiderationObjMap {
+  [key: string]: Array<ConsiderationFulfillmentUnit>;
+}
+
+interface ConsiderationFulfillmentUnit {
+  orderIndex: string;
+  itemIndex: string;
+}
+
+const generateOrderConsiderationArray = (
+  array: Array<Array<SeaportConsideration>>,
+): Array<Array<ConsiderationFulfillmentUnit>> => {
+  const mapIndex: ConsiderationObjMap = {};
+  array.map((item: Array<SeaportConsideration>, index: number) =>
+    item.map((i: SeaportConsideration, shortIndex: number) => {
+      if (mapIndex[i.recipient] == undefined) {
+        mapIndex[i.recipient] = [{ orderIndex: index.toString(), itemIndex: shortIndex.toString() }];
+      } else {
+        mapIndex[i.recipient].push({ orderIndex: index.toString(), itemIndex: shortIndex.toString() });
+      }
+    }),
+  );
+
+  return Object.values(mapIndex);
+};
+
+export const getSeaportHex = (
+  recipient: string,
+  orders: SeaportProtocolData[],
+  ethValues: BigNumber[],
+): AggregatorResponse => {
+  try {
+    const orderParams = [];
+
+    for (let i = 0; i < orders.length; i++) {
+      const order = orders[i];
+      orderParams.push({
+        denominator: '1',
+        numerator: '1',
+        parameters: {
+          conduitKey: order?.parameters?.conduitKey,
+          consideration: order?.parameters?.consideration,
+          endTime: order?.parameters?.endTime,
+          offer: order?.parameters?.offer,
+          offerer: order?.parameters?.offerer, // seller
+          orderType: order?.parameters?.orderType,
+          salt: order?.parameters?.salt,
+          startTime: order?.parameters?.startTime,
+          totalOriginalConsiderationItems: order?.parameters?.totalOriginalConsiderationItems,
+          zone: order?.parameters?.zone, // opensea pausable zone
+          zoneHash: order?.parameters?.zoneHash,
+        },
+        signature: order?.signature,
+        extraData: '0x',
+      });
+    }
+
+    const orderStruct = [
+      [
+        orderParams, // advancedOrders
+        [], // criteria resolvers
+        generateOfferArray(orderParams.map(i => i.parameters.offer)), // array of all offers (offers fulfillment)
+        generateOrderConsiderationArray(orderParams.map(i => i.parameters.consideration)), // array of all considerations (considerations fulfillment)
+        '0x0000000000000000000000000000000000000000000000000000000000000000', // fulfillerConduitKey
+        recipient, // recipient
+        orders.length.toString(), // maximumFulfilled
+      ],
+    ];
+
+    const msgValue: ethers.BigNumber = ethValues
+      .reduce(
+        (partialSum: ethers.BigNumber, a: ethers.BigNumber) => ethers.BigNumber.from(partialSum).add(a),
+        ethers.BigNumber.from(0),
+      );
+
+    // input data for SeaportLibV1_1
+    const inputData = [orderStruct, [msgValue], true];
+    const wholeHex = seaportLib.encodeFunctionData('fulfillAvailableAdvancedOrders', inputData);
+    const genHex = libraryCall(
+      'fulfillAvailableAdvancedOrders(SeaportLib1_1.SeaportBuyOrder[],uint256[],bool)',
+      wholeHex.slice(10),
+    );
+
+    return {
+      tradeData: genHex,
+      value: msgValue,
+      marketId: '1',
+    };
+  } catch (err) {
+    throw `error in getSeaportHex: ${err}`;
+  }
+};

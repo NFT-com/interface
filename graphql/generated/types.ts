@@ -1683,13 +1683,10 @@ export type SignatureInput = {
 };
 
 export enum SupportedExternalExchange {
-  LooksRare = 'LooksRare',
-  Opensea = 'Opensea',
-}
-
-export enum SupportedExternalProtocol {
-  Seaport = 'Seaport',
-  LooksRare = "LooksRare",
+  Looksrare = 'looksrare',
+  Opensea = 'opensea',
+  Rarible = 'rarible',
+  X2y2 = 'x2y2'
 }
 
 export type SwapNftInput = {
@@ -2276,7 +2273,7 @@ export type ActivitiesQueryVariables = Exact<{
 }>;
 
 
-export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', chainId?: string | null, activityType: string, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: Array<string | null> | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', chainId?: string | null, activityType: string, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
 
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2988,7 +2985,56 @@ export const ActivitiesDocument = gql`
         makerAddress
         takerAddress
         protocol
-        protocolData
+        protocolData {
+          ... on LooksrareProtocolData {
+            isOrderAsk
+            signer
+            collectionAddress
+            price
+            tokenId
+            amount
+            strategy
+            currencyAddress
+            nonce
+            startTime
+            endTime
+            minPercentageToAsk
+            params
+            v
+            r
+            s
+          }
+          ... on SeaportProtocolData {
+            signature
+            parameters {
+              offerer
+              offer {
+                itemType
+                token
+                identifierOrCriteria
+                startAmount
+                endAmount
+              }
+              consideration {
+                itemType
+                token
+                identifierOrCriteria
+                startAmount
+                endAmount
+                recipient
+              }
+              startTime
+              endTime
+              orderType
+              zone
+              zoneHash
+              salt
+              conduitKey
+              totalOriginalConsiderationItems
+              counter
+            }
+          }
+        }
       }
       cancel {
         exchange

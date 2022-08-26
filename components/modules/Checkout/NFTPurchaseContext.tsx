@@ -1,21 +1,30 @@
-import { Nft, SupportedExternalProtocol } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
+import { ExternalProtocol } from 'types';
 import { filterNulls } from 'utils/helpers';
+import { getLooksrareHex } from 'utils/looksrareHelpers';
+import { getSeaportHex } from 'utils/seaportHelpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
 
 import { BigNumber } from '@ethersproject/bignumber';
+import { ethers } from 'ethers';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
+import { useAccount, useSigner } from 'wagmi';
 
 export type StagedPurchase = {
   nft: PartialDeep<Nft>;
   collectionName: string;
-  protocol: SupportedExternalProtocol;
+  protocol: ExternalProtocol;
   currency: string;
   price: BigNumber;
+  /**
+   * purchasers need to give ERC20 approval to the Aggregator contract
+   */
   isApproved: boolean;
-  protocolData: any;
+  protocolData: SeaportProtocolData | LooksrareProtocolData;
 }
 
 interface NFTPurchaseContextType {
@@ -44,7 +53,10 @@ export function NFTPurchaseContextProvider(
   
   const { toggleCartSidebar } = useContext(NFTListingsContext);
 
+  const { address: currentAddress } = useAccount();
+  const { data: signer } = useSigner();
   const { aggregator } = useAllContracts();
+  const looksrareExchange = useLooksrareExchangeContract(signer);
 
   useEffect(() => {
     if (window != null) {
@@ -87,23 +99,42 @@ export function NFTPurchaseContextProvider(
   }, [toBuy]);
 
   const buyAll = useCallback(async () => {
-    const result = await aggregator.batchTrade(
-      {
-        tokenAddrs: toBuy?.map(purchase => purchase?.currency),
-        amounts: toBuy?.map(purchase => BigNumber.from(purchase?.currency ?? 0))
-      },
-      toBuy?.map(purchase => ({
-        marketId: purchase?.protocol === SupportedExternalProtocol.Seaport ? BigNumber.from(1) : BigNumber.from(0),
-        value: BigNumber.from(0),
-        tradeData: JSON.stringify(purchase?.protocolData),
-      })),
+    const tokenAmounts = {
+      tokenAddrs: toBuy?.map(purchase => purchase?.currency),
+      amounts: toBuy?.map(purchase => BigNumber.from(purchase?.price ?? 0))
+    };
+    const orderDetails = filterNulls([
+      // Looksrare orders are given individually
+      ...(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.LooksRare)?.map(looksrarePurchase => {
+        return getLooksrareHex(aggregator.address, looksrarePurchase?.protocolData as LooksrareProtocolData, looksrareExchange, '0');
+      }) ?? []),
+      // Seaport orders are combined
+      toBuy?.find(purchase => purchase.protocol === ExternalProtocol.Seaport) != null ?
+        getSeaportHex(
+          ethers.utils.getAddress(currentAddress),
+          toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.Seaport)?.map(purchase => purchase?.protocolData as SeaportProtocolData),
+          toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.Seaport)?.map(() => BigNumber.from(0)), // eth values
+        ) :
+        null
+    ]);
+
+    const result = await aggregator.connect(signer).batchTrade(
+      tokenAmounts,
+      orderDetails,
       [] // dustTokens
-    ).catch(() => null);
+    )
+      .then(tx => {
+        return tx.wait(1).then(() => true).catch(() => false);
+      })
+      .catch((e) => {
+        console.log(e);
+        return null;
+      });
     if (result) {
       return await result.wait(1).then(() => true);
     }
     return false;
-  }, [aggregator, toBuy]);
+  }, [aggregator, currentAddress, looksrareExchange, signer, toBuy]);
 
   return <NFTPurchasesContext.Provider value={{
     removePurchase,

@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { Maybe, SupportedExternalProtocol } from 'graphql/generated/types';
+import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { ExternalProtocol } from 'types';
 import { isNullOrEmpty, max } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
@@ -54,7 +55,7 @@ export function NFTListingsCartSummary() {
   const getMaxMarketplaceFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
       const feesByMarketplace = stagedListing.targets.map((protocol) => {
-        if (protocol === SupportedExternalProtocol.LooksRare) {
+        if (protocol === ExternalProtocol.LooksRare) {
           // Looksrare fee is fetched from the smart contract.
           return BigNumber.from(looksrareProtocolFeeBps == null
             ? 0
@@ -71,7 +72,7 @@ export function NFTListingsCartSummary() {
   const getMaxRoyaltyFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
       const royaltiesByMarketplace = stagedListing.targets.map((protocol) => {
-        if (protocol === SupportedExternalProtocol.LooksRare) {
+        if (protocol === ExternalProtocol.LooksRare) {
           const minAskAmount = BigNumber.from(stagedListing?.looksrareOrder?.minPercentageToAsk ?? 0)
             .div(10000)
             .mul(BigNumber.from(stagedListing?.looksrareOrder?.price ?? 0));
@@ -105,8 +106,8 @@ export function NFTListingsCartSummary() {
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
-      (stagedListing.targets.includes(SupportedExternalProtocol.LooksRare) && !stagedListing?.isApprovedForLooksrare) ||
-      (stagedListing.targets.includes(SupportedExternalProtocol.Seaport) && !stagedListing?.isApprovedForSeaport)
+      (stagedListing.targets.includes(ExternalProtocol.LooksRare) && !stagedListing?.isApprovedForLooksrare) ||
+      (stagedListing.targets.includes(ExternalProtocol.Seaport) && !stagedListing?.isApprovedForSeaport)
     );
   }, [toList]);
 
@@ -132,7 +133,7 @@ export function NFTListingsCartSummary() {
                     error: error === 'ApprovalError',
                     items: toList?.map((stagedListing) => {
                       return stagedListing.targets.map((protocol) => {
-                        const approved = protocol === SupportedExternalProtocol.LooksRare ?
+                        const approved = protocol === ExternalProtocol.LooksRare ?
                           stagedListing?.isApprovedForLooksrare :
                           stagedListing?.isApprovedForSeaport;
                         return {
@@ -206,11 +207,11 @@ export function NFTListingsCartSummary() {
                 const stagedListing = toList[i];
                 for (let j = 0; j < toList[i].targets.length; j++) {
                   const protocol = toList[i].targets[j];
-                  const approved = protocol === SupportedExternalProtocol.LooksRare ?
+                  const approved = protocol === ExternalProtocol.LooksRare ?
                     stagedListing?.isApprovedForLooksrare :
                     stagedListing?.isApprovedForSeaport;
-                  if (!approved && protocol === SupportedExternalProtocol.LooksRare) {
-                    const result = await approveCollection(stagedListing, SupportedExternalProtocol.LooksRare)
+                  if (!approved && protocol === ExternalProtocol.LooksRare) {
+                    const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
                       .then(result => {
                         if (!result) {
                           setError('ApprovalError');
@@ -226,8 +227,8 @@ export function NFTListingsCartSummary() {
                     if (!result) {
                       break;
                     }
-                  } else if (!approved && protocol === SupportedExternalProtocol.Seaport) {
-                    const result = await approveCollection(stagedListing, SupportedExternalProtocol.Seaport)
+                  } else if (!approved && protocol === ExternalProtocol.Seaport) {
+                    const result = await approveCollection(stagedListing, ExternalProtocol.Seaport)
                       .then(result => {
                         if (!result) {
                           setError('ApprovalError');

@@ -1,6 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { SupportedExternalProtocol } from 'graphql/generated/types';
+import { ExternalProtocol } from 'types';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
@@ -20,8 +20,8 @@ export function ListingCheckout() {
     
   const [showSummary, setShowSummary] = useState(false);
 
-  const openseaFullyEnabled = toList.find(listing => listing.targets?.includes(SupportedExternalProtocol.Seaport)) != null;
-  const looksrareFullyEnabled = toList.find(listing => listing.targets?.includes(SupportedExternalProtocol.LooksRare)) != null;
+  const openseaFullyEnabled = toList.find(listing => listing.targets?.includes(ExternalProtocol.Seaport)) != null;
+  const looksrareFullyEnabled = toList.find(listing => listing.targets?.includes(ExternalProtocol.LooksRare)) != null;
 
   return (
     <div className="flex flex-col minlg:flex-row w-full">
@@ -31,7 +31,7 @@ export function ListingCheckout() {
           <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
             <div
               onClick={() => {
-                toggleTargetMarketplace(SupportedExternalProtocol.Seaport);
+                toggleTargetMarketplace(ExternalProtocol.Seaport);
                 setShowSummary(false);
               }}
               className={tw(
@@ -44,7 +44,7 @@ export function ListingCheckout() {
             </div>
             <div
               onClick={() => {
-                toggleTargetMarketplace(SupportedExternalProtocol.LooksRare);
+                toggleTargetMarketplace(ExternalProtocol.LooksRare);
                 setShowSummary(false);
               }}
               className={tw(

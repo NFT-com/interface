@@ -45,7 +45,7 @@ export interface Contracts {
   genesisKeyDistributor: Genesis_key_distributor;
   genesisKeyTeamDistributor: Genesis_key_team_distributor;
   genesisKeyTeamClaim: Genesis_key_team_claim;
-  aggregator: Nft_aggregator
+  aggregator: Nft_aggregator;
 }
 
 export function useAllContracts(): Contracts {
