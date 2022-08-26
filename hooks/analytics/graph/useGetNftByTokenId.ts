@@ -1,10 +1,10 @@
 import { request } from 'graphql-request';
-import { getAnalyticsEndpoint } from 'utils/helpers';
+import { Doppler, getEnv } from 'utils/env';
 
 import useSWR from 'swr';
 
 const fetcher = (query, variables) => {
-  return request(getAnalyticsEndpoint('Graph'), query, variables);
+  return request(getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_GRAPH_ENDPOINT), query, variables);
 };
 
 export function useGetNftByTokenId(contractAddress: string, tokenId: string) {
