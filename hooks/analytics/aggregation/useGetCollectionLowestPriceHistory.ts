@@ -1,4 +1,5 @@
-import { fetcher, getAnalyticsEndpoint } from 'utils/helpers';
+import { Doppler, getEnv } from 'utils/env';
+import { fetcher } from 'utils/helpers';
 
 import { Moment } from 'moment';
 import moment from 'moment';
@@ -9,7 +10,7 @@ export function useGetCollectionLowestPriceHistory(collectionId: string, dateFro
   const dateFromFormatted = dateFrom.format('YYYY-MM-DD').toString();
 
   const { data, error } = useSWR(
-    `${getAnalyticsEndpoint('Aggregation')}:443/collection/${collectionId}/lowest_price/history?from=${dateFromFormatted}&to=${nowFormatted}`,
+    `${getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_AGGREGATION_ENDPOINT)}:443/collection/${collectionId}/lowest_price/history?from=${dateFromFormatted}&to=${nowFormatted}`,
     fetcher
   );
 
