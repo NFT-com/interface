@@ -19,3 +19,16 @@ export type UserNotifications = {
 };
 
 export type ValidTimeFrame = '1D' | '7D' | '1M' | '3M' | '1Y' | 'ALL';
+
+export type CuratedCollection = {
+  tabTitle: string;
+  contractAddresses: string[]
+}
+
+export type ResultsPageProps = {
+  data: CuratedCollection[]
+};
+
+export type DiscoverPageProps = {
+  data: CuratedCollection[]
+};

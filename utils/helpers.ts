@@ -1,5 +1,4 @@
 import { Maybe } from 'graphql/generated/types';
-import { ValidTimeFrame } from 'types';
 
 import { Doppler, getEnv } from './env';
 
@@ -177,6 +176,16 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen: bool
       perPage = sideNavOpen ? 9 : 12;
     } else if (screenWidth >= 900 ) {
       perPage = sideNavOpen ? 4 : 6;
+    } else if (screenWidth >= 600) {
+      perPage = 4;
+    } else {
+      perPage = 2;
+    }
+  } else if (index === 'discover') {
+    if (screenWidth >= 1200) {
+      perPage = sideNavOpen ? 9 : 8;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 6 : 8;
     } else if (screenWidth >= 600) {
       perPage = 4;
     } else {
