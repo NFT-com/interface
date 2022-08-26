@@ -1,7 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { ActivityType, Nft, TxActivity } from 'graphql/generated/types';
-import { useActivitiesQuery } from 'graphql/hooks/useActivitiesQuery';
+import { Nft, TxActivity } from 'graphql/generated/types';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -22,17 +22,12 @@ export function ExternalListings(props: ExternalListingsProps) {
   const { address: currentAddress } = useAccount();
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
   
-  const { data: listings } = useActivitiesQuery({
-    // todo: paginate to get all the listings
-    pageInput: {
-      first: 50,
-    },
-    activityType: ActivityType.Listing,
-    contract: props?.nft?.contract,
-    tokenId: props?.nft?.tokenId,
-    chainId: String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
-  });
-  
+  const { data: listings } = useListingActivitiesQuery(
+    props?.nft?.contract,
+    props?.nft?.tokenId,
+    String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
+  );
+
   const {
     allowedAll: openseaAllowed,
   } = useNftCollectionAllowance(
