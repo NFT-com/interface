@@ -46,7 +46,7 @@ export const NftMemo = (props: NftMemoProps) => {
             'bg-[#F8F8F8]'
           )}
           maxLength={300}
-          placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) && 'Enter memo (optional)'}
+          placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter memo (optional)' : undefined}
           value={draftMemo ?? nft?.memo ?? ''}
           onChange={e => {
             handleMemoChange(e);
@@ -75,7 +75,7 @@ export const NftMemo = (props: NftMemoProps) => {
                 onClick={() => {
                   saveMemo();
                   setEditMemo(false);
-                  setDraftMemo('');
+                  setDraftMemo(draftMemo ?? nft?.memo ?? '');
                 } }
               />
               <Button
