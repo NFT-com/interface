@@ -27,7 +27,7 @@ export default function ProfileCard({ profile, onClick, message, showSwitch, ope
   const { setSidebarOpen } = useSidebar();
   return (
     <motion.div className={tw(
-      'mb-4 rounded-[10px] box-border',
+      'rounded-[10px] box-border',
       isSelected && 'outline-[#F9D963] outline-offset-[-2px] outline-3 outline'
     )}>
       {isSidebar
