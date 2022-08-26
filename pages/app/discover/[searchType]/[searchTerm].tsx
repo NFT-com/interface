@@ -36,6 +36,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
+  const { width: screenWidth } = useWindowDimensions();
 
   const [results, setResults] = useState([]);
   const [found, setFound] = useState(0);
