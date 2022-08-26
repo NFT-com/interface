@@ -91,7 +91,7 @@ export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) =>
 };
 
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
-  const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
+  const prefix = 'https://nft-llc-3.mypinata.cloud/ipfs/';
   if (image == null) {
     return null;
   } else if (image.indexOf('ipfs://ipfs/') === 0) {
