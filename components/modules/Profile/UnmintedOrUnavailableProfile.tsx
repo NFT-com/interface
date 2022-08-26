@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { Footer } from 'components/elements/Footer';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { tw } from 'utils/tw';
@@ -76,9 +75,6 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
             <LinksToSection isAddressOwner={false} />
           </div>
         </div>
-      </div>
-      <div className='w-full mt-16 minmd:mt-0'>
-        <Footer />
       </div>
     </div>
   );
