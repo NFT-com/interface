@@ -1,8 +1,9 @@
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
+import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { DescriptionDetail } from './DescriptionDetail';
@@ -21,8 +22,11 @@ export interface NFTDetailPageProps {
 }
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
+  const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
+  const { mutate: mutateListings } = useExternalListingsQuery(nft?.contract, nft?.tokenId, String(nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
+
   const { address: currentAddress } = useAccount();
-  const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
+
   const { chain } = useNetwork();
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
     return await getContractMetadata(nft?.contract, chain?.id);
@@ -30,7 +34,10 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
 
   return (
     <div className="flex flex-col pt-20 items-center w-full max-w-7xl mx-auto">
-      <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
+      <NFTDetail nft={nft} onRefreshSuccess={() => {
+        mutateNft();
+        mutateListings();
+      }} key={nft?.id} />
       {
         ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
         (currentAddress === nft?.wallet?.address) ||

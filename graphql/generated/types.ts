@@ -2149,6 +2149,13 @@ export type RefreshNftMutationVariables = Exact<{
 
 export type RefreshNftMutation = { __typename?: 'Mutation', refreshNft: { __typename?: 'NFT', id: string } };
 
+export type RefreshNftOrdersMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type RefreshNftOrdersMutation = { __typename?: 'Mutation', refreshNFTOrder: string };
+
 export type RemoveFromWatchlistMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -2705,6 +2712,11 @@ export const RefreshNftDocument = gql`
   refreshNft(id: $id) {
     id
   }
+}
+    `;
+export const RefreshNftOrdersDocument = gql`
+    mutation RefreshNftOrders($id: ID!) {
+  refreshNFTOrder(id: $id)
 }
     `;
 export const RemoveFromWatchlistDocument = gql`
@@ -3825,6 +3837,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     RefreshNft(variables: RefreshNftMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RefreshNftMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<RefreshNftMutation>(RefreshNftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RefreshNft', 'mutation');
+    },
+    RefreshNftOrders(variables: RefreshNftOrdersMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RefreshNftOrdersMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RefreshNftOrdersMutation>(RefreshNftOrdersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RefreshNftOrders', 'mutation');
     },
     RemoveFromWatchlist(variables: RemoveFromWatchlistMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RemoveFromWatchlistMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<RemoveFromWatchlistMutation>(RemoveFromWatchlistDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RemoveFromWatchlist', 'mutation');
