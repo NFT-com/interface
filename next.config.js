@@ -82,7 +82,7 @@ const moduleExports = withTM({
   images: {
     domains: [
       'cdn.nft.com',
-      'nft-llc.mypinata.cloud',
+      'nft-llc-3.mypinata.cloud',
       'cdn.nft.com/_ipx',
       'images.ctfassets.net',
       'nftcom-dev-assets.s3.amazonaws.com'

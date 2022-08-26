@@ -15,7 +15,8 @@ import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
 export interface ListingCheckoutNftProps {
-  listing: PartialDeep<StagedListing>
+  listing: PartialDeep<StagedListing>;
+  onPriceChange: () => void;
 }
 
 export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
@@ -64,6 +65,7 @@ export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
           currencyOptions={['WETH']}
           onPriceChange={(val: BigNumber) => {
             setPrice(props.listing, val);
+            props.onPriceChange();
           }}
           onCurrencyChange={null}
           error={props.listing?.startingPrice == null || BigNumber.from(props.listing?.startingPrice).eq(0)}

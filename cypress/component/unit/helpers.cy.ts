@@ -124,12 +124,12 @@ describe('Unit test our helper functions', () => {
   context('processIPFSURL', () => {
     it('should return the correct ipfs urls', () => {
       expect(processIPFSURL(null)).to.equal(null);
-      expect(processIPFSURL('ipfs://ipfs/test_url')).to.equal('https://nft-llc.mypinata.cloud/ipfs/test_url');
-      expect(processIPFSURL('ipfs://test_url')).to.equal('https://nft-llc.mypinata.cloud/ipfs/test_url');
-      expect(processIPFSURL('https://ipfs.io/ipfs/test_url')).to.equal('https://nft-llc.mypinata.cloud/ipfs/test_url');
-      expect(processIPFSURL('https://gateway.pinata.cloud/ipfs/test_url')).to.equal('https://nft-llc.mypinata.cloud/ipfs/test_url');
-      expect(processIPFSURL('https://infura-ipfs.io/ipfs/QmbyQAnbszAt3o9hCmDngR92st8tUBW9z8mdztMSTvUaKS/preload.gif')).to.equal('https://nft-llc.mypinata.cloud/ipfs/QmbyQAnbszAt3o9hCmDngR92st8tUBW9z8mdztMSTvUaKS/preload.gif');
-      expect(processIPFSURL('QmZT1ijWYugocjMDreJYKmUsPQS5Gu6mvmFbWrnUpBQK4L')).to.equal('https://nft-llc.mypinata.cloud/ipfs/QmZT1ijWYugocjMDreJYKmUsPQS5Gu6mvmFbWrnUpBQK4L');
+      expect(processIPFSURL('ipfs://ipfs/test_url')).to.equal('https://nft-llc-3.mypinata.cloud/ipfs/test_url');
+      expect(processIPFSURL('ipfs://test_url')).to.equal('https://nft-llc-3.mypinata.cloud/ipfs/test_url');
+      expect(processIPFSURL('https://ipfs.io/ipfs/test_url')).to.equal('https://nft-llc-3.mypinata.cloud/ipfs/test_url');
+      expect(processIPFSURL('https://gateway.pinata.cloud/ipfs/test_url')).to.equal('https://nft-llc-3.mypinata.cloud/ipfs/test_url');
+      expect(processIPFSURL('https://infura-ipfs.io/ipfs/QmbyQAnbszAt3o9hCmDngR92st8tUBW9z8mdztMSTvUaKS/preload.gif')).to.equal('https://nft-llc-3.mypinata.cloud/ipfs/QmbyQAnbszAt3o9hCmDngR92st8tUBW9z8mdztMSTvUaKS/preload.gif');
+      expect(processIPFSURL('QmZT1ijWYugocjMDreJYKmUsPQS5Gu6mvmFbWrnUpBQK4L')).to.equal('https://nft-llc-3.mypinata.cloud/ipfs/QmZT1ijWYugocjMDreJYKmUsPQS5Gu6mvmFbWrnUpBQK4L');
       expect(processIPFSURL('noop')).to.equal('noop');
     });
   });

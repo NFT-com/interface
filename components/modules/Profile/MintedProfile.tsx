@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import { Footer } from 'components/elements/Footer';
 import Loader from 'components/elements/Loader';
 import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -110,7 +109,7 @@ export function MintedProfile(props: MintedProfileProps) {
     associatedContract != null &&
     (associatedAddresses?.find(addr => sameAddress(addr?.chainAddr, associatedCollectionWithDeployer?.deployer)) || sameAddress(profileData?.profile?.owner?.address, associatedCollectionWithDeployer?.deployer))
   ) {
-    return <div className='w-full h-full'>
+    return <div className='w-full h-max'>
       <Collection contract={associatedContract?.chainAddr} />
     </div>;
   }
@@ -336,9 +335,6 @@ export function MintedProfile(props: MintedProfileProps) {
         </div>
       </div>
       <div className="flex grow" />
-      <div className='w-full mt-20'>
-        <Footer />
-      </div>
     </ProfileScrollContextProvider>
   );
 }
