@@ -1,5 +1,4 @@
 import { Maybe } from 'graphql/generated/types';
-import { ValidTimeFrame } from 'types';
 
 import { Doppler, getEnv } from './env';
 

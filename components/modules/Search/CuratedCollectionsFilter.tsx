@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import CaretCircle from 'public/caret_circle.svg';
 import Flask from 'public/flask.svg';
-import {  useState } from 'react';
+import { useState } from 'react';
 
 export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void, collapsed?: boolean}) => {
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(props.collapsed ?? true);
