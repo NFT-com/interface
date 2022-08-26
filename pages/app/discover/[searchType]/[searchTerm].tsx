@@ -9,6 +9,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import NotFoundPage from 'pages/404';
+import { ResultsPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -30,8 +31,8 @@ function usePrevious(value) {
   return ref.current;
 }
 
-export default function ResultsPage() {
-  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy } = useSearchModal();
+export default function ResultsPage({ data }: ResultsPageProps) {
+  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy, setCuratedCollections, curatedCollections } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
@@ -41,6 +42,12 @@ export default function ResultsPage() {
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
   const [filters, setFilters] = useState([]);
+  
+  useEffect(() => {
+    if (isNullOrEmpty(curatedCollections)) {
+      setCuratedCollections(data);
+    }
+  }, [curatedCollections, data, setCuratedCollections]);
 
   const checkedFiltersString = useCallback(() => {
     let checkedFiltersString = '';
