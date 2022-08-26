@@ -1,4 +1,5 @@
-import { fetcher, getAnalyticsEndpoint } from 'utils/helpers';
+import { Doppler,getEnv } from 'utils/env';
+import { fetcher } from 'utils/helpers';
 
 import moment, { Moment } from 'moment';
 import useSWR from 'swr';
@@ -15,7 +16,7 @@ export function useGetCollectionSalesHistory(collectionId: string, dateFrom: Mom
   const dateFromFormatted = dateFrom.format('YYYY-MM-DD').toString();
 
   const { data, error } = useSWR(
-    `${getAnalyticsEndpoint('Aggregation')}/collection/${collectionId}/sales/history?from=${dateFromFormatted}&to=${nowFormatted}`,
+    `${getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_AGGREGATION_ENDPOINT)}collection/${collectionId}/sales/history?from=${dateFromFormatted}&to=${nowFormatted}`,
     fetcher
   );
 

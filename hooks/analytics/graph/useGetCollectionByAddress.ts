@@ -1,11 +1,11 @@
 import { request } from 'graphql-request';
-import { getAnalyticsEndpoint } from 'utils/helpers';
+import { Doppler, getEnv } from 'utils/env';
 
 import useSWR from 'swr';
 
 const fetcher = (query, variables) => {
   console.log(query, variables);
-  return request(getAnalyticsEndpoint('GQL'), query, variables);
+  return request(getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_GQL_ENDPOINT), query, variables);
 };
 
 export function useGetCollectionByAddress(contractAddress: string) {
