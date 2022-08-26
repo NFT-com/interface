@@ -3,64 +3,46 @@ import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { SideNav } from 'components/modules/Search/SideNav';
-import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import NotFoundPage from 'pages/404';
 import { DiscoverPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getPerPage } from 'utils/helpers';
+import { getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
-import { SearchableFields } from 'utils/typeSenseAdapters';
 
 import { getCollection } from 'lib/contentful/api';
 import Link from 'next/link';
 import Vector from 'public/Vector.svg';
-import { useEffect, useRef, useState } from 'react';
-import { Loader } from 'react-feather';
-
-function usePrevious(value) {
-  const ref = useRef(value);
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
+import { useEffect, useMemo, useState } from 'react';
 
 export default function DiscoverPage({ data }: DiscoverPageProps) {
-  const [searchTerm, setSearchTerm] = useState('nft');
-  const [page, setPage] = useState(1);
-  const { fetchTypesenseSearch, loading } = useFetchTypesenseSearch();
-  const [collectionsResults, setCollectionsResults] = useState([]);
   const { width: screenWidth } = useWindowDimensions();
-  const prevVal = usePrevious(page);
-  const { sideNavOpen, setCuratedCollections, selectedCuratedCollection } = useSearchModal();
-  const contractAddresses = selectedCuratedCollection?.contractAddresses.addresses ?? [];
+  const [page, setPage] = useState(1);
+  const { sideNavOpen, setCuratedCollections, selectedCuratedCollection, curatedCollections, setSelectedCuratedCollection } = useSearchModal();
+  const [paginatedAddresses, setPaginatedAddresses] = useState([]);
+
+  const contractAddresses = useMemo(() => {
+    return selectedCuratedCollection?.contractAddresses.addresses ?? [];
+  }, [selectedCuratedCollection?.contractAddresses.addresses]);
 
   setCuratedCollections(data);
 
   useEffect(() => {
-    if (page > 1 && page !== prevVal) {
-      screenWidth && fetchTypesenseSearch({
-        index:'collections',
-        query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
-        q: searchTerm,
-        per_page: getPerPage('collections', screenWidth, sideNavOpen),
-        page: page,
-      })
-        .then((results) => {
-          setCollectionsResults([...collectionsResults,...results.hits]);
-        });
+    if(isNullOrEmpty(selectedCuratedCollection)) {
+      setSelectedCuratedCollection(curatedCollections[0]);
     }
-  }, [fetchTypesenseSearch, page, searchTerm, screenWidth, collectionsResults, prevVal, sideNavOpen]);
+  },[curatedCollections, selectedCuratedCollection, setSelectedCuratedCollection]);
+
+  useEffect(() => {
+    setPaginatedAddresses([...contractAddresses.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page)]);
+  },[contractAddresses, page, screenWidth, sideNavOpen]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
     return <NotFoundPage />;
   }
 
-  const changeCurated = (curated: string) => {
-    setCollectionsResults([]);
-    setSearchTerm(curated);
+  const changeCurated = () => {
     setPage(1);
   };
 
@@ -89,27 +71,24 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
             <div className="block minlg:hidden">
               <CuratedCollectionsFilter onClick={changeCurated}/>
             </div>
-            {loading ?
-              <div className="w-full mx-auto flex justify-center items-center h-screen">
-                <Loader />
-              </div> :
-              <div className="mt-10">
-                <div className="font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
-                  {`${contractAddresses.length} ${selectedCuratedCollection?.tabTitle.toUpperCase()} COLLECTIONS`}
-                </div>
-                <div className={tw(
-                  'mt-6 gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-                  sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-3 minxl:grid-cols-4')}>
-                  {contractAddresses.map((collection, index) => {
-                    return (
-                      <div key={index} className="DiscoverCollectionItem mb-2 min-h-[10.5rem] minmd:min-h-[13rem] minxl:min-h-[13.5rem]">
-                        <CollectionItem
-                          contractAddr={collection}
-                        />
-                      </div>);
-                  })}
-                </div>
-              </div>}
+            <div className="mt-10">
+              <div className="font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
+                {`${contractAddresses.length} ${selectedCuratedCollection?.tabTitle.toUpperCase() ?? 'CURATED'} COLLECTIONS`}
+              </div>
+              <div className={tw(
+                'mt-6 gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+                sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-3 minxl:grid-cols-4')}>
+                {paginatedAddresses.map((collection, index) => {
+                  return (
+                    <div key={index} className="DiscoverCollectionItem mb-2 min-h-[10.5rem] minmd:min-h-[13rem] minxl:min-h-[13.5rem]">
+                      <CollectionItem
+                        contractAddr={collection}
+                      />
+                    </div>);
+                })}
+              </div>
+            </div>
+            { paginatedAddresses.length < contractAddresses.length &&
             <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
               <Button
                 color={'black'}
@@ -119,7 +98,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                 onClick={() => setPage(page + 1)}
                 type={ButtonType.PRIMARY}
               />
-            </div>
+            </div>}
           </div>
         </div>
       </div>

@@ -181,6 +181,16 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen: bool
     } else {
       perPage = 2;
     }
+  } else if (index === 'discover') {
+    if (screenWidth >= 1200) {
+      perPage = 8;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 6 : 8;
+    } else if (screenWidth >= 600) {
+      perPage = 4;
+    } else {
+      perPage = 2;
+    }
   } else {
     if (screenWidth >= 1200) {
       perPage = 8;
