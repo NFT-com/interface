@@ -1,13 +1,15 @@
-import { fetcher, formatDateForIndexer } from 'utils/helpers';
+import { fetcher, getAnalyticsEndpoint } from 'utils/helpers';
 
+import { Moment } from 'moment';
+import moment from 'moment';
 import useSWR from 'swr';
 
-export function useGetCollectionLowestPriceHistory(collectionId: string, dateFrom: Date, dateTo: Date) {
-  const dateToFormatted = formatDateForIndexer(dateTo);
-  const dateFromFormatted = formatDateForIndexer(dateFrom);
+export function useGetCollectionLowestPriceHistory(collectionId: string, dateFrom: Moment) {
+  const nowFormatted = moment().format('YYYY-MM-DD').toString();
+  const dateFromFormatted = dateFrom.format('YYYY-MM-DD').toString();
 
   const { data, error } = useSWR(
-    `https://xbutmk6nl7.execute-api.us-east-1.amazonaws.com:443/collection/${collectionId}/lowest_price/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
+    `${getAnalyticsEndpoint('Aggregation')}:443/collection/${collectionId}/lowest_price/history?from=${dateFromFormatted}&to=${nowFormatted}`,
     fetcher
   );
 
