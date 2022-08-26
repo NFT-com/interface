@@ -3,9 +3,7 @@ import { tw } from 'utils/tw';
 
 import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
 import { FiltersContent } from './FiltersContent';
-import { SearchContent } from './SearchContent';
 
-import { SearchIcon } from '@heroicons/react/outline';
 import { motion } from 'framer-motion';
 import { FunnelSimple } from 'phosphor-react';
 import CaretCircle from 'public/caret_circle.svg';
@@ -86,15 +84,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
         backgroundColor={'bg-[#E1E1E1]'}>
         <CuratedCollectionsFilter onClick={props.onSideNav} collapsed={false}/>
       </OptionNav>
-      <OptionNav
-        title={'Search'}
-        icon={<SearchIcon
-          className="w-6 h-6"
-          color={'grey'} />}
-        backgroundColor={'bg-[#D5D5D5]'}>
-        <SearchContent />
-      </OptionNav>
-      <OptionNav
+      {props.filtersData?.length > 0 && <OptionNav
         title={'NFT Filters'}
         icon={<FunnelSimple
           className="w-6 h-6"
@@ -102,7 +92,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
         backgroundColor={'bg-[#C2C2C2]'}
         onOptionNav={setFilters}>
         <FiltersContent />
-      </OptionNav>
+      </OptionNav>}
     </div>
   );
 };

@@ -86,8 +86,8 @@ const EmblaCarousel = (props: slidesProps) => {
   }, [embla, onSelect]);
 
   return (
-    !props.full && props.slides.length < 5 ?
-      <div className="grid grid-cols-4 gap-8" >
+    props.slides.length < 4 ?
+      <div className="grid grid-cols-3 gap-8" >
         {props.slides.map((item: any, index) => (
           <CollectionItem key={index} contractAddr={item.document?.contractAddr}/>
         ))}
