@@ -1,5 +1,4 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
-import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
 import { TxHistory } from 'components/modules/Analytics/TxHistory';
 import { CollectionAnalyticsContainer } from 'components/modules/Collection/CollectionAnalyticsContainer';
@@ -169,9 +168,6 @@ export function Collection(props: CollectionProps) {
             }
           </>:
           <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
-      </div>
-      <div className='w-full'>
-        <Footer />
       </div>
     </>
   );
