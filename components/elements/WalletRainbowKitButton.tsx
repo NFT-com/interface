@@ -1,13 +1,14 @@
+import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
+import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
+import { useChainModal } from '@rainbow-me/rainbowkit';
 import { UserCircle, Wallet } from 'phosphor-react';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { Menu } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount, useDisconnect, useNetwork } from 'wagmi';
@@ -21,9 +22,10 @@ interface WalletRainbowKitButtonProps {
 }
 
 export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
+  const { count } = useContext(NotificationContext);
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { toggleSidebar } = useSidebar();
-  const { user, setCurrentProfileUrl, getNotificationCount } = useUser();
+  const { user, setCurrentProfileUrl } = useUser();
   const { address: currentAddress, connector, isConnected } = useAccount({
     onConnect({ isReconnected }) {
       if (isReconnected && !! user?.currentProfileUrl) {
@@ -39,7 +41,6 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
   });
   const { disconnect } = useDisconnect();
   const { primaryIcon } = useThemeColors();
-  const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
   const { chain } = useNetwork();
 
@@ -69,9 +70,7 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 </button>
                 :
                 <button
-                  onClick={() => {
-                    !getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) ? openConnectModal() : toggleSidebar();
-                  }}
+                  onClick={() => toggleSidebar()}
                   className={tw(
                     `${props?.signInButton ? 'block' : 'hidden'}`,
                     'font-header',
@@ -109,11 +108,8 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
         }
         return (
           <>
-            {(getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED) && getNotificationCount() > 0) && (
-              <span className="flex h-5 w-5 minmd:-mb-3 -mb-1 right-2 minmd:right-0 relative z-50">
-                <span className="animate-ping absolute inline-flex h-5 w-5 rounded-full bg-[#F9D963] opacity-75"></span>
-                <span className="relative bg-[#F9D963] w-5 h-5 flex items-center rounded-full px-[5px]">{getNotificationCount()}</span>
-              </span>
+            {(count > 0) && (
+              <NotificationBadge count={count} />
             )
             }
             <button
@@ -137,18 +133,16 @@ export const WalletRainbowKitButton = (props : WalletRainbowKitButtonProps) => {
                 toggleSidebar();
               }} type="button">
                 
-                {!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)
-                  ? shortenAddress(currentAddress, 3) :
-                  myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
-                    <>
-                      <UserCircle className="h-6 w-6 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                      {user.currentProfileUrl}
-                    </>
-                    :
-                    <>
-                      <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
-                      {shortenAddress(currentAddress, 3)}
-                    </>
+                {myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
+                  <>
+                    <UserCircle className="h-6 w-6 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                    {user.currentProfileUrl}
+                  </>
+                  :
+                  <>
+                    <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'}/>
+                    {shortenAddress(currentAddress, 3)}
+                  </>
                 }
               </button>
             </div>

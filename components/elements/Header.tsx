@@ -1,4 +1,5 @@
-import { NFTListingsContext } from 'components/modules/NFTDetail/NFTListingsContext';
+import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
@@ -14,6 +15,7 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 import { SearchIcon } from '@heroicons/react/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { ShoppingCartSimple } from 'phosphor-react';
 import LightNavLogo from 'public/hero_corner.svg';
 import NavLogo from 'public/hero_corner_dark.svg';
@@ -23,25 +25,23 @@ import { useAccount } from 'wagmi';
 
 type HeaderProps = {
   removeBg?: boolean
-  bgLight?: boolean
 }
 
-export const Header = ({ removeBg, bgLight } : HeaderProps) => {
+export const Header = ({ removeBg } : HeaderProps) => {
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
   const { toggleSearchModal } = useSearchModal();
   const { primaryIcon } = useThemeColors();
-  const { toggleCartSidebar } = useContext(NFTListingsContext);
+  const { toggleCartSidebar, toList } = useContext(NFTListingsContext);
+  const router = useRouter();
 
   const { setDarkMode, user } = useUser();
 
   useMaybeCreateUser();
 
-  // We still need to support forced-light mode in this component until we're ready.
-  const useDarkMode = user?.isDarkMode && !bgLight;
-
+  const useDarkMode = user?.isDarkMode;
   return (
     <nav className={tw(
       'fixed z-[104] top-0 w-full h-20 drop-shadow-md',
@@ -123,17 +123,25 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
             }
             {
               getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-              <button
-                className='cursor-pointer mr-2 h-full w-7'
-                onClick={() => {
-                  toggleCartSidebar();
-                }}
-              >
-                <ShoppingCartSimple size={28} color={primaryIcon} />
-              </button>
+              !router.pathname.includes('/app/list') &&
+              <div className='h-full flex items-center relative'>
+                {toList?.length > 0 && (
+                  <div className='absolute right-0 -top-4'>
+                    <NotificationBadge count={toList?.length} />
+                  </div>
+                )}
+                <button
+                  className='cursor-pointer mr-2 h-full w-7'
+                  onClick={() => {
+                    toggleCartSidebar();
+                  }}
+                >
+                  <ShoppingCartSimple size={28} color={useDarkMode ? primaryIcon : 'black'} />
+                </button>
+              </div>
             }
             {
-              !getEnvBool(Doppler.NEXT_PUBLIC_FORCE_DARK_MODE) &&
+              getEnvBool(Doppler.NEXT_PUBLIC_THEME_TOGGLE_ENABLED) &&
               <button
                 className='cursor-pointer mr-2 h-full w-7'
                 onClick={() => {
@@ -141,7 +149,9 @@ export const Header = ({ removeBg, bgLight } : HeaderProps) => {
                 }}
               >
                 {
-                  user.isDarkMode ? <SunIcon color={primaryIcon} /> : <MoonIcon color={primaryIcon} />
+                  user.isDarkMode ?
+                    <SunIcon color={useDarkMode ? primaryIcon : 'black'} /> :
+                    <MoonIcon color={useDarkMode ? primaryIcon : 'black'} />
                 }
               </button>
             }

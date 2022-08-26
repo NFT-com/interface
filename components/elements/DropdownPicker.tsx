@@ -19,6 +19,7 @@ export interface DropdownPickerProps {
   constrain?: boolean;
   above?: boolean;
   placeholder?: string;
+  lightModeForced?: boolean;
 }
 
 /**
@@ -53,7 +54,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
         className={`flex flex-row w-full pl-2.5 py-3
-        ${ index === optionHoverIndex ? 'dark:text-always-white text-primary-txt' : 'text-secondary-txt'}`}
+        ${ index === optionHoverIndex ? props.lightModeForced ? 'text-primary-txt' : 'dark:text-always-white text-primary-txt' : 'text-secondary-txt'}`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
@@ -67,7 +68,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         {item.label}
       </div>
     );
-  }, [optionHoverIndex]);
+  }, [optionHoverIndex, props.lightModeForced]);
 
   const expandedIcon = useMemo(() => props.above ?
     <ChevronDown size={24} color={primaryIcon} /> :
@@ -84,7 +85,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         'cursor-pointer flex flex-col items-center rounded-xl',
         'text-sm',
         props.constrain ? '' : 'w-full h-full shrink-0',
-        'dark:text-always-white text-primary-txt',
+        props.lightModeForced ? 'text-primary-txt' : 'dark:text-always-white text-primary-txt',
         'whitespace-nowrap justify-between'
       )}
       onClick={() => {
@@ -94,7 +95,8 @@ export function DropdownPicker(props: DropdownPickerProps) {
       <div
         ref={activeRowRef}
         className={tw('flex flex-row items-center px-2.5',
-          'bg-white dark:bg-black border py-2 h-full',
+          'border py-2 h-full',
+          props.lightModeForced ? 'bg-gray-200' : 'bg-gray-200 dark:bg-black',
           'justify-between rounded-xl border-select-brdr w-full')}
         key={props?.options[props?.selectedIndex]?.label}
       >
@@ -129,7 +131,8 @@ export function DropdownPicker(props: DropdownPickerProps) {
           }}
           className={tw(
             'border rounded-xl border-select-brdr',
-            'divide-y bg-white dark:bg-black',
+            'divide-y',
+            props.lightModeForced ? 'bg-gray-200' : 'bg-gray-200 dark:bg-black',
             'w-full absolute z-50'
           )}
         >

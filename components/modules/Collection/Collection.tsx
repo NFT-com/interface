@@ -1,14 +1,17 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { Footer } from 'components/elements/Footer';
 import { NFTCard } from 'components/elements/NFTCard';
+import { TxHistory } from 'components/modules/Analytics/TxHistory';
+import { CollectionAnalyticsContainer } from 'components/modules/Collection/CollectionAnalyticsContainer';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
+import { Tab } from '@headlessui/react';
 import router from 'next/router';
 import CopyIcon from 'public/arrow_square_out.svg';
 import { useEffect, useState } from 'react';
@@ -17,7 +20,6 @@ import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
-  forceLightMode?: boolean
 }
 
 export function Collection(props: CollectionProps) {
@@ -42,6 +44,14 @@ export function Collection(props: CollectionProps) {
 
     return imgUrl;
   } );
+
+  const tabs = {
+    0: 'NFTs',
+    1: 'Activity',
+    2: 'Analytics'
+  };
+
+  const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   useEffect(() => {
     currentPage === 1 && props.contract && client.collections('nfts')
@@ -83,52 +93,80 @@ export function Collection(props: CollectionProps) {
       </div>
       <div className={tw(
         'pt-7 px-8 minmd:px-[5%] minxl:mx-auto pb-16 w-full',
-        props.forceLightMode && 'bg-white'
       )}
       >
         {collectionNfts.length > 0 ?
           <>
-            <div className="font-grotesk font-black text-black text-4xl max-w-nftcom minxl:mx-auto">{collectionNfts[0].document.contractName}</div>
-            <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F] max-w-nftcom minxl:mx-auto">
-              <span>{shortenAddress(props.contract?.toString())}</span>
-              <a
-                target="_blank"
-                rel="noreferrer" href={`https://etherscan.io/address/${props.contract?.toString()}`} className='font-bold underline tracking-wide'>
-                <CopyIcon />
-              </a>
-            </div>
-            <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
-              {collectionNfts.map((nft, index) => {
-                return (
-                  <div className="NftCollectionItem" key={index}>
-                    <NFTCard
-                      title={nft.document.nftName}
-                      subtitle={'#'+ nft.document.tokenId}
-                      images={[nft.document.imageURL]}
-                      onClick={() => {
-                        if (nft.document.nftName) {
-                          router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
-                        }
-                      }}
-                      description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
-                      customBackground={'#303030'}
-                      customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
-                    />
-                  </div>);}
-              )}
-            </div>
-            {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-              <Button
-                color={'black'}
-                accent={AccentType.SCALE}
-                stretch={true}
-                label={'Load More'}
-                onClick={ () => {
-                  setCurrentPage(currentPage + 1);
-                }}
-                type={ButtonType.PRIMARY}
-              />
-            </div>}
+            {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+            <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
+              <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
+                {Object.keys(tabs).map((tab) => (
+                  <Tab
+                    key={tab}
+                    className={({ selected }) =>
+                      tw(
+                        'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
+                        selected
+                        && 'bg-black text-[#F8F8F8]'
+                      )
+                    }
+                  >
+                    {tabs[tab]}
+                  </Tab>
+                ))}
+              </Tab.List>
+            </Tab.Group>
+            }
+            {selectedTab === 'NFTs' &&
+            <>
+              <div className="font-grotesk font-black text-black text-4xl max-w-nftcom minxl:mx-auto">{collectionNfts[0].document.contractName}</div>
+              <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F] max-w-nftcom minxl:mx-auto">
+                <span>{shortenAddress(props.contract?.toString())}</span>
+                <a
+                  target="_blank"
+                  rel="noreferrer" href={`https://etherscan.io/address/${props.contract?.toString()}`} className='font-bold underline tracking-wide'>
+                  <CopyIcon />
+                </a>
+              </div>
+              <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
+                {collectionNfts.map((nft, index) => {
+                  return (
+                    <div className="NftCollectionItem" key={index}>
+                      <NFTCard
+                        title={nft.document.nftName}
+                        subtitle={'#'+ nft.document.tokenId}
+                        images={[nft.document.imageURL]}
+                        onClick={() => {
+                          if (nft.document.nftName) {
+                            router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
+                          }
+                        }}
+                        description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
+                        customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+                      />
+                    </div>);}
+                )}
+              </div>
+              {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+                <Button
+                  color={'black'}
+                  accent={AccentType.SCALE}
+                  stretch={true}
+                  label={'Load More'}
+                  onClick={ () => {
+                    setCurrentPage(currentPage + 1);
+                  }}
+                  type={ButtonType.PRIMARY}
+                />
+              </div>}
+            </>
+            }
+            {selectedTab === 'Activity' &&
+              <TxHistory />
+            }
+            {selectedTab === 'Analytics' &&
+              <CollectionAnalyticsContainer data={collectionData} />
+            }
           </>:
           <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
       </div>

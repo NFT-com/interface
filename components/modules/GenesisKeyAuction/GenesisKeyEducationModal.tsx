@@ -39,7 +39,6 @@ export function GenesiskeyEducationModal() {
         onClose={() => {
           setInformationModalVisible(false);
         }}
-        pinkTitle
         longModal
       >
         <div className='flex flex-col max-w-xl items-center w-full'>

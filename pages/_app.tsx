@@ -1,7 +1,8 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { NFTListingsContextProvider } from 'components/modules/NFTDetail/NFTListingsContext';
+import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
+import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
 import { getChainIdString } from 'utils/helpers';
@@ -101,33 +102,33 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
-    getLayout(
-      <>
-        <Head>
-          <title>NFT.com</title>
-        </Head>
-        <Script strategy="afterInteractive" src="/js/pageScripts.js" />
+    <>
+      <Head>
+        <title>NFT.com</title>
+      </Head>
+      <Script strategy="afterInteractive" src="/js/pageScripts.js" />
         
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider
-            appInfo={{
-              appName: 'NFT.com',
-              learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
-            }}
-            theme={rainbowDark}
-            chains={chains}
-            initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
-          >
-            <AnimatePresence exitBeforeEnter>
-              <GraphQLProvider>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider
+          appInfo={{
+            appName: 'NFT.com',
+            learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
+          }}
+          theme={rainbowDark}
+          chains={chains}
+          initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
+        >
+          <AnimatePresence exitBeforeEnter>
+            <GraphQLProvider>
+              <NotificationContextProvider>
                 <NFTListingsContextProvider>
-                  <Component {...pageProps} key={router.pathname} />
+                  {getLayout(<Component {...pageProps} key={router.pathname} />)}
                 </NFTListingsContextProvider>
-              </GraphQLProvider>
-            </AnimatePresence>
-          </RainbowKitProvider>
-        </WagmiConfig>
-      </>
-    )
+              </NotificationContextProvider>
+            </GraphQLProvider>
+          </AnimatePresence>
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </>
   );
 }

@@ -1,5 +1,5 @@
 import Loader from 'components/elements/Loader';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { ProfilePage } from 'components/modules/Profile/ProfilePage';
 import { tw } from 'utils/tw';
 
@@ -22,18 +22,15 @@ export default function ProfileURI() {
     </div>;
   } else {
     return (
-      <PageWrapper
-        bgColorClasses='dark:bg-secondary-dk bg-pagebg'
-        headerOptions={{
-          removeSummaryBanner: true,
-          walletOnly: true,
-          walletPopupMenu: true,
-          hideAnalytics: true,
-          profileHeader: true
-        }}
-      >
-        <ProfilePage uri={profileURI} />
-      </PageWrapper>
+      <ProfilePage uri={profileURI} />
     );
   }
 }
+
+ProfileURI.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

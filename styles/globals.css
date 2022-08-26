@@ -1711,4 +1711,24 @@ li {
   transform: translate(-50%, -50%);
 }
 
+.filter-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.filter-scrollbar::-web10it-scrollbar-track {
+  border-radius: 0vh;
+  background: #f7f4ed;
+}
+
+.filter-scrollbar::-webkit-scrollbar-thumb {
+  background: #e0cbcb;
+  border-radius: 100vh;
+  border: 3px solid #f6f7ed;
+}
+
+.filter-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #c0a0b9;
+}
+
 @tailwind utilities;

@@ -1,13 +1,12 @@
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { NullState } from 'components/elements/NullState';
-import { PageWrapper } from 'components/layouts/PageWrapper';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import DiscordIcon from 'public/discord_black_icon.svg';
 import tokenHeroBg from 'public/token-hero2.jpg';
 import TwitterIcon from 'public/twitter_black_icon.svg';
@@ -31,7 +30,6 @@ export default function RoadmapPage() {
   });
 
   const { address: currentAddress } = useAccount();
-  const router = useRouter();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { data: ownedGKTokens, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
@@ -190,44 +188,40 @@ export default function RoadmapPage() {
   }, []);
   
   return (
-    <PageWrapper
-      headerOptions={{
-        walletOnly: true,
-        removeBackground: true,
-        walletPopupMenu: true,
-        removeSummaryBanner: true,
-        heroHeader: true,
-        heroHeaderBlack: headerBlack,
+    <div
+      ref={contentRef}
+      className={tw(
+        'relative',
+        'overflow-x-hidden bg-black w-screen h-screen')}
+      onScroll={(event: React.UIEvent<HTMLDivElement>) => {
+        const containerHeight = event.currentTarget.clientHeight;
+        const scrollTop = event.currentTarget.scrollTop;
+        setHeaderBlack(scrollTop >= containerHeight);
       }}>
-      <div
-        ref={contentRef}
-        className={tw(
-          'relative',
-          'overflow-x-hidden bg-black w-screen h-screen')}
-        onScroll={(event: React.UIEvent<HTMLDivElement>) => {
-          const containerHeight = event.currentTarget.clientHeight;
-          const scrollTop = event.currentTarget.scrollTop;
-          setHeaderBlack(scrollTop >= containerHeight);
-        }}>
-        <LoadedContainer loaded={firstLoaded}>
-          {
-            hasGksOrTokens ?
-              getVaultContent() :
-              (
-                <div className="flex flex-col h-full w-full items-center justify-center">
-                  <NullState
-                    showImage={true}
-                    primaryMessage='Looking for exclusive content?'
-                    buttonLabel="Go to NFT.com"
-                    onClick={() => {
-                      router.replace('/');
-                    }}/>
-                </div>
-              )
-          }
-        </LoadedContainer>
-      </div>
-
-    </PageWrapper>
+      <LoadedContainer loaded={firstLoaded}>
+        {
+          hasGksOrTokens ?
+            getVaultContent() :
+            (
+              <div className="flex flex-col h-full w-full items-center justify-center">
+                <NullState
+                  showImage={true}
+                  primaryMessage='Looking for exclusive content?'
+                  buttonLabel="Go to NFT.com"
+                  href='/'
+                />
+              </div>
+            )
+        }
+      </LoadedContainer>
+    </div>
   );
 }
+
+RoadmapPage.getLayout = function getLayout(page) {
+  return (
+    <DefaultLayout>
+      { page }
+    </DefaultLayout>
+  );
+};

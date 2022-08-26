@@ -27,7 +27,7 @@ export function ProfileScrollContextProvider(props: PropsWithChildren) {
     scroll,
     current: ref.current,
   }}>
-    <div ref={ref} className="h-full w-full flex flex-col mt-20 overflow-scroll">
+    <div ref={ref} className="h-full w-full flex flex-col mt-20 overflow-y-scroll overflow-x-hidden">
       {props.children}
     </div>
   </ProfileScrollContext.Provider>;

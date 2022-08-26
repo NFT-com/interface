@@ -37,7 +37,6 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
       topLine: showWyreDisclaimer ? 'SENDING YOU' : 'ADD FUNDS',
       bottomLine: showWyreDisclaimer? 'TO WYRE' : ''
     }}
-    pinkTitle
     onClose={() => {
       setShowWyreDisclaimer(false);
       setAddFundsDialogOpen(false);

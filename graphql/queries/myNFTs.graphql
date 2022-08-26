@@ -6,6 +6,10 @@ query MyNFTs($input: NFTsInput) {
     }
     totalItems
     items {
+      isOwnedByMe
+      wallet {
+        address
+      }
       contract
       tokenId
       id

@@ -1,17 +1,17 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Modal } from 'components/elements/Modal';
+import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useIgnoreAssociationsMutation } from 'graphql/hooks/useIgnoreAssociationsMutation';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useUpdateHiddenMutation } from 'graphql/hooks/useUpdateHiddenMutation';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { useUser } from 'hooks/state/useUser';
 import { filterNulls, getEtherscanLink, shortenAddress } from 'utils/helpers';
 
 import RemoveModal from './RemoveModal';
 
 import { ArrowsClockwise, CheckCircle, Clock, DotsThreeOutlineVertical, GasPump, XCircle } from 'phosphor-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { toast } from 'react-toastify';
 import { ExternalLink } from 'styles/theme';
@@ -42,7 +42,9 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   const [accepted, setAccepted] = useState(false);
   const { chain } = useNetwork();
   const { nftResolver } = useAllContracts();
-  const { setUserNotificationActive } = useUser();
+  const {
+    setUserNotificationActive
+  } = useContext(NotificationContext);
   const { address: currentAddress } = useAccount();
   const { updateHidden } = useUpdateHiddenMutation();
 
@@ -55,10 +57,14 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       await tx.wait(1).then(() => {
         setAccepted(true);
         setTransactionPending(false);
+        analytics.track('Accepted Profile Association', {
+          ethereumAddress: currentAddress,
+          profile: url,
+        });
       }).catch(() => toast.error('Error'));
       setUserNotificationActive('associatedProfileAdded', true);
     }
-  }, [nftResolver, setUserNotificationActive]);
+  }, [nftResolver, setUserNotificationActive, currentAddress]);
 
   const removeHandler = useCallback(async () => {
     if (pending) {
@@ -67,6 +73,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           setVisible(true);
           setAssociationRejected(true);
           toast.success('Rejected');
+          analytics.track('Reject Profile Association', {
+            ethereumAddress: currentAddress,
+            profile: profile,
+          });
         })
         .catch(() => toast.warning('Error. Please try again'));
     } else if (isRemoved) {
@@ -80,6 +90,10 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
       setTransactionPending(true);
       if (tx) {
         await tx.wait(1).then(() => {
+          analytics.track('Remove Profile Association', {
+            ethereumAddress: currentAddress,
+            profile: profile,
+          });
           setTransactionPending(false);
           setRemoveModalVisible(false);
           toast.success('Removed');
@@ -88,7 +102,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
         }).catch(() => toast.warning('Error. Please try again'));
       }
     }
-  }, [ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden]);
+  }, [ignoreAssociations, isRemoved, nftResolver, pending, profile, setUserNotificationActive, updateHidden, currentAddress]);
 
   const closeModal = useCallback(() => {
     if(associationRejected){
@@ -189,7 +203,6 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
   
         <div className='flex items-center'>
           <DropdownPickerModal
-            forceLightMode
             constrain
             selectedIndex={0}
             options={filterNulls([

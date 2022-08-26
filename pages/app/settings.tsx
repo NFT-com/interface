@@ -1,9 +1,5 @@
-import { Footer } from 'components/elements/Footer';
-import { Header } from 'components/elements/Header';
-import { Sidebar } from 'components/elements/Sidebar';
 import Toast from 'components/elements/Toast';
-import HomeLayout from 'components/layouts/HomeLayout';
-import { SearchModal } from 'components/modules/Search/SearchModal';
+import DefaultLayout from 'components/layouts/DefaultLayout';
 import ConnectedAccounts from 'components/modules/Settings/ConnectedAccounts';
 import ConnectedProfiles from 'components/modules/Settings/ConnectedProfiles';
 import DisplayMode from 'components/modules/Settings/DisplayMode';
@@ -18,9 +14,7 @@ import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQ
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import NotFoundPage from 'pages/404';
-import ClientOnly from 'utils/ClientOnly';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getChainIdString, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 
 import { useRouter } from 'next/router';
@@ -119,20 +113,11 @@ export default function Settings() {
       router.push('/');
     }
   }, [currentAddress, router]);
-  
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_ON_CHAIN_RESOLVER_ENABLED)) {
-    return <NotFoundPage />;
-  }
 
   const ownsProfilesAndSelectedProfile = myOwnedProfileTokens.length && myOwnedProfileTokens.some(t => t.title === selectedProfile);
   
   return (
     <>
-      <ClientOnly>
-        <Header bgLight />
-        <Sidebar />
-        <SearchModal />
-      </ClientOnly>
       <Toast />
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
@@ -171,7 +156,6 @@ export default function Settings() {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </>
   );
@@ -179,8 +163,8 @@ export default function Settings() {
 
 Settings.getLayout = function getLayout(page) {
   return (
-    <HomeLayout>
+    <DefaultLayout>
       { page }
-    </HomeLayout>
+    </DefaultLayout>
   );
 };

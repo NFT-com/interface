@@ -67,7 +67,7 @@ export function NftGallery(props: NftGalleryProps) {
       </GridContextProvider>
       {
         (draftLayoutType ?? savedLayoutType) === 'Spotlight' && <div className={tw(
-          'w-full flex items-center col-start-2 justify-around my-8'
+          'w-full flex items-center col-start-2 justify-around my-16'
         )}>
           <div className='pr-2 w-1/2'>
             <Button

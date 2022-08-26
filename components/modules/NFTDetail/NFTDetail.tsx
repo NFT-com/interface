@@ -42,9 +42,9 @@ export const NFTDetail = (props: NFTDetailProps) => {
   }, [props, refreshNft]);
   
   return (
-    <div className="flex minlg:flex-col flex-row w-full" id="NFTDetailContainer" key={props.nft?.id}>
+    <div className="flex flex-col minmd:flex-row w-full" id="NFTDetailContainer" key={props.nft?.id}>
       {props.nft?.metadata?.imageURL &&
-        <div className="w-full minlg:w-96 px-4 aspect-square">
+        <div className="w-full minlg:w-96 p-4 aspect-square">
           <div className="flex rounded-xl h-full object-contain">
             <video
               autoPlay
@@ -60,7 +60,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
       }
       <div className={tw(
         'flex flex-col text-left basis-2/3 minlg:basis-auto',
-        'px-4 justify-end relative'
+        'p-4 minlg:ml-8 justify-end relative'
       )}>
         <div className="font-bold text-2xl minlg:text-3xl  tracking-wide dark:text-white mt-8">
           {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : props.nft?.metadata?.name}
@@ -107,7 +107,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
               onClick={refreshNftCallback}
               className={tw(
                 'rounded-full bg-white dark:bg-secondary-bg-dk h-8 w-8 flex items-center justify-center cursor-pointer',
-                'relative minxl:absolute top-0 right-0 mr-4',
+                'relative minmd:absolute top-4 right-0 mr-4',
                 loading ? 'animate-spin' : null
               )}
             >

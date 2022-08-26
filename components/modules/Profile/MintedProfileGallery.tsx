@@ -3,6 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { createNftOwnerMap } from 'utils/createNftOwnerMap';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -106,14 +107,16 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 showNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Show All NFTs', {
                   ethereumAddress: currentAddress,
-                  profile: props.profileURI
+                  profile: props.profileURI,
+                  nftsByOwner: createNftOwnerMap(allOwnerNfts)
                 });
               }}
               onHideAll={() => {
                 hideNftIds(allOwnerNfts?.map(nft => nft.id));
                 analytics.track('Hide All NFTs', {
                   ethereumAddress: currentAddress,
-                  profile: props.profileURI
+                  profile: props.profileURI,
+                  nftsByOwner: createNftOwnerMap(allOwnerNfts)
                 });
               }}
             />}
@@ -124,12 +127,12 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 props.ownedGKTokens?.length > 0 && {
                   label: `${(draftNftsDescriptionsVisible) ? 'Hide' : 'Show'} Descriptions`,
                   onSelect: () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible),
-                  icon: <NftLabelIcon className="w-5 h-5" alt="Description label" />,
+                  icon: <NftLabelIcon className="w-5 h-5" alt="Description label" stroke="black" fill="black" />,
                 },
                 {
                   label: `${(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? 'Hide' : 'Show'} GK Badge`,
                   onSelect: () => setDraftGkIconVisible(!draftGkIconVisible),
-                  icon: <GKBadgeIcon className="w-5 h-5" alt="Description label" />,
+                  icon: <GKBadgeIcon className="w-5 h-5" alt="Description label" stroke="black" fill="black" />,
                 },
                 isMobile && {
                   label: 'Show All',
@@ -137,10 +140,11 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                     showNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Show All NFTs', {
                       ethereumAddress: currentAddress,
-                      profile: props.profileURI
+                      profile: props.profileURI,
+                      nftsByOwner: createNftOwnerMap(allOwnerNfts)
                     });
                   },
-                  icon: <EyeIcon alt="Show all nfts" />,
+                  icon: <EyeIcon alt="Show all nfts" stroke="black" fill="black" />,
                 },
                 isMobile && {
                   label: 'Hide All',
@@ -148,21 +152,22 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                     hideNftIds(allOwnerNfts?.map(nft => nft.id));
                     analytics.track('Hide All NFTs', {
                       ethereumAddress: currentAddress,
-                      profile: props.profileURI
+                      profile: props.profileURI,
+                      nftsByOwner: createNftOwnerMap(allOwnerNfts)
                     });
                   },
-                  icon: <EyeOffIcon alt="Hide all nfts" />,
+                  icon: <EyeOffIcon alt="Hide all nfts" stroke="black" fill="black" />,
                 },
                 {
                   label: 'Edit Layouts',
                   onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
-                  icon: <EditLayoutIcon className="w-5 h-5" alt="Hide descriptions" />,
+                  icon: <EditLayoutIcon className="w-5 h-5" stroke="black" fill="black" alt="Hide descriptions" />,
                 },
                 getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED)
                   ? {
                     label: `${(draftDeployedContractsVisible) ? 'Hide' : 'Show'} Created Collections`,
                     onSelect: () => setDraftDeployedContractsVisible(!draftDeployedContractsVisible),
-                    icon: <EditLayoutIcon className="" alt="Collections toggle" />,
+                    icon: <EditLayoutIcon className="" stroke="black" fill="black" alt="Collections toggle" />,
                   }
                   : null
               ])}>
