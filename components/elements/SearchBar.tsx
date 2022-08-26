@@ -94,23 +94,23 @@ export const SearchBar = (props: SearchBarProps) => {
 
   return (
     <>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col minlg:w-[90%] minxl:w-full">
         <div className={tw(
-          'relative minlg:flex items-center border rounded-xl py-2 px-3',
-          'mr-4 hidden w-full',
+          'relative minlg:flex items-center rounded-xl py-2 px-3',
+          'mr-4 hidden w-full h-10 bg-[#F8F8F8]',
           props.bgLight ? 'text-black':'text-white')}>
-          <SearchIcon className='mr-2 shrink-0 aspect-square' />
+          <SearchIcon className='shrink-0 aspect-square' />
           <div className="w-full">
             <input
               ref={inputRef}
               type="search"
-              placeholder="Search here…"
+              placeholder="Search profiles and nfts by name..."
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
               required maxLength={512}
-              className="bg-inherit w-full border-none focus:border-transparent focus:ring-0"
+              className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 placeholder:text-[#B6B6B6] placeholder:text-sm"
               onKeyUp={(event) => search(event)}
               onFocus={(event) => search(event)}/>
           </div>
