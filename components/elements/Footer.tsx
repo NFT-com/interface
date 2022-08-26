@@ -5,7 +5,7 @@ import { tw } from 'utils/tw';
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Logo from 'public/LogoFooterBlack.svg';
+import Logo from 'public/LogoFooterWhite.svg';
 import { useAccount } from 'wagmi';
 
 export const Footer = () => {
