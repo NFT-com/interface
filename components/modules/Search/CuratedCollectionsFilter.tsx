@@ -23,7 +23,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
           className={tw('cursor-pointer transition-transform', isFilterCollapsed ? 'rotate-180' : '')}
         />
       </div>
-      <p className="text-blog-text-reskin font-medium text-lg ">
+      <p className="text-blog-text-reskin font-medium text-base pt-3 px-3">
           We’ve hand-picked NFT collections to help you find what you’re looking for.
       </p>
       <motion.div
