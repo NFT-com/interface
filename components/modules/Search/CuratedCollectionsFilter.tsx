@@ -24,15 +24,18 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
           className={tw('cursor-pointer transition-transform', isFilterCollapsed ? 'rotate-180' : '')}
         />
       </div>
-      <p className="text-blog-text-reskin font-medium text-base pt-3 px-3">
-          We’ve hand-picked NFT collections to help you find what you’re looking for.
-      </p>
+
       <motion.div
         animate={{
           height: isFilterCollapsed ? 0 : 'auto' }}
         transition={{ duration: 0.2 }}
         className={tw('overflow-hidden mx-auto')}
       >
+        <div>
+          <p className="text-blog-text-reskin font-medium text-base pt-3 px-3">
+            We’ve hand-picked NFT collections to help you find what you’re looking for.
+          </p>
+        </div>
         <div className="flex flex-wrap justify-between items-center w-[90%] max-w-xs mx-auto h-fit my-7">
           {curatedCollections && curatedCollections.map((tab, index) =>{
             return (
