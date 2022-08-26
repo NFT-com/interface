@@ -11,16 +11,17 @@ import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { Fee, SeaportOrderParameters } from 'types';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getChainIdString } from 'utils/helpers';
-import { getLooksrareNonce, getOpenseaCollection } from 'utils/listings';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
+import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 
-import { NFTListingsCartSidebar } from './NFTListingsCartSidebar';
+import { CartSidebarTab, NFTCartSidebar } from './NFTCartSidebar';
+import { NFTPurchasesContext } from './NFTPurchaseContext';
 
 import { MakerOrder } from '@looksrare/sdk';
 import { BigNumberish } from 'ethers';
-import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 
@@ -50,8 +51,9 @@ interface NFTListingsContextType {
   clear: () => void;
   listAll: () => Promise<boolean>;
   prepareListings: () => Promise<void>;
+  
   submitting: boolean;
-  toggleCartSidebar: () => void;
+  toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: TargetMarketplace) => void;
   setDuration: (duration: SaleDuration) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish) => void;
@@ -85,6 +87,8 @@ export function NFTListingsContextProvider(
   const [submitting, setSubmitting] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
+  const { toBuy } = useContext(NFTPurchasesContext);
+
   const { data: supportedCurrencyData } = useSupportedCurrencies();
 
   useEffect(() => {
@@ -98,6 +102,8 @@ export function NFTListingsContextProvider(
   const { chain } = useNetwork();
   const provider = useProvider();
   const { data: signer } = useSigner();
+
+  const [selectedTab, setSelectedTab] = useState<CartSidebarTab>('buy');
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -122,15 +128,11 @@ export function NFTListingsContextProvider(
     setToList([]);
     localStorage.setItem('stagedNftListings', null);
   }, []);
-
-  useEffect(() => {
-    // Clear the listing cart if the connected address or network has changed.
-    clear();
-  }, [currentAddress, chain?.id, clear]);
-
-  const toggleCartSidebar = useCallback(() => {
+  
+  const toggleCartSidebar = useCallback((selectedTab?: 'buy' | 'sell') => {
     setSidebarVisible(!sidebarVisible);
-  }, [sidebarVisible]);
+    setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'buy' : 'sell'));
+  }, [sidebarVisible, toBuy]);
 
   const toggleTargetMarketplace = useCallback((targetMarketplace: TargetMarketplace) => {
     const targetFullyEnabled = toList.find(listing => listing.targets?.includes(targetMarketplace)) != null;
@@ -303,9 +305,9 @@ export function NFTListingsContextProvider(
   }}>
 
     {
-      toList.length > 0 &&
+      [...(toList ?? []), ...(toBuy ?? [])].length > 0 &&
       sidebarVisible &&
-      <NFTListingsCartSidebar />
+      <NFTCartSidebar selectedTab={selectedTab} onChangeTab={setSelectedTab} />
     }
     {props.children}
   </NFTListingsContext.Provider>;

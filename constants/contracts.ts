@@ -69,3 +69,25 @@ export const nftResolver: DeployedContract = {
   mainnet: '0xA657C988e8aC39D3268D390eB7c522a535B10453',
   rinkeby: '0x3a3539B6727E74fa1c5D4d39B433F0fAB5BC4F4a', // todo: remove this
 };
+
+export const nftAggregator: DeployedContract = {
+  goerli: '0x165699Cf79Aaf3D15746c16fb63ef7dDCcb8dF10',
+  mainnet: '0x165699Cf79Aaf3D15746c16fb63ef7dDCcb8dF10', // todo: use mainnet address
+  rinkeby: '0x3F15E5e9cCE275213365e5109168eD7B368f67Fe', // todo: remove this
+};
+
+export function getAddressForChain(contract: DeployedContract, chainId: number | string): string {
+  switch (chainId) {
+  case 1:
+  case '1':
+    return contract.mainnet;
+  case 5:
+  case '5':
+    return contract.goerli;
+  case 4:
+  case '4':
+    return contract.rinkeby;
+  default:
+    return contract.mainnet;
+  }
+}

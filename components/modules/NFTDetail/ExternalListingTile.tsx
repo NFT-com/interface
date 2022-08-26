@@ -1,13 +1,24 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { ExternalListing, SupportedExternalExchange } from 'graphql/generated/types';
+import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
+import { getAddressForChain, nftAggregator } from 'constants/contracts';
+import { WETH } from 'constants/tokens';
+import { ExternalListing, Nft, SupportedExternalExchange } from 'graphql/generated/types';
+import { useWethAllowance } from 'hooks/balances/useWethAllowance';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
+import { useContext } from 'react';
 import { PartialDeep } from 'type-fest';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface ExternalListingTileProps {
   listing: PartialDeep<ExternalListing>;
+  protocolData: any;
+  nft: PartialDeep<Nft>;
+  collectionName: string;
 }
 
 const Colors = {
@@ -26,6 +37,23 @@ const Icons = {
 
 export function ExternalListingTile(props: ExternalListingTileProps) {
   const { listing } = props;
+
+  const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
+  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const { toggleCartSidebar } = useContext(NFTListingsContext);
+  const { allowance } = useWethAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id));
+
+  const marketplace = props.listing?.exchange === SupportedExternalExchange.Looksrare ?
+    'looksrare' :
+    props.listing?.exchange === SupportedExternalExchange.Opensea ?
+      'seaport' :
+      null;
+
+  if (marketplace == null) {
+    // Unsupported marketplace.
+    return null;
+  }
 
   return <div className="flex flex-col bg-white dark:bg-secondary-bg-dk rounded-xl p-5 my-6">
     <div className='flex items-center mb-4'>
@@ -51,14 +79,39 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         </div>
       </div>
     </div>
-    <Button
-      stretch
-      color="white"
-      label={'View Listing'}
-      onClick={() => {
-        window.open(listing?.url, '_blank');
-      }}
-      type={ButtonType.PRIMARY}
-    />
+    <div className='flex items-center'>
+      <div className='flex items-center basis-1 grow px-2'>
+        <Button
+          stretch
+          color="white"
+          label={'View Listing'}
+          onClick={() => {
+            window.open(listing?.url, '_blank');
+          }}
+          type={ButtonType.PRIMARY}
+        />
+      </div>
+      <div className='flex items-center basis-1 grow px-2'>
+        <Button
+          stretch
+          color="white"
+          label={'Add to Cart'}
+          onClick={() => {
+            stagePurchase({
+              nft: props.nft,
+              currency: props.listing?.baseCoin?.address ?? WETH.address,
+              price: BigNumber.from(isNullOrEmpty(props.listing?.price) ? 0 : props.listing.price),
+              collectionName: props.collectionName,
+              marketplace,
+              // todo: check approval for any currency, not just WETH
+              isApproved: BigNumber.from(allowance?.balance ?? 0).gt(0),
+              protocolData: props.protocolData
+            });
+            toggleCartSidebar('buy');
+          }}
+          type={ButtonType.PRIMARY}
+        />
+      </div>
+    </div>
   </div>;
 }
