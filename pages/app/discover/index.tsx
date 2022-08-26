@@ -29,6 +29,10 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
   setCuratedCollections(data);
 
   useEffect(() => {
+    setPage(1);
+  },[selectedCuratedCollection?.tabTitle]);
+
+  useEffect(() => {
     if(isNullOrEmpty(selectedCuratedCollection)) {
       setSelectedCuratedCollection(curatedCollections[0]);
     }
