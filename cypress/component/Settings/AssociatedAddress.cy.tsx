@@ -19,12 +19,14 @@ describe('Associated Address', () => {
     );
     cy.findByText('0xd1D9F5...f5e3AC').should('exist');
     cy.findByText('Ethereum').should('exist');
-    cy.get('[data-cy="ApprovedAssociation"]').trigger('mouseover');
-    cy.findByText('This address has approved the NFT Profile association.').should('exist');
+    cy.get('[data-cy="ApprovedAssociation"]').trigger('mouseover').then(() => {
+      cy.findByText('This address has approved the NFT Profile association.').should('exist');
+    });
 
-    cy.get('[data-cy="AssociationDropdown"]').click();
-    cy.findByText('Remove').should('exist');
-    cy.findByText('View on Etherscan').should('exist');
+    cy.get('[data-cy="AssociationDropdown"]').click().then(() => {
+      cy.findByText('Remove').should('exist');
+      cy.findByText('View on Etherscan').should('exist');
+    });
   });
 
   it('should render as pending with minimum valid props', () => {
@@ -40,12 +42,14 @@ describe('Associated Address', () => {
     );
     cy.findByText('0xd1D9F5...f5e3AC').should('exist');
     cy.findByText('Ethereum').should('exist');
-    cy.get('[data-cy="PendingAssociation"]').trigger('mouseover');
-    cy.findByText('This address association is waiting approval.').should('exist');
+    cy.get('[data-cy="PendingAssociation"]').trigger('mouseover').then(() => {
+      cy.findByText('This address association is waiting approval.').should('exist');
+    });
 
-    cy.get('[data-cy="AssociationDropdown"]').click();
-    cy.findByText('Remove').should('exist');
-    cy.findByText('View on Etherscan').should('exist');
+    cy.get('[data-cy="AssociationDropdown"]').click().then(() => {
+      cy.findByText('Remove').should('exist');
+      cy.findByText('View on Etherscan').should('exist');
+    });
   });
 
   it('should render as rejected with minimum valid props', () => {
@@ -61,12 +65,14 @@ describe('Associated Address', () => {
     );
     cy.findByText('0xd1D9F5...f5e3AC').should('exist');
     cy.findByText('Ethereum').should('exist');
-    cy.get('[data-cy="RejectedAssociation"]').trigger('mouseover');
-    cy.findByText('This address has rejected the association. If this was done in error, please resend the request. No gas is required.').should('exist');
+    cy.get('[data-cy="RejectedAssociation"]').trigger('mouseover').then(() => {
+      cy.findByText('This address has rejected the association. If this was done in error, please resend the request. No gas is required.').should('exist');
+    });
 
-    cy.get('[data-cy="AssociationDropdown"]').click();
-    cy.findByText('Remove').should('exist');
-    cy.findByText('View on Etherscan').should('exist');
-    cy.findByText('Resend Request').should('exist');
+    cy.get('[data-cy="AssociationDropdown"]').click().then(() => {
+      cy.findByText('Remove').should('exist');
+      cy.findByText('View on Etherscan').should('exist');
+      cy.findByText('Resend Request').should('exist');
+    });
   });
 });
