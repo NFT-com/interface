@@ -7,7 +7,7 @@ import { getDateFromTimeFrame } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export type NFTAnalyticsContainerProps = {
@@ -39,22 +39,25 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
-  const currentDate = useMemo(() => {
-    return new Date();
-  }, []);
+  const [nftData, setNftData] = useState(null);
 
-  const dateFromTimeFrame = useMemo(() => {
+  const dateFrom = useMemo(() => {
     return getDateFromTimeFrame(selectedTimeFrame);
   }, [selectedTimeFrame]);
 
   const nftId = useGetNftByTokenId(data?.contract, parseInt(data?.tokenId, 16).toString())?.nft_by_token_id?.id;
-  const nftPriceHistory = useGetNftPriceHistory(nftId, dateFromTimeFrame, currentDate);
-  console.log(nftPriceHistory);
+  const nftPriceHistory = useGetNftPriceHistory(nftId, dateFrom);
+
+  useEffect(() => {
+    if(selectedChartType === 'Price') {
+      setNftData(nftPriceHistory);
+    }
+  }, [nftPriceHistory, selectedTimeFrame, selectedChartType]);
 
   return (
     <div className="bg-transparent">
       <div className="w-full">
-        <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]); setSelectedTimeFrame(timeFrames[0]);}}>
+        <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
           <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
             {Object.keys(nftChartTypes).map((chartType) => (
               <Tab
@@ -72,17 +75,40 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
             ))}
           </Tab.List>
         </Tab.Group>
+        <Tab.Group
+          onChange={(index) => {
+            setSelectedTimeFrame(timeFrames[index]);
+          }}
+        >
+          <Tab.List className="flex w-3/4 ml-16 items-center order-last rounded-lg bg-[#F6F6F6] p-2 my-4">
+            {Object.keys(timeFrames).map((timeFrame) => (
+              <Tab
+                key={timeFrame}
+                className={({ selected }) =>
+                  tw(
+                    'font-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6F6F6F] ',
+                    'ring-white ring-opacity-60 ring-offset-2 focus:outline-none focus:ring-2',
+                    selected
+                      ? 'bg-white shadow text-[#1F2127] font-medium'
+                      : 'hover:bg-white/[0.12] hover:text-white'
+                  )
+                }
+              >
+                {timeFrames[timeFrame]}
+              </Tab>
+            ))}
+          </Tab.List>
+        </Tab.Group>
       </div>
       {selectedChartType === 'Activity'
         ? <TxHistory />
         : <LineChart
-          data={data}
+          label={'Price'}
+          showMarketplaceOptions={true}
+          data={nftData}
           currentMarketplace={selectedMarketplace}
           setCurrentMarketplace={(selectedMarketplace: string) => {
             setSelectedMarketplace(selectedMarketplace);
-          }}
-          setCurrentTimeFrame={(selectedTimeFrame: string) => {
-            setSelectedTimeFrame(selectedTimeFrame);
           }}
         /> }
     </div>

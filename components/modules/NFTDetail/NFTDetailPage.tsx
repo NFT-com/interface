@@ -3,15 +3,17 @@ import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalytics
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import { DescriptionDetail } from './DescriptionDetail';
 import { ExternalListings } from './ExternalListings';
 import { NftChainInfo } from './NftChainInfo';
 import { NFTDetail } from './NFTDetail';
+import { NFTDetailContextProvider } from './NFTDetailContext';
 import { Properties } from './Properties';
 
 import useSWR from 'swr';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface NFTDetailPageProps {
   collection: string;
@@ -19,6 +21,7 @@ export interface NFTDetailPageProps {
 }
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
+  const { address: currentAddress } = useAccount();
   const { data: nft, mutate } = useNftQuery(props.collection, props.tokenId);
   const { chain } = useNetwork();
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
@@ -30,8 +33,13 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       <NFTDetail nft={nft} onRefreshSuccess={mutate} key={nft?.id} />
       {
         //TODO: @anthony - add in memo functionality
-        getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+        ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
+        (currentAddress === nft?.wallet?.address) ||
+        (currentAddress !== nft?.wallet?.address && !isNullOrEmpty(nft?.memo)))
+        &&
+        <NFTDetailContextProvider nft={nft} >
           <NftMemo nft={nft} />
+        </NFTDetailContextProvider>
       }
       <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
       <div className='w-full flex flex-col minlg:flex-row p-4'>
