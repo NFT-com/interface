@@ -37,13 +37,16 @@ export const NftMemo = (props: NftMemoProps) => {
 
   return (
     <div className='w-full p-4'>
-      <span className='dark:text-white flex items-start'>Owner&apos;s Message</span>
-      <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-center flex-col">
+      <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex flex-col">
+        <span className='dark:text-white absolute ml-3 mt-5'>Owner&apos;s Message</span>
         <textarea
           className={tw(
             'text-base w-full resize-none mt-4',
-            'text-left px-3 py-2 w-full rounded-xl font-medium h-32',
-            'bg-[#F8F8F8]'
+            'text-left px-3 py-2 w-full rounded-[10px] font-medium h-32',
+            'bg-[#F8F8F8]',
+            'border-none',
+            'border-0',
+            'pt-7'
           )}
           maxLength={300}
           placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter memo (optional)' : undefined}
@@ -63,7 +66,7 @@ export const NftMemo = (props: NftMemoProps) => {
               label={'Edit'}
               onClick={() => {
                 setEditMemo(true);
-                setDraftMemo(nft?.memo ?? draftMemo ?? '');
+                setDraftMemo(draftMemo ?? nft?.memo ?? '');
               }}
             />
           }
@@ -73,9 +76,8 @@ export const NftMemo = (props: NftMemoProps) => {
                 type={ButtonType.PRIMARY}
                 label={'Save'}
                 onClick={() => {
-                  saveMemo();
                   setEditMemo(false);
-                  setDraftMemo(draftMemo ?? nft?.memo ?? '');
+                  saveMemo();
                 } }
               />
               <Button

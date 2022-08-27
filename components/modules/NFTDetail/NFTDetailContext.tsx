@@ -56,11 +56,9 @@ export function NFTDetailContextProvider(
         memo: draftMemo ?? '',
         nftId: props?.nft?.id
       });
-
       if (memoUpdateResult) {
-        clearDraft();
+        setSaving(false);
       }
-      setSaving(false);
     } catch (err) {
       console.log('error while saving memo: ', err);
       alert('Error while saving profile.');
