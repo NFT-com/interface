@@ -50,7 +50,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
 
   useEffect(() => {
     if(selectedChartType === 'Price') {
-      setNftData(nftPriceHistory);
+      setNftData(nftPriceHistory?.prices?.length === 0 ? null : nftPriceHistory);
     }
   }, [nftPriceHistory, selectedTimeFrame, selectedChartType]);
 
@@ -75,6 +75,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
             ))}
           </Tab.List>
         </Tab.Group>
+        {nftData &&
         <Tab.Group
           onChange={(index) => {
             setSelectedTimeFrame(timeFrames[index]);
@@ -99,6 +100,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
             ))}
           </Tab.List>
         </Tab.Group>
+        }
       </div>
       {selectedChartType === 'Activity'
         ? <TxHistory />

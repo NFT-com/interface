@@ -15,12 +15,10 @@ export function useGetCollectionSalesHistory(collectionId: string, dateFrom: Mom
   const nowFormatted = moment().format('YYYY-MM-DD').toString();
   const dateFromFormatted = dateFrom.format('YYYY-MM-DD').toString();
 
-  const { data, error } = useSWR(
-    `${getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_AGGREGATION_ENDPOINT)}collection/${collectionId}/sales/history?from=${dateFromFormatted}&to=${nowFormatted}`,
-    fetcher
-  );
+  const formedRequest = `${getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_AGGREGATION_ENDPOINT)}collection/${collectionId}/sales/history?from=${dateFromFormatted}&to=${nowFormatted}`;
+
+  const { data, error } = useSWR(() => (!collectionId || !dateFrom) ? null : formedRequest, fetcher);
 
   if (error) return 'error';
-  if(!data) return null;
   return data;
 }
