@@ -4,8 +4,7 @@ import { getAnalyticsEndpoint } from 'utils/helpers';
 import useSWR from 'swr';
 
 const fetcher = (query, variables) => {
-  console.log(query, variables);
-  return request(getAnalyticsEndpoint('GQL'), query, variables);
+  return request(getAnalyticsEndpoint('Graph'), query, variables);
 };
 
 export function useGetCollectionByAddress(contractAddress: string) {
@@ -25,12 +24,12 @@ export function useGetCollectionByAddress(contractAddress: string) {
           website
           image_url
         }
-      }`,
+    }`,
       variables,
     ],
     fetcher
   );
-  if (error) return 'error';
+  if (error) console.log(error);
   if(!data) return null;
   return data;
 }
