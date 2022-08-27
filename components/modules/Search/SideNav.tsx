@@ -5,6 +5,7 @@ import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
 import { FiltersContent } from './FiltersContent';
 
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import CaretCircle from 'public/caret_circle.svg';
 import Flask from 'public/flask.svg';
@@ -19,7 +20,8 @@ export interface OptionNavProps {
 }
 
 export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
-  const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
+  const { route } = useRouter();
+  const [isFilterCollapsed, setIsFilterCollapsed] = useState(route !== '/app/discover');
   const { sideNavOpen, setSideNavOpen } = useSearchModal();
 
   return(
@@ -65,7 +67,9 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
 }
 
 export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?: any}) => {
-  const { sideNavOpen, setSearchFilters } = useSearchModal();
+  const { sideNavOpen, setSearchFilters, setSideNavOpen } = useSearchModal();
+  const { route } = useRouter();
+  setSideNavOpen(route === '/app/discover');
   const setFilters = () => {
     setSearchFilters(props.filtersData);
   };
@@ -73,6 +77,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
   useEffect(() => {
     setSearchFilters(props.filtersData);
   }, [props.filtersData, setSearchFilters]);
+
   return(
     <div
       className={tw(
