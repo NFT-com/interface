@@ -1579,7 +1579,6 @@ li {
 
 .emblafull {
   position: relative;
-  padding: 0px 10px;
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -1605,39 +1604,36 @@ li {
   -webkit-touch-callout: none;
   -khtml-user-select: none;
   -webkit-tap-highlight-color: transparent;
-  margin-left: -10px;
 }
 
 .embla__slide {
   position: relative;
   min-width: 25%;
-  padding-left: 10px;
 }
 
 
 .embla__slidefull {
   position: relative;
   min-width: 100%;
-  padding-left: 10px;
 }
 
 @media (min-width: 600px) {
   .embla__slidefull {
     min-width: 50%;
-    margin-left:7px;
   } 
 }
 @media (min-width: 900px) {
   .embla__slidefull {
     min-width: 33%;
-    margin-left:7px;
   }
 }
+
+
 
 .embla__slide__inner {
   position: relative;
   overflow: hidden;
-  height: 190px;
+  height: 210px;
 }
 
 @media (min-width: 1200px) {
@@ -1729,11 +1725,14 @@ li {
   display: block;
   top: 50%;
   left: 50%;
-  width: auto;
-  min-height: 100%;
-  min-width: 95%;
-  max-width: none;
+  width: 96%;
   transform: translate(-50%, -50%);
+}
+
+@media (min-width: 900px) {
+  .embla__slide__item {
+    width: 95%;
+  }
 }
 
 .filter-scrollbar::-webkit-scrollbar {

@@ -111,18 +111,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }
 
   return (
-    <div className="mt-20">
-      <Link href='/app/auctions' passHref>
-        <a>
-          <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
-            <span>Mint yourself! Get a free profile</span>
-            <div className='flex flex-col rounded items-center p-[1px] ml-2'>
-              <Vector />
-            </div>
-          </div>
-        </a>
-      </Link>
-        
+    <div className="mt-20 mb-10">        
       <div className="flex">
         <div className="hidden minlg:block">
           <SideNav onSideNav={() => null} filtersData={filters}/>
@@ -191,7 +180,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   </div>);
               })}
             </div>
-            {results.length < found && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+            {results.length < found && <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
               <Button
                 color={'black'}
                 accent={AccentType.SCALE}

@@ -57,16 +57,6 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
   return(
     <>
       <div className="my-10 minlg:mb-10 minlg:mt-20 max-w-lg minmd:max-w-full mx-[4%] minmd:mx-[2%] minlg:mr-[2%] minlg:ml-0 self-center minmd:self-stretch">
-        <Link href='/app/auctions' passHref>
-          <a>
-            <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
-              <span>Mint yourself! Get a free profile</span>
-              <div className='flex flex-col rounded items-center p-[1px] ml-2'>
-                <Vector />
-              </div>
-            </div>
-          </a>
-        </Link>
         <div className="flex">
           <div className="hidden minlg:block">
             <SideNav onSideNav={changeCurated}/>
@@ -97,7 +87,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
               </div>
             </div>
             { paginatedAddresses.length < contractAddresses.length &&
-            <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+            <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
               <Button
                 color={'black'}
                 accent={AccentType.SCALE}
