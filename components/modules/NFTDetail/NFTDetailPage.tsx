@@ -11,6 +11,8 @@ import { ExternalListings } from './ExternalListings';
 import { NftChainInfo } from './NftChainInfo';
 import { NFTDetail } from './NFTDetail';
 import { NFTDetailContextProvider } from './NFTDetailContext';
+import { NFTDetailFeaturedBy } from './NFTDetailFeaturedBy';
+import { NFTDetailMoreFromCollection } from './NFTDetailMoreFromCollection';
 import { Properties } from './Properties';
 
 import useSWR from 'swr';
@@ -68,6 +70,18 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             </div>
         }
       </div>
+      {
+        getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+        <div className="w-full my-10 flex items-center">
+          <NFTDetailMoreFromCollection contract={nft?.contract} />
+        </div>
+      }
+      {
+        getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+        <div className="w-full my-10 flex items-center">
+          <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
+        </div>
+      }
     </div>
   );
 }
