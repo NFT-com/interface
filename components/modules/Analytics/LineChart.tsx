@@ -1,4 +1,3 @@
-import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -32,35 +31,36 @@ export const LineChart = ({ data, label, currentMarketplace, setCurrentMarketpla
       <span className='flex flex-row w-full'>
         {label}
       </span>
-      <ResponsiveContainer height={270} width='100%'>
-        <AreaChart data={data} margin={{ top: 5, right: 0, bottom: 5, left: 0 }} >
-          {isNullOrEmpty(data) &&
-          <span>No data yet</span>
-          }
-          <defs>
-            <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0.2}/>
-              <stop offset="80%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0}/>
-            </linearGradient>
-          </defs>
+      {!data ?
+        <span>No data yet</span>
+        :
+        <ResponsiveContainer height={270} width='100%'>
+          <AreaChart data={data} margin={{ top: 5, right: 0, bottom: 5, left: 0 }} >
+            <defs>
+              <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0.2}/>
+                <stop offset="80%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0}/>
+              </linearGradient>
+            </defs>
 
-          <XAxis dataKey="name" />
-          <YAxis orientation={'right'} />
-          <Tooltip
-            wrapperClassName='rounded-xl bg-[#1F2127] text-white'
-            labelClassName='bg-[#1F2127] text-white'
-            contentStyle={{ backgroundColor: '#1F2127' }}
-          />
-          <Area
-            type="monotone"
-            dataKey="value"
-            stroke={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'}
-            strokeWidth={4}
-            fillOpacity={1}
-            fill="url(#colorvalue)" />
-        </AreaChart>
-      </ResponsiveContainer>
-      {showMarketplaceOptions &&
+            <XAxis dataKey="name" />
+            <YAxis orientation={'right'} />
+            <Tooltip
+              wrapperClassName='rounded-xl bg-[#1F2127] text-white'
+              labelClassName='bg-[#1F2127] text-white'
+              contentStyle={{ backgroundColor: '#1F2127' }}
+            />
+            <Area
+              type="monotone"
+              dataKey="value"
+              stroke={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'}
+              strokeWidth={4}
+              fillOpacity={1}
+              fill="url(#colorvalue)" />
+          </AreaChart>
+        </ResponsiveContainer>
+      }
+      {(showMarketplaceOptions && !!data) &&
       <div className="w-full max-w-md px-2 py-2 sm:px-0">
         <div className="flex flex-row items-center justify-end space-x-2">
           {Object.keys(marketplaces).map((marketplace) => (

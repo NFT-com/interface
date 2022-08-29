@@ -9,6 +9,7 @@ import { tw } from 'utils/tw';
 import { Tab } from '@headlessui/react';
 import { useEffect, useMemo, useState } from 'react';
 import { PartialDeep } from 'type-fest';
+import { useNetwork } from 'wagmi';
 
 export type NFTAnalyticsContainerProps = {
   data: PartialDeep<Nft>;
@@ -35,6 +36,7 @@ const timeFrames = {
 };
 
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
+  const { chain } = useNetwork();
   const [selectedChartType, setSelectedChartType] = useState(nftChartTypes[0]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
@@ -49,10 +51,14 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const nftPriceHistory = useGetNftPriceHistory(nftId, dateFrom);
 
   useEffect(() => {
-    if(selectedChartType === 'Price') {
-      setNftData(nftPriceHistory);
+    if(chain?.id !== 1) {
+      setNftData(null);
+      return;
     }
-  }, [nftPriceHistory, selectedTimeFrame, selectedChartType]);
+    if(selectedChartType === 'Price') {
+      setNftData(nftPriceHistory?.prices?.length === 0 ? null : nftPriceHistory);
+    }
+  }, [nftPriceHistory, selectedTimeFrame, selectedChartType, chain]);
 
   return (
     <div className="bg-transparent">
@@ -75,6 +81,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
             ))}
           </Tab.List>
         </Tab.Group>
+        {nftData &&
         <Tab.Group
           onChange={(index) => {
             setSelectedTimeFrame(timeFrames[index]);
@@ -99,6 +106,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
             ))}
           </Tab.List>
         </Tab.Group>
+        }
       </div>
       {selectedChartType === 'Activity'
         ? <TxHistory />
