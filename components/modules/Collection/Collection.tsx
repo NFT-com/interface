@@ -232,23 +232,7 @@ export function Collection(props: CollectionProps) {
                   </Tab.List>
                 </Tab.Group>
               </div>
-              <div
-                id="refreshNftButton"
-                className={tw(
-                  'rounded-full bg-[#F8F8F8] h-10 w-10 justify-center items-center mr-6 hidden minlg:flex'
-                )}
-              >
-                <ArrowClockwise color='#6F6F6F' className='h-7 w-7'/>
-              </div>
               <div className='mb-6 items-center w-full flex minlg:hidden'>
-                <div
-                  id="refreshNftButton"
-                  className={tw(
-                    'rounded-full bg-[#F8F8F8] h-6 w-7 flex justify-center items-center mr-6'
-                  )}
-                >
-                  <ArrowClockwise color='#6F6F6F' className='h-4 w-4'/>
-                </div>
                 <div className='w-full bg-[#F8F8F8] text-[#6F6F6F] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center'>
                   <FunnelSimple color='#6F6F6F' className='h-5 w-4 mr-2'/>
                   <p>Filter</p>
