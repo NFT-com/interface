@@ -208,11 +208,8 @@ export function Collection(props: CollectionProps) {
         {collectionNfts.length > 0 ?
           <>
             {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-            <div className='block minlg:flex w-full mb-6 justify-between items-center'>
+            <div className='block minlg:flex minlg:flex-row-reverse w-full minlg:w-max mb-6 justify-between items-center'>
               <div className='block minlg:flex items-center mb-6 minlg:mb-0'>
-                <div className='bg-[#F8F8F8] text-[#6F6F6F] w-10 h-10 font-grotesk font-bold p-1 rounded-[20px]  items-center justify-center mr-4 hidden minlg:flex'>
-                  <FunnelSimple color='#6F6F6F' className='h-7 w-7'/>
-                </div>
                 <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
                   <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk minlg:max-w-md minlg:w-[448px]">
                     {Object.keys(tabs).map((tab) => (
@@ -232,10 +229,10 @@ export function Collection(props: CollectionProps) {
                   </Tab.List>
                 </Tab.Group>
               </div>
-              <div className='mb-6 items-center w-full flex minlg:hidden'>
-                <div className='w-full bg-[#F8F8F8] text-[#6F6F6F] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center'>
-                  <FunnelSimple color='#6F6F6F' className='h-5 w-4 mr-2'/>
-                  <p>Filter</p>
+              <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
+                <div className='w-full minlg:w-10 minlg:h-10 bg-[#F8F8F8] text-[#6F6F6F] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center'>
+                  <FunnelSimple color='#6F6F6F' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+                  <p className='minlg:hidden'>Filter</p>
                 </div>
               </div>
             </div>
