@@ -17,8 +17,8 @@ export type NFTAnalyticsContainerProps = {
 
 const nftChartTypes = {
   0: 'Price',
-  1: 'Bids',
-  2: 'Activity'
+  1: 'Activity',
+  2: 'Bids'
 };
 
 const marketplaces = {
@@ -62,32 +62,34 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
 
   return (
     <div className="bg-transparent">
-      <div className="w-full">
-        <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
-          <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
-            {Object.keys(nftChartTypes).map((chartType) => (
-              <Tab
-                key={chartType}
-                className={({ selected }) =>
-                  tw(
-                    'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
-                    selected
+      <div className="w-full minmd:px-40">
+        <div className='w-full minmd:pb-4'>
+          <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
+            <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
+              {Object.keys(nftChartTypes).map((chartType) => (
+                <Tab
+                  key={chartType}
+                  className={({ selected }) =>
+                    tw(
+                      'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
+                      selected
                       && 'bg-black text-[#F8F8F8]'
-                  )
-                }
-              >
-                {nftChartTypes[chartType]}
-              </Tab>
-            ))}
-          </Tab.List>
-        </Tab.Group>
-        {nftData &&
+                    )
+                  }
+                >
+                  {nftChartTypes[chartType]}
+                </Tab>
+              ))}
+            </Tab.List>
+          </Tab.Group>
+        </div>
+        {nftData && selectedChartType !== 'Activity' &&
         <Tab.Group
           onChange={(index) => {
             setSelectedTimeFrame(timeFrames[index]);
           }}
         >
-          <Tab.List className="flex w-3/4 ml-16 items-center order-last rounded-lg bg-[#F6F6F6] p-2 my-4">
+          <Tab.List className="flex w-[250px] ml-11 minmd:-ml-40 items-center order-last rounded-lg bg-[#F6F6F6] p-2 my-4">
             {Object.keys(timeFrames).map((timeFrame) => (
               <Tab
                 key={timeFrame}
