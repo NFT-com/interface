@@ -109,14 +109,14 @@ export function Collection(props: CollectionProps) {
               props.profile && 'ml-2'
             )}>
               <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
-              <div className='flex mt-1 text-[#B59007] font-medium font-mono'>
-                <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
+              <div className='mt-1 text-[#B59007] font-medium font-mono'>
                 <a
                   target="_blank"
                   rel="noreferrer"
                   href={`https://etherscan.io/address/${props.contract?.toString()}`}
-                  className='font-bold underline tracking-wide'
+                  className=' tracking-wide flex'
                 >
+                  <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
                   <LinkIcon size={20} className='ml-1' />
                 </a>
               </div>
@@ -125,14 +125,15 @@ export function Collection(props: CollectionProps) {
 
           <div className='flex flex-col'>
             <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Contract Address</p>
-            <div className='flex mt-1 text-[#B59007] font-medium font-mono'>
-              <span>{shortenAddress(props.contract?.toString(), 4)}</span>
+            <div className='mt-1 text-[#B59007] font-medium font-mono'>
+              
               <a
                 target="_blank"
                 rel="noreferrer"
                 href={`https://etherscan.io/address/${props.contract?.toString()}`}
-                className='font-bold underline tracking-wide'
+                className='tracking-wide flex'
               >
+                <span>{shortenAddress(props.contract?.toString(), 4)}</span>
                 <LinkIcon size={20} className='ml-1' />
               </a>
             </div>
