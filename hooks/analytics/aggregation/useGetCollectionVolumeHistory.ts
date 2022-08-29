@@ -1,20 +1,16 @@
-import { fetcher, formatDateForIndexer, getAnalyticsEndpoint } from 'utils/helpers';
+import { Doppler, getEnv } from 'utils/env';
+import { fetcher } from 'utils/helpers';
 
+import { Moment } from 'moment';
+import moment from 'moment';
 import useSWR from 'swr';
 
-/**
- * Gets the sales history for a collection between two dates
- * @param collectionId | collection-id  of collection to query
- * @param dateFrom | YYYY-MM-DD
- * @param dateTo | YYYY-MM-DD
- * @returns 
- */
-export function useGetCollectionVolumeHistory(collectionId: string, dateFrom: Date, dateTo: Date) {
-  const dateToFormatted = formatDateForIndexer(dateTo);
-  const dateFromFormatted = formatDateForIndexer(dateFrom);
+export function useGetCollectionVolumeHistory(collectionId: string, dateFrom: Moment) {
+  const dateToFormatted = moment().format('YYYY-MM-DD').toString();
+  const dateFromFormatted = dateFrom.format('YYYY-MM-DD').toString();
 
   const { data, error } = useSWR(
-    `${getAnalyticsEndpoint('Aggregation')}:443/collection/${collectionId}/volume/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
+    `${getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_AGGREGATION_ENDPOINT)}/collection/${collectionId}/volume/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
     fetcher
   );
 

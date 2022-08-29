@@ -1,13 +1,15 @@
-import { fetcher, formatDateForIndexer, getAnalyticsEndpoint } from 'utils/helpers';
+import { Doppler, getEnv } from 'utils/env';
+import { fetcher } from 'utils/helpers';
 
+import moment, { Moment } from 'moment';
 import useSWR from 'swr';
 
-export function useGetCollectionMarketCap(collectionId: string, dateFrom: Date, dateTo: Date) {
-  const dateToFormatted = formatDateForIndexer(dateTo);
-  const dateFromFormatted = formatDateForIndexer(dateFrom);
+export function useGetCollectionMarketCap(collectionId: string, dateFrom: Moment) {
+  const dateToFormatted = moment().format('YYYY-MM-DD').toString();
+  const dateFromFormatted = dateFrom.format('YYYY-MM-DD').toString();
 
   const { data, error } = useSWR(
-    `${getAnalyticsEndpoint('Aggregation')}:443/collection/${collectionId}/market_cap/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
+    `${getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_AGGREGATION_ENDPOINT)}/collection/${collectionId}/market_cap/history?from=${dateFromFormatted}&to=${dateToFormatted}`,
     fetcher
   );
 
