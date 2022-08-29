@@ -2,20 +2,19 @@
 
 describe('results page tests', () => {
   it('renders title of collection and one item', () => {
-    cy.visit('/app/collection/0xd7Fd5046a2523841Ee840d7574B54591300bAcB6');
+    cy.visit('/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414');
     cy.wait(4000);
-    cy.get('.text-4xl').should('exist').and('include.text', 'NFT.com');
+    cy.get('.text-3xl').should('exist').and('include.text', 'NFT.com');
   });
 
   it('renders one item', () => {
-    cy.visit('/app/collection/0xd7Fd5046a2523841Ee840d7574B54591300bAcB6');
+    cy.visit('/app/collection/0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D');
     cy.wait(4000);
-    cy.contains('alchemyapi').should('exist');
     cy.get('.buttonContainer').should('not.exist');
   });
 
   it('renders 8 first items', () => {
-    cy.visit('/app/collection/0xf5de760f2e916647fd766B4AD9E85ff943cE3A2b');
+    cy.visit('/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414');
     cy.wait(4000);
     cy.get('.NftCollectionItem').should('exist');
     cy.get('.buttonContainer').should('exist');
@@ -23,7 +22,7 @@ describe('results page tests', () => {
   });
 
   it('renders 8 next items after clicking load more  button', () => {
-    cy.visit('/app/collection/0xf5de760f2e916647fd766B4AD9E85ff943cE3A2b');
+    cy.visit('/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414');
     cy.wait(4000);
     cy.get('.buttonContainer').should('exist');
     cy.get('.buttonContainer').click();
@@ -32,7 +31,7 @@ describe('results page tests', () => {
   });
 
   it('renders no nfts in the collection', () => {
-    cy.visit('/app/collection/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D');
+    cy.visit('/app/collection/0xd7Fd5046a2523841Ee840d7574B54591300bAcB6');
     cy.wait(4000);
     cy.contains('No NFTs in the collection').should('exist');
     cy.get('.NftCollectionItem').should('not.exist');
