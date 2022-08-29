@@ -18,7 +18,7 @@ export default function DefaultLayout({ children, hideFooter }: DefaultLayoutPro
   const { toggleSidebar } = useSidebar();
   return (
     <div className={tw('flex flex-col',
-      'h-screen w-full min-h-screen',
+      'h-screen w-screen min-w-screen overflow-x-hidden min-h-screen',
     )}>
       <div
         className='flex-1'

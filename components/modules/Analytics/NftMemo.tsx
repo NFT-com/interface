@@ -36,32 +36,33 @@ export const NftMemo = (props: NftMemoProps) => {
   };
 
   return (
-    <div className='w-full p-4'>
-      <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex flex-col -mt-10">
-        <h5 className='font-grotesk text-[#6F6F6F] font-semibold text-base leading-6 absolute ml-[10px] mt-14'>Owner&apos;s Message</h5>
-        <textarea
-          className={tw(
-            'text-base w-full resize-none mt-9',
-            'text-left px-3 py-2 w-full rounded-[10px] font-medium h-32',
-            'leading-5',
-            'bg-[#F8F8F8]',
-            'font-grotesk text-[#1F2127]',
-            `${editMemo ? 'border-2' : 'border-none'}`,
-            'pt-12',
-          )}
-          maxLength={300}
-          placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter memo (optional)' : undefined}
-          value={draftMemo ?? nft?.memo ?? ''}
-          onChange={e => {
-            handleMemoChange(e);
-          }}
-          style={{
-            color: alwaysBlack,
-          }}
-          disabled={!currentAddress === nft?.wallet?.address || !editMemo}
-        />
-        <div className='flex flex-row justify-center items-center py-2'>
-          {currentAddress === nft?.wallet?.address && !editMemo &&
+    <div className='flex flex-col h-full w-full p-4 mt-5 minmd:px-[17.5px] minlg:px-[128px]'>
+      <div className='flex h-full w-full'>
+        <div className='h-full w-full mt-20'>
+          <div className='font-grotesk text-[#6F6F6F] font-semibold text-base leading-6 relative ml-[10px] -my-20'>Owner&apos;s Message</div>
+          <textarea
+            className={tw(
+              'text-base w-full resize-none mt-9',
+              'text-left px-3 pb-2 w-full rounded-[10px] font-medium h-32',
+              'leading-5',
+              'bg-[#F8F8F8]',
+              'font-grotesk text-[#1F2127]',
+              `${editMemo ? 'border-2' : 'border-none'}`,
+              'pt-12',
+            )}
+            maxLength={300}
+            placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter memo (optional)' : undefined}
+            value={draftMemo ?? nft?.memo ?? ''}
+            onChange={e => {
+              handleMemoChange(e);
+            }}
+            style={{
+              color: alwaysBlack,
+            }}
+            disabled={!currentAddress === nft?.wallet?.address || !editMemo}
+          />
+          <div className='flex flex-row w-full justify-center items-center py-2 minmd:px-24'>
+            {currentAddress === nft?.wallet?.address && !editMemo &&
             <Button
               type={ButtonType.PRIMARY}
               label={'Edit'}
@@ -71,8 +72,8 @@ export const NftMemo = (props: NftMemoProps) => {
                 setDraftMemo(draftMemo ?? nft?.memo ?? '');
               }}
             />
-          }
-          {currentAddress === nft?.wallet?.address && editMemo &&
+            }
+            {currentAddress === nft?.wallet?.address && editMemo &&
             <div className='inline-flex space-x-4'>
               <Button
                 type={ButtonType.PRIMARY}
@@ -89,7 +90,8 @@ export const NftMemo = (props: NftMemoProps) => {
                   clearDraft();
                 } } />
             </div>
-          }
+            }
+          </div>
         </div>
       </div>
     </div>
