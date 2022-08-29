@@ -27,10 +27,10 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
   return(
     <>
       <div className={tw(
-        'flex justify-between items-center minmd:justify-start minlg:justify-between minmd:space-x-2 w-full',
+        'flex justify-between items-center minmd:justify-start minmd:space-x-2 w-full',
         `${props.backgroundColor} py-3`)}>
         <div
-          className="flex items-center pl-1 cursor-pointer"
+          className="basis 3/4 grow flex items-center pl-1 cursor-pointer"
           onClick={() => {
             setIsFilterCollapsed(route === '/app/discover' ? false : !isFilterCollapsed);
             props.onOptionNav && props.onOptionNav();
@@ -38,7 +38,7 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
           {props.icon}
           <span className="text-black text-lg minmd:text-xl font-medium ml-2">{props.title}</span>
         </div>
-        <div className="cursor-pointer">
+        <div className="basis 1/4 cursor-pointer">
           {sideNavOpen || route === '/app/discover'
             ? <CaretCircle
               onClick={() => {
