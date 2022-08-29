@@ -2280,6 +2280,13 @@ export type UploadProfileImagesMutationVariables = Exact<{
 
 export type UploadProfileImagesMutation = { __typename?: 'Mutation', uploadProfileImages: { __typename?: 'Profile', id: string } };
 
+export type ActivitiesQueryVariables = Exact<{
+  input?: InputMaybe<TxActivitiesInput>;
+}>;
+
+
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', chainId?: string | null, activityType: string, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
+
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
 }>;
@@ -2972,6 +2979,87 @@ export const UploadProfileImagesDocument = gql`
     mutation UploadProfileImages($input: UploadProfileImagesInput!) {
   uploadProfileImages(input: $input) {
     id
+  }
+}
+    `;
+export const ActivitiesDocument = gql`
+    query Activities($input: TxActivitiesInput) {
+  getActivities(input: $input) {
+    totalItems
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    items {
+      chainId
+      activityType
+      activityTypeId
+      timestamp
+      walletAddress
+      order {
+        chainId
+        exchange
+        orderHash
+        orderType
+        makerAddress
+        takerAddress
+        protocol
+        protocolData {
+          ... on LooksrareProtocolData {
+            isOrderAsk
+            signer
+            collectionAddress
+            price
+            tokenId
+            amount
+            strategy
+            currencyAddress
+            nonce
+            startTime
+            endTime
+            minPercentageToAsk
+            params
+            v
+            r
+            s
+          }
+          ... on SeaportProtocolData {
+            signature
+            parameters {
+              offerer
+              offer {
+                itemType
+                token
+                identifierOrCriteria
+                startAmount
+                endAmount
+              }
+              consideration {
+                itemType
+                token
+                identifierOrCriteria
+                startAmount
+                endAmount
+                recipient
+              }
+              startTime
+              endTime
+              orderType
+              zone
+              zoneHash
+              salt
+              conduitKey
+              totalOriginalConsiderationItems
+              counter
+            }
+          }
+        }
+      }
+      cancel {
+        exchange
+        transactionHash
+      }
+    }
   }
 }
     `;
@@ -3923,6 +4011,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UploadProfileImages(variables: UploadProfileImagesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UploadProfileImagesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UploadProfileImagesMutation>(UploadProfileImagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UploadProfileImages', 'mutation');
+    },
+    Activities(variables?: ActivitiesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ActivitiesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ActivitiesQuery>(ActivitiesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Activities', 'query');
     },
     AssociatedAddressesForContract(variables: AssociatedAddressesForContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<AssociatedAddressesForContractQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AssociatedAddressesForContractQuery>(AssociatedAddressesForContractDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AssociatedAddressesForContract', 'query');

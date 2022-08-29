@@ -8,7 +8,7 @@ import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { Fee, SeaportOrderParameters } from 'types';
+import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls, getChainIdString } from 'utils/helpers';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
@@ -25,14 +25,12 @@ import React, { PropsWithChildren, useCallback, useContext, useEffect, useState 
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 
-export type TargetMarketplace = 'looksrare' | 'seaport';
-
 export type StagedListing = {
   // this is the minimum required field
   nft: PartialDeep<Nft>;
   collectionName: string;
   // these are set in configuration page
-  targets: TargetMarketplace[],
+  targets: ExternalProtocol[],
   startingPrice: BigNumberish;
   endingPrice: BigNumberish;
   currency: string;
@@ -54,11 +52,11 @@ interface NFTListingsContextType {
   
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
-  toggleTargetMarketplace: (marketplace: TargetMarketplace) => void;
+  toggleTargetMarketplace: (marketplace: ExternalProtocol) => void;
   setDuration: (duration: SaleDuration) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
-  approveCollection: (listing: PartialDeep<StagedListing>, target: TargetMarketplace) => Promise<boolean>;
+  approveCollection: (listing: PartialDeep<StagedListing>, target: ExternalProtocol) => Promise<boolean>;
 }
 
 // initialize with default values
@@ -134,7 +132,7 @@ export function NFTListingsContextProvider(
     setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'buy' : 'sell'));
   }, [sidebarVisible, toBuy]);
 
-  const toggleTargetMarketplace = useCallback((targetMarketplace: TargetMarketplace) => {
+  const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol) => {
     const targetFullyEnabled = toList.find(listing => listing.targets?.includes(targetMarketplace)) != null;
     if (targetFullyEnabled) {
       // removing the target marketplace from all nfts
@@ -180,8 +178,8 @@ export function NFTListingsContextProvider(
   const prepareListings = useCallback(async () => {
     let nonce: number = await getLooksrareNonce(currentAddress);
     const preparedListings = await Promise.all(toList.map(async (listing) => {
-      const listingsPerMarketplace: StagedListing[] = await Promise.all(listing.targets?.map(async (target: TargetMarketplace) => {
-        if (target === 'looksrare') {
+      const listingsPerMarketplace: StagedListing[] = await Promise.all(listing.targets?.map(async (target: ExternalProtocol) => {
+        if (target === ExternalProtocol.LooksRare) {
           const order: MakerOrder = await createLooksrareParametersForNFTListing(
             currentAddress, // offerer
             listing.nft,
@@ -232,8 +230,8 @@ export function NFTListingsContextProvider(
   const listAll = useCallback(async () => {
     setSubmitting(true);
     const results = await Promise.all(toList.map(async (listing: StagedListing) => {
-      const results = await Promise.all(listing.targets?.map(async (target: TargetMarketplace) => {
-        if (target === 'looksrare') {
+      const results = await Promise.all(listing.targets?.map(async (target: ExternalProtocol) => {
+        if (target === ExternalProtocol.LooksRare) {
           const signature = await signOrderForLooksrare(listing.looksrareOrder).catch(() => null);
           if (signature == null) {
             return false;
@@ -261,22 +259,22 @@ export function NFTListingsContextProvider(
     localStorage.setItem('stagedNftListings', JSON.stringify(newToList));
   }, [toList]);
 
-  const approveCollection = useCallback(async (listing: StagedListing, target: TargetMarketplace) => {
+  const approveCollection = useCallback(async (listing: StagedListing, target: ExternalProtocol) => {
     const collection = get721Contract(listing?.nft?.contract, provider);
     if (collection == null) {
       return false;
     }
     const tx = await collection
       .connect(signer)
-      .setApprovalForAll(target === 'looksrare' ? TransferProxyTarget.LooksRare : TransferProxyTarget.Opensea, true);
+      .setApprovalForAll(target === ExternalProtocol.LooksRare ? TransferProxyTarget.LooksRare : TransferProxyTarget.Opensea, true);
     if (tx) {
       return await tx.wait(1).then(() => {
         const newToList = toList.slice().map(l => {
           if (listing?.nft?.id === l.nft?.id) {
             return {
               ...listing,
-              ...(target === 'looksrare' ? { isApprovedForLooksrare: true } : {}),
-              ...(target === 'seaport' ? { isApprovedForSeaport: true } : {}),
+              ...(target === ExternalProtocol.LooksRare ? { isApprovedForLooksrare: true } : {}),
+              ...(target === ExternalProtocol.Seaport ? { isApprovedForSeaport: true } : {}),
             };
           }
           return l;
