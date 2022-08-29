@@ -5,10 +5,6 @@ import { CollectionAnalyticsContainer } from 'components/modules/Collection/Coll
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
-import { useGetCollectionAveragePrice } from 'hooks/analytics/aggregation/useGetCollectionAveragePrice';
-import { useGetCollectionMarketCap } from 'hooks/analytics/aggregation/useGetCollectionMarketCap';
-import { useGetCollectionSize } from 'hooks/analytics/aggregation/useGetCollectionSize';
-import { useGetCollectionVolumeHistory } from 'hooks/analytics/aggregation/useGetCollectionVolumeHistory';
 import { useGetCollectionByAddress } from 'hooks/analytics/graph/useGetCollectionByAddress';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
@@ -21,7 +17,7 @@ import { Tab } from '@headlessui/react';
 import Image from 'next/image';
 import router from 'next/router';
 import { ArrowClockwise, FunnelSimple } from 'phosphor-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
@@ -62,21 +58,6 @@ export function Collection(props: CollectionProps) {
   };
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
-
-  const currentDate = useMemo(() => {
-    return new Date();
-  }, []);
-
-  const yesterdaysDate = useMemo(() => {
-    const yesterday = new Date(currentDate);
-    yesterday.setDate(yesterday.getDate() - 1);
-    return yesterday;
-  }, [currentDate]);
-
-  const collectionVolumeHistory = useGetCollectionVolumeHistory(props?.contract?.toString(), yesterdaysDate, currentDate);
-  const collectionMarketCap = useGetCollectionMarketCap(props?.contract?.toString(), yesterdaysDate, currentDate);
-  const collectionSize = useGetCollectionSize(props?.contract?.toString(), yesterdaysDate, currentDate);
-  const collectionAveragePrice = useGetCollectionAveragePrice(props?.contract?.toString(), yesterdaysDate, currentDate);
 
   useEffect(() => {
     currentPage === 1 && props.contract && client.collections('nfts')
