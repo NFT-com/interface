@@ -21,7 +21,7 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
                   className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
                 >
                   <p className='mb-3'>Floor Price</p>
-                  <p>Analytics will provide the underlying infrastructure to power NFT data across NFT.com.</p>
+                  <p>Lowest active listing price for a NFT from the collection</p>
                 </div>
               }>
               <Info className='mr-1' />
@@ -42,7 +42,7 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
                   className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
                 >
                   <p className='mb-3'>Volume</p>
-                  <p>Analytics will provide the underlying infrastructure to power NFT data across NFT.com.</p>
+                  <p>Total value of transactions for NFTs from the collection</p>
                 </div>
               }>
               <Info className='mr-1' />
@@ -60,7 +60,7 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
                   className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
                 >
                   <p className='mb-3'>Supply</p>
-                  <p>Analytics will provide the underlying infrastructure to power NFT data across NFT.com.</p>
+                  <p>Amount of NFTs in the collection</p>
                 </div>
               }>
               <Info className='mr-1' />
@@ -78,7 +78,7 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
                   className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
                 >
                   <p className='mb-3'>Owners</p>
-                  <p>Analytics will provide the underlying infrastructure to power NFT data across NFT.com.</p>
+                  <p>Amount of unique addresses holding NFTs from the collection</p>
                 </div>
               }>
               <Info className='mr-1' />
@@ -99,8 +99,8 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
                 <div
                   className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
                 >
-                  <p className='mb-3'>S/O Ratio</p>
-                  <p>Analytics will provide the underlying infrastructure to power NFT data across NFT.com.</p>
+                  <p className='mb-3'>Supply/Owners Ratio</p>
+                  <p>Ratio of supply compared to owners. Gives insight on NFTs owned per owner</p>
                 </div>
               }>
               <Info className='mr-1' />
@@ -117,8 +117,8 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
                 <div
                   className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]"
                 >
-                  <p className='mb-3'>Market Cap</p>
-                  <p>Analytics will provide the underlying infrastructure to power NFT data across NFT.com.</p>
+                  <p className='mb-3'>Market Capitalization</p>
+                  <p>Estimation of total value of all NFTs from the collection</p>
                 </div>
               }>
               <Info className='mr-1' />
