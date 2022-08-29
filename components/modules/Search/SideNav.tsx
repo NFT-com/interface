@@ -2,7 +2,7 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
 import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
-import { FiltersContent } from './FiltersContent';
+import { NFTsFiltersContent } from './NFTsFiltersContent';
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -96,7 +96,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
           color={'grey'} />}
         backgroundColor={'bg-[#C2C2C2]'}
         onOptionNav={setFilters}>
-        <FiltersContent />
+        <NFTsFiltersContent />
       </OptionNav>}
     </div>
   );

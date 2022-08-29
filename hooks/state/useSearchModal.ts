@@ -7,7 +7,7 @@ export function useSearchModal() {
   const { data, mutate } = useSWR('searchmodal', {
     fallbackData:
     {
-      modalType: 'search',
+      modalType: '',
       searchModalOpen: false,
       sideNavOpen: false,
       searchFilters: [],
@@ -17,7 +17,8 @@ export function useSearchModal() {
       clearedFilters: true,
       curatedCollections: null,
       selectedCuratedCollection: null,
-
+      collectionPageSortyBy: '',
+      id: '',
     } });
 
   const loading = !data;
@@ -30,18 +31,21 @@ export function useSearchModal() {
   };
 
   const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search', searchFilters?: any) => {
-    const filtersList = data.filtersList ?? (searchModalOpen && searchFilters?.map((item) => {
-      return {
-        filter: item.field_name,
-        values: []
-      };
-    }));
+    console.log(data, 'data modal open false');
+    const filtersList = modalType !== 'collectionFilters' ?
+      data.filtersList ?? (searchModalOpen && searchFilters?.map((item) => {
+        return {
+          filter: item.field_name,
+          values: []
+        };
+      }))
+      : [];
     mutate({
       ...data,
       searchModalOpen,
       modalType,
       searchFilters,
-      filtersList
+      filtersList,
     });
   }, [data, mutate]);
 
@@ -117,6 +121,15 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setCollectionPageAppliedFilters = useCallback((collectionPageSortyBy: string, id: string, searchModalOpen = true) => {
+    mutate({
+      ...data,
+      searchModalOpen,
+      id,
+      collectionPageSortyBy
+    });
+  },[data, mutate]);
+
   return {
     loading,
     modalType: data.modalType,
@@ -129,6 +142,8 @@ export function useSearchModal() {
     clearedFilters: data.clearedFilters,
     curatedCollections: data.curatedCollections,
     selectedCuratedCollection: data.selectedCuratedCollection,
+    collectionPageSortyBy: data.collectionPageSortyBy,
+    id: data.id,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
@@ -138,7 +153,8 @@ export function useSearchModal() {
     setClearedFilters,
     setSearchFilters,
     setCuratedCollections,
-    setSelectedCuratedCollection
+    setSelectedCuratedCollection,
+    setCollectionPageAppliedFilters
   };
 }
 

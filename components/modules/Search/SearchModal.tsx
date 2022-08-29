@@ -2,7 +2,8 @@ import { Modal } from 'components/elements/Modal';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
-import { FiltersContent } from './FiltersContent';
+import { CollectionsFiltersContent } from './CollectionsFiltersContent';
+import { NFTsFiltersContent } from './NFTsFiltersContent';
 import { SearchContent } from './SearchContent';
 
 export const SearchModal = () => {
@@ -25,7 +26,9 @@ export const SearchModal = () => {
         'text-primary-txt',
         'py-5'
       )}>
-        {modalType === 'search' ? <SearchContent /> : <FiltersContent />}
+        {modalType === 'search' && <SearchContent />}
+        {modalType === 'filters' && <NFTsFiltersContent />}
+        {modalType === 'collectionFilters' && <CollectionsFiltersContent />}
       </div>
     </Modal>);
 };

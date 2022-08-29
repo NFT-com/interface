@@ -16,10 +16,8 @@ import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
 import { getCollection } from 'lib/contentful/api';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
-import Vector from 'public/Vector.svg';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
 
@@ -111,7 +109,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }
 
   return (
-    <div className="mt-20 mb-10">        
+    <div className="mt-20 mb-10">
       <div className="flex">
         <div className="hidden minlg:block">
           <SideNav onSideNav={() => null} filtersData={filters}/>

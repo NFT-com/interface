@@ -129,7 +129,6 @@ const CurrencyPriceFilter = (props: any) => {
       <DropdownPicker
         placeholder={'Currency'}
         selectedIndex={0}
-        lightModeForced
         options={[
           {
             label: 'ETH',
@@ -260,7 +259,7 @@ const Filter = (props: any) => {
   );
 };
 
-export const FiltersContent = () => {
+export const NFTsFiltersContent = () => {
   const {
     setSearchModalOpen,
     searchFilters,
@@ -280,7 +279,7 @@ export const FiltersContent = () => {
         <div
           className="block minmd:hidden flex p-5 justify-end cursor-pointer"
           onClick={() => {
-            filtersList.forEach((item) => {
+            filtersList?.forEach((item) => {
               item.values = [];
             });
             setSearchModalOpen(false);
@@ -292,7 +291,6 @@ export const FiltersContent = () => {
           <div className="self-start font-black text-lg font-grotesk mb-3">Sort</div>
           <DropdownPicker
             selectedIndex={selectedIndex}
-            lightModeForced
             options={[
               {
                 label: 'Price: Low to High',

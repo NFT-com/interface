@@ -12,8 +12,6 @@ import { getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { getCollection } from 'lib/contentful/api';
-import Link from 'next/link';
-import Vector from 'public/Vector.svg';
 import { useEffect, useMemo, useState } from 'react';
 
 export default function DiscoverPage({ data }: DiscoverPageProps) {

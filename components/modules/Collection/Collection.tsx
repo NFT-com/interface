@@ -5,13 +5,17 @@ import { CollectionAnalyticsContainer } from 'components/modules/Collection/Coll
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
+import { SideNav } from '../Search/SideNav';
+
 import { Tab } from '@headlessui/react';
 import router from 'next/router';
+import { FunnelSimple } from 'phosphor-react';
 import CopyIcon from 'public/arrow_square_out.svg';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
@@ -23,6 +27,7 @@ export interface CollectionProps {
 
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
+  const { setSearchModalOpen, collectionPageSortyBy, id } = useSearchModal();
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -59,13 +64,16 @@ export function Collection(props: CollectionProps) {
         'q'       : props.contract.toString(),
         'query_by': 'contractAddr',
         'per_page': 8,
-        'page'    : currentPage
+        'page'    : currentPage,
+        'sort_by': collectionPageSortyBy,
+        'filter_by': id,
+        'facet_by': 'tokenId'
       })
       .then(function (nftsResults) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-  }, [client, currentPage, props.contract]);
+  }, [client, collectionPageSortyBy, currentPage, id, props.contract]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage !== prevVal) {
@@ -75,14 +83,17 @@ export function Collection(props: CollectionProps) {
           'q'       : props.contract.toString(),
           'query_by': 'contractAddr',
           'per_page': 8,
-          'page'    : currentPage
+          'page'    : currentPage,
+          'sort_by': collectionPageSortyBy,
+          'filter_by': id,
+          'facet_by': 'tokenId'
         })
         .then(function (nftsResults) {
           setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
           setFound(nftsResults.found);
         });
     }
-  }, [client, collectionNfts, currentPage, prevVal, props.contract]);
+  }, [client, collectionNfts, collectionPageSortyBy, currentPage, id, prevVal, props.contract]);
 
   return (
     <>
@@ -97,27 +108,45 @@ export function Collection(props: CollectionProps) {
         {collectionNfts.length > 0 ?
           <>
             {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-            <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
-              <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
-                {Object.keys(tabs).map((tab) => (
-                  <Tab
-                    key={tab}
-                    className={({ selected }) =>
-                      tw(
-                        'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
-                        selected
-                        && 'bg-black text-[#F8F8F8]'
-                      )
-                    }
-                  >
-                    {tabs[tab]}
-                  </Tab>
-                ))}
-              </Tab.List>
-            </Tab.Group>
+            <div className="minlg:flex">
+              <div className="hidden minlg:block">
+                <SideNav onSideNav={() => null} />
+              </div>
+              <div className="w-full items-center">
+                <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
+                  <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
+                    {Object.keys(tabs).map((tab) => (
+                      <Tab
+                        key={tab}
+                        className={({ selected }) =>
+                          tw(
+                            'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
+                            selected
+                            && 'bg-black text-[#F8F8F8]'
+                          )
+                        }
+                      >
+                        {tabs[tab]}
+                      </Tab>
+                    ))}
+                  </Tab.List>
+                </Tab.Group>
+              </div>
+            </div>
             }
             {selectedTab === 'NFTs' &&
             <>
+              <div className="block minlg:hidden grid grid-cols-2 my-3">
+                <div></div>
+                <div
+                  className="cursor-pointer flex flex-row items-center "
+                  onClick={() => {
+                    setSearchModalOpen(true, 'collectionFilters' );
+                  }}>
+                  <FunnelSimple className="h-8 w-8" />
+                  Filter
+                </div>
+              </div>
               <div className="font-grotesk font-black text-black text-4xl max-w-nftcom minxl:mx-auto">{collectionNfts[0].document.contractName}</div>
               <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F] max-w-nftcom minxl:mx-auto">
                 <span>{shortenAddress(props.contract?.toString())}</span>
