@@ -91,7 +91,7 @@ export function ListingCheckout() {
           No NFTs staged for listing
           </div>
         }
-        {!showSummary && <Button
+        {!showSummary && toList.length > 0 && <Button
           label={'Next'}
           onClick={async () => {
             await prepareListings();
@@ -101,13 +101,9 @@ export function ListingCheckout() {
         />}
       </div>
       <div className='flex flex-col p-8 w-full'>
-        {showSummary &&
-        <>
-          <p className="text-xl font-bold">
-          Summary and fees for {toList?.length ?? 0} NFTs
-          </p>
-          <NFTListingsCartSummary />
-        </>}
+        {showSummary && toList.length > 0 &&
+        <NFTListingsCartSummary />
+        }
       </div>
     </div>
   );
