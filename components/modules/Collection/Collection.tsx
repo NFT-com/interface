@@ -6,6 +6,7 @@ import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useGetCollectionByAddress } from 'hooks/analytics/graph/useGetCollectionByAddress';
+import { getFloorPrice } from 'utils/alchemyNFT';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -47,6 +48,10 @@ export function Collection(props: CollectionProps) {
     }
     return imgUrl;
   } );
+
+  const { data: floorPrice } = useSWR('FloorPrice' + props.contract?.toString(), async () => {
+    return await getFloorPrice(props.contract?.toString());
+  });
 
   const tabs = {
     0: 'NFTs',
@@ -181,7 +186,7 @@ export function Collection(props: CollectionProps) {
           </div>
           }
           <div className='w-full minlg:w-1/2'>
-            <CollectionInfo hasDescription={true} />
+            <CollectionInfo floorPrice={floorPrice?.openSea?.floorPrice} hasDescription={true} />
           </div>
         </div>
       </div>

@@ -6,9 +6,10 @@ import { useState } from 'react';
 export type CollectionInfoProps = {
   data?: any[];
   hasDescription?: boolean
+  floorPrice?: number
 }
 
-export const CollectionInfo = ({ data, hasDescription }: CollectionInfoProps) => {
+export const CollectionInfo = ({ data, hasDescription, floorPrice }: CollectionInfoProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div className="bg-[#F8F8F8] px-6 pt-6  pb-4 minmd:pb-6 rounded-[10px] font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minxl:gap-12">
@@ -31,7 +32,7 @@ export const CollectionInfo = ({ data, hasDescription }: CollectionInfoProps) =>
             Floor
           </p>
           <div className='text-right relative'>
-            <p className='font-medium'>12 ETH</p>
+            <p className='font-medium'>{floorPrice} ETH</p>
             <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>$19K</p>
           </div>
         </div>
