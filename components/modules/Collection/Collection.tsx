@@ -16,7 +16,7 @@ import { CollectionInfo } from './CollectionInfo';
 import { Tab } from '@headlessui/react';
 import Image from 'next/image';
 import router from 'next/router';
-import { ArrowClockwise, FunnelSimple } from 'phosphor-react';
+import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import useSWR from 'swr';
@@ -37,6 +37,7 @@ export function Collection(props: CollectionProps) {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
+  console.log('🚀 ~ file: Collection.tsx ~ line 40 ~ Collection ~ collectionData', collectionData);
   const collectionInfo = useGetCollectionByAddress(props.contract?.toString());
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
@@ -105,35 +106,22 @@ export function Collection(props: CollectionProps) {
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
-            {props.profile &&
-              <div className='relative h-10 w-10'>
-                <Image src={props.profile?.photoURL || 'https://cdn.nft.com/profile-image-default.svg'} alt='test' className='rounded-[10px] mr-2' layout='fill' objectFit='cover' />
-              </div>
-            }
             <div className={tw(
               'flex flex-col justify-between',
               props.profile && 'ml-2'
             )}>
               <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
-              {props.profile
-                ? (
-                  <p className='font-bold underline decoration-[#F9D963] underline-offset-4'>{props.profile.url}</p>
-                )
-                : (
-                  <div className='flex mt-1 text-[#B59007] font-medium font-mono'>
-                    <span>{shortenAddress(props.contract?.toString(), 4)}</span>
-                    <a
-                      target="_blank"
-                      rel="noreferrer"
-                      href={`https://etherscan.io/address/${props.contract?.toString()}`}
-                      className='font-bold underline tracking-wide'
-                    >
-                      <LinkIcon size={20} className='ml-1' />
-                    </a>
-                  </div>
-                )
-              }
-            
+              <div className='flex mt-1 text-[#B59007] font-medium font-mono'>
+                <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`https://etherscan.io/address/${props.contract?.toString()}`}
+                  className='font-bold underline tracking-wide'
+                >
+                  <LinkIcon size={20} className='ml-1' />
+                </a>
+              </div>
             </div>
           </div>
 
