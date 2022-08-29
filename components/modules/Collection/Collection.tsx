@@ -19,7 +19,6 @@ import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import useSWR from 'swr';
-import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
@@ -27,7 +26,6 @@ export interface CollectionProps {
 }
 
 export function Collection(props: CollectionProps) {
-  const { chain } = useNetwork();
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -35,7 +33,7 @@ export function Collection(props: CollectionProps) {
   const [found, setFound] = useState(0);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
-  const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
+  const { data: collectionData } = useCollectionQuery(String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
   const collectionInfo = useGetCollectionByAddress(props.contract?.toString());
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
