@@ -6,7 +6,7 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler,getEnv } from 'utils/env';
-import { getEtherscanLink, isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
