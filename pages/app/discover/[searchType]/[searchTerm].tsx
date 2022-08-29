@@ -9,6 +9,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import NotFoundPage from 'pages/404';
+import { ResultsPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -30,17 +31,24 @@ function usePrevious(value) {
   return ref.current;
 }
 
-export default function ResultsPage() {
-  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy } = useSearchModal();
+export default function ResultsPage({ data }: ResultsPageProps) {
+  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy, setCuratedCollections, curatedCollections } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const { width: screenWidth } = useWindowDimensions();
+
   const [results, setResults] = useState([]);
   const [found, setFound] = useState(0);
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
   const [filters, setFilters] = useState([]);
+  
+  useEffect(() => {
+    if (isNullOrEmpty(curatedCollections)) {
+      setCuratedCollections(data);
+    }
+  }, [curatedCollections, data, setCuratedCollections]);
 
   const checkedFiltersString = useCallback(() => {
     let checkedFiltersString = '';
@@ -103,18 +111,7 @@ export default function ResultsPage() {
   }
 
   return (
-    <div className="mt-20">
-      <Link href='/app/auctions' passHref>
-        <a>
-          <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap'>
-            <span>Mint yourself! Get a free profile</span>
-            <div className='flex flex-col rounded items-center p-[1px] ml-2'>
-              <Vector />
-            </div>
-          </div>
-        </a>
-      </Link>
-        
+    <div className="mt-20 mb-10">        
       <div className="flex">
         <div className="hidden minlg:block">
           <SideNav onSideNav={() => null} filtersData={filters}/>
@@ -183,7 +180,7 @@ export default function ResultsPage() {
                   </div>);
               })}
             </div>
-            {results.length < found && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+            {results.length < found && <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
               <Button
                 color={'black'}
                 accent={AccentType.SCALE}

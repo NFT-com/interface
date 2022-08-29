@@ -1,32 +1,33 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
-import { max } from 'utils/helpers';
+import { isNullOrEmpty, max } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
-import { NFTListingsContext } from './NFTListingsContext';
+import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
-import { useProvider } from 'wagmi';
+import { useProvider, useSigner } from 'wagmi';
 
-export function NFTListingsCartSidebarSummary() {
+export function NFTListingsCartSummary() {
   const {
     toList,
     listAll,
     approveCollection,
     toggleCartSidebar,
-    clear
+    clear,
   } = useContext(NFTListingsContext);
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
+  const { data: signer } = useSigner();
 
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<Maybe<'ApprovalError' | 'ListingError'>>(null);
+  const [error, setError] = useState<Maybe<'ApprovalError' | 'ListingError' | 'ConnectionError'>>(null);
 
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
@@ -37,6 +38,18 @@ export function NFTListingsCartSidebarSummary() {
       refreshInterval: 0,
       revalidateOnFocus: false,
     });
+
+  const allListingsConfigured = useCallback(() => {
+    const unconfigured = toList.find((listing: StagedListing) => {
+      return listing.startingPrice == null || BigNumber.from(listing.startingPrice).eq(0) ||
+              listing.nft == null ||
+              listing.duration == null ||
+              isNullOrEmpty(listing.currency) ||
+              isNullOrEmpty(listing.targets) ||
+              (listing.seaportParameters == null && listing.looksrareOrder == null);
+    });
+    return unconfigured == null;
+  }, [toList]);
 
   const getMaxMarketplaceFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
@@ -51,7 +64,7 @@ export function NFTListingsCartSidebarSummary() {
           return BigNumber.from(multiplyBasisPoints(stagedListing?.startingPrice ?? 0, 250));
         }
       });
-      return cartTotal.add(max(...feesByMarketplace));
+      return cartTotal.add(max(...feesByMarketplace) ?? 0);
     }, BigNumber.from(0));
   }, [toList, looksrareProtocolFeeBps]);
  
@@ -72,7 +85,7 @@ export function NFTListingsCartSidebarSummary() {
             0);
         }
       });
-      return cartTotal.add(max(...royaltiesByMarketplace));
+      return cartTotal.add(max(...royaltiesByMarketplace) ?? 0);
     }, BigNumber.from(0));
   }, [looksrareProtocolFeeBps, toList]);
 
@@ -84,7 +97,7 @@ export function NFTListingsCartSidebarSummary() {
 
   const getTotalProfit = useCallback(() => {
     const total = toList?.reduce((cartTotal, stagedListing) => {
-      return BigNumber.from(stagedListing?.startingPrice).add(cartTotal);
+      return BigNumber.from(stagedListing?.startingPrice ?? 0).add(cartTotal);
     }, BigNumber.from(0));
 
     return total.sub(getMaxMarketplaceFees()).sub(getMaxRoyaltyFees());
@@ -108,6 +121,7 @@ export function NFTListingsCartSidebarSummary() {
                 nodes={[
                   {
                     label: 'Initialize Wallet',
+                    error: error === 'ConnectionError'
                   },
                   {
                     label: 'Approve Collections for Sale',
@@ -163,13 +177,18 @@ export function NFTListingsCartSidebarSummary() {
         <Button
           stretch
           loading={showProgressBar && !error && !success}
-          disabled={showProgressBar && !error && !success}
+          disabled={!allListingsConfigured() || (showProgressBar && !error && !success)}
           label={success ? 'Finish' : error ? 'Try Again' : 'List Now'}
           onClick={async () => {
             if (success) {
               clear();
               setSuccess(false);
               toggleCartSidebar();
+              return;
+            }
+
+            if (signer == null) {
+              setError('ConnectionError');
               return;
             }
 

@@ -19,7 +19,7 @@ export function useProfileQuery(
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
   
-  const keyString = 'ProfileQuery ' + url;
+  const keyString = 'ProfileQuery ' + url + chain?.id;
 
   const { data, error } = useSWR(keyString, async () => {
     if (isNullOrEmpty(url)) {

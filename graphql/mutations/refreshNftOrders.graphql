@@ -1,0 +1,3 @@
+mutation RefreshNftOrders($id: ID!) {
+  refreshNFTOrder(id: $id)
+}

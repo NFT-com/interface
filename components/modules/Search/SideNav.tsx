@@ -5,6 +5,7 @@ import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
 import { FiltersContent } from './FiltersContent';
 
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import CaretCircle from 'public/caret_circle.svg';
 import Flask from 'public/flask.svg';
@@ -19,6 +20,7 @@ export interface OptionNavProps {
 }
 
 export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
+  const { route } = useRouter();
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const { sideNavOpen, setSideNavOpen } = useSearchModal();
 
@@ -30,14 +32,14 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
         <div
           className="flex items-center pl-1 cursor-pointer"
           onClick={() => {
-            setIsFilterCollapsed(!isFilterCollapsed);
+            setIsFilterCollapsed(route === '/app/discover' ? false : !isFilterCollapsed);
             props.onOptionNav && props.onOptionNav();
           }}>
           {props.icon}
           <span className="text-black text-lg minmd:text-xl font-medium ml-2">{props.title}</span>
         </div>
         <div className="cursor-pointer">
-          {sideNavOpen
+          {sideNavOpen || route === '/app/discover'
             ? <CaretCircle
               onClick={() => {
                 setSideNavOpen(false);
@@ -54,7 +56,7 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
       </div>
       <motion.div
         animate={{
-          height: !sideNavOpen || isFilterCollapsed ? 0 : 'auto' }}
+          height: route === '/app/discover' ? 'auto' : !sideNavOpen || isFilterCollapsed ? 0 : 'auto' }}
         transition={{ duration: 0.2 }}
         className={tw('overflow-hidden')}
       >
@@ -66,6 +68,8 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
 
 export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?: any}) => {
   const { sideNavOpen, setSearchFilters } = useSearchModal();
+  const { route } = useRouter();
+
   const setFilters = () => {
     setSearchFilters(props.filtersData);
   };
@@ -73,11 +77,12 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
   useEffect(() => {
     setSearchFilters(props.filtersData);
   }, [props.filtersData, setSearchFilters]);
+
   return(
     <div
       className={tw(
         'flex-shrink-0 w-80 flex flex-col border-r transition-all duration-300',
-        sideNavOpen? '' : '-ml-64')}>
+        route === '/app/discover' ? '' : sideNavOpen ? '' : '-ml-64')}>
       <OptionNav
         title={'Curations'}
         icon={<Flask />}
