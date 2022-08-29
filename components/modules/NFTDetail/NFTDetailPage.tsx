@@ -101,8 +101,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         </div>
       </>}
       <div className='w-full flex flex-col minlg:flex-row p-4 '>
-        {
-          getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+        {(getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) && chain?.id === 1) &&
             <div className="minlg:w-1/2 w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
               <NFTAnalyticsContainer data={nft} />
             </div>

@@ -51,14 +51,14 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const nftPriceHistory = useGetNftPriceHistory(nftId, dateFrom);
 
   useEffect(() => {
-    if(chain.id !== 1) {
+    if(chain?.id !== 1) {
       setNftData(null);
       return;
     }
     if(selectedChartType === 'Price') {
       setNftData(nftPriceHistory?.prices?.length === 0 ? null : nftPriceHistory);
     }
-  }, [nftPriceHistory, selectedTimeFrame, selectedChartType, chain.id]);
+  }, [nftPriceHistory, selectedTimeFrame, selectedChartType, chain]);
 
   return (
     <div className="bg-transparent">

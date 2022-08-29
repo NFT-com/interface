@@ -76,9 +76,9 @@ export const NFTDetail = (props: NFTDetailProps) => {
           <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
             {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
           </div>
-          <h3 className='font-grotesk font-bold text-2xl leading-9'>
+          <div className='font-grotesk font-bold text-2xl leading-9'>
             {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${BigNumber.from(props.nft?.tokenId).toNumber()}`}
-          </h3>
+          </div>
         </div>
         <div className='flex flex-col w-1/2 pl-24 -mt-1'>
           <div
