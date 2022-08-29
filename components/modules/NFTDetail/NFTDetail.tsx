@@ -55,24 +55,26 @@ export const NFTDetail = (props: NFTDetailProps) => {
   }, [props, refreshNft, refreshNftOrders]);
   
   return (
-    <div className="flex flex-col w-screen" id="NFTDetailContainer" key={props.nft?.id}>
+    <div className="flex flex-col w-screen items-center" id="NFTDetailContainer" key={props.nft?.id}>
       {props.nft?.metadata?.imageURL &&
-        <div className="flex w-full h-full object-contain aspect-square drop-shadow-lg">
+      <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-[22px] minmd:px-[42px] minlg:py-[119px] minxl:px-[350px]'>
+        <div className="flex w-full max-w-[600px] h-full aspect-square object-contain drop-shadow-lg rounded-lg">
           <video
             autoPlay
             muted
             loop
             poster={processIPFSURL(props.nft?.metadata?.imageURL)}
-            className='rounded-md'
+            className='rounded-lg aspect-square'
             src={processIPFSURL(props.nft?.metadata?.imageURL)}
             key={props.nft?.id}
           />
         </div>
+      </div>
       }
       <div className={tw(
-        'flex flex-row w-full mt-8 py-4 pl-4',
+        'flex items-center w-full mt-8 py-4 px-4 justify-between minmd:px-[17.5px] minlg:px-[128px]',
       )}>
-        <div className='flex flex-col w-1/2'>
+        <div className='flex flex-col'>
           <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
             {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
           </div>
@@ -80,7 +82,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${BigNumber.from(props.nft?.tokenId).toNumber()}`}
           </div>
         </div>
-        <div className='flex flex-col w-1/2 pl-24 -mt-1'>
+        <div className='flex flex-col pl-12 minmd:pr-12 -mt-1'>
           <div
             id="refreshNftButton"
             onClick={refreshNftCallback}
@@ -93,20 +95,19 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
         </div>
       </div>
-
-      <div className='flex flex-row items-center w-full h-full py-4 pl-4'>
+      <div className='flex flex-row items-center w-full h-full py-4 px-4 minmd:px-[17.5px] minlg:px-[128px]'>
         {//todo: show collection owner pic
         }
         <div className='flex flex-col h-full'>
-          {collectionOwnerToShow?.photoURL && <div className="flex flex-col h-[42px] w-[42px]">
+          {<div className="flex flex-col h-[42px] w-[42px]">
             <img
               className='rounded-md aspect-square h-full w-full'
-              src={collectionOwnerToShow?.photoURL}
+              src={collectionOwnerToShow?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
               alt='creator-profile-pic'
             />
           </div>}
         </div>
-        <div className='flex flex-col w-1/2 h-full'>
+        <div className='flex flex-col w-1/2 h-full minlg:-mr-40'>
           <div className='flex flex-col h-full'>
             <span className='flex flex-col pl-[11px] -mt-2 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
             CREATOR
@@ -138,7 +139,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             }
           </div>
         </div>
-        <div className='flex flex-col h-full'>
+        <div className='flex flex-col h-full minlg:-ml-32'>
           {profileOwnerToShow?.photoURL && <div className="flex flex-col h-[42px] w-[42px]">
             <img
               className='rounded-md aspect-square h-full w-full'
