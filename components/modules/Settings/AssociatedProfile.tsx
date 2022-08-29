@@ -132,7 +132,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                 </div>
               }
             >
-              <Clock size={25} className='mr-3' color='orange' weight='fill' />
+              <Clock data-cy="PendingProfile" size={25} className='mr-3' color='orange' weight='fill' />
             </CustomTooltip>
             :
             isRemoved
@@ -152,7 +152,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                       </div>
                     }
                   >
-                    <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                    <XCircle data-cy="RemovedProfile" size={25} className='mr-3' color='#D40909' weight='fill' />
                   </CustomTooltip>
               )
               :
@@ -168,7 +168,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                     </div>
                   }
                 >
-                  <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
+                  <CheckCircle data-cy="ApprovedProfile" size={25} className='mr-3 rounded-full' color='green' weight="fill" />
                 </CustomTooltip>
               )
           }
@@ -229,7 +229,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
                 icon: null,
               }
             ])}>
-            <DotsThreeOutlineVertical size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
+            <DotsThreeOutlineVertical data-cy="ProfileDropdown" size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
           </DropdownPickerModal>
         </div>
       </div>

@@ -1234,6 +1234,12 @@ export enum ProfileViewType {
   Gallery = 'Gallery'
 }
 
+export type ProfilesByDisplayNftInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  collectionAddress?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['String']>;
+};
+
 export type ProfilesInput = {
   pageInput?: InputMaybe<PageInput>;
   statuses?: InputMaybe<Array<InputMaybe<ProfileStatus>>>;
@@ -1310,6 +1316,7 @@ export type Query = {
   profile: Profile;
   profileFollowers: FollowersOutput;
   profilePassive: Profile;
+  profilesByDisplayNft: ProfilesOutput;
   /** AUTHENTICATED */
   profilesFollowedByMe: ProfilesOutput;
   topBids: BidsOutput;
@@ -1536,6 +1543,11 @@ export type QueryProfileFollowersArgs = {
 export type QueryProfilePassiveArgs = {
   chainId?: InputMaybe<Scalars['String']>;
   url: Scalars['String'];
+};
+
+
+export type QueryProfilesByDisplayNftArgs = {
+  input: ProfilesByDisplayNftInput;
 };
 
 
@@ -2518,6 +2530,13 @@ export type ProfileNfTsMutationVariables = Exact<{
 
 
 export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', contract?: any | null, id: string, tokenId: any, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
+
+export type ProfilesByDisplayedNftQueryVariables = Exact<{
+  input: ProfilesByDisplayNftInput;
+}>;
+
+
+export type ProfilesByDisplayedNftQuery = { __typename?: 'Query', profilesByDisplayNft: { __typename?: 'ProfilesOutput', totalItems?: number | null, items: Array<{ __typename?: 'Profile', id: string, photoURL?: string | null, url: string }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
 export type RecentProfilesQueryVariables = Exact<{
   input?: InputMaybe<LatestProfilesInput>;
@@ -3804,6 +3823,22 @@ export const ProfileNfTsDocument = gql`
   }
 }
     `;
+export const ProfilesByDisplayedNftDocument = gql`
+    query ProfilesByDisplayedNft($input: ProfilesByDisplayNftInput!) {
+  profilesByDisplayNft(input: $input) {
+    items {
+      id
+      photoURL
+      url
+    }
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+  }
+}
+    `;
 export const RecentProfilesDocument = gql`
     query RecentProfiles($input: LatestProfilesInput) {
   latestProfiles(input: $input) {
@@ -4084,6 +4119,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     ProfileNFTs(variables?: ProfileNfTsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfileNfTsMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfileNfTsMutation>(ProfileNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfileNFTs', 'mutation');
+    },
+    ProfilesByDisplayedNft(variables: ProfilesByDisplayedNftQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfilesByDisplayedNftQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfilesByDisplayedNftQuery>(ProfilesByDisplayedNftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfilesByDisplayedNft', 'query');
     },
     RecentProfiles(variables?: RecentProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RecentProfilesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<RecentProfilesQuery>(RecentProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RecentProfiles', 'query');

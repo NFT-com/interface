@@ -1,5 +1,4 @@
 import { Maybe } from 'graphql/generated/types';
-import { ValidTimeFrame } from 'types';
 
 import { Doppler, getEnv } from './env';
 
@@ -182,6 +181,16 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen: bool
     } else {
       perPage = 2;
     }
+  } else if (index === 'discover') {
+    if (screenWidth >= 1200) {
+      perPage = sideNavOpen ? 9 : 8;
+    } else if (screenWidth >= 900 ) {
+      perPage = sideNavOpen ? 6 : 8;
+    } else if (screenWidth >= 600) {
+      perPage = 4;
+    } else {
+      perPage = 2;
+    }
   } else {
     if (screenWidth >= 1200) {
       perPage = 8;
@@ -222,28 +231,5 @@ export function getDateFromTimeFrame(timeFrame: string) {
   }
   if(timeFrame === '1Y') {
     return moment().subtract(1, 'year');
-  }
-}
-
-export function getAnalyticsEndpoint(api: string) {
-  if(api === 'GQL') {
-    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
-      return 'https://xbutmk6nl7.execute-api.us-east-1.amazonaws.com/graphql';
-    }
-  }
-  if(api === 'Graph') {
-    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
-      return 'https://p35hl729o9.execute-api.us-east-1.amazonaws.com/graphql';
-    }
-  }
-  if(api === 'Event') {
-    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
-      return 'https://oqsslkak4c.execute-api.us-east-1.amazonaws.com';
-    }
-  }
-  if(api === 'Aggregation') {
-    if(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) === 'http://localhost:3000/') {
-      return 'https://2rx187aj95.execute-api.us-east-1.amazonaws.com';
-    }
   }
 }

@@ -7,8 +7,9 @@ import { getDateFromTimeFrame } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PartialDeep } from 'type-fest';
+import { useNetwork } from 'wagmi';
 
 export type CollectionAnalyticsContainerProps = {
   data: PartialDeep<CollectionInfo>;
@@ -29,20 +30,35 @@ const marketplaces = {
 };
 
 export const CollectionAnalyticsContainer = ({ data }: CollectionAnalyticsContainerProps) => {
+  const { chain } = useNetwork();
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
-  const collectionId = useGetCollectionByAddress(data?.collection?.contract);
+  const [collectionLineData, setCollectionLineData] = useState(null);
+  const [collectionBarData, setCollectionBarData] = useState(null);
 
   const dateFrom = useMemo(() => {
     return getDateFromTimeFrame(selectedTimeFrame);
   }, [selectedTimeFrame]);
 
+  const collectionId = useGetCollectionByAddress(data?.collection?.contract);
   const collectionSalesHistory = useGetCollectionSalesHistory(collectionId, dateFrom);
+
+  useEffect(() => {
+    if(chain.id !== 1) {
+      setCollectionLineData(null);
+      setCollectionBarData(null);
+      return;
+    } else {
+      setCollectionLineData(collectionSalesHistory);
+      setCollectionBarData(collectionSalesHistory);
+    }
+  }, [chain.id, collectionSalesHistory]);
 
   return (
     <>
       <div className="bg-transparent">
+        {(collectionLineData && collectionBarData) &&
         <Tab.Group
           onChange={(index) => {
             setSelectedTimeFrame(timeFrames[index]);
@@ -67,10 +83,11 @@ export const CollectionAnalyticsContainer = ({ data }: CollectionAnalyticsContai
             ))}
           </Tab.List>
         </Tab.Group>
+        }
         <LineChart
           label={'Floor Price'}
           showMarketplaceOptions={false}
-          data={collectionSalesHistory}
+          data={collectionLineData}
           currentMarketplace={selectedMarketplace}
           setCurrentMarketplace={(selectedMarketplace: string) => {
             setSelectedMarketplace(selectedMarketplace);
@@ -80,11 +97,8 @@ export const CollectionAnalyticsContainer = ({ data }: CollectionAnalyticsContai
       <div className='bg-transparent'>
         <BarGraph
           label={'Volume'}
-          data={data}
+          data={collectionBarData}
           currentMarketplace={selectedMarketplace}
-          setCurrentMarketplace={(selectedMarketplace: string) => {
-            setSelectedMarketplace(selectedMarketplace);
-          }}
         />
       </div>
     </>

@@ -48,12 +48,12 @@ export function ExternalListings(props: ExternalListingsProps) {
     return (
       getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
         currentAddress === props.nft?.wallet?.address &&
-        <div className='w-full flex'>
-          <div className="flex flex-col items-center bg-white dark:bg-secondary-bg-dk rounded-xl py-5 px-12 my-6">
-            <span className='dark:text-white mb-4'>This item is in your wallet</span>
+        <div className='w-full flex py-4 pb-8 px-4 minmd:px-[17.5px] minlg:px-[128px]'>
+          <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full p-4 minmd:py-8 minmd:px-20">
+            <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>This item is in your wallet</span>
             <Button
-              label={'List Item'}
-              color="white"
+              stretch
+              label={'List item'}
               onClick={() => {
                 stageListing({
                   nft: props.nft,

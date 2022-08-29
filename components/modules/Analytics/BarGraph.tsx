@@ -1,39 +1,32 @@
 import { isNullOrEmpty } from 'utils/helpers';
 
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React from 'react';
 import { Bar, BarChart, ResponsiveContainer,Tooltip, XAxis, YAxis } from 'recharts';
 
 export type BarGraphProps = {
   data: any;
   label: string;
   currentMarketplace: string;
-  setCurrentMarketplace?: Dispatch<SetStateAction<string>>,
 };
 
-const marketplaces = {
-  0: 'OpenSea',
-  1: 'LooksRare'
-};
-
-export const BarGraph = ({ data, label, currentMarketplace, setCurrentMarketplace } : BarGraphProps) => {
-  const [selectedMarketplace, setSelectedMarketplace] = useState(currentMarketplace);
-
+export const BarGraph = ({ data, label, currentMarketplace } : BarGraphProps) => {
   return (
     <div className='bg-transparent'>
       <span className='flex flex-row w-full'>
         {label}
       </span>
-      {isNullOrEmpty(data) && <span>No data yet</span>}
-      <ResponsiveContainer width="100%" height={270} >
-        <BarChart data={data} margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
-
-          <XAxis dataKey="name" />
-          <YAxis orientation={'right'} />
-          <Tooltip />
-          <Bar dataKey="pv" fill="#8884d8" />
-        </BarChart>
-      </ResponsiveContainer>
-      
+      {isNullOrEmpty(data) ?
+        <span>No data yet</span>
+        :
+        <ResponsiveContainer width="100%" height={270} >
+          <BarChart data={data} margin={{ top: 5, right: 0, bottom: 5, left: 0 }}>
+            <XAxis dataKey="name" />
+            <YAxis orientation={'right'} />
+            <Tooltip />
+            <Bar dataKey="pv" fill="#8884d8" />
+          </BarChart>
+        </ResponsiveContainer>
+      }
     </div>
   );
 };

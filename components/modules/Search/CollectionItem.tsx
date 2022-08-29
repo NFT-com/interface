@@ -19,9 +19,9 @@ export const CollectionItem = ({ contractAddr, contractName }: {contractAddr: st
         afterCursor: null, }
     }).then((collectionsData => {
       setCount(collectionsData?.collectionNFTs.items.length);
-      images.push(collectionsData?.collectionNFTs.items[0]?.metadata.imageURL);
-      images.push(collectionsData?.collectionNFTs.items[1]?.metadata.imageURL);
-      images.push(collectionsData?.collectionNFTs.items[2]?.metadata.imageURL);
+      images.push(collectionsData?.collectionNFTs.items[0]?.metadata.imageURL ?? null);
+      images.push(collectionsData?.collectionNFTs.items[1]?.metadata.imageURL ?? null);
+      images.push(collectionsData?.collectionNFTs.items[2]?.metadata.imageURL ?? null);
     }));
     return images;
   });

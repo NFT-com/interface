@@ -10,6 +10,7 @@ export interface BannerWrapperProps {
   loading?: boolean;
   onMouseEnter?: () => void,
   onMouseLeave?: () => void,
+  isCollection?: boolean
 }
 
 const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
@@ -25,7 +26,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
         'bg-no-repeat bg-cover bg-center',
-        'h-60 minxl:h-72',
+        props.isCollection ? 'h-[120px]' : 'h-60 minxl:h-72',
       )}
     >
       {props.loading && <div
