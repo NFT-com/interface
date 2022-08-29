@@ -1,18 +1,15 @@
 import { BarGraph } from 'components/modules/Analytics/BarGraph';
-import { LineChart } from 'components/modules/Analytics/LineChart';
-import { CollectionInfo } from 'graphql/generated/types';
-import { useGetCollectionSalesHistory } from 'hooks/analytics/aggregation/useGetCollectionSalesHistory';
-import { useGetCollectionByAddress } from 'hooks/analytics/graph/useGetCollectionByAddress';
-import { getDateFromTimeFrame } from 'utils/helpers';
+import { LineVis } from 'components/modules/Analytics/LineChart';
+import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
-import { useEffect, useMemo, useState } from 'react';
-import { PartialDeep } from 'type-fest';
+import moment from 'moment';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 export type CollectionAnalyticsContainerProps = {
-  data: PartialDeep<CollectionInfo>;
+  contract: string;
 }
 
 const timeFrames = {
@@ -29,31 +26,41 @@ const marketplaces = {
   1: 'LooksRare'
 };
 
-export const CollectionAnalyticsContainer = ({ data }: CollectionAnalyticsContainerProps) => {
+export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsContainerProps) => {
   const { chain } = useNetwork();
+  const collectionSalesHistory = useGetSalesStats(contract);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
+  const [singleDayVolume, setSingleDayVolume] = useState(null);
+  const [sevenDayVolume, setSevenDayVolume] = useState(null);
+  const [thirtyDayVolume, setThirtyDayVolume] = useState(null);
   const [collectionLineData, setCollectionLineData] = useState(null);
+
+  const now = moment();
+
+  const oneDayAgo = now.format('MM-DD-YYYY').toString();
+  const sevenDaysAgo = now.subtract(7, 'days').format('MM-DD-YYYY').toString();
+  const thirtyDaysAgo = now.subtract(30, 'days').format('MM-DD-YYYY').toString();
   const [collectionBarData, setCollectionBarData] = useState(null);
 
-  const dateFrom = useMemo(() => {
-    return getDateFromTimeFrame(selectedTimeFrame);
-  }, [selectedTimeFrame]);
-
-  const collectionId = useGetCollectionByAddress(data?.collection?.contract);
-  const collectionSalesHistory = useGetCollectionSalesHistory(collectionId, dateFrom);
-
   useEffect(() => {
-    if(chain.id !== 1) {
-      setCollectionLineData(null);
-      setCollectionBarData(null);
+    if(chain.id !== 1 || !collectionSalesHistory) {
       return;
     } else {
-      setCollectionLineData(collectionSalesHistory);
+      console.log(collectionSalesHistory?.statistics.floor_price_historic_thirty_day );
+      if(!collectionLineData) {
+        setCollectionLineData([{ 'date': thirtyDaysAgo, 'value': collectionSalesHistory?.statistics.floor_price_historic_thirty_day },
+          { 'date': sevenDaysAgo, 'value': collectionSalesHistory?.statistics.floor_price_historic_seven_day },
+          { 'date': oneDayAgo, 'value': collectionSalesHistory?.statistics.floor_price_historic_one_day }]);
+      }
+      setSingleDayVolume({ 'date': oneDayAgo, 'value': collectionSalesHistory.statistics.one_day_volume });
+      setSevenDayVolume({ 'date': sevenDaysAgo, 'value': collectionSalesHistory.statistics.seven_day_volume });
+      setThirtyDayVolume({ 'date': thirtyDaysAgo, 'value': collectionSalesHistory.statistics.thirty_day_volume });
+
       setCollectionBarData(collectionSalesHistory);
     }
-  }, [chain.id, collectionSalesHistory]);
+  }, [chain.id, collectionLineData, collectionSalesHistory, oneDayAgo, sevenDaysAgo, thirtyDaysAgo]);
 
   return (
     <>
@@ -84,7 +91,7 @@ export const CollectionAnalyticsContainer = ({ data }: CollectionAnalyticsContai
           </Tab.List>
         </Tab.Group>
         }
-        <LineChart
+        <LineVis
           label={'Floor Price'}
           showMarketplaceOptions={false}
           data={collectionLineData}

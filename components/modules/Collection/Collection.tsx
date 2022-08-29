@@ -37,7 +37,7 @@ export function Collection(props: CollectionProps) {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
-  const collectionInfo = useGetCollectionByAddress(props.contract?.toString());
+  const collectionInfo = useGetCollectionByAddress(props?.contract?.toString());
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
     if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
@@ -296,7 +296,7 @@ export function Collection(props: CollectionProps) {
               <TxHistory />
             }
             {selectedTab === 'Analytics' &&
-              <CollectionAnalyticsContainer data={collectionData} />
+              <CollectionAnalyticsContainer contract={props?.contract} />
             }
           </>
           :
