@@ -14,7 +14,6 @@ import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';
-import Image from 'next/image';
 import router from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
@@ -37,7 +36,6 @@ export function Collection(props: CollectionProps) {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
-  console.log('🚀 ~ file: Collection.tsx ~ line 40 ~ Collection ~ collectionData', collectionData);
   const collectionInfo = useGetCollectionByAddress(props.contract?.toString());
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
@@ -184,7 +182,7 @@ export function Collection(props: CollectionProps) {
           </div>
           }
           <div className='w-full minlg:w-1/2'>
-            <CollectionInfo />
+            <CollectionInfo hasDescription={true} />
           </div>
         </div>
       </div>

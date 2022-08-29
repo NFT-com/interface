@@ -4,17 +4,19 @@ import { tw } from 'utils/tw';
 import { CaretDown, CaretUp, Info } from 'phosphor-react';
 import { useState } from 'react';
 export type CollectionInfoProps = {
-  data?: any[]
+  data?: any[];
+  hasDescription?: boolean
 }
 
-export const CollectionInfo = ({ data }: CollectionInfoProps) => {
+export const CollectionInfo = ({ data, hasDescription }: CollectionInfoProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div className="bg-[#F8F8F8] px-6 pt-6  pb-4 minmd:pb-6 rounded-[10px] font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minxl:gap-12">
       <div className='flex flex-col'>
         <div className="flex justify-between h-10">
-          <p className='self-center font-medium text-[#6F6F6F] flex items-center'>
+          <p className='self-center font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
+              rightPostion={!hasDescription && -100}
               mode="hover"
               tooltipComponent={
                 <div
@@ -34,8 +36,9 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
           </div>
         </div>
         <div className="flex justify-between mt-3">
-          <p className='font-medium text-[#6F6F6F] flex items-center'>
+          <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
+              rightPostion={!hasDescription && -100}
               mode="hover"
               tooltipComponent={
                 <div
@@ -52,8 +55,9 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
           <p className='self-center font-medium'>12K</p>
         </div>
         <div className="flex justify-between mt-4">
-          <p className='font-medium text-[#6F6F6F] flex items-center'>
+          <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
+              rightPostion={!hasDescription && -100}
               mode="hover"
               tooltipComponent={
                 <div
@@ -70,8 +74,9 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
           <p className='font-medium'>10K</p>
         </div>
         <div className="flex justify-between mt-4">
-          <p className='font-medium text-[#6F6F6F] flex items-center'>
+          <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
+              rightPostion={!hasDescription && -100}
               mode="hover"
               tooltipComponent={
                 <div
@@ -92,8 +97,9 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
         isExpanded ? 'block' : 'hidden minmd:block'
       )}>
         <div className="flex justify-between mt-4 minmd:mt-0">
-          <p className='font-medium text-[#6F6F6F] flex items-center'>
+          <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
+              rightPostion={!hasDescription && -100}
               mode="hover"
               tooltipComponent={
                 <div
@@ -110,8 +116,9 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
           <p className='font-medium'>80%</p>
         </div>
         <div className="flex justify-between h-10 mt-3">
-          <p className='self-center font-medium text-[#6F6F6F] flex items-center minlg:hidden'>
+          <p className='self-center font-medium text-[#6F6F6F] flex items-center minlg:hidden relative'>
             <CustomTooltip
+              rightPostion={!hasDescription && -100}
               mode="hover"
               tooltipComponent={
                 <div
@@ -125,8 +132,9 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
             </CustomTooltip>
             Market Cap
           </p>
-          <p className='self-center font-medium text-[#6F6F6F] hidden items-center minlg:flex'>
+          <p className='self-center font-medium text-[#6F6F6F] hidden items-center minlg:flex relative'>
             <CustomTooltip
+              rightPostion={!hasDescription && -100}
               mode="hover"
               tooltipComponent={
                 <div
@@ -163,14 +171,14 @@ export const CollectionInfo = ({ data }: CollectionInfoProps) => {
       <div className='block minmd:hidden'>
         {!isExpanded
           ? (
-            <div className='flex w-full justify-center items-center mt-4'>
-              <p className='text-[#B59007] font-medium' onClick={() => setIsExpanded(true)}>Expand</p>
+            <div className='flex w-max justify-center items-center mt-4 mx-auto hover:cursor-pointer' onClick={() => setIsExpanded(true)}>
+              <p className='text-[#B59007] font-medium'>Expand</p>
               <CaretDown className='ml-1' weight='fill' color='#B59007' />
             </div>
           )
           : (
-            <div className='flex w-full justify-center items-center mt-4'>
-              <p className='text-[#B59007] font-medium' onClick={() => setIsExpanded(false)}>Collapse</p>
+            <div className='flex w-max justify-center items-center mt-4 mx-auto hover:cursor-pointer' onClick={() => setIsExpanded(false)}>
+              <p className='text-[#B59007] font-medium'>Collapse</p>
               <CaretUp className='ml-1' weight='fill' color='#B59007' />
             </div>
           )}
