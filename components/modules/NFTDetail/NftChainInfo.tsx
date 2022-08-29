@@ -14,11 +14,11 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
   const router = useRouter();
   
   return (
-    <div className='w-full flex' id="NftChainInfoContainer">
+    <div className='flex flex-row w-full' id="NftChainInfoContainer">
       <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full py-4 px-4 space-y-2">
         <div className='flex flex-row w-full space-x-1 items-center font-grotesk justify-between'>
           <span className='font-base font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
-            Contract Address
+            Contract
           </span>
           <span
             className='font-medium text-base leading-6 text-[#1F2127]'
@@ -33,7 +33,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
           <span className='font-base font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
             Volume
           </span>
-          <Info className='h-3 w-3 rounded-full text-[#6F6F6F] absolute ml-14' />
+          <Info className='h-3 w-3 rounded-full text-[#6F6F6F] relative' />
           <span
             className='font-medium text-base leading-6 text-[#1F2127]'
           >
@@ -44,7 +44,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
           <span className='font-base font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
             Token Standard
           </span>
-          <Info className='h-3 w-3 rounded-full text-[#6F6F6F] absolute ml-28' />
+          <Info className='h-3 w-3 rounded-full text-[#6F6F6F] relative' />
           <span
             className='font-medium text-base leading-6 text-[#1F2127]'
           >
@@ -55,7 +55,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
           <span className='font-base font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
             Blockchain
           </span>
-          <Info className='h-3 w-3 rounded-full text-[#6F6F6F] absolute ml-20' />
+          <Info className='h-3 w-3 rounded-full text-[#6F6F6F] relative' />
           <span
             className='font-medium text-base leading-6 text-[#1F2127]'
           >
