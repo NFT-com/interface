@@ -19,6 +19,7 @@ import {
   genesisKeyTeamClaim,
   genesisKeyTeamDistributor,
   maxProfiles,
+  nftAggregator,
   nftProfile,
   nftResolver,
   nftToken,
@@ -72,7 +73,8 @@ export type SupportedTokenContract =
   | 'genesisKeyDistributor'
   | 'genesisKeyTeamDistributor'
   | 'genesisKeyTeamClaim'
-  | 'nftResolver';
+  | 'nftResolver'
+  | 'aggregator';
 
 export const getAddress = (token: SupportedTokenContract, chainId: number | string | undefined) => {
   if (getEnv(Doppler.NEXT_PUBLIC_ENV) === 'PRODUCTION') {
@@ -103,6 +105,8 @@ export const getAddress = (token: SupportedTokenContract, chainId: number | stri
     return ethers.utils.getAddress(isSandbox(chainId) ? DAI_GOERLI.address : DAI.address);
   case 'weth':
     return ethers.utils.getAddress(isSandbox(chainId) ? WETH_GOERLI.address : WETH.address);
+  case 'aggregator':
+    return deployedContractAddressResolver(chainId, nftAggregator);
   default:
     return '';
   }
