@@ -14,7 +14,7 @@ export interface BannerWrapperProps {
 }
 
 const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
-  'https://cdn.nft.com/empty_profile_banner.png'
+  'https://cdn.nft.com/collectionBanner_default.png'
   : 'https://cdn.nft.com/profile-banner-default-logo-key.png';
 
 export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
