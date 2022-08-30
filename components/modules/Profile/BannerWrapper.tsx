@@ -3,7 +3,6 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { PropsWithChildren } from 'react';
-import { isMobile } from 'react-device-detect';
 
 export interface BannerWrapperProps {
   imageOverride?: string
