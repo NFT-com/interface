@@ -6,18 +6,24 @@ import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 
+import { EditListingsModal } from './EditListingsModal';
+import { SelectListingModal } from './SelectListingModal';
+
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
-import { useCallback, useContext } from 'react';
+import LooksrareIcon from 'public/looksrare-icon.svg';
+import OpenseaIcon from 'public/opensea-icon.svg';
+import { useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export interface ExternalListingsProps {
   nft: PartialDeep<Nft>;
@@ -25,18 +31,20 @@ export interface ExternalListingsProps {
 }
 
 export function ExternalListings(props: ExternalListingsProps) {
-  const { address: currentAddress } = useAccount();
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
+  const { stagePurchase } = useContext(NFTPurchasesContext);
   const { getByContractAddress } = useSupportedCurrencies();
+  const chainId = useDefaultChainId();
+  const { address: currentAddress } = useAccount();
   const ethPriceUsd: number = useEthPriceUSD();
 
-  const { chain } = useNetwork();
-  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const [editListingsModalOpen, setEditListingsModalOpen] = useState(false);
+  const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
   
   const { data: listings } = useListingActivitiesQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
+    String(props.nft?.wallet.chainId ?? chainId)
   );
 
   const {
@@ -70,7 +78,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         stretch
         label={'Edit Listings'}
         onClick={() => {
-          // todo: open Edit Listing modal
+          setEditListingsModalOpen(true);
         }}
         type={ButtonType.PRIMARY}
       />;
@@ -79,7 +87,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         stretch
         label={'Select Listings'}
         onClick={() => {
-          // todo: open Choose Listing modal
+          setSelectListingModalOpen(true);
         }}
         type={ButtonType.PRIMARY}
       />;
@@ -90,7 +98,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         label={'Add to Cart'}
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
-          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chain?.id ?? 1));
+          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
           const price = getListingPrice(listing);
           stagePurchase({
             nft: props.nft,
@@ -109,7 +117,7 @@ export function ExternalListings(props: ExternalListingsProps) {
       />;
     }
   }, [
-    chain?.id,
+    chainId,
     currentAddress,
     getByContractAddress,
     listings,
@@ -146,37 +154,48 @@ export function ExternalListings(props: ExternalListingsProps) {
     );
   }
 
-  // todo: instead of showing a tile per listing, show one tile with the *lowest* price 
-  // for owner, the tile should show: "edit listing" button, protocol icons, and price. 
-  //      "edit listing" opens the EditListingsModal
-  // for buyer, 
-
-  // old code
-  // {listings?.map((listing: PartialDeep<TxActivity>, index) => (
-  //   <div className='w-full minlg:w-2/4 pr-2' key={index}>
-  //     <ExternalListingTile
-  //       listing={listing}
-  //       nft={props.nft}
-  //       collectionName={props.collectionName}
-  //     />
-  //   </div>
-  // ))}
-
-  const bestListing = getLowestPriceListing(listings, ethPriceUsd);
+  const bestListing = getLowestPriceListing(listings, ethPriceUsd, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   
   return <div className='w-full flex justify-center py-4 pb-8 px-4 minmd:px-[17.5px] minlg:px-[128px]'>
+    <EditListingsModal
+      nft={props.nft}
+      collectionName={props.collectionName}
+      listings={listings}
+      visible={editListingsModalOpen}
+      onClose={() => {
+        setEditListingsModalOpen(false);
+      }} />
+    <SelectListingModal
+      listings={listings}
+      nft={props.nft}
+      collectionName={props.collectionName}
+      visible={selectListingModalOpen}
+      onClose={() => {
+        setSelectListingModalOpen(false);
+      }}
+    />
     <div className="flex flex-col bg-[#F6F6F6] rounded-xl p-5 my-6 w-full max-w-nftcom">
       <div className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>
         <span className='text-sm'>
           {getListingSummaryTitle()}
         </span>
-        <div className='flex items-center'>
-          {!isNullOrEmpty(listingCurrencyData?.logo) && <Image src={listingCurrencyData?.logo} alt="Currency Icon" height={24} width={24} />}
-          <span className='text-xl font-bold mx-4'>
+        <div className='flex items-center w-full justify-between my-2'>
+          <div className='text-xl font-bold flex items-center'>
+            <span className="mx-4 flex items-center">{!isNullOrEmpty(listingCurrencyData?.logo) && <Image src={listingCurrencyData?.logo} alt="Currency Icon" height={32} width={32} />}</span>
             {ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
             {listingCurrencyData?.name ?? 'WETH'}
-          </span>
+          </div>
+          <div className="flex items-center">
+            {
+              listings?.map(listing => {
+                return <div key={listing?.id}>
+                  {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+                  {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+                </div>;
+              })
+            }
+          </div>
         </div>
       </div>
       {getListingSummaryButtons()}
