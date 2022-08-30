@@ -36,7 +36,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
             We’ve hand-picked NFT collections to help you find what you’re looking for.
           </p>
         </div>
-        <div className="flex flex-wrap justify-between items-center w-[90%] max-w-xs mx-auto h-fit my-7">
+        <div className="flex flex-wrap justify-around items-center w-[90%] max-w-xs mx-auto h-fit my-7">
           {curatedCollections && curatedCollections.map((tab, index) =>{
             return (
               <span

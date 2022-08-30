@@ -185,7 +185,7 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen: bool
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 8;
     } else if (screenWidth >= 900 ) {
-      perPage = sideNavOpen ? 6 : 8;
+      perPage = sideNavOpen ? 6 : 9;
     } else if (screenWidth >= 600) {
       perPage = 4;
     } else {

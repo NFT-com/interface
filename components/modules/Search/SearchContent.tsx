@@ -10,7 +10,11 @@ import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useRef, useState } from 'react';
 
-export const SearchContent = () => {
+interface SearchContentProps {
+  isHeader?: boolean;
+}
+
+export const SearchContent = ({ isHeader }: SearchContentProps) => {
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [searchResults, setSearchResults] = useState([]);
@@ -138,7 +142,7 @@ export const SearchContent = () => {
       <div className="flex flex-col w-full">
         <div className="flex space-x-2 p-5">
           <div className={tw(
-            'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black')}>
+            'relative flex items-center border border-gray-300 rounded-xl p-2 w-full text-black')}>
             <SearchIcon className='mr-2 shrink-0 aspect-square' />
             <div className="w-full">
               <input
@@ -166,6 +170,7 @@ export const SearchContent = () => {
             <div
               ref={resultsRef}
               className={tw(
+                isHeader ? 'absolute mt-16 max-w-[27rem]' : '',
                 'bg-always-white flex flex-col w-full py-4 text-rubik')}>
               {searchResults.length > 0 && <>
                 {searchResults[0].found === 0 && searchResults[1].found === 0 ?
@@ -174,26 +179,31 @@ export const SearchContent = () => {
                   </div>):
                   <>
                     <ResultsContent searchResults={searchResults} />
-                    <div className="mx-auto absolute minlg:relative bottom-0 w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-                      <Button
-                        color={'black'}
-                        accent={AccentType.SCALE}
-                        stretch={true}
-                        label={'Search'}
-                        onClick={() => {
-                          router.push(`/app/discover/allResults/${keyword}`);
-                          setSearchModalOpen(false);
-                        }}
-                        type={ButtonType.PRIMARY}
-                      />
-                    </div>
+                    {isHeader ?
+                      <span className="px-5 text-xs text-gray-400">Press enter for all results</span> :
+                      <div className="mx-auto absolute minlg:relative bottom-0 w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+                        <Button
+                          color={'black'}
+                          accent={AccentType.SCALE}
+                          stretch={true}
+                          label={'Search'}
+                          onClick={() => {
+                            router.push(`/app/discover/allResults/${keyword}`);
+                            setSearchModalOpen(false);
+                          }}
+                          type={ButtonType.PRIMARY}
+                        />
+                      </div>}
                   </>
                 }
               </>}
             </div>)
-          :<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500">
-            Enter a keyword to begin searching.
-          </div>}
+          :
+          isHeader
+            ? '' :
+            (<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500">
+              Enter a keyword to begin searching.
+            </div>)}
       </div>
     </>);
 };
