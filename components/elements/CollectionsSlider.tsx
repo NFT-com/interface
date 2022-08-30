@@ -4,8 +4,20 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import useEmblaCarousel from 'embla-carousel-react';
 import React, { useCallback,useEffect, useState } from 'react';
 
+interface typesenseNftType {
+  id: string;
+  isOwnedByMe: boolean;
+  metadata: any;
+  tokenId: string;
+  type: string;
+}
+
+interface collectionType {
+  collectionAddress: string;
+  nfts: typesenseNftType[];
+}
 export interface slidesProps {
-  slides: any[];
+  slides: collectionType[];
   full?: boolean;
 }
 
@@ -52,6 +64,7 @@ export const NextButton = ({ enabled, onClick }: buttonProps) => (
 );
 
 const EmblaCarousel = (props: slidesProps) => {
+  console.log(props, 'props fdo');
   const { width: screenWidth } = useWindowDimensions();
   const [viewportRef, embla] = useEmblaCarousel({
     dragFree: true,
