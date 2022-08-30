@@ -5,7 +5,7 @@ import { CollectionAnalyticsContainer } from 'components/modules/Collection/Coll
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
-import { useGetSalesStats } from 'hooks/nftport/useGetSalesStats';
+import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
