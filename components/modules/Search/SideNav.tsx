@@ -56,7 +56,7 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
       </div>
       <motion.div
         animate={{
-          height: router.pathname.includes('discover/') ? !sideNavOpen || isFilterCollapsed ? 0 : 'auto' : 'auto' }}
+          height: !sideNavOpen || isFilterCollapsed ? 0 : 'auto' }}
         transition={{ duration: 0.2 }}
         className={tw('overflow-hidden')}
       >
