@@ -18,7 +18,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
     <div className='flex flex-row w-full' id="NftChainInfoContainer">
       <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full py-4 px-4 space-y-2">
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
-          <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F]'>
+          <div className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F]'>
             Contract
             <CustomTooltip
               mode='hover'
@@ -30,9 +30,9 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
               }>
               <Info className='h-3 w-3 rounded-full text-[#6F6F6F] ml-2' />
             </CustomTooltip>
-          </p>
+          </div>
           <span
-            className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'
+            className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127] cursor-pointer'
             onClick={nft?.contract && (() => router.push(`/app/collection/${nft?.contract}/`))}
           >
             {shortenAddress(nft?.contract)}

@@ -48,7 +48,6 @@ export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsCo
     if(chain.id !== 1 || !collectionSalesHistory) {
       return;
     } else {
-      console.log(collectionSalesHistory?.statistics.floor_price_historic_thirty_day );
       if(!collectionLineData) {
         setCollectionLineData([{ 'date': thirtyDaysAgo, 'value': collectionSalesHistory?.statistics.floor_price_historic_thirty_day },
           { 'date': sevenDaysAgo, 'value': collectionSalesHistory?.statistics.floor_price_historic_seven_day },
