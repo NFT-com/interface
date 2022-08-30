@@ -133,7 +133,7 @@ export function Collection(props: CollectionProps) {
                 href={`https://etherscan.io/address/${props.contract?.toString()}`}
                 className='tracking-wide flex'
               >
-                <span>{shortenAddress(props.contract?.toString(), 4)}</span>
+                <span className='contractAddress'>{shortenAddress(props.contract?.toString(), 4)}</span>
                 <LinkIcon size={20} className='ml-1' />
               </a>
             </div>
