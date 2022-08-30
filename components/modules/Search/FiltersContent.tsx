@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useEffect, useState } from 'react';
-import { Plus, X } from 'react-feather';
+import { Minus,Plus } from 'react-feather';
 
 interface FilterOptionProps {
   isSelected: boolean,
@@ -232,7 +232,7 @@ const Filter = (props: any) => {
         onClick={() => { setIsFilterCollapsed(!isFilterCollapsed); }}
         className="flex justify-between cursor-pointer">
         <div className="font-black text-base font-grotesk">{formatTitle(filter.field_name)}</div>
-        {!isFilterCollapsed && <X className="h-4 w-4"/>}
+        {!isFilterCollapsed && <Minus className="h-4 w-4"/>}
         {isFilterCollapsed && <Plus className="h-4 w-4"/>}
       </div>
       <motion.div
@@ -337,7 +337,7 @@ export const FiltersContent = () => {
             color={'black'}
             accent={AccentType.SCALE}
             stretch={true}
-            label={'Filter'}
+            label={'Apply Filter'}
             onClick={() => {
               const checkedFiltersArray = modalCheckedFilters.filter(item => item.values.length > 0);
               const checkedFiltersList = [];

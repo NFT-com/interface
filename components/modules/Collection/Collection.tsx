@@ -5,20 +5,25 @@ import { CollectionAnalyticsContainer } from 'components/modules/Collection/Coll
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
+import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
+import { CollectionInfo } from './CollectionInfo';
+
 import { Tab } from '@headlessui/react';
 import router from 'next/router';
-import CopyIcon from 'public/arrow_square_out.svg';
+import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
+import { ExternalLink as LinkIcon } from 'react-feather';
 import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
+  profile?: any
 }
 
 export function Collection(props: CollectionProps) {
@@ -28,8 +33,10 @@ export function Collection(props: CollectionProps) {
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [found, setFound] = useState(0);
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
-  const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
+  const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
+  const collectionSalesHistory = useGetSalesStats(props?.contract?.toString());
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
     if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
@@ -40,7 +47,6 @@ export function Collection(props: CollectionProps) {
           (data) => data.status === 200 ? `${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null
         );
     }
-
     return imgUrl;
   } );
 
@@ -88,45 +94,139 @@ export function Collection(props: CollectionProps) {
     <>
       <div className="mt-20">
         <BannerWrapper
-          imageOverride={imgUrl}/>
+          imageOverride={imgUrl}
+          isCollection
+        />
+      </div>
+      <div className='font-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
+        <h2 className="text-3xl font-bold">
+          {collectionData?.collection?.name}
+        </h2>
+        <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
+          <div className='flex'>
+            <div className={tw(
+              'flex flex-col justify-between',
+              props.profile && 'ml-2'
+            )}>
+              <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
+              <div className='mt-1 text-[#B59007] font-medium font-mono'>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`https://etherscan.io/address/${props.contract?.toString()}`}
+                  className=' tracking-wide flex'
+                >
+                  <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
+                  <LinkIcon size={20} className='ml-1' />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className='flex flex-col'>
+            <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Contract Address</p>
+            <div className='mt-1 text-[#B59007] font-medium font-mono'>
+              
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={`https://etherscan.io/address/${props.contract?.toString()}`}
+                className='tracking-wide flex'
+              >
+                <span className='contractAddress'>{shortenAddress(props.contract?.toString(), 4)}</span>
+                <LinkIcon size={20} className='ml-1' />
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
+          {collectionData?.collection?.description &&
+          <div className='minlg:w-1/2'>
+            <h3 className='text-[#6F6F6F] font-semibold'>
+            Description
+            </h3>
+            <div className='mt-1 mb-10 minlg:mb-0 minlg:pr-4'>
+              {descriptionExpanded ?
+                <>
+                  <p className='inline'>
+                    {collectionData?.collection?.description}
+                  </p>
+                  <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(false)}>Show less</p>
+                </>
+                :
+                <>
+                  <p className='inline minlg:hidden'>
+                    {collectionData?.collection?.description.length > 87 ? collectionData?.collection?.description.substring(0, 87) + '...' : collectionData?.collection?.description}
+                  </p>
+                  <p className='hidden minlg:inline'>
+                    {collectionData?.collection?.description.length > 200 ? collectionData?.collection?.description.substring(0, 200) + '...' : collectionData?.collection?.description}
+                  </p>
+                  {
+                    collectionData?.collection?.description.length > 87 &&
+                    <>
+                      <p className='text-[#B59007] font-bold ml-1 hover:cursor-pointer inline minlg:hidden' onClick={() => setDescriptionExpanded(true)}>
+                        Show more
+                      </p>
+                    </>
+                  }
+                  {
+                    collectionData?.collection?.description.length > 200 &&
+                    <>
+                      <p className='text-[#B59007] font-bold ml-1 hover:cursor-pointer hidden minlg:inline' onClick={() => setDescriptionExpanded(true)}>
+                        Show more
+                      </p>
+                    </>
+                  }
+                </>
+              }
+            </div>
+          </div>
+          }
+          <div className='w-full minlg:w-1/2'>
+            <CollectionInfo data={collectionSalesHistory?.statistics} type={collectionNfts[0]?.document?.nftType} hasDescription={true} />
+          </div>
+        </div>
       </div>
       <div className={tw(
-        'pt-7 px-8 minmd:px-[5%] minxl:mx-auto pb-16 w-full',
+        'px-4 pb-16 w-full',
+        'max-w-nftcom mx-auto'
       )}
       >
         {collectionNfts.length > 0 ?
           <>
             {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-            <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
-              <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
-                {Object.keys(tabs).map((tab) => (
-                  <Tab
-                    key={tab}
-                    className={({ selected }) =>
-                      tw(
-                        'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
-                        selected
+            <div className='block minlg:flex minlg:flex-row-reverse w-full minlg:w-max mb-6 justify-between items-center'>
+              <div className='block minlg:flex items-center mb-6 minlg:mb-0'>
+                <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
+                  <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk minlg:max-w-md minlg:w-[448px]">
+                    {Object.keys(tabs).map((tab) => (
+                      <Tab
+                        key={tab}
+                        className={({ selected }) =>
+                          tw(
+                            'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
+                            selected
                         && 'bg-black text-[#F8F8F8]'
-                      )
-                    }
-                  >
-                    {tabs[tab]}
-                  </Tab>
-                ))}
-              </Tab.List>
-            </Tab.Group>
+                          )
+                        }
+                      >
+                        {tabs[tab]}
+                      </Tab>
+                    ))}
+                  </Tab.List>
+                </Tab.Group>
+              </div>
+              <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
+                <div className='w-full minlg:w-10 minlg:h-10 bg-[#F8F8F8] text-[#6F6F6F] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center'>
+                  <FunnelSimple color='#6F6F6F' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+                  <p className='minlg:hidden'>Filter</p>
+                </div>
+              </div>
+            </div>
             }
             {selectedTab === 'NFTs' &&
             <>
-              <div className="font-grotesk font-black text-black text-4xl max-w-nftcom minxl:mx-auto">{collectionNfts[0].document.contractName}</div>
-              <div className="mb-7 text-4xl flex items-center font-medium text-copy-size text-[#6F6F6F] max-w-nftcom minxl:mx-auto">
-                <span>{shortenAddress(props.contract?.toString())}</span>
-                <a
-                  target="_blank"
-                  rel="noreferrer" href={`https://etherscan.io/address/${props.contract?.toString()}`} className='font-bold underline tracking-wide'>
-                  <CopyIcon />
-                </a>
-              </div>
+              <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{collectionSalesHistory?.statistics?.total_supply.toLocaleString()} {collectionSalesHistory?.statistics?.total_supply > 1 ? 'NFTS' : 'NFT'}</p>
               <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
                 {collectionNfts.map((nft, index) => {
                   return (
@@ -164,10 +264,12 @@ export function Collection(props: CollectionProps) {
               <TxHistory />
             }
             {selectedTab === 'Analytics' &&
-              <CollectionAnalyticsContainer data={collectionData} />
+              <CollectionAnalyticsContainer contract={props?.contract} />
             }
-          </>:
-          <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>}
+          </>
+          :
+          <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>
+        }
       </div>
     </>
   );

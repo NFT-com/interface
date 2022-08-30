@@ -1,8 +1,11 @@
-import { IExecutionStrategy, RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
-import { Nft } from 'graphql/generated/types';
+import { IExecutionStrategy, LooksRareExchange, RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
+import { LooksrareProtocolData, Nft } from 'graphql/generated/types';
+import { AggregatorResponse } from 'types';
+
+import { libraryCall, looksrareLib } from './marketplaceHelpers';
 
 import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
 
 export async function createLooksrareParametersForNFTListing(
@@ -45,3 +48,93 @@ export async function createLooksrareParametersForNFTListing(
     params: []
   };
 }
+
+export async function cancelLooksrareListing(
+  orderNonce: BigNumberish,
+  looksrareExchange: LooksRareExchange
+): Promise<boolean> {
+  if (orderNonce == null || looksrareExchange == null) {
+    return;
+  }
+  return looksrareExchange.cancelMultipleMakerOrders([orderNonce]).then(tx => {
+    return tx.wait(1).then(() => true).catch(() => false);
+  }).catch(() => false);
+}
+
+export const getLooksrareHex = (
+  executorAddress: string,
+  protocolData: LooksrareProtocolData,
+  looksrareExchange: LooksRareExchange,
+  ethValue: string,
+): AggregatorResponse => {
+  try {
+    const {
+      collectionAddress,
+      tokenId,
+      isOrderAsk,
+      signer,
+      strategy,
+      currencyAddress,
+      amount,
+      price,
+      nonce,
+      startTime,
+      endTime,
+      minPercentageToAsk,
+      params,
+      v,
+      r,
+      s,
+      // hash,
+      // status,
+      // signature,
+    } = protocolData;
+    
+    const hexParam = looksrareExchange.interface.encodeFunctionData('matchAskWithTakerBidUsingETHAndWETH', [
+      {
+        isOrderAsk: false,
+        taker: executorAddress,
+        price,
+        tokenId,
+        minPercentageToAsk,
+        params: params || '0x',
+      },
+      {
+        isOrderAsk,
+        signer,
+        collection: collectionAddress,
+        price,
+        tokenId,
+        amount,
+        strategy,
+        currency: currencyAddress,
+        nonce,
+        startTime,
+        endTime,
+        minPercentageToAsk,
+        params: params || '0x',
+        v,
+        r,
+        s,
+      },
+    ]);
+    
+    const wholeHex = looksrareLib.encodeFunctionData('_tradeHelper', [
+      ethValue,
+      hexParam,
+      collectionAddress,
+      tokenId,
+      true, // failIfRevert
+    ]);
+    
+    const genHex = libraryCall('_tradeHelper(uint256,bytes,address,uint256,bool)', wholeHex.slice(10));
+    
+    return {
+      tradeData: genHex,
+      value: ethers.BigNumber.from(ethValue),
+      marketId: '0',
+    };
+  } catch (err) {
+    throw `error in getLooksrareHex: ${err}`;
+  }
+};

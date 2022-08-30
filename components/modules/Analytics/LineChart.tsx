@@ -3,8 +3,8 @@ import { tw } from 'utils/tw';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import {
-  Area,
-  AreaChart,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -24,7 +24,7 @@ const marketplaces = {
   1: 'LooksRare'
 };
 
-export const LineChart = ({ data, label, currentMarketplace, setCurrentMarketplace, showMarketplaceOptions }: LineChartProps) => {
+export const LineVis = ({ data, label, currentMarketplace, setCurrentMarketplace, showMarketplaceOptions }: LineChartProps) => {
   const [selectedMarketplace, setSelectedMarketplace] = useState(currentMarketplace);
   
   return (
@@ -66,7 +66,7 @@ export const LineChart = ({ data, label, currentMarketplace, setCurrentMarketpla
         <span>No data yet</span>
         :
         <ResponsiveContainer height={isMobile ? 227 : 357} width={'100%'} >
-          <AreaChart data={data} margin={{ top: 5, right: -30, bottom: 5, left: 0 }} >
+          <LineChart data={data} margin={{ top: 5, right: -30, bottom: 5, left: 0 }} >
             <defs>
               <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0.2}/>
@@ -74,21 +74,15 @@ export const LineChart = ({ data, label, currentMarketplace, setCurrentMarketpla
               </linearGradient>
             </defs>
 
-            <XAxis dataKey="name" />
+            <XAxis dataKey={'date'} />
             <YAxis orientation={'right'} />
             <Tooltip
               wrapperClassName='rounded-xl bg-[#1F2127] text-white'
               labelClassName='bg-[#1F2127] text-white'
               contentStyle={{ backgroundColor: '#1F2127' }}
             />
-            <Area
-              type="monotone"
-              dataKey="value"
-              stroke={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'}
-              strokeWidth={4}
-              fillOpacity={1}
-              fill="url(#colorvalue)" />
-          </AreaChart>
+            <Line type="monotone" dataKey="value" stroke="#18A0FB" />
+          </LineChart>
         </ResponsiveContainer>
       }
       {(showMarketplaceOptions && !!data) &&
