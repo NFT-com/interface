@@ -39,9 +39,9 @@ export function SelectListingModal(props: SelectListingsModalProps) {
       </div>
       <div>
         {
-          listings?.map((listing) => {
+          listings?.map((listing, index) => {
             return <ExternalListingTile
-              key={listing?.id}
+              key={listing?.id + index}
               listing={listing}
               nft={nft}
               collectionName={collectionName}
