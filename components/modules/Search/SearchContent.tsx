@@ -175,7 +175,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
                 'bg-always-white flex flex-col w-full py-4 text-rubik')}>
               {searchResults.length > 0 && <>
                 {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                  (<div className="mt-10 text-base font-grotesk font-medium text-gray-500">
+                  (<div className="mt-10 self-center text-base font-grotesk font-medium text-gray-500">
                 No results found. Please try another keyword.
                   </div>):
                   <>

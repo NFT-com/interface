@@ -1735,6 +1735,10 @@ li {
   transform: translate(-50%, -50%);
 }
 
+input[type="search"]::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
 @media (min-width: 900px) {
   .embla__slide__item {
     width: 95%;
