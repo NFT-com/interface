@@ -20,7 +20,6 @@ export interface OptionNavProps {
 }
 
 export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
-  const router = useRouter();
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const { sideNavOpen, setSideNavOpen } = useSearchModal();
 
