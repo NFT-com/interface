@@ -24,7 +24,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
     return input?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
   return (
-    <div className="bg-[#F8F8F8] px-6 pt-6  pb-4 minmd:pb-6 rounded-[10px] font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minxl:gap-12">
+    <div data-cy="collectionInfoContainer" className="bg-[#F8F8F8] px-6 pt-6  pb-4 minmd:pb-6 rounded-[10px] font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minxl:gap-12">
       <div className='flex flex-col'>
         <div className="flex justify-between h-10">
           <p className='self-center font-medium text-[#6F6F6F] flex items-center relative'>
@@ -39,7 +39,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
                   <p>Lowest active listing price for a NFT from the collection</p>
                 </div>
               }>
-              <Info className='mr-1' />
+              <Info className='mr-1 floorToolTip' />
             </CustomTooltip>
             Floor
           </p>
@@ -196,7 +196,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
       <div className='block minmd:hidden'>
         {!isExpanded
           ? (
-            <div className='flex w-max justify-center items-center mt-4 mx-auto hover:cursor-pointer' onClick={() => setIsExpanded(true)}>
+            <div data-cy="collectionInfoExpand" className='flex w-max justify-center items-center mt-4 mx-auto hover:cursor-pointer' onClick={() => setIsExpanded(true)}>
               <p className='text-[#B59007] font-medium'>Expand</p>
               <CaretDown className='ml-1' weight='fill' color='#B59007' />
             </div>
