@@ -217,8 +217,8 @@ export function Collection(props: CollectionProps) {
                 </Tab.Group>
               </div>
               <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
-                <div className='w-full minlg:w-10 minlg:h-10 bg-[#F8F8F8] text-[#6F6F6F] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center'>
-                  <FunnelSimple color='#6F6F6F' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+                <div className='w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'>
+                  <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
                   <p className='minlg:hidden'>Filter</p>
                 </div>
               </div>
