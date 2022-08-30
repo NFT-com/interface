@@ -1646,6 +1646,12 @@ li {
   }
 }
 
+@media (min-width: 1900px) {
+  .embla__slide__inner {
+    height: 360px;
+  }
+}
+
 .embla__button {
   outline: 0;
   cursor: pointer;
