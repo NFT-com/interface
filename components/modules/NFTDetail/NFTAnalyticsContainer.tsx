@@ -3,6 +3,7 @@ import { TxHistory } from 'components/modules/Analytics/TxHistory';
 import { Nft } from 'graphql/generated/types';
 import { useGetNftPriceHistory } from 'hooks/analytics/aggregation/useGetNftPriceHistory';
 import { useGetNftByTokenId } from 'hooks/analytics/graph/useGetNftByTokenId';
+import { Doppler, getEnv } from 'utils/env';
 import { getDateFromTimeFrame } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -51,7 +52,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const nftPriceHistory = useGetNftPriceHistory(nftId, dateFrom);
 
   useEffect(() => {
-    if(chain?.id !== 1) {
+    if(chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {
       setNftData(null);
       return;
     }

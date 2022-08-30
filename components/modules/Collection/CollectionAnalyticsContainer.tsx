@@ -1,6 +1,7 @@
 import { BarGraph } from 'components/modules/Analytics/BarGraph';
 import { LineVis } from 'components/modules/Analytics/LineChart';
 import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
+import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
@@ -45,7 +46,7 @@ export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsCo
   const [collectionBarData, setCollectionBarData] = useState(null);
 
   useEffect(() => {
-    if(chain.id !== 1 || !collectionSalesHistory) {
+    if((chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') || !collectionSalesHistory) {
       return;
     } else {
       if(!collectionLineData) {
@@ -59,7 +60,7 @@ export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsCo
 
       setCollectionBarData(collectionSalesHistory);
     }
-  }, [chain.id, collectionLineData, collectionSalesHistory, oneDayAgo, sevenDaysAgo, thirtyDaysAgo]);
+  }, [chain?.id, collectionLineData, collectionSalesHistory, oneDayAgo, sevenDaysAgo, thirtyDaysAgo]);
 
   return (
     <>
