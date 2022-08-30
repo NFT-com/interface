@@ -35,7 +35,7 @@ export const getListingPriceUSD: (
   if (sameAddress(currency, getAddress('dai', chainId)) || sameAddress(currency, getAddress('usdc', chainId))) {
     return Number(ethers.utils.formatUnits(getListingPrice(listing), 18));
   } else if (sameAddress(NULL_ADDRESS, currency) || sameAddress(currency, getAddress('weth', chainId))) {
-    return Number(ethers.utils.formatUnits(getListingPrice(listing), 18)) / ethPriceUSD;
+    return Number(ethers.utils.formatUnits(getListingPrice(listing), 18)) * ethPriceUSD;
   }
   return 0;
 };
