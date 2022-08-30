@@ -45,44 +45,80 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
 
   return (
-    <div className="flex flex-col pt-20 items-center w-screen mx-auto">
-      <NFTDetail nft={nft} onRefreshSuccess={() => {
-        mutateNft();
-        mutateListings();
-      }} key={nft?.id} />
-      <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
-      {
-        ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
+    !getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
+
+      <div className="flex flex-col pt-20 items-center w-full max-w-7xl mx-auto">
+        <NFTDetail nft={nft} onRefreshSuccess={mutateNft} key={nft?.id} />
+        {
+          ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
         (currentAddress === nft?.wallet?.address) ||
         (currentAddress !== nft?.wallet?.address && !isNullOrEmpty(nft?.memo)))
         &&
         <NFTDetailContextProvider nft={nft} >
           <NftMemo nft={nft} />
         </NFTDetailContextProvider>
-      }
-      <div className='flex flex-row w-full items-center pt-4 minlg:justify-around minlg:px-[200px]'>
-        <div className='w-2/3 minmd:w-full justify-start minmd:justify-center h-[40px] pl-4 minmd:px-[200px]'>
-          <Tab.Group onChange={(index) => {setSelectedDetailTab(detailTabTypes[index]);}}>
-            <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
-              {Object.keys(detailTabTypes).map((detailTab) => (
-                <Tab
-                  key={detailTab}
-                  className={({ selected }) =>
-                    tw(
-                      'w-full rounded-3xl py-2.5 px-7 minmd:px-10 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
-                      selected
-                      && 'bg-black text-[#F8F8F8] font-grotesk text-base font-semibold leading-6'
-                    )
-                  }
-                >
-                  {detailTabTypes[detailTab]}
-                </Tab>
-              ))}
-            </Tab.List>
-          </Tab.Group>
+        }
+        {getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) && <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />}
+        <div className='w-full flex flex-col minlg:flex-row p-4'>
+          <div className='flex flex-col minlg:w-1/2 w-full minlg:pr-4 pr-0'>
+            <div className='w-full border-b dark:border-accent-border-dk border-accent-border pb-5'>
+              <DescriptionDetail nft={nft} />
+            </div>
+            <div className='w-full border-b dark:border-accent-border-dk border-accent-border pb-5'>
+              <NftChainInfo nft={nft} />
+            </div>
+          </div>
+          <div className="minlg:w-1/2 w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
+            <Properties nft={nft} />
+          </div>
+          {
+          //TODO: @anthony - get data from indexer
+            getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+            <div className="minlg:w-1/2 w-full border-b dark:border-accent-border-dk border-accent-border pb-5 mb-20">
+              <NFTAnalyticsContainer data={nft} />
+            </div>
+          }
         </div>
       </div>
-      {selectedDetailTab === 'Info' &&
+      :
+      <div className="flex flex-col pt-20 items-center w-screen mx-auto">
+        <NFTDetail nft={nft} onRefreshSuccess={() => {
+          mutateNft();
+          mutateListings();
+        }} key={nft?.id} />
+        {getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) && <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} /> }
+        {
+          ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
+        (currentAddress === nft?.wallet?.address) ||
+        (currentAddress !== nft?.wallet?.address && !isNullOrEmpty(nft?.memo)))
+        &&
+        <NFTDetailContextProvider nft={nft} >
+          <NftMemo nft={nft} />
+        </NFTDetailContextProvider>
+        }
+        <div className='flex flex-row w-full items-center pt-4 minlg:justify-around minlg:px-[200px]'>
+          <div className='w-2/3 minmd:w-full justify-start minmd:justify-center h-[40px] pl-4 minmd:px-[200px]'>
+            <Tab.Group onChange={(index) => {setSelectedDetailTab(detailTabTypes[index]);}}>
+              <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
+                {Object.keys(detailTabTypes).map((detailTab) => (
+                  <Tab
+                    key={detailTab}
+                    className={({ selected }) =>
+                      tw(
+                        'w-full rounded-3xl py-2.5 px-7 minmd:px-10 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
+                        selected
+                      && 'bg-black text-[#F8F8F8] font-grotesk text-base font-semibold leading-6'
+                      )
+                    }
+                  >
+                    {detailTabTypes[detailTab]}
+                  </Tab>
+                ))}
+              </Tab.List>
+            </Tab.Group>
+          </div>
+        </div>
+        {selectedDetailTab === 'Info' &&
       <>
         <div className='flex flex-col w-full p-4 minmd:px-[42px] minlg:px-[128px] font-grotesk'>
           <DescriptionDetail nft={nft} />
@@ -91,8 +127,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           <NftChainInfo nft={nft} />
         </div>
       </>
-      }
-      {selectedDetailTab === 'Traits' &&
+        }
+        {selectedDetailTab === 'Traits' &&
       <>
         <div className='flex flex-col w-full p-4 minmd:px-[42px] minlg:px-[128px]'>
           <div className='border border-[#E1E1E1] rounded-md py-4 font-grotesk w-full'>
@@ -100,25 +136,25 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
         </div>
       </>}
-      <div className='w-full flex flex-col minlg:flex-row p-4 minmd:px-[42px] minlg:px-[128px]'>
-        {(getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) && chain?.id === 1) &&
+        <div className='w-full flex flex-col minlg:flex-row p-4 minmd:px-[42px] minlg:px-[128px]'>
+          {(getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) && chain?.id === 1) &&
             <div className="w-full">
               <NFTAnalyticsContainer data={nft} />
             </div>
-        }
-      </div>
-      {
-        getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+          }
+        </div>
+        {
+          getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
         <div className="w-full my-10 flex items-center minmd:px-[42px] minlg:px-[128px]">
           <NFTDetailMoreFromCollection contract={nft?.contract} />
         </div>
-      }
-      {
-        getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+        }
+        {
+          getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
         <div className="w-full my-10 flex items-center minmd:px-[42px] minlg:px-[128px]">
           <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
         </div>
-      }
-    </div>
+        }
+      </div>
   );
 }
