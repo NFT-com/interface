@@ -95,7 +95,7 @@ const CurrencyPriceFilter = (props: any) => {
   const [min, setMin] = useState('');
   const [max, setMax] = useState('');
 
-  const priceOptions = filtersList.find(i => i.filter === 'listedPx');
+  const priceOptions = (filtersList || []).find(i => i.filter === 'listedPx');
 
   useEffect(() => {
     let stringValue = '';
@@ -195,7 +195,7 @@ const Filter = (props: any) => {
   const { filter, onGetCheckedFilters } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const { filtersList } = useSearchModal();
-  const checkedOptions = filtersList.find(item => item.filter === filter.field_name);
+  const checkedOptions = (filtersList || []).find(item => item.filter === filter.field_name);
   
   const formatTitle = (title) => {
     switch(title){
@@ -241,8 +241,8 @@ const Filter = (props: any) => {
         transition={{ duration: 0.2 }}
         className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-scroll max-h-[10rem] filter-scrollbar')}
       >
-        { filter.field_name === 'listedPx' ?
-          ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) :
+        { /* filter.field_name === 'listedPx' ?
+          ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) : */
           filter.field_name === 'contractName' ?
             (<ContractNameFilter filterOptions={filter.counts} checkedOptions={checkedOptions} getCheckedFiltersList={getCheckedFiltersList} />) :
             filter.counts.map((item, index) => {
@@ -314,7 +314,7 @@ export const FiltersContent = () => {
         </div>
         <div>
           {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
-            if (['contractName', 'marketplace', 'listedPx', 'nftType'].includes(item.field_name)) {
+            if (['contractName', 'nftType'].includes(item.field_name)) {
               return (<div key={index}>
                 <Filter filter={item} onGetCheckedFilters={setCheckedFilters}/>
               </div>);
