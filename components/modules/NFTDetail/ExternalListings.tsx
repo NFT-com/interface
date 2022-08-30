@@ -1,19 +1,23 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { Nft } from 'graphql/generated/types';
+import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
+import { getAddressForChain, nftAggregator } from 'constants/contracts';
+import { WETH } from 'constants/tokens';
+import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { ExternalProtocol } from 'types';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface ExternalListingsProps {
   nft: PartialDeep<Nft>;
@@ -25,6 +29,9 @@ export function ExternalListings(props: ExternalListingsProps) {
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
   const { getByContractAddress } = useSupportedCurrencies();
   const ethPriceUsd: number = useEthPriceUSD();
+
+  const { chain } = useNetwork();
+  const { stagePurchase } = useContext(NFTPurchasesContext);
   
   const { data: listings } = useListingActivitiesQuery(
     props?.nft?.contract,
@@ -56,6 +63,61 @@ export function ExternalListings(props: ExternalListingsProps) {
       return 'Listed on ' + protocolName;
     }
   }, [listings]);
+
+  const getListingSummaryButtons = useCallback(() => {
+    if (currentAddress === props.nft?.wallet?.address) {
+      return <Button
+        stretch
+        label={'Edit Listings'}
+        onClick={() => {
+          // todo: open Edit Listing modal
+        }}
+        type={ButtonType.PRIMARY}
+      />;
+    } else if (listings.length > 1) {
+      return <Button
+        stretch
+        label={'Select Listings'}
+        onClick={() => {
+          // todo: open Choose Listing modal
+        }}
+        type={ButtonType.PRIMARY}
+      />;
+    } else {
+      const listing = listings[0];
+      return <Button
+        stretch
+        label={'Add to Cart'}
+        onClick={async () => {
+          const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
+          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chain?.id ?? 1));
+          const price = getListingPrice(listing);
+          stagePurchase({
+            nft: props.nft,
+            currency: getListingCurrencyAddress(listing) ?? WETH.address,
+            price: price,
+            collectionName: props.collectionName,
+            protocol: listing?.order?.protocol as ExternalProtocol,
+            isApproved: BigNumber.from(allowance ?? 0).gt(price),
+            protocolData: listing?.order?.protocol === ExternalProtocol.Seaport ?
+              listing?.order?.protocolData as SeaportProtocolData :
+              listing?.order?.protocolData as LooksrareProtocolData
+          });
+          toggleCartSidebar('buy');
+        }}
+        type={ButtonType.PRIMARY}
+      />;
+    }
+  }, [
+    chain?.id,
+    currentAddress,
+    getByContractAddress,
+    listings,
+    props.collectionName,
+    props.nft,
+    stagePurchase,
+    toggleCartSidebar
+  ]);
 
   if (isNullOrEmpty(listings)) {
     return (
@@ -105,7 +167,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   
   return <div className='w-full flex justify-center py-4 pb-8 px-4 minmd:px-[17.5px] minlg:px-[128px]'>
     <div className="flex flex-col bg-[#F6F6F6] rounded-xl p-5 my-6 w-full max-w-nftcom">
-      <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>
+      <div className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>
         <span className='text-sm'>
           {getListingSummaryTitle()}
         </span>
@@ -116,7 +178,8 @@ export function ExternalListings(props: ExternalListingsProps) {
             {listingCurrencyData?.name ?? 'WETH'}
           </span>
         </div>
-      </span>
+      </div>
+      {getListingSummaryButtons()}
     </div>
   </div>;
 }
