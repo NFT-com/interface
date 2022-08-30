@@ -25,7 +25,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       style={{ backgroundImage: `url(${props.imageOverride ?? defaultBanner})` }}
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
-        'bg-no-repeat bg-cover bg-center',
+        'bg-cover minxl:bg-contain bg-center',
         props.isCollection ? 'h-[120px]' : 'h-60 minxl:h-72',
       )}
     >
@@ -41,8 +41,8 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       <div
         className="flex justify-start items-end h-full"
         style={{
-          minWidth: isMobile ? '100%' : '1000px',
-          maxWidth: isMobile ? '100%' : '1000px',
+          minWidth: '100%',
+          maxWidth: '100%'
         }}
       >
         {props.children}
