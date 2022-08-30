@@ -48,7 +48,7 @@ export const CollectionsResults = (props: {searchTerm: string}) => {
 
   return(
     <>
-      <div className="flex justify-between items-center font-grotesk font-bold text-base minmd:text-lg text-blog-text-reskin mt-12">
+      <div className="flex justify-between items-center font-grotesk font-black text-base text-lg minmd:text-xl text-blog-text-reskin mt-12">
         <span> {data?.found + ' ' + 'COLLECTIONS'} </span>
         <span
           className="cursor-pointer hover:font-semibold"

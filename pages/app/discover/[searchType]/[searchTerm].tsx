@@ -136,15 +136,31 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         <div className="mx-6">
           <div className="flex flex-col mt-6">
             <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
-            <div className="text-2xl font-semibold pt-1">
-              <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
+            <div className="flex justify-between items-center">
+              <div className="text-2xl font-semibold pt-1">
+                <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
+              </div>
+              {searchType?.toString() !== 'allResults' && <span
+                className="cursor-pointer hover:font-semibold font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black "
+                onClick={() => { router.push(`/app/discover/allResults/${searchTerm.toString()}`); }}
+              >
+                SEE ALL COLLECTIONS AND NFTS RESULTS
+              </span>}
             </div>
           </div>
           {searchType?.toString() === 'collections' && <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>}
           <div>
             {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
-            <div className="mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
-              {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
+            <div className="flex justify-between items-center mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
+              <div>
+                {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
+              </div>
+              {searchType?.toString() === 'allResults' && <span
+                className="cursor-pointer hover:font-semibold"
+                onClick={() => { router.push(`/app/discover/nfts/${searchTerm.toString()}`); }}
+              >
+                SEE ALL
+              </span>}
             </div>
             {searchType?.toString() !== 'collections' &&
             <div className="my-6 mb-4 flex minlg:hidden justify-between font-grotesk font-black text-xl minmd:text-2xl">
