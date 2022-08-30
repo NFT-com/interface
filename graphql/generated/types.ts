@@ -704,6 +704,8 @@ export type Mutation = {
   /** AUTHENTICATED */
   uploadFileSession: FileUploadOutput;
   /** AUTHENTICATED */
+  uploadMetadataImagesToS3: UploadMetadataImagesToS3Output;
+  /** AUTHENTICATED */
   uploadProfileImages: Profile;
 };
 
@@ -978,6 +980,11 @@ export type MutationUpdateWalletProfileIdArgs = {
 };
 
 
+export type MutationUploadMetadataImagesToS3Args = {
+  count: Scalars['Int'];
+};
+
+
 export type MutationUploadProfileImagesArgs = {
   input?: InputMaybe<UploadProfileImagesInput>;
 };
@@ -993,6 +1000,7 @@ export type Nft = {
   memo?: Maybe<Scalars['String']>;
   metadata: NftMetadata;
   preferredProfile?: Maybe<Profile>;
+  previewLink?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Uint256']>;
   profileId?: Maybe<Scalars['String']>;
   tokenId: Scalars['Uint256'];
@@ -1756,6 +1764,8 @@ export type TxActivity = {
   cancel?: Maybe<TxCancel>;
   chainId?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+  nftContract: Scalars['String'];
+  nftId: Array<Maybe<Scalars['String']>>;
   order?: Maybe<TxOrder>;
   read: Scalars['Boolean'];
   timestamp: Scalars['Date'];
@@ -1950,6 +1960,11 @@ export type UpdateUserInput = {
   avatarURL?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   preferences?: InputMaybe<UserPreferencesInput>;
+};
+
+export type UploadMetadataImagesToS3Output = {
+  __typename?: 'UploadMetadataImagesToS3Output';
+  message?: Maybe<Scalars['String']>;
 };
 
 export type UploadProfileImagesInput = {
@@ -2308,7 +2323,7 @@ export type CollectionQueryVariables = Exact<{
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, deployer?: string | null } | null, ubiquityResults?: { __typename?: 'UbiquityResults', collection?: { __typename?: 'UbiquityCollection', id?: string | null, name?: string | null, description?: string | null, logo?: string | null, banner?: string | null, verified?: boolean | null, contracts?: Array<{ __typename?: 'UbiquityContract', address?: string | null, name?: string | null, symbol?: string | null, description?: string | null, image_url?: string | null, type?: string | null } | null> | null, meta?: { __typename?: 'UbiquityMeta', discord_url?: string | null, external_url?: string | null, twitter_username?: string | null } | null } | null } | null } | null };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, deployer?: string | null, description?: string | null } | null, ubiquityResults?: { __typename?: 'UbiquityResults', collection?: { __typename?: 'UbiquityCollection', id?: string | null, name?: string | null, description?: string | null, logo?: string | null, banner?: string | null, verified?: boolean | null, contracts?: Array<{ __typename?: 'UbiquityContract', address?: string | null, name?: string | null, symbol?: string | null, description?: string | null, image_url?: string | null, type?: string | null } | null> | null, meta?: { __typename?: 'UbiquityMeta', discord_url?: string | null, external_url?: string | null, twitter_username?: string | null } | null } | null } | null } | null };
 
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
@@ -3091,6 +3106,7 @@ export const CollectionDocument = gql`
       contract
       name
       deployer
+      description
     }
     ubiquityResults {
       collection {

@@ -6,7 +6,8 @@ import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useGetCollectionByAddress } from 'hooks/analytics/graph/useGetCollectionByAddress';
-import { getFloorPrice } from 'utils/alchemyNFT';
+import { useGetSalesStats } from 'hooks/nftport/useGetSalesStats';
+// import { useGetSalesStats } from 'hooks/nftport/useGetSalesStats';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -20,6 +21,7 @@ import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import useSWR from 'swr';
+import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
@@ -27,6 +29,7 @@ export interface CollectionProps {
 }
 
 export function Collection(props: CollectionProps) {
+  const { chain } = useNetwork();
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -34,8 +37,8 @@ export function Collection(props: CollectionProps) {
   const [found, setFound] = useState(0);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
-  const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
-  const collectionInfo = useGetCollectionByAddress(props?.contract?.toString());
+  const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
+  const collectionSalesHistory = useGetSalesStats(props?.contract?.toString());
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
     if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
@@ -48,10 +51,6 @@ export function Collection(props: CollectionProps) {
     }
     return imgUrl;
   } );
-
-  const { data: floorPrice } = useSWR('FloorPrice' + props.contract?.toString(), async () => {
-    return await getFloorPrice(props.contract?.toString());
-  });
 
   const tabs = {
     0: 'NFTs',
@@ -143,7 +142,7 @@ export function Collection(props: CollectionProps) {
           </div>
         </div>
         <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
-          {collectionInfo?.collection_by_address?.description &&
+          {collectionData?.collection?.description &&
           <div className='minlg:w-1/2'>
             <h3 className='text-[#6F6F6F] font-semibold'>
             Description
@@ -152,20 +151,20 @@ export function Collection(props: CollectionProps) {
               {descriptionExpanded ?
                 <>
                   <p className='inline'>
-                    {collectionInfo?.collection_by_address?.description}
+                    {collectionData?.collection?.description}
                   </p>
                   <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(false)}>Show less</p>
                 </>
                 :
                 <>
                   <p className='inline minlg:hidden'>
-                    {collectionInfo?.collection_by_address?.description.length > 87 ? collectionInfo?.collection_by_address?.description.substring(0, 87) + '...' : collectionInfo?.collection_by_address?.description}
+                    {collectionData?.collection?.description.length > 87 ? collectionData?.collection?.description.substring(0, 87) + '...' : collectionData?.collection?.description}
                   </p>
                   <p className='hidden minlg:inline'>
-                    {collectionInfo?.collection_by_address?.description.length > 200 ? collectionInfo?.collection_by_address?.description.substring(0, 200) + '...' : collectionInfo?.collection_by_address?.description}
+                    {collectionData?.collection?.description.length > 200 ? collectionData?.collection?.description.substring(0, 200) + '...' : collectionData?.collection?.description}
                   </p>
                   {
-                    collectionInfo?.collection_by_address?.description.length > 87 &&
+                    collectionData?.collection?.description.length > 87 &&
                     <>
                       <p className='text-[#B59007] font-bold ml-1 hover:cursor-pointer inline minlg:hidden' onClick={() => setDescriptionExpanded(true)}>
                         Show more
@@ -173,7 +172,7 @@ export function Collection(props: CollectionProps) {
                     </>
                   }
                   {
-                    collectionInfo?.collection_by_address?.description.length > 200 &&
+                    collectionData?.collection?.description.length > 200 &&
                     <>
                       <p className='text-[#B59007] font-bold ml-1 hover:cursor-pointer hidden minlg:inline' onClick={() => setDescriptionExpanded(true)}>
                         Show more
@@ -186,7 +185,7 @@ export function Collection(props: CollectionProps) {
           </div>
           }
           <div className='w-full minlg:w-1/2'>
-            <CollectionInfo floorPrice={floorPrice?.openSea?.floorPrice} hasDescription={true} />
+            <CollectionInfo data={collectionSalesHistory?.statistics} type={collectionNfts[0]?.document?.nftType} hasDescription={true} />
           </div>
         </div>
       </div>
@@ -229,7 +228,7 @@ export function Collection(props: CollectionProps) {
             }
             {selectedTab === 'NFTs' &&
             <>
-              <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{collectionNfts.length} {collectionNfts.length > 1 ? 'NFTS' : 'NFT'}</p>
+              <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{collectionSalesHistory?.statistics?.total_supply.toLocaleString()} {collectionSalesHistory?.statistics?.total_supply > 1 ? 'NFTS' : 'NFT'}</p>
               <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
                 {collectionNfts.map((nft, index) => {
                   return (

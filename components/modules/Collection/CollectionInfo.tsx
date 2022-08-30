@@ -1,16 +1,28 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { tw } from 'utils/tw';
 
 import { CaretDown, CaretUp, Info } from 'phosphor-react';
 import { useState } from 'react';
 export type CollectionInfoProps = {
-  data?: any[];
+  data: {
+    floor_price: number;
+    one_day_volume: number;
+    total_supply: number;
+    num_owners: number;
+    market_cap: number;
+    average_price: number;
+  }
   hasDescription?: boolean
-  floorPrice?: number
+  type?: string
 }
 
-export const CollectionInfo = ({ data, hasDescription, floorPrice }: CollectionInfoProps) => {
+export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoProps) => {
+  const ethPriceUSD = useEthPriceUSD();
   const [isExpanded, setIsExpanded] = useState(false);
+  const formatCurrency = (input: number) => {
+    return input?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
   return (
     <div className="bg-[#F8F8F8] px-6 pt-6  pb-4 minmd:pb-6 rounded-[10px] font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minxl:gap-12">
       <div className='flex flex-col'>
@@ -32,8 +44,8 @@ export const CollectionInfo = ({ data, hasDescription, floorPrice }: CollectionI
             Floor
           </p>
           <div className='text-right relative'>
-            <p className='font-medium'>{floorPrice} ETH</p>
-            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>$19K</p>
+            <p className='font-medium'>{formatCurrency(data?.floor_price)} ETH</p>
+            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>${formatCurrency(ethPriceUSD * data?.floor_price)}</p>
           </div>
         </div>
         <div className="flex justify-between mt-3">
@@ -53,7 +65,7 @@ export const CollectionInfo = ({ data, hasDescription, floorPrice }: CollectionI
             </CustomTooltip>
             Volume
           </p>
-          <p className='self-center font-medium'>12K</p>
+          <p className='self-center font-medium'>{formatCurrency(data?.one_day_volume)} ETH</p>
         </div>
         <div className="flex justify-between mt-4">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
@@ -72,7 +84,7 @@ export const CollectionInfo = ({ data, hasDescription, floorPrice }: CollectionI
             </CustomTooltip>
             Supply
           </p>
-          <p className='font-medium'>10K</p>
+          <p className='font-medium'>{data?.total_supply.toLocaleString()}</p>
         </div>
         <div className="flex justify-between mt-4">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
@@ -91,7 +103,7 @@ export const CollectionInfo = ({ data, hasDescription, floorPrice }: CollectionI
             </CustomTooltip>
             Owners
           </p>
-          <p className='font-medium'>976</p>
+          <p className='font-medium'>{data?.num_owners.toLocaleString()}</p>
         </div>
       </div>
       <div className={tw(
@@ -114,7 +126,7 @@ export const CollectionInfo = ({ data, hasDescription, floorPrice }: CollectionI
             </CustomTooltip>
             S/O Ratio
           </p>
-          <p className='font-medium'>80%</p>
+          <p className='font-medium'>{(data?.total_supply / data?.num_owners).toFixed(2)}</p>
         </div>
         <div className="flex justify-between h-10 mt-3">
           <p className='self-center font-medium text-[#6F6F6F] flex items-center minlg:hidden relative'>
@@ -150,22 +162,22 @@ export const CollectionInfo = ({ data, hasDescription, floorPrice }: CollectionI
             Mkt Cap
           </p>
           <div className='text-right relative'>
-            <p className='font-medium'>120 ETH</p>
-            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>$190K</p>
+            <p className='font-medium'>{formatCurrency(data?.market_cap)} ETH</p>
+            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>${formatCurrency(ethPriceUSD * data?.market_cap)}</p>
           </div>
         </div>
         <div className="flex justify-between h-10 mt-3 minmd:mt-2">
           <p className='self-center font-medium text-[#6F6F6F] block minlg:hidden'>Average Price</p>
           <p className='self-center font-medium text-[#6F6F6F] hidden items-center minlg:flex'>Avg Price</p>
           <div className='text-right relative'>
-            <p className='font-medium'>3 ETH</p>
-            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>$5K</p>
+            <p className='font-medium'>{data?.average_price.toFixed(2)} ETH</p>
+            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>${formatCurrency(ethPriceUSD * data?.average_price)}</p>
           </div>
         </div>
         <div className="flex justify-between mt-3 minmd:mt-2">
           <p className='font-medium text-[#6F6F6F] block minlg:hidden'>Contract Type</p>
           <p className='self-center font-medium text-[#6F6F6F] hidden items-center minlg:flex'>Type</p>
-          <p className='font-medium'>ERC1155</p>
+          <p className='font-medium'>{type}</p>
         </div>
       </div>
       
