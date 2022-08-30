@@ -63,7 +63,7 @@ export const Header = ({ removeBg } : HeaderProps) => {
             {
               getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
             <div className="hidden minlg:block w-full mr-8 ml-16 max-w-[27rem]">
-              <SearchBar bgLight={!useDarkMode || removeBg} />
+              <SearchBar />
             </div>
             }
           </div>
