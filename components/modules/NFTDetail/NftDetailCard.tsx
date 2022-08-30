@@ -20,7 +20,7 @@ export function NftDetailCard(props: NftDetailCardProps) {
       className={tw(
         'NftDetailCard',
         'flex w-full h-full',
-        'bg-footer-bg dark:bg-secondary-bg-dk rounded-lg',
+        'bg-[#F8F8F8] rounded-sm',
         'overflow-hidden cursor-pointer',
         props.onClick &&
        'cursor-pointer transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out'
@@ -33,22 +33,22 @@ export function NftDetailCard(props: NftDetailCardProps) {
     >
 
       <div className={tw(
-        'flex flex-col p-4 w-full',
-        'font-medium font-rubik',
+        'flex flex-col p-2 w-full',
         props.center ? 'items-center' : null,
-        'overflow-hidden'
+        'overflow-hidden',
+        'border border-[#E1E1E1] rounded-sm'
       )}>
-        <span className="text-xs text-secondary-txt dark:text-secondary-txt-dk mb-2">
+        <span className='font-grotesk text-[#6F6F6F] font-bold text-[10px] leading-5 tracking-[10%]'>
           {props.type}
         </span>
         <span className={tw(
-          'text-base dark:text-white',
+          'font-grotesk text-[#1F2127] font-bold text-[14px] leading-5',
           'line-clamp-1 text-ellipsis',
           props.valueClasses
         )}>
           {isCopied ? 'Copied!' : props.value}
         </span>
-        {!isNullOrEmpty(props.subtitle) && <span className=''>{props.subtitle}</span>}
+        {!isNullOrEmpty(props.subtitle) && <span className='font-grotesk font-normal text-xs leading-5 text-[#6F6F6F]'>{props.subtitle}</span>}
       </div>
     </div>
   );

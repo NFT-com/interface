@@ -1,3 +1,5 @@
+import { CuratedCollection } from 'types';
+
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
@@ -13,6 +15,9 @@ export function useSearchModal() {
       checkedFiltersList: '',
       sortBy: '',
       clearedFilters: true,
+      curatedCollections: null,
+      selectedCuratedCollection: null,
+
     } });
 
   const loading = !data;
@@ -25,7 +30,7 @@ export function useSearchModal() {
   };
 
   const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search', searchFilters?: any) => {
-    const filtersList = data.filtersList ?? (searchModalOpen && searchFilters.map((item) => {
+    const filtersList = data.filtersList ?? (searchModalOpen && searchFilters?.map((item) => {
       return {
         filter: item.field_name,
         values: []
@@ -98,6 +103,20 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setCuratedCollections = useCallback((curatedCollections: CuratedCollection[]) => {
+    mutate({
+      ...data,
+      curatedCollections
+    });
+  },[data, mutate]);
+
+  const setSelectedCuratedCollection = useCallback((selectedCuratedCollection: CuratedCollection) => {
+    mutate({
+      ...data,
+      selectedCuratedCollection
+    });
+  },[data, mutate]);
+
   return {
     loading,
     modalType: data.modalType,
@@ -108,6 +127,8 @@ export function useSearchModal() {
     checkedFiltersList: data.checkedFiltersList,
     sortBy:data.sortBy,
     clearedFilters: data.clearedFilters,
+    curatedCollections: data.curatedCollections,
+    selectedCuratedCollection: data.selectedCuratedCollection,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
@@ -115,7 +136,9 @@ export function useSearchModal() {
     setCheckedFiltersList,
     setSortBy,
     setClearedFilters,
-    setSearchFilters
+    setSearchFilters,
+    setCuratedCollections,
+    setSelectedCuratedCollection
   };
 }
 

@@ -1,7 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { Nft } from 'graphql/generated/types';
-import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { Nft, TxActivity } from 'graphql/generated/types';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -21,7 +21,12 @@ export interface ExternalListingsProps {
 export function ExternalListings(props: ExternalListingsProps) {
   const { address: currentAddress } = useAccount();
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
-  const { data: listings } = useExternalListingsQuery(props?.nft?.contract, props?.nft?.tokenId, String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
+  
+  const { data: listings } = useListingActivitiesQuery(
+    props?.nft?.contract,
+    props?.nft?.tokenId,
+    String(props.nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
+  );
 
   const {
     allowedAll: openseaAllowed,
@@ -39,16 +44,16 @@ export function ExternalListings(props: ExternalListingsProps) {
     TransferProxyTarget.LooksRare
   );
   
-  if (isNullOrEmpty(listings?.filter((l) => !isNullOrEmpty(l.url)))) {
+  if (isNullOrEmpty(listings)) {
     return (
       getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
         currentAddress === props.nft?.wallet?.address &&
-        <div className='w-full flex'>
-          <div className="flex flex-col items-center bg-white dark:bg-secondary-bg-dk rounded-xl py-5 px-12 my-6">
-            <span className='dark:text-white mb-4'>This item is in your wallet</span>
+        <div className='w-full flex py-4 pb-8 px-4 minmd:px-[17.5px] minlg:px-[128px]'>
+          <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full p-4 minmd:py-8 minmd:px-20">
+            <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>This item is in your wallet</span>
             <Button
-              label={'List Item'}
-              color="white"
+              stretch
+              label={'List item'}
               onClick={() => {
                 stageListing({
                   nft: props.nft,
@@ -57,7 +62,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   isApprovedForLooksrare: looksRareAllowed,
                   targets: []
                 });
-                toggleCartSidebar();
+                toggleCartSidebar('sell');
               }}
               type={ButtonType.PRIMARY}
             />
@@ -65,13 +70,18 @@ export function ExternalListings(props: ExternalListingsProps) {
         </div>
     );
   }
+  
   return <div className={tw(
     'flex w-full px-4',
     'flex-col minlg:flex-row flex-wrap'
   )}>
-    {listings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
+    {listings?.map((listing: PartialDeep<TxActivity>, index) => (
       <div className='w-full minlg:w-2/4 pr-2' key={index}>
-        <ExternalListingTile listing={listing} />
+        <ExternalListingTile
+          listing={listing}
+          nft={props.nft}
+          collectionName={props.collectionName}
+        />
       </div>
     ))}
   </div>;

@@ -6,7 +6,6 @@ import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
-import Link from 'next/link';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import { MouseEvent, useCallback, useState } from 'react';
@@ -58,7 +57,9 @@ export function NFTCard(props: NFTCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
+  // todo: replace this with TxActivity query
   const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
+
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-xs minmd:text-sm' style={{ color: pink }}>
@@ -200,12 +201,32 @@ export function NFTCard(props: NFTCardProps) {
         )}
         {(listings?.find(listing => listing.price != null) != null) && (
           <div className='mt-4 flex justify-start items-center'>
-            {listings[0].price && <Link href={listings[0].url}>
-              <OpenseaIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Opensea logo redirect" layout="fill"/>
-            </Link>}
-            {listings[1].price && <Link href={listings[1].url}>
-              <LooksrareIcon className='h-9 w-9 relative shrink-0 hover:opacity-70' alt="Looksrare logo redirect" layout="fill"/>
-            </Link>}
+            {listings[0].price &&
+              <OpenseaIcon
+                onClick={() => {
+                  window.open(
+                    listings[0].url,
+                    '_blank'
+                  );
+                }}
+                className='h-9 w-9 relative shrink-0 hover:opacity-70'
+                alt="Opensea logo redirect"
+                layout="fill"
+              />
+            }
+            {listings[1].price &&
+              <LooksrareIcon
+                onClick={() => {
+                  window.open(
+                    listings[1].url,
+                    '_blank'
+                  );
+                }}
+                className='h-9 w-9 relative shrink-0 hover:opacity-70'
+                alt="Looksrare logo redirect"
+                layout="fill"
+              />
+            }
             {(!listings[0].price && !listings[1].price) && <div className="h-9"></div>}
           </div>)
         }

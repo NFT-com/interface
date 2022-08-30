@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { PageInput, RecentProfilesQuery } from 'graphql/generated/types';
+import { PageInput, ProfileSortType, RecentProfilesQuery } from 'graphql/generated/types';
 
 import useSWR, { mutate } from 'swr';
 
@@ -20,6 +20,7 @@ export function useRecentProfilesQuery(pageInput: PageInput): RecentProfilesQuer
     const result = await sdk.RecentProfiles({
       input: {
         pageInput,
+        sortBy: ProfileSortType.RecentMinted
       },
     });
     return result;

@@ -27,7 +27,7 @@ export default function ProfileCard({ profile, onClick, message, showSwitch, ope
   const { setSidebarOpen } = useSidebar();
   return (
     <motion.div className={tw(
-      'mb-4 rounded-[10px] box-border',
+      'rounded-[10px] box-border',
       isSelected && 'outline-[#F9D963] outline-offset-[-2px] outline-3 outline'
     )}>
       {isSidebar
@@ -68,7 +68,7 @@ export default function ProfileCard({ profile, onClick, message, showSwitch, ope
                 <p className='font-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide w-full'>{profile?.title}</p>
               </div>
               <div className='h-full flex items-center' onClick={onClick ? !opensModal ? () => onClick(profile?.title) : () => onClick(true) : null}>
-                <p className='text-[#F9D963]'>Switch</p>
+                <p data-cy='profileCardSwitchSidebar' className='text-[#F9D963]'>Switch</p>
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function ProfileCard({ profile, onClick, message, showSwitch, ope
                 }
                 <p className='font-grotesk text-base text-white leading-6 font-medium ml-3 tracking-wide'>{profile?.title}</p>
               </div>
-              {showSwitch && <p className='text-[#F9D963]'>Switch</p>}
+              {showSwitch && <p data-cy='profileCardSwitch' className='text-[#F9D963]'>Switch</p>}
             </div>
           </div>
         </motion.div>

@@ -1,5 +1,6 @@
 import NftOwner from 'components/modules/Settings/NftOwner';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
+import MobileNoAccount from 'components/modules/Sidebar/MobileNoAccount';
 import { Notifications } from 'components/modules/Sidebar/Notifications';
 import SignIn from 'components/modules/Sidebar/SignIn';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
@@ -9,6 +10,7 @@ import { useUser } from 'hooks/state/useUser';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, prettify, shortenAddress } from 'utils/helpers';
 import { randomLabelGenerator } from 'utils/randomLabelGenerator';
 import { tw } from 'utils/tw';
@@ -46,6 +48,7 @@ export const Sidebar = () => {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
 
   const [hiddenProfile, setHiddenProfile] = useState(null);
+  const [signIn, setSignIn] = useState(false);
 
   useEffect(() => {
     sidebarOpen && promoteZIndex('sidebar');
@@ -90,7 +93,7 @@ export const Sidebar = () => {
             {randomLabel}
           </div>
 
-          <div className='w-full p-4 items-center drop-shadow-xl -mt-3 minlg:-mt-3'>
+          <div className='w-full h-max p-4 items-center drop-shadow-xl -mt-3 minlg:-mt-3'>
             {myOwnedProfileTokens.length ?
               <NftOwner isSidebar selectedProfile={user?.currentProfileUrl} showToastOnSuccess={router?.pathname === '/app/settings' ? false : true} />
               : <p className='text-2xl text-[#B6B6B6] font-bold'>No Profiles Found</p>
@@ -100,14 +103,39 @@ export const Sidebar = () => {
 
           <Link href='/app/settings' passHref>
             <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 pb-2'
+              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3'
             >
               Settings
             </a>
           </Link>
 
+          {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
+          <Link href='/app/discover' passHref>
+            <a onClick={() => setSidebarOpen(false)}
+              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
+            >
+            Discover
+            </a>
+          </Link>
+          }
+
+          <Link href='/app/gallery' passHref>
+            <a onClick={() => setSidebarOpen(false)}
+              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
+            >
+              Gallery
+            </a>
+          </Link>
+
+          <a
+            target="_blank" href="https://docs.nft.com" rel="noopener noreferrer"
+            className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
+          >
+              Docs
+          </a>
+
           <button
-            className='w-full flex flex-row items-start text-black hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 underline pr-12 pl-4 py-2 mb-8'
+            className='w-full flex flex-row items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 mb-8'
             onClick={() => {
               disconnect();
               setSignOutDialogOpen(true);
@@ -189,7 +217,13 @@ export const Sidebar = () => {
           }}
           className='h-full'
         >
-          <SignIn />
+          <div className='block minlg:hidden'>
+            {signIn ? <SignIn /> : <MobileNoAccount setSignIn={setSignIn} />}
+          </div>
+
+          <div className='hidden minlg:block'>
+            <SignIn />
+          </div>
         </motion.div>
       );
     } else {
@@ -214,7 +248,7 @@ export const Sidebar = () => {
         </motion.div>
       );
     }
-  }, [currentAddress, getSidebarContent]);
+  }, [currentAddress, getSidebarContent, signIn]);
   
   return (
     <AnimatePresence>

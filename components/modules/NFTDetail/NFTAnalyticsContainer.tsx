@@ -7,8 +7,9 @@ import { getDateFromTimeFrame } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PartialDeep } from 'type-fest';
+import { useNetwork } from 'wagmi';
 
 export type NFTAnalyticsContainerProps = {
   data: PartialDeep<Nft>;
@@ -16,8 +17,8 @@ export type NFTAnalyticsContainerProps = {
 
 const nftChartTypes = {
   0: 'Price',
-  1: 'Bids',
-  2: 'Activity'
+  1: 'Activity',
+  2: 'Bids'
 };
 
 const marketplaces = {
@@ -35,54 +36,89 @@ const timeFrames = {
 };
 
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
+  const { chain } = useNetwork();
   const [selectedChartType, setSelectedChartType] = useState(nftChartTypes[0]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
-  const currentDate = useMemo(() => {
-    return new Date();
-  }, []);
+  const [nftData, setNftData] = useState(null);
 
-  const dateFromTimeFrame = useMemo(() => {
+  const dateFrom = useMemo(() => {
     return getDateFromTimeFrame(selectedTimeFrame);
   }, [selectedTimeFrame]);
 
   const nftId = useGetNftByTokenId(data?.contract, parseInt(data?.tokenId, 16).toString())?.nft_by_token_id?.id;
-  const nftPriceHistory = useGetNftPriceHistory(nftId, dateFromTimeFrame, currentDate);
-  console.log(nftPriceHistory);
+  const nftPriceHistory = useGetNftPriceHistory(nftId, dateFrom);
+
+  useEffect(() => {
+    if(chain?.id !== 1) {
+      setNftData(null);
+      return;
+    }
+    if(selectedChartType === 'Price') {
+      setNftData(nftPriceHistory?.prices?.length === 0 ? null : nftPriceHistory);
+    }
+  }, [nftPriceHistory, selectedTimeFrame, selectedChartType, chain]);
 
   return (
     <div className="bg-transparent">
-      <div className="w-full">
-        <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]); setSelectedTimeFrame(timeFrames[0]);}}>
-          <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
-            {Object.keys(nftChartTypes).map((chartType) => (
+      <div className="w-full minmd:px-40">
+        <div className='w-full minmd:pb-4'>
+          <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
+            <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
+              {Object.keys(nftChartTypes).map((chartType) => (
+                <Tab
+                  key={chartType}
+                  className={({ selected }) =>
+                    tw(
+                      'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
+                      selected
+                      && 'bg-black text-[#F8F8F8]'
+                    )
+                  }
+                >
+                  {nftChartTypes[chartType]}
+                </Tab>
+              ))}
+            </Tab.List>
+          </Tab.Group>
+        </div>
+        {nftData && selectedChartType !== 'Activity' &&
+        <Tab.Group
+          onChange={(index) => {
+            setSelectedTimeFrame(timeFrames[index]);
+          }}
+        >
+          <Tab.List className="flex w-[250px] ml-11 minmd:-ml-40 items-center order-last rounded-lg bg-[#F6F6F6] p-2 my-4">
+            {Object.keys(timeFrames).map((timeFrame) => (
               <Tab
-                key={chartType}
+                key={timeFrame}
                 className={({ selected }) =>
                   tw(
-                    'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
+                    'font-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6F6F6F] ',
+                    'ring-white ring-opacity-60 ring-offset-2 focus:outline-none focus:ring-2',
                     selected
-                      && 'bg-black text-[#F8F8F8]'
+                      ? 'bg-white shadow text-[#1F2127] font-medium'
+                      : 'hover:bg-white/[0.12] hover:text-white'
                   )
                 }
               >
-                {nftChartTypes[chartType]}
+                {timeFrames[timeFrame]}
               </Tab>
             ))}
           </Tab.List>
         </Tab.Group>
+        }
       </div>
       {selectedChartType === 'Activity'
         ? <TxHistory />
         : <LineChart
-          data={data}
+          label={'Price'}
+          showMarketplaceOptions={true}
+          data={nftData}
           currentMarketplace={selectedMarketplace}
           setCurrentMarketplace={(selectedMarketplace: string) => {
             setSelectedMarketplace(selectedMarketplace);
-          }}
-          setCurrentTimeFrame={(selectedTimeFrame: string) => {
-            setSelectedTimeFrame(selectedTimeFrame);
           }}
         /> }
     </div>

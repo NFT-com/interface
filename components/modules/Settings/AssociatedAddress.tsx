@@ -78,7 +78,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
                     </div>
                   }
                 >
-                  <Clock size={25} className='mr-3' color='orange' weight='fill' />
+                  <Clock data-cy='PendingAssociation' size={25} className='mr-3' color='orange' weight='fill' />
                 </CustomTooltip>
               ):
               (
@@ -93,7 +93,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
                     </div>
                   }
                 >
-                  <XCircle size={25} className='mr-3' color='#D40909' weight='fill' />
+                  <XCircle data-cy='RejectedAssociation' size={25} className='mr-3' color='#D40909' weight='fill' />
                 </CustomTooltip>
               )
             :
@@ -108,7 +108,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
                 </div>
               }
             >
-              <CheckCircle size={25} className='mr-3 rounded-full' color='green' weight="fill" />
+              <CheckCircle data-cy='ApprovedAssociation' size={25} className='mr-3 rounded-full' color='green' weight="fill" />
             </CustomTooltip>
           }
         </div>
@@ -142,7 +142,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
               },
             ])
             }>
-            <DotsThreeOutlineVertical size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
+            <DotsThreeOutlineVertical data-cy='AssociationDropdown' size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
           </DropdownPickerModal>
         </div>
       </div>

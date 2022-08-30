@@ -1,9 +1,13 @@
+import { Button, ButtonType } from 'components/elements/Button';
+import { NFTDetailContext } from 'components/modules/NFTDetail/NFTDetailContext';
 import { Nft } from 'graphql/generated/types';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { useState } from 'react';
+import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
+import { useAccount } from 'wagmi';
 
 export interface NftMemoProps {
   nft: PartialDeep<Nft>;
@@ -12,8 +16,16 @@ export interface NftMemoProps {
 export const NftMemo = (props: NftMemoProps) => {
   const { nft } = props;
   const { alwaysBlack } = useThemeColors();
+  const { address: currentAddress } = useAccount();
 
-  const [draftMemo, setDraftMemo] = useState('');
+  const {
+    editMemo,
+    draftMemo,
+    setDraftMemo,
+    saveMemo,
+    setEditMemo,
+    clearDraft
+  } = useContext(NFTDetailContext);
 
   const handleMemoChange = (event) => {
     let memoValue = event.target.value;
@@ -22,26 +34,65 @@ export const NftMemo = (props: NftMemoProps) => {
     }
     setDraftMemo(memoValue);
   };
-  
+
   return (
-    <div className='w-full p-4'>
-      <span className='dark:text-white flex items-start'>Owner&apos;s Message</span>
-      <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
-        <textarea
-          className={tw(
-            'text-base w-full resize-none mt-4',
-            'text-left px-3 py-2 w-full rounded-xl font-medium h-32',
-          )}
-          maxLength={300}
-          placeholder="Enter memo (optional)"
-          value={draftMemo ?? ''}
-          onChange={e => {
-            handleMemoChange(e);
-          }}
-          style={{
-            color: alwaysBlack,
-          }}
-        />
+    <div className='flex flex-col h-full w-full p-4 mt-5 minmd:px-[17.5px] minlg:px-[128px]'>
+      <div className='flex h-full w-full'>
+        <div className='h-full w-full mt-20'>
+          <div className='font-grotesk text-[#6F6F6F] font-semibold text-base leading-6 relative ml-[10px] -my-20'>Owner&apos;s Message</div>
+          <textarea
+            className={tw(
+              'text-base w-full resize-none mt-9',
+              'text-left px-3 pb-2 w-full rounded-[10px] font-medium h-32',
+              'leading-5',
+              'bg-[#F8F8F8]',
+              'font-grotesk text-[#1F2127]',
+              `${editMemo ? 'border-2' : 'border-none'}`,
+              'pt-12',
+            )}
+            maxLength={300}
+            placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter memo (optional)' : undefined}
+            value={draftMemo ?? nft?.memo ?? ''}
+            onChange={e => {
+              handleMemoChange(e);
+            }}
+            style={{
+              color: alwaysBlack,
+            }}
+            disabled={!currentAddress === nft?.wallet?.address || !editMemo}
+          />
+          <div className='flex flex-row w-full justify-center items-center py-2 minmd:px-24'>
+            {currentAddress === nft?.wallet?.address && !editMemo &&
+            <Button
+              type={ButtonType.PRIMARY}
+              label={'Edit'}
+              stretch
+              onClick={() => {
+                setEditMemo(true);
+                setDraftMemo(draftMemo ?? nft?.memo ?? '');
+              }}
+            />
+            }
+            {currentAddress === nft?.wallet?.address && editMemo &&
+            <div className='inline-flex space-x-4'>
+              <Button
+                type={ButtonType.PRIMARY}
+                label={'Save'}
+                onClick={() => {
+                  setEditMemo(false);
+                  saveMemo();
+                } }
+              />
+              <Button
+                type={ButtonType.SECONDARY}
+                label={'Clear Draft'}
+                onClick={() => {
+                  clearDraft();
+                } } />
+            </div>
+            }
+          </div>
+        </div>
       </div>
     </div>
   );

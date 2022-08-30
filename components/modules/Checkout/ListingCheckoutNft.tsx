@@ -1,4 +1,5 @@
 import { PriceInput } from 'components/elements/PriceInput';
+import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -15,7 +16,8 @@ import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
 export interface ListingCheckoutNftProps {
-  listing: PartialDeep<StagedListing>
+  listing: PartialDeep<StagedListing>;
+  onPriceChange: () => void;
 }
 
 export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
@@ -56,14 +58,15 @@ export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
       </div>
       <div className='flex items-center'>
         <div className='flex flex-col ml-4'>
-          {props.listing.targets?.includes('seaport') && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-          {props.listing.targets?.includes('looksrare') && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+          {props.listing.targets?.includes(ExternalProtocol.Seaport) && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+          {props.listing.targets?.includes(ExternalProtocol.LooksRare) && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
         </div>
         <PriceInput
           currency={'WETH'}
           currencyOptions={['WETH']}
           onPriceChange={(val: BigNumber) => {
             setPrice(props.listing, val);
+            props.onPriceChange();
           }}
           onCurrencyChange={null}
           error={props.listing?.startingPrice == null || BigNumber.from(props.listing?.startingPrice).eq(0)}
