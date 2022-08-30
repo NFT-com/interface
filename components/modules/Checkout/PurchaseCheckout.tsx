@@ -18,6 +18,7 @@ export function PurchaseCheckout() {
   const {
     toBuy,
     clear,
+    buyAll,
     updateCurrencyApproval
   } = useContext(NFTPurchasesContext);
   const { getByContractAddress } = useSupportedCurrencies();
@@ -104,8 +105,8 @@ export function PurchaseCheckout() {
       </div>
       {toBuy?.length > 0 && <div className='mt-16'>
         <Button
-          disabled={loading && !error}
-          loading={loading && !error}
+          disabled={loading && !error && !success}
+          loading={loading && !error && !success}
           label={success ? 'Finish' : error ? 'Try Again' : 'Buy Now'}
           onClick={async () => {
             if (success) {
@@ -144,7 +145,12 @@ export function PurchaseCheckout() {
               }
             }
 
-            // todo complete the purchase transaction
+            const result = await buyAll();
+            if (result) {
+              setSuccess(true);
+            } else {
+              setError('PurchaseError');
+            }
           }}
           type={ButtonType.PRIMARY} />
       </div>}

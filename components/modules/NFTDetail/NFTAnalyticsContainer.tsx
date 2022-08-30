@@ -1,4 +1,4 @@
-import { LineChart } from 'components/modules/Analytics/LineChart';
+import { LineVis } from 'components/modules/Analytics/LineChart';
 import { TxHistory } from 'components/modules/Analytics/TxHistory';
 import { Nft } from 'graphql/generated/types';
 import { useGetNftPriceHistory } from 'hooks/analytics/aggregation/useGetNftPriceHistory';
@@ -112,7 +112,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
       </div>
       {selectedChartType === 'Activity'
         ? <TxHistory />
-        : <LineChart
+        : <LineVis
           label={'Price'}
           showMarketplaceOptions={true}
           data={nftData}
