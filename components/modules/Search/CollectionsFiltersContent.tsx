@@ -37,7 +37,6 @@ export const CollectionsFiltersContent = () => {
   const [sortBy, setSortBy] = useState(collectionPageSortyBy);
   const [id, setId] = useState(null);
 
-  console.log(id, 'id fdo');
   return (
     <>
       <div className="flex flex-col w-full">
