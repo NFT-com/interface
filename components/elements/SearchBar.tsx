@@ -12,7 +12,6 @@ export const SearchBar = () => {
 
   useEffect(() => {
     if (!router.pathname.includes('discover/')) {
-      //inputRef.current.value = '';
       setShowHits(false);
       setSearchResults([]);
     }
