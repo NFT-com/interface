@@ -85,7 +85,7 @@ export function PurchaseCheckout() {
     } else {
       // Cost Summary, Default view
       return (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full px-8">
           <p className="text-xl font-bold">
             Summary and fees for {toBuy?.length ?? 0} NFT{toBuy?.length > 1 && 's'}
           </p>

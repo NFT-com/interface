@@ -13,7 +13,7 @@ export default function BuyPage() {
   }
 
   return <div className={tw(
-    'w-full h-full pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
+    'w-full h-full flex flex-col items-center justify-center text-primary-txt dark:text-primary-txt-dk',
     getEnvBool(Doppler.NEXT_PUBLIC_FORCE_DARK_MODE) ? 'bg-white' : 'bg-white dark:bg-footer-bg-dk'
   )}>
     <div className='max-w-nftcom w-full flex flex-col items-center my-8'>

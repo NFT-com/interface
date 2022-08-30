@@ -1,7 +1,11 @@
+import { NULL_ADDRESS } from 'constants/addresses';
 import { LooksrareProtocolData, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
 
-import { BigNumber } from 'ethers';
+import { sameAddress } from './helpers';
+import { getAddress } from './httpHooks';
+
+import { BigNumber, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
 
 export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
@@ -18,8 +22,22 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
   }
 };
 
-export const getListingPriceUSD = (listing: PartialDeep<TxActivity>, ethPriceUSD: number) => {
-  // todo
+export const getListingPriceUSD: (
+  listing: PartialDeep<TxActivity>,
+  ethPriceUSD: number,
+  chainId: string | number
+) => number = (
+  listing: PartialDeep<TxActivity>,
+  ethPriceUSD: number,
+  chainId: string | number
+) => {
+  const currency = getListingCurrencyAddress(listing);
+  if (sameAddress(currency, getAddress('dai', chainId)) || sameAddress(currency, getAddress('usdc', chainId))) {
+    return Number(ethers.utils.formatUnits(getListingPrice(listing), 18));
+  } else if (sameAddress(NULL_ADDRESS, currency) || sameAddress(currency, getAddress('weth', chainId))) {
+    return Number(ethers.utils.formatUnits(getListingPrice(listing), 18)) / ethPriceUSD;
+  }
+  return 0;
 };
 
 export const getListingCurrencyAddress = (listing: PartialDeep<TxActivity>) => {
@@ -37,12 +55,13 @@ export const getListingCurrencyAddress = (listing: PartialDeep<TxActivity>) => {
 
 export const getLowestPriceListing = (
   listings: PartialDeep<TxActivity>[],
-  ethPriceUSD: number
+  ethPriceUSD: number,
+  chainId: number | string
 ) => {
   let lowestPriceListing = listings[0];
-  const lowestPriceUSD = getListingPriceUSD(listings[0], ethPriceUSD);
+  const lowestPriceUSD = getListingPriceUSD(listings[0], ethPriceUSD, chainId);
   for (let i = 1; i < listings.length; i++) {
-    if (getListingPriceUSD(listings[i], ethPriceUSD) < lowestPriceUSD) {
+    if (getListingPriceUSD(listings[i], ethPriceUSD, chainId) < lowestPriceUSD) {
       lowestPriceListing = listings[i];
     }
   }

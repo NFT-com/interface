@@ -4,11 +4,12 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
-import { sameAddress } from 'utils/helpers';
+import { filterNulls } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
@@ -16,7 +17,8 @@ import { tw } from 'utils/tw';
 
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
-import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useSigner } from 'wagmi';
 
@@ -24,6 +26,7 @@ export interface ExternalListingTileProps {
   listing: PartialDeep<TxActivity>;
   nft: PartialDeep<Nft>;
   collectionName: string;
+  buttons: ListingButtonType[];
 }
 
 const Colors = {
@@ -36,21 +39,167 @@ const Icons = {
   [ExternalExchange.Opensea]: '/opensea_blue.png',
 };
 
+export enum ListingButtonType {
+  View = 'View',
+  Cancel = 'Cancel',
+  Adjust = 'Adjust',
+  AddToCart = 'AddToCart',
+}
+
 export function ExternalListingTile(props: ExternalListingTileProps) {
   const { listing } = props;
 
   const [cancelling, setCancelling] = useState(false);
 
+  const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
   const { chain } = useNetwork();
   const { stagePurchase } = useContext(NFTPurchasesContext);
-  const { toggleCartSidebar } = useContext(NFTListingsContext);
+  const { stageListing } = useContext(NFTListingsContext);
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
 
+  const {
+    allowedAll: openseaAllowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.Opensea
+  );
+
+  const {
+    allowedAll: looksRareAllowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.LooksRare
+  );
+
   const listingProtocol = props.listing?.order?.protocol;
+
+  const getButton = useCallback((type: ListingButtonType) => {
+    switch (type) {
+    case ListingButtonType.Adjust: {
+      return <Button
+        stretch
+        color="white"
+        label={'Adjust Price'}
+        onClick={() => {
+          stageListing({
+            nft: props.nft,
+            collectionName: props.collectionName,
+            isApprovedForSeaport: openseaAllowed,
+            isApprovedForLooksrare: looksRareAllowed,
+            targets: filterNulls([listing?.order?.protocol as ExternalProtocol])
+          });
+          router.push('/app/list');
+        }}
+        type={ButtonType.PRIMARY}
+      />;
+    }
+    case ListingButtonType.View: {
+      return <Button
+        stretch
+        color="white"
+        label={'View Listing'}
+        onClick={() => {
+          switch(listingProtocol) {
+          case ExternalProtocol.Seaport: {
+            const order = listing?.order?.protocolData as SeaportProtocolData;
+            window.open(`https://opensea.io/assets/ethereum/${order?.parameters?.offer?.[0]?.token}/${order?.parameters?.offer?.[0]?.identifierOrCriteria}`, '_blank');
+            break;
+          }
+          case ExternalProtocol.LooksRare: {
+            const order = listing?.order?.protocolData as LooksrareProtocolData;
+            window.open(`https://looksrare.org/collections/${order?.collectionAddress ?? order?.['collection']}/${order?.tokenId}`, '_blank');
+            break;
+          }
+          }
+        }}
+        type={ButtonType.PRIMARY}
+      />;
+    }
+    case ListingButtonType.Cancel: {
+      return <Button
+        stretch
+        type={ButtonType.ERROR}
+        color="white"
+        label={'Cancel Listing'}
+        disabled={cancelling}
+        loading={cancelling}
+        onClick={async () => {
+          setCancelling(true);
+          if (listingProtocol === ExternalProtocol.LooksRare) {
+            const order = listing?.order?.protocolData as LooksrareProtocolData;
+            if (order == null) {
+              setCancelling(false);
+              return;
+            }
+            const result = await cancelLooksrareListing(BigNumber.from(order.nonce), looksrareExchange);
+            if (result) {
+            // todo: notify backend of cancellation
+            }
+            setCancelling(false);
+          } else if (listingProtocol === ExternalProtocol.Seaport) {
+            const order = listing?.order?.protocolData as SeaportProtocolData;
+            if (order == null) {
+              setCancelling(false);
+              return;
+            }
+            const result = await cancelSeaportListing(order?.parameters, seaportExchange);
+            if (result) {
+            // todo: notify backend of cancellation
+            }
+            setCancelling(false);
+          }
+        }}
+      />;
+    }
+    case ListingButtonType.AddToCart: {
+      return <Button
+        stretch
+        color="white"
+        label={'Add to Cart'}
+        onClick={async () => {
+          const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
+          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chain?.id ?? 1));
+          const price = getListingPrice(listing);
+          stagePurchase({
+            nft: props.nft,
+            currency: getListingCurrencyAddress(listing) ?? WETH.address,
+            price: price,
+            collectionName: props.collectionName,
+            protocol: listingProtocol as ExternalProtocol,
+            isApproved: BigNumber.from(allowance ?? 0).gt(price),
+            protocolData: listingProtocol === ExternalProtocol.Seaport ?
+              listing?.order?.protocolData as SeaportProtocolData :
+              listing?.order?.protocolData as LooksrareProtocolData
+          });
+          router.push('/app/buy');
+        }}
+        type={ButtonType.PRIMARY}
+      />;
+    }
+    }
+  }, [
+    router,
+    cancelling,
+    chain?.id,
+    currentAddress,
+    getByContractAddress,
+    listing,
+    listingProtocol,
+    looksRareAllowed,
+    looksrareExchange,
+    openseaAllowed,
+    props.collectionName,
+    props.nft,
+    seaportExchange,
+    stageListing,
+    stagePurchase
+  ]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
@@ -80,89 +229,14 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         </div>
       </div>
     </div>
-    <div className='flex items-center'>
-      <div className='flex items-center basis-1 grow px-2'>
-        <Button
-          stretch
-          color="white"
-          label={'View Listing'}
-          onClick={() => {
-            switch(listingProtocol) {
-            case ExternalProtocol.Seaport: {
-              const order = listing?.order?.protocolData as SeaportProtocolData;
-              window.open(`https://opensea.io/assets/ethereum/${order?.parameters?.offer?.[0]?.token}/${order?.parameters?.offer?.[0]?.identifierOrCriteria}`, '_blank');
-              break;
-            }
-            case ExternalProtocol.LooksRare: {
-              const order = listing?.order?.protocolData as LooksrareProtocolData;
-              window.open(`https://looksrare.org/collections/${order?.collectionAddress ?? order?.['collection']}/${order?.tokenId}`, '_blank');
-              break;
-            }
-            }
-          }}
-          type={ButtonType.PRIMARY}
-        />
-      </div>
-      <div className='flex items-center basis-1 grow px-2'>
-        {sameAddress(currentAddress, props.nft?.wallet?.address) ?
-          <Button
-            stretch
-            type={ButtonType.PRIMARY}
-            color="white"
-            label={'Cancel Listing'}
-            disabled={cancelling}
-            loading={cancelling}
-            onClick={async () => {
-              setCancelling(true);
-              if (listingProtocol === ExternalProtocol.LooksRare) {
-                const order = listing?.order?.protocolData as LooksrareProtocolData;
-                if (order == null) {
-                  setCancelling(false);
-                  return;
-                }
-                const result = await cancelLooksrareListing(BigNumber.from(order.nonce), looksrareExchange);
-                if (result) {
-                  // todo: notify backend of cancellation
-                }
-                setCancelling(false);
-              } else if (listingProtocol === ExternalProtocol.Seaport) {
-                const order = listing?.order?.protocolData as SeaportProtocolData;
-                if (order == null) {
-                  setCancelling(false);
-                  return;
-                }
-                const result = await cancelSeaportListing(order?.parameters, seaportExchange);
-                if (result) {
-                  // todo: notify backend of cancellation
-                }
-                setCancelling(false);
-              }
-            }}
-          />:
-          <Button
-            stretch
-            color="white"
-            label={'Add to Cart'}
-            onClick={async () => {
-              const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
-              const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chain?.id ?? 1));
-              const price = getListingPrice(listing);
-              stagePurchase({
-                nft: props.nft,
-                currency: getListingCurrencyAddress(listing) ?? WETH.address,
-                price: price,
-                collectionName: props.collectionName,
-                protocol: listingProtocol as ExternalProtocol,
-                isApproved: BigNumber.from(allowance ?? 0).gt(price),
-                protocolData: listingProtocol === ExternalProtocol.Seaport ?
-                  listing?.order?.protocolData as SeaportProtocolData :
-                  listing?.order?.protocolData as LooksrareProtocolData
-              });
-              toggleCartSidebar('buy');
-            }}
-            type={ButtonType.PRIMARY}
-          />}
-      </div>
+    <div className='flex flex-col items-center'>
+      {
+        props.buttons?.map(buttonType => {
+          return <div className='flex items-center basis-1 grow px-2 w-full mt-2' key={buttonType}>
+            {getButton(buttonType)}
+          </div>;
+        })
+      }
     </div>
   </div>;
 }

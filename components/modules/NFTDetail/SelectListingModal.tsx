@@ -1,20 +1,15 @@
-import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Nft, TxActivity } from 'graphql/generated/types';
-import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 import { ExternalListingTile, ListingButtonType } from './ExternalListingTile';
 
-import { useRouter } from 'next/router';
 import { XCircle } from 'phosphor-react';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount } from 'wagmi';
 
-export interface EditListingsModalProps {
+export interface SelectListingsModalProps {
   listings: PartialDeep<TxActivity>[];
   nft: PartialDeep<Nft>;
   collectionName: string;
@@ -22,28 +17,8 @@ export interface EditListingsModalProps {
   onClose: () => void;
 }
 
-export function EditListingsModal(props: EditListingsModalProps) {
+export function SelectListingModal(props: SelectListingsModalProps) {
   const { visible, onClose, nft, listings, collectionName } = props;
-
-  const router = useRouter();
-  const { address: currentAddress } = useAccount();
-  const { stageListing } = useContext(NFTListingsContext);
-
-  const {
-    allowedAll: openseaAllowed,
-  } = useNftCollectionAllowance(
-    props.nft?.contract,
-    currentAddress,
-    TransferProxyTarget.Opensea
-  );
-
-  const {
-    allowedAll: looksRareAllowed,
-  } = useNftCollectionAllowance(
-    props.nft?.contract,
-    currentAddress,
-    TransferProxyTarget.LooksRare
-  );
 
   const getModalContent = useCallback(() => {
     return <div className='flex flex-col'>
@@ -70,41 +45,13 @@ export function EditListingsModal(props: EditListingsModalProps) {
               listing={listing}
               nft={nft}
               collectionName={collectionName}
-              buttons={[ListingButtonType.Cancel, ListingButtonType.Adjust]}
+              buttons={[ListingButtonType.View, ListingButtonType.AddToCart]}
             />;
           })
         }
-        <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full p-4 minmd:py-8 minmd:px-20">
-          <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>List item on another marketplace</span>
-          <Button
-            stretch
-            label={'List item'}
-            onClick={() => {
-              stageListing({
-                nft: props.nft,
-                collectionName: props.collectionName,
-                isApprovedForSeaport: openseaAllowed,
-                isApprovedForLooksrare: looksRareAllowed,
-                targets: []
-              });
-              router.push('/app/list');
-            }}
-            type={ButtonType.PRIMARY}
-          />
-        </div>
       </div>
     </div>;
-  }, [
-    nft,
-    collectionName,
-    listings,
-    stageListing,
-    props.nft,
-    props.collectionName,
-    openseaAllowed,
-    looksRareAllowed,
-    router
-  ]);
+  }, [nft, collectionName, listings]);
 
   return (
     <Modal
@@ -121,7 +68,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
         <div className='pt-20 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
           <XCircle onClick={onClose} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
-          {<h2 className='text-4xl tracking-wide font-bold mb-10'>Editing Listings</h2>}
+          {<h2 className='text-4xl tracking-wide font-bold mb-10'>Select Listing</h2>}
           {getModalContent()}
         </div>
       </div>
