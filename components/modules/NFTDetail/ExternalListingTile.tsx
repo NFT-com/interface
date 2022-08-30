@@ -9,13 +9,14 @@ import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
 import { sameAddress } from 'utils/helpers';
+import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
-import { useCallback, useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useSigner } from 'wagmi';
 
@@ -51,39 +52,12 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
 
   const listingProtocol = props.listing?.order?.protocol;
 
-  const getPrice = useCallback(() => {
-    switch(listing?.order?.protocol) {
-    case (ExternalProtocol.LooksRare): {
-      const order = listing?.order?.protocolData as LooksrareProtocolData;
-      return BigNumber.from(order?.price ?? 0);
-    }
-    case (ExternalProtocol.Seaport): {
-      const order = listing?.order?.protocolData as SeaportProtocolData;
-      return order?.parameters?.consideration
-        ?.reduce((total, consideration) => total.add(BigNumber.from(consideration?.startAmount ?? 0)), BigNumber.from(0));
-    }
-    }
-  }, [listing?.order?.protocol, listing?.order?.protocolData]);
-
-  const getCurrency = useCallback(() => {
-    switch(listing?.order?.protocol) {
-    case (ExternalProtocol.LooksRare): {
-      const order = listing?.order?.protocolData as LooksrareProtocolData;
-      return order?.currencyAddress ?? order?.['currency'];
-    }
-    case (ExternalProtocol.Seaport): {
-      const order = listing?.order?.protocolData as SeaportProtocolData;
-      return order?.parameters?.consideration?.[0]?.token;
-    }
-    }
-  }, [listing?.order?.protocol, listing?.order?.protocolData]);
-
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
     return null;
   }
 
-  return <div className="flex flex-col bg-white dark:bg-secondary-bg-dk rounded-xl p-5 my-6">
+  return <div className="flex flex-col bg-[#F6F6F6] rounded-xl p-5 my-6">
     <div className='flex items-center mb-4'>
       <div className={tw(
         'relative flex items-center justify-center',
@@ -100,8 +74,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         </span>
         <div className='flex items-center'>
           <span className='text-base font-medium'>
-            {ethers.utils.formatUnits(getPrice(), getByContractAddress(getCurrency())?.decimals ?? 18)}{' '}
-            {getByContractAddress(getCurrency())?.name ?? 'ETH'}
+            {ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}{' '}
+            {getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'ETH'}
           </span>
         </div>
       </div>
@@ -170,12 +144,12 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             color="white"
             label={'Add to Cart'}
             onClick={async () => {
-              const currencyData = getByContractAddress(getCurrency() ?? WETH.address);
+              const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
               const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chain?.id ?? 1));
-              const price = getPrice();
+              const price = getListingPrice(listing);
               stagePurchase({
                 nft: props.nft,
-                currency: getCurrency() ?? WETH.address,
+                currency: getListingCurrencyAddress(listing) ?? WETH.address,
                 price: price,
                 collectionName: props.collectionName,
                 protocol: listingProtocol as ExternalProtocol,
