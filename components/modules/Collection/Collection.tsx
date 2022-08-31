@@ -5,15 +5,19 @@ import { CollectionAnalyticsContainer } from 'components/modules/Collection/Coll
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
+import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';
+import Image from 'next/image';
+import Link from 'next/link';
 import router from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
@@ -23,7 +27,6 @@ import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
-  profile?: any
 }
 
 export function Collection(props: CollectionProps) {
@@ -37,6 +40,14 @@ export function Collection(props: CollectionProps) {
   const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
   const collectionSalesHistory = useGetSalesStats(props?.contract?.toString());
+  const { profileTokens: creatorTokens } = useNftProfileTokens(collectionData?.collection?.deployer);
+  const { profileData: collectionOwnerData } = useProfileQuery(
+    creatorTokens?.at(0)?.tokenUri?.raw?.split('/').pop()
+  );
+  const { profileData: collectionPreferredOwnerData } = useProfileQuery(
+    collectionOwnerData?.profile?.owner?.preferredProfile.url
+  );
+
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
     if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
@@ -104,22 +115,33 @@ export function Collection(props: CollectionProps) {
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
+            {collectionPreferredOwnerData &&
+              <div className='relative h-10 w-10'>
+                <Image src={processIPFSURL(collectionPreferredOwnerData?.profile?.photoURL) || 'https://cdn.nft.com/profile-image-default.svg'} alt='test' className='rounded-[10px] mr-2' layout='fill' objectFit='cover' />
+              </div>
+            }
             <div className={tw(
               'flex flex-col justify-between',
-              props.profile && 'ml-2'
+              collectionPreferredOwnerData?.profile && 'ml-2'
             )}>
               <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
-              <div className='mt-1 text-[#B59007] font-medium font-mono'>
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={`https://etherscan.io/address/${props.contract?.toString()}`}
-                  className=' tracking-wide flex'
-                >
-                  <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
-                  <LinkIcon size={20} className='ml-1' />
-                </a>
-              </div>
+              {collectionPreferredOwnerData?.profile ?
+                <Link href={`/${collectionPreferredOwnerData?.profile?.url}`}>
+                  <p className='font-bold underline decoration-[#F9D963] underline-offset-4 cursor-pointer'>{collectionPreferredOwnerData?.profile?.url}</p>
+                </Link>
+                :
+                <div className='mt-1 text-[#B59007] font-medium font-mono'>
+                  <a
+                    target="_blank"
+                    rel="noreferrer"
+                    href={`https://etherscan.io/address/${props.contract?.toString()}`}
+                    className=' tracking-wide flex'
+                  >
+                    <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
+                    <LinkIcon size={20} className='ml-1' />
+                  </a>
+                </div>
+              }
             </div>
           </div>
 
@@ -140,7 +162,7 @@ export function Collection(props: CollectionProps) {
           </div>
         </div>
         <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
-          {collectionData?.collection?.description &&
+          {collectionData?.collection?.description && collectionData?.collection?.description !== 'placeholder collection description text' &&
           <div className='minlg:w-1/2'>
             <h3 className='text-[#6F6F6F] font-semibold'>
             Description
