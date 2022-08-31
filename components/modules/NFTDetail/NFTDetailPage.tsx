@@ -45,7 +45,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
 
   return (
-    <div className="flex flex-col pt-20 items-center w-screen mx-auto">
+    <div className="flex flex-col pt-20 items-center minxl:items-start w-screen mx-auto">
       <NFTDetail nft={nft} onRefreshSuccess={() => {
         mutateNft();
         mutateListings();
@@ -60,8 +60,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           <NftMemo nft={nft} />
         </NFTDetailContextProvider>
       }
-      <div className='flex flex-row w-full items-center pt-4 minlg:justify-around minlg:px-[200px]'>
-        <div className='w-2/3 minmd:w-full justify-start minmd:justify-center h-[40px] pl-4 minmd:px-[200px]'>
+      <div className='flex w-full minxl:w-1/4 items-center pt-4 minxl:pt-4 minlg:justify-around minxl:justify-start minlg:px-[200px] minxl:px-4'>
+        <div className='w-2/3 minmd:w-full justify-start minmd:justify-center h-[40px] pl-4 minxl:pl-0 minmd:px-[200px] minxl:px-4'>
           <Tab.Group onChange={(index) => {setSelectedDetailTab(detailTabTypes[index]);}}>
             <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
               {Object.keys(detailTabTypes).map((detailTab) => (
@@ -84,38 +84,44 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       </div>
       {selectedDetailTab === 'Info' &&
       <>
-        <div className='flex flex-col w-full p-4 minmd:px-[42px] minlg:px-[128px] font-grotesk'>
+        <div className='flex w-full minxl:w-1/2 p-4 minmd:px-[42px] minlg:px-[128px] minxl:px-4 font-grotesk minxl:pr-20'>
           <DescriptionDetail nft={nft} />
         </div>
-        <div className='flex flex-col w-full p-4 minmd:px-[42px] minlg:px-[128px] font-grotesk'>
+        <div className='flex w-full minxl:w-1/2 p-4 minmd:px-[42px] minlg:px-[128px] minxl:px-4 font-grotesk minxl:pr-20'>
           <NftChainInfo nft={nft} />
         </div>
       </>
       }
       {selectedDetailTab === 'Traits' &&
       <>
-        <div className='flex flex-col w-full p-4 minmd:px-[42px] minlg:px-[128px]'>
+        <div className='flex w-full minxl:w-1/2 p-4 minmd:px-[42px] minlg:px-[128px] minxl:px-4 minxl:pr-20 minxl:clear-right'>
           <div className='border border-[#E1E1E1] rounded-md py-4 font-grotesk w-full'>
             <Properties nft={nft} />
           </div>
         </div>
       </>}
-      <div className='w-full flex flex-col minlg:flex-row p-4 minmd:px-[42px] minlg:px-[128px]'>
-        {(getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) && chain?.id === 1) &&
+      <>
+        <div className={tw('flex w-full p-4',
+          'minmd:px-[42px]',
+          'minlg:flex-row minlg:px-[128px]',
+          'minxl:w-full minxl:float-right'
+        )}>
+          {(getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) && chain?.id === 1) &&
             <div className="w-full">
               <NFTAnalyticsContainer data={nft} />
             </div>
-        }
-      </div>
+          }
+        </div>
+      </>
       {
         getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-        <div className="w-full my-10 flex items-center minmd:px-[42px] minlg:px-[128px]">
+        <div className="w-full my-10 flex items-center minmd:px-[42px] minlg:px-[128px] minxl:px-4">
           <NFTDetailMoreFromCollection contract={nft?.contract} />
         </div>
       }
       {
         getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-        <div className="w-full my-10 flex items-center minmd:px-[42px] minlg:px-[128px]">
+        <div className="w-full my-10 flex items-center minmd:px-[42px] minlg:px-[128px] minxl:px-4">
           <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
         </div>
       }

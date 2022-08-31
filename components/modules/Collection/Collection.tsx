@@ -1,6 +1,6 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
-import { TxHistory } from 'components/modules/Analytics/TxHistory';
+import { CollectionActivity } from 'components/modules/Analytics/CollectionActivity';
 import { CollectionAnalyticsContainer } from 'components/modules/Collection/CollectionAnalyticsContainer';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
@@ -260,10 +260,9 @@ export function Collection(props: CollectionProps) {
               </div>}
             </>
             }
-            {selectedTab === 'Activity' &&
-              <TxHistory />
-            }
-            {selectedTab === 'Analytics' &&
+            {selectedTab === 'Activity' ?
+              <CollectionActivity contract={props?.contract} />
+              :
               <CollectionAnalyticsContainer contract={props?.contract} />
             }
           </>
