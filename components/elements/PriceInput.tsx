@@ -44,7 +44,7 @@ export function PriceInput(props: PriceInputProps) {
   return (
     <div
       className={tw(
-        'flex flex-row p-6 rounded-xl',
+        'flex flex-row rounded-xl',
       )}>
       {props.onCurrencyChange && <div className='relative items-center flex shrink-0 grow mr-8'>
         <DropdownPicker
@@ -53,13 +53,12 @@ export function PriceInput(props: PriceInputProps) {
         />
       </div>
       }
-      <div className='flex basis-3/5'>
+      <div className='flex'>
         <input
           type="text"
           className={tw(
             'text-lg min-w-0 border',
             'text-left px-3 py-3 rounded-xl font-medium',
-            'w-full',
             props.error ? 'border-red-500 border-2' : ''
           )}
           placeholder={'e.g. 1 ' + props.currency}

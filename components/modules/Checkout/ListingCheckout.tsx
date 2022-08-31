@@ -15,13 +15,14 @@ export function ListingCheckout() {
     toList,
     setDuration,
     toggleTargetMarketplace,
-    prepareListings
+    prepareListings,
+    allListingsConfigured
   } = useContext(NFTListingsContext);
     
   const [showSummary, setShowSummary] = useState(false);
 
-  const openseaFullyEnabled = toList.find(listing => listing.targets?.includes(ExternalProtocol.Seaport)) != null;
-  const looksrareFullyEnabled = toList.find(listing => listing.targets?.includes(ExternalProtocol.LooksRare)) != null;
+  const openseaFullyEnabled = toList.find(listing => !listing.targets?.includes(ExternalProtocol.Seaport)) == null;
+  const looksrareFullyEnabled = toList.find(listing => !listing.targets?.includes(ExternalProtocol.LooksRare)) == null;
 
   return (
     <div className="flex flex-col minlg:flex-row w-full">
@@ -93,6 +94,7 @@ export function ListingCheckout() {
         }
         {!showSummary && <Button
           label={'Next'}
+          disabled={!allListingsConfigured()}
           onClick={async () => {
             await prepareListings();
             setShowSummary(true);

@@ -41,7 +41,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
 
   return (
     <div ref={sidebarRef} className={tw(
-      'z-50 absolute pt-20 right-0 w-full h-full minmd:max-w-md bg-white flex flex-col grow',
+      'z-50 fixed top-20 right-0 w-full h-full minmd:max-w-md bg-white flex flex-col grow',
       'drop-shadow-md'
     )}>
       <div className='flex flex-row items-center px-8 my-8'>
