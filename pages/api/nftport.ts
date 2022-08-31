@@ -15,7 +15,7 @@ const nftportHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const apiUrl = new URL(`https://api.nftport.xyz/v0/transactions/${category}/${contractAddress}${`/${tokenId}` ?? ''}?chain=ethereum${`&type=${type}`?? ''}`);
 
   try {
-    const result = await fetch(apiUrl, {
+    const result = await fetch(apiUrl.toString(), {
       method: 'GET',
       headers: {
         'Authorization': process.env.NFTPORT_KEY,
