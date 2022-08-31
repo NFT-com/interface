@@ -20,7 +20,6 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
     }
   }, [chain.id, nftData, nftTransactionHistory]);
 
-  //TODO: @anthony - add tx history from indexer
   return (
     <div className="shadow-sm overflow-x-auto my-8 font-grotesk rounded-md p-4 border-2 border-[#D5D5D5]">
       {!nftData ?
