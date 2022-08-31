@@ -1,11 +1,10 @@
-import indexedCollections from 'constants/indexedCollections.json';
 import { request } from 'graphql-request';
 import { Doppler, getEnv } from 'utils/env';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR from 'swr';
 
 const fetcher = (query, variables) => {
-  console.log(query, variables);
   return request(getEnv(Doppler.NEXT_PUBLIC_ANALYTICS_GQL_ENDPOINT), query, variables);
 };
 
@@ -28,7 +27,7 @@ export function useGetCollectionByAddress(contractAddress: string) {
     variables,
   ];
 
-  const { data, error } = useSWR((!contractAddress || !indexedCollections.includes(contractAddress) ? null : request), fetcher);
+  const { data, error } = useSWR((isNullOrEmpty(contractAddress) ? null : request), fetcher);
 
   if (error) return 'error';
   return data;

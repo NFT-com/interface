@@ -1,4 +1,3 @@
-import indexedCollections from 'constants/indexedCollections.json';
 import { request } from 'graphql-request';
 import { Doppler, getEnv } from 'utils/env';
 
@@ -41,7 +40,7 @@ export function useGetNftByTokenId(contractAddress: string, tokenId: string) {
     variables,
   ];
 
-  const { data, error } = useSWR(() => (!contractAddress || !tokenId || !indexedCollections.includes(contractAddress)) ? null : request, fetcher);
+  const { data, error } = useSWR(() => (!contractAddress || !tokenId) ? null : request, fetcher);
   
   if (error) return 'error';
   return data;

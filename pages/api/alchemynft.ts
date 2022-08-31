@@ -24,7 +24,8 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   
   const alchemyAPIKey = ALCHEMY_KEYS[chainId as string];
   
-  const apiUrl = `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/v2/${alchemyAPIKey}`;
+  const apiUrl = `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/nft/v2/${alchemyAPIKey}`;
+  const nftApiUrl = `https://eth-${ALCHEMY_PREFIXES[chainId as string]}.alchemyapi.io/nft/v2/${alchemyAPIKey}`;
   
   switch (action) {
   case 'getNftMetadata': {
@@ -128,6 +129,26 @@ const alchemyNftHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     } catch (e) {
       res.status(500).json(JSON.stringify({ message: 'getNFTsForCollection: error processing Alchemy result', e }));
+      return;
+    }
+  }
+  case 'getFloorPrice': {
+    const contractAddress = req.query['contractAddress'];
+    if (isNullOrEmpty(contractAddress)) {
+      res.status(400).json(JSON.stringify({ message: 'getFloorPrice: Invalid Arguments' }));
+      return;
+    }
+    const requestUrl = new URL(nftApiUrl + '/getFloorPrice/');
+    requestUrl.searchParams.set('contractAddress', contractAddress as string);
+    try {
+      const result = await fetch(requestUrl.toString(), {
+        method: 'GET',
+        redirect: 'follow',
+      }).then(alchemyRes => alchemyRes.json());
+      res.status(200).json(result);
+      return;
+    } catch (e) {
+      res.status(500).json(JSON.stringify({ message: 'getFloorPrice: error processing Alchemy result', e }));
       return;
     }
   }

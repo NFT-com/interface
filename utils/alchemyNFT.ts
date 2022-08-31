@@ -59,3 +59,13 @@ export async function getNftsForCollection(
   const result = await fetch(url.toString()).then(res => res.json());
   return result;
 }
+
+export async function getFloorPrice(
+  contract: string,
+) {
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
+  url.searchParams.set('action', 'getFloorPrice');
+  url.searchParams.set('contractAddress', contract);
+  const result = await fetch(url.toString()).then(res => res.json());
+  return result;
+}

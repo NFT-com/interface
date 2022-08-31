@@ -17,7 +17,7 @@ export default function ListPage() {
     'w-full h-full pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
     'bg-white dark:bg-footer-bg-dk'
   )}>
-    <div className='max-w-nftcom w-full flex flex-col items-center my-8'>
+    <div className='max-w-nftcom w-full flex flex-col items-center my-8 pt-20'>
       <div className='w-full flex px-8'>
         <h1 className='text-xl font-bold underline'>Configure Listings</h1>
       </div>

@@ -6,10 +6,6 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { MAX_UINT_256 } from 'utils/marketplaceUtils';
 
 import { BigNumberish } from '@ethersproject/bignumber';
-import DAI_LOGO from 'public/dai.svg';
-import ETH_LOGO from 'public/eth.svg';
-import USDC_LOGO from 'public/usdc.svg';
-import WETH_LOGO from 'public/weth.svg';
 import { useCallback, useMemo } from 'react';
 import { useAccount, useSigner } from 'wagmi';
 
@@ -66,7 +62,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
     return {
       'WETH': {
         name: 'WETH',
-        logo: WETH_LOGO,
+        logo: 'https://cdn.nft.com/weth.svg',
         contract: weth.address,
         decimals: 18,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
@@ -80,7 +76,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
       },
       'ETH': {
         name: 'ETH',
-        logo: ETH_LOGO,
+        logo: 'https://cdn.nft.com/eth.svg',
         contract: NULL_ADDRESS,
         decimals: 18,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
@@ -94,7 +90,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
       },
       'DAI': {
         name: 'DAI',
-        logo: DAI_LOGO,
+        logo: 'https://cdn.nft.com/dai.svg',
         contract: dai.address,
         usd: (val: number) => val,
         decimals: 18,
@@ -108,7 +104,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
       },
       'USDC': {
         name: 'USDC',
-        logo: USDC_LOGO,
+        logo: 'https://cdn.nft.com/usdc.svg',
         contract: usdc.address,
         usd: (val: number) => val,
         decimals: 18,

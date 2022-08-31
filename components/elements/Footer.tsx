@@ -71,6 +71,15 @@ export const Footer = () => {
             );
           },
         },
+        {
+          name: 'Business Inquiries',
+          onClick: () => {
+            window.open(
+              'mailto:info@nft.com',
+              '_open'
+            );
+          },
+        },
       ]
     },
     {
