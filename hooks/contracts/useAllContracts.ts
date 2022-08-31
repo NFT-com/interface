@@ -57,7 +57,7 @@ export function useAllContracts(): Contracts {
   const provider = useProvider({ chainId: Number(chainId) });
 
   const [daiContract, setDaiContract] =
-    useState(getDaiContract(getAddress('weth', chainId), provider));
+    useState(getDaiContract(getAddress('dai', chainId), provider));
   const [wethContract, setWethContract] =
     useState(getWethContract(getAddress('weth', chainId), provider));
   const [usdcContract, setUsdcContract] =
