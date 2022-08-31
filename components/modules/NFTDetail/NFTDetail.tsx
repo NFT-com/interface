@@ -129,7 +129,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                   <span className='text-[14px] font-medium leading-5 font-grotesk text-link'>
                     {collectionOwnerToShow?.url == null ?
                       shortenAddress(collectionOwnerToShow?.owner?.address) :
-                      '@' + collectionOwnerToShow?.url
+                      collectionOwnerToShow?.url
                     }
                   </span>
                 </div> :
@@ -169,7 +169,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 <span className="text-[14px] font-medium leading-5 font-grotesk text-link">
                   {profileOwnerToShow?.url == null ?
                     shortenAddress(props.nft?.wallet?.address) :
-                    '@' + profileOwnerToShow?.url
+                    profileOwnerToShow?.url
                   }
                 </span>
               </div> :
