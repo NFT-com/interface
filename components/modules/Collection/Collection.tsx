@@ -5,7 +5,7 @@ import { CollectionAnalyticsContainer } from 'components/modules/Collection/Coll
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
-import { useGetCollectionByAddress } from 'hooks/analytics/graph/useGetCollectionByAddress';
+import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -14,9 +14,8 @@ import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';
-import Image from 'next/image';
 import router from 'next/router';
-import { ArrowClockwise, FunnelSimple } from 'phosphor-react';
+import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import useSWR from 'swr';
@@ -36,8 +35,8 @@ export function Collection(props: CollectionProps) {
   const [found, setFound] = useState(0);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
-  const { data: collectionData } = useCollectionQuery(String( chain ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
-  const collectionInfo = useGetCollectionByAddress(props.contract?.toString());
+  const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
+  const collectionSalesHistory = useGetSalesStats(props?.contract?.toString());
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
     if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
@@ -105,55 +104,43 @@ export function Collection(props: CollectionProps) {
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
-            {props.profile &&
-              <div className='relative h-10 w-10'>
-                <Image src={props.profile?.photoURL || 'https://cdn.nft.com/profile-image-default.svg'} alt='test' className='rounded-[10px] mr-2' layout='fill' objectFit='cover' />
-              </div>
-            }
             <div className={tw(
               'flex flex-col justify-between',
               props.profile && 'ml-2'
             )}>
               <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
-              {props.profile
-                ? (
-                  <p className='font-bold underline decoration-[#F9D963] underline-offset-4'>{props.profile.url}</p>
-                )
-                : (
-                  <div className='flex mt-1 text-[#B59007] font-medium font-mono'>
-                    <span>{shortenAddress(props.contract?.toString(), 4)}</span>
-                    <a
-                      target="_blank"
-                      rel="noreferrer"
-                      href={`https://etherscan.io/address/${props.contract?.toString()}`}
-                      className='font-bold underline tracking-wide'
-                    >
-                      <LinkIcon size={20} className='ml-1' />
-                    </a>
-                  </div>
-                )
-              }
-            
+              <div className='mt-1 text-[#B59007] font-medium font-mono'>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`https://etherscan.io/address/${props.contract?.toString()}`}
+                  className=' tracking-wide flex'
+                >
+                  <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
+                  <LinkIcon size={20} className='ml-1' />
+                </a>
+              </div>
             </div>
           </div>
 
           <div className='flex flex-col'>
             <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Contract Address</p>
-            <div className='flex mt-1 text-[#B59007] font-medium font-mono'>
-              <span>{shortenAddress(props.contract?.toString(), 4)}</span>
+            <div className='mt-1 text-[#B59007] font-medium font-mono'>
+              
               <a
                 target="_blank"
                 rel="noreferrer"
                 href={`https://etherscan.io/address/${props.contract?.toString()}`}
-                className='font-bold underline tracking-wide'
+                className='tracking-wide flex'
               >
+                <span className='contractAddress'>{shortenAddress(props.contract?.toString(), 4)}</span>
                 <LinkIcon size={20} className='ml-1' />
               </a>
             </div>
           </div>
         </div>
         <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
-          {collectionInfo?.collection_by_address?.description &&
+          {collectionData?.collection?.description &&
           <div className='minlg:w-1/2'>
             <h3 className='text-[#6F6F6F] font-semibold'>
             Description
@@ -162,20 +149,20 @@ export function Collection(props: CollectionProps) {
               {descriptionExpanded ?
                 <>
                   <p className='inline'>
-                    {collectionInfo?.collection_by_address?.description}
+                    {collectionData?.collection?.description}
                   </p>
                   <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(false)}>Show less</p>
                 </>
                 :
                 <>
                   <p className='inline minlg:hidden'>
-                    {collectionInfo?.collection_by_address?.description.length > 87 ? collectionInfo?.collection_by_address?.description.substring(0, 87) + '...' : collectionInfo?.collection_by_address?.description}
+                    {collectionData?.collection?.description.length > 87 ? collectionData?.collection?.description.substring(0, 87) + '...' : collectionData?.collection?.description}
                   </p>
                   <p className='hidden minlg:inline'>
-                    {collectionInfo?.collection_by_address?.description.length > 200 ? collectionInfo?.collection_by_address?.description.substring(0, 200) + '...' : collectionInfo?.collection_by_address?.description}
+                    {collectionData?.collection?.description.length > 200 ? collectionData?.collection?.description.substring(0, 200) + '...' : collectionData?.collection?.description}
                   </p>
                   {
-                    collectionInfo?.collection_by_address?.description.length > 87 &&
+                    collectionData?.collection?.description.length > 87 &&
                     <>
                       <p className='text-[#B59007] font-bold ml-1 hover:cursor-pointer inline minlg:hidden' onClick={() => setDescriptionExpanded(true)}>
                         Show more
@@ -183,7 +170,7 @@ export function Collection(props: CollectionProps) {
                     </>
                   }
                   {
-                    collectionInfo?.collection_by_address?.description.length > 200 &&
+                    collectionData?.collection?.description.length > 200 &&
                     <>
                       <p className='text-[#B59007] font-bold ml-1 hover:cursor-pointer hidden minlg:inline' onClick={() => setDescriptionExpanded(true)}>
                         Show more
@@ -196,7 +183,7 @@ export function Collection(props: CollectionProps) {
           </div>
           }
           <div className='w-full minlg:w-1/2'>
-            <CollectionInfo />
+            <CollectionInfo data={collectionSalesHistory?.statistics} type={collectionNfts[0]?.document?.nftType} hasDescription={true} />
           </div>
         </div>
       </div>
@@ -208,11 +195,8 @@ export function Collection(props: CollectionProps) {
         {collectionNfts.length > 0 ?
           <>
             {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-            <div className='block minlg:flex w-full mb-6 justify-between items-center'>
+            <div className='block minlg:flex minlg:flex-row-reverse w-full minlg:w-max mb-6 justify-between items-center'>
               <div className='block minlg:flex items-center mb-6 minlg:mb-0'>
-                <div className='bg-[#F8F8F8] text-[#6F6F6F] w-10 h-10 font-grotesk font-bold p-1 rounded-[20px]  items-center justify-center mr-4 hidden minlg:flex'>
-                  <FunnelSimple color='#6F6F6F' className='h-7 w-7'/>
-                </div>
                 <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
                   <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk minlg:max-w-md minlg:w-[448px]">
                     {Object.keys(tabs).map((tab) => (
@@ -232,33 +216,17 @@ export function Collection(props: CollectionProps) {
                   </Tab.List>
                 </Tab.Group>
               </div>
-              <div
-                id="refreshNftButton"
-                className={tw(
-                  'rounded-full bg-[#F8F8F8] h-10 w-10 justify-center items-center mr-6 hidden minlg:flex'
-                )}
-              >
-                <ArrowClockwise color='#6F6F6F' className='h-7 w-7'/>
-              </div>
-              <div className='mb-6 items-center w-full flex minlg:hidden'>
-                <div
-                  id="refreshNftButton"
-                  className={tw(
-                    'rounded-full bg-[#F8F8F8] h-6 w-7 flex justify-center items-center mr-6'
-                  )}
-                >
-                  <ArrowClockwise color='#6F6F6F' className='h-4 w-4'/>
-                </div>
-                <div className='w-full bg-[#F8F8F8] text-[#6F6F6F] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center'>
-                  <FunnelSimple color='#6F6F6F' className='h-5 w-4 mr-2'/>
-                  <p>Filter</p>
+              <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
+                <div className='w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'>
+                  <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+                  <p className='minlg:hidden'>Filter</p>
                 </div>
               </div>
             </div>
             }
             {selectedTab === 'NFTs' &&
             <>
-              <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{collectionNfts.length} {collectionNfts.length > 1 ? 'NFTS' : 'NFT'}</p>
+              <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{collectionSalesHistory?.statistics?.total_supply.toLocaleString()} {collectionSalesHistory?.statistics?.total_supply > 1 ? 'NFTS' : 'NFT'}</p>
               <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
                 {collectionNfts.map((nft, index) => {
                   return (
@@ -296,7 +264,7 @@ export function Collection(props: CollectionProps) {
               <TxHistory />
             }
             {selectedTab === 'Analytics' &&
-              <CollectionAnalyticsContainer data={collectionData} />
+              <CollectionAnalyticsContainer contract={props?.contract} />
             }
           </>
           :
