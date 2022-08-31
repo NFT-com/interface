@@ -8,7 +8,7 @@ import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
-import { BigNumber, utils } from 'ethers';
+import { utils } from 'ethers';
 import Link from 'next/link';
 
 import { useRouter } from 'next/router';
