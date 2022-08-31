@@ -15,12 +15,12 @@ import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
-export interface ListingCheckoutNftProps {
+export interface ListingCheckoutNftTableRowProps {
   listing: PartialDeep<StagedListing>;
   onPriceChange: () => void;
 }
 
-export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
+export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProps) {
   const { chain } = useNetwork();
   const { data: collection } = useSWR('ContractMetadata' + props.listing?.nft?.contract, async () => {
     return await getContractMetadata(props.listing?.nft?.contract, chain?.id);
@@ -28,8 +28,8 @@ export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
   const { setPrice, removeListing } = useContext(NFTListingsContext);
 
   return (
-    <div className='flex items-center justify-between w-full h-32 px-8'>
-      <div className='h-full flex items-center'>
+    <tr className='flex items-center h-32 border border-black'>
+      <td className='h-full flex items-center w-56 border border-black shrink-0'>
         <div className='relative h-2/4 aspect-square'>
           <MinusCircle
             size={20}
@@ -55,12 +55,14 @@ export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
           <span>{props.listing?.nft?.metadata?.name}</span>
           <span>{collection?.contractMetadata?.name}</span>
         </div>
-      </div>
-      <div className='flex items-center'>
+      </td>
+      <td>
         <div className='flex flex-col ml-4'>
           {props.listing.targets?.includes(ExternalProtocol.Seaport) && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
           {props.listing.targets?.includes(ExternalProtocol.LooksRare) && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
         </div>
+      </td>
+      <td className='flex items-center'>
         <PriceInput
           currency={'WETH'}
           currencyOptions={['WETH']}
@@ -71,7 +73,7 @@ export function ListingCheckoutNft(props: ListingCheckoutNftProps) {
           onCurrencyChange={null}
           error={props.listing?.startingPrice == null || BigNumber.from(props.listing?.startingPrice).eq(0)}
         />
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 }
