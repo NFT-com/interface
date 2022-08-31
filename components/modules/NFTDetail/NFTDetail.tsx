@@ -8,8 +8,9 @@ import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
+import { BigNumber, utils } from 'ethers';
+import Link from 'next/link';
 
-import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
@@ -75,9 +76,11 @@ export const NFTDetail = (props: NFTDetailProps) => {
         'flex items-center w-full mt-8 py-4 px-4 justify-between minmd:px-[17.5px] minlg:px-[128px] minxl:px-4',
       )}>
         <div className='flex flex-col'>
-          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
-            {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
-          </div>
+          <Link href={`/app/collection/${collection?.collection?.contract}`}>
+            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline">
+              {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
+            </div>
+          </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
             {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${utils.formatEther(props.nft?.tokenId.toString())}`}
           </div>
