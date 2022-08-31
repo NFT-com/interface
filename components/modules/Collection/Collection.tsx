@@ -22,6 +22,7 @@ import router from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
@@ -101,6 +102,31 @@ export function Collection(props: CollectionProps) {
     }
   }, [client, collectionNfts, currentPage, prevVal, props.contract]);
 
+  const theme = {
+    p: (props: any) => {
+      const { children } = props;
+      return (
+        <p className="inline">
+          {children}
+        </p>
+      );
+    },
+    a: (props: any) => {
+      const { children } = props;
+      return (
+        
+        <a
+          className="underline inline"
+          href={props.href}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {children}
+        </a>
+      );
+    }
+  };
+
   return (
     <>
       <div className="mt-20">
@@ -165,24 +191,46 @@ export function Collection(props: CollectionProps) {
           {collectionData?.collection?.description && collectionData?.collection?.description !== 'placeholder collection description text' &&
           <div className='minlg:w-1/2'>
             <h3 className='text-[#6F6F6F] font-semibold'>
-            Description
+              Description
             </h3>
             <div className='mt-1 mb-10 minlg:mb-0 minlg:pr-4'>
               {descriptionExpanded ?
                 <>
-                  <p className='inline'>
+                  <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
                     {collectionData?.collection?.description}
-                  </p>
+                  </ReactMarkdown>
                   <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(false)}>Show less</p>
                 </>
                 :
                 <>
-                  <p className='inline minlg:hidden'>
-                    {collectionData?.collection?.description.length > 87 ? collectionData?.collection?.description.substring(0, 87) + '...' : collectionData?.collection?.description}
-                  </p>
-                  <p className='hidden minlg:inline'>
-                    {collectionData?.collection?.description.length > 200 ? collectionData?.collection?.description.substring(0, 200) + '...' : collectionData?.collection?.description}
-                  </p>
+                  {collectionData?.collection?.description.length > 87
+                    ?
+                    <div className='inline minlg:hidden'>
+                      <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+                        {collectionData?.collection?.description.substring(0, 87) + '...'}
+                      </ReactMarkdown>
+                    </div>
+                    :
+                    <div className='inline minlg:hidden'>
+                      <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+                        {collectionData?.collection?.description}
+                      </ReactMarkdown>
+                    </div>
+                  }
+                  {collectionData?.collection?.description.length > 200
+                    ?
+                    <div className='hidden minlg:inline'>
+                      <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+                        {collectionData?.collection?.description.substring(0, 200) + '...'}
+                      </ReactMarkdown>
+                    </div>
+                    :
+                    <div className='hidden minlg:inline'>
+                      <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+                        {collectionData?.collection?.description}
+                      </ReactMarkdown>
+                    </div>
+                  }
                   {
                     collectionData?.collection?.description.length > 87 &&
                     <>
