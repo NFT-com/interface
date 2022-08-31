@@ -33,7 +33,6 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
     }).then((collectionsData => {
       nftsForCollections = collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
     }));
-    console.log(nftsForCollections, 'nftsForCollections fdo');
     return nftsForCollections;
   });
 
@@ -59,7 +58,6 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
 
   useEffect(() => {
     const paginatedContracts = nftsForCollections?.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page);
-    console.log(paginatedContracts, 'paginatedContracts fdo');
     const sortedPaginatedAddresses = paginatedContracts?.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
     nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...sortedPaginatedAddresses]);
   },[nftsForCollections, page, screenWidth, sideNavOpen]);
