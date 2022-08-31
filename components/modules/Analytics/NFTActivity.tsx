@@ -1,7 +1,7 @@
 import { Nft } from 'graphql/generated/types';
 import { useGetTransactionsByNFT } from 'hooks/analytics/nftport/nfts/useGetTransactionsByNFT';
 import { Doppler, getEnv } from 'utils/env';
-import { shortenAddress } from 'utils/helpers';
+import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import moment from 'moment';
@@ -43,11 +43,12 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
         <table className="border-collapse table-auto w-full overflow-x-auto">
           <thead className='text-[#6F6F6F] text-sm font-medium leading-6'>
             <tr className='p-4 pt-0 pb-3 text-left ...'>
-              <th>Event</th>
-              <th>From</th>
-              <th>To</th>
-              <th>Marketplace</th>
-              <th>Timestamp</th>
+              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Event</th>
+              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>From</th>
+              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>To</th>
+              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Marketplace</th>
+              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Timestamp</th>
+              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Transaction Hash</th>
             </tr>
           </thead>
           <tbody className='p-4'>
@@ -61,7 +62,14 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
                 <td className="font-normal text-base leading-6 text-[#1F2127] p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>
                 <td className="font-normal text-base leading-6 text-[#1F2127] p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>
                 <td className="font-normal text-base leading-6 text-[#1F2127] p-4 capitalize">{formatMarketplaceName(tx.marketplace) || '—'}</td>
-                <td className="font-normal text-base leading-6 text-[#1F2127] p-4">{moment.utc(tx.transaction_date).format('MMM-YY-DD:HH:MM').toString() || '—'}</td>
+                <td className="font-normal text-base leading-6 text-[#1F2127] p-4">{moment.utc(tx.transaction_date).format('lll').toString() || '—'}</td>
+                <td className="font-normal text-base leading-6 text-[#B59007] p-4">
+                  <a
+                    target="_blank"
+                    rel="noreferrer" href={`https://etherscan.io/tx/${tx.transaction_hash}`} className='font-bold tracking-wide'>
+                    {shorten(tx?.transaction_hash, true) || '—'}
+                  </a>
+                </td>
               </tr>
             ))}
           </tbody>
