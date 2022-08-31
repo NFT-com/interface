@@ -33,7 +33,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
             Token ID
           </p>
           <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
-            {nft?.tokenId}
+            {parseInt(nft?.tokenId, 16).toString()}
           </span>
         </div>
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>

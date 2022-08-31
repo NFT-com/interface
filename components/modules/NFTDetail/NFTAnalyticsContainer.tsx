@@ -18,9 +18,7 @@ export type NFTAnalyticsContainerProps = {
 }
 
 const nftChartTypes = {
-  0: 'Price',
   1: 'Activity',
-  2: 'Bids'
 };
 
 const marketplaces = {
@@ -39,7 +37,7 @@ const timeFrames = {
 
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const { chain } = useNetwork();
-  const [selectedChartType, setSelectedChartType] = useState(nftChartTypes[0]);
+  const [selectedChartType, setSelectedChartType] = useState(nftChartTypes[1]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
