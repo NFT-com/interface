@@ -1,9 +1,7 @@
-import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { Nft } from 'graphql/generated/types';
 import { shortenAddress } from 'utils/helpers';
 
 import { useRouter } from 'next/router';
-import { Info } from 'react-feather';
 import { PartialDeep } from 'type-fest';
 
 export interface NftChainInfoProps {

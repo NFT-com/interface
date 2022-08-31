@@ -1,4 +1,3 @@
-import indexedCollections from 'constants/indexedCollections.json';
 import { Doppler, getEnv } from 'utils/env';
 
 import useSWR from 'swr';
@@ -7,7 +6,7 @@ export function useGetTransactionsByNFT(contractAddress: string, tokenId: string
   const { data } = useSWR(
     'useGetTransactionsByNFT' + contractAddress + tokenId,
     async () => {
-      if (!contractAddress || !tokenId || !indexedCollections.includes(contractAddress)) {
+      if (!contractAddress || !tokenId) {
         return null;
       }
       const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/nftport');
