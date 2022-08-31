@@ -1,27 +1,26 @@
 import { Nft } from 'graphql/generated/types';
 import { useGetTransactionsByNFT } from 'hooks/analytics/nftport/nfts/useGetTransactionsByNFT';
-import { Doppler, getEnv } from 'utils/env';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import { useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useNetwork } from 'wagmi';
 
 export type TxHistoryProps = {
   data: PartialDeep<Nft>;
 }
 export const NFTActivity = ({ data }: TxHistoryProps) => {
-  const { chain } = useNetwork();
+  const defaultChainId = useDefaultChainId();
   const nftTransactionHistory = useGetTransactionsByNFT(data?.contract, parseInt(data?.tokenId, 16).toString());
   const [nftData, setNftdata] = useState(null);
 
   useEffect(() => {
-    if((chain.id === 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') && !nftData && !!nftTransactionHistory) {
+    if(defaultChainId === '1' && !nftData && !!nftTransactionHistory) {
       setNftdata(nftTransactionHistory);
     }
-  }, [chain.id, nftData, nftTransactionHistory]);
+  }, [defaultChainId, nftData, nftTransactionHistory]);
 
   return (
-    <div className="shadow-sm overflow-x-auto my-8 font-grotesk rounded-md p-4 border-2 border-[#D5D5D5]">
+    <div className="shadow-sm overflow-x-scroll my-8 font-grotesk rounded-md p-4 border-2 border-[#D5D5D5] max-h-96 overflow-y-scroll">
       {!nftData ?
         <span className='bg-white flex justify-center px-auto mx-auto w-full whitespace-nowrap font-normal text-base leading-6 text-[#1F2127] text-center items-center'>
           No Activity for this NFT yet
@@ -38,8 +37,8 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
             </tr>
           </thead>
           <tbody className='p-4'>
-            {nftData?.transactions?.map((tx) => (
-              <tr key={tx} className="bg-white font-normal text-base leading-6 text-[#1F2127]">
+            {nftData?.transactions?.map((tx, index) => (
+              <tr key={index} className="bg-white font-normal text-base leading-6 text-[#1F2127]">
                 <td>{tx.type}</td>
                 <td>{tx.transfer_from}</td>
                 <td>{tx.transfer_to}</td>

@@ -65,18 +65,17 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
 
   return (
     <div className="bg-transparent">
-      <div className="w-full minmd:px-40">
-        <div className='w-full minmd:pb-4 minxl:-ml-40 py-2'>
+      <div className="w-full flex flex-col">
+        <div className='justify-start flex'>
           <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
-            <Tab.List className="flex w-full space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
+            <Tab.List className="flex rounded-3xl bg-[#F6F6F6] font-grotesk">
               {Object.keys(nftChartTypes).map((chartType) => (
                 <Tab
                   key={chartType}
                   className={({ selected }) =>
                     tw(
-                      'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
-                      selected
-                      && 'bg-black text-[#F8F8F8]'
+                      'rounded-3xl py-2.5 px-8 text-sm font-medium leading-5 text-[#6F6F6F]',
+                      selected && 'bg-black text-[#F8F8F8]'
                     )
                   }
                 >
