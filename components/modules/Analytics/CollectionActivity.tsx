@@ -64,7 +64,9 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
                 formatMarketplaceName(tx.marketplace) || '—'
               }
               </td>
-              <td className="font-normal text-base leading-6 text-[#1F2127] p-4">{moment.utc(tx.transaction_date).format('MMM-YY-DD:HH:MM').toString() || '—'}</td>
+              <td className="font-normal text-base leading-6 text-[#1F2127] p-4">
+                {moment.utc(tx.transaction_date).format('lll').toString() || '—'}
+              </td>
               <td className="font-normal text-base leading-6 text-[#B59007] p-4">
                 <a
                   target="_blank"
