@@ -50,7 +50,7 @@ const ContractNameFilter = (props: any) => {
 
   useEffect(() => {
     const filteredContracts = filterOptions.filter((contract) => {
-      return contract.value?.includes(searchVal);
+      return contract.value?.toLowerCase().includes(searchVal.toLowerCase());
     });
 
     setFilteredContracts([...filteredContracts]);
