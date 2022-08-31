@@ -5,6 +5,7 @@ import { Maybe } from 'graphql/generated/types';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 
+import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { PurchaseCheckoutNft } from './PurchaseCheckoutNft';
 import { VerticalProgressBar } from './VerticalProgressBar';
@@ -32,16 +33,72 @@ export function PurchaseCheckout() {
 
   const getNeedsApprovals = useCallback(() => {
     return filterDuplicates(
-      toBuy.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+      toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
       (first, second) => first?.currency === second?.currency
     ).some(purchase => !purchase?.isApproved);
   }, [toBuy]);
 
   const getTotalPrice = useCallback(() => {
-    return toBuy.reduce((acc, curr) => {
+    return toBuy?.reduce((acc, curr) => {
       return acc.add(curr.price);
     }, BigNumber.from(0));
   }, [toBuy]);
+
+  const getSummaryContent = useCallback(() => {
+    if (success) {
+      return <div className="my-8">
+        <CheckoutSuccessView subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}/>
+      </div>;
+    } else if (loading) {
+      return (<div>
+        <VerticalProgressBar
+          nodes={filterNulls([
+            {
+              label: 'Initialize Wallet',
+            },
+            {
+              label: 'Approve Tokens',
+              error: error === 'ApprovalError',
+              items: filterDuplicates(
+                toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                (first, second) => first?.currency === second?.currency
+              ).map(purchase => {
+                const currencyData = getByContractAddress(purchase?.currency);
+                return {
+                  label: 'Approve ' + currencyData.name,
+                  icon: purchase?.isApproved ?
+                    <CheckCircle size={16} className="text-green-500" /> :
+                    error === 'ApprovalError' ?
+                      <X size={16} className="text-red-400" /> :
+                      <SpinnerGap size={16} className="text-yellow-500 animate-spin" />
+                };
+              })
+            },
+            {
+              label: 'Complete Transaction',
+              error: error === 'PurchaseError',
+            }
+          ])}
+          activeNodeIndex={getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2}
+        />
+      </div>);
+    } else {
+      // Cost Summary, Default view
+      return (
+        <div className="flex flex-col w-full">
+          <p className="text-xl font-bold">
+            Summary and fees for {toBuy?.length ?? 0} NFT{toBuy?.length > 1 && 's'}
+          </p>
+          <div className="mx-8 my-4 flex items-center w-full">
+            <span>Total Cost: {' '}</span>
+            <span className='ml-2'>
+              {ethers.utils.formatEther(getTotalPrice() ?? 0) + ' WETH'}
+            </span>
+          </div>
+        </div>
+      );
+    }
+  }, [error, getByContractAddress, getNeedsApprovals, getTotalPrice, loading, success, toBuy]);
     
   return (
     <div className="flex flex-col w-full items-center">
@@ -59,48 +116,7 @@ export function PurchaseCheckout() {
           }
         </div>
         {toBuy?.length > 0 && <div className='flex flex-col items-center justify-center w-full'>
-          {loading ?
-            <div>
-              <VerticalProgressBar
-                nodes={filterNulls([
-                  {
-                    label: 'Initialize Wallet',
-                  },
-                  {
-                    label: 'Approve Tokens',
-                    error: error === 'ApprovalError',
-                    items: filterDuplicates(
-                      toBuy.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
-                      (first, second) => first?.currency === second?.currency
-                    ).map(purchase => {
-                      const currencyData = getByContractAddress(purchase?.currency);
-                      return {
-                        label: 'Approve ' + currencyData.name,
-                        icon: purchase?.isApproved ?
-                          <CheckCircle size={16} className="text-green-500" /> :
-                          error === 'ApprovalError' ?
-                            <X size={16} className="text-red-400" /> :
-                            <SpinnerGap size={16} className="text-yellow-500 animate-spin" />
-                      };
-                    })
-                  },
-                  {
-                    label: 'Complete Transaction',
-                    error: error === 'PurchaseError',
-                  }
-                ])}
-                activeNodeIndex={getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2}
-              />
-            </div> :
-            <div>
-              <div className="mx-8 my-4 flex items-center">
-                <span>Total Cost: {' '}</span>
-                <span className='ml-2'>
-                  {ethers.utils.formatEther(getTotalPrice() ?? 0) + ' WETH'}
-                </span>
-              </div>
-            </div>
-          }
+          {getSummaryContent()}
         </div>}
       </div>
       {toBuy?.length > 0 && <div className='mt-16'>
@@ -125,7 +141,7 @@ export function PurchaseCheckout() {
 
             if (getNeedsApprovals()) {
               const missingApprovals = filterDuplicates(
-                toBuy.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
                 (first, second) => first?.currency === second?.currency
               ).filter(purchase => !purchase?.isApproved);
               for (let i = 0; i < missingApprovals.length; i++) {
