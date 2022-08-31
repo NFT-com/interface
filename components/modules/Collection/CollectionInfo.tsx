@@ -24,7 +24,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
     return input?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
   return (
-    <div data-cy="collectionInfoContainer" className="bg-[#F8F8F8] px-6 pt-6  pb-4 minmd:pb-6 rounded-[10px] font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minxl:gap-12">
+    <div data-cy="collectionInfoContainer" className="bg-[#F8F8F8] px-6 pt-6  pb-4 minmd:pb-6 rounded-[10px] font-grotesk grid minmd:grid-cols-2 minmd:gap-16 minlg:gap-6 minxl:gap-12">
       <div className='flex flex-col'>
         <div className="flex justify-between h-10">
           <p className='self-start font-medium text-[#6F6F6F] flex items-center relative'>
@@ -50,7 +50,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
             </>
           </div>
         </div>
-        <div className="flex justify-between mt-3">
+        <div className="flex justify-between mt-1">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
               rightPostion={!hasDescription && -100}
@@ -69,7 +69,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
           </p>
           <p className='self-start font-medium'>{data?.one_day_volume ? formatCurrency(data?.one_day_volume)+ ' ETH': 'N/A'}</p>
         </div>
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between mt-5">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
             <CustomTooltip
               rightPostion={!hasDescription && -100}
@@ -130,7 +130,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
           </p>
           <p className='font-medium'>{data?.total_supply ? (data?.total_supply / data?.num_owners).toFixed(2): 'N/A'}</p>
         </div>
-        <div className="flex justify-between h-10 mt-4">
+        <div className="flex justify-between h-10 mt-4 minmd:mt-5">
           <p className='self-start font-medium text-[#6F6F6F] flex items-center minlg:hidden relative'>
             <CustomTooltip
               rightPostion={!hasDescription && -100}
@@ -168,7 +168,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
             <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>{data?.market_cap ? '$' + formatCurrency(ethPriceUSD * data?.market_cap): 'N/A'}</p>
           </div>
         </div>
-        <div className="flex justify-between h-10 mt-3 minmd:mt-2">
+        <div className="flex justify-between h-10 mt-2 minmd:mt-1">
           <p className='self-start font-medium text-[#6F6F6F] block minlg:hidden'>Average Price</p>
           <p className='self-start font-medium text-[#6F6F6F] hidden items-center minlg:flex'>Avg Price</p>
           <div className='text-right relative'>
@@ -176,7 +176,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
             <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>{data?.average_price ? '$'+ formatCurrency(ethPriceUSD * data?.average_price) : 'N/A'}</p>
           </div>
         </div>
-        <div className="flex justify-between mt-3 minmd:mt-1">
+        <div className="flex justify-between mt-3 minmd:mt-0">
           <p className='font-medium text-[#6F6F6F] block minlg:hidden'>Contract Type</p>
           <p className='self-start font-medium text-[#6F6F6F] hidden items-center minlg:flex'>Type</p>
           <p className='font-medium'>{type ? type : 'N/A'}</p>
