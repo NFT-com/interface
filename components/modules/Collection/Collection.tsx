@@ -5,25 +5,29 @@ import { CollectionAnalyticsContainer } from 'components/modules/Collection/Coll
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
+import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';
+import Image from 'next/image';
+import Link from 'next/link';
 import router from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
-  profile?: any
 }
 
 export function Collection(props: CollectionProps) {
@@ -37,6 +41,14 @@ export function Collection(props: CollectionProps) {
   const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
   const collectionSalesHistory = useGetSalesStats(props?.contract?.toString());
+  const { profileTokens: creatorTokens } = useNftProfileTokens(collectionData?.collection?.deployer);
+  const { profileData: collectionOwnerData } = useProfileQuery(
+    creatorTokens?.at(0)?.tokenUri?.raw?.split('/').pop()
+  );
+  const { profileData: collectionPreferredOwnerData } = useProfileQuery(
+    collectionOwnerData?.profile?.owner?.preferredProfile.url
+  );
+
   const { data: imgUrl } = useSWR('imageurl', async() => {
     let imgUrl;
     if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
@@ -52,8 +64,7 @@ export function Collection(props: CollectionProps) {
 
   const tabs = {
     0: 'NFTs',
-    1: 'Activity',
-    2: 'Analytics'
+    1: 'Activity'
   };
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -90,6 +101,31 @@ export function Collection(props: CollectionProps) {
     }
   }, [client, collectionNfts, currentPage, prevVal, props.contract]);
 
+  const theme = {
+    p: (props: any) => {
+      const { children } = props;
+      return (
+        <p className="inline">
+          {children}
+        </p>
+      );
+    },
+    a: (props: any) => {
+      const { children } = props;
+      return (
+        
+        <a
+          className="underline inline"
+          href={props.href}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {children}
+        </a>
+      );
+    }
+  };
+
   return (
     <>
       <div className="mt-20">
@@ -104,22 +140,33 @@ export function Collection(props: CollectionProps) {
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
+            {collectionPreferredOwnerData &&
+              <div className='relative h-10 w-10'>
+                <Image src={processIPFSURL(collectionPreferredOwnerData?.profile?.photoURL) || 'https://cdn.nft.com/profile-image-default.svg'} alt='test' className='rounded-[10px] mr-2' layout='fill' objectFit='cover' />
+              </div>
+            }
             <div className={tw(
               'flex flex-col justify-between',
-              props.profile && 'ml-2'
+              collectionPreferredOwnerData?.profile && 'ml-2'
             )}>
               <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
-              <div className='mt-1 text-[#B59007] font-medium font-mono'>
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={`https://etherscan.io/address/${props.contract?.toString()}`}
-                  className=' tracking-wide flex'
-                >
-                  <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
-                  <LinkIcon size={20} className='ml-1' />
-                </a>
-              </div>
+              {collectionPreferredOwnerData?.profile ?
+                <Link href={`/${collectionPreferredOwnerData?.profile?.url}`}>
+                  <p className='font-bold underline decoration-[#F9D963] underline-offset-4 cursor-pointer'>{collectionPreferredOwnerData?.profile?.url}</p>
+                </Link>
+                :
+                <div className='mt-1 text-[#B59007] font-medium font-mono'>
+                  <a
+                    target="_blank"
+                    rel="noreferrer"
+                    href={`https://etherscan.io/address/${props.contract?.toString()}`}
+                    className=' tracking-wide flex'
+                  >
+                    <span>{shortenAddress(collectionData?.collection?.deployer, 4)}</span>
+                    <LinkIcon size={20} className='ml-1' />
+                  </a>
+                </div>
+              }
             </div>
           </div>
 
@@ -140,27 +187,49 @@ export function Collection(props: CollectionProps) {
           </div>
         </div>
         <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
-          {collectionData?.collection?.description &&
+          {collectionData?.collection?.description && collectionData?.collection?.description !== 'placeholder collection description text' &&
           <div className='minlg:w-1/2'>
             <h3 className='text-[#6F6F6F] font-semibold'>
-            Description
+              Description
             </h3>
             <div className='mt-1 mb-10 minlg:mb-0 minlg:pr-4'>
               {descriptionExpanded ?
                 <>
-                  <p className='inline'>
+                  <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
                     {collectionData?.collection?.description}
-                  </p>
+                  </ReactMarkdown>
                   <p className='text-[#B59007] font-bold inline ml-1 hover:cursor-pointer' onClick={() => setDescriptionExpanded(false)}>Show less</p>
                 </>
                 :
                 <>
-                  <p className='inline minlg:hidden'>
-                    {collectionData?.collection?.description.length > 87 ? collectionData?.collection?.description.substring(0, 87) + '...' : collectionData?.collection?.description}
-                  </p>
-                  <p className='hidden minlg:inline'>
-                    {collectionData?.collection?.description.length > 200 ? collectionData?.collection?.description.substring(0, 200) + '...' : collectionData?.collection?.description}
-                  </p>
+                  {collectionData?.collection?.description.length > 87
+                    ?
+                    <div className='inline minlg:hidden'>
+                      <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+                        {collectionData?.collection?.description.substring(0, 87) + '...'}
+                      </ReactMarkdown>
+                    </div>
+                    :
+                    <div className='inline minlg:hidden'>
+                      <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+                        {collectionData?.collection?.description}
+                      </ReactMarkdown>
+                    </div>
+                  }
+                  {collectionData?.collection?.description.length > 200
+                    ?
+                    <div className='hidden minlg:inline'>
+                      <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+                        {collectionData?.collection?.description.substring(0, 200) + '...'}
+                      </ReactMarkdown>
+                    </div>
+                    :
+                    <div className='hidden minlg:inline'>
+                      <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+                        {collectionData?.collection?.description}
+                      </ReactMarkdown>
+                    </div>
+                  }
                   {
                     collectionData?.collection?.description.length > 87 &&
                     <>
@@ -216,12 +285,14 @@ export function Collection(props: CollectionProps) {
                   </Tab.List>
                 </Tab.Group>
               </div>
-              <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
-                <div className='w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'>
-                  <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
-                  <p className='minlg:hidden'>Filter</p>
+              {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
+                <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
+                  <div className='w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'>
+                    <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+                    <p className='minlg:hidden'>Filter</p>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
             }
             {selectedTab === 'NFTs' &&

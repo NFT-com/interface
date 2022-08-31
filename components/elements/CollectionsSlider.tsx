@@ -64,7 +64,6 @@ export const NextButton = ({ enabled, onClick }: buttonProps) => (
 );
 
 const EmblaCarousel = (props: slidesProps) => {
-  console.log(props, 'props fdo');
   const { width: screenWidth } = useWindowDimensions();
   const [viewportRef, embla] = useEmblaCarousel({
     dragFree: true,

@@ -3,27 +3,31 @@ import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { CheckBox } from 'components/elements/CheckBox';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
-import { isNullOrEmpty } from 'utils/helpers';
 
 import { motion } from 'framer-motion';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Minus,Plus } from 'react-feather';
 
 interface FilterOptionProps {
-  isSelected: boolean,
+  fieldName?: string,
   item: {
     value: string,
     count: string,
   },
-  onSelectFilter: (selectedCheck: string, selected: boolean) => void
+  setClearedFilters?: (clearedFilters: boolean) => void,
+  onSelectFilter?: (fieldName: string, selectedCheck: string, selected: boolean) => void,
+  clearedFilters: boolean
 }
 
 const FilterOption = (props: FilterOptionProps) => {
-  const { item, onSelectFilter, isSelected } = props;
-  const [selected, setSelected] = useState(isSelected);
-  const { clearedFilters, setClearedFilters } = useSearchModal();
+  const { item, fieldName, onSelectFilter, clearedFilters, setClearedFilters } = props;
+  const [selected, setSelected] = useState(false);
+
+  useEffect(() => {
+    clearedFilters && setSelected(false);
+  },[clearedFilters]);
 
   return (
     <div className="flex items-startfont-grotesk">
@@ -31,7 +35,7 @@ const FilterOption = (props: FilterOptionProps) => {
         checked={!clearedFilters && selected}
         onToggle={(selected: boolean) => {
           setSelected(selected);
-          onSelectFilter(item.value, selected);
+          onSelectFilter && onSelectFilter(fieldName,item.value, selected);
           setClearedFilters(false);
         }}
       />
@@ -44,14 +48,14 @@ const FilterOption = (props: FilterOptionProps) => {
 };
 
 const ContractNameFilter = (props: any) => {
-  const { filterOptions, getCheckedFiltersList, checkedOptions } = props;
+  const { filterOptions, setCheckedFilters, clearedFilters, setClearedFilters } = props;
   const [searchVal, setSearchVal] = useState('');
   const [filteredContracts, setFilteredContracts] = useState([]);
 
   useEffect(() => {
     const filteredContracts = filterOptions.filter((contract) => {
-      return contract.value?.includes(searchVal);
-    });
+      return contract.value?.toLowerCase().includes(searchVal.toLowerCase());
+    }).sort((a,b) =>(a.value > b.value) ? 1 : -1);
 
     setFilteredContracts([...filteredContracts]);
   },[filterOptions, searchVal]);
@@ -76,22 +80,27 @@ const ContractNameFilter = (props: any) => {
             onChange={(event) => setSearchVal(event.target.value)}/>
         </div>
       </div>
-      {filteredContracts.map((item, index) => {
-        return (
-          <div key={index} className="mt-3 overflow-y-hidden">
-            <FilterOption
-              item={item}
-              onSelectFilter={getCheckedFiltersList}
-              isSelected={checkedOptions?.values.includes(item.value)}
-            />
-          </div>);
-      })}
+      <div className="overflow-y-scroll max-h-[14rem] filter-scrollbar">
+        {filteredContracts.map((item, index) => {
+          return (
+            <div key={index} className="mt-3 overflow-y-hidden">
+              <FilterOption
+                item={item}
+                onSelectFilter={setCheckedFilters}
+                fieldName={'contractName'}
+                clearedFilters={clearedFilters}
+                setClearedFilters={setClearedFilters}
+              />
+            </div>);
+        })}
+      </div>
+
     </div>
   );
 };
 
 const CurrencyPriceFilter = (props: any) => {
-  const { filtersList, clearedFilters, setClearedFilters } = useSearchModal();
+  const { filtersList, clearedFilters } = useSearchModal();
   const [min, setMin] = useState('');
   const [max, setMax] = useState('');
 
@@ -156,9 +165,7 @@ const CurrencyPriceFilter = (props: any) => {
               value={min}
               required maxLength={512}
               className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-              onChange={(event) => {
-                setMin(event.target.value);
-                setClearedFilters(false);}}
+              onChange={(event) => { setMin(event.target.value); }}
               onFocus={(event) => setMin(event.target.value)}
             />
           </div>
@@ -180,7 +187,6 @@ const CurrencyPriceFilter = (props: any) => {
               className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
               onChange={(event) => {
                 setMax(event.target.value);
-                setClearedFilters(false);
               }}
               onFocus={(event) => setMax(event.target.value)}
             />
@@ -192,10 +198,8 @@ const CurrencyPriceFilter = (props: any) => {
 };
 
 const Filter = (props: any) => {
-  const { filter, onGetCheckedFilters } = props;
+  const { filter, setCheckedFilters, clearedFilters, setClearedFilters } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
-  const { filtersList } = useSearchModal();
-  const checkedOptions = (filtersList || []).find(item => item.filter === filter.field_name);
   
   const formatTitle = (title) => {
     switch(title){
@@ -212,20 +216,6 @@ const Filter = (props: any) => {
     }
   };
 
-  const getCheckedFiltersList = (selectedCheck: string, selected: boolean) => {
-    const tempFiltersList = [...filtersList];
-    tempFiltersList.forEach((item) => {
-      if (item.filter === filter.field_name) {
-        if (selected) {
-          isNullOrEmpty(item.values.find(i => i === selectedCheck)) && item.values.push(selectedCheck);
-        } else {
-          item.values = item.values.filter( i => i !== selectedCheck);
-        }
-      }
-    });
-    onGetCheckedFilters(tempFiltersList);
-  };
-
   return (
     <div className="my-6 px-4">
       <div
@@ -239,19 +229,26 @@ const Filter = (props: any) => {
         animate={{
           height: isFilterCollapsed ? 0 : 'auto' }}
         transition={{ duration: 0.2 }}
-        className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-scroll max-h-[10rem] filter-scrollbar')}
+        className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-hidden max-h-[14rem]')}
       >
         { /* filter.field_name === 'listedPx' ?
           ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) : */
           filter.field_name === 'contractName' ?
-            (<ContractNameFilter filterOptions={filter.counts} checkedOptions={checkedOptions} getCheckedFiltersList={getCheckedFiltersList} />) :
+            (<ContractNameFilter
+              filterOptions={filter.counts}
+              setCheckedFilters={setCheckedFilters}
+              clearedFilters={clearedFilters}
+              setClearedFilters={setClearedFilters}
+            />) :
             filter.counts.map((item, index) => {
               return (
                 <div key={index} className="mt-3 overflow-y-hidden">
                   <FilterOption
                     item={item}
-                    onSelectFilter={getCheckedFiltersList}
-                    isSelected={checkedOptions?.values.includes(item.value)}
+                    onSelectFilter={setCheckedFilters}
+                    fieldName={filter.field_name}
+                    clearedFilters={clearedFilters}
+                    setClearedFilters={setClearedFilters}
                   />
                 </div>);
             })}
@@ -261,18 +258,24 @@ const Filter = (props: any) => {
 };
 
 export const FiltersContent = () => {
-  const {
-    setSearchModalOpen,
-    searchFilters,
-    setCheckedFiltersList,
-    filtersList,
-    setSortBy,
-    sortBy,
-    sideNavOpen,
-    setClearedFilters } = useSearchModal();
-  const [modalCheckedFilters, setModalCheckedFilters] = useState([]);
-  const [selectedIndex, setSelectedIndex] = useState(sortBy === '' || sortBy === 'listedPx:asc' ? 0 : 1);
-  const setCheckedFilters = (checkedFiltersString) => { setModalCheckedFilters(checkedFiltersString); };
+  const { setSearchModalOpen, searchFilters, searchModalOpen, setNftsPageAppliedFilters, nftsPageSortyBy } = useSearchModal();
+  const [sortBy, setSortBy] = useState(nftsPageSortyBy);
+  const [checked, setChecked] = useState([]);
+  const [clearedFilters, setClearedFilters] = useState(false);
+  
+  const setCheckedFilters = useCallback((fieldName: string, selectedCheck: string, selected: boolean) => {
+    const foundItem = checked.find(i => i.fieldName === fieldName);
+    if (selected) {
+      if (!foundItem) {
+        checked.push({ fieldName, selectedCheck });
+      } else {
+        foundItem.selectedCheck = foundItem.selectedCheck +','+ selectedCheck;
+      }
+    } else {
+      const removedCheck = (foundItem.selectedCheck.split(',')).filter(i => i !== selectedCheck);
+      foundItem.selectedCheck = removedCheck.join(',');
+    }
+  }, [checked]);
 
   return (
     <>
@@ -280,9 +283,6 @@ export const FiltersContent = () => {
         <div
           className="block minmd:hidden flex p-5 justify-end cursor-pointer"
           onClick={() => {
-            filtersList.forEach((item) => {
-              item.values = [];
-            });
             setSearchModalOpen(false);
           }}>
           <EllipseX />
@@ -291,23 +291,16 @@ export const FiltersContent = () => {
         <div className="px-4 flex flex-col">
           <div className="self-start font-black text-lg font-grotesk mb-3">Sort</div>
           <DropdownPicker
-            selectedIndex={selectedIndex}
-            lightModeForced
+            placeholder={nftsPageSortyBy !== '' ? null : 'Default'}
+            selectedIndex={nftsPageSortyBy === 'Price: Low to High' ? 0 : 1}
             options={[
               {
                 label: 'Price: Low to High',
-                onSelect: () =>
-                {
-                  setSortBy('listedPx:asc');
-                  setSelectedIndex(0);
-                }
+                onSelect: () => { setSortBy('listedPx:asc'); }
               },
               {
                 label: 'Price: High to Low',
-                onSelect: () => {
-                  setSortBy('listedPx:desc');
-                  setSelectedIndex(1);
-                }
+                onSelect: () => { setSortBy('listedPx:desc'); }
               },
             ]}
           />
@@ -316,19 +309,21 @@ export const FiltersContent = () => {
           {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
             if (['contractName', 'nftType'].includes(item.field_name)) {
               return (<div key={index}>
-                <Filter filter={item} onGetCheckedFilters={setCheckedFilters}/>
+                <Filter
+                  filter={item}
+                  setCheckedFilters={setCheckedFilters}
+                  clearedFilters={clearedFilters}
+                  setClearedFilters={setClearedFilters}
+                />
               </div>);
             }
           })}
         </div>
         <div
-          onClick={ () =>{
-            filtersList.forEach((item) => {
-              item.values = [];
-            });
+          onClick={ () => {
             setClearedFilters(true);
-          }
-          }
+            setChecked([]);
+          }}
           className="px-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">
           Clear filters
         </div>
@@ -339,17 +334,15 @@ export const FiltersContent = () => {
             stretch={true}
             label={'Apply Filter'}
             onClick={() => {
-              const checkedFiltersArray = modalCheckedFilters.filter(item => item.values.length > 0);
-              const checkedFiltersList = [];
-              checkedFiltersArray.forEach(item => {
-                checkedFiltersList.push(item.filter + ': [' + item.values.toString()+ ']');
+              const checkedList =[];
+              checked.forEach(item => {
+                if (item.selectedCheck.toString()[0] === ',') item.selectedCheck = item.selectedCheck.slice(1);
+                checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
               });
-              const checkedFiltersString = checkedFiltersList.join(' && ');
-              setCheckedFiltersList(checkedFiltersString);
-              
-              !sideNavOpen && setTimeout(() => {
-                setSearchModalOpen(false);
-              }, 500);
+              const checkedFiltersString = checkedList.join(' && ');
+
+              setNftsPageAppliedFilters(sortBy, checkedFiltersString, false);
+              searchModalOpen && setSearchModalOpen(false);
             }}
             type={ButtonType.PRIMARY}
           />
