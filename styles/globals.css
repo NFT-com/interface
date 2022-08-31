@@ -1636,9 +1636,21 @@ li {
   height: 210px;
 }
 
+@media (min-width: 600px) {
+  .embla__slide__inner {
+    height: 230px;
+  }
+}
+
+@media (min-width: 900px) {
+  .embla__slide__inner {
+    height: 250px;
+  }
+}
+
 @media (min-width: 1200px) {
   .embla__slide__inner {
-    height: 265px;
+    height: 257px;
   }
 
   .embla__slidefull {
@@ -1648,7 +1660,7 @@ li {
 
 @media (min-width: 1900px) {
   .embla__slide__inner {
-    height: 360px;
+    height: 312px;
   }
 }
 
@@ -1742,6 +1754,19 @@ input[type="search"]::-webkit-search-cancel-button {
 @media (min-width: 900px) {
   .embla__slide__item {
     width: 95%;
+  }
+}
+
+
+@media (min-width: 1200px) {
+  .min-h-XL {
+    min-height: 92px
+  }
+}
+
+@media (min-width: 1900px) {
+  .min-h-XXL {
+    min-height: 165px
   }
 }
 

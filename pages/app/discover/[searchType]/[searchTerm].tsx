@@ -19,7 +19,7 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
 import useSWR from 'swr';
 
@@ -32,7 +32,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage({ data }: ResultsPageProps) {
-  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, sortBy, setCuratedCollections, curatedCollections } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsPageFilterBy } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -67,22 +67,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     }
   }, [curatedCollections, data, setCuratedCollections]);
 
-  const checkedFiltersString = useCallback(() => {
-    let checkedFiltersString = '';
-    const checkedList = [];
-    if (filtersList) {
-      const checkedArray = filtersList.filter(item => item.values.length > 0);
-      checkedArray.forEach(item => {
-        item.filter !== 'listedPx' && checkedList.push(item.filter + ': [' + item.values.toString()+ ']');
-      });
-      
-      const priceOptions = filtersList.find(i => i.filter === 'listedPx');
-      checkedFiltersString = checkedList.join(' && ') + (priceOptions && priceOptions.values ? (' && ' + priceOptions.values) : '');
-    }
-
-    return checkedFiltersString;
-  }, [filtersList]);
-
   useEffect(() => {
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
       facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
@@ -92,15 +76,15 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       q: searchTerm?.toString() !== '*' ? searchTerm?.toString() : '',
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
-      filter_by: checkedFiltersString(),
-      sort_by: sortBy,
+      filter_by: nftsPageFilterBy,
+      sort_by: nftsPageSortyBy,
     }] })
       .then((resp) => {
         setResults([...resp.results[0].hits]);
         setFound(resp.results[0].found);
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
+  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, nftsPageSortyBy, nftsPageFilterBy]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -112,8 +96,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         q: searchTerm?.toString() !== '*' ? searchTerm?.toString() : '',
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
-        filter_by: checkedFiltersString(),
-        sort_by: sortBy,
+        filter_by: nftsPageFilterBy,
+        sort_by: nftsPageSortyBy,
       }] })
         .then((resp) => {
           setResults([...results,...resp.results[0].hits]);
@@ -121,7 +105,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, sortBy, checkedFiltersString]);
+  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, nftsPageSortyBy, nftsPageFilterBy]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
     return <NotFoundPage />;
@@ -133,19 +117,13 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         <div className="hidden minlg:block">
           <SideNav onSideNav={() => null} filtersData={filters}/>
         </div>
-        <div className="mx-6">
+        <div className="mx-6 w-full">
           <div className="flex flex-col mt-6">
             <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
-            <div className="flex justify-between items-center">
+            <div>
               <div className="text-2xl font-semibold pt-1">
                 <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
               </div>
-              {searchType?.toString() !== 'allResults' && <span
-                className="cursor-pointer hover:font-semibold font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black "
-                onClick={() => { router.push(`/app/discover/allResults/${searchTerm.toString()}`); }}
-              >
-                SEE ALL COLLECTIONS AND NFTS RESULTS
-              </span>}
             </div>
           </div>
           {searchType?.toString() === 'collections' && <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>}
@@ -160,6 +138,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 onClick={() => { router.push(`/app/discover/nfts/${searchTerm.toString()}`); }}
               >
                 SEE ALL
+              </span>}
+              {searchType?.toString() !== 'allResults' && <span
+                className="cursor-pointer hover:font-semibold font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black "
+                onClick={() => { router.push(`/app/discover/allResults/${searchTerm.toString()}`); }}
+              >
+                SEE ALL COLLECTIONS AND NFTS RESULTS
               </span>}
             </div>
             {searchType?.toString() !== 'collections' &&
