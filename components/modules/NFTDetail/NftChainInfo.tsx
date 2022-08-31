@@ -30,10 +30,10 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
         }
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
-            Volume
+            Token ID
           </p>
           <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
-            {2408}
+            {nft?.tokenId}
           </span>
         </div>
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
