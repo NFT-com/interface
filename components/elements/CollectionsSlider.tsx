@@ -4,8 +4,20 @@ import useWindowDimensions from 'hooks/useWindowDimensions';
 import useEmblaCarousel from 'embla-carousel-react';
 import React, { useCallback,useEffect, useState } from 'react';
 
+interface typesenseNftType {
+  id: string;
+  isOwnedByMe: boolean;
+  metadata: any;
+  tokenId: string;
+  type: string;
+}
+
+interface collectionType {
+  collectionAddress: string;
+  nfts: typesenseNftType[];
+}
 export interface slidesProps {
-  slides: string[];
+  slides: collectionType[];
   full?: boolean;
 }
 
@@ -52,6 +64,7 @@ export const NextButton = ({ enabled, onClick }: buttonProps) => (
 );
 
 const EmblaCarousel = (props: slidesProps) => {
+  console.log(props, 'props fdo');
   const { width: screenWidth } = useWindowDimensions();
   const [viewportRef, embla] = useEmblaCarousel({
     dragFree: true,
@@ -84,24 +97,40 @@ const EmblaCarousel = (props: slidesProps) => {
     onSelect();
     setScrollSnaps(embla.scrollSnapList());
   }, [embla, onSelect]);
-
+  
   return (
     props.slides.length < 4 ?
       <div className="grid grid-cols-3 gap-8" >
-        {props.slides.map((item: any, index) => (
-          <CollectionItem key={index} contractAddr={item.document?.contractAddr}/>
-        ))}
+        {props.slides.map((slide: any, index) => {
+          return <CollectionItem
+            key={index}
+            contractAddr={slide.collectionAddress}
+            images={[
+              slide.nfts[0]?.metadata?.imageURL,
+              slide.nfts[1]?.metadata?.imageURL,
+              slide.nfts[2]?.metadata?.imageURL,
+            ]}
+            count={slide.nfts.length}/>;
+        })}
       </div>
       :
       <>
         <div className={`embla${props.full ? 'full' : ''}`}>
           <div className="embla__viewport" ref={viewportRef}>
             <div className="embla__container">
-              {props.slides.map((item: any, index) => (
+              {props.slides.map((slide: any, index) => (
                 <div className={`embla__slide${props.full ? 'full' : ''}`} key={index}>
                   <div className="embla__slide__inner">
                     <div className={`${props.full ? 'embla__slide__item' : ''}`}>
-                      <CollectionItem contractAddr={item.document?.contractAddr}/>
+                      <CollectionItem
+                        contractAddr={slide?.collectionAddress}
+                        images={[
+                          slide.nfts[0]?.metadata?.imageURL,
+                          slide.nfts[1]?.metadata?.imageURL,
+                          slide.nfts[2]?.metadata?.imageURL,
+                        ]}
+                        count={slide.nfts.length}
+                      />
                     </div>
                   </div>
                 </div>
