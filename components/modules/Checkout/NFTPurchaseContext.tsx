@@ -16,6 +16,7 @@ import { useAccount, useSigner } from 'wagmi';
 
 export type StagedPurchase = {
   nft: PartialDeep<Nft>;
+  activityId: string;
   collectionName: string;
   protocol: ExternalProtocol;
   currency: string;

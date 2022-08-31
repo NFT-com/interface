@@ -27,6 +27,12 @@ export type Scalars = {
   Upload: any;
 };
 
+export enum ActivityStatus {
+  Cancelled = 'Cancelled',
+  Executed = 'Executed',
+  Valid = 'Valid'
+}
+
 export enum ActivityType {
   Bid = 'Bid',
   Cancel = 'Cancel',
@@ -699,6 +705,8 @@ export type Mutation = {
   /** AUTHETICATED */
   updateReadByIds: UpdateReadOutput;
   updateSpamStatus: UpdateSpamStatusOutput;
+  /** AUTHETICATED */
+  updateStatusByIds: UpdateReadOutput;
   /** AUTHENTICATED */
   updateWalletProfileId: Wallet;
   /** AUTHENTICATED */
@@ -972,6 +980,12 @@ export type MutationUpdateReadByIdsArgs = {
 export type MutationUpdateSpamStatusArgs = {
   contracts: Array<Scalars['Address']>;
   isSpam: Scalars['Boolean'];
+};
+
+
+export type MutationUpdateStatusByIdsArgs = {
+  ids: Array<InputMaybe<Scalars['String']>>;
+  status?: InputMaybe<ActivityStatus>;
 };
 
 
@@ -1746,6 +1760,7 @@ export type TxActivitiesInput = {
   pageInput: PageInput;
   read?: InputMaybe<Scalars['Boolean']>;
   skipRelations?: InputMaybe<Scalars['Boolean']>;
+  status?: InputMaybe<ActivityStatus>;
   tokenId?: InputMaybe<Scalars['String']>;
   walletAddress?: InputMaybe<Scalars['String']>;
 };
@@ -1759,7 +1774,7 @@ export type TxActivitiesOutput = {
 
 export type TxActivity = {
   __typename?: 'TxActivity';
-  activityType: Scalars['String'];
+  activityType: ActivityType;
   activityTypeId: Scalars['String'];
   cancel?: Maybe<TxCancel>;
   chainId?: Maybe<Scalars['String']>;
@@ -1768,6 +1783,7 @@ export type TxActivity = {
   nftId: Array<Maybe<Scalars['String']>>;
   order?: Maybe<TxOrder>;
   read: Scalars['Boolean'];
+  status: ActivityStatus;
   timestamp: Scalars['Date'];
   walletAddress: Scalars['String'];
 };
@@ -2224,6 +2240,14 @@ export type SubmitProfilePreferencesMutationVariables = Exact<{
 
 export type SubmitProfilePreferencesMutation = { __typename?: 'Mutation', setProfilePreferences: Array<{ __typename?: 'Bid', id: string, profile?: { __typename?: 'Profile', url: string } | null }> };
 
+export type UpdateActivityStatusMutationVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+  status?: InputMaybe<ActivityStatus>;
+}>;
+
+
+export type UpdateActivityStatusMutation = { __typename?: 'Mutation', updateStatusByIds: { __typename?: 'UpdateReadOutput', updatedIdsSuccess: Array<string | null>, idsNotFoundOrFailed: Array<string | null> } };
+
 export type UpdateEmailMutationVariables = Exact<{
   input: UpdateEmailInput;
 }>;
@@ -2301,7 +2325,7 @@ export type ActivitiesQueryVariables = Exact<{
 }>;
 
 
-export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', chainId?: string | null, activityType: string, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
 
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2808,6 +2832,14 @@ export const SubmitProfilePreferencesDocument = gql`
   }
 }
     `;
+export const UpdateActivityStatusDocument = gql`
+    mutation UpdateActivityStatus($ids: [String]!, $status: ActivityStatus) {
+  updateStatusByIds(ids: $ids, status: $status) {
+    updatedIdsSuccess
+    idsNotFoundOrFailed
+  }
+}
+    `;
 export const UpdateEmailDocument = gql`
     mutation UpdateEmail($input: UpdateEmailInput!) {
   updateEmail(input: $input) {
@@ -3007,6 +3039,7 @@ export const ActivitiesDocument = gql`
       lastCursor
     }
     items {
+      id
       chainId
       activityType
       activityTypeId
@@ -3999,6 +4032,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     SubmitProfilePreferences(variables: SubmitProfilePreferencesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SubmitProfilePreferencesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SubmitProfilePreferencesMutation>(SubmitProfilePreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SubmitProfilePreferences', 'mutation');
+    },
+    UpdateActivityStatus(variables: UpdateActivityStatusMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateActivityStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateActivityStatusMutation>(UpdateActivityStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateActivityStatus', 'mutation');
     },
     UpdateEmail(variables: UpdateEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateEmailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateEmailMutation>(UpdateEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateEmail', 'mutation');

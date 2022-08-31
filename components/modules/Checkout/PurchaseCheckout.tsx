@@ -1,7 +1,8 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
-import { Maybe } from 'graphql/generated/types';
+import { ActivityStatus, Maybe } from 'graphql/generated/types';
+import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 
@@ -26,6 +27,7 @@ export function PurchaseCheckout() {
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const { data: signer } = useSigner();
+  const { updateActivityStatus } = useUpdateActivityStatusMutation();
 
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -164,6 +166,7 @@ export function PurchaseCheckout() {
             const result = await buyAll();
             if (result) {
               setSuccess(true);
+              updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
             } else {
               setError('PurchaseError');
             }
