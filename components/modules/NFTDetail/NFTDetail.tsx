@@ -9,7 +9,7 @@ import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { BigNumber } from 'ethers';
+import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
@@ -79,7 +79,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
           </div>
           <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${BigNumber.from(props.nft?.tokenId).toNumber()}`}
+            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${utils.formatEther(props.nft?.tokenId.toString())}`}
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12 -mt-1'>

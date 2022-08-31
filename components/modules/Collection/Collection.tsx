@@ -6,8 +6,8 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useNumberOfNFTsQuery } from 'graphql/hooks/useNumberOfNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useGetNFTDetails } from 'hooks/analytics/nftport/collections/useGetNFTDetails';
 import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
+import { useGetNFTDetails } from 'hooks/analytics/nftport/nfts/useGetNFTDetails';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { processIPFSURL, shortenAddress } from 'utils/helpers';
@@ -286,8 +286,8 @@ export function Collection(props: CollectionProps) {
             }
             {selectedTab === 'NFTs' &&
             <>
-              {nftCount &&
-                <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount > 1 ? `${nftCount} NFTS` : `${nftCount} NFT`}</p>
+              {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
+                <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
               }
               <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
                 {collectionNfts.map((nft, index) => {
