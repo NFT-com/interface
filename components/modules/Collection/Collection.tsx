@@ -64,8 +64,7 @@ export function Collection(props: CollectionProps) {
 
   const tabs = {
     0: 'NFTs',
-    1: 'Activity',
-    2: 'Analytics'
+    1: 'Activity'
   };
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -286,12 +285,14 @@ export function Collection(props: CollectionProps) {
                   </Tab.List>
                 </Tab.Group>
               </div>
-              <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
-                <div className='w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'>
-                  <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
-                  <p className='minlg:hidden'>Filter</p>
+              {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
+                <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
+                  <div className='w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'>
+                    <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+                    <p className='minlg:hidden'>Filter</p>
+                  </div>
                 </div>
-              </div>
+              }
             </div>
             }
             {selectedTab === 'NFTs' &&
