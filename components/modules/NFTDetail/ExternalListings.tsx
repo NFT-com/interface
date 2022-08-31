@@ -13,6 +13,7 @@ import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
+import { tw } from 'utils/tw';
 
 import { EditListingsModal } from './EditListingsModal';
 import { SelectListingModal } from './SelectListingModal';
