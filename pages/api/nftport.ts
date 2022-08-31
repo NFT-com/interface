@@ -4,6 +4,7 @@ import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const nftportHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const apiType = req.query['apiType'] || 'transactions';
   const category = req.query['category'];
   const contractAddress = req.query['contractAddress'];
   const tokenId = req.query['tokenId'] ?? '';
@@ -12,7 +13,12 @@ const nftportHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(400).json({ message: 'nftport handler: Invalid Arguments' });
   }
 
-  const apiUrl = new URL(`https://api.nftport.xyz/v0/transactions/${category}/${contractAddress}${`/${tokenId}` ?? ''}?chain=ethereum${`&type=${type}`?? ''}`);
+  let apiUrl;
+  if(apiType === 'nft'){
+    apiUrl = new URL(`https://api.nftport.xyz/v0/${category}/${contractAddress}${`/${tokenId}` ?? ''}?chain=ethereum${`&type=${type}`?? ''}`);
+  } else {
+    apiUrl = new URL(`https://api.nftport.xyz/v0/transactions/${category}/${contractAddress}${`/${tokenId}` ?? ''}?chain=ethereum${`&type=${type}`?? ''}`);
+  }
 
   try {
     const result = await fetch(apiUrl.toString(), {

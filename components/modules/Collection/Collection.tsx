@@ -1,15 +1,16 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import { CollectionActivity } from 'components/modules/Analytics/CollectionActivity';
-import { CollectionAnalyticsContainer } from 'components/modules/Collection/CollectionAnalyticsContainer';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { useNumberOfNFTsQuery } from 'graphql/hooks/useNumberOfNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useGetNFTDetails } from 'hooks/analytics/nftport/collections/useGetNFTDetails';
 import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
+import { processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
@@ -23,7 +24,6 @@ import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
-import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
@@ -32,6 +32,7 @@ export interface CollectionProps {
 
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
+  const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -41,6 +42,7 @@ export function Collection(props: CollectionProps) {
   const prevVal = usePrevious(currentPage);
   const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
   const collectionSalesHistory = useGetSalesStats(props?.contract?.toString());
+  const collectionNFTInfo = useGetNFTDetails(props?.contract?.toString(), collectionNfts[0]?.document?.tokenId);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collectionData?.collection?.deployer);
   const { profileData: collectionOwnerData } = useProfileQuery(
     creatorTokens?.at(0)?.tokenUri?.raw?.split('/').pop()
@@ -48,19 +50,6 @@ export function Collection(props: CollectionProps) {
   const { profileData: collectionPreferredOwnerData } = useProfileQuery(
     collectionOwnerData?.profile?.owner?.preferredProfile.url
   );
-
-  const { data: imgUrl } = useSWR('imageurl', async() => {
-    let imgUrl;
-    if (isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner)) {
-      imgUrl = null;
-    } else {
-      imgUrl = await fetch(`${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}`)
-        .then(
-          (data) => data.status === 200 ? `${collectionData?.ubiquityResults?.collection?.banner}?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null
-        );
-    }
-    return imgUrl;
-  } );
 
   const tabs = {
     0: 'NFTs',
@@ -130,7 +119,7 @@ export function Collection(props: CollectionProps) {
     <>
       <div className="mt-20">
         <BannerWrapper
-          imageOverride={imgUrl}
+          imageOverride={collectionNFTInfo?.contract?.metadata?.cached_banner_url}
           isCollection
         />
       </div>
@@ -297,7 +286,9 @@ export function Collection(props: CollectionProps) {
             }
             {selectedTab === 'NFTs' &&
             <>
-              <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{collectionSalesHistory?.statistics?.total_supply.toLocaleString()} {collectionSalesHistory?.statistics?.total_supply > 1 ? 'NFTS' : 'NFT'}</p>
+              {nftCount &&
+                <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount > 1 ? `${nftCount} NFTS` : `${nftCount} NFT`}</p>
+              }
               <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
                 {collectionNfts.map((nft, index) => {
                   return (
@@ -331,10 +322,8 @@ export function Collection(props: CollectionProps) {
               </div>}
             </>
             }
-            {selectedTab === 'Activity' ?
+            {selectedTab === 'Activity' &&
               <CollectionActivity contract={props?.contract} />
-              :
-              <CollectionAnalyticsContainer contract={props?.contract} />
             }
           </>
           :
