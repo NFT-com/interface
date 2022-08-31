@@ -4,6 +4,7 @@ import { CollectionActivity } from 'components/modules/Analytics/CollectionActiv
 import { CollectionAnalyticsContainer } from 'components/modules/Collection/CollectionAnalyticsContainer';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { useNumberOfNFTsQuery } from 'graphql/hooks/useNumberOfNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
@@ -32,6 +33,7 @@ export interface CollectionProps {
 
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
+  const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -297,7 +299,9 @@ export function Collection(props: CollectionProps) {
             }
             {selectedTab === 'NFTs' &&
             <>
-              <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{collectionSalesHistory?.statistics?.total_supply.toLocaleString()} {collectionSalesHistory?.statistics?.total_supply > 1 ? 'NFTS' : 'NFT'}</p>
+              {nftCount &&
+                <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount > 1 ? `${nftCount} NFTS` : `${nftCount} NFT`}</p>
+              }
               <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
                 {collectionNfts.map((nft, index) => {
                   return (
