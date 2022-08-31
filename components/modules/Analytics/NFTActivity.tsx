@@ -1,5 +1,6 @@
 import { Nft } from 'graphql/generated/types';
 import { useGetTransactionsByNFT } from 'hooks/analytics/nftport/nfts/useGetTransactionsByNFT';
+import { Doppler, getEnv } from 'utils/env';
 
 import { useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -14,7 +15,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
   const [nftData, setNftdata] = useState(null);
 
   useEffect(() => {
-    if(chain.id === 1 && !nftData && !!nftTransactionHistory) {
+    if((chain.id === 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') && !nftData && !!nftTransactionHistory) {
       setNftdata(nftTransactionHistory);
     }
   }, [chain.id, nftData, nftTransactionHistory]);

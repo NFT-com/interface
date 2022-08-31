@@ -1,3 +1,4 @@
+import { ExternalExchange } from 'types';
 import { tw } from 'utils/tw';
 
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -20,22 +21,17 @@ export type LineChartProps = {
   setCurrentMarketplace?: Dispatch<SetStateAction<string>>,
 };
 
-const marketplaces = {
-  0: 'OpenSea',
-  1: 'LooksRare'
-};
-
 export const LineVis = ({ data, label, currentMarketplace, setCurrentMarketplace, showMarketplaceOptions }: LineChartProps) => {
-  const [selectedMarketplace, setSelectedMarketplace] = useState(currentMarketplace);
+  const [selectedMarketplace, setSelectedMarketplace] = useState<ExternalExchange>(ExternalExchange.Opensea);
   
   return (
     <div className="bg-transparent">
       {(showMarketplaceOptions && !!data) &&
       <div className="w-full px-2 py-2 -mt-16 minmd:ml-[17.5px] minmd:visible sm:hidden">
         <div className="flex flex-row items-center justify-end space-x-2">
-          {Object.keys(marketplaces).map((marketplace) => (
+          {Object.keys(ExternalExchange).map((marketplace) => (
             <div key={marketplace} className='group'>
-              {marketplaces[marketplace] === 'LooksRare' &&
+              {marketplace === 'LooksRare' &&
               <div
                 className={tw('group-hover:opacity-100 transition-opacity bg-[#1F2127]',
                   'p-3 rounded-md absolute left-full minxl:left-1/4 -translate-x-full minxl:translate-x-1',
@@ -52,12 +48,12 @@ export const LineVis = ({ data, label, currentMarketplace, setCurrentMarketplace
               <input
                 type='radio'
                 name={selectedMarketplace}
-                value={marketplaces[marketplace]}
-                disabled={marketplaces[marketplace] === marketplaces[1]}
-                onChange={(e) => setSelectedMarketplace(marketplaces[marketplace]) }
-                checked={selectedMarketplace === marketplaces[marketplace]}
+                value={ExternalExchange[marketplace]}
+                disabled={ExternalExchange[marketplace] === ExternalExchange.LooksRare}
+                onChange={(e) => setSelectedMarketplace(ExternalExchange[marketplace]) }
+                checked={selectedMarketplace === ExternalExchange[marketplace]}
               />
-              <div className='inline-flex px-2'>{marketplaces[marketplace]}</div>
+              <div className='inline-flex px-2'>{ExternalExchange[marketplace]}</div>
             </div>
           ))}
         </div>
@@ -87,9 +83,9 @@ export const LineVis = ({ data, label, currentMarketplace, setCurrentMarketplace
       {(showMarketplaceOptions && !!data) &&
       <div className="w-full px-2 py-2 sm:px-0 visible minmd:hidden">
         <div className="flex flex-row items-center justify-end space-x-2">
-          {Object.keys(marketplaces).map((marketplace) => (
+          {Object.keys(ExternalExchange).map((marketplace) => (
             <div key={marketplace} className='group'>
-              {marketplaces[marketplace] === 'LooksRare' &&
+              {ExternalExchange[marketplace] === 'LooksRare' &&
               <div
                 className={tw('group-hover:opacity-100 transition-opacity bg-[#1F2127]',
                   'p-3 rounded-md absolute left-full -translate-x-full',
@@ -106,12 +102,12 @@ export const LineVis = ({ data, label, currentMarketplace, setCurrentMarketplace
               <input
                 type='radio'
                 name={selectedMarketplace}
-                value={marketplaces[marketplace]}
-                disabled={marketplaces[marketplace] === marketplaces[1]}
-                onChange={(e) => setSelectedMarketplace(marketplaces[marketplace]) }
-                checked={selectedMarketplace === marketplaces[marketplace]}
+                value={ExternalExchange[marketplace]}
+                disabled={ExternalExchange[marketplace] === ExternalExchange.LooksRare}
+                onChange={(e) => setSelectedMarketplace(ExternalExchange[marketplace]) }
+                checked={selectedMarketplace === ExternalExchange[marketplace]}
               />
-              <div className='inline-flex px-2'>{marketplaces[marketplace]}</div>
+              <div className='inline-flex px-2'>{ExternalExchange[marketplace]}</div>
             </div>
           ))}
         </div>

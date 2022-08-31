@@ -12,7 +12,6 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
   const { chain } = useNetwork();
   const txs = useGetTransactionsByContract(contract);
   const [collectionData, setCollectionData] = useState(null);
-  console.log(txs);
 
   useEffect(() => {
     if((chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') || !txs) {
