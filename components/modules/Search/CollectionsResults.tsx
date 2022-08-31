@@ -1,4 +1,5 @@
 import CollectionsSlider from 'components/elements/CollectionsSlider';
+import Loader from 'components/elements/Loader';
 import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -57,7 +58,11 @@ export const CollectionsResults = (props: {searchTerm: string}) => {
           SEE ALL
         </span>
       </div>
-      {nftsForCollections && nftsForCollections.length > 0 && <CollectionsSlider full slides={nftsForCollections} />}
+      {nftsForCollections && nftsForCollections.length > 0 ?
+        <CollectionsSlider full slides={nftsForCollections} /> :
+        (<div className="flex items-center justify-center min-h-[16rem]">
+          <Loader />
+        </div>)}
     </>
   );
 };
