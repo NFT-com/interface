@@ -31,8 +31,9 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
       collectionAddresses: contractAddresses,
       count: contractAddresses.length
     }).then((collectionsData => {
-      nftsForCollections = collectionsData.nftsForCollections;
+      nftsForCollections = collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
     }));
+    console.log(nftsForCollections, 'nftsForCollections fdo');
     return nftsForCollections;
   });
 
@@ -57,7 +58,10 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
   },[curatedCollections, selectedCuratedCollection, setSelectedCuratedCollection]);
 
   useEffect(() => {
-    nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...nftsForCollections.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page)]);
+    const paginatedContracts = nftsForCollections?.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page);
+    console.log(paginatedContracts, 'paginatedContracts fdo');
+    const sortedPaginatedAddresses = paginatedContracts?.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
+    nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...sortedPaginatedAddresses]);
   },[nftsForCollections, page, screenWidth, sideNavOpen]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
