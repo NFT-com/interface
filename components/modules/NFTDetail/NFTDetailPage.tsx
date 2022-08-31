@@ -115,13 +115,13 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       </>
       {
         getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-        <div className="w-full my-10 flex items-center minmd:px-[42px] minlg:px-[128px] minxl:px-4">
+        <div className="w-full my-10 flex items-center px-2 minmd:px-[42px] minlg:px-[128px] minxl:px-4">
           <NFTDetailMoreFromCollection contract={nft?.contract} />
         </div>
       }
       {
         getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-        <div className="w-full my-10 flex items-center minmd:px-[42px] minlg:px-[128px] minxl:px-4">
+        <div className="w-full my-10 flex items-center px-2 minmd:px-[42px] minlg:px-[128px] minxl:px-4">
           <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
         </div>
       }
