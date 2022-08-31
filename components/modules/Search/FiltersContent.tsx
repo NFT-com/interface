@@ -283,8 +283,6 @@ export const FiltersContent = () => {
         <div
           className="block minmd:hidden flex p-5 justify-end cursor-pointer"
           onClick={() => {
-            // setClearedFilters(true);
-            // setChecked([]);
             setSearchModalOpen(false);
           }}>
           <EllipseX />
@@ -336,17 +334,15 @@ export const FiltersContent = () => {
             stretch={true}
             label={'Apply Filter'}
             onClick={() => {
-              setTimeout(() => {
-                const checkedList =[];
-                checked.forEach(item => {
-                  if (item.selectedCheck.toString()[0] === ',') item.selectedCheck = item.selectedCheck.slice(1);
-                  checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
-                });
-                const checkedFiltersString = checkedList.join(' && ');
+              const checkedList =[];
+              checked.forEach(item => {
+                if (item.selectedCheck.toString()[0] === ',') item.selectedCheck = item.selectedCheck.slice(1);
+                checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
+              });
+              const checkedFiltersString = checkedList.join(' && ');
 
-                setNftsPageAppliedFilters(sortBy, checkedFiltersString, false);
-                searchModalOpen && setSearchModalOpen(false);
-              }, 500);
+              setNftsPageAppliedFilters(sortBy, checkedFiltersString, false);
+              searchModalOpen && setSearchModalOpen(false);
             }}
             type={ButtonType.PRIMARY}
           />
