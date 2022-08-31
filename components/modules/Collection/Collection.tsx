@@ -335,10 +335,8 @@ export function Collection(props: CollectionProps) {
               </div>}
             </>
             }
-            {selectedTab === 'Activity' ?
+            {selectedTab === 'Activity' &&
               <CollectionActivity contract={props?.contract} />
-              :
-              <CollectionAnalyticsContainer contract={props?.contract} />
             }
           </>
           :
