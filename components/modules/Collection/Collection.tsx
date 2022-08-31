@@ -162,7 +162,7 @@ export function Collection(props: CollectionProps) {
           </div>
         </div>
         <div className='font-grotesk mt-6 text-black flex flex-col minlg:flex-row mb-10'>
-          {collectionData?.collection?.description &&
+          {collectionData?.collection?.description && collectionData?.collection?.description !== 'placeholder collection description text' &&
           <div className='minlg:w-1/2'>
             <h3 className='text-[#6F6F6F] font-semibold'>
             Description
