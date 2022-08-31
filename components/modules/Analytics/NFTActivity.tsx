@@ -1,7 +1,10 @@
 import { Nft } from 'graphql/generated/types';
 import { useGetTransactionsByNFT } from 'hooks/analytics/nftport/nfts/useGetTransactionsByNFT';
 import { Doppler, getEnv } from 'utils/env';
+import { shortenAddress } from 'utils/helpers';
+import { tw } from 'utils/tw';
 
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -19,6 +22,16 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
       setNftdata(nftTransactionHistory);
     }
   }, [chain?.id, nftData, nftTransactionHistory]);
+
+  const formatMarketplaceName = (name) => {
+    if(name === 'opensea'){
+      return 'OpenSea';
+    } else if (name === 'looksrare') {
+      return 'LooksRare';
+    } else {
+      return name;
+    }
+  };
 
   return (
     <div className="shadow-sm overflow-x-auto my-8 font-grotesk rounded-md p-4 border-2 border-[#D5D5D5] whitespace-nowrap">
@@ -38,13 +51,17 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
             </tr>
           </thead>
           <tbody className='p-4'>
-            {nftData?.transactions?.map((tx) => (
-              <tr key={tx} className="bg-white font-normal text-base leading-6 text-[#1F2127] w-full">
-                <td>{tx.type}</td>
-                <td>{tx.transfer_from}</td>
-                <td>{tx.transfer_to}</td>
-                <td>{tx.marketplace}</td>
-                <td>{tx.transaction_date}</td>
+            {nftData?.transactions?.map((tx, index) => (
+              <tr key={index} className={tw(
+                'font-normal text-base leading-6 text-[#1F2127] overflow-auto',
+                index % 2 === 0 && 'bg-[#F8F8F8]'
+              )}
+              >
+                <td className="font-normal text-base leading-6 text-[#1F2127] p-4 capitalize">{tx?.type || '—'}</td>
+                <td className="font-normal text-base leading-6 text-[#1F2127] p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>
+                <td className="font-normal text-base leading-6 text-[#1F2127] p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>
+                <td className="font-normal text-base leading-6 text-[#1F2127] p-4 capitalize">{formatMarketplaceName(tx.marketplace) || '—'}</td>
+                <td className="font-normal text-base leading-6 text-[#1F2127] p-4">{moment.utc(tx.transaction_date).format('MMM-YY-DD:HH:MM').toString() || '—'}</td>
               </tr>
             ))}
           </tbody>
