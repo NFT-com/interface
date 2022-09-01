@@ -36,19 +36,18 @@ export const NftMemo = (props: NftMemoProps) => {
   };
 
   return (
-    <div className='flex h-full w-full minxl:w-1/2 p-4 mt-5 minxl:mt-0 minmd:px-[17.5px] minlg:px-[128px] minxl:px-4 minxl:pr-20'>
+    <div className='flex h-full w-full p-4 mt-5'>
       <div className='flex h-full w-full'>
-        <div className='h-full w-full mt-20'>
-          <div className='font-grotesk text-[#6F6F6F] font-semibold text-base leading-6 relative ml-[10px] -my-20'>Owner&apos;s Message</div>
+        <div className='h-full w-full'>
+          <div className='font-grotesk text-[#6F6F6F] font-semibold text-base leading-6 relative'>Owner&apos;s Message</div>
           <textarea
             className={tw(
-              'text-base w-full resize-none mt-9',
+              'text-base w-full resize-none mt-2',
               'text-left px-3 pb-2 w-full rounded-[10px] font-medium h-32',
               'leading-5',
               'bg-[#F8F8F8]',
               'font-grotesk text-[#1F2127]',
               `${editMemo ? 'border-2' : 'border-none'}`,
-              'pt-12',
             )}
             maxLength={300}
             placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter memo (optional)' : undefined}
@@ -61,7 +60,7 @@ export const NftMemo = (props: NftMemoProps) => {
             }}
             disabled={!currentAddress === nft?.wallet?.address || !editMemo}
           />
-          <div className='flex flex-row w-full justify-center items-center py-2 minmd:px-24'>
+          <div className='flex flex-row w-full justify-center items-center py-2'>
             {currentAddress === nft?.wallet?.address && !editMemo &&
             <Button
               type={ButtonType.PRIMARY}

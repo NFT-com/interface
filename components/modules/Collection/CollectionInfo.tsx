@@ -46,7 +46,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
           </p>
           <div className='text-right relative'>
             <>
-              <p className='font-medium'>{data ? formatCurrency(data?.floor_price) + ' ETH' : 'N/A'}</p>
+              <p className='font-medium'>{data && data?.floor_price ? formatCurrency(data?.floor_price) + ' ETH' : 'N/A'}</p>
               <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>{data?.floor_price ? '$' + formatCurrency(ethPriceUSD * data?.floor_price) : 'N/A'}</p>
             </>
           </div>
@@ -68,7 +68,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
             </CustomTooltip>
             Total Vol<span className='inline minmd:hidden'>ume</span>
           </p>
-          <p className='self-start font-medium'>{data ? formatCurrency(data?.total_volume)+ ' ETH': 'N/A'}</p>
+          <p className='self-start font-medium'>{data && data?.total_volume ? formatCurrency(data?.total_volume)+ ' ETH': 'N/A'}</p>
         </div>
         <div className="flex justify-between mt-5">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
@@ -87,7 +87,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
             </CustomTooltip>
             Supply
           </p>
-          <p className='font-medium'>{data ? data?.total_supply.toLocaleString() : 'N/A'}</p>
+          <p className='font-medium'>{data && data?.total_supply ? data?.total_supply.toLocaleString() : 'N/A'}</p>
         </div>
         <div className="flex justify-between mt-4">
           <p className='font-medium text-[#6F6F6F] flex items-center relative'>
@@ -106,7 +106,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
             </CustomTooltip>
             Owners
           </p>
-          <p className='font-medium'>{data ? data?.num_owners.toLocaleString() : 'N/A'}</p>
+          <p className='font-medium'>{data && data?.num_owners ? data?.num_owners.toLocaleString() : 'N/A'}</p>
         </div>
       </div>
       <div className={tw(
@@ -129,7 +129,7 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
             </CustomTooltip>
             S/O Ratio
           </p>
-          <p className='font-medium'>{data ? (data?.total_supply / data?.num_owners).toFixed(2): 'N/A'}</p>
+          <p className='font-medium'>{data && data?.total_supply && data?.num_owners ? (data?.total_supply / data?.num_owners).toFixed(2): 'N/A'}</p>
         </div>
         <div className="flex justify-between h-10 mt-4 minmd:mt-5">
           <p className='self-start font-medium text-[#6F6F6F] flex items-center minlg:hidden relative'>
@@ -165,16 +165,16 @@ export const CollectionInfo = ({ data, hasDescription, type }: CollectionInfoPro
             Mkt Cap
           </p>
           <div className='text-right relative'>
-            <p className='font-medium'>{data ? formatCurrency(data?.market_cap) + ' ETH': 'N/A'}</p>
-            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>{data ? '$' + formatCurrency(ethPriceUSD * data?.market_cap): 'N/A'}</p>
+            <p className='font-medium'>{data && data?.market_cap ? formatCurrency(data?.market_cap) + ' ETH': 'N/A'}</p>
+            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>{data?.market_cap ? '$' + formatCurrency(ethPriceUSD * data?.market_cap): 'N/A'}</p>
           </div>
         </div>
         <div className="flex justify-between h-10 mt-2 minmd:mt-1">
           <p className='self-start font-medium text-[#6F6F6F] block minlg:hidden'>Average Price</p>
           <p className='self-start font-medium text-[#6F6F6F] hidden items-center minlg:flex'>Avg Price</p>
           <div className='text-right relative'>
-            <p className='font-medium'>{data ? data?.average_price.toFixed(2) + ' ETH' : 'N/A'}</p>
-            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>{data ? '$'+ formatCurrency(ethPriceUSD * data?.average_price) : 'N/A'}</p>
+            <p className='font-medium'>{data && data?.average_price ? data?.average_price.toFixed(2) + ' ETH' : 'N/A'}</p>
+            <p className='text-[#B6B6B6] text-xs font-medium absolute right-0'>{data && data?.average_price ? '$'+ formatCurrency(ethPriceUSD * data?.average_price) : 'N/A'}</p>
           </div>
         </div>
         <div className="flex justify-between mt-3 minmd:mt-0">
