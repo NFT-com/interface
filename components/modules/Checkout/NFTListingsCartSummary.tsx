@@ -2,11 +2,11 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { ExternalProtocol } from 'types';
-import { isNullOrEmpty, max } from 'utils/helpers';
+import { max } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
-import { NFTListingsContext, StagedListing } from './NFTListingsContext';
+import { NFTListingsContext } from './NFTListingsContext';
 import { VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, ethers } from 'ethers';
@@ -22,6 +22,7 @@ export function NFTListingsCartSummary() {
     approveCollection,
     toggleCartSidebar,
     clear,
+    allListingsConfigured
   } = useContext(NFTListingsContext);
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
@@ -40,18 +41,6 @@ export function NFTListingsCartSummary() {
       refreshInterval: 0,
       revalidateOnFocus: false,
     });
-
-  const allListingsConfigured = useCallback(() => {
-    const unconfigured = toList.find((listing: StagedListing) => {
-      return listing.startingPrice == null || BigNumber.from(listing.startingPrice).eq(0) ||
-              listing.nft == null ||
-              listing.duration == null ||
-              isNullOrEmpty(listing.currency) ||
-              isNullOrEmpty(listing.targets) ||
-              (listing.seaportParameters == null && listing.looksrareOrder == null);
-    });
-    return unconfigured == null;
-  }, [toList]);
 
   const getMaxMarketplaceFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
@@ -253,7 +242,7 @@ export function NFTListingsCartSummary() {
                       });
                     stagedListing.isApprovedForLooksrare = result;
                     if (!result) {
-                      break;
+                      return;
                     }
                   } else if (!approved && protocol === ExternalProtocol.Seaport) {
                     const result = await approveCollection(stagedListing, ExternalProtocol.Seaport)
@@ -270,7 +259,7 @@ export function NFTListingsCartSummary() {
                       });
                     stagedListing.isApprovedForSeaport = result;
                     if (!result) {
-                      break;
+                      return;
                     }
                   }
                 }

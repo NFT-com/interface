@@ -10,7 +10,7 @@ import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
 import { Doppler, getEnv } from 'utils/env';
-import { filterNulls, getChainIdString } from 'utils/helpers';
+import { filterNulls, getChainIdString, isNullOrEmpty } from 'utils/helpers';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
@@ -20,7 +20,7 @@ import { CartSidebarTab, NFTCartSidebar } from './NFTCartSidebar';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 
 import { MakerOrder } from '@looksrare/sdk';
-import { BigNumberish } from 'ethers';
+import { BigNumber, BigNumberish } from 'ethers';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
@@ -52,11 +52,12 @@ interface NFTListingsContextType {
   
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
-  toggleTargetMarketplace: (marketplace: ExternalProtocol) => void;
+  toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>) => void;
   setDuration: (duration: SaleDuration) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
   approveCollection: (listing: PartialDeep<StagedListing>, target: ExternalProtocol) => Promise<boolean>;
+  allListingsConfigured: () => boolean;
 }
 
 // initialize with default values
@@ -73,6 +74,7 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   setPrice: () => null,
   removeListing: () => null,
   approveCollection: () => null,
+  allListingsConfigured: () => false,
 });
 
 /**
@@ -132,9 +134,33 @@ export function NFTListingsContextProvider(
     setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'buy' : 'sell'));
   }, [sidebarVisible, toBuy]);
 
-  const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol) => {
-    const targetFullyEnabled = toList.find(listing => listing.targets?.includes(targetMarketplace)) != null;
-    if (targetFullyEnabled) {
+  const allListingsConfigured = useCallback(() => {
+    const unconfigured = toList.find((listing: StagedListing) => {
+      return listing.startingPrice == null || BigNumber.from(listing.startingPrice).eq(0) ||
+              listing.nft == null ||
+              listing.duration == null ||
+              isNullOrEmpty(listing.currency) ||
+              isNullOrEmpty(listing.targets);
+    });
+    return unconfigured == null;
+  }, [toList]);
+
+  const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol, toggleListing?: PartialDeep<StagedListing>) => {
+    const targetFullyEnabled = toList.find(listing => !listing.targets?.includes(targetMarketplace)) == null;
+    if (toggleListing) {
+      // toggle the marketplace for a specific listing.
+      setToList(toList.slice().map(listing => {
+        if (toggleListing?.nft?.id === listing?.nft?.id) {
+          return {
+            ...listing,
+            targets: listing.targets.includes(targetMarketplace) ?
+              listing.targets.filter(target => target !== targetMarketplace) :
+              [...listing.targets, targetMarketplace]
+          };
+        }
+        return listing;
+      }));
+    } else if (targetFullyEnabled) {
       // removing the target marketplace from all nfts
       setToList(toList.slice().map(listing => {
         return {
@@ -299,7 +325,8 @@ export function NFTListingsContextProvider(
     toggleCartSidebar,
     toggleTargetMarketplace,
     setDuration,
-    setPrice
+    setPrice,
+    allListingsConfigured
   }}>
 
     {

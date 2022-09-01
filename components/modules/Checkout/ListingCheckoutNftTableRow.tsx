@@ -25,7 +25,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const { data: collection } = useSWR('ContractMetadata' + props.listing?.nft?.contract, async () => {
     return await getContractMetadata(props.listing?.nft?.contract, chain?.id);
   });
-  const { setPrice, removeListing } = useContext(NFTListingsContext);
+  const { setPrice, removeListing, toggleTargetMarketplace } = useContext(NFTListingsContext);
 
   return (
     <tr>
@@ -64,8 +64,28 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       </td>
       <td>
         <div className='flex flex-col h-24'>
-          {props.listing.targets?.includes(ExternalProtocol.Seaport) && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-          {props.listing.targets?.includes(ExternalProtocol.LooksRare) && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+          <OpenseaIcon
+            className={tw(
+              'h-9 w-9 relative shrink-0 cursor-pointer',
+              !props.listing.targets?.includes(ExternalProtocol.Seaport) && 'opacity-40'
+            )}
+            alt="Opensea logo redirect"
+            layout="fill"
+            onClick={() => {
+              toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
+            }}
+          />
+          <LooksrareIcon
+            className={tw(
+              'h-9 w-9 relative shrink-0 cursor-pointer',
+              !props.listing.targets?.includes(ExternalProtocol.LooksRare) && 'opacity-40'
+            )}
+            alt="Looksrare logo redirect"
+            layout="fill"
+            onClick={() => {
+              toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
+            }}
+          />
         </div>
       </td>
     </tr>
