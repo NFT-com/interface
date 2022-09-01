@@ -66,7 +66,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
       )}>
         <div className='flex flex-col'>
           <Link href={`/app/collection/${collection?.collection?.contract}`}>
-            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline">
+            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline cursor-pointer">
               {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
             </div>
           </Link>
