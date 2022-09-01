@@ -4,6 +4,7 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
+import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -13,8 +14,10 @@ import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
+import { tw } from 'utils/tw';
 
 import { EditListingsModal } from './EditListingsModal';
+import { LegacyListingTile } from './LegacyListingTile';
 import { SelectListingModal } from './SelectListingModal';
 
 import { BigNumber, ethers } from 'ethers';
@@ -42,6 +45,12 @@ export function ExternalListings(props: ExternalListingsProps) {
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
   
   const { data: listings } = useListingActivitiesQuery(
+    props?.nft?.contract,
+    props?.nft?.tokenId,
+    String(props.nft?.wallet.chainId ?? chainId)
+  );
+
+  const { data: legacyListings } = useExternalListingsQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
     String(props.nft?.wallet.chainId ?? chainId)
@@ -127,11 +136,33 @@ export function ExternalListings(props: ExternalListingsProps) {
     toggleCartSidebar
   ]);
 
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+    if (isNullOrEmpty(legacyListings)) {
+      return null;
+    }
+    return <div className={tw(
+      'flex w-full px-4',
+      'flex-col flex-wrap'
+    )}>
+      {legacyListings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
+        <div className='w-full pr-2' key={index}>
+          <LegacyListingTile
+            listing={listing}
+            nft={props.nft}
+            collectionName={props.collectionName}
+          />
+        </div>
+      ))}
+    </div>;
+  }
+
   if (isNullOrEmpty(listings)) {
     return (
       getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
         currentAddress === props.nft?.wallet?.address &&
-        <div className='w-full flex py-4 pb-8 px-4 minmd:px-[17.5px] minlg:px-[128px]'>
+        <div className={tw(
+          'w-full flex p-4',
+        )}>
           <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full p-4 minmd:py-8 minmd:px-20">
             <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>This item is in your wallet</span>
             <Button
@@ -157,7 +188,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   const bestListing = getLowestPriceListing(listings, ethPriceUsd, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   
-  return <div className='w-full flex justify-center py-4 pb-8 px-4 minmd:px-[17.5px] minlg:px-[128px]'>
+  return <div className='w-full flex justify-center p-4'>
     <EditListingsModal
       nft={props.nft}
       collectionName={props.collectionName}
@@ -175,7 +206,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         setSelectListingModalOpen(false);
       }}
     />
-    <div className="flex flex-col bg-[#F6F6F6] rounded-xl p-5 my-6 w-full max-w-nftcom">
+    <div className="flex flex-col bg-[#F6F6F6] rounded-xl p-5 my-6 w-full max-w-nftcom max-h-52 justify-between">
       <div className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>
         <span className='text-sm'>
           {getListingSummaryTitle()}
@@ -198,7 +229,9 @@ export function ExternalListings(props: ExternalListingsProps) {
           </div>
         </div>
       </div>
-      {getListingSummaryButtons()}
+      <div className='flex w-full'>
+        {getListingSummaryButtons()}
+      </div>
     </div>
   </div>;
 }
