@@ -30,7 +30,7 @@ export function LinksToSection(props: LinksToSectionParams) {
       section: 'KNOWLEDGE BASE',
       title: 'NFT.COM Support',
       description: 'Learn about the different ways you can obtain your own NFT.com Profile.',
-      linkTo: '/about'
+      linkTo: 'https://docs.nft.com'
     },
     {
       image: '/link-to-green-key.png',
@@ -61,7 +61,7 @@ export function LinksToSection(props: LinksToSectionParams) {
       section: 'KNOWLEDGE BASE',
       title: 'NFT.COM Support',
       description: 'Learn about the different ways you can obtain your own NFT.com Profile.',
-      linkTo: '/about'
+      linkTo: 'https://docs.nft.com'
     },
     {
       image: '/link-to-green-key.png',

@@ -36,7 +36,7 @@ export const NftMemo = (props: NftMemoProps) => {
   };
 
   return (
-    <div className='flex flex-col h-full w-full p-4 mt-5 minmd:px-[17.5px] minlg:px-[128px]'>
+    <div className='flex h-full w-full minxl:w-1/2 p-4 mt-5 minxl:mt-0 minmd:px-[17.5px] minlg:px-[128px] minxl:px-4 minxl:pr-20'>
       <div className='flex h-full w-full'>
         <div className='h-full w-full mt-20'>
           <div className='font-grotesk text-[#6F6F6F] font-semibold text-base leading-6 relative ml-[10px] -my-20'>Owner&apos;s Message</div>

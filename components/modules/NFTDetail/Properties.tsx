@@ -28,7 +28,6 @@ export const Properties = (props: PropertiesProps) => {
                 key={index}
                 type={item.type.toUpperCase()}
                 value={item.value}
-                subtitle={'x% have this trait'}
                 copy
               />;
             })}

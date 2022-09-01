@@ -1,4 +1,5 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
@@ -25,11 +26,12 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
 
   const { data: nftsForCollections } = useSWR(selectedCuratedCollection, async () => {
     let nftsForCollections;
+    setPaginatedAddresses([]);
     await fetchNFTsForCollections({
       collectionAddresses: contractAddresses,
       count: contractAddresses.length
     }).then((collectionsData => {
-      nftsForCollections = collectionsData.nftsForCollections;
+      nftsForCollections = collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
     }));
     return nftsForCollections;
   });
@@ -55,7 +57,9 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
   },[curatedCollections, selectedCuratedCollection, setSelectedCuratedCollection]);
 
   useEffect(() => {
-    nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...nftsForCollections.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page)]);
+    const paginatedContracts = nftsForCollections?.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page);
+    const sortedPaginatedAddresses = paginatedContracts?.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
+    nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...sortedPaginatedAddresses]);
   },[nftsForCollections, page, screenWidth, sideNavOpen]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
@@ -73,7 +77,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
           <div className="hidden minlg:block">
             <SideNav onSideNav={changeCurated}/>
           </div>
-          <div className="minlg:mt-8 minlg:ml-6">
+          <div className="minlg:mt-8 minlg:ml-6 w-full">
             <span className="font-grotesk text-black font-black text-4xl minmd:text-5xl">Discover</span>
             <p className="text-blog-text-reskin mt-4 text-base minmd:text-lg">
             Find your next PFP, one-of-kind collectable, or membership pass to the next big thing!
@@ -103,6 +107,13 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                     </div>);
                 })}
               </div>
+              {(paginatedAddresses && paginatedAddresses.length === 0) &&
+                (<div className="flex items-center justify-center min-h-[16rem] w-full">
+                  <Loader />
+                </div>)}
+              {paginatedAddresses && paginatedAddresses.length < 5 && (
+                <div className="hidden minlg:block w-full h-52"></div>
+              )}
             </div>
             { paginatedAddresses.length < contractAddresses.length &&
             <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">

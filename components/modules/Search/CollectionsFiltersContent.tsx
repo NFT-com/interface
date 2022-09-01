@@ -56,16 +56,11 @@ export const CollectionsFiltersContent = () => {
             options={[
               {
                 label: 'Price: Low to High',
-                onSelect: () =>
-                {
-                  setSortBy('listedPx:asc');
-                }
+                onSelect: () => { setSortBy('listedPx:asc'); }
               },
               {
                 label: 'Price: High to Low',
-                onSelect: () => {
-                  setSortBy('listedPx:desc');
-                }
+                onSelect: () => { setSortBy('listedPx:desc'); }
               },
             ]}
           />

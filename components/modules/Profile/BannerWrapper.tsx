@@ -24,7 +24,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       style={{ backgroundImage: `url(${props.imageOverride ?? defaultBanner})` }}
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
-        'bg-cover minxl:bg-contain bg-center',
+        'bg-cover bg-center',
         props.isCollection ? 'h-[120px]' : 'h-60 minxl:h-72',
       )}
     >
