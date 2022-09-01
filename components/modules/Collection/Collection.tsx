@@ -48,7 +48,7 @@ export function Collection(props: CollectionProps) {
     creatorTokens?.at(0)?.tokenUri?.raw?.split('/').pop()
   );
   const { profileData: collectionPreferredOwnerData } = useProfileQuery(
-    collectionOwnerData?.profile?.owner?.preferredProfile.url
+    collectionOwnerData?.profile?.owner?.preferredProfile?.url
   );
 
   const tabs = {
