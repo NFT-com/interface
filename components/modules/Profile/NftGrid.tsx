@@ -55,7 +55,7 @@ export function NftGrid(props: NftGridProps) {
 
   return <div
     className={tw(
-      'grid w-full gap-y-2.5 gap-x-8',
+      'grid w-full gap-y-6 gap-x-8 mt-2',
       (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
       (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-1 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
