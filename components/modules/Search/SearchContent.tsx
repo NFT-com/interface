@@ -57,7 +57,6 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
       }
     }
 
-    
     const searchRequests = {
       'searches': [
         {
