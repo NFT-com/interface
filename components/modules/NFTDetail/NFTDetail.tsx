@@ -121,13 +121,13 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 >
                   <span className='text-base font-medium leading-5 font-grotesk text-link font-dm-mono'>
                     {collectionOwnerToShow?.url == null ?
-                      shortenAddress(collectionOwnerToShow?.owner?.address) :
+                      shortenAddress(collectionOwnerToShow?.owner?.address, 2) :
                       collectionOwnerToShow?.url
                     }
                   </span>
                 </div> :
                 <span className="text-[#1F2127] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
-                  {shortenAddress(collection?.collection?.contract) ?? 'Unknown'}
+                  {shortenAddress(collection?.collection?.contract, 2) ?? 'Unknown'}
                 </span>
             }
           </div>
@@ -164,14 +164,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 }}
               >
                 <span className="text-base font-medium leading-5 font-grotesk text-link">
-                  {profileOwnerToShow?.url == null ?
-                    shortenAddress(props.nft?.wallet?.address) :
+                  {!profileOwnerToShow?.url == null ?
+                    shortenAddress(props.nft?.wallet?.address, 0) :
                     profileOwnerToShow?.url
                   }
                 </span>
               </div> :
               <span className="text-[#1F2127] text-base font-medium leading-5 font-grotesk pl-3">
-                {shortenAddress(props.nft?.wallet?.address) ?? 'Unknown'}
+                {shortenAddress(props.nft?.wallet?.address, 2) ?? 'Unknown'}
               </span>
           }
         </div>
