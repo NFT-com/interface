@@ -5,6 +5,7 @@ import { ExternalProtocol } from 'types';
 import { max } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
+import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { NFTListingsContext } from './NFTListingsContext';
 import { VerticalProgressBar } from './VerticalProgressBar';
 
@@ -100,74 +101,96 @@ export function NFTListingsCartSummary() {
     );
   }, [toList]);
 
+  const getSummaryContent = useCallback(() => {
+    if (success) {
+      return <div className='my-8'>
+        <CheckoutSuccessView subtitle="You have successfully listed your items!" />
+      </div>;
+    } else if (showProgressBar) {
+      return (
+        <div className="mx-8">
+          <VerticalProgressBar
+            activeNodeIndex={
+              error === 'ConnectionError' ?
+                0 :
+                getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2
+            }
+            nodes={[
+              {
+                label: 'Initialize Wallet',
+                error: error === 'ConnectionError'
+              },
+              {
+                label: 'Approve Collections for Sale',
+                error: error === 'ApprovalError',
+                items: toList?.map((stagedListing) => {
+                  return stagedListing.targets.map((protocol) => {
+                    const approved = protocol === ExternalProtocol.LooksRare ?
+                      stagedListing?.isApprovedForLooksrare :
+                      stagedListing?.isApprovedForSeaport;
+                    return {
+                      label: 'Approve ' + stagedListing?.collectionName + ' for ' + protocol,
+                      icon: approved ?
+                        <CheckCircle size={16} className="text-green-500" /> :
+                        error === 'ApprovalError' ?
+                          <X size={16} className="text-red-400" /> :
+                          <SpinnerGap size={16} className="text-yellow-500 animate-spin" />,
+                    };
+                  });
+                }).flat()
+              },
+              {
+                label: `Confirm ${getTotalListings()} Listings`,
+                error: error === 'ListingError',
+              }
+            ]}
+          />
+        </div>
+      );
+    } else {
+      // fee summary, default state.
+      return (
+        <>
+          <p className="text-xl font-bold">
+            Summary and fees for {toList?.length ?? 0} NFT{toList?.length > 1 && 's'}
+          </p>
+          <div className="mx-8 my-4 flex items-center">
+            <span>Max marketplace fees: {' '}</span>
+            <span className='ml-2'>
+              {ethers.utils.formatEther(getMaxMarketplaceFees() ?? 0) + ' WETH'}
+            </span>
+          </div>
+          <div className="mx-8 my-4 flex items-center">
+            <span>Max royalties: </span>
+            <span className='ml-2'>
+              {ethers.utils.formatEther(getMaxRoyaltyFees() ?? 0) + ' WETH'}
+            </span>
+          </div>
+          <div className="mx-8 my-4 flex items-center">
+            <span>Minimum profit: </span>
+            <span className='ml-2'>
+              {ethers.utils.formatEther(getTotalProfit() ?? 0) + ' WETH'}
+            </span>
+          </div>
+        </>
+      );
+    }
+  }, [
+    error,
+    getMaxMarketplaceFees,
+    getMaxRoyaltyFees,
+    getNeedsApprovals,
+    getTotalListings,
+    getTotalProfit,
+    showProgressBar,
+    success,
+    toList
+  ]);
+
   return (
     <>
-      {
-        showProgressBar
-          ? (
-            <div className="mx-8">
-              <VerticalProgressBar
-                activeNodeIndex={
-                  error === 'ConnectionError' ?
-                    0 :
-                    getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2
-                }
-                nodes={[
-                  {
-                    label: 'Initialize Wallet',
-                    error: error === 'ConnectionError'
-                  },
-                  {
-                    label: 'Approve Collections for Sale',
-                    error: error === 'ApprovalError',
-                    items: toList?.map((stagedListing) => {
-                      return stagedListing.targets.map((protocol) => {
-                        const approved = protocol === ExternalProtocol.LooksRare ?
-                          stagedListing?.isApprovedForLooksrare :
-                          stagedListing?.isApprovedForSeaport;
-                        return {
-                          label: 'Approve ' + stagedListing?.collectionName + ' for ' + protocol,
-                          icon: approved ?
-                            <CheckCircle size={16} className="text-green-500" /> :
-                            error === 'ApprovalError' ?
-                              <X size={16} className="text-red-400" /> :
-                              <SpinnerGap size={16} className="text-yellow-500 animate-spin" />,
-                        };
-                      });
-                    }).flat()
-                  },
-                  {
-                    label: `Confirm ${getTotalListings()} Listings`,
-                    error: error === 'ListingError',
-                  }
-                ]}
-              />
-            </div>
-          )
-          : (
-            <>
-              <div className="mx-8 my-4 flex items-center">
-                <span>Max marketplace fees: {' '}</span>
-                <span className='ml-2'>
-                  {ethers.utils.formatEther(getMaxMarketplaceFees() ?? 0) + ' WETH'}
-                </span>
-              </div>
-              <div className="mx-8 my-4 flex items-center">
-                <span>Max royalties: </span>
-                <span className='ml-2'>
-                  {ethers.utils.formatEther(getMaxRoyaltyFees() ?? 0) + ' WETH'}
-                </span>
-              </div>
-              <div className="mx-8 my-4 flex items-center">
-                <span>Minimum profit: </span>
-                <span className='ml-2'>
-                  {ethers.utils.formatEther(getTotalProfit() ?? 0) + ' WETH'}
-                </span>
-              </div>
-            </>
-          )
-      }
-      <div className="mx-8 my-4 flex">
+      {getSummaryContent()}
+      {toList.length > 0 && <div className="mx-8 my-4 flex">
         <Button
           stretch
           loading={showProgressBar && !error && !success}
@@ -252,7 +275,7 @@ export function NFTListingsCartSummary() {
           }}
           type={ButtonType.PRIMARY}
         />
-      </div>
+      </div>}
     </>
   );
 }

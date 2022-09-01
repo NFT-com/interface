@@ -20,7 +20,7 @@ export function useRecentProfilesQuery(pageInput: PageInput): RecentProfilesQuer
     const result = await sdk.RecentProfiles({
       input: {
         pageInput,
-        sortBy: ProfileSortType.RecentMinted
+        sortBy: ProfileSortType.RecentUpdated
       },
     });
     return result;

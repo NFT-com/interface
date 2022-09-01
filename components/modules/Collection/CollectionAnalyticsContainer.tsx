@@ -1,12 +1,12 @@
 import { BarGraph } from 'components/modules/Analytics/BarGraph';
-import { LineVis } from 'components/modules/Analytics/LineChart';
+import { LineVis } from 'components/modules/Analytics/LineVis';
 import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
 import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
 import moment from 'moment';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 export type CollectionAnalyticsContainerProps = {

@@ -157,7 +157,7 @@ export function NFTCard(props: NFTCardProps) {
               />}
           </div> :
           props.imageLayout === 'row' ?
-            <div className='flex justify-center w-full'>
+            <div className='flex justify-center w-full min-h-XL min-h-2XL min-h-3XL'>
               {processedImageURLs.slice(0,3).map((image: string, index: number) => {
                 return <RoundedCornerMedia
                   key={image + index}
@@ -188,7 +188,7 @@ export function NFTCard(props: NFTCardProps) {
           {isNullOrEmpty(props.title) ? 'Unknown Name' : props.title}
         </span>
         {props.subtitle && <span
-          className='text-xs minmd:text-sm  text-secondary-txt mt-2'
+          className='text-xs minmd:text-sm  text-secondary-txt mt-2 text-ellipsis overflow-hidden'
         >
           {props.subtitle}
         </span>}

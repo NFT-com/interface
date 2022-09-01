@@ -1,4 +1,6 @@
 import CollectionsSlider from 'components/elements/CollectionsSlider';
+import Loader from 'components/elements/Loader';
+import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { SearchableFields } from 'utils/typeSenseAdapters';
@@ -8,7 +10,10 @@ import useSWR from 'swr';
 
 export const CollectionsResults = (props: {searchTerm: string}) => {
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
+  const { fetchNFTsForCollections } = useFetchNFTsForCollections();
   const { width: screenWidth } = useWindowDimensions();
+
+  let addressesList = [];
 
   const { data } = useSWR(screenWidth, async () => {
     let results = [];
@@ -24,13 +29,27 @@ export const CollectionsResults = (props: {searchTerm: string}) => {
         results = [...resp.results[0].hits];
         found = resp.results[0].found;
       });
-
     return { found, results };
+  });
+
+  addressesList = data?.results.map((nft) => {
+    return nft.document?.contractAddr;
+  });
+
+  const { data: nftsForCollections } = useSWR('fetchNFTsForCollections', async () => {
+    let nftsForCollections;
+    await fetchNFTsForCollections({
+      collectionAddresses: addressesList,
+      count: 20
+    }).then((collectionsData => {
+      nftsForCollections = collectionsData.nftsForCollections;
+    }));
+    return nftsForCollections;
   });
 
   return(
     <>
-      <div className="flex justify-between items-center font-grotesk font-bold text-base minmd:text-lg text-blog-text-reskin mt-12">
+      <div className="flex justify-between items-center font-grotesk font-black text-base text-lg minmd:text-xl text-blog-text-reskin mt-12">
         <span> {data?.found + ' ' + 'COLLECTIONS'} </span>
         <span
           className="cursor-pointer hover:font-semibold"
@@ -39,7 +58,11 @@ export const CollectionsResults = (props: {searchTerm: string}) => {
           SEE ALL
         </span>
       </div>
-      {data?.results && data?.results.length > 0 && <CollectionsSlider full slides={data?.results} />}
+      {nftsForCollections && nftsForCollections.length > 0 ?
+        <CollectionsSlider full slides={nftsForCollections} /> :
+        (<div className="flex items-center justify-center min-h-[16rem]">
+          <Loader />
+        </div>)}
     </>
   );
 };

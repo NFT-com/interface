@@ -1,15 +1,17 @@
 import { CuratedCollection } from 'types';
 
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useSearchModal() {
+  const router = useRouter();
   const { data, mutate } = useSWR('searchmodal', {
     fallbackData:
     {
-      modalType: 'search',
+      modalType: '',
       searchModalOpen: false,
-      sideNavOpen: false,
+      sideNavOpen: !router.pathname.includes('discover/'),
       searchFilters: [],
       filtersList: null,
       checkedFiltersList: '',
@@ -17,7 +19,10 @@ export function useSearchModal() {
       clearedFilters: true,
       curatedCollections: null,
       selectedCuratedCollection: null,
-
+      collectionPageSortyBy: '',
+      id: '',
+      nftsPageFilterBy: '',
+      nftsPageSortyBy: '',
     } });
 
   const loading = !data;
@@ -30,18 +35,20 @@ export function useSearchModal() {
   };
 
   const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search', searchFilters?: any) => {
-    const filtersList = data.filtersList ?? (searchModalOpen && searchFilters?.map((item) => {
-      return {
-        filter: item.field_name,
-        values: []
-      };
-    }));
+    const filtersList = modalType !== 'collectionFilters' ?
+      data.filtersList ?? (searchModalOpen && searchFilters?.map((item) => {
+        return {
+          filter: item.field_name,
+          values: []
+        };
+      }))
+      : [];
     mutate({
       ...data,
       searchModalOpen,
       modalType,
       searchFilters,
-      filtersList
+      filtersList,
     });
   }, [data, mutate]);
 
@@ -73,33 +80,10 @@ export function useSearchModal() {
     });
   }, [data, mutate]);
 
-  const setCheckedFiltersList = useCallback((checkedFiltersList: string) => {
-    mutate({
-      ...data,
-      checkedFiltersList
-    });
-  },[data, mutate]);
-
   const setSortBy = useCallback((sortBy: string) => {
     mutate({
       ...data,
       sortBy
-    });
-  },[data, mutate]);
-
-  const setClearedFilters = useCallback((clearedFilters: boolean) => {
-    const filtersList = !clearedFilters
-      ? data.filtersList
-      : data.filtersList.map((item) => {
-        return {
-          filter: item.field_name,
-          values: []
-        };
-      });
-    mutate({
-      ...data,
-      filtersList,
-      clearedFilters
     });
   },[data, mutate]);
 
@@ -117,6 +101,24 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setCollectionPageAppliedFilters = useCallback((collectionPageSortyBy: string, id: string, searchModalOpen = true) => {
+    mutate({
+      ...data,
+      searchModalOpen,
+      id,
+      collectionPageSortyBy
+    });
+  },[data, mutate]);
+
+  const setNftsPageAppliedFilters = useCallback((nftsPageSortyBy: string, nftsPageFilterBy: string, searchModalOpen = true) => {
+    mutate({
+      ...data,
+      searchModalOpen,
+      nftsPageSortyBy,
+      nftsPageFilterBy
+    });
+  },[data, mutate]);
+
   return {
     loading,
     modalType: data.modalType,
@@ -129,16 +131,20 @@ export function useSearchModal() {
     clearedFilters: data.clearedFilters,
     curatedCollections: data.curatedCollections,
     selectedCuratedCollection: data.selectedCuratedCollection,
+    collectionPageSortyBy: data.collectionPageSortyBy,
+    id: data.id,
+    nftsPageSortyBy: data.nftsPageSortyBy,
+    nftsPageFilterBy: data.nftsPageFilterBy,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
     setSideNavOpen,
-    setCheckedFiltersList,
     setSortBy,
-    setClearedFilters,
     setSearchFilters,
     setCuratedCollections,
-    setSelectedCuratedCollection
+    setSelectedCuratedCollection,
+    setCollectionPageAppliedFilters,
+    setNftsPageAppliedFilters
   };
 }
 

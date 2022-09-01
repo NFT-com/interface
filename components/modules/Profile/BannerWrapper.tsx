@@ -3,7 +3,6 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { PropsWithChildren } from 'react';
-import { isMobile } from 'react-device-detect';
 
 export interface BannerWrapperProps {
   imageOverride?: string
@@ -14,7 +13,7 @@ export interface BannerWrapperProps {
 }
 
 const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
-  'https://cdn.nft.com/empty_profile_banner.png'
+  'https://cdn.nft.com/collectionBanner_default.png'
   : 'https://cdn.nft.com/profile-banner-default-logo-key.png';
 
 export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
@@ -25,8 +24,8 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       style={{ backgroundImage: `url(${props.imageOverride ?? defaultBanner})` }}
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
-        'bg-no-repeat bg-cover bg-center',
-        props.isCollection ? 'h-[120px]' : 'h-60 minxl:h-72',
+        'bg-cover bg-center',
+        props.isCollection ? 'h-[320px]' : 'h-60 minxl:h-72',
       )}
     >
       {props.loading && <div
@@ -41,8 +40,8 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       <div
         className="flex justify-start items-end h-full"
         style={{
-          minWidth: isMobile ? '100%' : '1000px',
-          maxWidth: isMobile ? '100%' : '1000px',
+          minWidth: '100%',
+          maxWidth: '100%'
         }}
       >
         {props.children}
