@@ -9,7 +9,6 @@ import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchan
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
-import { filterNulls } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
@@ -92,7 +91,15 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             collectionName: props.collectionName,
             isApprovedForSeaport: openseaAllowed,
             isApprovedForLooksrare: looksRareAllowed,
-            targets: filterNulls([listing?.order?.protocol as ExternalProtocol])
+            targets: [{
+              protocol: listing?.order?.protocol as ExternalProtocol,
+              startingPrice: 0,
+              endingPrice: 0,
+              currency: WETH.address,
+              duration: null,
+              looksrareOrder: null,
+              seaportParameters: null
+            }]
           });
           router.push('/app/list');
         }}

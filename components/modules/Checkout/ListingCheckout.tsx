@@ -21,9 +21,15 @@ export function ListingCheckout() {
     
   const [showSummary, setShowSummary] = useState(false);
 
-  const openseaFullyEnabled = toList.find(listing => !listing.targets?.includes(ExternalProtocol.Seaport)) == null;
-  const looksrareFullyEnabled = toList.find(listing => !listing.targets?.includes(ExternalProtocol.LooksRare)) == null;
-
+  const openseaFullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
+    const hasTarget = nft.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
+    return !hasTarget; // return true if missing the desired target.
+  }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
+  const looksrareFullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
+    const hasTarget = nft.targets?.find(target => target?.protocol === ExternalProtocol.LooksRare) != null;
+    return !hasTarget; // return true if missing the desired target.
+  }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
+  console.log(toList);
   return (
     <div className="flex flex-col minlg:flex-row w-full mt-10">
       <div className="flex flex-col items-center w-full">
@@ -70,7 +76,7 @@ export function ListingCheckout() {
                   }}
                   className={tw(
                     'rounded-full py-2.5 px-2',
-                    toList?.find(l => l.duration === convertDurationToSec(duration as SaleDuration)) ? 'bg-black font-bold text-white' : 'border border-[#D5D5D5] text-black',
+                    toList?.find(l => l.duration === convertDurationToSec(duration as SaleDuration)) ? 'bg-primary-yellow font-bold' : 'border border-[#D5D5D5] text-black',
                     'cursor-pointer hover:opacity-80',
                   )}
                 >
@@ -80,11 +86,11 @@ export function ListingCheckout() {
             }
           </div>
         </div>
-        <div className='my-8 w-full'>
+        <div className='my-8 w-full overflow-x-scroll'>
           <div className="border-t border-[#D5D5D5] mx-8">
             <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
           </div>
-          <table className="w-full mx-8 text-sm overflow-x-scroll table-auto">
+          <table className="w-full mx-8 text-sm table-auto">
             <thead>
               <tr>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">NFT</th>

@@ -6,7 +6,7 @@ import { max } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
-import { NFTListingsContext } from './NFTListingsContext';
+import { ListingTarget, NFTListingsContext } from './NFTListingsContext';
 import { VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, ethers } from 'ethers';
@@ -44,15 +44,15 @@ export function NFTListingsCartSummary() {
 
   const getMaxMarketplaceFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
-      const feesByMarketplace = stagedListing.targets.map((protocol) => {
-        if (protocol === ExternalProtocol.LooksRare) {
+      const feesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+        if (target.protocol === ExternalProtocol.LooksRare) {
           // Looksrare fee is fetched from the smart contract.
           return BigNumber.from(looksrareProtocolFeeBps == null
             ? 0
-            : multiplyBasisPoints(stagedListing?.startingPrice ?? 0, looksrareProtocolFeeBps));
+            : multiplyBasisPoints(target?.startingPrice ?? 0, looksrareProtocolFeeBps));
         } else {
           // Seaport fee is hard-coded in our codebase and not expected to change.
-          return BigNumber.from(multiplyBasisPoints(stagedListing?.startingPrice ?? 0, 250));
+          return BigNumber.from(multiplyBasisPoints(target?.startingPrice ?? 0, 250));
         }
       });
       return cartTotal.add(max(...feesByMarketplace) ?? 0);
@@ -61,18 +61,18 @@ export function NFTListingsCartSummary() {
  
   const getMaxRoyaltyFees = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
-      const royaltiesByMarketplace = stagedListing.targets.map((protocol) => {
-        if (protocol === ExternalProtocol.LooksRare) {
-          const minAskAmount = BigNumber.from(stagedListing?.looksrareOrder?.minPercentageToAsk ?? 0)
+      const royaltiesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+        if (target.protocol === ExternalProtocol.LooksRare) {
+          const minAskAmount = BigNumber.from(target?.looksrareOrder?.minPercentageToAsk ?? 0)
             .div(10000)
-            .mul(BigNumber.from(stagedListing?.looksrareOrder?.price ?? 0));
+            .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
           const marketplaceFeeAmount = BigNumber.from(looksrareProtocolFeeBps ?? 0)
             .div(10000)
-            .mul(BigNumber.from(stagedListing?.looksrareOrder?.price ?? 0));
+            .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
           return minAskAmount.sub(marketplaceFeeAmount);
         } else {
-          return BigNumber.from(stagedListing?.seaportParameters?.consideration.length === 3 ?
-            stagedListing?.seaportParameters?.consideration[2].startAmount :
+          return BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
+            target?.seaportParameters?.consideration[2].startAmount :
             0);
         }
       });
@@ -88,7 +88,10 @@ export function NFTListingsCartSummary() {
 
   const getTotalProfit = useCallback(() => {
     const total = toList?.reduce((cartTotal, stagedListing) => {
-      return BigNumber.from(stagedListing?.startingPrice ?? 0).add(cartTotal);
+      const targetsSum = stagedListing.targets.reduce((total, target) => {
+        return total.add(BigNumber.from(target.startingPrice));
+      }, BigNumber.from(0));
+      return BigNumber.from(targetsSum ?? 0).add(cartTotal);
     }, BigNumber.from(0));
 
     return total.sub(getMaxMarketplaceFees()).sub(getMaxRoyaltyFees());
@@ -96,8 +99,8 @@ export function NFTListingsCartSummary() {
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
-      (stagedListing.targets.includes(ExternalProtocol.LooksRare) && !stagedListing?.isApprovedForLooksrare) ||
-      (stagedListing.targets.includes(ExternalProtocol.Seaport) && !stagedListing?.isApprovedForSeaport)
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null && !stagedListing?.isApprovedForLooksrare) ||
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport)
     );
   }, [toList]);
 
