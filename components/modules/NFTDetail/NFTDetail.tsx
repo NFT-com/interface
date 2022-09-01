@@ -13,6 +13,7 @@ import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
 
+import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
@@ -88,14 +89,15 @@ export const NFTDetail = (props: NFTDetailProps) => {
         </div>
       </div>
       <div className='flex flex-row items-center w-full h-full p-4'>
-        <div className='flex flex-col h-full'>
-          {collectionOwnerToShow?.photoURL
-            ? <img
-              className='rounded-md aspect-square h-[42px] w-[42px]'
-              src={collectionOwnerToShow?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
+        <div className='flex flex-col h-full aspect-square'>
+          {collectionOwnerToShow?.photoURL ?
+            <img
+              className='rounded-md aspect-square h-full w-full'
+              src={collectionOwnerToShow?.photoURL}
               alt='creator-profile-pic'
             />
-            : <LoggedInIdenticon round border />
+            :
+            <LoggedInIdenticon round border />
           }
         </div>
         <div className='flex flex-col w-1/2 h-full'>
@@ -119,13 +121,13 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 >
                   <span className='text-base font-medium leading-5 font-grotesk text-link font-dm-mono'>
                     {collectionOwnerToShow?.url == null ?
-                      shortenAddress(collectionOwnerToShow?.owner?.address) :
+                      shortenAddress(collectionOwnerToShow?.owner?.address, 2) :
                       collectionOwnerToShow?.url
                     }
                   </span>
                 </div> :
                 <span className="text-[#1F2127] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
-                  {shortenAddress(collection?.collection?.contract) ?? 'Unknown'}
+                  {shortenAddress(collection?.collection?.contract, 2) ?? 'Unknown'}
                 </span>
             }
           </div>
@@ -162,14 +164,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 }}
               >
                 <span className="text-base font-medium leading-5 font-grotesk text-link">
-                  {profileOwnerToShow?.url == null ?
-                    shortenAddress(props.nft?.wallet?.address) :
+                  {!profileOwnerToShow?.url == null ?
+                    shortenAddress(props.nft?.wallet?.address, 0) :
                     profileOwnerToShow?.url
                   }
                 </span>
               </div> :
               <span className="text-[#1F2127] text-base font-medium leading-5 font-grotesk pl-3">
-                {shortenAddress(props.nft?.wallet?.address) ?? 'Unknown'}
+                {shortenAddress(props.nft?.wallet?.address, 2) ?? 'Unknown'}
               </span>
           }
         </div>
