@@ -60,12 +60,12 @@ export const NftMemo = (props: NftMemoProps) => {
             }}
             disabled={!currentAddress === nft?.wallet?.address || !editMemo}
           />
-          <div className='flex flex-row w-full justify-center items-center py-2'>
+          <div className='flex flex-row w-full justify-center items-center py-2 minxl:float-right minxl:flex-row-reverse minxl:w-1/4 minxl:-mb-12'>
             {currentAddress === nft?.wallet?.address && !editMemo &&
             <Button
               type={ButtonType.PRIMARY}
-              label={'Edit'}
               stretch
+              label={'Edit'}
               onClick={() => {
                 setEditMemo(true);
                 setDraftMemo(draftMemo ?? nft?.memo ?? '');
