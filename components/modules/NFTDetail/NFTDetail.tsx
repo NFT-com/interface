@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import Copy from 'components/elements/Copy';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { Nft, Profile } from 'graphql/generated/types';
