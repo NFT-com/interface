@@ -13,7 +13,7 @@ import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
 
-import { ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
@@ -72,7 +72,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             </div>
           </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${ethers.BigNumber.from(props.nft?.tokenId.toString()).toString()}`}
+            {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : `${props.nft?.metadata?.name}`}
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12'>
