@@ -9,12 +9,12 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
-import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
 
-import { ethers } from 'ethers';
+import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
@@ -68,19 +68,19 @@ export const NFTDetail = (props: NFTDetailProps) => {
       )}>
         <div className='flex flex-col'>
           <Link href={`/app/collection/${collection?.collection?.contract}`}>
-            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline">
+            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline cursor-pointer">
               {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
             </div>
           </Link>
           <div className='hidden minlg:block font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${ethers.BigNumber.from(props.nft?.tokenId.toString()).toString()}`}
+            {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : `${props.nft?.metadata?.name}`}
           </div>
           <div className="block minlg:hidden">
-            <Copy toCopy={ethers.BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
+            <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
               <div className='font-grotesk font-bold text-2xl leading-9'>
                 {isNullOrEmpty(props?.nft?.tokenId) ?
                   'Unknown token ID' :
-                  `#${ethers.BigNumber.from(props.nft?.tokenId).toString().length > 11 ? ethers.BigNumber.from(props.nft?.tokenId).toString().slice(0,10) + '...' : ethers.BigNumber.from(props.nft?.tokenId).toString()}`}
+                  `#${BigNumber.from(props.nft?.tokenId).toString().length > 11 ? BigNumber.from(props.nft?.tokenId).toString().slice(0,10) + '...' : BigNumber.from(props.nft?.tokenId).toString()}`}
               </div>
             </Copy>
           </div>
@@ -129,16 +129,21 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     router.push('/' + collectionOwnerToShow?.url);
                   }}
                 >
-                  <span className='text-base font-medium leading-5 font-grotesk text-link font-dm-mono'>
+                  <span className={tw('text-base font-medium leading-5',
+                    `${collectionOwnerToShow?.url == null ? 'font-dm-mono text-[#B59007]' : 'font-grotesk'}`,
+                    'text-link'
+                  )}>
                     {collectionOwnerToShow?.url == null ?
-                      shortenAddress(collectionOwnerToShow?.owner?.address) :
-                      '@' + collectionOwnerToShow?.url
+                      shortenAddress(collectionOwnerToShow?.owner?.address, 2) :
+                      collectionOwnerToShow?.url
                     }
                   </span>
                 </div> :
-                <span className="text-[#1F2127] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
-                  {shortenAddress(collection?.collection?.contract) ?? 'Unknown'}
-                </span>
+                <Link href={getEtherscanLink((chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID).toString()), collection?.collection?.contract, 'address')}>
+                  <span className="text-[#B59007] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
+                    {shortenAddress(collection?.collection?.contract, 2) ?? 'Unknown'}
+                  </span>
+                </Link>
             }
           </div>
         </div>
@@ -174,14 +179,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 }}
               >
                 <span className="text-base font-medium leading-5 font-grotesk text-link">
-                  {profileOwnerToShow?.url == null ?
-                    shortenAddress(props.nft?.wallet?.address) :
-                    '@' + profileOwnerToShow?.url
+                  {!profileOwnerToShow?.url == null ?
+                    shortenAddress(props.nft?.wallet?.address, 0) :
+                    profileOwnerToShow?.url
                   }
                 </span>
               </div> :
               <span className="text-[#1F2127] text-base font-medium leading-5 font-grotesk pl-3">
-                {shortenAddress(props.nft?.wallet?.address) ?? 'Unknown'}
+                {shortenAddress(props.nft?.wallet?.address, 2) ?? 'Unknown'}
               </span>
           }
         </div>
