@@ -120,7 +120,7 @@ export function ExternalListings(props: ExternalListingsProps) {
               listing?.order?.protocolData as SeaportProtocolData :
               listing?.order?.protocolData as LooksrareProtocolData
           });
-          toggleCartSidebar('buy');
+          toggleCartSidebar('Buy');
         }}
         type={ButtonType.PRIMARY}
       />;
@@ -176,7 +176,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   isApprovedForLooksrare: looksRareAllowed,
                   targets: []
                 });
-                toggleCartSidebar('sell');
+                toggleCartSidebar('Sell');
               }}
               type={ButtonType.PRIMARY}
             />

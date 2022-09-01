@@ -101,7 +101,7 @@ export function NFTListingsContextProvider(
   const provider = useProvider();
   const { data: signer } = useSigner();
 
-  const [selectedTab, setSelectedTab] = useState<CartSidebarTab>('buy');
+  const [selectedTab, setSelectedTab] = useState<CartSidebarTab>('Buy');
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -127,9 +127,9 @@ export function NFTListingsContextProvider(
     localStorage.setItem('stagedNftListings', null);
   }, []);
   
-  const toggleCartSidebar = useCallback((selectedTab?: 'buy' | 'sell') => {
+  const toggleCartSidebar = useCallback((selectedTab?: 'Buy' | 'Sell') => {
     setSidebarVisible(!sidebarVisible);
-    setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'buy' : 'sell'));
+    setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'Buy' : 'Sell'));
   }, [sidebarVisible, toBuy]);
 
   const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol) => {
