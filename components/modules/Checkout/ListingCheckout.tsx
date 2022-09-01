@@ -6,7 +6,7 @@ import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
-import { NFTListingsCartSummary } from './NFTListingsCartSummary';
+import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
 
 import { useContext, useState } from 'react';
 
@@ -29,9 +29,9 @@ export function ListingCheckout() {
     const hasTarget = nft.targets?.find(target => target?.protocol === ExternalProtocol.LooksRare) != null;
     return !hasTarget; // return true if missing the desired target.
   }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
-  console.log(toList);
+
   return (
-    <div className="flex flex-col minlg:flex-row w-full mt-10">
+    <div className="flex flex-col items-center w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className='w-full flex flex-col px-8 items-center'>
           <span className='text-2xl w-full flex font-bold'>Select Marketplace</span>
@@ -122,11 +122,7 @@ export function ListingCheckout() {
           type={ButtonType.PRIMARY}
         />}
       </div>
-      <div className='flex flex-col p-8 w-full'>
-        {showSummary && toList.length > 0 &&
-        <NFTListingsCartSummary />
-        }
-      </div>
+      <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
     </div>
   );
 }

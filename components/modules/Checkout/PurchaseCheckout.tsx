@@ -8,7 +8,7 @@ import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils
 import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { PurchaseCheckoutNft } from './PurchaseCheckoutNft';
-import { VerticalProgressBar } from './VerticalProgressBar';
+import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
@@ -66,12 +66,12 @@ export function PurchaseCheckout() {
                 const currencyData = getByContractAddress(purchase?.currency);
                 return {
                   label: 'Approve ' + currencyData.name,
-                  icon: purchase?.isApproved ?
+                  endIcon: purchase?.isApproved ?
                     <CheckCircle size={16} className="text-green-500" /> :
                     error === 'ApprovalError' ?
                       <X size={16} className="text-red-400" /> :
                       <SpinnerGap size={16} className="text-yellow-500 animate-spin" />
-                };
+                } as ProgressBarItem;
               })
             },
             {

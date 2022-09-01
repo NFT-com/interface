@@ -1,21 +1,29 @@
 import { Button, ButtonType } from 'components/elements/Button';
+import { Modal } from 'components/elements/Modal';
 import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { ExternalProtocol } from 'types';
-import { max } from 'utils/helpers';
+import { max, min } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { ListingTarget, NFTListingsContext } from './NFTListingsContext';
-import { VerticalProgressBar } from './VerticalProgressBar';
+import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, ethers } from 'ethers';
-import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
+import { CheckCircle, SpinnerGap, X, XCircle } from 'phosphor-react';
+import LooksrareIcon from 'public/looksrare-icon.svg';
+import OpenseaIcon from 'public/opensea-icon.svg';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
 import { useProvider, useSigner } from 'wagmi';
 
-export function NFTListingsCartSummary() {
+export interface NFTListingsCartSummaryModalProps {
+  visible: boolean;
+  onClose: () => void;
+}
+
+export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalProps) {
   const {
     toList,
     listAll,
@@ -86,12 +94,12 @@ export function NFTListingsCartSummary() {
     }, 0);
   }, [toList]);
 
-  const getTotalProfit = useCallback(() => {
+  const getTotalMinimumProfit = useCallback(() => {
     const total = toList?.reduce((cartTotal, stagedListing) => {
-      const targetsSum = stagedListing.targets.reduce((total, target) => {
-        return total.add(BigNumber.from(target.startingPrice));
-      }, BigNumber.from(0));
-      return BigNumber.from(targetsSum ?? 0).add(cartTotal);
+      const targetValues = stagedListing.targets.map((target) => {
+        return BigNumber.from(target?.startingPrice ?? stagedListing?.startingPrice ?? 0);
+      });
+      return cartTotal.add(min(...targetValues) ?? 0);
     }, BigNumber.from(0));
 
     return total.sub(getMaxMarketplaceFees()).sub(getMaxRoyaltyFees());
@@ -127,18 +135,29 @@ export function NFTListingsCartSummary() {
                 label: 'Approve Collections for Sale',
                 error: error === 'ApprovalError',
                 items: toList?.map((stagedListing) => {
-                  return stagedListing.targets.map((protocol) => {
-                    const approved = protocol === ExternalProtocol.LooksRare ?
+                  return stagedListing.targets.map((target: ListingTarget) => {
+                    const approved = target.protocol === ExternalProtocol.LooksRare ?
                       stagedListing?.isApprovedForLooksrare :
                       stagedListing?.isApprovedForSeaport;
                     return {
-                      label: 'Approve ' + stagedListing?.collectionName + ' for ' + protocol,
-                      icon: approved ?
-                        <CheckCircle size={16} className="text-green-500" /> :
+                      label: 'Approve ' + stagedListing?.collectionName + ' for ' + target.protocol,
+                      startIcon: target.protocol === ExternalProtocol.Seaport ?
+                        <OpenseaIcon
+                          className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
+                          alt="Opensea logo"
+                          layout="fill"
+                        /> :
+                        <LooksrareIcon
+                          className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
+                          alt="Looksrare logo"
+                          layout="fill"
+                        />,
+                      endIcon: approved ?
+                        <CheckCircle size={16} className="text-green-500 ml-2" /> :
                         error === 'ApprovalError' ?
-                          <X size={16} className="text-red-400" /> :
-                          <SpinnerGap size={16} className="text-yellow-500 animate-spin" />,
-                    };
+                          <X size={16} className="text-red-400 ml-2" /> :
+                          <SpinnerGap size={16} className="text-yellow-500 animate-spin ml-2" />,
+                    } as ProgressBarItem;
                   });
                 }).flat()
               },
@@ -172,7 +191,7 @@ export function NFTListingsCartSummary() {
           <div className="mx-8 my-4 flex items-center">
             <span>Minimum profit: </span>
             <span className='ml-2'>
-              {ethers.utils.formatEther(getTotalProfit() ?? 0) + ' WETH'}
+              {ethers.utils.formatEther(getTotalMinimumProfit() ?? 0) + ' WETH'}
             </span>
           </div>
         </>
@@ -184,101 +203,126 @@ export function NFTListingsCartSummary() {
     getMaxRoyaltyFees,
     getNeedsApprovals,
     getTotalListings,
-    getTotalProfit,
+    getTotalMinimumProfit,
     showProgressBar,
     success,
     toList
   ]);
 
   return (
-    <>
-      {getSummaryContent()}
-      {toList.length > 0 && <div className="mx-8 my-4 flex">
-        <Button
-          stretch
-          loading={showProgressBar && !error && !success}
-          disabled={!allListingsConfigured() || (showProgressBar && !error && !success)}
-          label={success ? 'Finish' : error ? 'Try Again' : 'List Now'}
-          onClick={async () => {
-            if (success) {
-              clear();
-              setSuccess(false);
-              toggleCartSidebar();
-              setShowProgressBar(false);
-              return;
-            }
-
-            if (signer == null) {
-              setError('ConnectionError');
-              return;
-            }
-
-            setShowProgressBar(true);
-            setError(null);
+    <Modal
+      visible={props.visible}
+      loading={false}
+      title={''}
+      onClose={() => {
+        setSuccess(false);
+        setShowProgressBar(false);
+        setError(null);
+        props.onClose();
+      }}
+      bgColor='white'
+      hideX
+      fullModal
+      pure
+    >
+      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+        <div className='pt-20 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+          <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
+          <XCircle onClick={() => {
             setSuccess(false);
-            
-            if (signer == null) {
-              setError('ConnectionError');
-              return;
-            }
+            setShowProgressBar(false);
+            setError(null);
+            props.onClose();
+          }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
+          {getSummaryContent()}
+          {toList.length > 0 && <div className="mx-8 my-4 flex">
+            <Button
+              stretch
+              loading={showProgressBar && !error && !success}
+              disabled={!allListingsConfigured() || (showProgressBar && !error && !success)}
+              label={success ? 'Finish' : error ? 'Try Again' : 'List Now'}
+              onClick={async () => {
+                if (success) {
+                  clear();
+                  setSuccess(false);
+                  toggleCartSidebar();
+                  setShowProgressBar(false);
+                  return;
+                }
 
-            if (getNeedsApprovals()) {
-              for (let i = 0; i < toList.length; i++) {
-                const stagedListing = toList[i];
-                for (let j = 0; j < toList[i].targets.length; j++) {
-                  const protocol = toList[i].targets[j];
-                  const approved = protocol === ExternalProtocol.LooksRare ?
-                    stagedListing?.isApprovedForLooksrare :
-                    stagedListing?.isApprovedForSeaport;
-                  if (!approved && protocol === ExternalProtocol.LooksRare) {
-                    const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
-                      .then(result => {
+                if (signer == null) {
+                  setError('ConnectionError');
+                  return;
+                }
+
+                setShowProgressBar(true);
+                setError(null);
+                setSuccess(false);
+            
+                if (signer == null) {
+                  setError('ConnectionError');
+                  return;
+                }
+
+                if (getNeedsApprovals()) {
+                  for (let i = 0; i < toList.length; i++) {
+                    const stagedListing = toList[i];
+                    for (let j = 0; j < toList[i].targets.length; j++) {
+                      const protocol = toList[i].targets[j].protocol;
+                      const approved = protocol === ExternalProtocol.LooksRare ?
+                        stagedListing?.isApprovedForLooksrare :
+                        stagedListing?.isApprovedForSeaport;
+                      if (!approved && protocol === ExternalProtocol.LooksRare) {
+                        const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
+                          .then(result => {
+                            if (!result) {
+                              setError('ApprovalError');
+                              return false;
+                            }
+                            return true;
+                          })
+                          .catch(() => {
+                            setError('ApprovalError');
+                            return false;
+                          });
+                        stagedListing.isApprovedForLooksrare = result;
                         if (!result) {
-                          setError('ApprovalError');
-                          return false;
+                          return;
                         }
-                        return true;
-                      })
-                      .catch(() => {
-                        setError('ApprovalError');
-                        return false;
-                      });
-                    stagedListing.isApprovedForLooksrare = result;
-                    if (!result) {
-                      return;
-                    }
-                  } else if (!approved && protocol === ExternalProtocol.Seaport) {
-                    const result = await approveCollection(stagedListing, ExternalProtocol.Seaport)
-                      .then(result => {
+                      } else if (!approved && protocol === ExternalProtocol.Seaport) {
+                        const result = await approveCollection(stagedListing, ExternalProtocol.Seaport)
+                          .then(result => {
+                            if (!result) {
+                              setError('ApprovalError');
+                              return false;
+                            }
+                            return true;
+                          })
+                          .catch(() => {
+                            setError('ApprovalError');
+                            return false;
+                          });
+                        stagedListing.isApprovedForSeaport = result;
                         if (!result) {
-                          setError('ApprovalError');
-                          return false;
+                          return;
                         }
-                        return true;
-                      })
-                      .catch(() => {
-                        setError('ApprovalError');
-                        return false;
-                      });
-                    stagedListing.isApprovedForSeaport = result;
-                    if (!result) {
-                      return;
+                      }
                     }
                   }
                 }
-              }
-            }
 
-            const result = await listAll();
-            if (result) {
-              setSuccess(true);
-            } else {
-              setError('ListingError');
-            }
-          }}
-          type={ButtonType.PRIMARY}
-        />
-      </div>}
-    </>
+                const result = await listAll();
+                if (result) {
+                  setSuccess(true);
+                } else {
+                  setError('ListingError');
+                }
+              }}
+              type={ButtonType.PRIMARY}
+            />
+          </div>}
+        </div>
+      </div>
+    </Modal>
   );
 }

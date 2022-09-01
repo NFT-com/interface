@@ -1,7 +1,7 @@
 import { PriceInput } from 'components/elements/PriceInput';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
@@ -121,7 +121,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         </div>
       </td>
       <td>
-        <div className={tw('flex flex-col items-center py-4 justify-around', rowHeightClass)}>
+        <div className={tw('flex flex-col p-4 justify-around', rowHeightClass)}>
           <OpenseaIcon
             className={tw(
               'h-9 w-9 relative shrink-0 cursor-pointer',
@@ -130,6 +130,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             alt="Opensea logo redirect"
             layout="fill"
             onClick={() => {
+              if (expanded) {
+                return;
+              }
               toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
             }}
           />
@@ -141,6 +144,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             alt="Looksrare logo redirect"
             layout="fill"
             onClick={() => {
+              if (expanded) {
+                return;
+              }
               toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
             }}
           />
