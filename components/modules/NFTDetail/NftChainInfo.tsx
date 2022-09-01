@@ -2,6 +2,7 @@ import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { Nft } from 'graphql/generated/types';
 import { shortenAddress } from 'utils/helpers';
 
+import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
 import { Info } from 'phosphor-react';
 import { PartialDeep } from 'type-fest';
@@ -34,8 +35,8 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
           <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
             Token ID
           </p>
-          <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
-            {parseInt(nft?.tokenId, 16).toString().replace('.', '').length > 11 ?
+          {nft?.tokenId && <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
+            {BigNumber.from(nft?.tokenId).toString().length > 11 ?
               (
                 <p className='font-medium text-[#1F2127] flex items-center relative'>
                   <CustomTooltip
@@ -45,16 +46,16 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
                       <div
                         className="rounded-xl p-3 bg-modal-bg-dk text-white w-full"
                       >
-                        <p>{BigInt(nft?.tokenId).toString().replace('.', '')}</p>
+                        <p>{BigNumber.from(nft?.tokenId).toString()}</p>
                       </div>
                     }>
                     <Info className='mr-1' />
                   </CustomTooltip>
-                  {parseInt(nft?.tokenId, 16).toString().replace('.', '').slice(0,10) + '...'}
+                  {BigNumber.from(nft?.tokenId).toString().slice(0,10) + '...'}
                 </p>
               )
-              : parseInt(nft?.tokenId, 16).toString().replace('.', '')}
-          </span>
+              : BigNumber.from(nft?.tokenId).toString()}
+          </span>}
         </div>
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>

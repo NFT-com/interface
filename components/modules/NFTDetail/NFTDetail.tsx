@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Copy from 'components/elements/Copy';
 import { Nft, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
@@ -9,8 +10,7 @@ import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { utils } from 'ethers';
-import Link from 'next/link';
+import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
@@ -56,9 +56,9 @@ export const NFTDetail = (props: NFTDetailProps) => {
   }, [props, refreshNft, refreshNftOrders]);
   
   return (
-    <div className="flex flex-col w-screen" id="NFTDetailContainer" key={props.nft?.id}>
+    <div className="flex flex-col w-screen items-center" id="NFTDetailContainer" key={props.nft?.id}>
       {props.nft?.metadata?.imageURL &&
-      <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-[22px] minmd:px-[42px]'>
+      <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-[22px] minmd:px-[42px] minlg:py-[119px] minxl:px-[350px]'>
         <div className="flex w-full max-w-[600px] h-full aspect-square object-contain drop-shadow-lg rounded-lg">
           <video
             autoPlay
@@ -73,16 +73,23 @@ export const NFTDetail = (props: NFTDetailProps) => {
       </div>
       }
       <div className={tw(
-        'flex items-center w-full mt-8 py-4 px-4 justify-between minmd:px-[17.5px] minlg:px-[128px] minxl:px-4',
+        'flex items-center w-full mt-8 py-4 px-4 justify-between minmd:px-[17.5px] minlg:px-[128px]',
       )}>
         <div className='flex flex-col'>
-          <Link href={`/app/collection/${collection?.collection?.contract}`}>
-            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline">
-              {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
-            </div>
-          </Link>
-          <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${utils.formatEther(props.nft?.tokenId.toString())}`}
+          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
+            {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
+          </div>
+          <div className='hidden minlg:block font-grotesk font-bold text-2xl leading-9'>
+            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${BigNumber.from(props.nft?.tokenId).toString()}`}
+          </div>
+          <div className="block minlg:hidden ">
+            <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
+              <div className='font-grotesk font-bold text-2xl leading-9'>
+                {isNullOrEmpty(props?.nft?.tokenId) ?
+                  'Unknown token ID' :
+                  `#${BigNumber.from(props.nft?.tokenId).toString().length > 11 ? BigNumber.from(props.nft?.tokenId).toString().slice(0,10) + '...' : BigNumber.from(props.nft?.tokenId).toString()}`}
+              </div>
+            </Copy>
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12 -mt-1'>
@@ -98,7 +105,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
         </div>
       </div>
-      <div className='flex flex-row items-center w-full minxl:w-1/2 h-full py-4 px-4 minmd:px-[17.5px] minlg:px-[128px] minxl:px-4'>
+      <div className='flex flex-row items-center w-full h-full py-4 px-4 minmd:px-[17.5px] minlg:px-[128px]'>
         {//todo: show collection owner pic
         }
         <div className='flex flex-col h-full'>
@@ -110,7 +117,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             />
           </div>}
         </div>
-        <div className='flex flex-col w-1/2 h-full minlg:-mr-40 minxl:-mr-0'>
+        <div className='flex flex-col w-1/2 h-full minlg:-mr-40'>
           <div className='flex flex-col h-full'>
             <span className='flex flex-col pl-[11px] -mt-2 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
             CREATOR
@@ -132,7 +139,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                   <span className='text-[14px] font-medium leading-5 font-grotesk text-link'>
                     {collectionOwnerToShow?.url == null ?
                       shortenAddress(collectionOwnerToShow?.owner?.address) :
-                      collectionOwnerToShow?.url
+                      '@' + collectionOwnerToShow?.url
                     }
                   </span>
                 </div> :
@@ -172,7 +179,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 <span className="text-[14px] font-medium leading-5 font-grotesk text-link">
                   {profileOwnerToShow?.url == null ?
                     shortenAddress(props.nft?.wallet?.address) :
-                    profileOwnerToShow?.url
+                    '@' + profileOwnerToShow?.url
                   }
                 </span>
               </div> :
