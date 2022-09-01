@@ -1751,6 +1751,7 @@ input[type="search"]::-webkit-search-cancel-button {
   cursor: pointer;
 }
 
+
 @media (min-width: 900px) {
   .embla__slide__item {
     width: 95%;
@@ -1765,8 +1766,18 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 @media (min-width: 1900px) {
-  .min-h-XXL {
+  .min-h-2XL {
     min-height: 165px
+  }
+}
+
+@media (min-width: 2560px) {
+  .min-h-3XL {
+    min-height: 332px
+  }
+
+  .min-h-disc {
+    min-height: 62.5rem;
   }
 }
 
