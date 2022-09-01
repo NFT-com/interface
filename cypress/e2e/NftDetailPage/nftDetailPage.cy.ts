@@ -46,7 +46,6 @@ describe('nft detail page tests', () => {
     cy.get('#headlessui-tabs-tab-2').click();
     cy.get('#NftPropertiesContainer').should('exist');
     cy.get('#NftChainInfoContainer').should('not.exist');
-    // cy.get('#NftPropertiesContainer .NftDetailCard').should('have.length', 8);
   });
 
   it('all 4 Chain Info items are displayed', () => {
