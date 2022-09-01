@@ -1,7 +1,9 @@
+import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { Nft } from 'graphql/generated/types';
 import { shortenAddress } from 'utils/helpers';
 
 import { useRouter } from 'next/router';
+import { Info } from 'phosphor-react';
 import { PartialDeep } from 'type-fest';
 
 export interface NftChainInfoProps {
@@ -33,7 +35,25 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
             Token ID
           </p>
           <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
-            {parseInt(nft?.tokenId, 16).toString()}
+            {parseInt(nft?.tokenId, 16).toString().replace('.', '').length > 11 ?
+              (
+                <p className='font-medium text-[#1F2127] flex items-center relative'>
+                  <CustomTooltip
+                    rightPostion={-600}
+                    mode="hover"
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl p-3 bg-modal-bg-dk text-white w-full"
+                      >
+                        <p>{BigInt(nft?.tokenId).toString().replace('.', '')}</p>
+                      </div>
+                    }>
+                    <Info className='mr-1' />
+                  </CustomTooltip>
+                  {parseInt(nft?.tokenId, 16).toString().replace('.', '').slice(0,10) + '...'}
+                </p>
+              )
+              : parseInt(nft?.tokenId, 16).toString().replace('.', '')}
           </span>
         </div>
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
