@@ -13,7 +13,6 @@ import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
 
-import { ethers } from 'ethers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
@@ -72,7 +71,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             </div>
           </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${ethers.BigNumber.from(props.nft?.tokenId.toString()).toString()}`}
+            {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : `${props.nft?.metadata?.name}`}
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12'>
@@ -89,15 +88,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
         </div>
       </div>
       <div className='flex flex-row items-center w-full h-full p-4'>
-        <div className='flex flex-col h-full aspect-square'>
-          {collectionOwnerToShow?.photoURL ?
-            <img
-              className='rounded-md aspect-square h-full w-full'
-              src={collectionOwnerToShow?.photoURL}
+        <div className='flex flex-col h-full'>
+          {collectionOwnerToShow?.photoURL
+            ? <img
+              className='rounded-md aspect-square h-[42px] w-[42px]'
+              src={collectionOwnerToShow?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
               alt='creator-profile-pic'
             />
-            :
-            <LoggedInIdenticon round border />
+            : <LoggedInIdenticon round border />
           }
         </div>
         <div className='flex flex-col w-1/2 h-full'>
