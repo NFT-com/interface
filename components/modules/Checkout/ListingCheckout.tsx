@@ -86,9 +86,9 @@ export function ListingCheckout() {
           <table className="w-full mx-8 text-sm overflow-x-scroll table-auto">
             <thead>
               <tr>
-                <th className="border border-black font-medium pb-3 text-blog-text-reskin text-left">NFT</th>
-                <th className="border border-black font-medium pb-3 text-blog-text-reskin text-left">Marketplaces</th>
-                <th className="border border-black font-medium pb-3 text-blog-text-reskin text-left">Set Price</th>
+                <th className="font-medium pb-3 text-blog-text-reskin text-left">NFT</th>
+                <th className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</th>
+                <th className="font-medium pb-3 text-blog-text-reskin text-left">Marketplaces</th>
               </tr>
             </thead>
             <tbody>

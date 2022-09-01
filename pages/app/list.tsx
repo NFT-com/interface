@@ -19,8 +19,8 @@ export default function ListPage() {
   }
 
   return <div className={tw(
-    'w-full h-full pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
-    'bg-white dark:bg-footer-bg-dk font-grotesk'
+    'w-full pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
+    'bg-white dark:bg-footer-bg-dk font-grotesk border border-green-500'
   )}>
     <div className='max-w-nftcom w-full flex flex-col items-center my-8'>
       <div className='w-full flex px-8 items-center'>
