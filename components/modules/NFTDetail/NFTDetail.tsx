@@ -8,12 +8,11 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler,getEnv, getEnvBool } from 'utils/env';
-import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
 
-import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
@@ -119,16 +118,21 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     router.push('/' + collectionOwnerToShow?.url);
                   }}
                 >
-                  <span className='text-base font-medium leading-5 font-grotesk text-link font-dm-mono'>
+                  <span className={tw('text-base font-medium leading-5',
+                    `${collectionOwnerToShow?.url == null ? 'font-dm-mono text-[#B59007]' : 'font-grotesk'}`,
+                    'text-link'
+                  )}>
                     {collectionOwnerToShow?.url == null ?
                       shortenAddress(collectionOwnerToShow?.owner?.address, 2) :
                       collectionOwnerToShow?.url
                     }
                   </span>
                 </div> :
-                <span className="text-[#1F2127] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
-                  {shortenAddress(collection?.collection?.contract, 2) ?? 'Unknown'}
-                </span>
+                <Link href={getEtherscanLink((chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID).toString()), collection?.collection?.contract, 'address')}>
+                  <span className="text-[#B59007] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
+                    {shortenAddress(collection?.collection?.contract, 2) ?? 'Unknown'}
+                  </span>
+                </Link>
             }
           </div>
         </div>
