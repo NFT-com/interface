@@ -46,13 +46,13 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     <div className="flex flex-col pt-20 items-center w-full">
       {nft?.metadata?.imageURL &&
         <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py-5 minxl:py-10 minmd:px-auto'>
-          <div className="flex w-full max-w-[600px] h-full object-contain drop-shadow-lg rounded">
+          <div className="flex w-full max-w-[600px] h-full object-contain drop-shadow-lg rounded aspect-square">
             <video
               autoPlay
               muted
               loop
               poster={processIPFSURL(nft?.metadata?.imageURL)}
-              className='rounded'
+              className='rounded aspect-square'
               src={processIPFSURL(nft?.metadata?.imageURL)}
               key={nft?.id}
             />
