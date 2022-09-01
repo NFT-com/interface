@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
+import { isMobile } from 'react-device-detect';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork } from 'wagmi';
 export interface NFTDetailProps {
@@ -130,7 +131,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 </div> :
                 <Link href={getEtherscanLink((chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID).toString()), collection?.collection?.contract, 'address')}>
                   <span className="text-[#B59007] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
-                    {shortenAddress(collection?.collection?.contract, 2) ?? 'Unknown'}
+                    {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
                   </span>
                 </Link>
             }
