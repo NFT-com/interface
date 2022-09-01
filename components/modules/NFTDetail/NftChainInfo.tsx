@@ -1,3 +1,4 @@
+import Copy from 'components/elements/Copy';
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { Nft } from 'graphql/generated/types';
 import { shortenAddress } from 'utils/helpers';
@@ -51,10 +52,16 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
                     }>
                     <Info className='mr-1' />
                   </CustomTooltip>
-                  {BigNumber.from(nft?.tokenId).toString().slice(0,10) + '...'}
+                  <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
+                    {BigNumber.from(nft?.tokenId).toString().slice(0,10) + '...'}
+                  </Copy>
                 </p>
               )
-              : BigNumber.from(nft?.tokenId).toString()}
+              : (
+                <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
+                  {BigNumber.from(nft?.tokenId).toString()}
+                </Copy>
+              )}
           </span>}
         </div>
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>

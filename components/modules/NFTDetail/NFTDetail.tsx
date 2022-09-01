@@ -14,7 +14,6 @@ import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
 
-import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
@@ -72,17 +71,8 @@ export const NFTDetail = (props: NFTDetailProps) => {
               {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
             </div>
           </Link>
-          <div className='hidden minlg:block font-grotesk font-bold text-2xl leading-9'>
+          <div className='font-grotesk font-bold text-2xl leading-9'>
             {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : `${props.nft?.metadata?.name}`}
-          </div>
-          <div className="block minlg:hidden">
-            <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
-              <div className='font-grotesk font-bold text-2xl leading-9'>
-                {isNullOrEmpty(props?.nft?.tokenId) ?
-                  'Unknown token ID' :
-                  `#${BigNumber.from(props.nft?.tokenId).toString().length > 11 ? BigNumber.from(props.nft?.tokenId).toString().slice(0,10) + '...' : BigNumber.from(props.nft?.tokenId).toString()}`}
-              </div>
-            </Copy>
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12'>
