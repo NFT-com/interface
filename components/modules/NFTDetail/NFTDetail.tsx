@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { Nft, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
@@ -12,7 +13,7 @@ import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
 
-import { BigNumber } from 'ethers';
+import { ethers } from 'ethers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
@@ -71,7 +72,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
             </div>
           </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${BigNumber.from(props.nft?.tokenId.toString())}`}
+            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${ethers.BigNumber.from(props.nft?.tokenId.toString()).toString()}`}
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12'>
@@ -88,14 +89,16 @@ export const NFTDetail = (props: NFTDetailProps) => {
         </div>
       </div>
       <div className='flex flex-row items-center w-full h-full p-4'>
-        {//todo: show collection owner pic
-        }
         <div className='flex flex-col h-full aspect-square'>
-          <img
-            className='rounded-md aspect-square h-full w-full'
-            src={collectionOwnerToShow?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
-            alt='creator-profile-pic'
-          />
+          {collectionOwnerToShow?.photoURL ?
+            <img
+              className='rounded-md aspect-square h-full w-full'
+              src={collectionOwnerToShow?.photoURL}
+              alt='creator-profile-pic'
+            />
+            :
+            <LoggedInIdenticon round border />
+          }
         </div>
         <div className='flex flex-col w-1/2 h-full'>
           <div className='flex flex-col h-full'>
@@ -130,13 +133,17 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
         </div>
         <div className='flex flex-col h-full'>
-          {profileOwnerToShow?.photoURL && <div className="flex flex-col h-[42px] w-[42px]">
-            <img
-              className='rounded-md aspect-square h-full w-full'
-              src={profileOwnerToShow?.photoURL}
-              alt='owner-profile-pic'
-            />
-          </div>}
+          <div className='flex flex-col h-[42px] w-[42px]'>
+            {profileOwnerToShow?.photoURL ?
+              <img
+                className='rounded-md aspect-square h-full w-full'
+                src={profileOwnerToShow?.photoURL}
+                alt='owner-profile-pic'
+              />
+              :
+              <LoggedInIdenticon round border />
+            }
+          </div>
         </div>
         <div className='flex flex-col h-full'>
           <span className='flex flex-col pl-3 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
