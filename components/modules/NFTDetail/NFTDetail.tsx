@@ -12,7 +12,8 @@ import { tw } from 'utils/tw';
 
 import { NFTDetailContextProvider } from './NFTDetailContext';
 
-import { BigNumber } from 'ethers';
+import { utils } from 'ethers';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
@@ -64,11 +65,13 @@ export const NFTDetail = (props: NFTDetailProps) => {
         'flex items-center w-full mt-8 py-4 px-4 justify-between',
       )}>
         <div className='flex flex-col'>
-          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
-            {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
-          </div>
+          <Link href={`/app/collection/${collection?.collection?.contract}`}>
+            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline">
+              {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
+            </div>
+          </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${BigNumber.from(props.nft?.tokenId).toNumber()}`}
+            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${utils.formatEther(props.nft?.tokenId.toString())}`}
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12'>
