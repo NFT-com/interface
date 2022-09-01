@@ -77,6 +77,9 @@ export function getEnv(name: Doppler): any {
 }
 
 export function getEnvBool(name: Doppler): boolean {
+  if (name === Doppler.NEXT_PUBLIC_ROUTER_ENABLED) {
+    return false;
+  }
   const value = getEnv(name);
   if (typeof value === 'boolean') {
     return value;

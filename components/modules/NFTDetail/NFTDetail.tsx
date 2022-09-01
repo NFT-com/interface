@@ -90,9 +90,9 @@ export const NFTDetail = (props: NFTDetailProps) => {
       <div className='flex flex-row items-center w-full h-full p-4'>
         {//todo: show collection owner pic
         }
-        <div className='flex flex-col h-full aspect-square'>
+        <div className='flex flex-col h-full'>
           <img
-            className='rounded-md aspect-square h-full w-full'
+            className='rounded-md aspect-square h-[42px] w-[42px]'
             src={collectionOwnerToShow?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
             alt='creator-profile-pic'
           />
