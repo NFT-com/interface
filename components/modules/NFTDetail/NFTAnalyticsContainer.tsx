@@ -36,7 +36,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [nftData, setNftData] = useState(null);
 
   return (
-    <div className="bg-transparent">
+    <div className="bg-transparent overflow-x-auto p-4 minxl:p-10 minxl:pt-10">
       <div className="w-full flex flex-col">
         <div className='justify-start flex'>
           <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
@@ -63,7 +63,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
             setSelectedTimeFrame(timeFrames[index]);
           }}
         >
-          <Tab.List className="flex w-[250px] ml-9 py-2 minmd:-ml-40 items-center order-last rounded-lg bg-[#F6F6F6] p-2">
+          <Tab.List className="flex w-[250px] ml-9 minmd:-ml-40 items-center order-last rounded-lg bg-[#F6F6F6] p-2">
             {Object.keys(timeFrames).map((timeFrame) => (
               <Tab
                 key={timeFrame}
