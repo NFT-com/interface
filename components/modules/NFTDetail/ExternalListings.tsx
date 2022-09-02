@@ -111,6 +111,7 @@ export function ExternalListings(props: ExternalListingsProps) {
           const price = getListingPrice(listing);
           stagePurchase({
             nft: props.nft,
+            activityId: listing?.id,
             currency: getListingCurrencyAddress(listing) ?? WETH.address,
             price: price,
             collectionName: props.collectionName,
@@ -120,7 +121,7 @@ export function ExternalListings(props: ExternalListingsProps) {
               listing?.order?.protocolData as SeaportProtocolData :
               listing?.order?.protocolData as LooksrareProtocolData
           });
-          toggleCartSidebar('buy');
+          toggleCartSidebar('Buy');
         }}
         type={ButtonType.PRIMARY}
       />;
@@ -176,7 +177,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   isApprovedForLooksrare: looksRareAllowed,
                   targets: []
                 });
-                toggleCartSidebar('sell');
+                toggleCartSidebar('Sell');
               }}
               type={ButtonType.PRIMARY}
             />
