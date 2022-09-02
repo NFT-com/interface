@@ -177,7 +177,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
                   isApprovedForLooksrare: looksRareAllowed,
                   targets: []
                 });
-                toggleCartSidebar('sell');
+                toggleCartSidebar();
               },
               icon: null,
             },
