@@ -1,25 +1,17 @@
-import { LineVis } from 'components/modules/Analytics/LineChart';
-import { TxHistory } from 'components/modules/Analytics/TxHistory';
+import { NFTActivity } from 'components/modules/Analytics/NFTActivity';
 import { Nft } from 'graphql/generated/types';
-import { useGetNftPriceHistory } from 'hooks/analytics/aggregation/useGetNftPriceHistory';
-import { useGetNftByTokenId } from 'hooks/analytics/graph/useGetNftByTokenId';
-import { Doppler, getEnv } from 'utils/env';
-import { getDateFromTimeFrame } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useNetwork } from 'wagmi';
 
 export type NFTAnalyticsContainerProps = {
   data: PartialDeep<Nft>;
 }
 
 const nftChartTypes = {
-  0: 'Price',
   1: 'Activity',
-  2: 'Bids'
 };
 
 const marketplaces = {
@@ -33,48 +25,29 @@ const timeFrames = {
   2: '1M',
   3: '3M',
   4: '1Y',
-  5: 'ALL',
+  5: 'ALL'
 };
 
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
-  const { chain } = useNetwork();
-  const [selectedChartType, setSelectedChartType] = useState(nftChartTypes[0]);
+  const [selectedChartType, setSelectedChartType] = useState(nftChartTypes[1]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
   const [nftData, setNftData] = useState(null);
 
-  const dateFrom = useMemo(() => {
-    return getDateFromTimeFrame(selectedTimeFrame);
-  }, [selectedTimeFrame]);
-
-  const nftId = useGetNftByTokenId(data?.contract, parseInt(data?.tokenId, 16).toString())?.nft_by_token_id?.id;
-  const nftPriceHistory = useGetNftPriceHistory(nftId, dateFrom);
-
-  useEffect(() => {
-    if(chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {
-      setNftData(null);
-      return;
-    }
-    if(selectedChartType === 'Price') {
-      setNftData(nftPriceHistory?.prices?.length === 0 ? null : nftPriceHistory);
-    }
-  }, [nftPriceHistory, selectedTimeFrame, selectedChartType, chain]);
-
   return (
     <div className="bg-transparent">
-      <div className="w-full minmd:px-40">
-        <div className='w-full minmd:pb-4'>
+      <div className="w-full flex flex-col">
+        <div className='justify-start flex'>
           <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
-            <Tab.List className="flex space-x-1 rounded-3xl bg-[#F6F6F6] font-grotesk">
+            <Tab.List className="flex rounded-3xl bg-[#F6F6F6] font-grotesk">
               {Object.keys(nftChartTypes).map((chartType) => (
                 <Tab
                   key={chartType}
                   className={({ selected }) =>
                     tw(
-                      'w-full rounded-3xl py-2.5 text-sm font-medium leading-5 text-[#6F6F6F]',
-                      selected
-                      && 'bg-black text-[#F8F8F8]'
+                      'rounded-3xl py-2.5 px-8 text-sm font-medium leading-5 text-[#6F6F6F]',
+                      selected && 'bg-black text-[#F8F8F8]'
                     )
                   }
                 >
@@ -90,7 +63,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
             setSelectedTimeFrame(timeFrames[index]);
           }}
         >
-          <Tab.List className="flex w-[250px] ml-11 minmd:-ml-40 items-center order-last rounded-lg bg-[#F6F6F6] p-2 my-4">
+          <Tab.List className="flex w-[250px] ml-9 py-2 minmd:-ml-40 items-center order-last rounded-lg bg-[#F6F6F6] p-2">
             {Object.keys(timeFrames).map((timeFrame) => (
               <Tab
                 key={timeFrame}
@@ -111,17 +84,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </Tab.Group>
         }
       </div>
-      {selectedChartType === 'Activity'
-        ? <TxHistory />
-        : <LineVis
-          label={'Price'}
-          showMarketplaceOptions={true}
-          data={nftData}
-          currentMarketplace={selectedMarketplace}
-          setCurrentMarketplace={(selectedMarketplace: string) => {
-            setSelectedMarketplace(selectedMarketplace);
-          }}
-        /> }
+      <NFTActivity data={data} />
     </div>
   );
 };

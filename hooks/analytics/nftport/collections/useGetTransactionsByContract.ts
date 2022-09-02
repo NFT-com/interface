@@ -1,18 +1,18 @@
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR from 'swr';
 
-export function useGetSalesStats(contractAddress: string) {
+export function useGetTransactionsByContract(contractAddress: string) {
   const { data } = useSWR(
-    'useGetSalesStats' + contractAddress,
+    'useGetTransactionsByContract' + contractAddress,
     async () => {
-      if (isNullOrEmpty(contractAddress)) {
+      if (!contractAddress) {
         return null;
       }
       const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/nftport');
-      url.searchParams.set('category', 'stats');
+      url.searchParams.set('category', 'nfts');
       url.searchParams.set('contractAddress', contractAddress);
+      url.searchParams.set('type', 'all');
       const result = await fetch(url.toString()).then(res => res.json());
       return result;
     }

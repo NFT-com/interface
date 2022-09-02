@@ -1,9 +1,11 @@
+import Copy from 'components/elements/Copy';
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { Nft } from 'graphql/generated/types';
 import { shortenAddress } from 'utils/helpers';
 
+import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
-import { Info } from 'react-feather';
+import { Info } from 'phosphor-react';
 import { PartialDeep } from 'type-fest';
 
 export interface NftChainInfoProps {
@@ -18,19 +20,9 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
     <div className='flex flex-row w-full' id="NftChainInfoContainer">
       <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full py-4 px-4 space-y-2">
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
-          <div className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F]'>
+          <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F]'>
             Contract
-            <CustomTooltip
-              mode='hover'
-              tooltipComponent={
-                <div className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]">
-                  <p className='mb-3'>Contract</p>
-                  <p>{nft?.contract}</p>
-                </div>
-              }>
-              <Info className='h-3 w-3 rounded-full text-[#6F6F6F] ml-2' />
-            </CustomTooltip>
-          </div>
+          </p>
           <span
             className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127] cursor-pointer'
             onClick={nft?.contract && (() => router.push(`/app/collection/${nft?.contract}/`))}
@@ -42,35 +34,39 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
         }
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
-            Volume
-            <CustomTooltip
-              mode='hover'
-              tooltipComponent={
-                <div className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]">
-                  <p className='mb-3'>Volume</p>
-                  <p>500 ETH</p>
-                </div>
-              }>
-              <Info className='h-3 w-3 rounded-full text-[#6F6F6F] ml-2' />
-            </CustomTooltip>
+            Token ID
           </p>
-          <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
-            {2408}
-          </span>
+          {nft?.tokenId && <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
+            {BigNumber.from(nft?.tokenId).toString().length > 11 ?
+              (
+                <p className='font-medium text-[#1F2127] flex items-center relative'>
+                  <CustomTooltip
+                    rightPostion={-600}
+                    mode="hover"
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl p-3 bg-modal-bg-dk text-white w-full"
+                      >
+                        <p>{BigNumber.from(nft?.tokenId).toString()}</p>
+                      </div>
+                    }>
+                    <Info className='mr-1' />
+                  </CustomTooltip>
+                  <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
+                    {BigNumber.from(nft?.tokenId).toString().slice(0,10) + '...'}
+                  </Copy>
+                </p>
+              )
+              : (
+                <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
+                  {BigNumber.from(nft?.tokenId).toString()}
+                </Copy>
+              )}
+          </span>}
         </div>
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
             Token Standard
-            <CustomTooltip
-              mode='hover'
-              tooltipComponent={
-                <div className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]">
-                  <p className='mb-3'>Token Standard</p>
-                  <p>{nft?.type}</p>
-                </div>
-              }>
-              <Info className='h-3 w-3 rounded-full text-[#6F6F6F] ml-2' />
-            </CustomTooltip>
           </p>
           <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
             {nft?.type}
@@ -79,16 +75,6 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
             Blockchain
-            <CustomTooltip
-              mode='hover'
-              tooltipComponent={
-                <div className="rounded-xl p-3 bg-modal-bg-dk text-white w-[200px]">
-                  <p className='mb-3'>Blockchain</p>
-                  <p>Ethereum</p>
-                </div>
-              }>
-              <Info className='h-3 w-3 rounded-full text-[#6F6F6F] ml-2' />
-            </CustomTooltip>
           </p>
           <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
             ETH

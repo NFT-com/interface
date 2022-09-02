@@ -29,6 +29,7 @@ export default function CopyHelper(props: {
   toCopy: string;
   children?: React.ReactNode;
   lightModeForced?: boolean;
+  size?: string;
 }) {
   const [isCopied, setCopied] = useCopyClipboard();
   const { primaryIcon, alwaysWhite } = useThemeColors();
@@ -50,7 +51,7 @@ export default function CopyHelper(props: {
         {isCopied
           ? (
             <TransactionStatusText>
-              <CheckCircle size={'16'} color={props.white ? alwaysWhite : primaryIcon} />
+              <CheckCircle size={props.size ?? '16'} color={props.white ? alwaysWhite : primaryIcon} />
               <TransactionStatusText color={props.white}>
               Copied
               </TransactionStatusText>
@@ -58,7 +59,7 @@ export default function CopyHelper(props: {
           )
           : (
             <TransactionStatusText>
-              <Copy size={'16'} color={props.white ? alwaysWhite : primaryIcon} />
+              <Copy size={props.size ?? '16'} color={props.white ? alwaysWhite : primaryIcon} />
             </TransactionStatusText>
           )}
         {props.after !== true && (props.keepContent !== true && isCopied ? '' : props.children)}
