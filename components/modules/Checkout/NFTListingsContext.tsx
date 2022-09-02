@@ -127,8 +127,8 @@ export function NFTListingsContextProvider(
   const stageListings = useCallback((
     listings: StagedListing[]
   ) => {
-    // todo: filter input listings to ensure no duplicate NFTs in the cart
-    setToList([...toList, ...listings]);
+    const filterListings = listings?.filter(a => !toList?.some(b => b.nft.id === a.nft.id));
+    setToList([...toList, ...filterListings]);
     
     localStorage.setItem('stagedNftListings', JSON.stringify(filterNulls([...toList, ...listings])));
   }, [toList]);
