@@ -1,7 +1,11 @@
+import Copy from 'components/elements/Copy';
+import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { Nft } from 'graphql/generated/types';
 import { shortenAddress } from 'utils/helpers';
 
+import { BigNumber } from 'ethers';
 import { useRouter } from 'next/router';
+import { Info } from 'phosphor-react';
 import { PartialDeep } from 'type-fest';
 
 export interface NftChainInfoProps {
@@ -32,9 +36,33 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
           <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
             Token ID
           </p>
-          <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
-            {parseInt(nft?.tokenId, 16).toString()}
-          </span>
+          {nft?.tokenId && <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
+            {BigNumber.from(nft?.tokenId).toString().length > 11 ?
+              (
+                <p className='font-medium text-[#1F2127] flex items-center relative'>
+                  <CustomTooltip
+                    rightPostion={-600}
+                    mode="hover"
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl p-3 bg-modal-bg-dk text-white w-full"
+                      >
+                        <p>{BigNumber.from(nft?.tokenId).toString()}</p>
+                      </div>
+                    }>
+                    <Info className='mr-1' />
+                  </CustomTooltip>
+                  <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
+                    {BigNumber.from(nft?.tokenId).toString().slice(0,10) + '...'}
+                  </Copy>
+                </p>
+              )
+              : (
+                <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
+                  {BigNumber.from(nft?.tokenId).toString()}
+                </Copy>
+              )}
+          </span>}
         </div>
         <div className='flex flex-row w-full items-center font-grotesk justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>

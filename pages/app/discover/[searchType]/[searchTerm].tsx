@@ -117,7 +117,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         <div className="hidden minlg:block">
           <SideNav onSideNav={() => null} filtersData={filters}/>
         </div>
-        <div className="mx-6 w-full">
+        <div className="mx-6 w-full min-h-disc">
           <div className="flex flex-col mt-6">
             <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
             <div>
@@ -202,9 +202,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                       />}
                   </div>);
               })}
-              {results.length < 5 && (
-                <div className="hidden minlg:block w-full h-52"></div>
-              )}
             </div>
             {results.length < found && <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
               <Button

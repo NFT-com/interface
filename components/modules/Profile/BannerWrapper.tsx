@@ -25,7 +25,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
         'bg-cover bg-center',
-        props.isCollection ? 'h-[120px]' : 'h-60 minxl:h-72',
+        props.isCollection ? 'h-[320px]' : 'h-60 minxl:h-72',
       )}
     >
       {props.loading && <div

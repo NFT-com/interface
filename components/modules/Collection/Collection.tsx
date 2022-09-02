@@ -48,7 +48,7 @@ export function Collection(props: CollectionProps) {
     creatorTokens?.at(0)?.tokenUri?.raw?.split('/').pop()
   );
   const { profileData: collectionPreferredOwnerData } = useProfileQuery(
-    collectionOwnerData?.profile?.owner?.preferredProfile.url
+    collectionOwnerData?.profile?.owner?.preferredProfile?.url
   );
 
   const tabs = {
@@ -289,7 +289,7 @@ export function Collection(props: CollectionProps) {
               {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
                 <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
               }
-              <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-4 max-w-nftcom minxl:mx-auto ">
+              <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
                 {collectionNfts.map((nft, index) => {
                   return (
                     <div className="NftCollectionItem" key={index}>

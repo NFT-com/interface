@@ -1,21 +1,25 @@
 /* eslint-disable @next/next/no-img-element */
+import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
+import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { Nft, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { Doppler,getEnv } from 'utils/env';
-import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
+import { Doppler,getEnv, getEnvBool } from 'utils/env';
+import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { utils } from 'ethers';
+import { NFTDetailContextProvider } from './NFTDetailContext';
+
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
+import { isMobile } from 'react-device-detect';
 import { PartialDeep } from 'type-fest';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 export interface NFTDetailProps {
   nft: PartialDeep<Nft>;
   onRefreshSuccess?: () => void;
@@ -28,6 +32,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.nft?.contract);
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
+  const { address: currentAddress } = useAccount();
 
   const { profileData } = useProfileQuery(
     props.nft?.wallet?.preferredProfile == null ?
@@ -39,8 +44,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
     creatorTokens?.at(0)?.tokenUri?.raw?.split('/').pop()
   );
 
+  const { profileData: collectionPreferredOwnerData } = useProfileQuery(
+    collectionOwnerData?.profile?.owner?.preferredProfile?.url
+  );
+
   const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
-  const collectionOwnerToShow: PartialDeep<Profile> = collectionOwnerData?.profile ?? null;
+  const collectionOwnerToShow: PartialDeep<Profile> = collectionPreferredOwnerData?.profile ?? null;
 
   const { refreshNft, loading } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
@@ -56,36 +65,21 @@ export const NFTDetail = (props: NFTDetailProps) => {
   }, [props, refreshNft, refreshNftOrders]);
   
   return (
-    <div className="flex flex-col w-screen" id="NFTDetailContainer" key={props.nft?.id}>
-      {props.nft?.metadata?.imageURL &&
-      <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-[22px] minmd:px-[42px]'>
-        <div className="flex w-full max-w-[600px] h-full aspect-square object-contain drop-shadow-lg rounded-lg">
-          <video
-            autoPlay
-            muted
-            loop
-            poster={processIPFSURL(props.nft?.metadata?.imageURL)}
-            className='rounded-lg aspect-square'
-            src={processIPFSURL(props.nft?.metadata?.imageURL)}
-            key={props.nft?.id}
-          />
-        </div>
-      </div>
-      }
+    <div className="flex flex-col w-full max-w-nftcom" id="NFTDetailContainer" key={props.nft?.id}>
       <div className={tw(
-        'flex items-center w-full mt-8 py-4 px-4 justify-between minmd:px-[17.5px] minlg:px-[128px] minxl:px-4',
+        'flex items-center w-full mt-8 py-4 px-4 justify-between',
       )}>
         <div className='flex flex-col'>
           <Link href={`/app/collection/${collection?.collection?.contract}`}>
-            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline">
+            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline cursor-pointer">
               {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
             </div>
           </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props?.nft?.tokenId) ? 'Unknown token ID' : `#${utils.formatEther(props.nft?.tokenId.toString())}`}
+            {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : `${props.nft?.metadata?.name}`}
           </div>
         </div>
-        <div className='flex flex-col pl-12 minmd:pr-12 -mt-1'>
+        <div className='flex flex-col pl-12 minmd:pr-12'>
           <div
             id="refreshNftButton"
             onClick={refreshNftCallback}
@@ -98,28 +92,28 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
         </div>
       </div>
-      <div className='flex flex-row items-center w-full minxl:w-1/2 h-full py-4 px-4 minmd:px-[17.5px] minlg:px-[128px] minxl:px-4'>
-        {//todo: show collection owner pic
-        }
-        <div className='flex flex-col h-full'>
-          {<div className="flex flex-col h-[42px] w-[42px]">
+      <div className='flex flex-row items-center w-full h-full p-4'>
+        <div className='flex flex-col h-full aspect-square'>
+          {collectionOwnerToShow?.photoURL ?
             <img
-              className='rounded-md aspect-square h-full w-full'
-              src={collectionOwnerToShow?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
+              className='rounded-md aspect-square h-10 w-10'
+              src={collectionOwnerToShow?.photoURL}
               alt='creator-profile-pic'
             />
-          </div>}
+            :
+            <LoggedInIdenticon round border />
+          }
         </div>
-        <div className='flex flex-col w-1/2 h-full minlg:-mr-40 minxl:-mr-0'>
+        <div className='flex flex-col w-1/2 h-full'>
           <div className='flex flex-col h-full'>
-            <span className='flex flex-col pl-[11px] -mt-2 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
-            CREATOR
+            <span className='flex flex-col pl-3 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
+              CREATOR
             </span>
             {
               creatorTokens?.length > 0 ?
                 <div
                   className={tw(
-                    'flex px-2 items-center',
+                    'flex px-3 items-center',
                     collectionOwnerToShow?.url != null && 'cursor-pointer'
                   )}
                   onClick={() => {
@@ -129,37 +123,46 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     router.push('/' + collectionOwnerToShow?.url);
                   }}
                 >
-                  <span className='text-[14px] font-medium leading-5 font-grotesk text-link'>
+                  <span className={tw('text-base font-medium leading-5',
+                    `${collectionOwnerToShow?.url == null ? 'font-dm-mono text-[#B59007]' : 'font-grotesk'}`,
+                    'text-link'
+                  )}>
                     {collectionOwnerToShow?.url == null ?
-                      shortenAddress(collectionOwnerToShow?.owner?.address) :
+                      shortenAddress(collectionOwnerToShow?.owner?.address, 2) :
                       collectionOwnerToShow?.url
                     }
                   </span>
                 </div> :
-                <span className="text-[#1F2127] text-[14px] font-medium leading-5 font-grotesk pl-[11px] pt-2">
-                  {shortenAddress(collection?.collection?.contract) ?? 'Unknown'}
-                </span>
+                <Link href={getEtherscanLink((chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID).toString()), collection?.collection?.contract, 'address')}>
+                  <span className="text-[#B59007] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
+                    {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
+                  </span>
+                </Link>
             }
           </div>
         </div>
-        <div className='flex flex-col h-full minlg:-ml-32'>
-          {profileOwnerToShow?.photoURL && <div className="flex flex-col h-[42px] w-[42px]">
-            <img
-              className='rounded-md aspect-square h-full w-full'
-              src={profileOwnerToShow?.photoURL}
-              alt='owner-profile-pic'
-            />
-          </div>}
+        <div className='flex flex-col h-full'>
+          <div className='flex flex-col h-[42px] w-[42px]'>
+            {profileOwnerToShow?.photoURL ?
+              <img
+                className='rounded-md aspect-square h-10 w-10'
+                src={profileOwnerToShow?.photoURL}
+                alt='owner-profile-pic'
+              />
+              :
+              <LoggedInIdenticon round border />
+            }
+          </div>
         </div>
         <div className='flex flex-col h-full'>
-          <span className='flex flex-col pl-[11px] -mt-2 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
+          <span className='flex flex-col pl-3 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
             OWNER
           </span>
           {
             profileTokens?.length > 0 ?
               <div
                 className={tw(
-                  'flex px-2 items-center',
+                  'flex px-3 items-center',
                   profileOwnerToShow?.url != null && 'cursor-pointer'
                 )}
                 onClick={() => {
@@ -169,19 +172,30 @@ export const NFTDetail = (props: NFTDetailProps) => {
                   router.push('/' + profileOwnerToShow?.url);
                 }}
               >
-                <span className="text-[14px] font-medium leading-5 font-grotesk text-link">
-                  {profileOwnerToShow?.url == null ?
-                    shortenAddress(props.nft?.wallet?.address) :
+                <span className="text-base font-medium leading-5 font-grotesk text-link">
+                  {!profileOwnerToShow?.url == null ?
+                    shortenAddress(props.nft?.wallet?.address, 0) :
                     profileOwnerToShow?.url
                   }
                 </span>
               </div> :
-              <span className="text-[#1F2127] text-[14px] font-medium leading-5 font-grotesk">
-                {shortenAddress(props.nft?.wallet?.address) ?? 'Unknown'}
+              <span className="text-[#1F2127] text-base font-medium leading-5 font-grotesk pl-3">
+                {shortenAddress(props.nft?.wallet?.address, 2) ?? 'Unknown'}
               </span>
           }
         </div>
       </div>
+      {
+        ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
+          (currentAddress === props.nft?.wallet?.address) ||
+          (currentAddress !== props.nft?.wallet?.address && !isNullOrEmpty(props.nft?.memo)))
+          &&
+          <div className="flex minxl:basis-1/2">
+            <NFTDetailContextProvider nft={props.nft} >
+              <NftMemo nft={props.nft} />
+            </NFTDetailContextProvider>
+          </div>
+      }
     </div>
   );
 };
