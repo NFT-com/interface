@@ -12,7 +12,6 @@ import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
-import { filterNulls } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
@@ -94,7 +93,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.Adjust: {
       return <Button
         stretch
-        color="white"
+        color="black"
         label={'Adjust Price'}
         onClick={() => {
           stageListing({
@@ -102,7 +101,15 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             collectionName: props.collectionName,
             isApprovedForSeaport: openseaAllowed,
             isApprovedForLooksrare: looksRareAllowed,
-            targets: filterNulls([listing?.order?.protocol as ExternalProtocol])
+            targets: [{
+              protocol: listing?.order?.protocol as ExternalProtocol,
+              startingPrice: 0,
+              endingPrice: 0,
+              currency: WETH.address,
+              duration: null,
+              looksrareOrder: null,
+              seaportParameters: null
+            }]
           });
           router.push('/app/list');
         }}
@@ -112,7 +119,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.View: {
       return <Button
         stretch
-        color="white"
+        color="black"
         label={'View Listing'}
         onClick={() => {
           switch(listingProtocol) {
@@ -128,14 +135,14 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
           }
           }
         }}
-        type={ButtonType.PRIMARY}
+        type={ButtonType.SECONDARY}
       />;
     }
     case ListingButtonType.Cancel: {
       return <Button
         stretch
-        type={ButtonType.ERROR}
-        color="white"
+        type={ButtonType.SECONDARY}
+        color="black"
         label={'Cancel Listing'}
         disabled={cancelling}
         loading={cancelling}
@@ -171,7 +178,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.AddToCart: {
       return <Button
         stretch
-        color="white"
+        color="black"
         label={'Add to Cart'}
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
@@ -220,8 +227,19 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     return null;
   }
 
-  return <div className="flex flex-col bg-[#F6F6F6] rounded-xl p-5 my-6">
-    <div className='flex items-center mb-4'>
+  return <div className="flex flex-col rounded-xl p-5 my-6 border border-[#D5D5D5]">
+    <div className='flex items-center mb-4 justify-between pr-4'>
+      <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
+        <span className='text-sm'>
+            Listed on <span className="font-bold">{listing?.order?.exchange}</span>
+        </span>
+        <div className='flex items-center'>
+          <span className='text-base font-medium'>
+            {ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}{' '}
+            {getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'ETH'}
+          </span>
+        </div>
+      </div>
       <div className={tw(
         'relative flex items-center justify-center',
         'aspect-square h-8 w-8 rounded-full',
@@ -229,17 +247,6 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
       )}>
         <div className='relative h-6 w-6 shrink-0 flex'>
           <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
-        </div>
-      </div>
-      <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
-        <span className='text-sm'>
-            Listed on <span className='text-link'>{listing?.order?.exchange}</span>
-        </span>
-        <div className='flex items-center'>
-          <span className='text-base font-medium'>
-            {ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}{' '}
-            {getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'ETH'}
-          </span>
         </div>
       </div>
     </div>
