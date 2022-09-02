@@ -77,7 +77,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
           <div className="hidden minlg:block">
             <SideNav onSideNav={changeCurated}/>
           </div>
-          <div className="minlg:mt-8 minlg:ml-6 w-full">
+          <div className="minlg:mt-8 minlg:ml-6 w-full min-h-disc">
             <span className="font-grotesk text-black font-black text-4xl minmd:text-5xl">Discover</span>
             <p className="text-blog-text-reskin mt-4 text-base minmd:text-lg">
             Find your next PFP, one-of-kind collectable, or membership pass to the next big thing!
@@ -111,11 +111,8 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                 (<div className="flex items-center justify-center min-h-[16rem] w-full">
                   <Loader />
                 </div>)}
-              {paginatedAddresses && paginatedAddresses.length < 5 && (
-                <div className="hidden minlg:block w-full h-52"></div>
-              )}
             </div>
-            { paginatedAddresses.length < contractAddresses.length &&
+            { paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < contractAddresses.length &&
             <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
               <Button
                 color={'black'}
