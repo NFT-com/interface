@@ -98,11 +98,11 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
     let title = '';
 
     if (found < 1 && collectionName !== '')
-      title = 'O ' + collectionName.toUpperCase();
+      title = 'O ' + collectionName?.toUpperCase();
     else if (found > 3) {
-      title = 'TOP 3 ' + collectionName.toUpperCase();
+      title = 'TOP 3 ' + collectionName?.toUpperCase();
     } else {
-      title = found + ' ' + collectionName.toUpperCase();
+      title = found + ' ' + collectionName?.toUpperCase();
     }
 
     return (
