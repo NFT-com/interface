@@ -12,14 +12,15 @@ describe('Collection Info', () => {
           total_supply: 1.3,
           num_owners: 1.4,
           market_cap: 1.5,
-          average_price: 1.6
+          average_price: 1.6,
+          total_volume: 100
         }}
       />
     );
     cy.findByText('Floor').should('exist');
     cy.findByText('1.10 ETH').should('exist');
-    cy.findByText('Volume').should('exist');
-    cy.findByText('1.20 ETH').should('exist');
+    cy.findByText('Total Vol').should('exist');
+    cy.findByText('100.00 ETH').should('exist');
     cy.findByText('Supply').should('exist');
     cy.findByText('1.3').should('exist');
     cy.findByText('S/O Ratio').should('exist');
@@ -40,7 +41,8 @@ describe('Collection Info', () => {
           total_supply: 1.3,
           num_owners: 1.4,
           market_cap: 1.5,
-          average_price: 1.6
+          average_price: 1.6,
+          total_volume: 100
         }}
       />
     );
@@ -58,7 +60,8 @@ describe('Collection Info', () => {
           total_supply: 1.3,
           num_owners: 1.4,
           market_cap: 1.5,
-          average_price: 1.6
+          average_price: 1.6,
+          total_volume: 100
         }}
         type="ERC721"
         hasDescription

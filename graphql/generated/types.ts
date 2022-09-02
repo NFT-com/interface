@@ -235,6 +235,16 @@ export type CollectionNfTsInput = {
   pageInput?: InputMaybe<PageInput>;
 };
 
+export type ContractSalesStatistics = {
+  __typename?: 'ContractSalesStatistics';
+  response?: Maybe<Scalars['String']>;
+  statistics?: Maybe<NftPortStatistics>;
+};
+
+export type ContractSalesStatisticsInput = {
+  contractAddress: Scalars['String'];
+};
+
 export type ConvertEnsToEthAddress = {
   __typename?: 'ConvertEnsToEthAddress';
   ethAddresses: Array<Scalars['String']>;
@@ -1029,12 +1039,104 @@ export type Nft = {
   wallet?: Maybe<Wallet>;
 };
 
+export type NftDetail = {
+  __typename?: 'NFTDetail';
+  contract?: Maybe<NftPortContract>;
+  nft?: Maybe<NftPortNft>;
+  owner?: Maybe<Scalars['String']>;
+  response?: Maybe<Scalars['String']>;
+};
+
+export type NftDetailInput = {
+  contractAddress: Scalars['String'];
+  refreshMetadata?: InputMaybe<Scalars['Boolean']>;
+  tokenId: Scalars['String'];
+};
+
 export type NftMetadata = {
   __typename?: 'NFTMetadata';
   description?: Maybe<Scalars['String']>;
   imageURL?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   traits: Array<NftTrait>;
+};
+
+export type NftPortContract = {
+  __typename?: 'NFTPortContract';
+  metadata?: Maybe<NftPortContractMetadata>;
+  name?: Maybe<Scalars['String']>;
+  symbol?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type NftPortContractMetadata = {
+  __typename?: 'NFTPortContractMetadata';
+  banner_url?: Maybe<Scalars['String']>;
+  cached_banner_url?: Maybe<Scalars['String']>;
+  cached_thumbnail_url?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  thumbnail_url?: Maybe<Scalars['String']>;
+};
+
+export type NftPortNft = {
+  __typename?: 'NFTPortNFT';
+  animation_url?: Maybe<Scalars['String']>;
+  cached_animation_url?: Maybe<Scalars['String']>;
+  cached_file_url?: Maybe<Scalars['String']>;
+  chain?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  file_information?: Maybe<NftPortNftFileInfo>;
+  file_url?: Maybe<Scalars['String']>;
+  metadata?: Maybe<NftPortNftMetadata>;
+  metadata_url?: Maybe<Scalars['String']>;
+  mint_date?: Maybe<Scalars['String']>;
+  token_id?: Maybe<Scalars['String']>;
+  updated_date?: Maybe<Scalars['String']>;
+};
+
+export type NftPortNftFileInfo = {
+  __typename?: 'NFTPortNFTFileInfo';
+  file_size?: Maybe<Scalars['Uint256']>;
+  height?: Maybe<Scalars['Uint256']>;
+  width?: Maybe<Scalars['Uint256']>;
+};
+
+export type NftPortNftMetadata = {
+  __typename?: 'NFTPortNFTMetadata';
+  animation_url?: Maybe<Scalars['String']>;
+  background_color?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  external_url?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type NftPortStatistics = {
+  __typename?: 'NFTPortStatistics';
+  average_price?: Maybe<Scalars['Float']>;
+  floor_price?: Maybe<Scalars['Float']>;
+  floor_price_historic_one_day?: Maybe<Scalars['Float']>;
+  floor_price_historic_seven_day?: Maybe<Scalars['Float']>;
+  floor_price_historic_thirty_day?: Maybe<Scalars['Uint256']>;
+  market_cap?: Maybe<Scalars['Float']>;
+  num_owners?: Maybe<Scalars['Uint256']>;
+  one_day_average_price?: Maybe<Scalars['Float']>;
+  one_day_change?: Maybe<Scalars['Float']>;
+  one_day_sales?: Maybe<Scalars['Uint256']>;
+  one_day_volume?: Maybe<Scalars['Float']>;
+  seven_day_average_price?: Maybe<Scalars['Float']>;
+  seven_day_change?: Maybe<Scalars['Float']>;
+  seven_day_sales?: Maybe<Scalars['Uint256']>;
+  seven_day_volume?: Maybe<Scalars['Float']>;
+  thirty_day_average_price?: Maybe<Scalars['Float']>;
+  thirty_day_change?: Maybe<Scalars['Float']>;
+  thirty_day_sales?: Maybe<Scalars['Uint256']>;
+  thirty_day_volume?: Maybe<Scalars['Float']>;
+  total_minted?: Maybe<Scalars['Uint256']>;
+  total_sales?: Maybe<Scalars['Uint256']>;
+  total_supply?: Maybe<Scalars['Uint256']>;
+  total_volume?: Maybe<Scalars['Float']>;
+  updated_date?: Maybe<Scalars['String']>;
 };
 
 export enum NftSize {
@@ -1267,6 +1369,7 @@ export enum ProfileViewType {
 export type ProfilesByDisplayNftInput = {
   chainId?: InputMaybe<Scalars['String']>;
   collectionAddress?: InputMaybe<Scalars['String']>;
+  showOnlyVisibleNFTProfile?: InputMaybe<Scalars['Boolean']>;
   tokenId?: InputMaybe<Scalars['String']>;
 };
 
@@ -1306,12 +1409,14 @@ export type Query = {
   getApprovedAssociations: Array<Maybe<ApprovedAssociationOutput>>;
   getAsks: GetMarketAsk;
   getBids: GetMarketBid;
+  getContractSalesStatistics?: Maybe<ContractSalesStatistics>;
   getContracts: GetContracts;
   /** AUTHENTICATED */
   getMyGenesisKeys: Array<Maybe<GkOutput>>;
   /** AUTHENTICATED */
   getMyPendingAssociations: Array<Maybe<PendingAssociationOutput>>;
   getNFTAsks: Array<MarketAsk>;
+  getNFTDetails?: Maybe<NftDetail>;
   getNFTOffers: Array<MarketAsk>;
   /** AUTHENTICATED */
   getRejectedAssociations: Array<Maybe<RejectedAssociationOutput>>;
@@ -1446,6 +1551,11 @@ export type QueryGetBidsArgs = {
 };
 
 
+export type QueryGetContractSalesStatisticsArgs = {
+  input?: InputMaybe<ContractSalesStatisticsInput>;
+};
+
+
 export type QueryGetContractsArgs = {
   input: GetContractsInput;
 };
@@ -1453,6 +1563,11 @@ export type QueryGetContractsArgs = {
 
 export type QueryGetNftAsksArgs = {
   input: NftAsksInput;
+};
+
+
+export type QueryGetNftDetailsArgs = {
+  input?: InputMaybe<NftDetailInput>;
 };
 
 
@@ -2259,6 +2374,14 @@ export type SubmitProfilePreferencesMutationVariables = Exact<{
 
 export type SubmitProfilePreferencesMutation = { __typename?: 'Mutation', setProfilePreferences: Array<{ __typename?: 'Bid', id: string, profile?: { __typename?: 'Profile', url: string } | null }> };
 
+export type UpdateActivityStatusMutationVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+  status?: InputMaybe<ActivityStatus>;
+}>;
+
+
+export type UpdateActivityStatusMutation = { __typename?: 'Mutation', updateStatusByIds: { __typename?: 'UpdateReadOutput', updatedIdsSuccess: Array<string | null>, idsNotFoundOrFailed: Array<string | null> } };
+
 export type UpdateEmailMutationVariables = Exact<{
   input: UpdateEmailInput;
 }>;
@@ -2336,7 +2459,7 @@ export type ActivitiesQueryVariables = Exact<{
 }>;
 
 
-export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
 
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2851,6 +2974,14 @@ export const SubmitProfilePreferencesDocument = gql`
   }
 }
     `;
+export const UpdateActivityStatusDocument = gql`
+    mutation UpdateActivityStatus($ids: [String]!, $status: ActivityStatus) {
+  updateStatusByIds(ids: $ids, status: $status) {
+    updatedIdsSuccess
+    idsNotFoundOrFailed
+  }
+}
+    `;
 export const UpdateEmailDocument = gql`
     mutation UpdateEmail($input: UpdateEmailInput!) {
   updateEmail(input: $input) {
@@ -3050,6 +3181,7 @@ export const ActivitiesDocument = gql`
       lastCursor
     }
     items {
+      id
       chainId
       activityType
       activityTypeId
@@ -4047,6 +4179,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     SubmitProfilePreferences(variables: SubmitProfilePreferencesMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SubmitProfilePreferencesMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SubmitProfilePreferencesMutation>(SubmitProfilePreferencesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SubmitProfilePreferences', 'mutation');
+    },
+    UpdateActivityStatus(variables: UpdateActivityStatusMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateActivityStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateActivityStatusMutation>(UpdateActivityStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateActivityStatus', 'mutation');
     },
     UpdateEmail(variables: UpdateEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateEmailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateEmailMutation>(UpdateEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateEmail', 'mutation');

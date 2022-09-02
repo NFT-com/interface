@@ -1,17 +1,23 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { CartSidebarNft } from './CartSidebarNft';
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { NFTPurchasesContext, StagedPurchase } from './NFTPurchaseContext';
 
+import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { XCircle } from 'phosphor-react';
 import { useContext, useRef } from 'react';
 
-export type CartSidebarTab = 'buy' | 'sell';
+export type CartSidebarTab = 'Buy' | 'Sell';
+
+const cartTabTypes = {
+  0: 'Buy',
+  1: 'Sell'
+};
 
 export interface NFTCartSidebarProps {
   selectedTab: CartSidebarTab;
@@ -34,7 +40,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
     removePurchase
   } = useContext(NFTPurchasesContext);
 
-  const stagedNFTs = filterNulls<StagedListing | StagedPurchase>(props.selectedTab === 'sell' ? toList : toBuy);
+  const stagedNFTs = filterNulls<StagedListing | StagedPurchase>(props.selectedTab === 'Sell' ? toList : toBuy);
 
   const sidebarRef = useRef();
   useOutsideClickAlerter(sidebarRef, () => toggleCartSidebar());
@@ -44,48 +50,57 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
       'z-50 fixed pt-20 right-0 w-full h-full minmd:max-w-md bg-white flex flex-col grow',
       'drop-shadow-md'
     )}>
-      <div className='flex flex-row items-center px-8 my-8'>
-        <div className='flex items-center w-full'>
-          <p
-            onClick={() => {props.onChangeTab('buy');}}
-            className={tw(
-              'text-2xl mr-4 cursor-pointer',
-              props.selectedTab === 'buy' ? 'text-primary-txt underline' : 'text-secondary-txt'
-            )}>
-            Buy
-          </p>
-          <p
-            onClick={() => {props.onChangeTab('sell');}}
-            className={tw(
-              'text-2xl cursor-pointer',
-              props.selectedTab === 'sell' ? 'text-primary-txt underline' : 'text-secondary-txt'
-            )}>
-            Sell
-          </p>
-        </div>
-        <XCircle onClick={() => toggleCartSidebar()} className='hover:cursor-pointer' size={32} color="black" weight="fill" />
+      <div className="absolute top-24 right-4 h-10 w-10 flex items-center justify-center">
+        <div className='absolute hover:cursor-pointer h-8 w-8 bg-[#f9d963] rounded-full'></div>
+        <XCircle onClick={() => toggleCartSidebar()} className='absolute hover:cursor-pointer' size={40} color="black" weight="fill" />
       </div>
-      <div className='flex px-8 mb-4'>
-        {isNullOrEmpty(stagedNFTs) ? <span>No NFTs in cart</span> : stagedNFTs?.length + ' NFT' + (stagedNFTs.length === 1 ? '' : 's')}
+      <div className="flex px-4 mt-24 font-bold font-grotesk items-end justify-between">
+        <span className="text-4xl">My Cart</span>
         {stagedNFTs?.length > 0 && <span
-          className='ml-8 cursor-pointer hover:underline text-link'
+          className="text-base text-link-yellow cursor-pointer hover:underline"
           onClick={() => {
-            if (props.selectedTab === 'sell') {
+            if (props.selectedTab === 'Sell') {
               clearListings();
             } else {
               clearPurchases();
             }
           }}
         >
-          Clear
+          {props.selectedTab === 'Buy' ? 'Clear Buy' : 'Clear Sell'}
         </span>}
+      </div>
+      <div className='w-full px-4 mt-10'>
+        <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])}>
+          <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
+            {['Buy', 'Sell'].map((detailTab, index) => (
+              <Tab
+                key={detailTab}
+                className={({ selected }) =>
+                  tw(
+                    'flex items-center justify-center w-1/2 rounded-3xl py-2.5 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
+                    selected && 'bg-black text-[#F8F8F8]'
+                  )
+                }
+              >
+                <span className='font-semibold'>{cartTabTypes[index]}</span>
+                <div
+                  className={tw(
+                    'rounded-full h-4 w-4 flex items-center justify-center text-sm ml-2',
+                    cartTabTypes[index] === props.selectedTab ? 'bg-white text-black' : 'bg-[#6F6F6F] text-white'
+                  )}>
+                  {(cartTabTypes[index] === 'Buy' ? toBuy : toList).length}
+                </div>
+              </Tab>
+            ))}
+          </Tab.List>
+        </Tab.Group>
       </div>
       {stagedNFTs.map((stagedItem, index) => {
         return <CartSidebarNft
-          nft={stagedItem?.nft}
+          item={stagedItem}
           key={index}
           onRemove={() => {
-            if (props.selectedTab === 'sell') {
+            if (props.selectedTab === 'Sell') {
               removeListing(stagedItem.nft);
             } else {
               removePurchase(stagedItem.nft);
@@ -94,14 +109,15 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
         />;
       })}
       {(stagedNFTs.length > 0 &&
-        !(router.pathname.includes('/app/list') && props.selectedTab === 'sell')
+        !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell') &&
+        !(router.pathname.includes('/app/buy') && props.selectedTab === 'Buy')
       ) && <div className="mx-8 my-4 flex">
         <Button
           stretch
-          label={`Proceed to ${props.selectedTab === 'sell' ? 'List' : 'Buy'}`}
+          label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Buy'}
           onClick={() => {
             toggleCartSidebar();
-            router.push(props.selectedTab === 'sell' ? '/app/list' : '/app/buy');
+            router.push(props.selectedTab === 'Sell' ? '/app/list' : '/app/buy');
           }}
           type={ButtonType.PRIMARY}
         />

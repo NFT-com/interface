@@ -3,10 +3,13 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { ActivityStatus, LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
+import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
@@ -19,7 +22,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork, useSigner } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 
 export interface ExternalListingTileProps {
   listing: PartialDeep<TxActivity>;
@@ -53,12 +56,19 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
-  const { chain } = useNetwork();
+  const defaultChainId = useDefaultChainId();
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { stageListing } = useContext(NFTListingsContext);
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
+  const { updateActivityStatus } = useUpdateActivityStatusMutation();
+
+  const { mutate: mutateNftListings } = useListingActivitiesQuery(
+    props?.nft?.contract,
+    props?.nft?.tokenId,
+    String(props.nft?.wallet.chainId ?? defaultChainId)
+  );
 
   const {
     allowedAll: openseaAllowed,
@@ -146,7 +156,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             }
             const result = await cancelLooksrareListing(BigNumber.from(order.nonce), looksrareExchange);
             if (result) {
-            // todo: notify backend of cancellation
+              updateActivityStatus([listing?.id], ActivityStatus.Cancelled);
             }
             setCancelling(false);
           } else if (listingProtocol === ExternalProtocol.Seaport) {
@@ -157,7 +167,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             }
             const result = await cancelSeaportListing(order?.parameters, seaportExchange);
             if (result) {
-            // todo: notify backend of cancellation
+              updateActivityStatus([listing?.id], ActivityStatus.Cancelled);
+              mutateNftListings();
             }
             setCancelling(false);
           }
@@ -171,10 +182,11 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         label={'Add to Cart'}
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
-          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chain?.id ?? 1));
+          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
           const price = getListingPrice(listing);
           stagePurchase({
             nft: props.nft,
+            activityId: listing?.id,
             currency: getListingCurrencyAddress(listing) ?? WETH.address,
             price: price,
             collectionName: props.collectionName,
@@ -193,7 +205,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   }, [
     router,
     cancelling,
-    chain?.id,
+    defaultChainId,
     currentAddress,
     getByContractAddress,
     listing,
@@ -205,7 +217,9 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     props.nft,
     seaportExchange,
     stageListing,
-    stagePurchase
+    stagePurchase,
+    updateActivityStatus,
+    mutateNftListings
   ]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport].includes(listingProtocol as ExternalProtocol)) {
