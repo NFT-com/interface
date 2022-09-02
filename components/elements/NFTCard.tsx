@@ -82,7 +82,7 @@ export function NFTCard(props: NFTCardProps) {
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
-          'w-full min-h-[inherit] h-full',
+          `w-full min-h-[inherit] ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
         props.customBorder ?? '',
         'cursor-pointer transform hover:scale-105',
         'overflow-hidden',
