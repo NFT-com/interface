@@ -6,12 +6,6 @@ command = "yarn build:netlify"
 publish = ".next"
 
 [[redirects]]
-  from = "/you"
-  to = "https://whitelist.nft.com"
-  status = 200
-  force = true
-
-[[redirects]]
   from = "/whitelist"
   to = "https://whitelist.nft.com"
   status = 200
