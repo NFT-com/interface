@@ -54,7 +54,6 @@ export function NFTCard(props: NFTCardProps) {
   const { chain } = useNetwork();
   const [selected, setSelected] = useState(false);
 
-  console.log(props.layoutType, 'layout type fdo');
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)))) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
@@ -142,7 +141,7 @@ export function NFTCard(props: NFTCardProps) {
           </div>
       }
       {(listings?.find(listing => listing.price != null) != null) && (
-        <div className='mt-4 flex justify-start items-center absolute left-3 top-4'>
+        <div className='absolute left-3 top-4 z-50'>
           {listings[0].price &&
               <OpenseaIcon
                 onClick={() => {
@@ -177,10 +176,13 @@ export function NFTCard(props: NFTCardProps) {
             className={tw(
               'w-full overflow-hidden aspect-square',
               props.nftsDescriptionsVisible != false ? 'bg-[#F0F0F0]' : '',
-              props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicSmallCard' ? 'max-h-[133px]' : '',
-              props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicMediumCard' ? 'max-h-[363px]' : '',
-              props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicSmallCard' ? 'max-h-[175px]' : '',
-              props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicSmallCard' ? 'max-h-[157px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicLargeCard' ? 'h-[592px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicSmallCard' ? 'h-[133px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicMediumCard' ? 'h-[363px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicSmallCard' ? 'h-[181px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicMediumCard' ? 'h-[456px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicSmallCard' ? 'h-[157px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicMediumCard' ? 'h-[397px]' : '',
               props.customBorderRadius ?? 'rounded-3xl',
               props.images[0] == null ? 'aspect-square' : '',
             )}

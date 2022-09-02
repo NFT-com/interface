@@ -56,14 +56,16 @@ export function NftGrid(props: NftGridProps) {
   const mosaicCardType = (layoutType, index) => {
     if (layoutType === 'Mosaic') {
       if (screenWidth > 1199) {
+        if (index % 7 === 0 )
+          return 'LargeMosaicLargeCard';
         if ((index-4) % 7 === 0)
           return 'LargeMosaicMediumCard';
         if (index % 7 !== 0 && (index-4) % 7 !== 0)
           return 'LargeMosaicSmallCard';
       } else if (screenWidth > 900 && screenWidth <= 1199) {
-        return !mosaicArray2.includes(index) ? 'MediumMosaicSmallCard' : '';
+        return mosaicArray2.includes(index) ? 'MediumMosaicMediumCard' : 'MediumMosaicSmallCard';
       } else if(screenWidth > 600 && screenWidth <= 899) {
-        return !mosaicArray.includes(index) ? 'SmallMosaicSmallCard' : '';
+        return mosaicArray.includes(index) ? 'SmallMosaicMediumCard' : 'SmallMosaicSmallCard';
       }
     }
 
