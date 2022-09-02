@@ -111,6 +111,7 @@ export function ExternalListings(props: ExternalListingsProps) {
           const price = getListingPrice(listing);
           stagePurchase({
             nft: props.nft,
+            activityId: listing?.id,
             currency: getListingCurrencyAddress(listing) ?? WETH.address,
             price: price,
             collectionName: props.collectionName,
