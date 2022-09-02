@@ -96,7 +96,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className='flex flex-col h-full aspect-square'>
           {collectionOwnerToShow?.photoURL ?
             <img
-              className='rounded-md aspect-square h-full w-full'
+              className='rounded-md aspect-square h-10 w-10'
               src={collectionOwnerToShow?.photoURL}
               alt='creator-profile-pic'
             />
@@ -145,7 +145,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
           <div className='flex flex-col h-[42px] w-[42px]'>
             {profileOwnerToShow?.photoURL ?
               <img
-                className='rounded-md aspect-square h-full w-full'
+                className='rounded-md aspect-square h-10 w-10'
                 src={profileOwnerToShow?.photoURL}
                 alt='owner-profile-pic'
               />
