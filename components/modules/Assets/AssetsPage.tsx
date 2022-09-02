@@ -3,7 +3,7 @@ import { ProfileContext } from 'components/modules/Profile/ProfileContext';
 
 import AssetTableRow from './AssetTableRow';
 
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 export default function AssetsPages() {
   const { stageListings, toggleCartSidebar } = useContext(NFTListingsContext);
@@ -12,24 +12,24 @@ export default function AssetsPages() {
     allOwnerNfts,
   } = useContext(ProfileContext);
 
-  const onChangeHandler = (asset) => {
+  const onChangeHandler = useCallback(async (asset) => {
     const index = selectedAssets.findIndex((item) => item.id === asset.id);
     if(index !== -1) {
       setSelectedAssets(selectedAssets.filter((_, i) => i !== index));
     } else {
       setSelectedAssets([...selectedAssets, asset]);
     }
-  };
+  }, [selectedAssets]);
 
-  const selectAllHandler = () => {
+  const selectAllHandler = useCallback(async () => {
     if(selectedAssets?.length === allOwnerNfts?.length){
       setSelectedAssets([]);
     } else {
       setSelectedAssets(allOwnerNfts);
     }
-  };
+  }, [allOwnerNfts, selectedAssets]);
 
-  const submitListings = () => {
+  const submitListings = useCallback(async () => {
     const listingsReady = [];
     selectedAssets.forEach((asset) => {
       listingsReady.push({
@@ -41,7 +41,7 @@ export default function AssetsPages() {
       });
     });
     stageListings(listingsReady);
-  };
+  }, [selectedAssets, stageListings]);
 
   return (
     <div className='flex flex-col justify-between pt-28 px-4 font-grotesk'>

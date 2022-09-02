@@ -12,7 +12,7 @@ import { tw } from 'utils/tw';
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 
 type NftItem = {
   contract?: string;
@@ -45,35 +45,35 @@ export default function AssetTableRow({ item, index, onChange, isChecked }: Asse
   );
   const nftSaleHistory = useGetSalesByNFT(item?.contract, parseInt(item?.tokenId, 16).toString());
 
-  const getDisplayedProfiles = () => {
+  const getDisplayedProfiles = useCallback(() => {
     if(!profiles?.length){
       return <p className='text-[#B6B6B6]'>hidden</p>;
-    } else if (profiles?.length === 1){
-      return <Link href={`/${profiles[0].url}`}><p className='text-[#B59007] font-bold hover:cursor-pointer'><span className='text-black'>/ </span>{profiles[0].url}</p></Link>;
-    } else {
-      return (
-        <div className='font-medium flex items-center relative underline text-[#1F2127] decoration-[#B59007] underline-offset-2'>
-          <CustomTooltip
-            rightPostion={0}
-            mode="hover"
-            tooltipComponent={
-              <div
-                className="rounded-xl p-3 bg-white text-black w-[200px] flex flex-col space-y-3"
-              >
-                {profiles.map((profile) => (
-                  <Link key={profile.url} href={`/${profile.url}`}>
-                    <p className='text-[#B59007] font-bold hover:cursor-pointer'>
-                      <span className='text-black'>/ </span>{profile.url}</p>
-                  </Link>
-                ))}
-              </div>
-            }>
-            {profiles.length} Profiles
-          </CustomTooltip>
-        </div>
-      );
     }
-  };
+    if (profiles?.length === 1){
+      return <Link href={`/${profiles[0].url}`}><p className='text-[#B59007] font-bold hover:cursor-pointer'><span className='text-black'>/ </span>{profiles[0].url}</p></Link>;
+    }
+    return (
+      <div className='font-medium flex items-center relative underline text-[#1F2127] decoration-[#B59007] underline-offset-2'>
+        <CustomTooltip
+          rightPostion={0}
+          mode="hover"
+          tooltipComponent={
+            <div
+              className="rounded-xl p-3 bg-white text-black w-[200px] flex flex-col space-y-3"
+            >
+              {profiles.map((profile) => (
+                <Link key={profile.url} href={`/${profile.url}`}>
+                  <p className='text-[#B59007] font-bold hover:cursor-pointer'>
+                    <span className='text-black'>/ </span>{profile.url}</p>
+                </Link>
+              ))}
+            </div>
+          }>
+          {profiles.length} Profiles
+        </CustomTooltip>
+      </div>
+    );
+  }, [profiles]);
   
   return (
     <tr
