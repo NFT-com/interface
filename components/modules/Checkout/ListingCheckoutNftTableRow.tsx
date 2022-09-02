@@ -1,7 +1,10 @@
 import { PriceInput } from 'components/elements/PriceInput';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { processIPFSURL } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
@@ -25,7 +28,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const { data: collection } = useSWR('ContractMetadata' + props.listing?.nft?.contract, async () => {
     return await getContractMetadata(props.listing?.nft?.contract, chain?.id);
   });
-  const { setPrice, removeListing, toggleTargetMarketplace } = useContext(NFTListingsContext);
+  const { setPrice, setCurrency, toggleTargetMarketplace } = useContext(NFTListingsContext);
+  const defaultChainId = useDefaultChainId();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -78,20 +82,23 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             expanded ?
               <>
                 <PriceInput
-                  currency={'WETH'}
-                  currencyOptions={['WETH']}
+                  currencyAddress={props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
+                  currencyOptions={['WETH', 'ETH']}
                   onPriceChange={(val: BigNumber) => {
                     setPrice(props.listing, val, ExternalProtocol.Seaport);
                     props.onPriceChange();
                   }}
-                  onCurrencyChange={null}
+                  onCurrencyChange={(currency: SupportedCurrency) => {
+                    setCurrency(props.listing, currency, ExternalProtocol.Seaport);
+                    props.onPriceChange();
+                  }}
                   error={
                     props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && target.startingPrice == null) != null ||
                     props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && BigNumber.from(target.startingPrice).eq(0)) != null
                   }
                 />
                 <PriceInput
-                  currency={'WETH'}
+                  currencyAddress={getAddress('weth', defaultChainId)}
                   currencyOptions={['WETH']}
                   onPriceChange={(val: BigNumber) => {
                     setPrice(props.listing, val, ExternalProtocol.LooksRare);
@@ -105,7 +112,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 />
               </> :
               <PriceInput
-                currency={'WETH'}
+                currencyAddress={getAddress('weth', defaultChainId)}
                 currencyOptions={['WETH']}
                 onPriceChange={(val: BigNumber) => {
                   setPrice(props.listing, val);

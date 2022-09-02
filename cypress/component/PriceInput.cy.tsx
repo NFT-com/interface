@@ -10,7 +10,7 @@ describe('PriceInput', () => {
   it('should have the correct placeholder', () => {
     cy.mount(
       <PriceInput
-        currency="WETH"
+        currencyAddress="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
         currencyOptions={['ETH', 'WETH']}
         onPriceChange={cy.stub()}
         onCurrencyChange={cy.stub()}
@@ -24,7 +24,7 @@ describe('PriceInput', () => {
     const onCurrencyChange = cy.stub();
     cy.mount(
       <PriceInput
-        currency="WETH"
+        currencyAddress="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
         currencyOptions={['ETH', 'WETH']}
         onPriceChange={cy.stub()}
         onCurrencyChange={onCurrencyChange}
@@ -42,7 +42,7 @@ describe('PriceInput', () => {
     const onPriceChange = cy.stub();
     cy.mount(
       <PriceInput
-        currency="WETH"
+        currencyAddress="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
         currencyOptions={['ETH', 'WETH']}
         onPriceChange={onPriceChange}
         onCurrencyChange={cy.stub()}
@@ -62,7 +62,7 @@ describe('PriceInput', () => {
     const onPriceChange = cy.stub();
     cy.mount(
       <PriceInput
-        currency="WETH"
+        currencyAddress="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
         currencyOptions={['ETH', 'WETH']}
         onPriceChange={onPriceChange}
         onCurrencyChange={cy.stub()}
@@ -82,7 +82,7 @@ describe('PriceInput', () => {
     const onPriceChange = cy.stub();
     cy.mount(
       <PriceInput
-        currency="WETH"
+        currencyAddress="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
         currencyOptions={['ETH', 'WETH']}
         onPriceChange={onPriceChange}
         onCurrencyChange={cy.stub()}
@@ -102,7 +102,7 @@ describe('PriceInput', () => {
     const onPriceChange = cy.stub();
     cy.mount(
       <PriceInput
-        currency="WETH"
+        currencyAddress="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
         currencyOptions={['ETH', 'WETH']}
         onPriceChange={onPriceChange}
         onCurrencyChange={cy.stub()}
@@ -122,7 +122,7 @@ describe('PriceInput', () => {
     const onPriceChange = cy.stub();
     cy.mount(
       <PriceInput
-        currency="WETH"
+        currencyAddress="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
         currencyOptions={['ETH', 'WETH']}
         onPriceChange={onPriceChange}
         onCurrencyChange={cy.stub()}

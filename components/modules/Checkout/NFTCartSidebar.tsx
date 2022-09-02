@@ -70,7 +70,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
         </span>}
       </div>
       <div className='w-full px-4 mt-10'>
-        <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])}>
+        <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])} selectedIndex={props.selectedTab === 'Buy' ? 0 : 1}>
           <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
             {['Buy', 'Sell'].map((detailTab, index) => (
               <Tab
