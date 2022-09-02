@@ -27,7 +27,6 @@ describe('AddressInput', () => {
       </WagmiConfig>
     );
     cy.findByText('luc').should('exist');
-    cy.findByText('NFT.com Profile').should('exist');
     cy.get('[type="checkbox"]').should('not.be.checked');
   });
 
@@ -51,7 +50,6 @@ describe('AddressInput', () => {
       </WagmiConfig>
     );
     cy.findByText('robo').should('exist');
-    cy.findByText('NFT.com Profile').should('exist');
     cy.get('[type="checkbox"]').should('be.checked');
   });
 
