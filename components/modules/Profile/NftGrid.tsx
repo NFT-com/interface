@@ -53,9 +53,28 @@ export function NftGrid(props: NftGridProps) {
 
   const savedLayoutType = profileData?.profile?.layoutType;
 
+  const mosaicCardType = (layoutType, index) => {
+    if (layoutType === 'Mosaic') {
+      if (screenWidth > 1199) {
+        if (index % 7 === 0 )
+          return 'LargeMosaicLargeCard';
+        if ((index-4) % 7 === 0)
+          return 'LargeMosaicMediumCard';
+        if (index % 7 !== 0 && (index-4) % 7 !== 0)
+          return 'LargeMosaicSmallCard';
+      } else if (screenWidth > 900 && screenWidth <= 1199) {
+        return mosaicArray2.includes(index) ? 'MediumMosaicMediumCard' : 'MediumMosaicSmallCard';
+      } else if(screenWidth > 600 && screenWidth <= 899) {
+        return mosaicArray.includes(index) ? 'SmallMosaicMediumCard' : 'SmallMosaicSmallCard';
+      }
+    }
+
+    return '';
+  };
+
   return <div
     className={tw(
-      'grid w-full gap-y-6 gap-x-8 mt-2',
+      'grid w-full gap-8 mt-2',
       (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
       (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-1 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
@@ -108,6 +127,7 @@ export function NftGrid(props: NftGridProps) {
             customBackground={tileBackgroundSecondary}
             customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
             nftsDescriptionsVisible={draftNftsDescriptionsVisible}
+            layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}
           />
         </div>
       </DraggableGridItem>
