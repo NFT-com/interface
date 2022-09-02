@@ -44,8 +44,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
     creatorTokens?.at(0)?.tokenUri?.raw?.split('/').pop()
   );
 
+  const { profileData: collectionPreferredOwnerData } = useProfileQuery(
+    collectionOwnerData?.profile?.owner?.preferredProfile?.url
+  );
+
   const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
-  const collectionOwnerToShow: PartialDeep<Profile> = collectionOwnerData?.profile ?? null;
+  const collectionOwnerToShow: PartialDeep<Profile> = collectionPreferredOwnerData?.profile ?? null;
 
   const { refreshNft, loading } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
