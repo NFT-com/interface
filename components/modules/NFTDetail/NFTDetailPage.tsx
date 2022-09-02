@@ -58,7 +58,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
 
   const showListings = useMemo(() => {
     return isNullOrEmpty(!getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)
-      ? legacyListings
+      ? (legacyListings.filter((x) => x.url !== null))
       : listings);
   }, [legacyListings, listings]);
 
