@@ -40,7 +40,8 @@ export default function AssetTableRow({ item, index, onChange, isChecked }: Asse
   const { data: profiles } = useProfilesByDisplayedNft(
     item?.contract,
     item?.tokenId,
-    String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
+    String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    true
   );
   const nftSaleHistory = useGetSalesByNFT(item?.contract, parseInt(item?.tokenId, 16).toString());
 

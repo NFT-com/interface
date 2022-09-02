@@ -18,9 +18,10 @@ export function useProfilesByDisplayedNft(
   contractAddress: string,
   tokenId: string,
   chainId: string,
+  showOnlyVisibleNFTProfile?: boolean
 ): ProfilesByDisplayedNftData {
   const sdk = useGraphQLSDK();
-  const keyString = 'ProfilesByDisplayedNft ' + contractAddress + tokenId + chainId;
+  const keyString = 'ProfilesByDisplayedNft ' + contractAddress + tokenId + chainId + showOnlyVisibleNFTProfile;
 
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(contractAddress) || isNullOrEmpty(tokenId) || isNullOrEmpty(chainId)) {
@@ -30,7 +31,8 @@ export function useProfilesByDisplayedNft(
       input: {
         collectionAddress: contractAddress,
         tokenId,
-        chainId
+        chainId,
+        showOnlyVisibleNFTProfile
       },
     });
     return result?.profilesByDisplayNft?.items ?? [];
