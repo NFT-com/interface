@@ -63,7 +63,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
 
   return (
     <div className={tw(
-      'flex flex-col mt-0 minlg:mt-14 align-items',
+      'flex flex-col mt-0 minlg:mt-16 align-items',
       isMobile ? 'px-2' : 'px-2 minmd:px-8'
     )}>
       <Modal
