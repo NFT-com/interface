@@ -11,7 +11,7 @@ import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { PurchaseCheckoutNft } from './PurchaseCheckoutNft';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
 import { useAccount, useNetwork, useSigner } from 'wagmi';
@@ -40,11 +40,13 @@ export function PurchaseCheckout() {
     ).some(purchase => !purchase?.isApproved);
   }, [toBuy]);
 
-  const getTotalPrice = useCallback(() => {
+  const getTotalPriceUSD = useCallback(() => {
     return toBuy?.reduce((acc, curr) => {
-      return acc.add(curr.price);
-    }, BigNumber.from(0));
-  }, [toBuy]);
+      const currencyData = getByContractAddress(curr.currency);
+      const formattedPrice = Number(ethers.utils.formatUnits(curr.price, currencyData.decimals));
+      return acc + currencyData.usd(formattedPrice);
+    }, 0);
+  }, [toBuy, getByContractAddress]);
 
   const getSummaryContent = useCallback(() => {
     if (success) {
@@ -69,10 +71,10 @@ export function PurchaseCheckout() {
                 return {
                   label: 'Approve ' + currencyData.name,
                   endIcon: purchase?.isApproved ?
-                    <CheckCircle size={16} className="text-green-500" /> :
+                    <CheckCircle size={16} className="text-green-500 mx-2" /> :
                     error === 'ApprovalError' ?
-                      <X size={16} className="text-red-400" /> :
-                      <SpinnerGap size={16} className="text-yellow-500 animate-spin" />
+                      <X size={16} className="text-red-400 mx-2" /> :
+                      <SpinnerGap size={16} className="text-yellow-500 animate-spin mx-2" />
                 } as ProgressBarItem;
               })
             },
@@ -94,13 +96,13 @@ export function PurchaseCheckout() {
           <div className="mx-8 my-4 flex items-center w-full">
             <span>Total Cost: {' '}</span>
             <span className='ml-2'>
-              {ethers.utils.formatEther(getTotalPrice() ?? 0) + ' WETH'}
+              {'$' + getTotalPriceUSD()}
             </span>
           </div>
         </div>
       );
     }
-  }, [error, getByContractAddress, getNeedsApprovals, getTotalPrice, loading, success, toBuy]);
+  }, [error, getByContractAddress, getNeedsApprovals, getTotalPriceUSD, loading, success, toBuy]);
     
   return (
     <div className="flex flex-col w-full items-center">
