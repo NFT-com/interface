@@ -46,6 +46,7 @@ export type StagedListing = {
 interface NFTListingsContextType {
   toList: StagedListing[];
   stageListing: (listing: PartialDeep<StagedListing>) => void;
+  stageListings: (listings: PartialDeep<StagedListing[]>) => void;
   clear: () => void;
   listAll: () => Promise<boolean>;
   prepareListings: () => Promise<void>;
@@ -63,6 +64,7 @@ interface NFTListingsContextType {
 export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   toList: [],
   stageListing: () => null,
+  stageListings: () => null,
   clear: () => null,
   listAll: () => null,
   prepareListings: () => null,
@@ -120,6 +122,15 @@ export function NFTListingsContextProvider(
     }
     setToList([...toList, listing]);
     localStorage.setItem('stagedNftListings', JSON.stringify(filterNulls([...toList, listing])));
+  }, [toList]);
+
+  const stageListings = useCallback((
+    listings: StagedListing[]
+  ) => {
+    // todo: filter input listings to ensure no duplicate NFTs in the cart
+    setToList([...toList, ...listings]);
+    
+    localStorage.setItem('stagedNftListings', JSON.stringify(filterNulls([...toList, ...listings])));
   }, [toList]);
 
   const clear = useCallback(() => {
@@ -292,6 +303,7 @@ export function NFTListingsContextProvider(
     removeListing,
     toList,
     stageListing,
+    stageListings,
     clear,
     listAll,
     prepareListings,
