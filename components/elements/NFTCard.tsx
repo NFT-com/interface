@@ -44,6 +44,7 @@ export interface NFTCardProps {
   nftsDescriptionsVisible?: boolean;
   customBorder?: string;
   lightModeForced?: boolean;
+  layoutType?: string
 }
 
 export function NFTCard(props: NFTCardProps) {
@@ -53,6 +54,7 @@ export function NFTCard(props: NFTCardProps) {
   const { chain } = useNetwork();
   const [selected, setSelected] = useState(false);
 
+  console.log(props.layoutType, 'layout type fdo');
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)))) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
@@ -83,7 +85,7 @@ export function NFTCard(props: NFTCardProps) {
           'w-2/5 minlg:w-[23%]' :
           'w-full min-h-[inherit]',
         props.customBorder ?? '',
-        'justify-between cursor-pointer transform hover:scale-105',
+        'cursor-pointer transform hover:scale-105',
         'overflow-hidden',
       )}
       style={{
@@ -139,11 +141,46 @@ export function NFTCard(props: NFTCardProps) {
             {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }
           </div>
       }
+      {(listings?.find(listing => listing.price != null) != null) && (
+        <div className='mt-4 flex justify-start items-center absolute left-3 top-4'>
+          {listings[0].price &&
+              <OpenseaIcon
+                onClick={() => {
+                  window.open(
+                    listings[0].url,
+                    '_blank'
+                  );
+                }}
+                className='h-9 w-9 relative shrink-0 hover:opacity-70 '
+                alt="Opensea logo redirect"
+                layout="fill"
+              />
+          }
+          {listings[1].price &&
+              <LooksrareIcon
+                onClick={() => {
+                  window.open(
+                    listings[1].url,
+                    '_blank'
+                  );
+                }}
+                className='h-9 w-9 relative shrink-0 hover:opacity-70'
+                alt="Looksrare logo redirect"
+                layout="fill"
+              />
+          }
+        </div>)
+      }
       {
         props.images.length <= 1 && props.imageLayout !== 'row' ?
           <div
             className={tw(
               'w-full overflow-hidden aspect-square',
+              props.nftsDescriptionsVisible != false ? 'bg-[#F0F0F0]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicSmallCard' ? 'max-h-[133px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicMediumCard' ? 'max-h-[363px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicSmallCard' ? 'max-h-[175px]' : '',
+              props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicSmallCard' ? 'max-h-[157px]' : '',
               props.customBorderRadius ?? 'rounded-3xl',
               props.images[0] == null ? 'aspect-square' : '',
             )}
@@ -199,37 +236,6 @@ export function NFTCard(props: NFTCardProps) {
             {props.description}
           </div>
         )}
-        {(listings?.find(listing => listing.price != null) != null) && (
-          <div className='mt-4 flex justify-start items-center'>
-            {listings[0].price &&
-              <OpenseaIcon
-                onClick={() => {
-                  window.open(
-                    listings[0].url,
-                    '_blank'
-                  );
-                }}
-                className='h-9 w-9 relative shrink-0 hover:opacity-70'
-                alt="Opensea logo redirect"
-                layout="fill"
-              />
-            }
-            {listings[1].price &&
-              <LooksrareIcon
-                onClick={() => {
-                  window.open(
-                    listings[1].url,
-                    '_blank'
-                  );
-                }}
-                className='h-9 w-9 relative shrink-0 hover:opacity-70'
-                alt="Looksrare logo redirect"
-                layout="fill"
-              />
-            }
-            {(!listings[0].price && !listings[1].price) && <div className="h-9"></div>}
-          </div>)
-        }
         {
           props.cta &&
             <div
