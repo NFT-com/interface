@@ -1,10 +1,11 @@
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnv } from 'utils/env';
-import { processIPFSURL } from 'utils/helpers';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { DescriptionDetail } from './DescriptionDetail';
@@ -16,7 +17,7 @@ import { NFTDetailMoreFromCollection } from './NFTDetailMoreFromCollection';
 import { Properties } from './Properties';
 
 import { Tab } from '@headlessui/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -41,13 +42,25 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return await getContractMetadata(nft?.contract, chain?.id);
   });
   
-  const { data: listings } = useExternalListingsQuery(
+  const { data: legacyListings } = useExternalListingsQuery(
     nft?.contract,
     nft?.tokenId,
-    String(nft?.wallet.chainId ?? defaultChainId)
+    defaultChainId
+  );
+
+  const { data: listings } = useListingActivitiesQuery(
+    nft?.contract,
+    nft?.tokenId,
+    defaultChainId
   );
 
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
+
+  const showListings = useMemo(() => {
+    return isNullOrEmpty(!getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)
+      ? legacyListings
+      : listings);
+  }, [legacyListings, listings]);
 
   return (
     <div className="flex flex-col pt-20 items-center w-full">
@@ -73,9 +86,14 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             mutateListings();
           }} key={nft?.id} />
         </div>
-        {(listings?.length > 0 || nft?.wallet === currentAddress) ?
-          <div className="flex minxl:w-1/2 w-full items-end">
-            <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+        {(showListings || nft?.wallet === currentAddress) ?
+          <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
+            <div className="flex minxl:flex-row w-full items-start">
+              <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+            </div>
+            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
+              <NFTAnalyticsContainer data={nft} />
+            </div>
           </div>
           :
           (defaultChainId === '1') &&
@@ -84,7 +102,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         </div>
         }
       </div>
-      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
+      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] minxl:-mt-20">
         <div className='flex flex-col w-full minxl:w-1/2'>
           <div className='flex w-full items-center p-4 justify-start'>
             <div className='justify-start'>

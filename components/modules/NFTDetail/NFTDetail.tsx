@@ -8,7 +8,7 @@ import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { Doppler,getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnv } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -189,7 +189,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         </div>
       </div>
       {
-        ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
+        (
           (currentAddress === props.nft?.wallet?.address) ||
           (currentAddress !== props.nft?.wallet?.address && !isNullOrEmpty(props.nft?.memo)))
           &&
