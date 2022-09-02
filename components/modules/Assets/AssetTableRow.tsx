@@ -47,12 +47,12 @@ export default function AssetTableRow({ item, index, onChange, isChecked }: Asse
 
   const getDisplayedProfiles = () => {
     if(!profiles?.length){
-      return <p>Hidden</p>;
+      return <p className='text-[#B6B6B6]'>hidden</p>;
     } else if (profiles?.length === 1){
       return <Link href={`/${profiles[0].url}`}><p className='text-[#B59007] font-bold hover:cursor-pointer'><span className='text-black'>/ </span>{profiles[0].url}</p></Link>;
     } else {
       return (
-        <div className='font-medium text-[#6F6F6F] flex items-center relative'>
+        <div className='font-medium flex items-center relative underline text-[#1F2127] decoration-[#B59007] underline-offset-2'>
           <CustomTooltip
             rightPostion={0}
             mode="hover"
