@@ -1,6 +1,5 @@
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
-import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -42,7 +41,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return await getContractMetadata(nft?.contract, chain?.id);
   });
   
-  const { data: listings } = useListingActivitiesQuery(
+  const { data: listings } = useExternalListingsQuery(
     nft?.contract,
     nft?.tokenId,
     String(nft?.wallet.chainId ?? defaultChainId)
