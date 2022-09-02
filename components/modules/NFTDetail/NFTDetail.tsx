@@ -44,8 +44,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
     creatorTokens?.at(0)?.tokenUri?.raw?.split('/').pop()
   );
 
+  const { profileData: collectionPreferredOwnerData } = useProfileQuery(
+    collectionOwnerData?.profile?.owner?.preferredProfile?.url
+  );
+
   const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
-  const collectionOwnerToShow: PartialDeep<Profile> = collectionOwnerData?.profile ?? null;
+  const collectionOwnerToShow: PartialDeep<Profile> = collectionPreferredOwnerData?.profile ?? null;
 
   const { refreshNft, loading } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
@@ -92,7 +96,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className='flex flex-col h-full aspect-square'>
           {collectionOwnerToShow?.photoURL ?
             <img
-              className='rounded-md aspect-square h-full w-full'
+              className='rounded-md aspect-square h-10 w-10'
               src={collectionOwnerToShow?.photoURL}
               alt='creator-profile-pic'
             />
@@ -141,7 +145,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
           <div className='flex flex-col h-[42px] w-[42px]'>
             {profileOwnerToShow?.photoURL ?
               <img
-                className='rounded-md aspect-square h-full w-full'
+                className='rounded-md aspect-square h-10 w-10'
                 src={profileOwnerToShow?.photoURL}
                 alt='owner-profile-pic'
               />
