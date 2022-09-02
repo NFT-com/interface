@@ -147,7 +147,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked }: Asse
             },
           ])
           }>
-          <DotsThreeVertical size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
+          <DotsThreeVertical data-cy="RowDropdown" size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
         </DropdownPickerModal>
       </td>
     </tr>

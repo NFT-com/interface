@@ -31,7 +31,6 @@ export default function AssetsPages() {
 
   const submitListings = () => {
     const listingsReady = [];
-
     selectedAssets.forEach((asset) => {
       listingsReady.push({
         nft: asset,
