@@ -2,22 +2,29 @@ import '../plugins/tailwind';
 
 /// <reference types="cypress" />
 import AssetTableRow from '../../components/modules/Assets/AssetTableRow';
+import { setupWagmiClient } from '../util/utils';
+
+import { WagmiConfig } from 'wagmi';
 
 describe('AddressInput', () => {
   it('should render with valid props and not checked', () => {
+    const client = setupWagmiClient();
     cy.mount(
-      <AssetTableRow
-        item={{
-          contract: '0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D',
-          tokenId: '8823',
-          metadata: {
-            name: 'luc'
-          }
-        }}
-        index={1}
-        onChange={() => null}
-        isChecked={false}
-      />
+      <WagmiConfig client={client}>
+        <AssetTableRow
+          item={{
+            contract: '0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D',
+            tokenId: '8823',
+            metadata: {
+              name: 'luc'
+            }
+          }}
+          index={1}
+          onChange={() => null}
+          isChecked={false}
+          selectAll={false}
+        />
+      </WagmiConfig>
     );
     cy.findByText('luc').should('exist');
     cy.findByText('NFT.com Profile').should('exist');
@@ -25,19 +32,23 @@ describe('AddressInput', () => {
   });
 
   it('should render with valid props and be checked', () => {
+    const client = setupWagmiClient();
     cy.mount(
-      <AssetTableRow
-        item={{
-          contract: '0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D',
-          tokenId: '8824',
-          metadata: {
-            name: 'robo'
-          }
-        }}
-        index={1}
-        onChange={() => null}
-        isChecked={true}
-      />
+      <WagmiConfig client={client}>
+        <AssetTableRow
+          item={{
+            contract: '0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D',
+            tokenId: '8824',
+            metadata: {
+              name: 'robo'
+            }
+          }}
+          index={1}
+          onChange={() => null}
+          isChecked={true}
+          selectAll={false}
+        />
+      </WagmiConfig>
     );
     cy.findByText('robo').should('exist');
     cy.findByText('NFT.com Profile').should('exist');
@@ -45,19 +56,23 @@ describe('AddressInput', () => {
   });
 
   it('dropdown should respond to actions', () => {
+    const client = setupWagmiClient();
     cy.mount(
-      <AssetTableRow
-        item={{
-          contract: '0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D',
-          tokenId: '8824',
-          metadata: {
-            name: 'robo'
-          }
-        }}
-        index={1}
-        onChange={() => null}
-        isChecked={false}
-      />
+      <WagmiConfig client={client}>
+        <AssetTableRow
+          item={{
+            contract: '0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D',
+            tokenId: '8824',
+            metadata: {
+              name: 'robo'
+            }
+          }}
+          index={1}
+          onChange={() => null}
+          isChecked={false}
+          selectAll={false}
+        />
+      </WagmiConfig>
     );
     cy.get('[data-cy="RowDropdown"]').click().then(() => {
       cy.findByText('List NFT').should('exist');
