@@ -1,10 +1,11 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
-import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NFTListingsContext, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useGetSalesByNFT } from 'hooks/analytics/nftport/nfts/useGetSalesByNFT';
+import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -12,7 +13,9 @@ import { tw } from 'utils/tw';
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
+import { PartialDeep } from 'type-fest';
+import { useAccount } from 'wagmi';
 
 type NftItem = {
   contract?: string;
@@ -24,14 +27,31 @@ type NftItem = {
 
 export interface AssetTableRowProps {
   item: NftItem;
-  index: number
-  onChange: (asset: NftItem) => void;
+  index: number;
+  onChange: (listing: PartialDeep<StagedListing>, addAll: boolean) => void;
+  selectAll: boolean;
   isChecked: boolean;
 }
 
-export default function AssetTableRow({ item, index, onChange, isChecked }: AssetTableRowProps) {
+export default function AssetTableRow({ item, index, onChange, isChecked, selectAll }: AssetTableRowProps) {
+  const { address: currentAddress } = useAccount();
   const { data: collectionData } = useCollectionQuery(String( getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), item?.contract);
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
+  const {
+    allowedAll: openseaAllowed,
+  } = useNftCollectionAllowance(
+    item?.contract,
+    currentAddress,
+    TransferProxyTarget.Opensea
+  );
+
+  const {
+    allowedAll: looksRareAllowed,
+  } = useNftCollectionAllowance(
+    item?.contract,
+    currentAddress,
+    TransferProxyTarget.LooksRare
+  );
   const { data: listings } = useListingActivitiesQuery(
     item?.contract,
     item?.tokenId,
@@ -44,6 +64,18 @@ export default function AssetTableRow({ item, index, onChange, isChecked }: Asse
     true
   );
   const nftSaleHistory = useGetSalesByNFT(item?.contract, parseInt(item?.tokenId, 16).toString());
+
+  useEffect(() => {
+    if(selectAll){
+      onChange({
+        nft: item,
+        collectionName: item.contract,
+        isApprovedForSeaport: openseaAllowed,
+        isApprovedForLooksrare: looksRareAllowed,
+        targets: []
+      }, true);
+    }
+  }, [selectAll, onChange, item, openseaAllowed, looksRareAllowed]);
 
   const getDisplayedProfiles = useCallback(() => {
     if(!profiles?.length){
@@ -84,7 +116,16 @@ export default function AssetTableRow({ item, index, onChange, isChecked }: Asse
     >
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <div className='flex justify-center'>
-          <input checked={isChecked} onChange={() => onChange(item)} className='border-2 border-[#6F6F6F] text-[#6F6F6F] form-checkbox focus:ring-[#F9D963]' type='checkbox' />
+          <input
+            checked={isChecked}
+            onChange={() => onChange({
+              nft: item,
+              collectionName: item.contract,
+              isApprovedForSeaport: openseaAllowed,
+              isApprovedForLooksrare: looksRareAllowed,
+              targets: []
+            }, false)}
+            className='border-2 border-[#6F6F6F] text-[#6F6F6F] form-checkbox focus:ring-[#F9D963]' type='checkbox' />
         </div>
       </td>
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
@@ -132,8 +173,8 @@ export default function AssetTableRow({ item, index, onChange, isChecked }: Asse
                 stageListing({
                   nft: item,
                   collectionName: item.contract,
-                  isApprovedForSeaport: true,
-                  isApprovedForLooksrare: true,
+                  isApprovedForSeaport: openseaAllowed,
+                  isApprovedForLooksrare: looksRareAllowed,
                   targets: []
                 });
                 toggleCartSidebar('sell');

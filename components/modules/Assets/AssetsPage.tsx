@@ -8,40 +8,40 @@ import { useCallback, useContext, useState } from 'react';
 export default function AssetsPages() {
   const { stageListings, toggleCartSidebar } = useContext(NFTListingsContext);
   const [selectedAssets, setSelectedAssets] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
   const {
     allOwnerNfts,
   } = useContext(ProfileContext);
 
-  const onChangeHandler = useCallback(async (asset) => {
-    const index = selectedAssets.findIndex((item) => item.id === asset.id);
-    if(index !== -1) {
-      setSelectedAssets(selectedAssets.filter((_, i) => i !== index));
+  const onChangeHandler = useCallback(async (asset, addAll) => {
+    if(addAll){
+      if(selectAll){
+        const index = selectedAssets.findIndex((item) => item.nft.id === asset.nft.id);
+        if(index === -1) {
+          setSelectedAssets([...selectedAssets, asset]);
+        }
+      } else {
+        setSelectedAssets([]);
+      }
     } else {
-      setSelectedAssets([...selectedAssets, asset]);
+      setSelectAll(false);
+      const index = selectedAssets.findIndex((item) => item.nft.id === asset.nft.id);
+      if(index !== -1) {
+        setSelectedAssets(selectedAssets.filter((_, i) => i !== index));
+      } else {
+        setSelectedAssets([...selectedAssets, asset]);
+      }
     }
-  }, [selectedAssets]);
+  }, [selectedAssets, selectAll]);
 
   const selectAllHandler = useCallback(async () => {
     if(selectedAssets?.length === allOwnerNfts?.length){
+      setSelectAll(false);
       setSelectedAssets([]);
     } else {
-      setSelectedAssets(allOwnerNfts);
+      setSelectAll(true);
     }
   }, [allOwnerNfts, selectedAssets]);
-
-  const submitListings = useCallback(async () => {
-    const listingsReady = [];
-    selectedAssets.forEach((asset) => {
-      listingsReady.push({
-        nft: asset,
-        collectionName: asset.contract,
-        isApprovedForSeaport: true,
-        isApprovedForLooksrare: true,
-        targets: []
-      });
-    });
-    stageListings(listingsReady);
-  }, [selectedAssets, stageListings]);
 
   return (
     <div className='flex flex-col justify-between pt-28 px-4 font-grotesk'>
@@ -52,7 +52,7 @@ export default function AssetsPages() {
         </h2>
         <div className='flex'>
           {selectedAssets.length ?
-            <div onClick={() => {submitListings(); toggleCartSidebar();}} className='w-full minlg:w-[200px] bg-[#F9D963] text-[#1F2127] font-grotesk font-bold p-2 rounded-[20px] text-center hover:cursor-pointer'>
+            <div onClick={() => {stageListings(selectedAssets); toggleCartSidebar();}} className='w-full minlg:w-[200px] bg-[#F9D963] text-[#1F2127] font-grotesk font-bold p-2 rounded-[20px] text-center hover:cursor-pointer'>
               <p>List NFTs</p>
             </div>
             :
@@ -61,7 +61,7 @@ export default function AssetsPages() {
             </div>
           }
           {selectedAssets.length ?
-            <div onClick={() => setSelectedAssets([])} className='hover:cursor-pointer w-full minlg:w-[200px] ml-2 bg-white text-[#1F2127] font-grotesk font-bold p-2 rounded-[20px] text-center border border-[#D5D5D5]'>
+            <div onClick={() => {setSelectedAssets([]); setSelectAll(false);}} className='hover:cursor-pointer w-full minlg:w-[200px] ml-2 bg-white text-[#1F2127] font-grotesk font-bold p-2 rounded-[20px] text-center border border-[#D5D5D5]'>
               <p>Cancel</p>
             </div>
             : null
@@ -85,11 +85,10 @@ export default function AssetsPages() {
             </thead>
             <tbody className='p-4'>
               {allOwnerNfts?.map((item, i) => (
-                <AssetTableRow isChecked={selectedAssets.some((i) => i.tokenId === item.tokenId)} onChange={onChangeHandler} key={item.id} item={item} index={i} />
+                <AssetTableRow selectAll={selectAll} isChecked={selectedAssets.some((i) => i.nft.tokenId === item.tokenId)} onChange={onChangeHandler} key={item.id} item={item} index={i} />
               ))}
             </tbody>
           </table>
-
         </div>
       </div>
     </div>
