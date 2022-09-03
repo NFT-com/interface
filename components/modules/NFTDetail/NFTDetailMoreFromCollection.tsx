@@ -33,10 +33,10 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
 
   return <div className='flex flex-col w-full'>
     <span className="text-2xl font-bold font-grotesk mb-2">More from collection</span>
-    <div className='flex items-center py-2 snap-x overflow-x-auto no-scrollbar'>
+    <div className='flex items-center py-2 snap-x overflow-x-auto sm:no-scrollbar'>
       {data?.map((nft, index) => {
         return <div className={tw(
-          'flex flex-col snap-always snap-center no-scrollbar h-full w-72 shrink-0 p-2 border border-[#D5D5D5] rounded-md cursor-pointer mr-4',
+          'flex flex-col snap-always snap-center sm:no-scrollbar h-full w-72 shrink-0 p-2 border border-[#D5D5D5] rounded-md cursor-pointer mr-4',
         )}
         key={index}
         onClick={() => {
