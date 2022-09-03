@@ -79,7 +79,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
         </div>
       }
-      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] mb-8 minxl:mb-0">
+      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] pb-8 minxl:-mb-20">
         <div className='flex minxl:w-1/2 w-full'>
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
@@ -102,7 +102,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         </div>
         }
       </div>
-      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] minxl:-mt-20">
+      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
         <div className='flex flex-col w-full minxl:w-1/2'>
           <div className='flex w-full items-center p-4 justify-start'>
             <div className='justify-start'>
