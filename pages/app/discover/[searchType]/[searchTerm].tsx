@@ -48,10 +48,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const [nftsForCollections, setNftsForCollections] = useState(null);
   let addressesList = [];
   
-  useSWR(results, async () => {
+  useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
       collectionAddresses: addressesList,
-      count: 20
+      count: 50
     }).then((collectionsData => {
       setNftsForCollections([...collectionsData.nftsForCollections.sort()]);
     }));

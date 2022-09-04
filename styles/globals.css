@@ -1752,6 +1752,12 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 
+@media (min-width: 600px) {
+  .min-h-XL {
+    min-height: 7.5rem;
+  }
+}
+
 @media (min-width: 900px) {
   .embla__slide__item {
     width: 95%;
