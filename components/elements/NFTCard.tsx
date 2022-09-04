@@ -196,7 +196,7 @@ export function NFTCard(props: NFTCardProps) {
               />}
           </div> :
           props.imageLayout === 'row' ?
-            <div className='flex justify-center w-full min-h-XL min-h-2XL min-h-3XL'>
+            <div className='flex justify-center w-full min-h-XL min-h-2XL'>
               {processedImageURLs.slice(0,3).map((image: string, index: number) => {
                 return <RoundedCornerMedia
                   key={image + index}

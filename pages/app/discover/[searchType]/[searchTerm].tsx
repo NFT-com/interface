@@ -1,4 +1,5 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import Loader from 'components/elements/Loader';
 import { NFTCard } from 'components/elements/NFTCard';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
@@ -38,28 +39,47 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const { width: screenWidth } = useWindowDimensions();
-
   const [results, setResults] = useState([]);
   const [found, setFound] = useState(0);
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
   const [filters, setFilters] = useState([]);
+  const [collectionsSliderData, setCollectionsSliderData] = useState(null);
+  const [nftsForCollections, setNftsForCollections] = useState(null);
   let addressesList = [];
   
-  addressesList = results?.map((nft) => {
-    return nft.document?.contractAddr;
-  });
-
-  const { data: nftsForCollections } = useSWR(results, async () => {
-    let nftsForCollections;
-    await fetchNFTsForCollections({
+  useSWR(results, async () => {
+    searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
       collectionAddresses: addressesList,
       count: 20
     }).then((collectionsData => {
-      nftsForCollections = collectionsData.nftsForCollections;
+      setNftsForCollections([...collectionsData.nftsForCollections.sort()]);
     }));
-    return nftsForCollections;
   });
+
+  useEffect(() => {
+    searchType?.toString() === 'allResults' && fetchTypesenseMultiSearch({ searches: [{
+      collection: 'collections',
+      query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
+      q: searchTerm?.toString(),
+      per_page: 20,
+      page: 1,
+    }] })
+      .then((resp) => {
+        setNftsForCollections(null);
+        setCollectionsSliderData(resp.results[0]);
+      });
+  }, [fetchTypesenseMultiSearch, searchTerm, searchType]);
+
+  if (searchType?.toString() === 'allResults' && collectionsSliderData) {
+    addressesList = collectionsSliderData.hits?.map((nft) => {
+      return nft.document?.contractAddr;
+    });
+  } else {
+    addressesList = results?.map((nft) => {
+      return nft.document?.contractAddr;
+    });
+  }
 
   useEffect(() => {
     if (isNullOrEmpty(curatedCollections)) {
@@ -128,7 +148,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           </div>
           {searchType?.toString() === 'collections' && <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>}
           <div>
-            {searchType?.toString() === 'allResults' && <CollectionsResults searchTerm={searchTerm.toString()} />}
+            {(searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) && !isNullOrEmpty(nftsForCollections))?
+              <CollectionsResults searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />:
+              (searchType?.toString() === 'allResults' && <div className="flex items-center justify-center min-h-[16rem]">
+                <Loader />
+              </div>)}
             <div className="flex justify-between items-center mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
               <div>
                 {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
