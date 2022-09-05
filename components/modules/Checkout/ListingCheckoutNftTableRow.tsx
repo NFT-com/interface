@@ -118,7 +118,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   setPrice(props.listing, val);
                   props.onPriceChange();
                 }}
-                onCurrencyChange={null}
+                onCurrencyChange={(seaportEnabled && !looksrareEnabled)
+                  ? (currency: SupportedCurrency) => {
+                    setCurrency(props.listing, currency, ExternalProtocol.Seaport);
+                    props.onPriceChange();
+                  }
+                  : null}
                 error={
                   (props.listing?.targets?.find(target => target.startingPrice == null) != null && props.listing.startingPrice == null) ||
                   (props.listing?.targets?.find(target => BigNumber.from(target.startingPrice ?? 0).eq(0)) != null && BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
@@ -127,7 +132,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           }
         </div>
       </td>
-      <td>
+      <td className={rowHeightClass}>
         <div className={tw('flex flex-col p-4 justify-around', rowHeightClass)}>
           <OpenseaIcon
             className={tw(

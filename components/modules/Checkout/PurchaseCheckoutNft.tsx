@@ -41,7 +41,7 @@ export function PurchaseCheckoutNft(props: PurchaseCheckoutNftProps) {
   }, []);
 
   return (
-    <div className='flex items-center w-full h-32 px-8'>
+    <div className='flex items-center w-full h-32 px-8 justify-center'>
       <div className='h-full flex items-center'>
         <div className='relative h-2/4 aspect-square'>
           <MinusCircle

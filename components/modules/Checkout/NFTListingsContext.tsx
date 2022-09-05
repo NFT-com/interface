@@ -296,7 +296,7 @@ export function NFTListingsContextProvider(
             currentAddress, // offerer
             stagedNft.nft,
             target.startingPrice ?? stagedNft.startingPrice,
-            target.currency ?? stagedNft.currency,
+            supportedCurrencyData['WETH'].contract,
             Number(defaultChainId),
             nonce,
             looksrareStrategy,
@@ -340,7 +340,7 @@ export function NFTListingsContextProvider(
       };
     }));
     setToList(preparedListings);
-  }, [defaultChainId, currentAddress, looksrareRoyaltyFeeRegistry, looksrareStrategy, toList]);
+  }, [defaultChainId, currentAddress, looksrareRoyaltyFeeRegistry, looksrareStrategy, toList, supportedCurrencyData]);
 
   const listAll = useCallback(async () => {
     setSubmitting(true);

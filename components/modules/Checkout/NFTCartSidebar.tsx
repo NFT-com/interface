@@ -114,7 +114,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
       ) && <div className="mx-8 my-4 flex">
         <Button
           stretch
-          label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Buy'}
+          label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Continue to Buy'}
           onClick={() => {
             toggleCartSidebar();
             router.push(props.selectedTab === 'Sell' ? '/app/list' : '/app/buy');

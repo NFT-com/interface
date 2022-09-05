@@ -170,7 +170,7 @@ export function NFTPurchaseContextProvider(
       }
       return false;
     } else {
-      // todo: support combinations of ETH and ERC20
+      // todo: support combinations of ETH and ERC20, or show error message if a currency is not supported
       return false;
     }
   }, [aggregator, currentAddress, getByContractAddress, looksrareExchange, toBuy]);

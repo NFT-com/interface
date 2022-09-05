@@ -88,7 +88,7 @@ export function ListingCheckout() {
             }
           </div>
         </div>
-        <div className='my-8 w-full overflow-x-scroll'>
+        <div className='my-8 w-full overflow-x-scroll flex flex-col'>
           <div className="border-t border-[#D5D5D5] mx-8">
             <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
           </div>
