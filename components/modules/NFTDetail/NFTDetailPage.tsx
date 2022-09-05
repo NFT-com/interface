@@ -2,6 +2,7 @@ import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalytics
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
@@ -17,9 +18,9 @@ import { NFTDetailMoreFromCollection } from './NFTDetailMoreFromCollection';
 import { Properties } from './Properties';
 
 import { Tab } from '@headlessui/react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo,useState } from 'react';
 import useSWR from 'swr';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export interface NFTDetailPageProps {
   collection: string;
@@ -35,11 +36,11 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
   const { mutate: mutateListings } = useExternalListingsQuery(nft?.contract, nft?.tokenId, String(nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
 
-  const { chain } = useNetwork();
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
+
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
-    return await getContractMetadata(nft?.contract, chain?.id);
+    return await getContractMetadata(nft?.contract, defaultChainId);
   });
   
   const { data: legacyListings } = useExternalListingsQuery(
@@ -54,6 +55,12 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     defaultChainId
   );
 
+  const { refreshNftOrders } = useRefreshNftOrdersMutation();
+
+  useEffect(() => {
+    refreshNftOrders(nft?.id);
+  }, [refreshNftOrders, nft]);
+
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
 
   const showListings = useMemo(() => {
@@ -65,7 +72,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   return (
     <div className="flex flex-col pt-20 items-center w-full">
       {nft?.metadata?.imageURL &&
-        <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py-5 minxl:py-10 minmd:px-auto'>
+        <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
           <div className="flex w-full max-w-[600px] h-full object-contain drop-shadow-lg rounded aspect-square">
             <video
               autoPlay
