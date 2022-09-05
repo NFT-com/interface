@@ -29,10 +29,10 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     <span className="text-2xl font-bold font-grotesk mb-2">
         Profiles that feature this NFT
     </span>
-    <div className='flex items-center overflow-x-scroll py-2'>
+    <div className='flex items-center snap-x overflow-x-auto sm:no-scrollbar py-2'>
       {profiles?.map((profile, index) => {
         return <div className={tw(
-          'flex flex-col h-full w-72 shrink-0 p-2 border border-[#D5D5D5] rounded-md cursor-pointer mr-4',
+          'flex flex-col snap-always snap-center sn:no-scrollbar h-full w-72 shrink-0 p-2 border border-[#D5D5D5] rounded-md cursor-pointer mr-4',
         )}
         key={index}
         onClick={() => {

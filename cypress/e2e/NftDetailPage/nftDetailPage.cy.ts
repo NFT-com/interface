@@ -37,13 +37,13 @@ describe('nft detail page tests', () => {
   });
 
   it('trait info container opens on click', () => {
-    cy.get('#headlessui-tabs-tab-2').click();
+    cy.get('#headlessui-tabs-tab-3').click();
     cy.get('#NftPropertiesContainer').should('exist');
   });
   
   // TODO: re-enable when traits are visible on goerli
   xit('all 8 traits are displayed', () => {
-    cy.get('#headlessui-tabs-tab-2').click();
+    cy.get('#headlessui-tabs-tab-3').click();
     cy.get('#NftPropertiesContainer').should('exist');
     cy.get('#NftChainInfoContainer').should('not.exist');
   });
