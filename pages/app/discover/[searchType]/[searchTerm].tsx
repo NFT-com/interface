@@ -33,7 +33,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage({ data }: ResultsPageProps) {
-  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsPageFilterBy } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsPageFilterBy, setClearedFilters } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -43,6 +43,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const [found, setFound] = useState(0);
   const [page, setPage] = useState(1);
   const prevVal = usePrevious(page);
+  const prevSearchTerm = usePrevious(searchTerm);
   const [filters, setFilters] = useState([]);
   const [collectionsSliderData, setCollectionsSliderData] = useState(null);
   const [nftsForCollections, setNftsForCollections] = useState(null);
@@ -88,6 +89,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }, [curatedCollections, data, setCuratedCollections]);
 
   useEffect(() => {
+    if (prevSearchTerm !== searchTerm){
+      setFilters([]);
+      setPage(1);
+      setClearedFilters();
+    }
+  },[prevSearchTerm, searchTerm, setClearedFilters]);
+
+  useEffect(() => {
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
       facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS : '',
       max_facet_values: 200,
@@ -104,7 +113,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         setFound(resp.results[0].found);
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, page, screenWidth, searchTerm, searchType, sideNavOpen, checkedFiltersList, filtersList, filters.length, nftsPageSortyBy, nftsPageFilterBy]);
+  },[fetchTypesenseMultiSearch, filters.length, nftsPageFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
