@@ -1752,6 +1752,12 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 
+@media (min-width: 600px) {
+  .min-h-XL {
+    min-height: 7.5rem;
+  }
+}
+
 @media (min-width: 900px) {
   .embla__slide__item {
     width: 95%;
@@ -1761,7 +1767,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @media (min-width: 1200px) {
   .min-h-XL {
-    min-height: 92px
+    min-height: 112px
   }
 
   .min-h-disc {
@@ -1771,7 +1777,7 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @media (min-width: 1900px) {
   .min-h-2XL {
-    min-height: 165px
+    min-height: 140px
   }
 }
 
@@ -1782,6 +1788,10 @@ input[type="search"]::-webkit-search-cancel-button {
 
   .min-h-disc {
     min-height: 62.5rem;
+  }
+
+  .embla__slide__inner {
+    min-height: 36rem;
   }
 }
 
