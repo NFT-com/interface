@@ -693,6 +693,8 @@ export type Mutation = {
   unfollowProfile: Profile;
   updateAssociatedAddresses: UpdateAssociatedAddressesOutput;
   updateAssociatedContract: UpdateAssociatedContractOutput;
+  /** AUTHENTICATED */
+  updateCache: UpdateCacheOutput;
   updateCollectionImageUrls: UpdateCollectionImageUrlsOutput;
   /** AUTHENTICATED */
   updateCuration: Curation;
@@ -927,6 +929,11 @@ export type MutationUpdateAssociatedContractArgs = {
 };
 
 
+export type MutationUpdateCacheArgs = {
+  input: UpdateCacheInput;
+};
+
+
 export type MutationUpdateCollectionImageUrlsArgs = {
   count: Scalars['Int'];
 };
@@ -1096,9 +1103,9 @@ export type NftPortNft = {
 
 export type NftPortNftFileInfo = {
   __typename?: 'NFTPortNFTFileInfo';
-  file_size?: Maybe<Scalars['Uint256']>;
-  height?: Maybe<Scalars['Uint256']>;
-  width?: Maybe<Scalars['Uint256']>;
+  file_size?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']>;
 };
 
 export type NftPortNftMetadata = {
@@ -1117,26 +1124,136 @@ export type NftPortStatistics = {
   floor_price?: Maybe<Scalars['Float']>;
   floor_price_historic_one_day?: Maybe<Scalars['Float']>;
   floor_price_historic_seven_day?: Maybe<Scalars['Float']>;
-  floor_price_historic_thirty_day?: Maybe<Scalars['Uint256']>;
+  floor_price_historic_thirty_day?: Maybe<Scalars['Float']>;
   market_cap?: Maybe<Scalars['Float']>;
-  num_owners?: Maybe<Scalars['Uint256']>;
+  num_owners?: Maybe<Scalars['Int']>;
   one_day_average_price?: Maybe<Scalars['Float']>;
   one_day_change?: Maybe<Scalars['Float']>;
-  one_day_sales?: Maybe<Scalars['Uint256']>;
+  one_day_sales?: Maybe<Scalars['Int']>;
   one_day_volume?: Maybe<Scalars['Float']>;
   seven_day_average_price?: Maybe<Scalars['Float']>;
   seven_day_change?: Maybe<Scalars['Float']>;
-  seven_day_sales?: Maybe<Scalars['Uint256']>;
+  seven_day_sales?: Maybe<Scalars['Int']>;
   seven_day_volume?: Maybe<Scalars['Float']>;
   thirty_day_average_price?: Maybe<Scalars['Float']>;
   thirty_day_change?: Maybe<Scalars['Float']>;
-  thirty_day_sales?: Maybe<Scalars['Uint256']>;
+  thirty_day_sales?: Maybe<Scalars['Int']>;
   thirty_day_volume?: Maybe<Scalars['Float']>;
-  total_minted?: Maybe<Scalars['Uint256']>;
-  total_sales?: Maybe<Scalars['Uint256']>;
-  total_supply?: Maybe<Scalars['Uint256']>;
+  total_minted?: Maybe<Scalars['Int']>;
+  total_sales?: Maybe<Scalars['Int']>;
+  total_supply?: Maybe<Scalars['Int']>;
   total_volume?: Maybe<Scalars['Float']>;
   updated_date?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByContract = {
+  __typename?: 'NFTPortTxByContract';
+  continuation?: Maybe<Scalars['String']>;
+  response?: Maybe<Scalars['String']>;
+  transactions?: Maybe<Array<Maybe<NftPortTxByContractTransactions>>>;
+};
+
+export type NftPortTxByContractCreators = {
+  __typename?: 'NFTPortTxByContractCreators';
+  account_address?: Maybe<Scalars['String']>;
+  creator_share?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByContractNft = {
+  __typename?: 'NFTPortTxByContractNft';
+  contract_address?: Maybe<Scalars['String']>;
+  contract_type?: Maybe<Scalars['String']>;
+  creators?: Maybe<Array<Maybe<NftPortTxByContractCreators>>>;
+  metadata_url?: Maybe<Scalars['String']>;
+  royalties?: Maybe<Array<Maybe<NftPortTxByContractRoyalties>>>;
+  signatures?: Maybe<Array<Maybe<Scalars['String']>>>;
+  token_id?: Maybe<Scalars['String']>;
+  total?: Maybe<Scalars['Int']>;
+};
+
+export type NftPortTxByContractPriceDetails = {
+  __typename?: 'NFTPortTxByContractPriceDetails';
+  asset_type?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  price_usd?: Maybe<Scalars['Float']>;
+};
+
+export type NftPortTxByContractRoyalties = {
+  __typename?: 'NFTPortTxByContractRoyalties';
+  account_address?: Maybe<Scalars['String']>;
+  royalty_share?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByContractTransactions = {
+  __typename?: 'NFTPortTxByContractTransactions';
+  block_hash?: Maybe<Scalars['String']>;
+  block_number?: Maybe<Scalars['Int']>;
+  buyer_address?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  marketplace?: Maybe<Scalars['String']>;
+  nft?: Maybe<NftPortTxByContractNft>;
+  owner_address?: Maybe<Scalars['String']>;
+  price_details?: Maybe<NftPortTxByContractPriceDetails>;
+  quantity?: Maybe<Scalars['Int']>;
+  seller_address?: Maybe<Scalars['String']>;
+  token_id?: Maybe<Scalars['String']>;
+  transaction_date?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  transfer_from?: Maybe<Scalars['String']>;
+  transfer_to?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByNft = {
+  __typename?: 'NFTPortTxByNFT';
+  continuation?: Maybe<Scalars['String']>;
+  response?: Maybe<Scalars['String']>;
+  transactions?: Maybe<Array<Maybe<NftPortTxByNftTransactions>>>;
+};
+
+export type NftPortTxByNftListingDetails = {
+  __typename?: 'NFTPortTxByNFTListingDetails';
+  asset_type?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  price_usd?: Maybe<Scalars['Float']>;
+};
+
+export type NftPortTxByNftNft = {
+  __typename?: 'NFTPortTxByNFTNft';
+  contract_address?: Maybe<Scalars['String']>;
+  contract_type?: Maybe<Scalars['String']>;
+  token_id?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByNftPriceDetails = {
+  __typename?: 'NFTPortTxByNFTPriceDetails';
+  asset_type?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Float']>;
+  price_usd?: Maybe<Scalars['Float']>;
+};
+
+export type NftPortTxByNftTransactions = {
+  __typename?: 'NFTPortTxByNFTTransactions';
+  block_hash?: Maybe<Scalars['String']>;
+  block_number?: Maybe<Scalars['Int']>;
+  buyer_address?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  lister_address?: Maybe<Scalars['String']>;
+  listing_details?: Maybe<NftPortTxByNftListingDetails>;
+  marketplace?: Maybe<Scalars['String']>;
+  nft?: Maybe<NftPortTxByNftNft>;
+  owner_address?: Maybe<Scalars['String']>;
+  price_details?: Maybe<NftPortTxByNftPriceDetails>;
+  quantity?: Maybe<Scalars['Int']>;
+  seller_address?: Maybe<Scalars['String']>;
+  token_id?: Maybe<Scalars['String']>;
+  transaction_date?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  transfer_from?: Maybe<Scalars['String']>;
+  transfer_to?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
 };
 
 export enum NftSize {
@@ -1425,6 +1542,8 @@ export type Query = {
   /** AUTHENTICATED */
   getRemovedAssociationsForSender: Array<Maybe<RemovedAssociationsForSenderOutput>>;
   getSwaps: GetMarketSwap;
+  getTxByContract?: Maybe<NftPortTxByContract>;
+  getTxByNFT?: Maybe<NftPortTxByNft>;
   getUserSwaps: GetMarketSwap;
   gkNFTs: GetGkNftsOutput;
   ignoredEvents: Array<Event>;
@@ -1588,6 +1707,16 @@ export type QueryGetRemovedAssociationsForSenderArgs = {
 
 export type QueryGetSwapsArgs = {
   input: SwapsInput;
+};
+
+
+export type QueryGetTxByContractArgs = {
+  input?: InputMaybe<TransactionsByContractInput>;
+};
+
+
+export type QueryGetTxByNftArgs = {
+  input?: InputMaybe<TransactionsByNftInput>;
 };
 
 
@@ -1882,10 +2011,28 @@ export type TopBidsInput = {
   status?: InputMaybe<BidStatus>;
 };
 
+export type TransactionsByContractInput = {
+  chain?: InputMaybe<Scalars['String']>;
+  continuation?: InputMaybe<Scalars['String']>;
+  contractAddress: Scalars['String'];
+  pageSize?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type TransactionsByNftInput = {
+  chain?: InputMaybe<Scalars['String']>;
+  continuation?: InputMaybe<Scalars['String']>;
+  contractAddress: Scalars['String'];
+  pageSize?: InputMaybe<Scalars['Int']>;
+  tokenId: Scalars['String'];
+  type?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type TxActivitiesInput = {
   activityType?: InputMaybe<ActivityType>;
   chainId?: InputMaybe<Scalars['String']>;
   contract?: InputMaybe<Scalars['String']>;
+  includeExpired?: InputMaybe<Scalars['Boolean']>;
   pageInput: PageInput;
   read?: InputMaybe<Scalars['Boolean']>;
   skipRelations?: InputMaybe<Scalars['Boolean']>;
@@ -2026,6 +2173,17 @@ export type UpdateAssociatedContractInput = {
 
 export type UpdateAssociatedContractOutput = {
   __typename?: 'UpdateAssociatedContractOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
+export type UpdateCacheInput = {
+  expireSeconds?: InputMaybe<Scalars['Int']>;
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type UpdateCacheOutput = {
+  __typename?: 'UpdateCacheOutput';
   message?: Maybe<Scalars['String']>;
 };
 
