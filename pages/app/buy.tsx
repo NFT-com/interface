@@ -1,24 +1,37 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { PurchaseCheckout } from 'components/modules/Checkout/PurchaseCheckout';
 import NotFoundPage from 'pages/404';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
+
+import { useRouter } from 'next/router';
+import { ArrowLeft } from 'phosphor-react';
 
 /**
  * Renders the entire cart for purchasing NFTs.
  */
 export default function BuyPage() {
-  if (!getEnv(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+  const router = useRouter();
+
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
     return <NotFoundPage />;
   }
 
   return <div className={tw(
-    'w-full h-full flex flex-col items-center justify-center text-primary-txt dark:text-primary-txt-dk',
-    getEnvBool(Doppler.NEXT_PUBLIC_FORCE_DARK_MODE) ? 'bg-white' : 'bg-white dark:bg-footer-bg-dk'
+    'w-full pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
+    'bg-white dark:bg-footer-bg-dk font-grotesk h-full'
   )}>
     <div className='max-w-nftcom w-full flex flex-col items-center my-8'>
-      <div className='w-full flex px-8'>
-        <h1 className='text-xl font-bold underline'>Buy Summary</h1>
+      <div className='w-full flex px-8 items-center'>
+        <div
+          className='flex items-center justify-center h-full aspect-square cursor-pointer'
+          onClick={() => {
+            router.back();
+          }}
+        >
+          <ArrowLeft size={24} color="black" />
+        </div>
+        <h1 className='text-3xl font-normal ml-4'>Purchase Checkout</h1>
       </div>
       <PurchaseCheckout />
     </div>
