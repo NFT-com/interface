@@ -256,7 +256,7 @@ const Filter = (props: any) => {
   );
 };
 
-export const FiltersContent = () => {
+export const NFTsFiltersContent = () => {
   const { setSearchModalOpen, searchFilters, searchModalOpen, setNftsPageAppliedFilters, nftsPageSortyBy } = useSearchModal();
   const [sortBy, setSortBy] = useState(nftsPageSortyBy);
   const [checked, setChecked] = useState([]);

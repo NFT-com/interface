@@ -8,6 +8,7 @@ import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
 import { useGetNFTDetails } from 'hooks/analytics/nftport/nfts/useGetNFTDetails';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { processIPFSURL, shortenAddress } from 'utils/helpers';
@@ -33,6 +34,7 @@ export interface CollectionProps {
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
   const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
+  const { setSearchModalOpen, collectionPageSortyBy, id } = useSearchModal();
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -94,7 +96,7 @@ export function Collection(props: CollectionProps) {
           setFound(nftsResults.found);
         });
     }
-  }, [client, collectionNfts, currentPage, prevVal, props.contract]);
+  }, [client, collectionNfts, collectionPageSortyBy, currentPage, id, prevVal, props.contract]);
 
   const theme = {
     p: (props: any) => {
@@ -282,7 +284,11 @@ export function Collection(props: CollectionProps) {
               </div>
               {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
                 <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
-                  <div className='w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'>
+                  <div
+                    className='cursor-pointer w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'
+                    onClick={() => {
+                      setSearchModalOpen(true, 'collectionFilters' );
+                    }}>
                     <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
                     <p className='minlg:hidden'>Filter</p>
                   </div>

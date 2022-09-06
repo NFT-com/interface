@@ -48,7 +48,7 @@ export const CollectionsFiltersContent = () => {
           <EllipseX />
         </div>
         <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
-        <div className="px-4 flex flex-col mt-7">
+{/*         <div className="px-4 flex flex-col mt-7">
           <div className="self-start font-black text-3xl font-grotesk mb-3">Sort</div>
           <DropdownPicker
             placeholder={collectionPageSortyBy !== '' ? null : 'Default'}
@@ -64,7 +64,7 @@ export const CollectionsFiltersContent = () => {
               },
             ]}
           />
-        </div>
+        </div> */}
         <div className="px-4 flex flex-col mt-7">
           <div className="self-start font-black text-xl font-grotesk mb-4">Filter by ID</div>
           <IdFilter setId={setId}/>
@@ -83,9 +83,7 @@ export const CollectionsFiltersContent = () => {
             stretch={true}
             label={'Filter'}
             onClick={() => {
-              setTimeout(() => {
-                setCollectionPageAppliedFilters(sortBy, 'tokenId:='+id, false);
-              }, 500);
+              setCollectionPageAppliedFilters(sortBy, 'tokenId:='+id, false);
             }}
             type={ButtonType.PRIMARY}
           />
