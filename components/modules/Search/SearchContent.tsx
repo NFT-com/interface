@@ -8,9 +8,13 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { useRouter } from 'next/router';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export const SearchContent = () => {
+interface SearchContentProps {
+  isHeader?: boolean;
+}
+
+export const SearchContent = ({ isHeader }: SearchContentProps) => {
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [searchResults, setSearchResults] = useState([]);
@@ -18,6 +22,16 @@ export const SearchContent = () => {
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const router = useRouter();
   const resultsRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!router.pathname.includes('discover/')) {
+      inputRef.current.value = '';
+      setShowHits(false);
+      setSearchResults([]);
+    }
+    setSearchResults([]);
+  },[router.pathname]);
 
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
@@ -38,7 +52,9 @@ export const SearchContent = () => {
 
     if (target.value.length < 3) {
       setShowHits(false);
-      return;
+      if (target.value.length > 1) {
+        return;
+      }
     }
 
     const searchRequests = {
@@ -60,31 +76,33 @@ export const SearchContent = () => {
       ]
     };
 
-    fetchTypesenseMultiSearch(searchRequests)
-      .then((data) => {
-        setSearchResults([...data.results]);
-      })
-      .catch((error) => {
-        console.log(error);
-        setShowHits(false);
-      });
-
-    setShowHits(true);
-
     if (event.keyCode === 13) {
-      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '0'}`);
+      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '*'}`);
       setSearchModalOpen(false);
+      setShowHits(false);
+    } else {
+      fetchTypesenseMultiSearch(searchRequests)
+        .then((data) => {
+          setSearchResults([...data.results]);
+        })
+        .catch((error) => {
+          console.log(error);
+          setShowHits(false);
+        });
+
+      setShowHits(true);
     }
   };
 
   const resultTitle = (found, collectionName) => {
     let title = '';
-    if (found < 1)
-      title = 'O ' + collectionName.toUpperCase();
+
+    if (found < 1 && collectionName !== '')
+      title = 'O ' + collectionName?.toUpperCase();
     else if (found > 3) {
-      title = 'TOP 3 ' + collectionName.toUpperCase();
+      title = 'TOP 3 ' + collectionName?.toUpperCase();
     } else {
-      title = found + ' ' + collectionName.toUpperCase();
+      title = found + ' ' + collectionName?.toUpperCase();
     }
 
     return (
@@ -108,27 +126,31 @@ export const SearchContent = () => {
   const ResultsContent = (data) => {
     return data.searchResults && data.searchResults.length > 0 && data.searchResults.map((item, index) => {
       return (
-        <>
+        <div key={index}>
           {resultTitle(item.found, item?.request_params?.collection_name)}
-          <div className="flex flex-col items-start py-3 px-5" key={index}>
+          <div className="flex flex-col items-start" key={index}>
             {item.found === 0 ?
-              <div className={tw('text-sm p-3 text-gray-500')}>
+              <div className={tw('text-sm py-3 text-gray-500 px-5')}>
               No {item?.request_params?.collection_name?.toLowerCase()} results
               </div>
               : (item?.hits?.map((hit, index) => {
                 return (
                   <div
-                    key={index}
-                    className={tw(
-                      'flex flex-col items-start my-1 py-3',
-                      'text-sm font-semibold text-black')}
-                    onClick={() => goTo(hit.document)}>
-                    <span>{hit.document.nftName ?? hit.document.contractName}</span>
+                    className="hover:cursor-pointer hover:bg-gray-100 w-full"
+                    key={index}>
+                    <div
+                      className={tw(
+                        'px-5',
+                        'flex flex-col items-start my-1 py-3 w-full',
+                        'text-sm font-semibold text-black')}
+                      onClick={() => goTo(hit.document)}>
+                      <span>{hit.document.nftName ?? hit.document.contractName}</span>
+                    </div>
                   </div>
                 );
               }))}
           </div>
-        </>
+        </div>
       );
     });
   };
@@ -138,10 +160,11 @@ export const SearchContent = () => {
       <div className="flex flex-col w-full">
         <div className="flex space-x-2 p-5">
           <div className={tw(
-            'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black')}>
+            'relative flex items-center border border-gray-300 rounded-xl p-2 w-full text-black')}>
             <SearchIcon className='mr-2 shrink-0 aspect-square' />
             <div className="w-full">
               <input
+                ref={inputRef}
                 type="search"
                 placeholder="Keyword"
                 autoComplete="off"
@@ -151,8 +174,7 @@ export const SearchContent = () => {
                 autoFocus
                 required maxLength={512}
                 className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-                onKeyUp={(event) => search(event)}
-                onFocus={(event) => search(event)}/>
+                onKeyUp={(event) => search(event)}/>
             </div>
           </div>
           <div className='flex items-center cursor-pointer block minlg:hidden' onClick={() => {
@@ -166,34 +188,40 @@ export const SearchContent = () => {
             <div
               ref={resultsRef}
               className={tw(
+                isHeader ? 'absolute mt-16 max-w-[27rem]' : '',
                 'bg-always-white flex flex-col w-full py-4 text-rubik')}>
               {searchResults.length > 0 && <>
                 {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                  (<div className="mt-10 text-base font-grotesk font-medium text-gray-500">
+                  (<div className="mt-10 self-center text-base font-grotesk font-medium text-gray-500">
                 No results found. Please try another keyword.
                   </div>):
                   <>
                     <ResultsContent searchResults={searchResults} />
-                    <div className="mx-auto absolute minlg:relative bottom-0 w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-                      <Button
-                        color={'black'}
-                        accent={AccentType.SCALE}
-                        stretch={true}
-                        label={'Search'}
-                        onClick={() => {
-                          router.push(`/app/discover/allResults/${keyword}`);
-                          setSearchModalOpen(false);
-                        }}
-                        type={ButtonType.PRIMARY}
-                      />
-                    </div>
+                    {isHeader ?
+                      <span className="px-5 text-xs text-gray-400">Press enter for all results</span> :
+                      <div className="mx-auto absolute minlg:relative bottom-0 w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+                        <Button
+                          color={'black'}
+                          accent={AccentType.SCALE}
+                          stretch={true}
+                          label={'Search'}
+                          onClick={() => {
+                            router.push(`/app/discover/allResults/${keyword}`);
+                            setSearchModalOpen(false);
+                          }}
+                          type={ButtonType.PRIMARY}
+                        />
+                      </div>}
                   </>
                 }
               </>}
             </div>)
-          :<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500">
-            Enter a keyword to begin searching.
-          </div>}
+          :
+          isHeader
+            ? '' :
+            (<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500">
+              Enter a keyword to begin searching.
+            </div>)}
       </div>
     </>);
 };

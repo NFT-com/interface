@@ -1,6 +1,7 @@
+import { BalanceData } from 'types';
+
 import { BigNumber } from 'ethers';
 import useSWR from 'swr';
-import { BalanceData } from 'types';
 import { useNetwork, useProvider } from 'wagmi';
 
 export function useEthBalance(

@@ -6,10 +6,6 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { MAX_UINT_256 } from 'utils/marketplaceUtils';
 
 import { BigNumberish } from '@ethersproject/bignumber';
-import DAI_LOGO from 'public/dai.svg';
-import ETH_LOGO from 'public/eth.svg';
-import USDC_LOGO from 'public/usdc.svg';
-import WETH_LOGO from 'public/weth.svg';
 import { useCallback, useMemo } from 'react';
 import { useAccount, useSigner } from 'wagmi';
 
@@ -17,6 +13,7 @@ export type NFTSupportedCurrency = {
   name: string;
   logo: string;
   contract: string;
+  decimals: number;
   usd: (val: number) => number;
   allowance: (address: string, proxy: string) => Promise<BigNumberish>;
   setAllowance: (address: string, proxy: string) => Promise<boolean>;
@@ -65,8 +62,9 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
     return {
       'WETH': {
         name: 'WETH',
-        logo: WETH_LOGO,
+        logo: 'https://cdn.nft.com/weth.svg',
         contract: weth.address,
+        decimals: 18,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
         allowance: async (currentAddress: string, proxy: string) => {
           const wethAllowance = await weth.allowance(currentAddress, proxy ?? NULL_ADDRESS);
@@ -78,8 +76,9 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
       },
       'ETH': {
         name: 'ETH',
-        logo: ETH_LOGO,
+        logo: 'https://cdn.nft.com/eth.svg',
         contract: NULL_ADDRESS,
+        decimals: 18,
         usd: (val: number) => Number(Number(val * ethPriceUSD).toFixed(2)),
         allowance: async () => {
           // ETH doesn't have allowances - just need to include ETH
@@ -91,9 +90,10 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
       },
       'DAI': {
         name: 'DAI',
-        logo: DAI_LOGO,
+        logo: 'https://cdn.nft.com/dai.svg',
         contract: dai.address,
         usd: (val: number) => val,
+        decimals: 18,
         allowance: async (currentAddress: string, proxy: string) => {
           const daiAllowance = await dai.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return daiAllowance;
@@ -104,9 +104,10 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
       },
       'USDC': {
         name: 'USDC',
-        logo: USDC_LOGO,
+        logo: 'https://cdn.nft.com/usdc.svg',
         contract: usdc.address,
         usd: (val: number) => val,
+        decimals: 18,
         allowance: async (currentAddress: string, proxy: string) => {
           const usdcAllowance = await usdc.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return usdcAllowance;
@@ -121,7 +122,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
   const getByContractAddress = useCallback((
     contractAddress: string
   ): NFTSupportedCurrency | null => {
-    switch(contractAddress.toLowerCase()) {
+    switch(contractAddress?.toLowerCase()) {
     case dai.address.toLowerCase():
       return data.DAI;
     case usdc.address.toLowerCase():

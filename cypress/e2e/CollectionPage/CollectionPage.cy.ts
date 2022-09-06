@@ -1,16 +1,15 @@
 /// <reference types="cypress" />
 
 describe('results page tests', () => {
-  it('renders title of collection and one item', () => {
+  it('renders contract address and one item', () => {
     cy.visit('/app/collection/0xd7Fd5046a2523841Ee840d7574B54591300bAcB6');
     cy.wait(4000);
-    cy.get('.text-4xl').should('exist').and('include.text', 'NFT.com');
+    cy.get('.contractAddress').should('exist').and('include.text', '0xd7Fd...AcB6');
   });
 
   it('renders one item', () => {
     cy.visit('/app/collection/0xd7Fd5046a2523841Ee840d7574B54591300bAcB6');
     cy.wait(4000);
-    cy.contains('alchemyapi').should('exist');
     cy.get('.buttonContainer').should('not.exist');
   });
 

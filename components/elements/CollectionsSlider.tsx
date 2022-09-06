@@ -1,11 +1,24 @@
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
 import useEmblaCarousel from 'embla-carousel-react';
 import React, { useCallback,useEffect, useState } from 'react';
 
+interface typesenseNftType {
+  id: string;
+  isOwnedByMe: boolean;
+  metadata: any;
+  tokenId: string;
+  type: string;
+}
+
+interface collectionType {
+  collectionAddress: string;
+  nfts: typesenseNftType[];
+}
 export interface slidesProps {
-  slides: string[];
+  slides: collectionType[];
   full?: boolean;
 }
 
@@ -53,6 +66,7 @@ export const NextButton = ({ enabled, onClick }: buttonProps) => (
 
 const EmblaCarousel = (props: slidesProps) => {
   const { width: screenWidth } = useWindowDimensions();
+  const { sideNavOpen } = useSearchModal();
   const [viewportRef, embla] = useEmblaCarousel({
     dragFree: true,
     containScroll: 'trimSnaps',
@@ -64,6 +78,8 @@ const EmblaCarousel = (props: slidesProps) => {
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isSlider, setIsSlider] = useState(false);
+  const [noSliderCols, setNoSliderCols] = useState(3);
 
   const scrollPrev = useCallback(() => embla && embla.scrollPrev(), [embla]);
   const scrollNext = useCallback(() => embla && embla.scrollNext(), [embla]);
@@ -85,23 +101,56 @@ const EmblaCarousel = (props: slidesProps) => {
     setScrollSnaps(embla.scrollSnapList());
   }, [embla, onSelect]);
 
+  useEffect(() => {
+    setIsSlider(true);
+    if (screenWidth < 600) {
+      setIsSlider(props.slides.length > 1);
+      setNoSliderCols(1);
+    } else if(screenWidth < 900) {
+      setIsSlider(props.slides.length > 2);
+      setNoSliderCols(2);
+    } else if (screenWidth < 1200) {
+      setIsSlider(sideNavOpen ? props.slides.length > 2 : props.slides.length > 3);
+      setNoSliderCols(sideNavOpen ? 2 : 3);
+    } else {
+      setIsSlider(sideNavOpen ? props.slides.length > 3 : props.slides.length > 4);
+      setNoSliderCols(sideNavOpen ? 3 : 4);
+    }
+  }, [props.slides.length, screenWidth, sideNavOpen]);
+  
   return (
-    props.slides.length < 4 ?
-      <div className="grid grid-cols-3 gap-8" >
-        {props.slides.map((item: any, index) => (
-          <CollectionItem key={index} contractAddr={item.document?.contractAddr}/>
-        ))}
+    !isSlider ?
+      <div className={`grid grid-cols-${noSliderCols} gap-8`} >
+        {props.slides.map((slide: any, index) => {
+          return <CollectionItem
+            key={index}
+            contractAddr={slide.collectionAddress}
+            images={[
+              slide.nfts[0]?.metadata?.imageURL,
+              slide.nfts[1]?.metadata?.imageURL,
+              slide.nfts[2]?.metadata?.imageURL,
+            ]}
+            count={slide.nfts.length}/>;
+        })}
       </div>
       :
       <>
         <div className={`embla${props.full ? 'full' : ''}`}>
           <div className="embla__viewport" ref={viewportRef}>
             <div className="embla__container">
-              {props.slides.map((item: any, index) => (
+              {props.slides.map((slide: any, index) => (
                 <div className={`embla__slide${props.full ? 'full' : ''}`} key={index}>
                   <div className="embla__slide__inner">
                     <div className={`${props.full ? 'embla__slide__item' : ''}`}>
-                      <CollectionItem contractAddr={item.document?.contractAddr}/>
+                      <CollectionItem
+                        contractAddr={slide?.collectionAddress}
+                        images={[
+                          slide.nfts[0]?.metadata?.imageURL,
+                          slide.nfts[1]?.metadata?.imageURL,
+                          slide.nfts[2]?.metadata?.imageURL,
+                        ]}
+                        count={slide.nfts.length}
+                      />
                     </div>
                   </div>
                 </div>

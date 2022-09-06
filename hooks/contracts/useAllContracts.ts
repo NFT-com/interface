@@ -5,6 +5,7 @@ import {
   Genesis_key_team_claim,
   Genesis_key_team_distributor,
   MaxProfiles,
+  Nft_aggregator,
   Nft_profile,
   Nft_resolver,
   Nft_token,
@@ -25,6 +26,7 @@ import { getGenesisKeyDistributorContract } from './getGenesisKeyDistributorCont
 import { getGenesisKeyTeamClaimContract } from './getGenesisKeyTeamClaimContract';
 import { getGenesisKeyTeamDistributorContract } from './getGenesisKeyTeamDistributorContract';
 import { getMaxProfilesContract } from './getMaxProfilesContract';
+import { getNftAggregatorContract } from './getNftAggregatorContract';
 import { getNftResolverContract } from './getNftResolverContract';
 
 import { useEffect, useState } from 'react';
@@ -43,6 +45,7 @@ export interface Contracts {
   genesisKeyDistributor: Genesis_key_distributor;
   genesisKeyTeamDistributor: Genesis_key_team_distributor;
   genesisKeyTeamClaim: Genesis_key_team_claim;
+  aggregator: Nft_aggregator;
 }
 
 export function useAllContracts(): Contracts {
@@ -54,7 +57,7 @@ export function useAllContracts(): Contracts {
   const provider = useProvider({ chainId: Number(chainId) });
 
   const [daiContract, setDaiContract] =
-    useState(getDaiContract(getAddress('weth', chainId), provider));
+    useState(getDaiContract(getAddress('dai', chainId), provider));
   const [wethContract, setWethContract] =
     useState(getWethContract(getAddress('weth', chainId), provider));
   const [usdcContract, setUsdcContract] =
@@ -86,6 +89,9 @@ export function useAllContracts(): Contracts {
   const [nftResolverContract, setNftResolverContract] = useState(
     getNftResolverContract(getAddress('nftResolver', chainId), signer, provider)
   );
+  const [aggregator, setAggregator] = useState<Nft_aggregator>(
+    getNftAggregatorContract(getAddress('aggregator', chainId), signer ?? provider)
+  );
 
   useEffect(() => {
     setDaiContract(getDaiContract(getAddress('dai', chainId), provider));
@@ -111,6 +117,7 @@ export function useAllContracts(): Contracts {
     setNftResolverContract(
       getNftResolverContract(getAddress('nftResolver', chainId), signer, provider)
     );
+    setAggregator(getNftAggregatorContract(getAddress('aggregator', chainId), signer ?? provider));
   }, [chainId, provider, signer]);
   
   return {
@@ -126,5 +133,6 @@ export function useAllContracts(): Contracts {
     genesisKeyDistributor: genesisKeyDistributorContract,
     genesisKeyTeamDistributor: genesisKeyTeamDistributorContract,
     genesisKeyTeamClaim: genesisKeyTeamClaim,
+    aggregator
   };
 }

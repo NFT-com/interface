@@ -28,26 +28,36 @@ describe('nft detail page tests', () => {
       cy.get('#NFTDetailContainer').should('exist');
 
       cy.get('#NFTDetailContainer').should('exist').should('contain.text', expectedName);
-      cy.get('#NFTDetailContainer').should('exist').should('contain.text', 'View on Etherscan');
     });
   });
   
-  it('all sections are visible', () => {
+  it('all sections are visible on load', () => {
     cy.get('#NFTDescriptionContainer').should('exist');
     cy.get('#NftChainInfoContainer').should('exist');
+  });
+
+  it('trait info container opens on click', () => {
+    cy.get('#headlessui-tabs-tab-3').click();
     cy.get('#NftPropertiesContainer').should('exist');
   });
   
   // TODO: re-enable when traits are visible on goerli
   xit('all 8 traits are displayed', () => {
+    cy.get('#headlessui-tabs-tab-3').click();
     cy.get('#NftPropertiesContainer').should('exist');
-    cy.get('#NftPropertiesContainer .NftDetailCard').should('have.length', 8);
+    cy.get('#NftChainInfoContainer').should('not.exist');
   });
 
   it('all 4 Chain Info items are displayed', () => {
-    cy.get('#NftChainInfoContainer').should('exist');
-
-    cy.get('#NftChainInfoContainer .NftDetailCard').should('have.length', 4);
+    cy.fixture('nft_details').then((json) => {
+      cy.get('#NftChainInfoContainer').should('exist');
+      const contract = json[Cypress.env('NETWORK')]?.['contract'];
+      const tokenId = json[Cypress.env('NETWORK')]?.['tokenId'];
+      cy.get(':nth-child(1) > .justify-end').should('include.text', contract.substring(Math.max(String(contract).length - 6, 0)));
+      cy.get(':nth-child(2) > .justify-end').should('include.text', tokenId);
+      cy.get(':nth-child(3) > .justify-end').should('include.text', 'ERC721');
+      cy.get(':nth-child(4) > .justify-end').should('include.text', 'ETH');
+    });
   });
 
   // TODO: re-enable when traits are visible on goerli
@@ -55,12 +65,6 @@ describe('nft detail page tests', () => {
     cy.get('#NftPropertiesContainer .NftDetailCard').should('have.length', 8);
     cy.get('#NftPropertiesContainer .nftDetailToggle').click();
     cy.get('#NftPropertiesContainer .NftDetailCard').should('not.exist');
-  });
-
-  it('should toggle chain info successfully', () => {
-    cy.get('#NftChainInfoContainer .NftDetailCard').should('have.length', 4);
-    cy.get('#NftChainInfoContainer .nftDetailToggle').click();
-    cy.get('#NftChainInfoContainer .NftDetailCard').should('not.exist');
   });
 
   xit('should be rate limited for nft data refresh', () => {

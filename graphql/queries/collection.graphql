@@ -4,6 +4,8 @@ query Collection($input: CollectionInput!) {
       id
       contract
       name
+      deployer
+      description
     }
     ubiquityResults {
       collection {

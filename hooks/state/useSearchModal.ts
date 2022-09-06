@@ -1,15 +1,17 @@
 import { CuratedCollection } from 'types';
 
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
 export function useSearchModal() {
+  const router = useRouter();
   const { data, mutate } = useSWR('searchmodal', {
     fallbackData:
     {
       modalType: '',
       searchModalOpen: false,
-      sideNavOpen: false,
+      sideNavOpen: !router.pathname.includes('discover/'),
       searchFilters: [],
       filtersList: null,
       checkedFiltersList: '',
@@ -19,6 +21,8 @@ export function useSearchModal() {
       selectedCuratedCollection: null,
       collectionPageSortyBy: '',
       id: '',
+      nftsPageFilterBy: '',
+      nftsPageSortyBy: '',
     } });
 
   const loading = !data;
@@ -31,7 +35,6 @@ export function useSearchModal() {
   };
 
   const setSearchModalOpen = useCallback((searchModalOpen: boolean, modalType = 'search', searchFilters?: any) => {
-    console.log(data, 'data modal open false');
     const filtersList = modalType !== 'collectionFilters' ?
       data.filtersList ?? (searchModalOpen && searchFilters?.map((item) => {
         return {
@@ -77,33 +80,10 @@ export function useSearchModal() {
     });
   }, [data, mutate]);
 
-  const setCheckedFiltersList = useCallback((checkedFiltersList: string) => {
-    mutate({
-      ...data,
-      checkedFiltersList
-    });
-  },[data, mutate]);
-
   const setSortBy = useCallback((sortBy: string) => {
     mutate({
       ...data,
       sortBy
-    });
-  },[data, mutate]);
-
-  const setClearedFilters = useCallback((clearedFilters: boolean) => {
-    const filtersList = !clearedFilters
-      ? data.filtersList
-      : data.filtersList.map((item) => {
-        return {
-          filter: item.field_name,
-          values: []
-        };
-      });
-    mutate({
-      ...data,
-      filtersList,
-      clearedFilters
     });
   },[data, mutate]);
 
@@ -130,6 +110,24 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setNftsPageAppliedFilters = useCallback((nftsPageSortyBy: string, nftsPageFilterBy: string, searchModalOpen = true) => {
+    mutate({
+      ...data,
+      searchModalOpen,
+      nftsPageSortyBy,
+      nftsPageFilterBy
+    });
+  },[data, mutate]);
+
+  const setClearedFilters = useCallback(() => {
+    mutate({
+      ...data,
+      clearedFilters: true,
+      nftsPageSortyBy: '',
+      nftsPageFilterBy: ''
+    });
+  },[data, mutate]);
+
   return {
     loading,
     modalType: data.modalType,
@@ -144,17 +142,19 @@ export function useSearchModal() {
     selectedCuratedCollection: data.selectedCuratedCollection,
     collectionPageSortyBy: data.collectionPageSortyBy,
     id: data.id,
+    nftsPageSortyBy: data.nftsPageSortyBy,
+    nftsPageFilterBy: data.nftsPageFilterBy,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
     setSideNavOpen,
-    setCheckedFiltersList,
     setSortBy,
-    setClearedFilters,
     setSearchFilters,
     setCuratedCollections,
     setSelectedCuratedCollection,
-    setCollectionPageAppliedFilters
+    setCollectionPageAppliedFilters,
+    setNftsPageAppliedFilters,
+    setClearedFilters
   };
 }
 

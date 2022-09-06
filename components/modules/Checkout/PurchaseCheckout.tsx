@@ -1,13 +1,15 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
-import { Maybe } from 'graphql/generated/types';
+import { ActivityStatus, Maybe } from 'graphql/generated/types';
+import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 
+import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { PurchaseCheckoutNft } from './PurchaseCheckoutNft';
-import { VerticalProgressBar } from './VerticalProgressBar';
+import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
@@ -18,12 +20,14 @@ export function PurchaseCheckout() {
   const {
     toBuy,
     clear,
+    buyAll,
     updateCurrencyApproval
   } = useContext(NFTPurchasesContext);
   const { getByContractAddress } = useSupportedCurrencies();
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const { data: signer } = useSigner();
+  const { updateActivityStatus } = useUpdateActivityStatusMutation();
 
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,16 +35,72 @@ export function PurchaseCheckout() {
 
   const getNeedsApprovals = useCallback(() => {
     return filterDuplicates(
-      toBuy.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+      toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
       (first, second) => first?.currency === second?.currency
     ).some(purchase => !purchase?.isApproved);
   }, [toBuy]);
 
   const getTotalPrice = useCallback(() => {
-    return toBuy.reduce((acc, curr) => {
+    return toBuy?.reduce((acc, curr) => {
       return acc.add(curr.price);
     }, BigNumber.from(0));
   }, [toBuy]);
+
+  const getSummaryContent = useCallback(() => {
+    if (success) {
+      return <div className="my-8">
+        <CheckoutSuccessView subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}/>
+      </div>;
+    } else if (loading) {
+      return (<div>
+        <VerticalProgressBar
+          nodes={filterNulls([
+            {
+              label: 'Initialize Wallet',
+            },
+            {
+              label: 'Approve Tokens',
+              error: error === 'ApprovalError',
+              items: filterDuplicates(
+                toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                (first, second) => first?.currency === second?.currency
+              ).map(purchase => {
+                const currencyData = getByContractAddress(purchase?.currency);
+                return {
+                  label: 'Approve ' + currencyData.name,
+                  endIcon: purchase?.isApproved ?
+                    <CheckCircle size={16} className="text-green-500" /> :
+                    error === 'ApprovalError' ?
+                      <X size={16} className="text-red-400" /> :
+                      <SpinnerGap size={16} className="text-yellow-500 animate-spin" />
+                } as ProgressBarItem;
+              })
+            },
+            {
+              label: 'Complete Transaction',
+              error: error === 'PurchaseError',
+            }
+          ])}
+          activeNodeIndex={getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2}
+        />
+      </div>);
+    } else {
+      // Cost Summary, Default view
+      return (
+        <div className="flex flex-col w-full px-8">
+          <p className="text-xl font-bold">
+            Summary and fees for {toBuy?.length ?? 0} NFT{toBuy?.length > 1 && 's'}
+          </p>
+          <div className="mx-8 my-4 flex items-center w-full">
+            <span>Total Cost: {' '}</span>
+            <span className='ml-2'>
+              {ethers.utils.formatEther(getTotalPrice() ?? 0) + ' WETH'}
+            </span>
+          </div>
+        </div>
+      );
+    }
+  }, [error, getByContractAddress, getNeedsApprovals, getTotalPrice, loading, success, toBuy]);
     
   return (
     <div className="flex flex-col w-full items-center">
@@ -58,54 +118,13 @@ export function PurchaseCheckout() {
           }
         </div>
         {toBuy?.length > 0 && <div className='flex flex-col items-center justify-center w-full'>
-          {loading ?
-            <div>
-              <VerticalProgressBar
-                nodes={filterNulls([
-                  {
-                    label: 'Initialize Wallet',
-                  },
-                  {
-                    label: 'Approve Tokens',
-                    error: error === 'ApprovalError',
-                    items: filterDuplicates(
-                      toBuy.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
-                      (first, second) => first?.currency === second?.currency
-                    ).map(purchase => {
-                      const currencyData = getByContractAddress(purchase?.currency);
-                      return {
-                        label: 'Approve ' + currencyData.name,
-                        icon: purchase?.isApproved ?
-                          <CheckCircle size={16} className="text-green-500" /> :
-                          error === 'ApprovalError' ?
-                            <X size={16} className="text-red-400" /> :
-                            <SpinnerGap size={16} className="text-yellow-500 animate-spin" />
-                      };
-                    })
-                  },
-                  {
-                    label: 'Complete Transaction',
-                    error: error === 'PurchaseError',
-                  }
-                ])}
-                activeNodeIndex={getNeedsApprovals() || error === 'ApprovalError' ? 1 : success ? 3 : 2}
-              />
-            </div> :
-            <div>
-              <div className="mx-8 my-4 flex items-center">
-                <span>Total Cost: {' '}</span>
-                <span className='ml-2'>
-                  {ethers.utils.formatEther(getTotalPrice() ?? 0) + ' WETH'}
-                </span>
-              </div>
-            </div>
-          }
+          {getSummaryContent()}
         </div>}
       </div>
       {toBuy?.length > 0 && <div className='mt-16'>
         <Button
-          disabled={loading && !error}
-          loading={loading && !error}
+          disabled={loading && !error && !success}
+          loading={loading && !error && !success}
           label={success ? 'Finish' : error ? 'Try Again' : 'Buy Now'}
           onClick={async () => {
             if (success) {
@@ -124,7 +143,7 @@ export function PurchaseCheckout() {
 
             if (getNeedsApprovals()) {
               const missingApprovals = filterDuplicates(
-                toBuy.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
                 (first, second) => first?.currency === second?.currency
               ).filter(purchase => !purchase?.isApproved);
               for (let i = 0; i < missingApprovals.length; i++) {
@@ -144,7 +163,13 @@ export function PurchaseCheckout() {
               }
             }
 
-            // todo complete the purchase transaction
+            const result = await buyAll();
+            if (result) {
+              setSuccess(true);
+              updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
+            } else {
+              setError('PurchaseError');
+            }
           }}
           type={ButtonType.PRIMARY} />
       </div>}

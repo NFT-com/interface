@@ -1,8 +1,10 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { SideNav } from 'components/modules/Search/SideNav';
+import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import NotFoundPage from 'pages/404';
@@ -13,12 +15,26 @@ import { tw } from 'utils/tw';
 
 import { getCollection } from 'lib/contentful/api';
 import { useEffect, useMemo, useState } from 'react';
+import useSWR from 'swr';
 
 export default function DiscoverPage({ data }: DiscoverPageProps) {
+  const { fetchNFTsForCollections } = useFetchNFTsForCollections();
   const { width: screenWidth } = useWindowDimensions();
   const [page, setPage] = useState(1);
   const { sideNavOpen, setCuratedCollections, selectedCuratedCollection, curatedCollections, setSelectedCuratedCollection } = useSearchModal();
   const [paginatedAddresses, setPaginatedAddresses] = useState([]);
+
+  const { data: nftsForCollections } = useSWR(selectedCuratedCollection, async () => {
+    let nftsForCollections;
+    setPaginatedAddresses([]);
+    await fetchNFTsForCollections({
+      collectionAddresses: contractAddresses,
+      count: contractAddresses.length
+    }).then((collectionsData => {
+      nftsForCollections = collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
+    }));
+    return nftsForCollections;
+  });
 
   const contractAddresses = useMemo(() => {
     return selectedCuratedCollection?.contractAddresses.addresses ?? [];
@@ -41,8 +57,10 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
   },[curatedCollections, selectedCuratedCollection, setSelectedCuratedCollection]);
 
   useEffect(() => {
-    setPaginatedAddresses([...contractAddresses.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page)]);
-  },[contractAddresses, page, screenWidth, sideNavOpen]);
+    const paginatedContracts = nftsForCollections?.slice(0, getPerPage('discover', screenWidth, sideNavOpen)*page);
+    const sortedPaginatedAddresses = paginatedContracts?.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
+    nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...sortedPaginatedAddresses]);
+  },[nftsForCollections, page, screenWidth, sideNavOpen]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
     return <NotFoundPage />;
@@ -59,7 +77,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
           <div className="hidden minlg:block">
             <SideNav onSideNav={changeCurated}/>
           </div>
-          <div className="minlg:mt-8 minlg:ml-6">
+          <div className="minlg:mt-8 minlg:ml-6 w-full min-h-disc">
             <span className="font-grotesk text-black font-black text-4xl minmd:text-5xl">Discover</span>
             <p className="text-blog-text-reskin mt-4 text-base minmd:text-lg">
             Find your next PFP, one-of-kind collectable, or membership pass to the next big thing!
@@ -74,17 +92,27 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
               <div className={tw(
                 'mt-6 gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
                 sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-3 minxl:grid-cols-4')}>
-                {paginatedAddresses.map((collection, index) => {
+                {paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.map((collection, index) => {
                   return (
                     <div key={index} className="DiscoverCollectionItem mb-2 min-h-[10.5rem] minmd:min-h-[13rem] minxl:min-h-[13.5rem]">
                       <CollectionItem
-                        contractAddr={collection}
+                        contractAddr={collection?.collectionAddress}
+                        images={[
+                          collection.nfts[0]?.metadata?.imageURL,
+                          collection.nfts[1]?.metadata?.imageURL,
+                          collection.nfts[2]?.metadata?.imageURL,
+                        ]}
+                        count={collection.nfts.length}
                       />
                     </div>);
                 })}
               </div>
+              {(paginatedAddresses && paginatedAddresses.length === 0) &&
+                (<div className="flex items-center justify-center min-h-[16rem] w-full">
+                  <Loader />
+                </div>)}
             </div>
-            { paginatedAddresses.length < contractAddresses.length &&
+            { paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < contractAddresses.length &&
             <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
               <Button
                 color={'black'}

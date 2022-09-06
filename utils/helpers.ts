@@ -91,7 +91,7 @@ export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) =>
 };
 
 export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
-  const prefix = 'https://nft-llc-3.mypinata.cloud/ipfs/';
+  const prefix = 'https://nft-llc.mypinata.cloud/ipfs/';
   if (image == null) {
     return null;
   } else if (image.indexOf('ipfs://ipfs/') === 0) {
@@ -185,7 +185,7 @@ export function getPerPage(index: string, screenWidth: number, sideNavOpen: bool
     if (screenWidth >= 1200) {
       perPage = sideNavOpen ? 9 : 8;
     } else if (screenWidth >= 900 ) {
-      perPage = sideNavOpen ? 6 : 8;
+      perPage = sideNavOpen ? 6 : 9;
     } else if (screenWidth >= 600) {
       perPage = 4;
     } else {
@@ -210,6 +210,13 @@ export function max(...args: BigNumberish[]) {
     return null;
   }
   return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MIN_VALUE).gt(val) ? acc : val);
+}
+
+export function min(...args: BigNumberish[]) {
+  if (isNullOrEmpty(args)) {
+    return null;
+  }
+  return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MAX_VALUE).lt(val) ? acc : val);
 }
 
 export function fetcher(url: string): Promise<any> {
