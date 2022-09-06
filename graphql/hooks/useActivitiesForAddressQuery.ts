@@ -1,8 +1,8 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ActivityStatus, TxActivity } from 'graphql/generated/types';
+import { ActivityStatus, PageInput, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
-import { mutate } from 'swr';
+import useSWR, { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 import { PartialDeep } from 'type-fest';
 
@@ -19,30 +19,30 @@ export interface ActivitiesForAddressData {
   mutate: () => void;
 }
 
-export function useActivitiesForAddressQuery(address: string, chainId: string, first?: number): ActivitiesForAddressData {
+export function useActivitiesForAddressQuery(address: string, chainId: string, pageInput: PageInput): ActivitiesForAddressData {
   const sdk = useGraphQLSDK();
-  const keyString = 'ActivitiesForAddressQuery ' +
+  const keyString = 'ActivitiesForAddressQuery' +
     chainId +
-    address;
-    
-  const { data } = useSWRImmutable(keyString, async () => {
+    address +
+    pageInput.first +
+    pageInput.afterCursor;
+
+  const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(address) || isNullOrEmpty(chainId)) {
       return [];
     }
     const result = await sdk.Activities({
       input: {
-        // todo: paginate to get all the listings
-        pageInput: {
-          first,
-        },
+        pageInput,
         chainId,
         walletAddress: address,
         includeExpired: true,
         status: ActivityStatus.Valid
       }
     });
-    return result?.getActivities;
+    return result;
   });
+
   return {
     data: data ?? [],
     loading: data == null,
