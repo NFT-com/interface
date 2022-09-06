@@ -15,7 +15,7 @@ export default function Activity() {
   const selectedProfile = getCurrentProfileUrl();
 
   useEffect(() => {
-    if(!currentAddress){
+    if(!currentAddress || !getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)){
       router.push('/');
     }
   }, [currentAddress, router]);
