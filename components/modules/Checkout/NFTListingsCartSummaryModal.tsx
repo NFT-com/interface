@@ -3,7 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { ExternalProtocol } from 'types';
-import { max, min } from 'utils/helpers';
+import { isNullOrEmpty, max, min } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
@@ -116,6 +116,18 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     if (success) {
       return <div className='my-8'>
         <CheckoutSuccessView subtitle="You have successfully listed your items!" />
+      </div>;
+    } else if (!isNullOrEmpty(error)) {
+      return <div className='flex flex-col w-full'>
+        <p className="text-3xl mx-4 font-bold">
+          {error === 'ApprovalError' ? 'Approval' : 'Signature'} Failed
+          <div className='w-full my-8'>
+            <span className='font-medium text-[#6F6F6F] text-base'>
+              The {error === 'ApprovalError' ? 'Approval' : 'Signature'} was not accepted in your wallet.
+              If you would like to continue listing, please try again.
+            </span>
+          </div>
+        </p>.
       </div>;
     } else if (showProgressBar) {
       return (
@@ -256,7 +268,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             props.onClose();
           }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
           {getSummaryContent()}
-          {toList.length > 0 && <div className="mx-4 my-4 flex">
+          {toList.length > 0 && <div className="my-4 flex">
             <Button
               stretch
               loading={showProgressBar && !error && !success}
@@ -342,6 +354,22 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               type={ButtonType.PRIMARY}
             />
           </div>}
+          {
+            !isNullOrEmpty(error) &&
+            <div className='w-full mt-4'>
+              <Button
+                stretch
+                label={'Cancel Purchase'}
+                onClick={() => {
+                  setSuccess(false);
+                  setShowProgressBar(false);
+                  setError(null);
+                  props.onClose();
+                }}
+                type={ButtonType.SECONDARY}
+              />
+            </div>
+          }
         </div>
       </div>
     </Modal>

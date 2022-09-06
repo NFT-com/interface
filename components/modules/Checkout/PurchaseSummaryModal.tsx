@@ -117,7 +117,19 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       return <div className="my-8">
         <CheckoutSuccessView subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}/>
       </div>;
-    } else if (loading) {
+    } else if (!isNullOrEmpty(error)) {
+      return <div className='flex flex-col w-full'>
+        <p className="text-3xl mx-4 font-bold">
+          {error === 'ApprovalError' ? 'Approval' : 'Transaction'} Failed
+          <div className='w-full my-8'>
+            <span className='font-medium text-[#6F6F6F] text-base'>
+              The {error === 'ApprovalError' ? 'Approval' : 'Transaction'} was not approved in your wallet
+              or execution was reverted. If you would like to continue your purchase, please try again.
+            </span>
+          </div>
+        </p>.
+      </div>;
+    } if (loading) {
       const tokens = filterDuplicates(
         toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
         (first, second) => first?.currency === second?.currency
@@ -126,7 +138,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         <p className="text-3xl mx-4 font-bold">
             Purchase Progress
         </p>
-        <div className='w-full mx-8 my-8'>
+        <div className='w-full m-8'>
           <VerticalProgressBar
             nodes={filterNulls([
               {
@@ -233,6 +245,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
           {getSummaryContent()}
           <Button
+            stretch
             disabled={loading && !error && !success}
             loading={loading && !error && !success}
             label={success ? 'Finish' : error ? 'Try Again' : 'Buy Now'}
@@ -282,6 +295,22 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               }
             }}
             type={ButtonType.PRIMARY} />
+          {
+            !isNullOrEmpty(error) &&
+            <div className='w-full mt-4'>
+              <Button
+                stretch
+                label={'Cancel Purchase'}
+                onClick={() => {
+                  setSuccess(false);
+                  setLoading(false);
+                  setError(null);
+                  props.onClose();
+                }}
+                type={ButtonType.SECONDARY}
+              />
+            </div>
+          }
         </div>
       </div>
     </Modal>
