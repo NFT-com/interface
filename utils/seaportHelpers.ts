@@ -193,15 +193,15 @@ interface ConsiderationFulfillmentUnit {
 }
 
 const generateOrderConsiderationArray = (
-  array: Array<Array<SeaportConsideration>>,
-): Array<Array<ConsiderationFulfillmentUnit>> => {
+  considerations: Array<Array<SeaportConsideration>>,
+): Array<Array<ConsiderationFulfillmentUnit>> | undefined => {
   const mapIndex: ConsiderationObjMap = {};
-  array.map((item: Array<SeaportConsideration>, index: number) =>
+  considerations.map((item: Array<SeaportConsideration>, index: number) =>
     item.map((i: SeaportConsideration, shortIndex: number) => {
-      if (mapIndex[i.recipient] == undefined) {
-        mapIndex[i.recipient] = [{ orderIndex: index.toString(), itemIndex: shortIndex.toString() }];
+      if (mapIndex[i.recipient + i.token] == undefined) {
+        mapIndex[i.recipient + i.token] = [{ orderIndex: index.toString(), itemIndex: shortIndex.toString() }];
       } else {
-        mapIndex[i.recipient].push({ orderIndex: index.toString(), itemIndex: shortIndex.toString() });
+        mapIndex[i.recipient + i.token].push({ orderIndex: index.toString(), itemIndex: shortIndex.toString() });
       }
     }),
   );
