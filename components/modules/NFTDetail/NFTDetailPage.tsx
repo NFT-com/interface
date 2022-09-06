@@ -42,7 +42,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return await getContractMetadata(nft?.contract, defaultChainId);
   });
   
-  const { data: legacyListings, mutate: mutateListings } = useExternalListingsQuery(
+  const { data: legacyListings, mutate: mutateLegacyListings } = useExternalListingsQuery(
     nft?.contract,
     nft?.tokenId,
     defaultChainId
@@ -91,7 +91,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         <div className='flex minxl:w-1/2 w-full'>
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
-            mutateListings();
+            mutateLegacyListings();
           }} key={nft?.id} />
         </div>
         {(showListings || nft?.wallet === currentAddress) ?
