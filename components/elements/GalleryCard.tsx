@@ -39,7 +39,7 @@ function GalleryCard(props: GalleryCardProps) {
       /> */}
       <img
         alt=""
-        src={props?.imageURL}
+        src={props?.imageURL + '?width=600'}
         className={tw(
           'h-full w-full aspect-square rounded-xl absolute z-20',
         )}

@@ -66,8 +66,8 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
         autoPlay
         muted
         loop
-        key={props.src}
-        src={props.src}
+        key={props.src + '?width=600'}
+        src={props.src + '?width=600'}
         poster={props.src}
         className={tw(
           'object-cover absolute w-full h-full justify-center',
