@@ -18,7 +18,6 @@ export default function ActivityPages() {
     cachedTotalCount
   } = usePaginator(ACTIVITY_LOAD_COUNT);
   const [lastAddedPage, setLastAddedPage] = useState('');
-
   const [activityData, setActivityData] = useState([]);
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
@@ -81,11 +80,11 @@ export default function ActivityPages() {
           {!activityData || !activityData?.length && <p className='text-[#6F6F6F] flex items-center justify-center border h-[400px] rounded-[10px]'>No activity available</p>}
 
           {cachedTotalCount > activityData?.length &&
-          <div className='w-full flex justify-center'>
-            <button onClick={() => loadMoreActivities()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
-            Load More
-            </button>
-          </div>
+            <div className='w-full flex justify-center'>
+              <button onClick={() => loadMoreActivities()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
+              Load More
+              </button>
+            </div>
           }
         </div>
       </div>
