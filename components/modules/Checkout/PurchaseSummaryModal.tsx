@@ -248,13 +248,14 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             stretch
             disabled={loading && !error && !success}
             loading={loading && !error && !success}
-            label={success ? 'Finish' : error ? 'Try Again' : 'Buy Now'}
+            label={success ? 'Finish' : error ? 'Try Again' : 'Confirm & Buy'}
             onClick={async () => {
               if (success) {
                 clear();
                 setSuccess(false);
                 return;
               }
+
               setError(null);
               setSuccess(false);
               setLoading(true);
@@ -300,7 +301,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             <div className='w-full mt-4'>
               <Button
                 stretch
-                label={'Cancel Purchase'}
+                label={'Cancel'}
                 onClick={() => {
                   setSuccess(false);
                   setLoading(false);

@@ -8,6 +8,7 @@ import { getLooksrareHex } from 'utils/looksrareHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
+import { PurchaseSummaryModal } from './PurchaseSummaryModal';
 
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
@@ -36,6 +37,7 @@ interface NFTPurchaseContextType {
   buyAll: () => Promise<boolean>;
   updateCurrencyApproval: (currency: string, approved: boolean) => void;
   removePurchase: (nft: PartialDeep<Nft>) => void;
+  togglePurchaseSummaryModal: () => void;
 }
 
 // initialize with default values
@@ -46,12 +48,14 @@ export const NFTPurchasesContext = React.createContext<NFTPurchaseContextType>({
   buyAll: () => null,
   updateCurrencyApproval: () => null,
   removePurchase: () => null,
+  togglePurchaseSummaryModal: () => null
 });
 
 export function NFTPurchaseContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
+  const [showPurchaseSummaryModal, setShowPurchaseSummaryModal] = useState(false);
   
   const { toggleCartSidebar } = useContext(NFTListingsContext);
 
@@ -65,6 +69,10 @@ export function NFTPurchaseContextProvider(
       setToBuy(JSON.parse(localStorage.getItem('stagedNftPurchases')) ?? []);
     }
   }, []);
+
+  const togglePurchaseSummaryModal = useCallback(() => {
+    setShowPurchaseSummaryModal(!showPurchaseSummaryModal);
+  }, [showPurchaseSummaryModal]);
 
   const stagePurchase = useCallback((
     purchase: StagedPurchase
@@ -176,8 +184,10 @@ export function NFTPurchaseContextProvider(
     stagePurchase,
     clear,
     buyAll,
-    updateCurrencyApproval
+    updateCurrencyApproval,
+    togglePurchaseSummaryModal
   }}>
+    <PurchaseSummaryModal visible={showPurchaseSummaryModal} onClose={() => setShowPurchaseSummaryModal(false)} />
     {props.children}
   </NFTPurchasesContext.Provider>;
 }

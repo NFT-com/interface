@@ -37,7 +37,8 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const {
     toBuy,
     clear: clearPurchases,
-    removePurchase
+    removePurchase,
+    togglePurchaseSummaryModal
   } = useContext(NFTPurchasesContext);
 
   const stagedNFTs = filterNulls<StagedListing | StagedPurchase>(props.selectedTab === 'Sell' ? toList : toBuy);
@@ -116,8 +117,12 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           stretch
           label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Continue to Buy'}
           onClick={() => {
-            toggleCartSidebar();
-            router.push(props.selectedTab === 'Sell' ? '/app/list' : '/app/buy');
+            if (props.selectedTab === 'Sell') {
+              toggleCartSidebar();
+              router.push('/app/list' );
+            } else {
+              togglePurchaseSummaryModal();
+            }
           }}
           type={ButtonType.PRIMARY}
         />
