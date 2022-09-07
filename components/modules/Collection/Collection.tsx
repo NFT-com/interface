@@ -317,14 +317,14 @@ export function Collection(props: CollectionProps) {
             </div>
             }
             {selectedTab === 'NFTs' &&
-            <>
-              {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
-                <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
-              }
-              <div className="flex  overflow-x-hidden">
-                <div className="hidden minlg:block">
-                  <SideNav onSideNav={() => null}/>
-                </div>
+            <div className="flex overflow-hidden pb-3.5">
+              <div className="hidden minlg:block">
+                <SideNav onSideNav={() => null}/>
+              </div>
+              <div>
+                {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
+                  <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
+                }
                 <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
                   {collectionNfts.map((nft, index) => {
                     return (
@@ -344,20 +344,20 @@ export function Collection(props: CollectionProps) {
                       </div>);}
                   )}
                 </div>
+                {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+                  <Button
+                    color={'black'}
+                    accent={AccentType.SCALE}
+                    stretch={true}
+                    label={'Load More'}
+                    onClick={ () => {
+                      setCurrentPage(currentPage + 1);
+                    }}
+                    type={ButtonType.PRIMARY}
+                  />
+                </div>}
               </div>
-              {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-                <Button
-                  color={'black'}
-                  accent={AccentType.SCALE}
-                  stretch={true}
-                  label={'Load More'}
-                  onClick={ () => {
-                    setCurrentPage(currentPage + 1);
-                  }}
-                  type={ButtonType.PRIMARY}
-                />
-              </div>}
-            </>
+            </div>
             }
             {selectedTab === 'Activity' &&
               <CollectionActivity contract={props?.contract} />
