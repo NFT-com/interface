@@ -5,6 +5,16 @@
         "type": "error"
     },
     {
+        "inputs": [],
+        "name": "MAX_FEE_EXCEEDED",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "TradingNotOpen",
+        "type": "error"
+    },
+    {
         "anonymous": false,
         "inputs": [
             {
@@ -40,6 +50,58 @@
         "anonymous": false,
         "inputs": [
             {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "version",
+                "type": "uint8"
+            }
+        ],
+        "name": "Initialized",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_new",
+                "type": "address"
+            }
+        ],
+        "name": "NewConverter",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_new",
+                "type": "address"
+            }
+        ],
+        "name": "NewNftProfile",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_new",
+                "type": "address"
+            }
+        ],
+        "name": "NewOwner",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
                 "indexed": true,
                 "internalType": "address",
                 "name": "implementation",
@@ -51,7 +113,7 @@
     },
     {
         "inputs": [],
-        "name": "baseFees",
+        "name": "baseFee",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -77,7 +139,7 @@
                         "type": "uint256[]"
                     }
                 ],
-                "internalType": "struct NftAggregator.ERC20Details",
+                "internalType": "struct ERC20Details",
                 "name": "erc20Details",
                 "type": "tuple"
             },
@@ -99,19 +161,48 @@
                         "type": "bytes"
                     }
                 ],
-                "internalType": "struct MarketplaceRegistry.TradeDetails[]",
-                "name": "_tradeDetails",
+                "internalType": "struct TradeDetails[]",
+                "name": "tradeDetails",
                 "type": "tuple[]"
             },
             {
-                "internalType": "address[]",
-                "name": "dustTokens",
-                "type": "address[]"
+                "components": [
+                    {
+                        "internalType": "bytes[]",
+                        "name": "conversionDetails",
+                        "type": "bytes[]"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "dustTokens",
+                        "type": "address[]"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "uint256",
+                                "name": "_profileTokenId",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "_wei",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct FeeDetails",
+                        "name": "feeDetails",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct MultiAssetInfo",
+                "name": "tradeInfo",
+                "type": "tuple"
             }
         ],
         "name": "batchTrade",
         "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -134,19 +225,62 @@
                         "type": "bytes"
                     }
                 ],
-                "internalType": "struct MarketplaceRegistry.TradeDetails[]",
-                "name": "_tradeDetails",
+                "internalType": "struct TradeDetails[]",
+                "name": "tradeDetails",
                 "type": "tuple[]"
             },
             {
                 "internalType": "address[]",
                 "name": "dustTokens",
                 "type": "address[]"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "uint256",
+                        "name": "_profileTokenId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_wei",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct FeeDetails",
+                "name": "feeDetails",
+                "type": "tuple"
             }
         ],
         "name": "batchTradeWithETH",
         "outputs": [],
         "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "converter",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "extraBool",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -168,6 +302,144 @@
         "outputs": [
             {
                 "internalType": "contract MarketplaceRegistry",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address[]",
+                        "name": "tokenAddrs",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "amounts",
+                        "type": "uint256[]"
+                    }
+                ],
+                "internalType": "struct ERC20Details",
+                "name": "erc20Details",
+                "type": "tuple"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "tokenAddr",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "to",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "ids",
+                        "type": "uint256[]"
+                    }
+                ],
+                "internalType": "struct SpecialTransferHelper.ERC721Details[]",
+                "name": "erc721Details",
+                "type": "tuple[]"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "tokenAddr",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "ids",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "amounts",
+                        "type": "uint256[]"
+                    }
+                ],
+                "internalType": "struct ERC1155Details[]",
+                "name": "erc1155Details",
+                "type": "tuple[]"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "uint256",
+                        "name": "marketId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "value",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes",
+                        "name": "tradeData",
+                        "type": "bytes"
+                    }
+                ],
+                "internalType": "struct TradeDetails[]",
+                "name": "tradeDetails",
+                "type": "tuple[]"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "bytes[]",
+                        "name": "conversionDetails",
+                        "type": "bytes[]"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "dustTokens",
+                        "type": "address[]"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "uint256",
+                                "name": "_profileTokenId",
+                                "type": "uint256"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "_wei",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct FeeDetails",
+                        "name": "feeDetails",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct MultiAssetInfo",
+                "name": "tradeInfo",
+                "type": "tuple"
+            }
+        ],
+        "name": "multiAssetSwap",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "nftProfile",
+        "outputs": [
+            {
+                "internalType": "address",
                 "name": "",
                 "type": "address"
             }
@@ -318,19 +590,6 @@
     },
     {
         "inputs": [],
-        "name": "openForFreeTrades",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "openForTrades",
         "outputs": [
             {
@@ -350,6 +609,32 @@
                 "internalType": "address",
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "percentFeeToDao",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "proxiableUUID",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
             }
         ],
         "stateMutability": "view",
@@ -441,7 +726,7 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_baseFees",
+                "name": "_baseFee",
                 "type": "uint256"
             }
         ],
@@ -453,22 +738,12 @@
     {
         "inputs": [
             {
-                "internalType": "contract IERC20Upgradeable",
-                "name": "token",
-                "type": "address"
-            },
-            {
                 "internalType": "address",
-                "name": "operator",
+                "name": "_new",
                 "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
             }
         ],
-        "name": "setOneTimeApproval",
+        "name": "setConvertor",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -476,12 +751,55 @@
     {
         "inputs": [
             {
-                "internalType": "bool",
-                "name": "_openForFreeTrades",
-                "type": "bool"
+                "internalType": "uint256",
+                "name": "_percentFeeToDao",
+                "type": "uint256"
             }
         ],
-        "name": "setOpenForFreeTrades",
+        "name": "setDaoFees",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_new",
+                "type": "address"
+            }
+        ],
+        "name": "setNftProfile",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "operator",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Approvals[]",
+                "name": "_approvals",
+                "type": "tuple[]"
+            }
+        ],
+        "name": "setOneTimeApproval",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

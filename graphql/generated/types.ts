@@ -2033,7 +2033,7 @@ export type TxActivitiesInput = {
   activityType?: InputMaybe<ActivityType>;
   chainId?: InputMaybe<Scalars['String']>;
   contract?: InputMaybe<Scalars['String']>;
-  includeExpired?: InputMaybe<Scalars['Boolean']>;
+  ignoreExpired?: InputMaybe<Scalars['Boolean']>;
   pageInput: PageInput;
   read?: InputMaybe<Scalars['Boolean']>;
   skipRelations?: InputMaybe<Scalars['Boolean']>;
@@ -2062,6 +2062,7 @@ export type TxActivity = {
   read: Scalars['Boolean'];
   status: ActivityStatus;
   timestamp: Scalars['Date'];
+  transaction?: Maybe<TxTransaction>;
   walletAddress: Scalars['String'];
 };
 
