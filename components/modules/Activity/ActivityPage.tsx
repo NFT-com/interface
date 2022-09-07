@@ -46,7 +46,7 @@ export default function ActivityPages() {
       setLastAddedPage(loadedActivitiesNextPage?.getActivities?.pageInfo?.firstCursor);
       setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems);
     } else {
-      setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems);
+      setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems || 0);
     }
   }, [lastAddedPage, setTotalCount, activityData, loadedActivitiesNextPage, afterCursor, loadedActivitiesNextPage?.getActivities?.items, currentAddress]);
   

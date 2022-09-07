@@ -2,11 +2,13 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useGetNFTDetails } from 'hooks/analytics/nftport/nfts/useGetNFTDetails';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
-import { shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { BigNumber } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export interface ActivityTableRowProps {
   item: any;
@@ -14,10 +16,22 @@ export interface ActivityTableRowProps {
 }
 
 export default function ActivityTableRow({ item, index }: ActivityTableRowProps) {
+  const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
-  const { data: collectionData } = useCollectionQuery(defaultChainId, item?.order?.protocolData?.collectionAddress);
-  const activityNFTInfo = useGetNFTDetails(item?.order?.protocolData?.collectionAddress, item?.order?.protocolData?.tokenId);
+  const { data: collectionData } = useCollectionQuery(defaultChainId, item?.nftContract);
+  const activityNFTInfo = useGetNFTDetails(item?.nftContract, BigNumber.from(item?.nftId[0].split('/')[2]).toNumber().toString());
   const ethPriceUSD = useEthPriceUSD();
+
+  useEffect(() => {
+    if(!isNullOrEmpty(item.transaction)){
+      setType('transaction');
+    } else if(!isNullOrEmpty(item.cancel)) {
+      setType('cancel');
+    } else {
+      setType('order');
+    }
+  }, [item]);
+
   return (
     <tr
       className={tw('min-w-[5.5rem] h-20',
@@ -38,27 +52,55 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
           </>
         }
       </td>
-      <td className="text-body leading-body pr-8 minmd:pr-4" >
+      <td className="text-body leading-body pr-8 minmd:pr-4">
         {item.activityType || <p>—</p>}
       </td>
       <td className="text-body leading-body pr-8 minmd:pr-4" >
-        {item.order.exchange || <p>—</p>}
+        {item[type]?.exchange || <p>—</p>}
       </td>
       <td className="text-body leading-body pr-8 minmd:pr-4" >
-        {item.order.protocolData.amount || <p>—</p>}
+        {type === 'order' && item?.order?.protocolData.amount || <p>—</p>}
       </td>
       <td className="text-body leading-body pr-8 minmd:pr-4" >
-        {item.order.protocolData.amount && ethPriceUSD ? <p>${(ethPriceUSD * item.order.protocolData.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+        {type === 'order' && item?.order?.protocolData.amount && ethPriceUSD ? <p>${(ethPriceUSD * item.order.protocolData.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
       </td>
       <td className="text-body leading-body pr-8 minmd:pr-4" >
         {moment(item.timestamp).fromNow() || <p>—</p>}
       </td>
-      <td className="text-body leading-body pr-8 minmd:pr-4" >
-        {item?.order?.makerAddress ? shortenAddress(item?.order?.makerAddress, 4) : <p>—</p>}
-      </td>
-      <td className="text-body leading-body pr-8 minmd:pr-4" >
-        {item?.order?.takerAddress ? shortenAddress(item?.order?.takerAddress, 4) : <p>—</p>}
-      </td>
+
+      {type === 'transaction' &&
+      <>
+        <td className="text-body leading-body pr-8 minmd:pr-4" >
+          {item.transaction.sender || <p>—</p>}
+        </td>
+        <td className="text-body leading-body pr-8 minmd:pr-4" >
+          {item.transaction.receiver|| <p>—</p>}
+        </td>
+      </>
+      }
+
+      {type === 'order' &&
+      <>
+        <td className="text-body leading-body pr-8 minmd:pr-4" >
+          {shortenAddress(item?.order?.makerAddress, 4) || <p>—</p>}
+        </td>
+        <td className="text-body leading-body pr-8 minmd:pr-4" >
+          {shortenAddress(item?.order?.makerAddress, 4) || <p>—</p>}
+        </td>
+      </>
+      }
+
+      {type === 'cancel' &&
+      <>
+        <td className="text-body leading-body pr-8 minmd:pr-4" >
+          <p>—</p>
+        </td>
+        <td className="text-body leading-body pr-8 minmd:pr-4" >
+          <p>—</p>
+        </td>
+      </>
+      }
+      
     </tr>
   );
 }
