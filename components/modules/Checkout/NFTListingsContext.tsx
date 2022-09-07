@@ -8,7 +8,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
-import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
@@ -65,6 +65,7 @@ interface NFTListingsContextType {
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>) => void;
   setDuration: (duration: SaleDuration) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol) => void;
+  setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
   approveCollection: (listing: PartialDeep<StagedListing>, target: ExternalProtocol) => Promise<boolean>;
   allListingsConfigured: () => boolean;
@@ -83,6 +84,7 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   toggleTargetMarketplace: () => null,
   setDuration: () => null,
   setPrice: () => null,
+  setCurrency: () => null,
   removeListing: () => null,
   approveCollection: () => null,
   allListingsConfigured: () => false,
@@ -224,26 +226,56 @@ export function NFTListingsContextProvider(
     }));
   }, [toList]);
 
-  // todo: support currency selection 
   const setPrice = useCallback((listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol) => {
     setToList(toList.slice().map(stagedNft => {
       if (listing?.nft?.id === stagedNft.nft?.id) {
         return {
           ...stagedNft,
           startingPrice: targetProtocol == null ? price : null,
-          currency: targetProtocol == null ? supportedCurrencyData['WETH'].contract : null,
+          currency: targetProtocol == null ? (stagedNft.currency ?? supportedCurrencyData['WETH'].contract) : null,
           targets: stagedNft.targets.slice().map(target => {
             if (targetProtocol == null) {
               return {
                 ...target,
                 startingPrice: price,
-                currency: supportedCurrencyData['WETH'].contract
+                currency: target.currency ?? supportedCurrencyData['WETH'].contract
               };
             } else if (targetProtocol === target.protocol) {
               return {
                 ...target,
                 startingPrice: price,
+                currency: target.currency ?? supportedCurrencyData['WETH'].contract
+              };
+            } else {
+              return target;
+            }
+          })
+        };
+      }
+      return stagedNft;
+    }));
+  }, [supportedCurrencyData, toList]);
+
+  const setCurrency = useCallback((
+    listing: PartialDeep<StagedListing>,
+    currency: SupportedCurrency,
+    targetProtocol?: ExternalProtocol
+  ) => {
+    setToList(toList.slice().map(stagedNft => {
+      if (listing?.nft?.id === stagedNft.nft?.id) {
+        return {
+          ...stagedNft,
+          currency: targetProtocol == null ? supportedCurrencyData['WETH'].contract : null,
+          targets: stagedNft.targets.slice().map(target => {
+            if (targetProtocol == null) {
+              return {
+                ...target,
                 currency: supportedCurrencyData['WETH'].contract
+              };
+            } else if (targetProtocol === target.protocol) {
+              return {
+                ...target,
+                currency: supportedCurrencyData[currency].contract
               };
             } else {
               return target;
@@ -264,7 +296,7 @@ export function NFTListingsContextProvider(
             currentAddress, // offerer
             stagedNft.nft,
             target.startingPrice ?? stagedNft.startingPrice,
-            target.currency ?? stagedNft.currency,
+            supportedCurrencyData['WETH'].contract,
             Number(defaultChainId),
             nonce,
             looksrareStrategy,
@@ -308,7 +340,7 @@ export function NFTListingsContextProvider(
       };
     }));
     setToList(preparedListings);
-  }, [defaultChainId, currentAddress, looksrareRoyaltyFeeRegistry, looksrareStrategy, toList]);
+  }, [defaultChainId, currentAddress, looksrareRoyaltyFeeRegistry, looksrareStrategy, toList, supportedCurrencyData]);
 
   const listAll = useCallback(async () => {
     setSubmitting(true);
@@ -369,7 +401,7 @@ export function NFTListingsContextProvider(
     }
     return false;
   }, [provider, signer, toList]);
-  
+
   return <NFTListingsContext.Provider value={{
     approveCollection,
     removeListing,
@@ -384,6 +416,7 @@ export function NFTListingsContextProvider(
     toggleTargetMarketplace,
     setDuration,
     setPrice,
+    setCurrency,
     allListingsConfigured
   }}>
 

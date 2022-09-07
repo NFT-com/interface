@@ -82,7 +82,6 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
     <div
       className={tw(
         'flex-shrink-0 w-80 flex flex-col transition-all duration-300',
-        modalType !== 'collectionFilters' ? 'border-r':'',
         sideNavOpen ? '' : modalType !== 'collectionFilters' ? '-ml-64' : '-ml-[20rem]')}>
       {modalType !== 'collectionFilters'
         ? (

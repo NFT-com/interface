@@ -52,7 +52,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
       collectionAddresses: addressesList,
-      count: 50
+      count: 5
     }).then((collectionsData => {
       setNftsForCollections([...collectionsData.nftsForCollections.sort()]);
     }));

@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 const IdFilter = (props: {setId: (id: string) => void, clearedFilters: boolean, setClearedFilters: (boolean) => void}) => {
   const [value, setValue] = useState('');
-  const { setId, id, clearedFilters, setClearedFilters } = props;
+  const { setId, clearedFilters, setClearedFilters } = props;
   return (
     <div className={tw(
       'relative flex items-center rounded-xl p-3 w-full text-black bg-gray-100')}>

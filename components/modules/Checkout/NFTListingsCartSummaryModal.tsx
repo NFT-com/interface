@@ -3,7 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { ExternalProtocol } from 'types';
-import { max, min } from 'utils/helpers';
+import { isNullOrEmpty, max, min } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
@@ -117,6 +117,18 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       return <div className='my-8'>
         <CheckoutSuccessView subtitle="You have successfully listed your items!" />
       </div>;
+    } else if (!isNullOrEmpty(error)) {
+      return <div className='flex flex-col w-full'>
+        <p className="text-3xl mx-4 font-bold">
+          {error === 'ApprovalError' ? 'Approval' : 'Signature'} Failed
+          <div className='w-full my-8'>
+            <span className='font-medium text-[#6F6F6F] text-base'>
+              The {error === 'ApprovalError' ? 'Approval' : 'Signature'} was not accepted in your wallet.
+              If you would like to continue listing, please try again.
+            </span>
+          </div>
+        </p>.
+      </div>;
     } else if (showProgressBar) {
       return (
         <div className="mx-8">
@@ -173,26 +185,47 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       // fee summary, default state.
       return (
         <>
-          <p className="text-xl font-bold">
-            Summary and fees for {toList?.length ?? 0} NFT{toList?.length > 1 && 's'}
+          <p className="text-3xl mx-4">
+            Listing Fees
           </p>
-          <div className="mx-8 my-4 flex items-center">
-            <span>Max marketplace fees: {' '}</span>
-            <span className='ml-2'>
-              {ethers.utils.formatEther(getMaxMarketplaceFees() ?? 0) + ' WETH'}
-            </span>
+          <p className='text-2xl text-[#6F6F6F] mx-4 font-bold'>
+            {toList?.length ?? 0} NFT{toList?.length > 1 && 's'}
+          </p>
+          <div className="mx-4 my-4 flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className='font-semibold'>Max Marketplace Fees</span>
+              <span className='font-medium text-[#6F6F6F] text-sm'>
+                Estimated Amount
+              </span>
+            </div>
+            <div className="flex flex-col align-end">
+              <span className='font-semibold'>{ethers.utils.formatEther(getMaxMarketplaceFees() ?? 0) + ' WETH'}</span>
+              {/* <span>todo: fees in usd</span> */}
+            </div>
           </div>
-          <div className="mx-8 my-4 flex items-center">
-            <span>Max royalties: </span>
-            <span className='ml-2'>
-              {ethers.utils.formatEther(getMaxRoyaltyFees() ?? 0) + ' WETH'}
-            </span>
+          <div className="mx-4 my-4 flex items-center justify-between">
+            <div className='flex flex-col'>
+              <span className='font-semibold'>Max Royalties</span>
+              <span className='font-medium text-[#6F6F6F] text-sm'>
+                Estimated Amount
+              </span>
+            </div>
+            <div className="flex flex-col justify-end">
+              <span className="font-semibold">{ethers.utils.formatEther(getMaxRoyaltyFees() ?? 0) + ' WETH'}</span>
+              {/* <span>todo: royalties in USD</span> */}
+            </div>
           </div>
-          <div className="mx-8 my-4 flex items-center">
-            <span>Minimum profit: </span>
-            <span className='ml-2'>
-              {ethers.utils.formatEther(getTotalMinimumProfit() ?? 0) + ' WETH'}
-            </span>
+          <div className='px-8 border-t border-[#D5D5D5] w-full'/>
+          <div className="mx-4 my-4 flex items-center justify-between">
+            <div className='flex flex-col'>
+              <span className='font-semibold'>Minimum Profit</span>
+              <span className='font-medium text-[#6F6F6F] text-sm'>
+              Estimated Value
+              </span>
+            </div>
+            <div className='flex flex-col justify-end'>
+              <span className='font-semibold'>{ethers.utils.formatEther(getTotalMinimumProfit() ?? 0) + ' WETH'}</span>
+            </div>
           </div>
         </>
       );
@@ -235,12 +268,12 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             props.onClose();
           }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
           {getSummaryContent()}
-          {toList.length > 0 && <div className="mx-8 my-4 flex">
+          {toList.length > 0 && <div className="my-4 flex">
             <Button
               stretch
               loading={showProgressBar && !error && !success}
               disabled={!allListingsConfigured() || (showProgressBar && !error && !success)}
-              label={success ? 'Finish' : error ? 'Try Again' : 'List Now'}
+              label={success ? 'Finish' : error ? 'Try Again' : 'Proceed to list'}
               onClick={async () => {
                 if (success) {
                   clear();
@@ -321,6 +354,22 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               type={ButtonType.PRIMARY}
             />
           </div>}
+          {
+            !isNullOrEmpty(error) &&
+            <div className='w-full mt-4'>
+              <Button
+                stretch
+                label={'Cancel Purchase'}
+                onClick={() => {
+                  setSuccess(false);
+                  setShowProgressBar(false);
+                  setError(null);
+                  props.onClose();
+                }}
+                type={ButtonType.SECONDARY}
+              />
+            </div>
+          }
         </div>
       </div>
     </Modal>

@@ -41,7 +41,7 @@ export function PurchaseCheckoutNft(props: PurchaseCheckoutNftProps) {
   }, []);
 
   return (
-    <div className='flex items-center w-full h-32 px-8'>
+    <div className='flex items-center w-full h-32 px-8 justify-center'>
       <div className='h-full flex items-center'>
         <div className='relative h-2/4 aspect-square'>
           <MinusCircle
@@ -64,9 +64,9 @@ export function PurchaseCheckoutNft(props: PurchaseCheckoutNftProps) {
             )}
           />
         </div>
-        <div className='flex flex-col ml-4'>
-          <span>{props.purchase?.nft?.metadata?.name}</span>
-          <span>{collection?.contractMetadata?.name}</span>
+        <div className='flex flex-col ml-4 font-grotesk'>
+          <span className='text-sm line-clamp-1'>{collection?.contractMetadata?.name}</span>
+          <span className='font-bold text-base line-clamp-1'>{props.purchase?.nft?.metadata?.name}</span>
         </div>
       </div>
       <div className='flex items-center ml-8'>
