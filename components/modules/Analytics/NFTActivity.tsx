@@ -1,5 +1,5 @@
 import { Nft } from 'graphql/generated/types';
-import { useGetTransactionsByNFT } from 'hooks/analytics/nftport/nfts/useGetTransactionsByNFT';
+import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -13,7 +13,7 @@ export type TxHistoryProps = {
 }
 export const NFTActivity = ({ data }: TxHistoryProps) => {
   const defaultChainId = useDefaultChainId();
-  const nftTransactionHistory = useGetTransactionsByNFT(data?.contract, parseInt(data?.tokenId, 16).toString());
+  const nftTransactionHistory = useGetTxByNFTQuery(data?.contract, parseInt(data?.tokenId, 16).toString(), 'all');
   const [nftData, setNftdata] = useState(null);
 
   useEffect(() => {

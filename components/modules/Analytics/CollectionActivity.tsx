@@ -1,4 +1,5 @@
-import { useGetTransactionsByContract } from 'hooks/analytics/nftport/collections/useGetTransactionsByContract';
+
+import { useGetTxByContractQuery } from 'graphql/hooks/useGetTxByContractQuery';
 import { Doppler,getEnv } from 'utils/env';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -12,7 +13,7 @@ export type CollectionActivityProps = {
 }
 export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
   const { chain } = useNetwork();
-  const txs = useGetTransactionsByContract(contract);
+  const txs = useGetTxByContractQuery(contract);
   const [collectionData, setCollectionData] = useState(null);
   
   useEffect(() => {
@@ -20,7 +21,7 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
       return;
     } else {
       if(!collectionData && txs) {
-        setCollectionData(txs.transactions);
+        setCollectionData(txs?.data);
       }
     }}, [chain?.id, collectionData, txs]);
 
@@ -34,7 +35,6 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
     }
   };
 
-  //TODO: @anthony - add tx history from indexer
   return (
     <div className="overflow-x-auto my-8 font-grotesk rounded-md p-4">
       {!collectionData && <p className='text-[#6F6F6F] flex items-center justify-center border h-[200px] rounded-[10px]'>No activity available</p>}

@@ -2,9 +2,9 @@ import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { NFTListingsContext, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
-import { useGetSalesByNFT } from 'hooks/analytics/nftport/nfts/useGetSalesByNFT';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
@@ -63,7 +63,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
     String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     true
   );
-  const nftSaleHistory = useGetSalesByNFT(item?.contract, parseInt(item?.tokenId, 16).toString());
+  const nftSaleHistory = useGetTxByNFTQuery(item?.contract, parseInt(item?.tokenId, 16).toString(), 'sale');
 
   useEffect(() => {
     if(selectAll){
@@ -149,12 +149,12 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.transactions ? <p>{nftSaleHistory?.transactions[0]?.price_details?.price}</p> : <p>—</p>}
+          {nftSaleHistory?.data ? <p>{nftSaleHistory?.data[0]?.price_details?.price}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.transactions ? <p>${nftSaleHistory?.transactions[0]?.price_details?.price_usd.toFixed(2)}</p> : <p>—</p>}
+          {nftSaleHistory?.data ? <p>${nftSaleHistory?.data[0]?.price_details?.price_usd.toFixed(2)}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >

@@ -18,7 +18,8 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
   const { data: profiles } = useProfilesByDisplayedNft(
     props.contract,
     props.tokenId,
-    getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+    getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+    true
   );
 
   if (profiles == null) {
