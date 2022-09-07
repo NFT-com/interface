@@ -275,3 +275,7 @@ export const getSeaportHex = (
     throw `error in getSeaportHex: ${err}`;
   }
 };
+
+export function getOpenseaAssetPageUrl(contractAddress: string, tokenId: string) {
+  return `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
+}

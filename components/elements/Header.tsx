@@ -102,7 +102,12 @@ export const Header = ({ removeBg } : HeaderProps) => {
             }
             {
               getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-              <div className='h-full flex items-center relative mr-4'>
+              <div
+                className='h-full flex items-center relative mr-4 cursor-pointer'
+                onClick={() => {
+                  toggleCartSidebar();
+                }}
+              >
                 {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
                   <div className='absolute right-0 -top-4'>
                     <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
@@ -110,9 +115,6 @@ export const Header = ({ removeBg } : HeaderProps) => {
                 )}
                 <button
                   className='cursor-pointer mr-2 h-full w-7'
-                  onClick={() => {
-                    toggleCartSidebar();
-                  }}
                 >
                   <ShoppingCartSimple size={28} color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
