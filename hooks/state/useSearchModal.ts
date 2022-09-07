@@ -6,7 +6,6 @@ import useSWR from 'swr';
 
 export function useSearchModal() {
   const router = useRouter();
-  console.log( !router.pathname.includes('discover/'), ' !router.pathname.include dfo');
   const { data, mutate } = useSWR('searchmodal', {
     fallbackData:
     {
