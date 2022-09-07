@@ -107,7 +107,7 @@ export function NFTPurchaseContextProvider(
       toBuy?.filter(purchase => purchase.currency !== NULL_ADDRESS)?.map(purchase => purchase?.currency),
       (first, second) => sameAddress(first, second)
     );
-    const erc20Totals = allDistinctErc20s?.map(currency => {
+    const erc20Totals: BigNumber[] = allDistinctErc20s?.map(currency => {
       return toBuy?.reduce((sum, purchase) => {
         if (sameAddress(purchase.currency, currency)) {
           return sum.add(BigNumber.from(purchase?.price ?? 0));
@@ -151,8 +151,8 @@ export function NFTPurchaseContextProvider(
         conversionDetails: [],
         dustTokens: [],
         feeDetails: {
-          _profileTokenId: '',
-          _wei: ''
+          _profileTokenId: 0,
+          _wei: 0
         }
       },
       {
@@ -167,6 +167,7 @@ export function NFTPurchaseContextProvider(
     if (tx) {
       return await tx.wait(1).then(() => true).catch(() => false);
     }
+    return false;
   }, [aggregator, currentAddress, looksrareExchange, toBuy]);
 
   return <NFTPurchasesContext.Provider value={{

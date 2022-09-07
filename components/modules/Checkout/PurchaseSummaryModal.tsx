@@ -67,7 +67,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       const currencyData = getByContractAddress(curr.currency);
       const formattedPrice = Number(ethers.utils.formatUnits(curr.price, currencyData.decimals));
       return acc + currencyData.usd(formattedPrice);
-    }, 0);
+    }, 0).toFixed(2);
   }, [toBuy, getByContractAddress]);
 
   const getTotalMarketplaceFeesUSD = useCallback(() => {
@@ -119,7 +119,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       </div>;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
-        <p className="text-3xl mx-4 font-bold">
+        <div className="text-3xl mx-4 font-bold">
           {error === 'ApprovalError' ? 'Approval' : 'Transaction'} Failed
           <div className='w-full my-8'>
             <span className='font-medium text-[#6F6F6F] text-base'>
@@ -127,7 +127,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               or execution was reverted. If you would like to continue your purchase, please try again.
             </span>
           </div>
-        </p>.
+        </div>
       </div>;
     } if (loading) {
       const tokens = filterDuplicates(
