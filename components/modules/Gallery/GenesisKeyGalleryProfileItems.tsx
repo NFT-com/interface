@@ -1,19 +1,20 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import GalleryCard from 'components/elements/GalleryCard';
 import { OwnedProfileGalleryCard } from 'components/modules/Gallery/OwnedProfileGalleryCard';
-import { Maybe } from 'graphql/generated/types';
+import { ProfileCard } from 'components/modules/Profile/ProfileCard';
+import { Maybe, Profile } from 'graphql/generated/types';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useGallery } from 'hooks/state/useGallery';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { usePaginator } from 'hooks/usePaginator';
-import { filterNulls, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect,useState } from 'react';
+import { PartialDeep } from 'type-fest';
 
 export interface GenesisKeyGalleryProfileItemsProps {
   showMyStuff: boolean;
@@ -30,7 +31,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
   const uniqueIds = new Set();
 
   const [lastAddedPage, setLastAddedPage] = useState('');
-  const [allLoadedProfiles, setAllLoadedProfiles] = useState([]);
+  const [allLoadedProfiles, setAllLoadedProfiles] = useState<PartialDeep<Profile>[]>([]);
   const [totalProfileSupply, setTotalProfileSupply] = useState<Maybe<BigNumber>>(null);
 
   const {
@@ -110,32 +111,10 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
               return !isDuplicate;
             })
             .map((profile, index) => {
-              const image = isNullOrEmpty(profile?.photoURL)
-                ? 'https://cdn.nft.com/profile-image-default.svg'
-                : processIPFSURL(
-                  profile?.photoURL
-                );
               return (
-                <Link href={'/' + profile?.url} key={profile.id ?? index} passHref>
-                  <a
-                    key={profile.id ?? index}
-                    className={tw(
-                      'ProfileGalleryCardContainer',
-                      'flex items-center justify-center p-4',
-                      'w-2/5 minmd:w-1/3 minlg:w-1/4 minxl:w-1/5'
-                    )}
-                  >
-                    <GalleryCard
-                      size='small'
-                      animate={false}
-                      label={''}
-                      imageURL={image}
-                      onClick={() => {
-                        router.push('/' + profile?.url);
-                      }}
-                    />
-                  </a>
-                </Link>
+                <div className='m-4' key={index}>
+                  <ProfileCard profile={profile} />
+                </div>
               );
             })
         }
