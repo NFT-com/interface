@@ -1,6 +1,7 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
+import { CollectionsFiltersContent } from './CollectionsFiltersContent';
 import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
 import { NFTsFiltersContent } from './NFTsFiltersContent';
 
@@ -67,7 +68,7 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
 }
 
 export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?: any}) => {
-  const { sideNavOpen, setSearchFilters } = useSearchModal();
+  const { sideNavOpen, setSearchFilters, modalType } = useSearchModal();
 
   const setFilters = () => {
     setSearchFilters(props.filtersData);
@@ -80,23 +81,33 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
   return(
     <div
       className={tw(
-        'flex-shrink-0 w-80 flex flex-col border-r transition-all duration-300',
-        sideNavOpen ? '' : '-ml-64')}>
-      <OptionNav
-        title={'Curations'}
-        icon={<Flask />}
-        backgroundColor={'bg-[#E1E1E1]'}>
-        <CuratedCollectionsFilter onClick={props.onSideNav} collapsed={false}/>
-      </OptionNav>
-      {props.filtersData?.length > 0 && <OptionNav
-        title={'NFT Filters'}
-        icon={<FunnelSimple
-          className="w-6 h-6"
-          color={'grey'} />}
-        backgroundColor={'bg-[#C2C2C2]'}
-        onOptionNav={setFilters}>
-        <NFTsFiltersContent />
-      </OptionNav>}
+        'flex-shrink-0 w-80 flex flex-col transition-all duration-300',
+        modalType !== 'collectionFilters' ? 'border-r':'',
+        sideNavOpen ? '' : modalType !== 'collectionFilters' ? '-ml-64' : '-ml-[20rem]')}>
+      {modalType !== 'collectionFilters'
+        ? (
+          <>
+            <OptionNav
+              title={'Curations'}
+              icon={<Flask />}
+              backgroundColor={'bg-[#E1E1E1]'}>
+              <CuratedCollectionsFilter onClick={props.onSideNav} collapsed={false}/>
+            </OptionNav>
+            {props.filtersData?.length > 0 && <OptionNav
+              title={'NFT Filters'}
+              icon={<FunnelSimple
+                className="w-6 h-6"
+                color={'grey'} />}
+              backgroundColor={'bg-[#C2C2C2]'}
+              onOptionNav={setFilters}>
+              <NFTsFiltersContent />
+            </OptionNav>}
+          </>
+        )
+        : (
+          <CollectionsFiltersContent />
+        )}
+
     </div>
   );
 };

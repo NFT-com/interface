@@ -2,6 +2,7 @@ import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import { CollectionActivity } from 'components/modules/Analytics/CollectionActivity';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
+import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useNumberOfNFTsQuery } from 'graphql/hooks/useNumberOfNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
@@ -10,6 +11,7 @@ import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSale
 import { useGetNFTDetails } from 'hooks/analytics/nftport/nfts/useGetNFTDetails';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -33,8 +35,9 @@ export interface CollectionProps {
 
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
+  const { width: screenWidth } = useWindowDimensions();
   const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
-  const { setSearchModalOpen, collectionPageSortyBy, id } = useSearchModal();
+  const { setSearchModalOpen, collectionPageSortyBy, id, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -52,6 +55,7 @@ export function Collection(props: CollectionProps) {
   const { profileData: collectionPreferredOwnerData } = useProfileQuery(
     collectionOwnerData?.profile?.owner?.preferredProfile?.url
   );
+  setModalType('collectionFilters' );
 
   const tabs = {
     0: 'NFTs',
@@ -283,14 +287,30 @@ export function Collection(props: CollectionProps) {
                 </Tab.Group>
               </div>
               {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
-                <div className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex'>
-                  <div
-                    className='cursor-pointer w-full minlg:w-10 minlg:h-10 bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px] flex items-center justify-center border border-[#D5D5D5]'
-                    onClick={() => {
+                <div
+                  className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex minlg:flex-auto'
+                  onClick={() => {
+                    if (screenWidth < 900) {
                       setSearchModalOpen(true, 'collectionFilters' );
-                    }}>
-                    <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
-                    <p className='minlg:hidden'>Filter</p>
+                    } else {
+                      setSideNavOpen(!sideNavOpen);
+                    }
+                  }}>
+                  <div
+                    className={tw(
+                      'cursor-pointer w-full minlg:h-10',
+                      'bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px]',
+                      'flex items-center justify-center border border-[#D5D5D5]')}
+                  >
+                    <div className='minlg:hidden flex items-center justify-center'>
+                      <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+                      <p>Filter</p>
+                    </div>
+
+                    <div className='hidden minlg:block'>
+                      {!sideNavOpen && <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>}
+                      {sideNavOpen && <p className="px-[6.5rem]">Close Filters</p>}
+                    </div>
                   </div>
                 </div>
               }
@@ -301,24 +321,29 @@ export function Collection(props: CollectionProps) {
               {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
                 <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
               }
-              <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
-                {collectionNfts.map((nft, index) => {
-                  return (
-                    <div className="NftCollectionItem" key={index}>
-                      <NFTCard
-                        title={nft.document.nftName}
-                        subtitle={'#'+ nft.document.tokenId}
-                        images={[nft.document.imageURL]}
-                        onClick={() => {
-                          if (nft.document.nftName) {
-                            router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
-                          }
-                        }}
-                        description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
-                        customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
-                      />
-                    </div>);}
-                )}
+              <div className="flex  overflow-x-hidden">
+                <div className="hidden minlg:block">
+                  <SideNav onSideNav={() => null}/>
+                </div>
+                <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
+                  {collectionNfts.map((nft, index) => {
+                    return (
+                      <div className="NftCollectionItem" key={index}>
+                        <NFTCard
+                          title={nft.document.nftName}
+                          subtitle={'#'+ nft.document.tokenId}
+                          images={[nft.document.imageURL]}
+                          onClick={() => {
+                            if (nft.document.nftName) {
+                              router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
+                            }
+                          }}
+                          description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
+                          customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+                        />
+                      </div>);}
+                  )}
+                </div>
               </div>
               {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
                 <Button

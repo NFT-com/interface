@@ -6,12 +6,13 @@ import useSWR from 'swr';
 
 export function useSearchModal() {
   const router = useRouter();
+  console.log( !router.pathname.includes('discover/'), ' !router.pathname.include dfo');
   const { data, mutate } = useSWR('searchmodal', {
     fallbackData:
     {
       modalType: '',
       searchModalOpen: false,
-      sideNavOpen: !router.pathname.includes('discover/'),
+      sideNavOpen: !router.pathname.includes('discover/') && !router.pathname.includes('collection/'),
       searchFilters: [],
       filtersList: null,
       checkedFiltersList: '',
@@ -66,7 +67,7 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
-  const setModalType = useCallback((modalType: 'search' | 'filters') => {
+  const setModalType = useCallback((modalType: 'search' | 'filters' | 'collectionFilters') => {
     mutate({
       ...data,
       modalType
