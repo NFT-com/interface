@@ -35,7 +35,7 @@ export function ListingCheckout() {
       <div className="flex flex-col items-center w-full">
         <div className='w-full flex flex-col px-8 items-center'>
           <span className='text-2xl w-full flex font-bold'>Select Marketplace</span>
-          <div className='flex flex-col items-center justify-around w-full max-w-lg'>
+          <div className='flex flex-col minlg:flex-row items-center justify-around w-full '>
             <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.Seaport);
@@ -43,11 +43,12 @@ export function ListingCheckout() {
               }}
               className={tw(
                 'border border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 py-6 cursor-pointer w-full mt-4',
+                'px-4 py-6 cursor-pointer w-full mt-4 mx-4',
                 openseaFullyEnabled ? 'border-2 border-primary-yellow font-bold' : ''
               )}
             >
-            Opensea
+              <span>Opensea</span>
+              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2.5% fee)</span>
             </div>
             <div
               onClick={() => {
@@ -60,7 +61,8 @@ export function ListingCheckout() {
                 looksrareFullyEnabled ? 'border-2 border-primary-yellow font-bold' : ''
               )}
             >
-            Looksrare
+              <span>Looksrare</span>
+              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
           </div>
         </div>
@@ -86,7 +88,7 @@ export function ListingCheckout() {
             }
           </div>
         </div>
-        <div className='my-8 w-full overflow-x-scroll'>
+        <div className='my-8 w-full overflow-x-scroll flex flex-col'>
           <div className="border-t border-[#D5D5D5] mx-8">
             <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
           </div>

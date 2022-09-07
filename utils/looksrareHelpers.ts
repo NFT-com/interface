@@ -138,3 +138,7 @@ export const getLooksrareHex = (
     throw `error in getLooksrareHex: ${err}`;
   }
 };
+
+export function getLooksrareAssetPageUrl(contractAddress: string, tokenId: string) {
+  return `https://looksrare.org/collections/${contractAddress}/${tokenId}`;
+}

@@ -5,7 +5,7 @@ import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -34,7 +34,6 @@ const detailTabTypes = {
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
   const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
-  const { mutate: mutateListings } = useExternalListingsQuery(nft?.contract, nft?.tokenId, String(nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
 
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
@@ -43,7 +42,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return await getContractMetadata(nft?.contract, defaultChainId);
   });
   
-  const { data: legacyListings } = useExternalListingsQuery(
+  const { data: legacyListings, mutate: mutateLegacyListings } = useExternalListingsQuery(
     nft?.contract,
     nft?.tokenId,
     defaultChainId
@@ -64,9 +63,11 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
 
   const showListings = useMemo(() => {
-    return isNullOrEmpty(!getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)
-      ? (legacyListings.filter((x) => x.url !== null))
-      : listings);
+    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+      return !isNullOrEmpty(listings);
+    } else {
+      return !isNullOrEmpty(legacyListings.filter(x => !isNullOrEmpty(x.url)));
+    }
   }, [legacyListings, listings]);
 
   return (
@@ -90,7 +91,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         <div className='flex minxl:w-1/2 w-full'>
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
-            mutateListings();
+            mutateLegacyListings();
           }} key={nft?.id} />
         </div>
         {(showListings || nft?.wallet === currentAddress) ?
