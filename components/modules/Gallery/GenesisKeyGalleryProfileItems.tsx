@@ -112,7 +112,7 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
             })
             .map((profile, index) => {
               return (
-                <div className='m-4' key={index}>
+                <div className='m-4 ProfileGalleryCardContainer' key={index}>
                   <ProfileCard profile={profile} />
                 </div>
               );
