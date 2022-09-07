@@ -130,7 +130,7 @@ const EmblaCarousel = (props: slidesProps) => {
               slide.nfts[1]?.metadata?.imageURL,
               slide.nfts[2]?.metadata?.imageURL,
             ]}
-            count={slide.nfts.length}/>;
+            count={slide.actualNumberOfNFTs}/>;
         })}
       </div>
       :
