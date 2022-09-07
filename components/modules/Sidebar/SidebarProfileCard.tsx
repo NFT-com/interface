@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { SetStateAction } from 'react';
 
-type ProfileCardProps = {
+type SidebarProfileCardProps = {
   profile: {
     metadata: {
       header: string
@@ -22,7 +22,7 @@ type ProfileCardProps = {
   isSidebar?: boolean
 };
 
-export default function ProfileCard({ profile, onClick, message, showSwitch, opensModal, isSelected, isSidebar }: ProfileCardProps) {
+export function SidebarProfileCard({ profile, onClick, message, showSwitch, opensModal, isSelected, isSidebar }: SidebarProfileCardProps) {
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
   return (
