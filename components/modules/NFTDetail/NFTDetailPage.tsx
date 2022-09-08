@@ -164,7 +164,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         </div>
       </div>
       <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
-        <NFTDetailMoreFromCollection contract={nft?.contract} />
+        <NFTDetailMoreFromCollection collectionName={collection?.contractMetadata?.name} contract={nft?.contract} />
       </div>
       <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
         <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
