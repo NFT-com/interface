@@ -225,6 +225,7 @@ export type CollectionInput = {
 
 export type CollectionNft = {
   __typename?: 'CollectionNFT';
+  actualNumberOfNFTs: Scalars['Int'];
   collectionAddress: Scalars['Address'];
   nfts: Array<Nft>;
 };
@@ -2032,7 +2033,7 @@ export type TxActivitiesInput = {
   activityType?: InputMaybe<ActivityType>;
   chainId?: InputMaybe<Scalars['String']>;
   contract?: InputMaybe<Scalars['String']>;
-  includeExpired?: InputMaybe<Scalars['Boolean']>;
+  ignoreExpired?: InputMaybe<Scalars['Boolean']>;
   pageInput: PageInput;
   read?: InputMaybe<Scalars['Boolean']>;
   skipRelations?: InputMaybe<Scalars['Boolean']>;
@@ -2061,6 +2062,7 @@ export type TxActivity = {
   read: Scalars['Boolean'];
   status: ActivityStatus;
   timestamp: Scalars['Date'];
+  transaction?: Maybe<TxTransaction>;
   walletAddress: Scalars['String'];
 };
 
@@ -2854,7 +2856,7 @@ export type NftsForCollectionsQueryVariables = Exact<{
 }>;
 
 
-export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
+export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, actualNumberOfNFTs: number, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
 
 export type NumberOfNfTsQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -4283,6 +4285,7 @@ export const NftsForCollectionsDocument = gql`
       }
     }
     collectionAddress
+    actualNumberOfNFTs
   }
 }
     `;

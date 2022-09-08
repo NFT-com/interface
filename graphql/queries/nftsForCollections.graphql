@@ -16,5 +16,6 @@ query NftsForCollections($input: NftsForCollectionsInput!) {
       }
     }
     collectionAddress
+    actualNumberOfNFTs
   }
 }

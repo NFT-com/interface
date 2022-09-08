@@ -1,10 +1,8 @@
-import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { ProfileCard } from 'components/modules/Profile/ProfileCard';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { Doppler, getEnv } from 'utils/env';
-import { getChainIdString, processIPFSURL } from 'utils/helpers';
-import { tw } from 'utils/tw';
+import { getChainIdString } from 'utils/helpers';
 
-import { useRouter } from 'next/router';
 import { useNetwork } from 'wagmi';
 
 export interface NFTDetailFeaturedByProps {
@@ -13,7 +11,6 @@ export interface NFTDetailFeaturedByProps {
 }
 
 export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
-  const router = useRouter();
   const { chain } = useNetwork();
   const { data: profiles } = useProfilesByDisplayedNft(
     props.contract,
@@ -32,24 +29,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     </span>
     <div className='flex items-center snap-x overflow-x-auto sm:no-scrollbar py-2'>
       {profiles?.map((profile, index) => {
-        return <div className={tw(
-          'flex flex-col snap-always snap-center sn:no-scrollbar h-full w-72 shrink-0 p-2 border border-[#D5D5D5] rounded-md cursor-pointer mr-4',
-        )}
-        key={index}
-        onClick={() => {
-          router.push('/' + profile?.url);
-        }}
-        >
-          <RoundedCornerMedia
-            containerClasses='w-full aspect-square'
-            variant={RoundedCornerVariant.All}
-            amount={RoundedCornerAmount.Medium}
-            src={processIPFSURL(profile?.photoURL)}
-          />
-          <div className="flex w-full font-grotesk font-semibold m-2">
-            {profile?.url}
-          </div>
-        </div>;
+        return <ProfileCard key={index} profile={profile} />;
       })}
     </div>
   </div>;

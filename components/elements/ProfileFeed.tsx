@@ -4,16 +4,11 @@ import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 
+import { ProfileCard } from 'components/modules/Profile/ProfileCard';
 import { ProfileQuery } from 'graphql/generated/types';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import { tw } from 'utils/tw';
 
-import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
-
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import SwiperCore, {
-  Autoplay,Navigation } from 'swiper/core';
+import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 SwiperCore.use([Autoplay, Navigation]);
@@ -23,33 +18,22 @@ interface ProfileFeedProps {
 }
 
 export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
-  const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
 
   return (
-    <Swiper slidesPerView={screenWidth < 600 ? 1.2 : screenWidth >= 600 && screenWidth < 900 ? 3.2 : 4.2} centeredSlides={false} loop={true} autoplay={{
-      'delay': 3000,
-      'disableOnInteraction': false
-    }} className="flex space-x-1 py-4 drop-shadow-2xl">
+    <Swiper
+      slidesPerView={screenWidth < 600 ? 1.2 : screenWidth >= 600 && screenWidth < 900 ? 3.2 : 4.2}
+      centeredSlides={false}
+      loop={true}
+      autoplay={{
+        'delay': 3000,
+        'disableOnInteraction': false
+      }}
+      className="flex drop-shadow-2xl"
+    >
       {profiles.map((profile, index) => (
-        <SwiperSlide key={profile?.profile?.id ?? index} className='flex-none cursor-pointer'>
-          <Link href={`/${profile?.profile?.url}`} passHref>
-            <a>
-              <RoundedCornerMedia
-                src={profile?.profile?.photoURL}
-                variant={RoundedCornerVariant.All}
-                containerClasses={tw(
-                  'h-[390px] w-[93%] flex-none cursor-pointer relative',
-                )}
-                onClick={() => router.push(`/${profile.profile.url}`)}
-              />
-              <div className='relative w-[93%] h-full flex-none rounded-b-3xl'>
-                <div className='absolute h-[45px] minlg:h-[50px] rounded-b-3xl bottom-0 flex flex-row items-center w-full bg-white/30 backdrop-blur-md'>
-                  <p className='text-white text-lg minlg:text-xl font-grotesk pl-6'>{profile?.profile?.url}</p>
-                </div>
-              </div>
-            </a>
-          </Link>
+        <SwiperSlide key={profile?.profile?.id ?? index} virtualIndex={index} className='flex-none cursor-pointer ml-12'>
+          <ProfileCard profile={profile?.profile} />
         </SwiperSlide>
       ))}
     </Swiper>
