@@ -10,7 +10,7 @@ module.exports = {
       {
         userAgent: '*',
         disallow: ['/*'],
-        allow: ['/articles', '/articles/what-is-an-nft'],
+        allow: ['/articles', '/articles/*'],
       }
     ]
   },
