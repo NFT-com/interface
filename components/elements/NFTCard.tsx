@@ -118,7 +118,7 @@ export function NFTCard(props: NFTCardProps) {
   return (
     <div
       className={tw(
-        `drop-shadow-md rounded-2xl flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
+        `drop-shadow-md rounded-[10px] flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
