@@ -52,7 +52,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
 
     if (target.value.length < 3) {
       setShowHits(false);
-      if (target.value.length > 1) {
+      if (target.value.length > 0) {
         return;
       }
     }
@@ -172,9 +172,11 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
                 autoCapitalize="off"
                 spellCheck="false"
                 autoFocus
-                required maxLength={512}
+                maxLength={512}
                 className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-                onKeyUp={(event) => search(event)}/>
+                onKeyUp={(event) => search(event)}
+                onChange={(event) => !event.target.value && setShowHits(false)}
+              />
             </div>
           </div>
           <div className='flex items-center cursor-pointer block minlg:hidden' onClick={() => {
@@ -189,13 +191,13 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
               ref={resultsRef}
               className={tw(
                 isHeader ? 'absolute mt-16 max-w-[27rem]' : '',
-                'bg-always-white flex flex-col w-full py-4 text-rubik')}>
+                'bg-always-white flex flex-col w-full text-rubik')}>
               {searchResults.length > 0 && <>
                 {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                  (<div className="mt-10 self-center text-base font-grotesk font-medium text-gray-500">
+                  (<div className="mt-10 self-center text-base font-grotesk font-medium text-gray-500 pb-4">
                 No results found. Please try another keyword.
                   </div>):
-                  <>
+                  <div className="py-4">
                     <ResultsContent searchResults={searchResults} />
                     {isHeader ?
                       <span className="px-5 text-xs text-gray-400">Press enter for all results</span> :
@@ -212,14 +214,14 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
                           type={ButtonType.PRIMARY}
                         />
                       </div>}
-                  </>
+                  </div>
                 }
               </>}
             </div>)
           :
           isHeader
             ? '' :
-            (<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500">
+            (<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500 pb-4">
               Enter a keyword to begin searching.
             </div>)}
       </div>

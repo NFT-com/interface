@@ -72,7 +72,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
 
   return(
     <>
-      <div className="my-10 minlg:mb-10 minlg:mt-20 max-w-lg minmd:max-w-full mx-[4%] minmd:mx-[2%] minlg:mr-[2%] minlg:ml-0 self-center minmd:self-stretch">
+      <div className="my-10 minlg:mb-10 minlg:mt-20 max-w-lg minmd:max-w-full mx-[4%] minmd:mx-[2%] minlg:mr-[2%] minlg:ml-0 self-center minmd:self-stretch minxl:max-w-nftcom minxl:mx-auto h-screen">
         <div className="flex">
           <div className="hidden minlg:block">
             <SideNav onSideNav={changeCurated}/>
@@ -102,7 +102,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                           collection.nfts[1]?.metadata?.imageURL,
                           collection.nfts[2]?.metadata?.imageURL,
                         ]}
-                        count={collection.nfts.length}
+                        count={collection.actualNumberOfNFTs}
                       />
                     </div>);
                 })}

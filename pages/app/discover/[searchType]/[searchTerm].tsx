@@ -50,7 +50,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   let addressesList = [];
   
   useSWR(collectionsSliderData, async () => {
-    searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
+    searchType?.toString() !== 'nfts' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
@@ -59,7 +59,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   });
 
   useEffect(() => {
-    searchType?.toString() === 'allResults' && fetchTypesenseMultiSearch({ searches: [{
+    fetchTypesenseMultiSearch({ searches: [{
       collection: 'collections',
       query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
@@ -141,7 +141,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }
 
   return (
-    <div className="mt-20 mb-10">
+    <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen">
       <div className="flex">
         <div className="hidden minlg:block">
           <SideNav onSideNav={() => null} filtersData={filters}/>
@@ -218,7 +218,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           nftsForCollections[index]?.nfts[1]?.metadata?.imageURL,
                           nftsForCollections[index]?.nfts[2]?.metadata?.imageURL,
                         ]}
-                        count={nftsForCollections[index]?.nfts.length}
+                        count={nftsForCollections[index]?.actualNumberOfNFTs}
                       />:
                       <NFTCard
                         title={item.document.nftName}

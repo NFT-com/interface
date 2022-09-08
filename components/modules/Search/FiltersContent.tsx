@@ -62,7 +62,7 @@ const ContractNameFilter = (props: any) => {
 
   return (
     <div className="mt-3">
-      <div className={tw(
+      {filterOptions.length > 1 && <div className={tw(
         'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black bg-gray-200')}>
         <SearchIcon className='mr-2 shrink-0 aspect-square' />
         <div className="w-full">
@@ -79,7 +79,7 @@ const ContractNameFilter = (props: any) => {
             className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
             onChange={(event) => setSearchVal(event.target.value)}/>
         </div>
-      </div>
+      </div>}
       <div className="overflow-y-scroll max-h-[12.5rem] filter-scrollbar">
         {filteredContracts.map((item, index) => {
           return (
@@ -212,7 +212,7 @@ const Filter = (props: any) => {
     case 'listingType':
       return 'Listing Type';
     default:
-      return title.charAt(0).toUpperCase() + title.slice(1);
+      return title?.charAt(0).toUpperCase() + title?.slice(1);
     }
   };
 
@@ -240,7 +240,7 @@ const Filter = (props: any) => {
               clearedFilters={clearedFilters}
               setClearedFilters={setClearedFilters}
             />) :
-            filter.counts.map((item, index) => {
+            filter.counts?.map((item, index) => {
               return (
                 <div key={index} className="mt-3 overflow-y-hidden">
                   <FilterOption
@@ -263,6 +263,18 @@ export const FiltersContent = () => {
   const [checked, setChecked] = useState([]);
   const [clearedFilters, setClearedFilters] = useState(false);
   
+  const updateCheckedString = useCallback(() => {
+    const checkedList =[];
+    checked.forEach(item => {
+      if (item.selectedCheck.toString()[0] === ',') item.selectedCheck = item.selectedCheck.slice(1);
+      item.selectedCheck !== '' && checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
+    });
+    const checkedFiltersString = checkedList.join(' && ');
+
+    setNftsPageAppliedFilters(sortBy, checkedFiltersString, false);
+    // searchModalOpen && setSearchModalOpen(false);
+  }, [checked, setNftsPageAppliedFilters, sortBy]);
+
   const setCheckedFilters = useCallback((fieldName: string, selectedCheck: string, selected: boolean) => {
     const foundItem = checked.find(i => i.fieldName === fieldName);
     if (selected) {
@@ -275,7 +287,8 @@ export const FiltersContent = () => {
       const removedCheck = (foundItem.selectedCheck.split(',')).filter(i => i !== selectedCheck);
       foundItem.selectedCheck = removedCheck.join(',');
     }
-  }, [checked]);
+    updateCheckedString();
+  }, [checked, updateCheckedString]);
 
   return (
     <>
@@ -321,27 +334,18 @@ export const FiltersContent = () => {
         </div>
         <div
           onClick={ () => {
-            setClearedFilters(true);
-            setChecked([]);
+            setNftsPageAppliedFilters('', '', false);
           }}
           className="px-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">
           Clear filters
         </div>
-        <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+        <div className="minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
           <Button
             color={'black'}
             accent={AccentType.SCALE}
             stretch={true}
             label={'Apply Filter'}
             onClick={() => {
-              const checkedList =[];
-              checked.forEach(item => {
-                if (item.selectedCheck.toString()[0] === ',') item.selectedCheck = item.selectedCheck.slice(1);
-                item.selectedCheck !== '' && checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
-              });
-              const checkedFiltersString = checkedList.join(' && ');
-
-              setNftsPageAppliedFilters(sortBy, checkedFiltersString, false);
               searchModalOpen && setSearchModalOpen(false);
             }}
             type={ButtonType.PRIMARY}
