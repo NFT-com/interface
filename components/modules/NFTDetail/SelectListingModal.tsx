@@ -21,19 +21,19 @@ export function SelectListingModal(props: SelectListingsModalProps) {
   const { visible, onClose, nft, listings, collectionName } = props;
 
   const getModalContent = useCallback(() => {
-    return <div className='flex flex-col'>
-      <div className="flex items-center">
+    return <div className='flex flex-col font-grotesk'>
+      <div className="flex flex-col items-center">
         <RoundedCornerMedia
-          containerClasses='w-2/4 aspect-square'
+          containerClasses='w-full aspect-square'
           src={processIPFSURL(nft?.metadata?.imageURL)}
           variant={RoundedCornerVariant.All}
           amount={RoundedCornerAmount.Medium}
         />
-        <div className="flex flex-col px-8">
-          <div className="whitespace-nowrap text-lg font-normal font-grotesk text-[#1F2127]">
+        <div className="flex flex-col w-full mt-4">
+          <div className="whitespace-nowrap text-base font-normal font-grotesk text-secondary-txt">
             {isNullOrEmpty(collectionName) ? 'Unknown Collection' : collectionName}
           </div>
-          <div className="whitespace-nowrap text-lg font-bold font-grotesk text-[#1F2127]">
+          <div className="whitespace-nowrap text-xl font-bold font-grotesk text-[#1F2127]">
             {isNullOrEmpty(nft?.metadata?.name) ? 'Unknown Name' : nft?.metadata?.name}
           </div>
         </div>
