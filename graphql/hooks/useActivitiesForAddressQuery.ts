@@ -36,7 +36,6 @@ export function useActivitiesForAddressQuery(address: string, chainId: string, p
         pageInput,
         chainId,
         walletAddress: address,
-        includeExpired: true,
         status: ActivityStatus.Valid
       }
     });
