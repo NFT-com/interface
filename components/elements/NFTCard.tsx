@@ -7,12 +7,13 @@ import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
-import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
+import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
@@ -22,7 +23,7 @@ import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 import { BigNumber, ethers } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import { MouseEvent, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { MouseEvent, useCallback, useContext, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
@@ -33,7 +34,6 @@ export interface NFTCardTrait {
 
 export interface NFTCardProps {
   title: string;
-  subtitle?: string;
   cta?: string;
   contractAddress?: string;
   collectionName?: string;
@@ -71,8 +71,7 @@ export function NFTCard(props: NFTCardProps) {
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { getByContractAddress } = useSupportedCurrencies();
   const [selected, setSelected] = useState(false);
-  const [lowestListing, setLowestListing] = useState(null);
-  const lowestPrice = getListingPrice(lowestListing);
+  const ethPriceUsd: number = useEthPriceUSD();
 
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
@@ -90,6 +89,8 @@ export function NFTCard(props: NFTCardProps) {
     defaultChainId
   );
 
+  const lowestListing = getLowestPriceListing(listings, ethPriceUsd, defaultChainId);
+  const lowestPrice = getListingPrice(lowestListing);
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-xs minmd:text-sm' style={{ color: pink }}>
@@ -103,17 +104,6 @@ export function NFTCard(props: NFTCardProps) {
       </span>
     </div>;
   }, [pink, secondaryText]);
-
-  useEffect(() => {
-    let lowestPrice = null;
-    listings.map((listing) => {
-      const price = getListingPrice(listing);
-      if(!lowestPrice || price < lowestPrice){
-        lowestPrice = price;
-        setLowestListing(listing);
-      }
-    });
-  }, [listings, legacyListings]);
 
   const showListingIcons: boolean = useMemo(() => {
     if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
@@ -290,10 +280,10 @@ export function NFTCard(props: NFTCardProps) {
         )}>
           {isNullOrEmpty(props.collectionName) ? 'Unknown Name' : props.collectionName}
         </span>
-        {props.subtitle && <span
+        {props.title && <span
           className='text-ellipsis overflow-hidden font-medium'
         >
-          {props.subtitle}
+          {props.title}
         </span>}
         {(props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
  

@@ -297,7 +297,6 @@ export function Collection(props: CollectionProps) {
                         contractAddress={nft.document.contractAddr}
                         tokenId={nft.document.tokenId}
                         title={nft.document.nftName}
-                        subtitle={'#'+ nft.document.tokenId}
                         images={[nft.document.imageURL]}
                         collectionName={nft.document.contractName}
                         onClick={() => {
