@@ -1,6 +1,6 @@
 import { BarGraph } from 'components/modules/Analytics/BarGraph';
 import { LineVis } from 'components/modules/Analytics/LineVis';
-import { useGetSalesStats } from 'hooks/analytics/nftport/collections/useGetSalesStats';
+import { useGetContractSalesStatisticsQuery } from 'graphql/hooks/useGetContractSalesStatisticsQuery';
 import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
@@ -29,7 +29,7 @@ const marketplaces = {
 
 export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsContainerProps) => {
   const { chain } = useNetwork();
-  const collectionSalesHistory = useGetSalesStats(contract);
+  const collectionSalesHistory = useGetContractSalesStatisticsQuery(contract);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
@@ -50,13 +50,13 @@ export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsCo
       return;
     } else {
       if(!collectionLineData) {
-        setCollectionLineData([{ 'date': thirtyDaysAgo, 'value': collectionSalesHistory?.statistics.floor_price_historic_thirty_day },
-          { 'date': sevenDaysAgo, 'value': collectionSalesHistory?.statistics.floor_price_historic_seven_day },
-          { 'date': oneDayAgo, 'value': collectionSalesHistory?.statistics.floor_price_historic_one_day }]);
+        setCollectionLineData([{ 'date': thirtyDaysAgo, 'value': collectionSalesHistory?.data?.statistics.floor_price_historic_thirty_day },
+          { 'date': sevenDaysAgo, 'value': collectionSalesHistory?.data?.statistics.floor_price_historic_seven_day },
+          { 'date': oneDayAgo, 'value': collectionSalesHistory?.data?.statistics.floor_price_historic_one_day }]);
       }
-      setSingleDayVolume({ 'date': oneDayAgo, 'value': collectionSalesHistory.statistics.one_day_volume });
-      setSevenDayVolume({ 'date': sevenDaysAgo, 'value': collectionSalesHistory.statistics.seven_day_volume });
-      setThirtyDayVolume({ 'date': thirtyDaysAgo, 'value': collectionSalesHistory.statistics.thirty_day_volume });
+      setSingleDayVolume({ 'date': oneDayAgo, 'value': collectionSalesHistory?.data?.statistics.one_day_volume });
+      setSevenDayVolume({ 'date': sevenDaysAgo, 'value': collectionSalesHistory?.data?.statistics.seven_day_volume });
+      setThirtyDayVolume({ 'date': thirtyDaysAgo, 'value': collectionSalesHistory?.data?.statistics.thirty_day_volume });
 
       setCollectionBarData(collectionSalesHistory);
     }
