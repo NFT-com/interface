@@ -294,16 +294,18 @@ export function Collection(props: CollectionProps) {
                   return (
                     <div className="NftCollectionItem" key={index}>
                       <NFTCard
+                        contractAddress={nft.document.contractAddr}
+                        tokenId={nft.document.tokenId}
                         title={nft.document.nftName}
-                        subtitle={'#'+ nft.document.tokenId}
                         images={[nft.document.imageURL]}
+                        collectionName={nft.document.contractName}
                         onClick={() => {
                           if (nft.document.nftName) {
                             router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
                           }
                         }}
                         description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
-                        customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+                        customBorderRadius={'rounded-tl rounded-tr'}
                       />
                     </div>);}
                 )}

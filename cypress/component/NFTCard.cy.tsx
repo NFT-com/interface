@@ -36,7 +36,7 @@ describe('NFTCard', () => {
       <WagmiConfig client={client}>
         <NFTCard
           title={'test_nft'}
-          subtitle="test_subtitle"
+          collectionName="test_collection"
           images={[]}
           onClick={onClick}
           visible={true}
@@ -44,7 +44,7 @@ describe('NFTCard', () => {
         />
       </WagmiConfig>
     );
-    cy.findByText('test_subtitle').should('exist');
+    cy.findByText('test_collection').should('exist');
     cy.get('#eye').should('exist');
   });
 });
