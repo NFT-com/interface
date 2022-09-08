@@ -46,7 +46,7 @@ export function SelectListingModal(props: SelectListingsModalProps) {
               listing={listing}
               nft={nft}
               collectionName={collectionName}
-              buttons={[ListingButtonType.AddToCart, ListingButtonType.View]}
+              buttons={[ListingButtonType.AddToCart]}
             />;
           })
         }
