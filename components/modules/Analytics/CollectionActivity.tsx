@@ -1,29 +1,28 @@
 
 import { useGetTxByContractQuery } from 'graphql/hooks/useGetTxByContractQuery';
-import { Doppler,getEnv } from 'utils/env';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useNetwork } from 'wagmi';
 
 export type CollectionActivityProps = {
   contract: string;
 }
 export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
-  const { chain } = useNetwork();
+  const defaultChainId = useDefaultChainId();
   const txs = useGetTxByContractQuery(contract);
   const [collectionData, setCollectionData] = useState(null);
   
   useEffect(() => {
-    if((chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') || !txs) {
+    if(defaultChainId !== '1' || !txs) {
       return;
     } else {
       if(!collectionData && txs) {
         setCollectionData(txs?.data?.transactions);
       }
-    }}, [chain?.id, collectionData, txs]);
+    }}, [defaultChainId, collectionData, txs]);
 
   const formatMarketplaceName = (name) => {
     if(name === 'opensea'){

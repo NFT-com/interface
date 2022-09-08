@@ -1,14 +1,12 @@
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { Doppler, getEnv } from 'utils/env';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
-import { useNetwork } from 'wagmi';
 
 export type TxHistoryProps = {
   data: PartialDeep<Nft>;
@@ -17,17 +15,16 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
   const defaultChainId = useDefaultChainId();
   const nftTransactionHistory = useGetTxByNFTQuery(data?.contract, parseInt(data?.tokenId, 16).toString(), 'all');
   const [nftData, setNftdata] = useState(null);
-  const { chain } = useNetwork();
 
   useEffect(() => {
-    if((chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') || !nftTransactionHistory) {
+    if(defaultChainId !== '1' || !nftTransactionHistory) {
       return;
     } else {
       if(!nftData && nftTransactionHistory) {
         setNftdata(nftTransactionHistory?.data?.transactions);
       }
     }
-  }, [chain?.id, defaultChainId, nftData, nftTransactionHistory]);
+  }, [defaultChainId, nftData, nftTransactionHistory]);
 
   const formatMarketplaceName = (name) => {
     if(name === 'opensea'){
