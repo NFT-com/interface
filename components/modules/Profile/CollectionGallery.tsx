@@ -116,7 +116,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             'bg-auto bg-center'
           )}
           style={{
-            backgroundImage: `url(${collectionData?.nftPortResults?.bannerUrl ? `${collectionData?.nftPortResults?.bannerUrl} + ?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null})`
+            backgroundImage: `url(${collectionData?.nftPortResults?.bannerUrl ? `${collectionData?.nftPortResults?.bannerUrl}` : null})`
           }}
         /> :
         ''

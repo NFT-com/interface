@@ -4,8 +4,13 @@ query Collection($input: CollectionInput!) {
       id
       contract
       name
+      chainId
       deployer
+      bannerUrl
+      logoUrl
       description
+      isCurated
+      isSpam
     }
     nftPortResults {
       name
