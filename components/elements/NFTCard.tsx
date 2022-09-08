@@ -1,17 +1,24 @@
+import { SupportedExternalExchange } from 'graphql/generated/types';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
-import { Doppler, getEnv } from 'utils/env';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { ExternalProtocol } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
+import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
+import { BigNumber } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import { MouseEvent, useCallback, useState } from 'react';
+import { MouseEvent, useCallback, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 export interface NFTCardTrait {
   key: string,
   value: string,
@@ -51,15 +58,24 @@ export function NFTCard(props: NFTCardProps) {
   const { tileBackground, secondaryText, pink, link, secondaryIcon } = useThemeColors();
 
   const { address: currentAddress } = useAccount();
-  const { chain } = useNetwork();
+  const defaultChainId = useDefaultChainId();
   const [selected, setSelected] = useState(false);
 
-  const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)))) && !isNullOrEmpty(props.tokenId) ?
+  const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
 
-  // todo: replace this with TxActivity query
-  const { data: listings } = useExternalListingsQuery(props?.contractAddress, props?.tokenId, String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
+  const { data: listings } = useListingActivitiesQuery(
+    props?.contractAddress,
+    props?.tokenId,
+    defaultChainId
+  );
+  
+  const { data: legacyListings } = useExternalListingsQuery(
+    props?.contractAddress,
+    props?.tokenId,
+    defaultChainId
+  );
 
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
@@ -75,10 +91,34 @@ export function NFTCard(props: NFTCardProps) {
     </div>;
   }, [pink, secondaryText]);
 
+  const showListingIcons: boolean = useMemo(() => {
+    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+      return !isNullOrEmpty(listings);
+    } else {
+      return !isNullOrEmpty(legacyListings?.filter((l) => !isNullOrEmpty(l.url)));
+    }
+  }, [legacyListings, listings]);
+
+  const showOpenseaListingIcon: boolean = useMemo(() => {
+    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+      return listings?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
+    } else {
+      return legacyListings?.find(listing => listing.price != null && listing.exchange === SupportedExternalExchange.Opensea) != null;
+    }
+  }, [listings, legacyListings]);
+
+  const showLooksrareListingIcon: boolean = useMemo(() => {
+    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+      return listings?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
+    } else {
+      return legacyListings?.find(listing => listing.price != null && listing.exchange === SupportedExternalExchange.Looksrare) != null;
+    }
+  }, [legacyListings, listings]);
+
   return (
     <div
       className={tw(
-        `drop-shadow-md rounded-2xl flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
+        `drop-shadow-md rounded-[10px] flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
@@ -140,36 +180,38 @@ export function NFTCard(props: NFTCardProps) {
             {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }
           </div>
       }
-      {(listings?.find(listing => listing.price != null) != null) && (
+      {showListingIcons && (
         <div className='absolute left-3 top-4 z-50'>
-          {listings[0].price &&
+          {showOpenseaListingIcon &&
               <OpenseaIcon
-                onClick={() => {
+                onClick={(e: MouseEvent<any>) => {
                   window.open(
-                    listings[0].url,
+                    getOpenseaAssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
                     '_blank'
                   );
+                  e.stopPropagation();
                 }}
                 className='h-9 w-9 relative shrink-0 hover:opacity-70 '
                 alt="Opensea logo redirect"
                 layout="fill"
               />
           }
-          {listings[1].price &&
+          {showLooksrareListingIcon &&
               <LooksrareIcon
-                onClick={() => {
+                onClick={(e: MouseEvent<any>) => {
                   window.open(
-                    listings[1].url,
+                    getLooksrareAssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
                     '_blank'
                   );
+                  e.stopPropagation();
                 }}
                 className='h-9 w-9 relative shrink-0 hover:opacity-70'
                 alt="Looksrare logo redirect"
                 layout="fill"
               />
           }
-        </div>)
-      }
+        </div>
+      )}
       {
         props.images.length <= 1 && props.imageLayout !== 'row' ?
           <div

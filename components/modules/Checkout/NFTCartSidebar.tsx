@@ -37,7 +37,8 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const {
     toBuy,
     clear: clearPurchases,
-    removePurchase
+    removePurchase,
+    togglePurchaseSummaryModal
   } = useContext(NFTPurchasesContext);
 
   const stagedNFTs = filterNulls<StagedListing | StagedPurchase>(props.selectedTab === 'Sell' ? toList : toBuy);
@@ -70,7 +71,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
         </span>}
       </div>
       <div className='w-full px-4 mt-10'>
-        <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])}>
+        <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])} selectedIndex={props.selectedTab === 'Buy' ? 0 : 1}>
           <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
             {['Buy', 'Sell'].map((detailTab, index) => (
               <Tab
@@ -114,10 +115,14 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
       ) && <div className="mx-8 my-4 flex">
         <Button
           stretch
-          label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Buy'}
+          label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Continue to Buy'}
           onClick={() => {
-            toggleCartSidebar();
-            router.push(props.selectedTab === 'Sell' ? '/app/list' : '/app/buy');
+            if (props.selectedTab === 'Sell') {
+              toggleCartSidebar();
+              router.push('/app/list' );
+            } else {
+              togglePurchaseSummaryModal();
+            }
           }}
           type={ButtonType.PRIMARY}
         />
