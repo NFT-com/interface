@@ -844,6 +844,7 @@ export type MutationProfileClaimedArgs = {
 
 
 export type MutationRefreshNftOrderArgs = {
+  force?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   ttl?: InputMaybe<Scalars['DateTime']>;
 };

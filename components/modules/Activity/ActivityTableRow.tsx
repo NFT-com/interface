@@ -1,5 +1,5 @@
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
-import { useGetNFTDetails } from 'hooks/analytics/nftport/nfts/useGetNFTDetails';
+import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
@@ -19,7 +19,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
   const { data: collectionData } = useCollectionQuery(defaultChainId, item?.nftContract);
-  const activityNFTInfo = useGetNFTDetails(item?.nftContract, BigNumber.from(item?.nftId[0].split('/')[2]).toNumber().toString());
+  const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, BigNumber.from(item?.nftId[0].split('/')[2]).toNumber().toString());
   const ethPriceUSD = useEthPriceUSD();
 
   useEffect(() => {
@@ -41,11 +41,11 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
     >
       <td className="font-bold text-body leading-body pl-8" >
 
-        {!collectionData?.ubiquityResults?.collection?.name && !activityNFTInfo?.nft?.metadata?.name ?
+        {!collectionData?.nftPortResults?.name && !activityNFTInfo?.nft?.metadata?.name ?
           <p>—</p>
           :
           <>
-            <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionData?.ubiquityResults?.collection?.name || activityNFTInfo?.contract?.name}</p>
+            <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionData?.nftPortResults?.name || activityNFTInfo?.contract?.name}</p>
             <Link href={`/app/nft/${item?.order?.protocolData?.collectionAddress}/${item?.order?.protocolData?.tokenId}`}>
               <p className='text-[#B59007] hover:cursor-pointer -mt-1'>{activityNFTInfo?.nft?.metadata?.name}</p>
             </Link>
