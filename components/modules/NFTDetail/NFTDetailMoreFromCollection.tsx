@@ -1,8 +1,7 @@
 import { NFTCard } from 'components/elements/NFTCard';
-import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
 import { Doppler, getEnv } from 'utils/env';
-import { getChainIdString, processIPFSURL } from 'utils/helpers';
+import { getChainIdString } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
