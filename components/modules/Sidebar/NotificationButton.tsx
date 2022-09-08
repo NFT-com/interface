@@ -22,7 +22,6 @@ export const NotificationButton = ({ buttonText, onClick, bgColor, date }: Notif
       onClick={onClick}
       >
         <p>{buttonText}</p>
-        <p className='text-[#6F6F6F] text-[10px] font-bold uppercase -mt-1'>{moment(date).fromNow()}</p>
       </button>
     </div>
   );
