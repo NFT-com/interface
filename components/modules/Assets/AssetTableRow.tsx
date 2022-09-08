@@ -131,14 +131,14 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toNumber()}`}>
           <div className='hover:cursor-pointer'>
-            <p className='-mt-1 font-bold text-[#B59007]'>{item.metadata.name}</p>
+            <p className='-mt-1 font-bold text-[#B59007]'>{item.metadata?.name}</p>
           </div>
         </Link>
       </td>
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <Link href={`/app/collection/${item?.contract}`}>
           <div className='hover:cursor-pointer'>
-            <p className='-mt-1 font-bold text-[#B59007]'>{collectionData?.collection.name}</p>
+            <p className='-mt-1 font-bold text-[#B59007]'>{collectionData?.collection?.name}</p>
           </div>
         </Link>
       </td>
