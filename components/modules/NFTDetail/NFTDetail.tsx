@@ -64,7 +64,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
       }
     })();
   }, [props, refreshNft, refreshNftOrders]);
-  
+  console.log({ collection });
   return (
     <div className="flex flex-col w-full max-w-nftcom" id="NFTDetailContainer" key={props.nft?.id}>
       <div className={tw(
