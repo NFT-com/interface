@@ -1,7 +1,5 @@
 import { tw } from 'utils/tw';
 
-import moment from 'moment';
-
 type NotificationButtonProps = {
   buttonText: string;
   onClick: () => void;
@@ -9,7 +7,7 @@ type NotificationButtonProps = {
   date: any
 }
 
-export const NotificationButton = ({ buttonText, onClick, bgColor, date }: NotificationButtonProps) => {
+export const NotificationButton = ({ buttonText, onClick, bgColor }: NotificationButtonProps) => {
   return (
     <div className='flex flex-row w-full rounded-2xl'>
       <button className={tw(
