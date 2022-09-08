@@ -36,18 +36,6 @@ describe('nft detail page tests', () => {
     cy.get('#NftChainInfoContainer').should('exist');
   });
 
-  it('trait info container opens on click', () => {
-    cy.get('#headlessui-tabs-tab-2').click();
-    cy.get('#NftPropertiesContainer').should('exist');
-  });
-  
-  // TODO: re-enable when traits are visible on goerli
-  xit('all 8 traits are displayed', () => {
-    cy.get('#headlessui-tabs-tab-2').click();
-    cy.get('#NftPropertiesContainer').should('exist');
-    cy.get('#NftChainInfoContainer').should('not.exist');
-  });
-
   it('all 4 Chain Info items are displayed', () => {
     cy.fixture('nft_details').then((json) => {
       cy.get('#NftChainInfoContainer').should('exist');

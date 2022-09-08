@@ -2,6 +2,7 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
+import { useCallback } from 'react';
 import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 import { PartialDeep } from 'type-fest';
@@ -33,16 +34,20 @@ export function useListingActivitiesQuery(contract: string, tokenId: string, cha
         chainId,
         contract,
         tokenId,
-        status: ActivityStatus.Valid
+        status: ActivityStatus.Valid,
+        ignoreExpired: true
       }
     });
     return result?.getActivities?.items;
   });
+
+  const mutateActivities = useCallback(() => {
+    mutate(keyString);
+  }, [keyString]);
+
   return {
     data: data ?? [],
     loading: data == null,
-    mutate: () => {
-      mutate(keyString);
-    },
+    mutate: mutateActivities,
   };
 }

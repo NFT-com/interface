@@ -1,12 +1,14 @@
+import { NULL_ADDRESS } from 'constants/addresses';
 import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { ExternalProtocol } from 'types';
-import { filterNulls } from 'utils/helpers';
+import { filterDuplicates, filterNulls, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
+import { PurchaseSummaryModal } from './PurchaseSummaryModal';
 
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
@@ -35,6 +37,7 @@ interface NFTPurchaseContextType {
   buyAll: () => Promise<boolean>;
   updateCurrencyApproval: (currency: string, approved: boolean) => void;
   removePurchase: (nft: PartialDeep<Nft>) => void;
+  togglePurchaseSummaryModal: () => void;
 }
 
 // initialize with default values
@@ -45,12 +48,14 @@ export const NFTPurchasesContext = React.createContext<NFTPurchaseContextType>({
   buyAll: () => null,
   updateCurrencyApproval: () => null,
   removePurchase: () => null,
+  togglePurchaseSummaryModal: () => null
 });
 
 export function NFTPurchaseContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
+  const [showPurchaseSummaryModal, setShowPurchaseSummaryModal] = useState(false);
   
   const { toggleCartSidebar } = useContext(NFTListingsContext);
 
@@ -64,6 +69,10 @@ export function NFTPurchaseContextProvider(
       setToBuy(JSON.parse(localStorage.getItem('stagedNftPurchases')) ?? []);
     }
   }, []);
+
+  const togglePurchaseSummaryModal = useCallback(() => {
+    setShowPurchaseSummaryModal(!showPurchaseSummaryModal);
+  }, [showPurchaseSummaryModal]);
 
   const stagePurchase = useCallback((
     purchase: StagedPurchase
@@ -102,29 +111,64 @@ export function NFTPurchaseContextProvider(
   }, [toBuy]);
 
   const buyAll = useCallback(async () => {
-    const tokenAmounts = {
-      tokenAddrs: toBuy?.map(purchase => purchase?.currency),
-      amounts: toBuy?.map(purchase => BigNumber.from(purchase?.price ?? 0))
+    const allDistinctErc20s: string[] = filterDuplicates(
+      toBuy?.filter(purchase => purchase.currency !== NULL_ADDRESS)?.map(purchase => purchase?.currency),
+      (first, second) => sameAddress(first, second)
+    );
+    const erc20Totals: BigNumber[] = allDistinctErc20s?.map(currency => {
+      return toBuy?.reduce((sum, purchase) => {
+        if (sameAddress(purchase.currency, currency)) {
+          return sum.add(BigNumber.from(purchase?.price ?? 0));
+        }
+        return sum;
+      }, BigNumber.from(0));
+    });
+    const erc20Details = {
+      tokenAddrs: allDistinctErc20s,
+      amounts: erc20Totals
     };
-    const orderDetails = filterNulls([
+    const tradeDetails = filterNulls([
       // Looksrare orders are given individually
       ...(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.LooksRare)?.map(looksrarePurchase => {
-        return getLooksrareHex(aggregator.address, looksrarePurchase?.protocolData as LooksrareProtocolData, looksrareExchange, '0');
+        return getLooksrareHex(
+          aggregator.address,
+          looksrarePurchase?.protocolData as LooksrareProtocolData,
+          looksrareExchange,
+          // If this is an ETH listing, we need to specify how much of the the sent ETH (below) should be spent on this specific NFT.
+          looksrarePurchase.currency === NULL_ADDRESS ? BigNumber.from(looksrarePurchase?.price).toString() : '0'
+        );
       }) ?? []),
       // Seaport orders are combined
       toBuy?.find(purchase => purchase.protocol === ExternalProtocol.Seaport) != null ?
         getSeaportHex(
           ethers.utils.getAddress(currentAddress),
-          toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.Seaport)?.map(purchase => purchase?.protocolData as SeaportProtocolData),
-          toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.Seaport)?.map(() => BigNumber.from(0)), // eth values
+          toBuy
+            ?.filter(purchase => purchase?.protocol === ExternalProtocol.Seaport)
+            ?.map(purchase => purchase?.protocolData as SeaportProtocolData),
+          toBuy
+            ?.filter(purchase => purchase?.protocol === ExternalProtocol.Seaport)
+            ?.map((purchase) => purchase.currency === NULL_ADDRESS ? BigNumber.from(purchase.price) : BigNumber.from(0)),
         ) :
         null
     ]);
 
     const tx = await aggregator.batchTrade(
-      tokenAmounts,
-      orderDetails,
-      [] // dustTokens
+      erc20Details,
+      tradeDetails,
+      {
+        conversionDetails: [],
+        dustTokens: [],
+        feeDetails: {
+          _profileTokenId: 0,
+          _wei: 0
+        }
+      },
+      {
+        // total WEI to send (for the ETH listings)
+        value: toBuy
+          .filter(purchase => purchase.currency === NULL_ADDRESS)
+          .reduce((sum, purchase) => sum.add(purchase.price), BigNumber.from(0))
+      }
     ).catch(() => {
       return null;
     });
@@ -140,8 +184,10 @@ export function NFTPurchaseContextProvider(
     stagePurchase,
     clear,
     buyAll,
-    updateCurrencyApproval
+    updateCurrencyApproval,
+    togglePurchaseSummaryModal
   }}>
+    <PurchaseSummaryModal visible={showPurchaseSummaryModal} onClose={() => setShowPurchaseSummaryModal(false)} />
     {props.children}
   </NFTPurchasesContext.Provider>;
 }

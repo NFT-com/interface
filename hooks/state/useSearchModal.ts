@@ -119,6 +119,15 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setClearedFilters = useCallback(() => {
+    mutate({
+      ...data,
+      clearedFilters: true,
+      nftsPageSortyBy: '',
+      nftsPageFilterBy: ''
+    });
+  },[data, mutate]);
+
   return {
     loading,
     modalType: data.modalType,
@@ -144,7 +153,8 @@ export function useSearchModal() {
     setCuratedCollections,
     setSelectedCuratedCollection,
     setCollectionPageAppliedFilters,
-    setNftsPageAppliedFilters
+    setNftsPageAppliedFilters,
+    setClearedFilters
   };
 }
 

@@ -1,10 +1,12 @@
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { processIPFSURL } from 'utils/helpers';
+import { Doppler, getEnvBool } from 'utils/env';
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { DescriptionDetail } from './DescriptionDetail';
@@ -16,9 +18,9 @@ import { NFTDetailMoreFromCollection } from './NFTDetailMoreFromCollection';
 import { Properties } from './Properties';
 
 import { Tab } from '@headlessui/react';
-import { useState } from 'react';
+import { useEffect, useMemo,useState } from 'react';
 import useSWR from 'swr';
-import { useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export interface NFTDetailPageProps {
   collection: string;
@@ -32,20 +34,46 @@ const detailTabTypes = {
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
   const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
-  const { mutate: mutateListings } = useExternalListingsQuery(nft?.contract, nft?.tokenId, String(nft?.wallet.chainId || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)));
 
-  const { chain } = useNetwork();
+  const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
+
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
-    return await getContractMetadata(nft?.contract, chain?.id);
+    return await getContractMetadata(nft?.contract, defaultChainId);
   });
+  
+  const { data: legacyListings, mutate: mutateLegacyListings } = useExternalListingsQuery(
+    nft?.contract,
+    nft?.tokenId,
+    defaultChainId
+  );
+
+  const { data: listings } = useListingActivitiesQuery(
+    nft?.contract,
+    nft?.tokenId,
+    defaultChainId
+  );
+
+  const { refreshNftOrders } = useRefreshNftOrdersMutation();
+
+  useEffect(() => {
+    refreshNftOrders(nft?.id);
+  }, [refreshNftOrders, nft]);
 
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
+
+  const showListings = useMemo(() => {
+    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+      return !isNullOrEmpty(listings);
+    } else {
+      return !isNullOrEmpty(legacyListings.filter(x => !isNullOrEmpty(x.url)));
+    }
+  }, [legacyListings, listings]);
 
   return (
     <div className="flex flex-col pt-20 items-center w-full">
       {nft?.metadata?.imageURL &&
-        <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py-5 minxl:py-10 minmd:px-auto'>
+        <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
           <div className="flex w-full max-w-[600px] h-full object-contain drop-shadow-lg rounded aspect-square">
             <video
               autoPlay
@@ -59,16 +87,28 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
         </div>
       }
-      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] mb-8">
+      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] pb-8 minxl:-mb-8">
         <div className='flex minxl:w-1/2 w-full'>
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
-            mutateListings();
+            mutateLegacyListings();
           }} key={nft?.id} />
         </div>
-        <div className="flex minxl:w-1/2 w-full items-end">
-          <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+        {(showListings || nft?.wallet === currentAddress) ?
+          <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
+            <div className="flex minxl:flex-row w-full items-start">
+              <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+            </div>
+            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
+              <NFTAnalyticsContainer data={nft} />
+            </div>
+          </div>
+          :
+          (defaultChainId === '1') &&
+        <div className="minxl:w-1/2 w-full hidden minxl:flex minxl:overflow-hidden">
+          <NFTAnalyticsContainer data={nft} />
         </div>
+        }
       </div>
       <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
         <div className='flex flex-col w-full minxl:w-1/2'>
@@ -114,27 +154,21 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           }
         </div>
         <div className={tw(
-          'flex flex-col w-full p-4 minxl:w-1/2',
+          'flex flex-col w-full minxl:hidden',
         )}>
-          {(getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) && defaultChainId === '1') &&
+          {(defaultChainId === '1') &&
             <div className="w-full">
               <NFTAnalyticsContainer data={nft} />
             </div>
           }
         </div>
       </div>
-      {
-        getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-        <div className="w-full my-10 flex items-center px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
-          <NFTDetailMoreFromCollection contract={nft?.contract} />
-        </div>
-      }
-      {
-        getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
-        <div className="w-full my-10 flex items-center px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
-          <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
-        </div>
-      }
+      <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
+        <NFTDetailMoreFromCollection collectionName={collection?.contractMetadata?.name} contract={nft?.contract} />
+      </div>
+      <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
+        <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
+      </div>
     </div>
   );
 }
