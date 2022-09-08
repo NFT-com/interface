@@ -1,21 +1,29 @@
-import { SupportedExternalExchange } from 'graphql/generated/types';
+import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
+import { getAddressForChain, nftAggregator } from 'constants/contracts';
+import { WETH } from 'constants/tokens';
+import { LooksrareProtocolData, SeaportProtocolData, SupportedExternalExchange } from 'graphql/generated/types';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import { MouseEvent, useCallback, useMemo, useState } from 'react';
+import { MouseEvent, useCallback, useContext, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
@@ -26,9 +34,9 @@ export interface NFTCardTrait {
 
 export interface NFTCardProps {
   title: string;
-  subtitle?: string;
   cta?: string;
   contractAddress?: string;
+  collectionName?: string;
   tokenId?: string;
   header?: NFTCardTrait;
   traits?: NFTCardTrait[];
@@ -55,11 +63,15 @@ export interface NFTCardProps {
 }
 
 export function NFTCard(props: NFTCardProps) {
-  const { tileBackground, secondaryText, pink, link, secondaryIcon } = useThemeColors();
-
+  const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
+  const { tileBackground, secondaryText, pink, secondaryIcon, link } = useThemeColors();
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
+  const { toggleCartSidebar } = useContext(NFTListingsContext);
+  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const { getByContractAddress } = useSupportedCurrencies();
   const [selected, setSelected] = useState(false);
+  const ethPriceUsd: number = useEthPriceUSD();
 
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
@@ -77,6 +89,8 @@ export function NFTCard(props: NFTCardProps) {
     defaultChainId
   );
 
+  const lowestListing = getLowestPriceListing(listings, ethPriceUsd, defaultChainId);
+  const lowestPrice = getListingPrice(lowestListing);
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
       <span className='text-xs minmd:text-sm' style={{ color: pink }}>
@@ -118,7 +132,7 @@ export function NFTCard(props: NFTCardProps) {
   return (
     <div
       className={tw(
-        `drop-shadow-md rounded-[10px] flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
+        `drop-shadow-md rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
@@ -126,6 +140,7 @@ export function NFTCard(props: NFTCardProps) {
         props.customBorder ?? '',
         'cursor-pointer transform hover:scale-105',
         'overflow-hidden',
+        'p-2 border border-[#D5D5D5]'
       )}
       style={{
         backgroundColor: props.customBackground ?? tileBackground
@@ -259,19 +274,16 @@ export function NFTCard(props: NFTCardProps) {
               })}
             </div>
       }
-      {props.nftsDescriptionsVisible != false && <div className="p-3 minlg:p-4 flex flex-col">
+      {props.nftsDescriptionsVisible != false && <div className="flex flex-col">
         <span className={tw(
-          ' text-base minmd:text-lg minlg:text-xl minxl:text-2xl font-semibold truncate',
-          isNullOrEmpty(props.title) ?
-            'text-secondary-txt' :
-            props.lightModeForced ? 'text-primary-txt':'text-primary-txt dark:text-primary-txt-dk'
+          'text-[#6F6F6F] text-sm pt-[10px]'
         )}>
-          {isNullOrEmpty(props.title) ? 'Unknown Name' : props.title}
+          {isNullOrEmpty(props.collectionName) ? 'Unknown Name' : props.collectionName}
         </span>
-        {props.subtitle && <span
-          className='text-xs minmd:text-sm  text-secondary-txt mt-2 text-ellipsis overflow-hidden'
+        {props.title && <span
+          className='text-ellipsis overflow-hidden font-medium'
         >
-          {props.subtitle}
+          {props.title}
         </span>}
         {(props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
  
@@ -288,6 +300,44 @@ export function NFTCard(props: NFTCardProps) {
             >
               {props.cta}
             </div>
+        }
+
+        {showListingIcons && !nft?.isOwnedByMe && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
+          <div className='flex flex-col minmd:flex-row flex-wrap mt-3 justify-between'>
+            <div className='flex flex-col pr-2'>
+              <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>
+              <p className='font-medium'>
+                {lowestPrice && ethers.utils.formatEther(lowestPrice)}
+                {' '}
+                {lowestListing && getByContractAddress(getListingCurrencyAddress(lowestListing) ?? WETH.address).name}
+              </p>
+            </div>
+            <div>
+              <button onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+                e.stopPropagation();
+                const listing = lowestListing;
+                const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
+                const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
+                const price = getListingPrice(listing);
+                stagePurchase({
+                  nft: nft,
+                  activityId: listing?.id,
+                  currency: getListingCurrencyAddress(listing) ?? WETH.address,
+                  price: price,
+                  collectionName: props.collectionName,
+                  protocol: listing?.order?.protocol as ExternalProtocol,
+                  isApproved: BigNumber.from(allowance ?? 0).gt(price),
+                  protocolData: listing?.order?.protocol === ExternalProtocol.Seaport ?
+                    listing?.order?.protocolData as SeaportProtocolData :
+                    listing?.order?.protocolData as LooksrareProtocolData
+                });
+                toggleCartSidebar('Buy');
+              }}
+              className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-5 rounded focus:outline-none focus:shadow-outline w-full" type="button">
+                Add to cart
+              </button>
+            </div>
+          </div>
         }
       </div>}
     </div>
