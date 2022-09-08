@@ -34,7 +34,8 @@ export function useListingActivitiesQuery(contract: string, tokenId: string, cha
         chainId,
         contract,
         tokenId,
-        status: ActivityStatus.Valid
+        status: ActivityStatus.Valid,
+        ignoreExpired: true
       }
     });
     return result?.getActivities?.items;

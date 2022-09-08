@@ -1,12 +1,12 @@
 import '../../plugins/tailwind';
 
 /// <reference types="cypress" />
-import ProfileCard from '../../../components/modules/Sidebar/ProfileCard';
+import { SidebarProfileCard } from '../../../components/modules/Sidebar/SidebarProfileCard';
 
 describe('Profile Card', () => {
   it('should render with basic valid props', () => {
     cy.mount(
-      <ProfileCard
+      <SidebarProfileCard
         onClick={() => null}
         isSidebar={false}
         opensModal
@@ -25,7 +25,7 @@ describe('Profile Card', () => {
 
   it('should render with basic valid props, and switch active', () => {
     cy.mount(
-      <ProfileCard
+      <SidebarProfileCard
         onClick={() => null}
         isSidebar={false}
         opensModal
@@ -45,7 +45,7 @@ describe('Profile Card', () => {
 
   it('should render with basic valid props for sidebar, and switch active', () => {
     cy.mount(
-      <ProfileCard
+      <SidebarProfileCard
         onClick={() => null}
         isSidebar={true}
         opensModal
