@@ -17,7 +17,10 @@ export function useRefreshNftOrdersMutation() {
       }
       setLoading(true);
       try {
-        await sdk.RefreshNftOrders({ id: nftId });
+        await sdk.RefreshNftOrders({
+          id: nftId,
+          force: true
+        });
         setLoading(false);
         return true;
       } catch (err) {

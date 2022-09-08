@@ -2499,6 +2499,8 @@ export type RefreshNftMutation = { __typename?: 'Mutation', refreshNft: { __type
 
 export type RefreshNftOrdersMutationVariables = Exact<{
   id: Scalars['ID'];
+  ttl?: InputMaybe<Scalars['DateTime']>;
+  force?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -3121,8 +3123,8 @@ export const RefreshNftDocument = gql`
 }
     `;
 export const RefreshNftOrdersDocument = gql`
-    mutation RefreshNftOrders($id: ID!) {
-  refreshNFTOrder(id: $id)
+    mutation RefreshNftOrders($id: ID!, $ttl: DateTime, $force: Boolean) {
+  refreshNFTOrder(id: $id, ttl: $ttl, force: $force)
 }
     `;
 export const RemoveFromWatchlistDocument = gql`
