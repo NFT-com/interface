@@ -1,10 +1,8 @@
-import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import NotificationsModal from 'components/modules/Notifications/NotificationsModal';
 import NftOwner from 'components/modules/Settings/NftOwner';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
 import MobileNoAccount from 'components/modules/Sidebar/MobileNoAccount';
-import { Notifications } from 'components/modules/Sidebar/Notifications';
 import SignIn from 'components/modules/Sidebar/SignIn';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useSidebar } from 'hooks/state/useSidebar';
