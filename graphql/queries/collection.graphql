@@ -7,28 +7,12 @@ query Collection($input: CollectionInput!) {
       deployer
       description
     }
-    ubiquityResults {
-      collection {
-        id
-        name
-        description
-        logo
-        banner
-        verified
-        contracts {
-          address
-          name
-          symbol
-          description
-          image_url
-          type
-        }
-        meta {
-          discord_url
-          external_url
-          twitter_username
-        }
-      }
+    nftPortResults {
+      name
+      symbol
+      bannerUrl
+      logoUrl
+      description
     }
   }
 }

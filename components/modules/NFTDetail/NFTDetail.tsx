@@ -7,8 +7,9 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { Doppler, getEnv } from 'utils/env';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -19,8 +20,9 @@ import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 export interface NFTDetailProps {
   nft: PartialDeep<Nft>;
   onRefreshSuccess?: () => void;
@@ -29,8 +31,14 @@ export interface NFTDetailProps {
 export const NFTDetail = (props: NFTDetailProps) => {
   const router = useRouter();
 
-  const { chain } = useNetwork();
-  const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.nft?.contract);
+  const defaultChainId = useDefaultChainId();
+  
+  const { data: collection } = useCollectionQuery(String(defaultChainId), props?.nft?.contract);
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
+    return await getContractMetadata(props.nft?.contract, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
+
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
   const { address: currentAddress } = useAccount();
@@ -64,7 +72,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
       }
     })();
   }, [props, refreshNft, refreshNftOrders]);
-  console.log({ collection });
+
   return (
     <div className="flex flex-col w-full max-w-nftcom" id="NFTDetailContainer" key={props.nft?.id}>
       <div className={tw(
@@ -73,7 +81,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className='flex flex-col'>
           <Link href={`/app/collection/${collection?.collection?.contract}`}>
             <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline cursor-pointer">
-              {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
+              {isNullOrEmpty(collectionName) ? 'Unknown Name' : collectionName}
             </div>
           </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
@@ -135,7 +143,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     }
                   </span>
                 </div> :
-                <Link href={getEtherscanLink((chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID).toString()), collection?.collection?.contract, 'address')}>
+                <Link href={getEtherscanLink(Number(defaultChainId), collection?.collection?.contract, 'address')}>
                   <span className="text-[#B59007] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
                     {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
                   </span>
