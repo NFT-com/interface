@@ -1,5 +1,6 @@
 import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
+import NotificationsModal from 'components/modules/Notifications/NotificationsModal';
 import NftOwner from 'components/modules/Settings/NftOwner';
 import LoginResults from 'components/modules/Sidebar/LoginResults';
 import MobileNoAccount from 'components/modules/Sidebar/MobileNoAccount';
@@ -36,7 +37,7 @@ export const Sidebar = () => {
     count,
   } = useContext(NotificationContext);
   const ethPriceUSD = useEthPriceUSD();
-
+  const [notificationsModalVisible, setNotificationModalVisible] = useState(false);
   const { address: currentAddress } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
@@ -119,25 +120,23 @@ export const Sidebar = () => {
           </div>
 
           <div className='mx-4 border border-[#E1E1E1] flex flex-col rounded-b-[10px] mb-5'>
-            <Link href='/app/settings' passHref>
-              <a onClick={() => setSidebarOpen(false)}
-                className={tw(
-                  'pl-4 py-1 font-bold  border-b flex items-center',
-                  count ? 'text-[#D40909]' : 'text-[#B59007]'
-                )}
+            <a onClick={() => setNotificationModalVisible(true)}
+              className={tw(
+                'pl-4 py-1 font-bold  border-b flex items-center hover:cursor-pointer',
+                count ? 'text-[#D40909]' : 'text-[#B59007]'
+              )}
                 
-              >
-                {count > 0
-                  ? (
-                    <span className="flex h-4 min-w-[16px] z-50 text-white mr-2">
-                      <span className="relative bg-[#D40909] rounded-full min-w-[16px] h-4 flex justify-center px-1 items-center leading-[0px] text-[8px] font-mono">
-                        {count}
-                      </span>
-                    </span>)
-                  : <Bell weight='fill' className='mr-2' />}
+            >
+              {count > 0
+                ? (
+                  <span className="flex h-4 min-w-[16px] z-50 text-white mr-2">
+                    <span className="relative bg-[#D40909] rounded-full min-w-[16px] h-4 flex justify-center px-1 items-center leading-[0px] text-[8px] font-mono">
+                      {count}
+                    </span>
+                  </span>)
+                : <Bell weight='fill' className='mr-2' />}
                 Notifications
-              </a>
-            </Link>
+            </a>
             {getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
             <>
               <Link href='/app/activity' passHref>
@@ -239,6 +238,7 @@ export const Sidebar = () => {
               </div>
             </div>
           </div>
+          <NotificationsModal visible={notificationsModalVisible} setVisible={setNotificationModalVisible} />
         </motion.div>
       );}
 
@@ -249,7 +249,7 @@ export const Sidebar = () => {
         />
       );
     }
-  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, user?.currentProfileUrl, count]);
+  }, [balanceData?.formatted, balanceData?.symbol, balanceData?.value, currentAddress, disconnect, ethPriceUSD, hiddenProfile, myOwnedProfileTokens, profileValue, randomLabel, router.pathname, setCurrentProfileUrl, setSidebarOpen, setSignOutDialogOpen, user?.currentProfileUrl, count, notificationsModalVisible, setNotificationModalVisible]);
 
   const getSidebarPanel = useCallback(() => {
     if(isNullOrEmpty(currentAddress)) {
