@@ -21,7 +21,7 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
       return;
     } else {
       if(!collectionData && txs) {
-        setCollectionData(txs?.data);
+        setCollectionData(txs?.data?.transactions);
       }
     }}, [chain?.id, collectionData, txs]);
 

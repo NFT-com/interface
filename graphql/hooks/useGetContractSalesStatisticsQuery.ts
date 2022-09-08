@@ -19,7 +19,7 @@ export function useGetContractSalesStatisticsQuery(contractAddress: string): Con
   const keyString = 'GetContractSalesStatisticsQuery ' + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + contractAddress;
 
   const { data } = useSWR(keyString, async () => {
-    if(chain?.id !== 1 || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== 1) {
+    if(chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {
       return null;
     }
     if(isNullOrEmpty(contractAddress)) {

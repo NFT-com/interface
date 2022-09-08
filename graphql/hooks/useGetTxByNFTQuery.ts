@@ -19,7 +19,7 @@ export function useGetTxByNFTQuery(contractAddress: string, tokenId: string, typ
   const keyString = 'GetTxByNFTQuery ' + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + contractAddress + tokenId;
 
   const { data } = useSWR(keyString, async () => {
-    if(chain?.id !== 1 || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== 1) {
+    if(chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {
       return null;
     }
     if(isNullOrEmpty(contractAddress) || tokenId == null) {
