@@ -102,6 +102,7 @@ export function NftGrid(props: NftGridProps) {
         >
           <NFTCard
             title={nft?.metadata?.name}
+            subtitle={nft?.metadata?.name}
             traits={[{ key: '', value: shortenAddress(nft?.contract?.address) }]}
             images={[nft?.metadata?.imageURL]}
             profileURI={props.profileURI}
@@ -125,7 +126,7 @@ export function NftGrid(props: NftGridProps) {
               }
             }}
             customBackground={tileBackgroundSecondary}
-            customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+            customBorderRadius={'rounded-tl rounded-tr'}
             nftsDescriptionsVisible={draftNftsDescriptionsVisible}
             layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}
           />
