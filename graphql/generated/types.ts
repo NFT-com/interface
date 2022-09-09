@@ -214,7 +214,7 @@ export type Collection = {
 export type CollectionInfo = {
   __typename?: 'CollectionInfo';
   collection?: Maybe<Collection>;
-  ubiquityResults?: Maybe<UbiquityResults>;
+  nftPortResults?: Maybe<NftPortResults>;
 };
 
 export type CollectionInput = {
@@ -225,6 +225,7 @@ export type CollectionInput = {
 
 export type CollectionNft = {
   __typename?: 'CollectionNFT';
+  actualNumberOfNFTs: Scalars['Int'];
   collectionAddress: Scalars['Address'];
   nfts: Array<Nft>;
 };
@@ -693,6 +694,8 @@ export type Mutation = {
   unfollowProfile: Profile;
   updateAssociatedAddresses: UpdateAssociatedAddressesOutput;
   updateAssociatedContract: UpdateAssociatedContractOutput;
+  /** AUTHENTICATED */
+  updateCache: UpdateCacheOutput;
   updateCollectionImageUrls: UpdateCollectionImageUrlsOutput;
   /** AUTHENTICATED */
   updateCuration: Curation;
@@ -841,6 +844,7 @@ export type MutationProfileClaimedArgs = {
 
 
 export type MutationRefreshNftOrderArgs = {
+  force?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   ttl?: InputMaybe<Scalars['DateTime']>;
 };
@@ -924,6 +928,11 @@ export type MutationUpdateAssociatedAddressesArgs = {
 
 export type MutationUpdateAssociatedContractArgs = {
   input?: InputMaybe<UpdateAssociatedContractInput>;
+};
+
+
+export type MutationUpdateCacheArgs = {
+  input: UpdateCacheInput;
 };
 
 
@@ -1096,9 +1105,9 @@ export type NftPortNft = {
 
 export type NftPortNftFileInfo = {
   __typename?: 'NFTPortNFTFileInfo';
-  file_size?: Maybe<Scalars['Uint256']>;
-  height?: Maybe<Scalars['Uint256']>;
-  width?: Maybe<Scalars['Uint256']>;
+  file_size?: Maybe<Scalars['Int']>;
+  height?: Maybe<Scalars['Int']>;
+  width?: Maybe<Scalars['Int']>;
 };
 
 export type NftPortNftMetadata = {
@@ -1111,32 +1120,151 @@ export type NftPortNftMetadata = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type NftPortResults = {
+  __typename?: 'NFTPortResults';
+  bannerUrl?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  symbol?: Maybe<Scalars['String']>;
+};
+
 export type NftPortStatistics = {
   __typename?: 'NFTPortStatistics';
   average_price?: Maybe<Scalars['Float']>;
   floor_price?: Maybe<Scalars['Float']>;
   floor_price_historic_one_day?: Maybe<Scalars['Float']>;
   floor_price_historic_seven_day?: Maybe<Scalars['Float']>;
-  floor_price_historic_thirty_day?: Maybe<Scalars['Uint256']>;
+  floor_price_historic_thirty_day?: Maybe<Scalars['Float']>;
   market_cap?: Maybe<Scalars['Float']>;
-  num_owners?: Maybe<Scalars['Uint256']>;
+  num_owners?: Maybe<Scalars['Int']>;
   one_day_average_price?: Maybe<Scalars['Float']>;
   one_day_change?: Maybe<Scalars['Float']>;
-  one_day_sales?: Maybe<Scalars['Uint256']>;
+  one_day_sales?: Maybe<Scalars['Int']>;
   one_day_volume?: Maybe<Scalars['Float']>;
   seven_day_average_price?: Maybe<Scalars['Float']>;
   seven_day_change?: Maybe<Scalars['Float']>;
-  seven_day_sales?: Maybe<Scalars['Uint256']>;
+  seven_day_sales?: Maybe<Scalars['Int']>;
   seven_day_volume?: Maybe<Scalars['Float']>;
   thirty_day_average_price?: Maybe<Scalars['Float']>;
   thirty_day_change?: Maybe<Scalars['Float']>;
-  thirty_day_sales?: Maybe<Scalars['Uint256']>;
+  thirty_day_sales?: Maybe<Scalars['Int']>;
   thirty_day_volume?: Maybe<Scalars['Float']>;
-  total_minted?: Maybe<Scalars['Uint256']>;
-  total_sales?: Maybe<Scalars['Uint256']>;
-  total_supply?: Maybe<Scalars['Uint256']>;
+  total_minted?: Maybe<Scalars['Int']>;
+  total_sales?: Maybe<Scalars['Int']>;
+  total_supply?: Maybe<Scalars['Int']>;
   total_volume?: Maybe<Scalars['Float']>;
   updated_date?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByContract = {
+  __typename?: 'NFTPortTxByContract';
+  continuation?: Maybe<Scalars['String']>;
+  response?: Maybe<Scalars['String']>;
+  transactions?: Maybe<Array<Maybe<NftPortTxByContractTransactions>>>;
+};
+
+export type NftPortTxByContractCreators = {
+  __typename?: 'NFTPortTxByContractCreators';
+  account_address?: Maybe<Scalars['String']>;
+  creator_share?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByContractNft = {
+  __typename?: 'NFTPortTxByContractNft';
+  contract_address?: Maybe<Scalars['String']>;
+  contract_type?: Maybe<Scalars['String']>;
+  creators?: Maybe<Array<Maybe<NftPortTxByContractCreators>>>;
+  metadata_url?: Maybe<Scalars['String']>;
+  royalties?: Maybe<Array<Maybe<NftPortTxByContractRoyalties>>>;
+  signatures?: Maybe<Array<Maybe<Scalars['String']>>>;
+  token_id?: Maybe<Scalars['String']>;
+  total?: Maybe<Scalars['Int']>;
+};
+
+export type NftPortTxByContractPriceDetails = {
+  __typename?: 'NFTPortTxByContractPriceDetails';
+  asset_type?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  price_usd?: Maybe<Scalars['Float']>;
+};
+
+export type NftPortTxByContractRoyalties = {
+  __typename?: 'NFTPortTxByContractRoyalties';
+  account_address?: Maybe<Scalars['String']>;
+  royalty_share?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByContractTransactions = {
+  __typename?: 'NFTPortTxByContractTransactions';
+  block_hash?: Maybe<Scalars['String']>;
+  block_number?: Maybe<Scalars['Int']>;
+  buyer_address?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  marketplace?: Maybe<Scalars['String']>;
+  nft?: Maybe<NftPortTxByContractNft>;
+  owner_address?: Maybe<Scalars['String']>;
+  price_details?: Maybe<NftPortTxByContractPriceDetails>;
+  quantity?: Maybe<Scalars['Int']>;
+  seller_address?: Maybe<Scalars['String']>;
+  token_id?: Maybe<Scalars['String']>;
+  transaction_date?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  transfer_from?: Maybe<Scalars['String']>;
+  transfer_to?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByNft = {
+  __typename?: 'NFTPortTxByNFT';
+  continuation?: Maybe<Scalars['String']>;
+  response?: Maybe<Scalars['String']>;
+  transactions?: Maybe<Array<Maybe<NftPortTxByNftTransactions>>>;
+};
+
+export type NftPortTxByNftListingDetails = {
+  __typename?: 'NFTPortTxByNFTListingDetails';
+  asset_type?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  price_usd?: Maybe<Scalars['Float']>;
+};
+
+export type NftPortTxByNftNft = {
+  __typename?: 'NFTPortTxByNFTNft';
+  contract_address?: Maybe<Scalars['String']>;
+  contract_type?: Maybe<Scalars['String']>;
+  token_id?: Maybe<Scalars['String']>;
+};
+
+export type NftPortTxByNftPriceDetails = {
+  __typename?: 'NFTPortTxByNFTPriceDetails';
+  asset_type?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Float']>;
+  price_usd?: Maybe<Scalars['Float']>;
+};
+
+export type NftPortTxByNftTransactions = {
+  __typename?: 'NFTPortTxByNFTTransactions';
+  block_hash?: Maybe<Scalars['String']>;
+  block_number?: Maybe<Scalars['Int']>;
+  buyer_address?: Maybe<Scalars['String']>;
+  contract_address?: Maybe<Scalars['String']>;
+  lister_address?: Maybe<Scalars['String']>;
+  listing_details?: Maybe<NftPortTxByNftListingDetails>;
+  marketplace?: Maybe<Scalars['String']>;
+  nft?: Maybe<NftPortTxByNftNft>;
+  owner_address?: Maybe<Scalars['String']>;
+  price_details?: Maybe<NftPortTxByNftPriceDetails>;
+  quantity?: Maybe<Scalars['Int']>;
+  seller_address?: Maybe<Scalars['String']>;
+  token_id?: Maybe<Scalars['String']>;
+  transaction_date?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  transfer_from?: Maybe<Scalars['String']>;
+  transfer_to?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
 };
 
 export enum NftSize {
@@ -1425,6 +1553,8 @@ export type Query = {
   /** AUTHENTICATED */
   getRemovedAssociationsForSender: Array<Maybe<RemovedAssociationsForSenderOutput>>;
   getSwaps: GetMarketSwap;
+  getTxByContract?: Maybe<NftPortTxByContract>;
+  getTxByNFT?: Maybe<NftPortTxByNft>;
   getUserSwaps: GetMarketSwap;
   gkNFTs: GetGkNftsOutput;
   ignoredEvents: Array<Event>;
@@ -1588,6 +1718,16 @@ export type QueryGetRemovedAssociationsForSenderArgs = {
 
 export type QueryGetSwapsArgs = {
   input: SwapsInput;
+};
+
+
+export type QueryGetTxByContractArgs = {
+  input?: InputMaybe<TransactionsByContractInput>;
+};
+
+
+export type QueryGetTxByNftArgs = {
+  input?: InputMaybe<TransactionsByNftInput>;
 };
 
 
@@ -1882,10 +2022,28 @@ export type TopBidsInput = {
   status?: InputMaybe<BidStatus>;
 };
 
+export type TransactionsByContractInput = {
+  chain?: InputMaybe<Scalars['String']>;
+  continuation?: InputMaybe<Scalars['String']>;
+  contractAddress: Scalars['String'];
+  pageSize?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+export type TransactionsByNftInput = {
+  chain?: InputMaybe<Scalars['String']>;
+  continuation?: InputMaybe<Scalars['String']>;
+  contractAddress: Scalars['String'];
+  pageSize?: InputMaybe<Scalars['Int']>;
+  tokenId: Scalars['String'];
+  type?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
 export type TxActivitiesInput = {
   activityType?: InputMaybe<ActivityType>;
   chainId?: InputMaybe<Scalars['String']>;
   contract?: InputMaybe<Scalars['String']>;
+  ignoreExpired?: InputMaybe<Scalars['Boolean']>;
   pageInput: PageInput;
   read?: InputMaybe<Scalars['Boolean']>;
   skipRelations?: InputMaybe<Scalars['Boolean']>;
@@ -1914,6 +2072,7 @@ export type TxActivity = {
   read: Scalars['Boolean'];
   status: ActivityStatus;
   timestamp: Scalars['Date'];
+  transaction?: Maybe<TxTransaction>;
   walletAddress: Scalars['String'];
 };
 
@@ -2026,6 +2185,17 @@ export type UpdateAssociatedContractInput = {
 
 export type UpdateAssociatedContractOutput = {
   __typename?: 'UpdateAssociatedContractOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
+export type UpdateCacheInput = {
+  expireSeconds?: InputMaybe<Scalars['Int']>;
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type UpdateCacheOutput = {
+  __typename?: 'UpdateCacheOutput';
   message?: Maybe<Scalars['String']>;
 };
 
@@ -2481,14 +2651,14 @@ export type CollectionQueryVariables = Exact<{
 }>;
 
 
-export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, deployer?: string | null, description?: string | null } | null, ubiquityResults?: { __typename?: 'UbiquityResults', collection?: { __typename?: 'UbiquityCollection', id?: string | null, name?: string | null, description?: string | null, logo?: string | null, banner?: string | null, verified?: boolean | null, contracts?: Array<{ __typename?: 'UbiquityContract', address?: string | null, name?: string | null, symbol?: string | null, description?: string | null, image_url?: string | null, type?: string | null } | null> | null, meta?: { __typename?: 'UbiquityMeta', discord_url?: string | null, external_url?: string | null, twitter_username?: string | null } | null } | null } | null } | null };
+export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, chainId?: string | null, deployer?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null, isCurated?: boolean | null, isSpam?: boolean | null } | null, nftPortResults?: { __typename?: 'NFTPortResults', name?: string | null, symbol?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null } | null } | null };
 
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
 }>;
 
 
-export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
+export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
 export type DeployedCollectionsQueryVariables = Exact<{
   deployer: Scalars['String'];
@@ -2633,7 +2803,7 @@ export type MyNfTsQueryVariables = Exact<{
 }>;
 
 
-export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
+export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
 
 export type MyPhotoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2654,21 +2824,21 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, memo?: string | null, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, memo?: string | null, type: NftType, previewLink?: string | null, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, previewLink?: string | null, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftsForCollectionsQueryVariables = Exact<{
   input: NftsForCollectionsInput;
 }>;
 
 
-export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
+export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
 
 export type NumberOfNfTsQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2711,7 +2881,7 @@ export type ProfileNfTsMutationVariables = Exact<{
 }>;
 
 
-export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', contract?: any | null, id: string, tokenId: any, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
+export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', previewLink?: string | null, contract?: any | null, id: string, tokenId: any, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
 
 export type ProfilesByDisplayedNftQueryVariables = Exact<{
   input: ProfilesByDisplayNftInput;
@@ -3280,31 +3450,20 @@ export const CollectionDocument = gql`
       id
       contract
       name
+      chainId
       deployer
+      bannerUrl
+      logoUrl
       description
+      isCurated
+      isSpam
     }
-    ubiquityResults {
-      collection {
-        id
-        name
-        description
-        logo
-        banner
-        verified
-        contracts {
-          address
-          name
-          symbol
-          description
-          image_url
-          type
-        }
-        meta {
-          discord_url
-          external_url
-          twitter_username
-        }
-      }
+    nftPortResults {
+      name
+      symbol
+      bannerUrl
+      logoUrl
+      description
     }
   }
 }
@@ -3317,6 +3476,7 @@ export const CollectionNfTsDocument = gql`
       tokenId
       type
       isOwnedByMe
+      previewLink
       metadata {
         name
         description
@@ -3803,6 +3963,7 @@ export const MyNfTsDocument = gql`
     totalItems
     items {
       isOwnedByMe
+      previewLink
       wallet {
         address
       }
@@ -3869,6 +4030,7 @@ export const NftDocument = gql`
     tokenId
     memo
     type
+    previewLink
     wallet {
       address
       chainId
@@ -3898,6 +4060,7 @@ export const NftByIdDocument = gql`
     contract
     tokenId
     type
+    previewLink
     wallet {
       address
     }
@@ -3921,6 +4084,7 @@ export const NftsForCollectionsDocument = gql`
       tokenId
       type
       isOwnedByMe
+      previewLink
       metadata {
         name
         description
@@ -4008,6 +4172,7 @@ export const ProfileNfTsDocument = gql`
     }
     totalItems
     items {
+      previewLink
       contract
       id
       tokenId
