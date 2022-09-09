@@ -129,7 +129,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
         </div>
       </td>
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
-        <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toNumber().toString()}`}>
+        <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`}>
           <div className='hover:cursor-pointer'>
             <p className='-mt-1 font-bold text-[#B59007]'>{item.metadata?.name}</p>
           </div>
@@ -183,7 +183,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
             },
             {
               label: 'Share on Twitter',
-              onSelect: () => window.open('https://twitter.com/share?url='+ encodeURIComponent(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toNumber().toString()}`)+'&text='+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
+              onSelect: () => window.open('https://twitter.com/share?url='+ encodeURIComponent(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`)+'&text='+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
               icon: null,
             },
           ])

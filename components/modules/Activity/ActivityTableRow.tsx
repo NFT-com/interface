@@ -19,7 +19,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
   const { data: collectionData } = useCollectionQuery(defaultChainId, item?.nftContract);
-  const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, !isNullOrEmpty(item?.nftId) && BigNumber.from(item?.nftId[0].split('/')[2]).toNumber().toString());
+  const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, !isNullOrEmpty(item?.nftId) ? BigNumber.from(item?.nftId.split('/')[2]).toString() : null);
   const ethPriceUSD = useEthPriceUSD();
 
   useEffect(() => {
