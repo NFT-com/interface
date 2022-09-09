@@ -110,8 +110,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
         />;
       })}
       {(stagedNFTs.length > 0 &&
-        !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell') &&
-        !(router.pathname.includes('/app/buy') && props.selectedTab === 'Buy')
+        !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell')
       ) && <div className="mx-8 my-4 flex">
         <Button
           stretch

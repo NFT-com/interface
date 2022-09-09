@@ -23,7 +23,6 @@ export const Hit = (hit: { hit: HitInnerProps }) => {
         header={{ value: hit.hit.nftName ?? hit.hit.url, key: '' }}
         traits={[{ value: shortenAddress(hit.hit.contractAddr), key: '' }]}
         title={'Price: ' + (hit.hit.listedPx ? (hit.hit.listedPx + 'ETH') : 'Not estimated')}
-        subtitle={hit.hit.contractName}
         images={[hit.hit.imageURL]}
         onClick={() => {
           if (hit.hit.url) {
