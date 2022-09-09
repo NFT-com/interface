@@ -3,24 +3,23 @@ import { tw } from 'utils/tw';
 type NotificationButtonProps = {
   buttonText: string;
   onClick: () => void;
+  bgColor: 'grey' | 'white';
+  date: any
 }
 
-export const NotificationButton = ({ buttonText, onClick }: NotificationButtonProps) => {
+export const NotificationButton = ({ buttonText, onClick, bgColor }: NotificationButtonProps) => {
   return (
-    <div className='flex flex-row w-full px-4 h-10 rounded-2xl'>
+    <div className='flex flex-row w-full rounded-2xl'>
       <button className={tw(
-        'inline-flex w-full h-full',
-        'text-md',
+        'w-full h-full flex flex-col',
+        'text-md text-[#B59007] font-bold',
         'leading-6',
-        'items-center',
-        'justify-start',
-        'bg-[#F9D963]',
-        'rounded-lg',
+        bgColor === 'grey' ? 'bg-[#F8F8F8]' : 'bg-white',
         'p-4'
       )}
       onClick={onClick}
       >
-        {buttonText}
+        <p>{buttonText}</p>
       </button>
     </div>
   );

@@ -1,4 +1,4 @@
-import ProfileCard from 'components/modules/Sidebar/ProfileCard';
+import { SidebarProfileCard } from 'components/modules/Sidebar/SidebarProfileCard';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
@@ -115,7 +115,7 @@ export default function LoginResults({ profileValue, hiddenProfile }: LoginResul
             if(!hiddenProfile || profile.title !== hiddenProfile){
               return (
                 <div key={profile?.title} className='mb-4'>
-                  <ProfileCard onClick={selectProfileHandler} profile={profile} />
+                  <SidebarProfileCard onClick={selectProfileHandler} profile={profile} />
                 </div>
               );
             }
