@@ -51,6 +51,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
         slidesPerView={screenWidth < 600 ? 1 : screenWidth >= 600 && screenWidth < 900 ? 3 : 4}
         centeredSlides={false}
         loop={true}
+        spaceBetween={16}
         autoplay={{
           'delay': 3000,
           'disableOnInteraction': false
