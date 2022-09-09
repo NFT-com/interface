@@ -70,7 +70,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const { mutate: mutateNftListings } = useListingActivitiesQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId ?? defaultChainId)
+    String(props.nft?.wallet.chainId ?? defaultChainId),
+    props?.nft?.wallet?.address
   );
 
   const {

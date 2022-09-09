@@ -55,7 +55,8 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
   const { data: listings } = useListingActivitiesQuery(
     item?.contract,
     item?.tokenId,
-    String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
+    String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    null
   );
   const { data: profiles } = useProfilesByDisplayedNft(
     item?.contract,
