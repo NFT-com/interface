@@ -80,7 +80,7 @@ const ContractNameFilter = (props: any) => {
             onChange={(event) => setSearchVal(event.target.value)}/>
         </div>
       </div>
-      <div className="overflow-y-scroll max-h-[14rem] filter-scrollbar">
+      <div className="overflow-y-scroll max-h-[12.5rem] filter-scrollbar">
         {filteredContracts.map((item, index) => {
           return (
             <div key={index} className="mt-3 overflow-y-hidden">
@@ -229,7 +229,7 @@ const Filter = (props: any) => {
         animate={{
           height: isFilterCollapsed ? 0 : 'auto' }}
         transition={{ duration: 0.2 }}
-        className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-hidden max-h-[14rem]')}
+        className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-hidden max-h-[16.5rem]')}
       >
         { /* filter.field_name === 'listedPx' ?
           ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) : */
@@ -288,7 +288,7 @@ export const FiltersContent = () => {
           <EllipseX />
         </div>
         <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
-        <div className="px-4 flex flex-col">
+        {/*         <div className="px-4 flex flex-col">
           <div className="self-start font-black text-lg font-grotesk mb-3">Sort</div>
           <DropdownPicker
             placeholder={nftsPageSortyBy !== '' ? null : 'Default'}
@@ -304,7 +304,7 @@ export const FiltersContent = () => {
               },
             ]}
           />
-        </div>
+        </div> */}
         <div>
           {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
             if (['contractName', 'nftType'].includes(item.field_name)) {
@@ -337,7 +337,7 @@ export const FiltersContent = () => {
               const checkedList =[];
               checked.forEach(item => {
                 if (item.selectedCheck.toString()[0] === ',') item.selectedCheck = item.selectedCheck.slice(1);
-                checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
+                item.selectedCheck !== '' && checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
               });
               const checkedFiltersString = checkedList.join(' && ');
 

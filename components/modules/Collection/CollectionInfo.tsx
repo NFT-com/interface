@@ -1,19 +1,12 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
+import { ContractSalesStatistics } from 'graphql/generated/types';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { tw } from 'utils/tw';
 
 import { CaretDown, CaretUp, Info } from 'phosphor-react';
 import { useState } from 'react';
 export type CollectionInfoProps = {
-  data: {
-    floor_price: number;
-    one_day_volume: number;
-    total_supply: number;
-    num_owners: number;
-    market_cap: number;
-    average_price: number;
-    total_volume: number
-  }
+  data: ContractSalesStatistics['statistics']
   hasDescription?: boolean
   type?: string
 }

@@ -24,6 +24,7 @@ export function useExternalListingsQuery(contract: string, tokenId: string, chai
     const result = await sdk.ExternalListings({ contract, tokenId: BigNumber.from(tokenId).toString(), chainId: chainId });
     return result.externalListings.listings;
   });
+  
   return {
     data: data ?? [],
     loading: data == null,

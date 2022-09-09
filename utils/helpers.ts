@@ -212,6 +212,13 @@ export function max(...args: BigNumberish[]) {
   return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MIN_VALUE).gt(val) ? acc : val);
 }
 
+export function min(...args: BigNumberish[]) {
+  if (isNullOrEmpty(args)) {
+    return null;
+  }
+  return args.reduce((acc, val) => BigNumber.from(acc ?? Number.MAX_VALUE).lt(val) ? acc : val);
+}
+
 export function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }

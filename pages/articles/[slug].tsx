@@ -31,7 +31,7 @@ export default function Post({ post, preview }: PostProps) {
         title={post.title}
         description={post.description}
         openGraph={{
-          url: `https://nft.com/articles/${post.slug}`,
+          url: `https://www.nft.com/articles/${post.slug}`,
           title: post.title,
           description: post.description,
           type: 'article',

@@ -2,7 +2,7 @@
 package = "@netlify/plugin-nextjs"
 
 [build]
-command = "yarn build:netlify"
+command = "yarn build:netlify && yarn postbuild"
 publish = ".next"
 
 [[redirects]]

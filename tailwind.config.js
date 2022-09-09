@@ -93,6 +93,8 @@ module.exports = {
         'blog-slider-blue': '#DCF2FF',
         'footer-bg': '#F8F8F8',
         'footer-bg-dk': '#0C0F17',
+        'primary-yellow': '#F9D963',
+        'link-yellow': '#B59007'
       },
       fontFamily: {
         'rubik': ['Rubik'],

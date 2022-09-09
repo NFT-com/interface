@@ -56,7 +56,7 @@ const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmo
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   return (
     <div className={tw(
-      'flex object-cover aspect-square',
+      'relative object-cover aspect-square',
       getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
       props.containerClasses
     )}
@@ -70,7 +70,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
         src={props.src}
         poster={props.src}
         className={tw(
-          'flex object-fit w-full justify-center',
+          'object-cover absolute w-full h-full justify-center',
           getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
           props.extraClasses
         )}
