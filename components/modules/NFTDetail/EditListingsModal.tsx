@@ -70,11 +70,11 @@ export function EditListingsModal(props: EditListingsModalProps) {
               listing={listing}
               nft={nft}
               collectionName={collectionName}
-              buttons={[ListingButtonType.Cancel, ListingButtonType.Adjust]}
+              buttons={[ListingButtonType.Adjust, ListingButtonType.Cancel]}
             />;
           })
         }
-        <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full p-4 minmd:py-8 minmd:px-20">
+        <div className="flex flex-col items-center w-full p-4">
           <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>List item on another marketplace</span>
           <Button
             stretch
@@ -121,7 +121,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
         <div className='pt-20 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
           <XCircle onClick={onClose} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
-          {<h2 className='text-4xl tracking-wide font-bold mb-10'>Editing Listings</h2>}
+          {<h2 className='text-4xl tracking-wide font-medium mb-10'>Edit Listings</h2>}
           {getModalContent()}
         </div>
       </div>

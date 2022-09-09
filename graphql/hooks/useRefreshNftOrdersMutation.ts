@@ -1,5 +1,6 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
+import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback,useState } from 'react';
 
@@ -11,9 +12,15 @@ export function useRefreshNftOrdersMutation() {
   
   const refreshNftOrders = useCallback(
     async (nftId: string) => {
+      if (isNullOrEmpty(nftId)) {
+        return;
+      }
       setLoading(true);
       try {
-        await sdk.RefreshNftOrders({ id: nftId });
+        await sdk.RefreshNftOrders({
+          id: nftId,
+          force: true
+        });
         setLoading(false);
         return true;
       } catch (err) {

@@ -125,7 +125,7 @@ export function NftGrid(props: NftGridProps) {
               }
             }}
             customBackground={tileBackgroundSecondary}
-            customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
+            customBorderRadius={'rounded-tl rounded-tr'}
             nftsDescriptionsVisible={draftNftsDescriptionsVisible}
             layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}
           />
