@@ -54,23 +54,6 @@ export const CollectionsFiltersContent = () => {
           <EllipseX />
         </div>
         <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
-{/*         <div className="px-4 flex flex-col mt-7">
-          <div className="self-start font-black text-3xl font-grotesk mb-3">Sort</div>
-          <DropdownPicker
-            placeholder={collectionPageSortyBy !== '' ? null : 'Default'}
-            selectedIndex={collectionPageSortyBy === 'Price: Low to High' ? 0 : 1}
-            options={[
-              {
-                label: 'Price: Low to High',
-                onSelect: () => { setSortBy('listedPx:asc'); }
-              },
-              {
-                label: 'Price: High to Low',
-                onSelect: () => { setSortBy('listedPx:desc'); }
-              },
-            ]}
-          />
-        </div> */}
         <div className="px-4 flex flex-col my-7">
           <div className="self-start font-black text-xl font-grotesk mb-4">Filter by ID</div>
           <IdFilter setId={setId} clearedFilters={clearedFilters} setClearedFilters={setClearedFilters}/>

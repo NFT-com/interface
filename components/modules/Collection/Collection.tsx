@@ -8,6 +8,7 @@ import { useGetContractSalesStatisticsQuery } from 'graphql/hooks/useGetContract
 import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { useNumberOfNFTsQuery } from 'graphql/hooks/useNumberOfNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
@@ -54,7 +55,6 @@ export function Collection(props: CollectionProps) {
   const { profileData: collectionPreferredOwnerData } = useProfileQuery(
     collectionOwnerData?.profile?.owner?.preferredProfile?.url
   );
-  setModalType('collectionFilters' );
 
   const tabs = {
     0: 'NFTs',
@@ -64,6 +64,7 @@ export function Collection(props: CollectionProps) {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   useEffect(() => {
+    setModalType('collectionFilters' );
     currentPage === 1 && props.contract && client.collections('nfts')
       .documents()
       .search({
@@ -79,7 +80,7 @@ export function Collection(props: CollectionProps) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-  }, [client, collectionPageSortyBy, currentPage, id, props.contract]);
+  }, [client, collectionPageSortyBy, currentPage, id, props.contract, setModalType]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage !== prevVal) {
@@ -327,20 +328,21 @@ export function Collection(props: CollectionProps) {
                 <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
                   {collectionNfts.map((nft, index) => {
                     return (
-                      <NFTCard
-                        contractAddress={nft.document.contractAddr}
-                        tokenId={nft.document.tokenId}
-                        title={nft.document.nftName}
-                        images={[nft.document.imageURL]}
-                        collectionName={nft.document.contractName}
-                        onClick={() => {
-                          if (nft.document.nftName) {
-                            router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
-                          }
-                        }}
-                        description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
-                        customBorderRadius={'rounded-tl rounded-tr'}
-                      />
+                      <div className="NftCollectionItem" key={index}>
+                        <NFTCard
+                          contractAddress={nft.document.contractAddr}
+                          tokenId={nft.document.tokenId}
+                          title={nft.document.nftName}
+                          images={[nft.document.imageURL]}
+                          collectionName={nft.document.contractName}
+                          onClick={() => {
+                            if (nft.document.nftName) {
+                              router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
+                            }
+                          }}
+                          description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
+                          customBorderRadius={'rounded-tl rounded-tr'}
+                        />
                       </div>);}
                   )}
                 </div>
