@@ -149,12 +149,12 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data ? <p>{nftSaleHistory?.data[0]?.price_details?.price}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.transactions[0]?.price_details ? <p>{nftSaleHistory?.data?.transactions[0]?.price_details?.price}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data ? <p>${nftSaleHistory?.data[0]?.price_details?.price_usd.toFixed(2)}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.transactions[0]?.price_details ? <p>${nftSaleHistory?.data?.transactions[0]?.price_details?.price_usd.toFixed(2)}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
