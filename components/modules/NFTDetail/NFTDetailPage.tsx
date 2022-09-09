@@ -51,7 +51,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const { data: listings } = useListingActivitiesQuery(
     nft?.contract,
     nft?.tokenId,
-    defaultChainId
+    defaultChainId,
+    nft?.wallet?.address
   );
 
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
