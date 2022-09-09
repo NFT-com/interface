@@ -37,9 +37,7 @@ export default function DefaultLayout({ children, hideFooter }: DefaultLayoutPro
             toggleSidebar();
           }}
         />
-        {!hideFooter && <div className='h-2/4 flex w-full flex-col justify-end'>
-          <Footer />
-        </div>}
+        {!hideFooter && <Footer />}
       </div>
     </div>
   );

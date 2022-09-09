@@ -9,8 +9,8 @@ module.exports = {
     policies: [
       {
         userAgent: '*',
-        disallow: ['/'],
-        allow: ['/articles', '/articles/*'],
+        disallow: ['/*'],
+        allow: ['/$', '/articles', '/articles/*'],
       }
     ]
   },

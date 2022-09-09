@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { useCheckFileType } from 'hooks/useCheckFileType';
 import { tw } from 'utils/tw';
 
 import React from 'react';
@@ -54,6 +55,7 @@ const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmo
 };
 
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
+  const imageSrc = useCheckFileType(props?.src);
   return (
     <div className={tw(
       'relative object-cover aspect-square',
@@ -67,7 +69,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
         muted
         loop
         key={props.src}
-        src={props.src}
+        src={imageSrc}
         poster={props.src}
         className={tw(
           'object-cover absolute w-full h-full justify-center',
