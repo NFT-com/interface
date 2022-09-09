@@ -6,6 +6,7 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
     }
     totalItems
     items {
+      previewLink
       contract
       id
       tokenId
