@@ -47,7 +47,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
             containerClasses='w-full aspect-square'
             variant={RoundedCornerVariant.All}
             amount={RoundedCornerAmount.Medium}
-            src={processIPFSURL(nft?.metadata?.imageURL)}
+            src={processIPFSURL(nft?.previewLink) || processIPFSURL(nft?.metadata?.imageURL)}
           />
           <div className="flex w-full font-grotesk font-semibold m-2">
             {nft?.metadata?.name}
