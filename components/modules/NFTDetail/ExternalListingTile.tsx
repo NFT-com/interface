@@ -20,7 +20,7 @@ import { tw } from 'utils/tw';
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useSigner } from 'wagmi';
 
@@ -42,7 +42,6 @@ const Icons = {
 };
 
 export enum ListingButtonType {
-  View = 'View',
   Cancel = 'Cancel',
   Adjust = 'Adjust',
   AddToCart = 'AddToCart',
@@ -57,12 +56,16 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
   const defaultChainId = useDefaultChainId();
-  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const { stagePurchase, toBuy } = useContext(NFTPurchasesContext);
   const { stageListing } = useContext(NFTListingsContext);
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
+
+  const nftInPurchaseCart = useMemo(() => {
+    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id) != null;
+  }, [props.nft?.id, toBuy]);
 
   const { mutate: mutateNftListings } = useListingActivitiesQuery(
     props?.nft?.contract,
@@ -116,28 +119,6 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         type={ButtonType.PRIMARY}
       />;
     }
-    case ListingButtonType.View: {
-      return <Button
-        stretch
-        color="black"
-        label={'View Listing'}
-        onClick={() => {
-          switch(listingProtocol) {
-          case ExternalProtocol.Seaport: {
-            const order = listing?.order?.protocolData as SeaportProtocolData;
-            window.open(`https://opensea.io/assets/ethereum/${order?.parameters?.offer?.[0]?.token}/${order?.parameters?.offer?.[0]?.identifierOrCriteria}`, '_blank');
-            break;
-          }
-          case ExternalProtocol.LooksRare: {
-            const order = listing?.order?.protocolData as LooksrareProtocolData;
-            window.open(`https://looksrare.org/collections/${order?.collectionAddress ?? order?.['collection']}/${order?.tokenId}`, '_blank');
-            break;
-          }
-          }
-        }}
-        type={ButtonType.SECONDARY}
-      />;
-    }
     case ListingButtonType.Cancel: {
       return <Button
         stretch
@@ -178,8 +159,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.AddToCart: {
       return <Button
         stretch
-        color="black"
-        label={'Add to Cart'}
+        disabled={nftInPurchaseCart}
+        label={nftInPurchaseCart ? 'In Cart' : 'Add to Cart'}
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
@@ -196,13 +177,13 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
               listing?.order?.protocolData as SeaportProtocolData :
               listing?.order?.protocolData as LooksrareProtocolData
           });
-          router.push('/app/buy');
         }}
         type={ButtonType.PRIMARY}
       />;
     }
     }
   }, [
+    nftInPurchaseCart,
     router,
     cancelling,
     defaultChainId,
@@ -227,19 +208,15 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     return null;
   }
 
-  return <div className="flex flex-col rounded-xl p-5 my-6 border border-[#D5D5D5]">
-    <div className='flex items-center mb-4 justify-between pr-4'>
-      <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
-        <span className='text-sm'>
-            Listed on <span className="font-bold">{listing?.order?.exchange}</span>
-        </span>
-        <div className='flex items-center'>
-          <span className='text-base font-medium'>
-            {ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}{' '}
-            {getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'ETH'}
-          </span>
-        </div>
-      </div>
+  const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(listing));
+
+  return <div className="flex flex-col rounded-[10px] my-6 bg-[#F8F8F8] relative pt-12 font-grotesk">
+    <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
+      <span className='font-bold text-secondary-txt'>
+        Fixed Price
+      </span>
+    </div>
+    <div className='flex items-center mb-4 px-4'>
       <div className={tw(
         'relative flex items-center justify-center',
         'aspect-square h-8 w-8 rounded-full',
@@ -249,11 +226,25 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
           <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
         </div>
       </div>
+      <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
+        <span className='text-sm text-secondary-txt'>
+          Current price on <span className="font-bold">{listing?.order?.exchange}</span>
+        </span>
+        <div className='flex items-center'>
+          <span className='text-xl font-medium'>
+            {ethers.utils.formatUnits(getListingPrice(listing), listingCurrencyData?.decimals ?? 18)}{' '}
+            {listingCurrencyData?.name ?? 'ETH'}
+            <span className="text-secondary-txt text-sm ml-4">
+              ${listingCurrencyData.usd(Number(ethers.utils.formatUnits(getListingPrice(listing), listingCurrencyData?.decimals ?? 18)))}
+            </span>
+          </span>
+        </div>
+      </div>
     </div>
     <div className='flex flex-col items-center'>
       {
         props.buttons?.map(buttonType => {
-          return <div className='flex items-center basis-1 grow px-2 w-full mt-2' key={buttonType}>
+          return <div className='flex items-center basis-1 grow px-2 w-full mt-2 mb-4' key={buttonType}>
             {getButton(buttonType)}
           </div>;
         })

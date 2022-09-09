@@ -1,5 +1,5 @@
 import { Nft } from 'graphql/generated/types';
-import { useGetTransactionsByNFT } from 'hooks/analytics/nftport/nfts/useGetTransactionsByNFT';
+import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -13,12 +13,16 @@ export type TxHistoryProps = {
 }
 export const NFTActivity = ({ data }: TxHistoryProps) => {
   const defaultChainId = useDefaultChainId();
-  const nftTransactionHistory = useGetTransactionsByNFT(data?.contract, parseInt(data?.tokenId, 16).toString());
+  const nftTransactionHistory = useGetTxByNFTQuery(data?.contract, parseInt(data?.tokenId, 16).toString(), 'all');
   const [nftData, setNftdata] = useState(null);
 
   useEffect(() => {
-    if(defaultChainId === '1' && !nftData && !!nftTransactionHistory) {
-      setNftdata(nftTransactionHistory);
+    if(defaultChainId !== '1' || !nftTransactionHistory) {
+      return;
+    } else {
+      if(!nftData && nftTransactionHistory) {
+        setNftdata(nftTransactionHistory?.data?.transactions);
+      }
     }
   }, [defaultChainId, nftData, nftTransactionHistory]);
 
@@ -51,7 +55,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
             </tr>
           </thead>
           <tbody className='p-4'>
-            {nftData?.transactions?.map((tx, index) => (
+            {nftData?.map((tx, index) => (
               <tr key={index} className={tw(
                 'font-normal text-base leading-6 text-[#1F2127] overflow-auto',
                 index % 2 === 0 && 'bg-[#F8F8F8]'
