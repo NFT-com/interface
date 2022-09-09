@@ -94,7 +94,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             mutateLegacyListings();
           }} key={nft?.id} />
         </div>
-        {(showListings || nft?.wallet === currentAddress) ?
+        {(showListings || nft?.wallet?.address === currentAddress) ?
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
             <div className="flex minxl:flex-row w-full items-start">
               <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
@@ -105,9 +105,9 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
           :
           (defaultChainId === '1') &&
-        <div className="minxl:w-1/2 w-full hidden minxl:flex minxl:overflow-hidden">
-          <NFTAnalyticsContainer data={nft} />
-        </div>
+          <div className="minxl:w-1/2 w-full hidden minxl:flex minxl:overflow-hidden">
+            <NFTAnalyticsContainer data={nft} />
+          </div>
         }
       </div>
       <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
