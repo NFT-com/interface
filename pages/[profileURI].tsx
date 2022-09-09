@@ -12,7 +12,7 @@ export default function ProfileURI() {
   const router = useRouter();
   const { profileURI } = router.query;
 
-  if(profileURI === null || profileURI === undefined) {
+  if (profileURI === null || profileURI === undefined) {
     return <div className={tw(
       'text-primary-txt dark:text-primary-txt-dk flex flex-col',
       'items-center justify-center h-screen'
