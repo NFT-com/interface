@@ -2612,6 +2612,13 @@ export type UpdateProfileViewMutationVariables = Exact<{
 
 export type UpdateProfileViewMutation = { __typename?: 'Mutation', updateProfileView: { __typename?: 'Profile', id: string, bannerURL?: string | null, createdAt: any, chainId?: string | null, description?: string | null, displayType?: ProfileDisplayType | null, layoutType?: ProfileLayoutType | null, followersCount?: number | null, isFollowedByMe?: boolean | null, isOwnedByMe?: boolean | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, tokenId?: string | null, photoURL?: string | null, status?: ProfileStatus | null, url: string, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', id: string, address: any, chainId: string, chainName: string, network: string, createdAt: any } | null, winningBid?: { __typename?: 'Bid', id: string, nftType: NftType, price: any, stakeWeightedSeconds?: number | null, status: BidStatus, createdAt: any, updatedAt: any } | null } };
 
+export type UpdateReadByIdsMutationVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateReadByIdsMutation = { __typename?: 'Mutation', updateReadByIds: { __typename?: 'UpdateReadOutput', updatedIdsSuccess: Array<string | null>, idsNotFoundOrFailed: Array<string | null> } };
+
 export type UpdateWalletProfileIdMutationVariables = Exact<{
   profileId: Scalars['ID'];
 }>;
@@ -3320,6 +3327,14 @@ export const UpdateProfileViewDocument = gql`
       updatedAt
     }
     profileView
+  }
+}
+    `;
+export const UpdateReadByIdsDocument = gql`
+    mutation UpdateReadByIds($ids: [String]!) {
+  updateReadByIds(ids: $ids) {
+    updatedIdsSuccess
+    idsNotFoundOrFailed
   }
 }
     `;
@@ -4568,6 +4583,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     UpdateProfileView(variables?: UpdateProfileViewMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateProfileViewMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateProfileViewMutation>(UpdateProfileViewDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateProfileView', 'mutation');
+    },
+    UpdateReadByIds(variables: UpdateReadByIdsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateReadByIdsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateReadByIdsMutation>(UpdateReadByIdsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateReadByIds', 'mutation');
     },
     UpdateWalletProfileId(variables: UpdateWalletProfileIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateWalletProfileIdMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateWalletProfileIdMutation>(UpdateWalletProfileIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateWalletProfileId', 'mutation');

@@ -21,12 +21,24 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     hasUnclaimedProfiles,
     totalClaimableForThisAddress,
     setRemovedAssociationNotifClicked,
-    setAddedAssociatedNotifClicked
+    setAddedAssociatedNotifClicked,
+    soldActivityDate
   } = useContext(NotificationContext);
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
 
   const notificationData = [
+    activeNotifications.hasSoldActivity ?
+      {
+        text: 'NFT Sold! View My Activity',
+        onClick: () => {
+          setVisible(false);
+          setSidebarOpen(false);
+          router.push('/app/activity');
+        },
+        date:  soldActivityDate
+      }
+      : null,
     activeNotifications.hasPendingAssociatedProfiles && pendingAssociationCount > 0 ?
       {
         text: `${pendingAssociationCount} NFT Profile Connection request${pendingAssociationCount > 1 ? 's' : ''}`,
@@ -35,7 +47,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
           setSidebarOpen(false);
           router.push('/app/settings');
         },
-        date:  '09/15/2022'
+        date:  null
       }
       : null,
     activeNotifications.associatedProfileRemoved ?
@@ -45,7 +57,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
           setRemovedAssociationNotifClicked(true);
           setVisible(false);
         },
-        date: '09/15/2022'
+        date: null
       }
       : null,
     activeNotifications.associatedProfileAdded ?
@@ -55,7 +67,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
           setAddedAssociatedNotifClicked(true);
           setVisible(false);
         },
-        date: '09/15/2022'
+        date: null
       }
       : null,
     activeNotifications.profileNeedsCustomization && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) ?

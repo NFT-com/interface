@@ -1,13 +1,16 @@
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
+
+import moment from 'moment';
 
 type NotificationButtonProps = {
   buttonText: string;
   onClick: () => void;
   bgColor: 'grey' | 'white';
-  date: any
+  date: string
 }
 
-export const NotificationButton = ({ buttonText, onClick, bgColor }: NotificationButtonProps) => {
+export const NotificationButton = ({ buttonText, onClick, bgColor, date }: NotificationButtonProps) => {
   return (
     <div className='flex flex-row w-full rounded-2xl'>
       <button className={tw(
@@ -20,6 +23,7 @@ export const NotificationButton = ({ buttonText, onClick, bgColor }: Notificatio
       onClick={onClick}
       >
         <p>{buttonText}</p>
+        {!isNullOrEmpty(date) && <p className='text-[#6F6F6F] text-[10px] font-bold uppercase -mt-1'>{moment(date).fromNow()}</p>}
       </button>
     </div>
   );
