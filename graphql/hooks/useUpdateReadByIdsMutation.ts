@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Maybe, MutationUpdateReadByIdsArgs, UpdateReadByIdsMutation, UpdateReadByIdsMutationVariables } from 'graphql/generated/types';
+import { Maybe, MutationUpdateReadByIdsArgs, UpdateReadByIdsMutation } from 'graphql/generated/types';
 
 import { useCallback, useState } from 'react';
 
