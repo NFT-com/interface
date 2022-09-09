@@ -19,7 +19,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
   const { data: collectionData } = useCollectionQuery(defaultChainId, item?.nftContract);
-  const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, BigNumber.from(item?.nftId[0].split('/')[2]).toNumber().toString());
+  const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, !isNullOrEmpty(item?.nftId) ? BigNumber.from(item?.nftId.split('/')[2]).toString() : null);
   const ethPriceUSD = useEthPriceUSD();
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
           {shortenAddress(item?.order?.makerAddress, 4) || <p>—</p>}
         </td>
         <td className="text-body leading-body pr-8 minmd:pr-4" >
-          {shortenAddress(item?.order?.makerAddress, 4) || <p>—</p>}
+          {shortenAddress(item?.order?.takerAddress, 4) || <p>—</p>}
         </td>
       </>
       }
