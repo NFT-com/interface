@@ -66,7 +66,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 contractAddress={props.contract}
                 tokenId={nft.tokenId}
                 title={nft.metadata.name}
-                images={[nft.metadata.imageURL]}
+                images={[nft?.previewLink || nft.metadata.imageURL]}
                 collectionName={props.collectionName}
                 onClick={() => {
                   if (nft.metadata.name) {
