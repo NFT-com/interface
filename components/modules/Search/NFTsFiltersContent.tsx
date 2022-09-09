@@ -18,12 +18,13 @@ interface FilterOptionProps {
   },
   setClearedFilters?: (clearedFilters: boolean) => void,
   onSelectFilter?: (fieldName: string, selectedCheck: string, selected: boolean) => void,
-  clearedFilters: boolean
+  clearedFilters: boolean,
+  checkedInfo: any
 }
 
 const FilterOption = (props: FilterOptionProps) => {
-  const { item, fieldName, onSelectFilter, clearedFilters, setClearedFilters } = props;
-  const [selected, setSelected] = useState(false);
+  const { item, fieldName, onSelectFilter, clearedFilters, setClearedFilters, checkedInfo } = props;
+  const [selected, setSelected] = useState(checkedInfo[0]?.selectedCheck?.includes(item.value));
 
   useEffect(() => {
     clearedFilters && setSelected(false);
@@ -48,7 +49,7 @@ const FilterOption = (props: FilterOptionProps) => {
 };
 
 const ContractNameFilter = (props: any) => {
-  const { filterOptions, setCheckedFilters, clearedFilters, setClearedFilters } = props;
+  const { filterOptions, setCheckedFilters, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [searchVal, setSearchVal] = useState('');
   const [filteredContracts, setFilteredContracts] = useState([]);
 
@@ -62,7 +63,7 @@ const ContractNameFilter = (props: any) => {
 
   return (
     <div className="mt-3">
-      <div className={tw(
+      {filterOptions.length > 1 && <div className={tw(
         'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black bg-gray-200')}>
         <SearchIcon className='mr-2 shrink-0 aspect-square' />
         <div className="w-full">
@@ -79,17 +80,18 @@ const ContractNameFilter = (props: any) => {
             className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
             onChange={(event) => setSearchVal(event.target.value)}/>
         </div>
-      </div>
+      </div>}
       <div className="overflow-y-scroll max-h-[12.5rem] filter-scrollbar">
         {filteredContracts.map((item, index) => {
           return (
-            <div key={index} className="mt-3 overflow-y-hidden">
+            item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
               <FilterOption
                 item={item}
                 onSelectFilter={setCheckedFilters}
                 fieldName={'contractName'}
                 clearedFilters={clearedFilters}
                 setClearedFilters={setClearedFilters}
+                checkedInfo={checkedInfo}
               />
             </div>);
         })}
@@ -199,6 +201,9 @@ const CurrencyPriceFilter = (props: any) => {
 const Filter = (props: any) => {
   const { filter, setCheckedFilters, clearedFilters, setClearedFilters } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
+  const [isCollapsing, setIsCollapsing] = useState(false);
+  
+  const { checkedArray } = useSearchModal();
   
   const formatTitle = (title) => {
     switch(title){
@@ -211,14 +216,23 @@ const Filter = (props: any) => {
     case 'listingType':
       return 'Listing Type';
     default:
-      return title.charAt(0).toUpperCase() + title.slice(1);
+      return title?.charAt(0).toUpperCase() + title?.slice(1);
     }
   };
+
+  const checkedInfo = checkedArray.filter(i => i.fieldName === filter.field_name);
+  
+  useEffect(() => {
+    checkedInfo.length > 0 && checkedInfo[0]?.selectedCheck !== '' && !isCollapsing && setIsFilterCollapsed(false);
+  }, [checkedInfo, isCollapsing]);
 
   return (
     <div className="my-6 px-4">
       <div
-        onClick={() => { setIsFilterCollapsed(!isFilterCollapsed); }}
+        onClick={() => {
+          setIsFilterCollapsed(!isFilterCollapsed);
+          setIsCollapsing(true);
+        }}
         className="flex justify-between cursor-pointer">
         <div className="font-black text-base font-grotesk">{formatTitle(filter.field_name)}</div>
         {!isFilterCollapsed && <Minus className="h-4 w-4"/>}
@@ -238,16 +252,18 @@ const Filter = (props: any) => {
               setCheckedFilters={setCheckedFilters}
               clearedFilters={clearedFilters}
               setClearedFilters={setClearedFilters}
+              checkedInfo={checkedInfo}
             />) :
-            filter.counts.map((item, index) => {
+            filter.counts?.map((item, index) => {
               return (
-                <div key={index} className="mt-3 overflow-y-hidden">
+                item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
                   <FilterOption
                     item={item}
                     onSelectFilter={setCheckedFilters}
                     fieldName={filter.field_name}
                     clearedFilters={clearedFilters}
                     setClearedFilters={setClearedFilters}
+                    checkedInfo={checkedInfo}
                   />
                 </div>);
             })}
@@ -257,16 +273,28 @@ const Filter = (props: any) => {
 };
 
 export const NFTsFiltersContent = () => {
-  const { setSearchModalOpen, searchFilters, searchModalOpen, setNftsPageAppliedFilters, nftsPageSortyBy } = useSearchModal();
+  const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray } = useSearchModal();
   const [sortBy, setSortBy] = useState(nftsPageSortyBy);
-  const [checked, setChecked] = useState([]);
   const [clearedFilters, setClearedFilters] = useState(false);
-  
+
+  const updateCheckedString = useCallback(() => {
+    const checkedList =[];
+    checkedArray.forEach(item => {
+      if (item.selectedCheck.toString()[0] === ',') item.selectedCheck = item.selectedCheck.slice(1);
+      item.selectedCheck !== '' && checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
+    });
+
+    const collectionsCheckedFiltersString = checkedList.filter(i => i.includes('contractName') || i.includes('nftType')).join(' && ');
+    const nftsCheckedFiltersString = checkedList.join(' && ');
+
+    setResultsPageAppliedFilters(sortBy, nftsCheckedFiltersString, collectionsCheckedFiltersString, checkedArray);
+  }, [checkedArray, setResultsPageAppliedFilters, sortBy]);
+
   const setCheckedFilters = useCallback((fieldName: string, selectedCheck: string, selected: boolean) => {
-    const foundItem = checked.find(i => i.fieldName === fieldName);
+    const foundItem = checkedArray.find(i => i.fieldName === fieldName);
     if (selected) {
       if (!foundItem) {
-        checked.push({ fieldName, selectedCheck });
+        checkedArray.push({ fieldName, selectedCheck });
       } else {
         foundItem.selectedCheck = foundItem.selectedCheck +','+ selectedCheck;
       }
@@ -274,7 +302,8 @@ export const NFTsFiltersContent = () => {
       const removedCheck = (foundItem.selectedCheck.split(',')).filter(i => i !== selectedCheck);
       foundItem.selectedCheck = removedCheck.join(',');
     }
-  }, [checked]);
+    updateCheckedString();
+  }, [checkedArray, updateCheckedString]);
 
   return (
     <>
@@ -321,26 +350,18 @@ export const NFTsFiltersContent = () => {
         <div
           onClick={ () => {
             setClearedFilters(true);
-            setChecked([]);
+            setResultsPageAppliedFilters('', '','', []);
           }}
           className="px-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">
           Clear filters
         </div>
-        <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+        <div className="minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
           <Button
             color={'black'}
             accent={AccentType.SCALE}
             stretch={true}
-            label={'Apply Filter'}
+            label={'Close Filter'}
             onClick={() => {
-              const checkedList =[];
-              checked.forEach(item => {
-                if (item.selectedCheck.toString()[0] === ',') item.selectedCheck = item.selectedCheck.slice(1);
-                item.selectedCheck !== '' && checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
-              });
-              const checkedFiltersString = checkedList.join(' && ');
-
-              setNftsPageAppliedFilters(sortBy, checkedFiltersString, false);
               searchModalOpen && setSearchModalOpen(false);
             }}
             type={ButtonType.PRIMARY}

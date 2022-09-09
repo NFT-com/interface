@@ -21,8 +21,10 @@ export function useSearchModal() {
       selectedCuratedCollection: null,
       collectionPageSortyBy: '',
       id: '',
-      nftsPageFilterBy: '',
+      nftsResultsFilterBy: '',
+      collectionsResultsFilterBy: '',
       nftsPageSortyBy: '',
+      checkedArray: [],
     } });
 
   const loading = !data;
@@ -110,12 +112,13 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
-  const setNftsPageAppliedFilters = useCallback((nftsPageSortyBy: string, nftsPageFilterBy: string, searchModalOpen = true) => {
+  const setResultsPageAppliedFilters = useCallback((nftsPageSortyBy: string, nftsResultsFilterBy: string, collectionsResultsFilterBy: string, checkedArray: any) => {
     mutate({
       ...data,
-      searchModalOpen,
       nftsPageSortyBy,
-      nftsPageFilterBy
+      nftsResultsFilterBy,
+      collectionsResultsFilterBy,
+      checkedArray
     });
   },[data, mutate]);
 
@@ -124,7 +127,8 @@ export function useSearchModal() {
       ...data,
       clearedFilters: true,
       nftsPageSortyBy: '',
-      nftsPageFilterBy: ''
+      nftsResultsFilterBy: '',
+      collectionsResultsFilterBy: ''
     });
   },[data, mutate]);
 
@@ -143,7 +147,9 @@ export function useSearchModal() {
     collectionPageSortyBy: data.collectionPageSortyBy,
     id: data.id,
     nftsPageSortyBy: data.nftsPageSortyBy,
-    nftsPageFilterBy: data.nftsPageFilterBy,
+    nftsResultsFilterBy: data.nftsResultsFilterBy,
+    collectionsResultsFilterBy: data.collectionsResultsFilterBy,
+    checkedArray: data.checkedArray,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
@@ -153,7 +159,7 @@ export function useSearchModal() {
     setCuratedCollections,
     setSelectedCuratedCollection,
     setCollectionPageAppliedFilters,
-    setNftsPageAppliedFilters,
+    setResultsPageAppliedFilters,
     setClearedFilters
   };
 }

@@ -37,7 +37,7 @@ export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
   const { width: screenWidth } = useWindowDimensions();
   const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
-  const { setSearchModalOpen, collectionPageSortyBy, id, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
+  const { setSearchModalOpen, collectionPageSortyBy, id, sideNavOpen, setSideNavOpen, setModalType, modalType } = useSearchModal();
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -64,7 +64,13 @@ export function Collection(props: CollectionProps) {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   useEffect(() => {
-    setModalType('collectionFilters' );
+    console.log(modalType,'modalType fdo');
+    if (modalType !== 'collectionFilters') {
+      setModalType('collectionFilters');
+    }
+  }, [modalType, setModalType]);
+
+  useEffect(() => {
     currentPage === 1 && props.contract && client.collections('nfts')
       .documents()
       .search({
