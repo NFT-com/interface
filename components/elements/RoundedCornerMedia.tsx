@@ -58,7 +58,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   const imageSrc = useCheckFileType(props?.src);
   return (
     <div className={tw(
-      'relative objecct-cover aspect-square',
+      'relative object-cover aspect-square',
       getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
       props.containerClasses
     )}

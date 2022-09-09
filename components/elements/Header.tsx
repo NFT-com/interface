@@ -24,7 +24,7 @@ type HeaderProps = {
 }
 
 export const Header = ({ removeBg } : HeaderProps) => {
-  const { toggleSearchModal } = useSearchModal();
+  const { setSearchModalOpen } = useSearchModal();
   const { primaryIcon } = useThemeColors();
   const { toggleCartSidebar, toList } = useContext(NFTListingsContext);
   const { toBuy } = useContext(NFTPurchasesContext);
@@ -80,21 +80,23 @@ export const Header = ({ removeBg } : HeaderProps) => {
               )}
             >
               {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && <Link href ='/app/discover'>
-                <span className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Discover</span>
+                <a className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Discover</a>
               </Link>}
               <Link href ='/app/gallery'>
-                <span className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Gallery</span>
+                <a className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Gallery</a>
               </Link>
-              <span onClick={() => {
-                window.open('https://docs.nft.com', '_open');
-              }} className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Docs</span>
+              <a
+                target="_blank"
+                rel="noreferrer noopener"
+                href="https://docs.nft.com"
+                className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Docs</a>
             </div>
             {
               getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
               <button
                 className='block minlg:hidden cursor-pointer mr-2 h-full w-7'
                 onClick={() => {
-                  toggleSearchModal();
+                  setSearchModalOpen(true);
                 }}
               >
                 <SearchIcon color='#6F6F6F' />
