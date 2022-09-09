@@ -120,7 +120,7 @@ export const Sidebar = () => {
           <div className='mx-4 border border-[#E1E1E1] flex flex-col rounded-b-[10px] mb-5'>
             <a onClick={() => setNotificationModalVisible(true)}
               className={tw(
-                'pl-4 py-1 font-bold  border-b flex items-center hover:cursor-pointer',
+                'pl-4 py-[10px] font-bold  border-b flex items-center hover:cursor-pointer',
                 count ? 'text-[#D40909]' : 'text-[#B59007]'
               )}
                 
@@ -139,7 +139,7 @@ export const Sidebar = () => {
             <>
               <Link href='/app/activity' passHref>
                 <a onClick={() => setSidebarOpen(false)}
-                  className='pl-4 py-1 font-bold text-[#B59007] border-b flex items-center'
+                  className='pl-4 py-[10px] font-bold text-[#B59007] border-b flex items-center'
                 >
                   <User weight='fill' className='mr-2' /> My Activity
                 </a>
@@ -147,7 +147,7 @@ export const Sidebar = () => {
 
               <Link href='/app/assets' passHref>
                 <a onClick={() => setSidebarOpen(false)}
-                  className='pl-4 py-1 font-bold text-[#B59007] border-b flex items-center'
+                  className='pl-4 py-[10px] font-bold text-[#B59007] border-b flex items-center'
                 >
                   <User weight='fill' className='mr-2' /> My Assets
                 </a>
@@ -157,7 +157,7 @@ export const Sidebar = () => {
 
             <Link href='/app/settings' passHref>
               <a onClick={() => setSidebarOpen(false)}
-                className='pl-4 py-1 font-bold text-[#B59007] border-b flex items-center'
+                className='pl-4 py-[10px] font-bold text-[#B59007] border-b flex items-center'
               >
                 <GearSix weight='fill' className='mr-2' /> Settings
               </a>
@@ -169,7 +169,7 @@ export const Sidebar = () => {
                 setSignOutDialogOpen(true);
                 setCurrentProfileUrl('');
               }}
-              className='pl-4 py-1 font-bold text-[#B59007] flex items-center hover:cursor-pointer'
+              className='pl-4 py-[10px] font-bold text-[#B59007] flex items-center hover:cursor-pointer'
             >
               <SignOut weight='fill' className='mr-2' /> Sign out
             </a>
