@@ -1,4 +1,5 @@
 import { useActivitiesForAddressQuery } from 'graphql/hooks/useActivitiesForAddressQuery';
+import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { usePaginator } from 'hooks/usePaginator';
 import { filterNulls } from 'utils/helpers';
@@ -21,6 +22,7 @@ export default function ActivityPages() {
   const [activityData, setActivityData] = useState([]);
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
+  const { updateReadbyIds } = useUpdateReadByIdsMutation();
 
   const { data: loadedActivitiesNextPage } = useActivitiesForAddressQuery(
     currentAddress,
@@ -33,6 +35,12 @@ export default function ActivityPages() {
   const loadMoreActivities = useCallback(() => {
     nextPage(loadedActivitiesNextPage?.getActivities?.pageInfo?.lastCursor);
   }, [loadedActivitiesNextPage?.getActivities?.pageInfo?.lastCursor, nextPage]);
+
+  useEffect(() => {
+    if(activityData.length) {
+      updateReadbyIds({ ids: [] });
+    }
+  }, [updateReadbyIds, currentAddress, activityData]);
 
   useEffect(() => {
     if (
