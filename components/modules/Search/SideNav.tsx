@@ -80,7 +80,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
   return(
     <div
       className={tw(
-        'flex-shrink-0 w-80 flex flex-col border-r transition-all duration-300',
+        'flex-shrink-0 w-80 flex flex-col transition-all duration-300',
         sideNavOpen ? '' : '-ml-64')}>
       <OptionNav
         title={'Curations'}
@@ -89,7 +89,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
         <CuratedCollectionsFilter onClick={props.onSideNav} collapsed={false}/>
       </OptionNav>
       {props.filtersData?.length > 0 && <OptionNav
-        title={'NFT Filters'}
+        title={'Filters'}
         icon={<FunnelSimple
           className="w-6 h-6"
           color={'grey'} />}

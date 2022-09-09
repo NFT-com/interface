@@ -107,7 +107,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
           />
         </div>}
       </div>
-      {!isNullOrEmpty(collectionData?.ubiquityResults?.collection?.banner) ?
+      {!isNullOrEmpty(collectionData?.nftPortResults?.bannerUrl) ?
         <div
           className={tw('w-screen h-80',
             'flex items-center justify-center',
@@ -116,7 +116,7 @@ export function CollectionGallery(props: CollectionGalleryProps) {
             'bg-auto bg-center'
           )}
           style={{
-            backgroundImage: `url(${collectionData?.ubiquityResults?.collection?.banner ? `${collectionData?.ubiquityResults?.collection?.banner} + ?apiKey=${getEnv(Doppler.NEXT_PUBLIC_UBIQUITY_API_KEY)}` : null})`
+            backgroundImage: `url(${collectionData?.nftPortResults?.bannerUrl ? `${collectionData?.nftPortResults?.bannerUrl}` : null})`
           }}
         /> :
         ''
