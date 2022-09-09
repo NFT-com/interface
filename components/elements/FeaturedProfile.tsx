@@ -55,7 +55,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
         )}>
           <Link href={`/app/nft/${props.featuredNfts[0]?.contract}/${props.featuredNfts[0]?.tokenId}`} passHref>
             <a className='flex flex-col w-full minmd:row-span-2 row-auto minmd:aspect-auto aspect-square minmd:h-auto h-full'>
-              <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[0]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full w-full' />
+              <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[0]?.previewLink || props.featuredNfts[0]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full w-full' />
               {props.featuredNfts[0] && (
                 <div className='bg-white rounded-b-md px-3 py-2'>
                   <p className='text-xxs2 text-[#727272] '>{props.featuredNfts[0]?.metadata?.name || '#' + BigNumber.from(props.featuredNfts[0]?.tokenId).toString()}</p>
@@ -67,7 +67,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
           <div className='h-full w-full row-span-1 col-span-1'>
             <Link href={`/app/nft/${props.featuredNfts[1]?.contract}/${props.featuredNfts[1]?.tokenId}`} passHref>
               <a className='flex flex-col w-full row-auto minmd:aspect-auto aspect-square h-full justify-start'>
-                <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[1]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full max-h-[77%] sm:max-h-full sm:w-full' />
+                <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[1]?.previewLink ||props.featuredNfts[1]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full max-h-[77%] sm:max-h-full sm:w-full' />
                 {props.featuredNfts[1] && (
                   <div className='bg-white rounded-b-md minmd:px-3 minmd:py-1 px-3 py-2 max-h-[50%] h-max overflow-hidden truncate ...'>
                     <p className='minmd:text-xxs4 text-xxs2 text-[#727272] truncate'>{props.featuredNfts[1]?.metadata?.name || '#' + BigNumber.from(props.featuredNfts[1]?.tokenId).toString()}</p>
@@ -80,7 +80,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
           <div className='h-full w-full row-span-1 col-span-1'>
             <Link href={`/app/nft/${props.featuredNfts[2]?.contract}/${props.featuredNfts[2]?.tokenId}`} passHref>
               <a className='flex flex-col w-full row-auto minmd:aspect-auto aspect-square h-full justify-end'>
-                <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[2]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full max-h-[77%] sm:max-h-full sm:w-full' />
+                <RoundedCornerMedia src={processIPFSURL(props.featuredNfts[2]?.previewLink || props.featuredNfts[2]?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='relative rounded-t-md object-cover' containerClasses='h-full max-h-[77%] sm:max-h-full sm:w-full' />
                 {props.featuredNfts[2] && (
                   <div className='bg-white rounded-b-md minmd:px-3 minmd:py-1 px-3 py-2 max-h-[50%] h-max truncate ...'>
                     <p className='minmd:text-xxs4 text-xxs2 text-[#727272] truncate'>{props.featuredNfts[2]?.metadata?.name || '#' + BigNumber.from(props.featuredNfts[2]?.tokenId).toString()}</p>
