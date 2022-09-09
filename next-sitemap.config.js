@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://nft.com',
+  siteUrl: 'https://www.nft.com',
   generateRobotsTxt: true,
   exclude: [
 
