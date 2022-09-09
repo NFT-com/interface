@@ -187,7 +187,7 @@ export function NFTCard(props: NFTCardProps) {
       {
         props.visible != null &&
           <div
-            className='absolute right-3 top-4'
+            className='absolute right-3 top-4 z-50'
             onClick={(e: MouseEvent<HTMLDivElement>) => {
               props.onVisibleToggle(!props.visible);
               e.stopPropagation();
