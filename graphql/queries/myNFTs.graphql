@@ -7,6 +7,7 @@ query MyNFTs($input: NFTsInput) {
     totalItems
     items {
       isOwnedByMe
+      previewLink
       wallet {
         address
       }
