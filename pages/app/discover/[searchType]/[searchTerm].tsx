@@ -33,7 +33,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage({ data }: ResultsPageProps) {
-  const { setSearchModalOpen, sideNavOpen, checkedFiltersList, filtersList, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsPageFilterBy, setClearedFilters } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -65,12 +65,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       q: searchTerm?.toString(),
       per_page: 20,
       page: 1,
+      filter_by: nftsResultsFilterBy,
+      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS
     }] })
       .then((resp) => {
         setNftsForCollections(null);
         setCollectionsSliderData(resp.results[0]);
       });
-  }, [fetchTypesenseMultiSearch, searchTerm, searchType]);
+  }, [fetchTypesenseMultiSearch, searchTerm, searchType, nftsResultsFilterBy]);
 
   if (searchType?.toString() === 'allResults' && collectionsSliderData) {
     addressesList = collectionsSliderData.hits?.map((nft) => {
@@ -93,8 +95,9 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       setFilters([]);
       setPage(1);
       setClearedFilters();
+      setResultsPageAppliedFilters('', '','', []);
     }
-  },[prevSearchTerm, searchTerm, setClearedFilters]);
+  },[prevSearchTerm, searchTerm, setClearedFilters, setResultsPageAppliedFilters]);
 
   useEffect(() => {
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
@@ -105,7 +108,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       q: searchTerm?.toString() !== '*' ? searchTerm?.toString() : '',
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
-      filter_by: nftsPageFilterBy,
+      filter_by: nftsResultsFilterBy,
       sort_by: nftsPageSortyBy,
     }] })
       .then((resp) => {
@@ -113,7 +116,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         setFound(resp.results[0].found);
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, filters.length, nftsPageFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen]);
+  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -125,7 +128,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         q: searchTerm?.toString() !== '*' ? searchTerm?.toString() : '',
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
-        filter_by: nftsPageFilterBy,
+        filter_by: nftsResultsFilterBy,
         sort_by: nftsPageSortyBy,
       }] })
         .then((resp) => {
@@ -134,14 +137,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseMultiSearch, page, searchTerm, screenWidth, prevVal, searchType, results, sideNavOpen, checkedFiltersList, filtersList, filters.length, nftsPageSortyBy, nftsPageFilterBy]);
+  }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
     return <NotFoundPage />;
   }
 
   return (
-    <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen">
+    <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen overflow-hidden">
       <div className="flex">
         <div className="hidden minlg:block">
           <SideNav onSideNav={() => null} filtersData={filters}/>
@@ -157,14 +160,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           </div>
           {searchType?.toString() === 'collections' && <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>}
           <div>
-            {(searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) && !isNullOrEmpty(nftsForCollections))?
-              <CollectionsResults searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />:
-              (searchType?.toString() === 'allResults' && <div className="flex items-center justify-center min-h-[16rem]">
-                <Loader />
-              </div>)}
+            {searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) &&
+              <CollectionsResults searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
             <div className="flex justify-between items-center mt-10 font-grotesk text-blog-text-reskin text-lg minmd:text-xl font-black">
               <div>
-                {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFTS' : 'COLLECTIONS')}
+                {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'COLLECTION') + `${found === 1 ? '' : 'S'}`}
               </div>
               {searchType?.toString() === 'allResults' && <span
                 className="cursor-pointer hover:font-semibold"
@@ -180,7 +180,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               </span>}
             </div>
             {searchType?.toString() !== 'collections' &&
-            <div className="my-6 mb-4 flex minlg:hidden justify-between font-grotesk font-black text-xl minmd:text-2xl">
+            <div className="my-6 mb-4 flex minlg:hidden justify-center font-grotesk font-black text-xl minmd:text-2xl">
               <div
                 className="cursor-pointer flex flex-row items-center"
                 onClick={() => {
@@ -188,14 +188,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 }}>
                 <FunnelSimple className="h-8 w-8" />
                 Filter
-              </div>
-              <div
-                className="cursor-pointer flex flex-row items-center"
-                onClick={() => {
-                  setSearchModalOpen(true, 'filters', filters );
-                }}>
-                Sort
-                <ChevronDown className="h-10 w-10" />
               </div>
             </div>}
             <div className={tw(

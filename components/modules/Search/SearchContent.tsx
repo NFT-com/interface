@@ -175,6 +175,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
                 maxLength={512}
                 className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
                 onKeyUp={(event) => search(event)}
+                onFocus={(event) => event.target.value !== '' && search(event)}
                 onChange={(event) => !event.target.value && setShowHits(false)}
               />
             </div>
