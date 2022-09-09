@@ -4,12 +4,10 @@ import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import Logo from 'public/LogoFooterWhite.svg';
 import { useAccount } from 'wagmi';
 
 export const Footer = () => {
-  const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
@@ -20,36 +18,31 @@ export const Footer = () => {
       links: filterNulls([
         {
           name: 'Gallery',
-          onClick: () => {
-            router.push('/app/gallery');
-          },
+          link: '/app/gallery',
+          newTab: false,
         },
         !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(profileTokens)
           ? {
             name: 'Vault',
-            onClick: () => {
-              router.push('/app/vault');
-            },
+            link: '/app/vault',
+            newTab: false,
             stylize: true,
           }
           : null,
         {
           name: 'Docs',
-          onClick: () => {
-            window.open('https://docs.nft.com', '_open');
-          },
+          link: 'https://docs.nft.com',
+          newTab: true,
         },
         {
           name: 'Blog',
-          onClick: () => {
-            router.push('/articles');
-          },
+          link: '/articles',
+          newTab: false,
         },
         {
           name: 'What is an NFT?',
-          onClick: () => {
-            router.push('/articles/what-is-an-nft');
-          }
+          link: '/articles/what-is-an-nft',
+          newTab: false,
         },
       ])
     },
@@ -58,27 +51,18 @@ export const Footer = () => {
       links: [
         {
           name: 'Support',
-          onClick: () => {
-            window.open('https://support.nft.com', '_open');
-          },
+          link: 'https://support.nft.com',
+          newTab: true,
         },
         {
           name: 'Careers',
-          onClick: () => {
-            window.open(
-              'https://jobs.lever.co/Nft.com',
-              '_open'
-            );
-          },
+          link: 'https://jobs.lever.co/Nft.com',
+          newTab: true,
         },
         {
           name: 'Business Inquiries',
-          onClick: () => {
-            window.open(
-              'mailto:info@nft.com',
-              '_open'
-            );
-          },
+          link: 'mailto:info@nft.com',
+          newTab: true,
         },
       ]
     },
@@ -87,27 +71,18 @@ export const Footer = () => {
       links: [
         {
           name: 'Terms of Service',
-          onClick: () => {
-            window.open(
-              'https://cdn.nft.com/nft_com_terms_of_service.pdf',
-              '_open'
-            );
-          },
+          link: 'https://cdn.nft.com/nft_com_terms_of_service.pdf',
+          newTab: true,
         },
         {
           name: 'Privacy Policy',
-          onClick: () => {
-            window.open(
-              'https://cdn.nft.com/nft_com_privacy_policy.pdf',
-              '_open'
-            );
-          },
+          link: 'https://cdn.nft.com/nft_com_privacy_policy.pdf',
+          newTab: true,
         },
         {
           name: 'Bug Bounty',
-          onClick: () => {
-            window.location.href='mailto:bugbounty@nft.com?subject=Bug Bounty for NFT.com ' + new Date().toLocaleDateString();
-          },
+          link: 'mailto:bugbounty@nft.com?subject=Bug Bounty for NFT.com ' + new Date().toLocaleDateString(),
+          newTab: true,
         },
       ]
     },
@@ -116,21 +91,13 @@ export const Footer = () => {
       links: [
         {
           name: 'Discord',
-          onClick: () => {
-            window.open(
-              'https://discord.gg/nftdotcom',
-              '_open'
-            );
-          },
+          link: 'https://discord.gg/nftdotcom',
+          newTab: true,
         },
         {
           name: 'Twitter',
-          onClick: () => {
-            window.open(
-              'https://twitter.com/nftcomofficial',
-              '_open'
-            );
-          },
+          link: 'https://twitter.com/nftcomofficial',
+          newTab: true,
         },
       ]
     },
@@ -143,7 +110,7 @@ export const Footer = () => {
       )}>
         <div className={tw(
           'minlg:w-max w-full flex-shrink-0 flex',
-          'items-start justify-between flex-col text-base minlg:pl-5 pl-0 items-center minlg:items-start'
+          'items-start justify-between flex-col text-base minlg:pl-5 pl-0 minlg:items-start'
         )}>
           <Link href="/">
             <div className={tw(
@@ -170,22 +137,44 @@ export const Footer = () => {
                 <div className='flex flex-col'>
                   {item.links?.map((item, index) => {
                     return (
-                      <span
+                      <Link
+                        href={item.link}
                         key={index}
-                        className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
-                        onClick={item.onClick}
-                        style={item?.stylize
-                          ? {
-                            background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
-                            backgroundSize: '200% 200%',
-                            animation: 'gradient 20s ease infinite',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent'
-                          }
-                          : null}
                       >
-                        {item.name}
-                      </span>
+                        {item.newTab ?
+                          <a
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
+                            style={item?.stylize
+                              ? {
+                                background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
+                                backgroundSize: '200% 200%',
+                                animation: 'gradient 20s ease infinite',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
+                              }
+                              : null}
+                          >
+                            {item.name}
+                          </a>
+                          :
+                          <a
+                            className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
+                            style={item?.stylize
+                              ? {
+                                background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
+                                backgroundSize: '200% 200%',
+                                animation: 'gradient 20s ease infinite',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
+                              }
+                              : null}
+                          >
+                            {item.name}
+                          </a>
+                        }
+                      </Link>
                     );
                   })}
                 </div>
