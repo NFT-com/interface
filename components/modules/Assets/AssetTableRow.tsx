@@ -6,6 +6,7 @@ import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -34,6 +35,7 @@ export interface AssetTableRowProps {
 }
 
 export default function AssetTableRow({ item, index, onChange, isChecked, selectAll }: AssetTableRowProps) {
+  const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const { data: collectionData } = useCollectionQuery(String( getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), item?.contract);
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
@@ -55,13 +57,13 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
   const { data: listings } = useListingActivitiesQuery(
     item?.contract,
     item?.tokenId,
-    String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    defaultChainId,
     null
   );
   const { data: profiles } = useProfilesByDisplayedNft(
     item?.contract,
     item?.tokenId,
-    String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    defaultChainId,
     true
   );
   const nftSaleHistory = useGetTxByNFTQuery(item?.contract, parseInt(item?.tokenId, 16).toString(), 'sale');
