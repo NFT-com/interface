@@ -51,6 +51,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
         slidesPerView={screenWidth < 600 ? 1 : screenWidth >= 600 && screenWidth < 900 ? 3 : 4}
         centeredSlides={false}
         loop={true}
+        spaceBetween={16}
         autoplay={{
           'delay': 3000,
           'disableOnInteraction': false
@@ -66,7 +67,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 contractAddress={props.contract}
                 tokenId={nft.tokenId}
                 title={nft.metadata.name}
-                images={[nft.metadata.imageURL]}
+                images={[nft?.previewLink || nft.metadata.imageURL]}
                 collectionName={props.collectionName}
                 onClick={() => {
                   if (nft.metadata.name) {

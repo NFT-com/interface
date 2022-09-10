@@ -17,6 +17,7 @@ export type UserNotifications = {
   profileNeedsCustomization: boolean;
   associatedProfileAdded: boolean;
   associatedProfileRemoved: boolean;
+  hasSoldActivity: boolean;
 };
 
 export type ValidTimeFrame = '1D' | '7D' | '1M' | '3M' | '1Y' | 'ALL';
