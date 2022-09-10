@@ -1624,7 +1624,7 @@ li {
 }
 @media (min-width: 900px) {
   .embla__slidefull {
-    min-width: 33%;
+    min-width: 33.5%;
   }
 }
 
@@ -1655,6 +1655,10 @@ li {
 
   .embla__slidefull {
     min-width: 25%;
+  }
+
+  .embla__slideSideNavClosed {
+    min-width: 33.5%;
   }
 }
 

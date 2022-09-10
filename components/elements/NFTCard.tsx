@@ -18,7 +18,7 @@ import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
-import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
+import { RoundedCornerAmount,RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import { BigNumber, ethers } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg';
@@ -47,7 +47,6 @@ export interface NFTCardProps {
   onSelectToggle?: (selected: boolean) => void;
   visible?: boolean;
   onVisibleToggle?: (visible: boolean) => void;
-  isCollectionCard?: boolean
 
   // By default this component takes the full width of its container.
   // If you need this component to constrain its own width, use this prop.
@@ -77,6 +76,25 @@ export function NFTCard(props: NFTCardProps) {
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
+  
+  const variantsForRow: RoundedCornerVariant[] = useMemo(() => {
+    if (processedImageURLs.length > 2) {
+      return [
+        RoundedCornerVariant.Left,
+        RoundedCornerVariant.None,
+        RoundedCornerVariant.Right,
+      ];
+    } else if (processedImageURLs.length === 2) {
+      return [
+        RoundedCornerVariant.Left,
+        RoundedCornerVariant.Right,
+      ];
+    } else {
+      return [
+        RoundedCornerVariant.All,
+      ];
+    }
+  }, [processedImageURLs.length]);
 
   const { data: listings } = useListingActivitiesQuery(
     props?.contractAddress,
@@ -134,7 +152,7 @@ export function NFTCard(props: NFTCardProps) {
     <div
       className={tw(
         `drop-shadow-md rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
-        props.isCollectionCard ? 'p-3 rounded-xl' : 'p-2 rounded',
+        props.imageLayout === 'row' ? 'p-3 rounded-xl' : 'p-2 rounded',
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
@@ -260,8 +278,9 @@ export function NFTCard(props: NFTCardProps) {
                 return <RoundedCornerMedia
                   key={image + index}
                   src={image}
-                  variant={RoundedCornerVariant.None}
+                  variant={variantsForRow[index]}
                   containerClasses='w-1/3'
+                  amount={RoundedCornerAmount.Medium}
                 />;
               })}
             </div> :
@@ -277,13 +296,13 @@ export function NFTCard(props: NFTCardProps) {
             </div>
       }
       {props.nftsDescriptionsVisible != false && <div className="flex flex-col">
-        {!props.isCollectionCard && <span className={tw(
+        {props.imageLayout !== 'row' && <span className={tw(
           'text-[#6F6F6F] text-sm pt-[10px]'
         )}>
           {isNullOrEmpty(props.collectionName) ? 'Unknown Name' : props.collectionName}
         </span>}
         {props.title && <span
-          className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.isCollectionCard ? 'pt-[10px]' : ''}`}
+          className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}
         >
           {props.title}
         </span>}

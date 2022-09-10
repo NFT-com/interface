@@ -71,7 +71,7 @@ const EmblaCarousel = (props: slidesProps) => {
     dragFree: true,
     containScroll: 'trimSnaps',
     skipSnaps: false,
-    slidesToScroll : props.full && screenWidth > 599 ? 2 : 1,
+    slidesToScroll : screenWidth > 599 ? 2 : 1,
   });
 
   const [scrollSnaps, setScrollSnaps] = useState([]);
@@ -135,13 +135,13 @@ const EmblaCarousel = (props: slidesProps) => {
       </div>
       :
       <>
-        <div className={`embla${props.full ? 'full' : ''}`}>
+        <div className="emblafull">
           <div className="embla__viewport" ref={viewportRef}>
             <div className="embla__container">
               {props.slides.map((slide: any, index) => (
-                <div className={`embla__slide${props.full ? 'full' : ''}`} key={index}>
+                <div className={sideNavOpen ? 'embla__slideSideNavClosed' : 'embla__slidefull'} key={index}>
                   <div className="embla__slide__inner">
-                    <div className={`${props.full ? 'embla__slide__item' : ''}`}>
+                    <div className="embla__slide__item">
                       <CollectionItem
                         contractAddr={slide?.collectionAddress}
                         images={[
