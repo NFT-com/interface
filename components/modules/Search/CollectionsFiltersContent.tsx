@@ -1,7 +1,5 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
-import { DropdownPicker } from 'components/elements/DropdownPicker';
 
 import EllipseX from 'public/ellipse-x.svg';
 import { useState } from 'react';
@@ -38,10 +36,13 @@ const IdFilter = (props: {setId: (id: string) => void, clearedFilters: boolean, 
 };
 
 export const CollectionsFiltersContent = () => {
-  const { setSearchModalOpen, setCollectionPageAppliedFilters, collectionPageSortyBy } = useSearchModal();
-  const [sortBy, setSortBy] = useState(collectionPageSortyBy);
-  const [id, setId] = useState(null);
+  const { setSearchModalOpen, setCollectionPageAppliedFilters } = useSearchModal();
   const [clearedFilters, setClearedFilters] = useState(false);
+
+  const setId = (id: string) => {
+    const paramId = id !== '' ? 'tokenId:='+id : '';
+    setCollectionPageAppliedFilters('',paramId, false);
+  };
 
   return (
     <>
@@ -53,7 +54,7 @@ export const CollectionsFiltersContent = () => {
           }}>
           <EllipseX />
         </div>
-        <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
+        <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filter</div>
         <div className="px-4 flex flex-col my-7">
           <div className="self-start font-black text-xl font-grotesk mb-4">Filter by ID</div>
           <IdFilter setId={setId} clearedFilters={clearedFilters} setClearedFilters={setClearedFilters}/>
@@ -64,19 +65,7 @@ export const CollectionsFiltersContent = () => {
             setClearedFilters(true);
           }}
           className="px-4 self-start font-black text-xl font-grotesk cursor-pointer text-blog-text-reskin">
-          Clear filters
-        </div>
-        <div className="px-4 mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-          <Button
-            color={'black'}
-            accent={AccentType.SCALE}
-            stretch={true}
-            label={'Filter'}
-            onClick={() => {
-              setCollectionPageAppliedFilters(sortBy, 'tokenId:='+id, false);
-            }}
-            type={ButtonType.PRIMARY}
-          />
+          Clear filter
         </div>
       </div>
     </>);

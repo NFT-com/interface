@@ -77,7 +77,12 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
     };
 
     if (event.keyCode === 13) {
-      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '*'}`);
+      if (target.value !== '') {
+        router.push(`/app/discover/allResults/${target.value}`);
+      } else {
+        router.push('/app/discover');
+      }
+      
       setSearchModalOpen(false);
       setShowHits(false);
     } else {

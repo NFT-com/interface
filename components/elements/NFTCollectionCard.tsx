@@ -42,7 +42,7 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
       contractAddress={collection?.collection?.contract}
       customBackground={props.customBackground}
       customBorder={props.customBorder}
-      lightModeForced={props.lightModeForced}
+      isCollectionCard
     />
   );
 }

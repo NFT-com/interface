@@ -71,7 +71,7 @@ export function useSearchModal() {
   const setModalType = useCallback((modalType: 'search' | 'filters' | 'collectionFilters') => {
     mutate({
       ...data,
-      modalType
+      modalType,
     });
   },[data, mutate]);
 

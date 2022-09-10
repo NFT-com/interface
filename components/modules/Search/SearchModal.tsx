@@ -10,7 +10,6 @@ import { SearchContent } from './SearchContent';
 export const SearchModal = () => {
   const { searchModalOpen, setSearchModalOpen, modalType } = useSearchModal();
   const { width: screenWidth } = useWindowDimensions();
-  
   return (
     <Modal
       fullModal

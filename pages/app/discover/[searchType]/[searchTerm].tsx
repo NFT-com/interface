@@ -21,7 +21,6 @@ import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown } from 'react-feather';
 import useSWR from 'swr';
 
 function usePrevious(value) {
@@ -33,7 +32,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage({ data }: ResultsPageProps) {
-  const { setSearchModalOpen, sideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
+  const { modalType, setModalType, setSearchModalOpen, sideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -91,6 +90,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }, [curatedCollections, data, setCuratedCollections]);
 
   useEffect(() => {
+    if (modalType !== 'filters') {
+      setModalType('filters');
+    }
+  }, [modalType, setModalType]);
+  
+  useEffect(() => {
     if (prevSearchTerm !== searchTerm){
       setFilters([]);
       setPage(1);
@@ -105,7 +110,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       max_facet_values: 200,
       collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS : SearchableFields.COLLECTIONS_INDEX_FIELDS,
-      q: searchTerm?.toString() !== '*' ? searchTerm?.toString() : '',
+      q: searchTerm?.toString(),
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
       filter_by: nftsResultsFilterBy,
@@ -125,7 +130,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         max_facet_values: 200,
         collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS,
-        q: searchTerm?.toString() !== '*' ? searchTerm?.toString() : '',
+        q: searchTerm?.toString(),
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
         filter_by: nftsResultsFilterBy,
@@ -215,6 +220,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                       <NFTCard
                         title={item.document.nftName}
                         images={[item.document.imageURL]}
+                        collectionName={item.document.contractName}
                         onClick={() => {
                           if (item.document.nftName) {
                             router.push(`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`);

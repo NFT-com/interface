@@ -47,6 +47,7 @@ export interface NFTCardProps {
   onSelectToggle?: (selected: boolean) => void;
   visible?: boolean;
   onVisibleToggle?: (visible: boolean) => void;
+  isCollectionCard?: boolean
 
   // By default this component takes the full width of its container.
   // If you need this component to constrain its own width, use this prop.
@@ -133,6 +134,7 @@ export function NFTCard(props: NFTCardProps) {
     <div
       className={tw(
         `drop-shadow-md rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
+        props.isCollectionCard ? 'p-3 rounded-xl' : 'p-2 rounded',
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
@@ -140,7 +142,7 @@ export function NFTCard(props: NFTCardProps) {
         props.customBorder ?? '',
         'cursor-pointer transform hover:scale-105',
         'overflow-hidden',
-        'p-2 border border-[#D5D5D5]'
+        'border border-[#D5D5D5]'
       )}
       style={{
         backgroundColor: props.customBackground ?? tileBackground
@@ -275,13 +277,13 @@ export function NFTCard(props: NFTCardProps) {
             </div>
       }
       {props.nftsDescriptionsVisible != false && <div className="flex flex-col">
-        <span className={tw(
+        {!props.isCollectionCard && <span className={tw(
           'text-[#6F6F6F] text-sm pt-[10px]'
         )}>
           {isNullOrEmpty(props.collectionName) ? 'Unknown Name' : props.collectionName}
-        </span>
+        </span>}
         {props.title && <span
-          className='text-ellipsis overflow-hidden font-medium'
+          className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.isCollectionCard ? 'pt-[10px]' : ''}`}
         >
           {props.title}
         </span>}

@@ -37,7 +37,7 @@ export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
   const { width: screenWidth } = useWindowDimensions();
   const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
-  const { setSearchModalOpen, collectionPageSortyBy, id, sideNavOpen, setSideNavOpen, setModalType, modalType } = useSearchModal();
+  const { setSearchModalOpen, collectionPageSortyBy, id, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -64,13 +64,6 @@ export function Collection(props: CollectionProps) {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   useEffect(() => {
-    console.log(modalType,'modalType fdo');
-    if (modalType !== 'collectionFilters') {
-      setModalType('collectionFilters');
-    }
-  }, [modalType, setModalType]);
-
-  useEffect(() => {
     currentPage === 1 && props.contract && client.collections('nfts')
       .documents()
       .search({
@@ -86,7 +79,7 @@ export function Collection(props: CollectionProps) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-  }, [client, collectionPageSortyBy, currentPage, id, props.contract, setModalType]);
+  }, [client, collectionPageSortyBy, currentPage, id, props.contract]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage !== prevVal) {
@@ -268,9 +261,8 @@ export function Collection(props: CollectionProps) {
         'max-w-nftcom mx-auto'
       )}
       >
-        {collectionNfts.length > 0 ?
-          <>
-            {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+        <>
+          {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
             <div className='block minlg:flex minlg:flex-row-reverse w-full minlg:w-max mb-6 justify-between items-center'>
               <div className='block minlg:flex items-center mb-6 minlg:mb-0'>
                 <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
@@ -297,6 +289,7 @@ export function Collection(props: CollectionProps) {
                   className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex minlg:flex-auto'
                   onClick={() => {
                     if (screenWidth < 900) {
+                      setModalType('collectionFilters');
                       setSearchModalOpen(true, 'collectionFilters' );
                     } else {
                       setSideNavOpen(!sideNavOpen);
@@ -321,59 +314,58 @@ export function Collection(props: CollectionProps) {
                 </div>
               }
             </div>
-            }
-            {selectedTab === 'NFTs' &&
+          }
+          {selectedTab === 'NFTs' &&
             <div className="flex overflow-hidden pb-3.5">
               <div className="hidden minlg:block">
                 <SideNav onSideNav={() => null}/>
               </div>
-              <div>
-                {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
+              {collectionNfts.length > 0
+                ? <div className="flex-auto">
+                  {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
                   <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
-                }
-                <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
-                  {collectionNfts.map((nft, index) => {
-                    return (
-                      <div className="NftCollectionItem" key={index}>
-                        <NFTCard
-                          contractAddress={nft.document.contractAddr}
-                          tokenId={nft.document.tokenId}
-                          title={nft.document.nftName}
-                          images={[nft.document.imageURL]}
-                          collectionName={nft.document.contractName}
-                          onClick={() => {
-                            if (nft.document.nftName) {
-                              router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
-                            }
-                          }}
-                          description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
-                          customBorderRadius={'rounded-tl rounded-tr'}
-                        />
-                      </div>);}
-                  )}
+                  }
+                  <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
+                    {collectionNfts.map((nft, index) => {
+                      return (
+                        <div className="NftCollectionItem" key={index}>
+                          <NFTCard
+                            contractAddress={nft.document.contractAddr}
+                            tokenId={nft.document.tokenId}
+                            title={nft.document.nftName}
+                            images={[nft.document.imageURL]}
+                            collectionName={nft.document.contractName}
+                            onClick={() => {
+                              if (nft.document.nftName) {
+                                router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
+                              }
+                            }}
+                            description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
+                            customBorderRadius={'rounded-tl rounded-tr'}
+                          />
+                        </div>);}
+                    )}
+                  </div>
+                  {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+                    <Button
+                      color={'black'}
+                      accent={AccentType.SCALE}
+                      stretch={true}
+                      label={'Load More'}
+                      onClick={ () => {
+                        setCurrentPage(currentPage + 1);
+                      }}
+                      type={ButtonType.PRIMARY}
+                    />
+                  </div>}
                 </div>
-                {found > collectionNfts.length && <div className="mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-                  <Button
-                    color={'black'}
-                    accent={AccentType.SCALE}
-                    stretch={true}
-                    label={'Load More'}
-                    onClick={ () => {
-                      setCurrentPage(currentPage + 1);
-                    }}
-                    type={ButtonType.PRIMARY}
-                  />
-                </div>}
-              </div>
+                : <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>}
             </div>
-            }
-            {selectedTab === 'Activity' &&
+          }
+          {selectedTab === 'Activity' &&
               <CollectionActivity contract={props?.contract} />
-            }
-          </>
-          :
-          <div className="font-grotesk font-black text-4xl text-[#7F7F7F]">No NFTs in the collection</div>
-        }
+          }
+        </>
       </div>
     </>
   );

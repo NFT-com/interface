@@ -68,7 +68,8 @@ export function OptionNav(props: PropsWithChildren<OptionNavProps>) {
 }
 
 export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?: any}) => {
-  const { sideNavOpen, setSearchFilters, modalType } = useSearchModal();
+  const { sideNavOpen, setSearchFilters } = useSearchModal();
+  const router = useRouter();
 
   const setFilters = () => {
     setSearchFilters(props.filtersData);
@@ -82,8 +83,8 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
     <div
       className={tw(
         'flex-shrink-0 w-80 flex flex-col transition-all duration-300',
-        sideNavOpen ? '' : modalType !== 'collectionFilters' ? '-ml-64' : '-ml-[20rem]')}>
-      {modalType !== 'collectionFilters'
+        sideNavOpen ? '' : !router.pathname.includes('/app/collection/') ? '-ml-64' : '-ml-[20rem]')}>
+      {!router.pathname.includes('/app/collection/')
         ? (
           <>
             <OptionNav
