@@ -80,7 +80,8 @@ export function NFTCard(props: NFTCardProps) {
   const { data: listings } = useListingActivitiesQuery(
     props?.contractAddress,
     props?.tokenId,
-    defaultChainId
+    defaultChainId,
+    nft?.wallet?.address
   );
   
   const { data: legacyListings } = useExternalListingsQuery(

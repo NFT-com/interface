@@ -46,7 +46,8 @@ export function ExternalListings(props: ExternalListingsProps) {
   const { data: listings } = useListingActivitiesQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId ?? chainId)
+    String(props.nft?.wallet.chainId ?? chainId),
+    props?.nft?.wallet?.address
   );
 
   const { data: legacyListings } = useExternalListingsQuery(
