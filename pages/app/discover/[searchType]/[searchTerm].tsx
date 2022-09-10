@@ -207,16 +207,18 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                       searchType?.toString() === 'collections' ? 'min-h-[10.5rem] minmd:min-h-[13rem]' : '')}
                   >
                     {searchType?.toString() === 'collections' ?
-                      nftsForCollections && <CollectionItem
-                        contractAddr={item.document.contractAddr}
-                        contractName={item.document.contractName}
-                        images={[
-                          nftsForCollections[index]?.nfts[0]?.metadata?.imageURL,
-                          nftsForCollections[index]?.nfts[1]?.metadata?.imageURL,
-                          nftsForCollections[index]?.nfts[2]?.metadata?.imageURL,
-                        ]}
-                        count={nftsForCollections[index]?.actualNumberOfNFTs}
-                      />:
+                      nftsForCollections
+                        ? <CollectionItem
+                          contractAddr={item.document.contractAddr}
+                          contractName={item.document.contractName}
+                          images={[
+                            nftsForCollections[index]?.nfts[0]?.metadata?.imageURL,
+                            nftsForCollections[index]?.nfts[1]?.metadata?.imageURL,
+                            nftsForCollections[index]?.nfts[2]?.metadata?.imageURL,
+                          ]}
+                          count={nftsForCollections[index]?.actualNumberOfNFTs}
+                        />
+                        :<div className="flex items-center justify-center"><Loader /> </div>:
                       <NFTCard
                         title={item.document.nftName}
                         images={[item.document.imageURL]}
