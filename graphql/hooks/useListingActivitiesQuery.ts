@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
+import { ActivityStatus, ActivityType, Maybe, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback } from 'react';
@@ -13,7 +13,7 @@ export interface ListingActivitiesData {
   mutate: () => void;
 }
 
-export function useListingActivitiesQuery(contract: string, tokenId: string, chainId: string): ListingActivitiesData {
+export function useListingActivitiesQuery(contract: string, tokenId: string, chainId: string, owner: Maybe<string>): ListingActivitiesData {
   const sdk = useGraphQLSDK();
   const keyString = 'ListingActivitiesQuery ' +
     chainId +
@@ -35,7 +35,8 @@ export function useListingActivitiesQuery(contract: string, tokenId: string, cha
         contract,
         tokenId,
         status: ActivityStatus.Valid,
-        ignoreExpired: true
+        ignoreExpired: true,
+        walletAddress: owner
       }
     });
     return result?.getActivities?.items;
