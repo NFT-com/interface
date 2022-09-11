@@ -112,7 +112,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 />
               </> :
               <PriceInput
-                currencyAddress={props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
+                currencyAddress={
+                  seaportEnabled && !looksrareEnabled ?
+                    props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId) :
+                    getAddress('weth', defaultChainId)
+                }
                 currencyOptions={filterNulls(['WETH', seaportEnabled && !looksrareEnabled ? 'ETH' : null])}
                 onPriceChange={(val: BigNumber) => {
                   setPrice(props.listing, val);
