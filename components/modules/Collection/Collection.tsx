@@ -8,7 +8,9 @@ import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { useNumberOfNFTsQuery } from 'graphql/hooks/useNumberOfNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -24,6 +26,7 @@ import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
@@ -40,7 +43,12 @@ export function Collection(props: CollectionProps) {
   const [found, setFound] = useState(0);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
-  const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
+  const defaultChainId = useDefaultChainId();
+  const { data: collectionData } = useCollectionQuery(defaultChainId, props.contract?.toString());
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contract, async () => {
+    return await getContractMetadata(props.contract, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
   const collectionSalesHistory = useGetContractSalesStatisticsQuery(props?.contract?.toString());
   const collectionNFTInfo = useGetNFTDetailsQuery(props?.contract?.toString(), collectionNfts[0]?.document?.tokenId);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collectionData?.collection?.deployer);
@@ -125,7 +133,7 @@ export function Collection(props: CollectionProps) {
       </div>
       <div className='font-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
         <h2 className="text-3xl font-bold">
-          {collectionData?.collection?.name}
+          {collectionName ?? 'Unknown Name'}
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
@@ -298,7 +306,6 @@ export function Collection(props: CollectionProps) {
                         tokenId={nft.document.tokenId}
                         title={nft.document.nftName}
                         images={[nft.document.imageURL]}
-                        collectionName={nft.document.contractName}
                         onClick={() => {
                           if (nft.document.nftName) {
                             router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
