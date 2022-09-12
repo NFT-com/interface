@@ -98,7 +98,7 @@ export function Button(props: ButtonProps) {
       return 'hover:opacity-80';
     }
     else if(props?.accent === AccentType.SCALE) {
-      return 'minlg:transform minlg:hover:scale-105';
+      return 'transform hover:scale-105';
     }
     return '';
   }, [props?.accent, props?.loading]);

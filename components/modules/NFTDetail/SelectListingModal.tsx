@@ -1,5 +1,5 @@
 import { Modal } from 'components/elements/Modal';
-import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
@@ -28,19 +28,18 @@ export function SelectListingModal(props: SelectListingsModalProps) {
 
   const getModalContent = useCallback(() => {
     return <div className='flex flex-col font-grotesk'>
-      <div className="flex flex-col items-center">
+      <div className="flex items-center">
         <RoundedCornerMedia
-          containerClasses='w-full aspect-square'
+          containerClasses='w-2/4 aspect-square'
           src={processIPFSURL(nft?.metadata?.imageURL)}
-          variant={RoundedCornerVariant.All}
-          amount={RoundedCornerAmount.Medium}
+          variant={RoundedCornerVariant.None}
         />
-        <div className="flex flex-col w-full mt-4">
-          <div className="whitespace-nowrap text-base font-normal font-grotesk text-secondary-txt">
-            {isNullOrEmpty(collectionName) ? 'Unknown Collection' : collectionName}
-          </div>
-          <div className="whitespace-nowrap text-xl font-bold font-grotesk text-[#1F2127]">
+        <div className="flex flex-col px-8">
+          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
             {isNullOrEmpty(nft?.metadata?.name) ? 'Unknown Name' : nft?.metadata?.name}
+          </div>
+          <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127]">
+            {isNullOrEmpty(collectionName) ? 'Unknown Collection' : collectionName}
           </div>
         </div>
       </div>
