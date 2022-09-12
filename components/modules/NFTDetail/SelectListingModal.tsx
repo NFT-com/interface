@@ -1,12 +1,13 @@
 import { Modal } from 'components/elements/Modal';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft, TxActivity } from 'graphql/generated/types';
+import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 import { ExternalListingTile, ListingButtonType } from './ExternalListingTile';
 
 import { XCircle } from 'phosphor-react';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export interface SelectListingsModalProps {
@@ -19,6 +20,11 @@ export interface SelectListingsModalProps {
 
 export function SelectListingModal(props: SelectListingsModalProps) {
   const { visible, onClose, nft, listings, collectionName } = props;
+
+  const modalRef = useRef();
+  useOutsideClickAlerter(modalRef, () => {
+    onClose();
+  });
 
   const getModalContent = useCallback(() => {
     return <div className='flex flex-col font-grotesk'>
@@ -65,7 +71,7 @@ export function SelectListingModal(props: SelectListingsModalProps) {
       fullModal
       pure
     >
-      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
         <div className='pt-20 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
           <XCircle onClick={onClose} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
