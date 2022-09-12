@@ -32,7 +32,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
                   className={tw(
                     'border border-gray-300 font-grotesk text-sm',
                     'rounded-3xl py-2 px-3.5 h-fit my-3 hover:cursor-pointer',
-                    selectedCuratedCollection?.tabTitle === tab.tabTitle ? 'bg-[#F9D963] text-black font-black': 'bg-pagebg text-blog-text-reskin font-bold' )}
+                    !router.pathname.includes('discover/') && selectedCuratedCollection?.tabTitle === tab.tabTitle ? 'bg-[#F9D963] text-black font-black': 'bg-pagebg text-blog-text-reskin font-bold' )}
                   onClick={() => {
                     setSelectedCuratedCollection(tab);
                     if (router.pathname.includes('discover/')) {
