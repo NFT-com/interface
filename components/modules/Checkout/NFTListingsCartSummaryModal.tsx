@@ -119,15 +119,15 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       </div>;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
-        <p className="text-3xl mx-4 font-bold">
+        <div className="text-3xl mx-4 font-bold">
           {error === 'ApprovalError' ? 'Approval' : 'Signature'} Failed
           <div className='w-full my-8'>
             <span className='font-medium text-[#6F6F6F] text-base'>
-              The {error === 'ApprovalError' ? 'Approval' : 'Signature'} was not accepted in your wallet.
+              The {error === 'ApprovalError' ? 'Approval' : 'Signature'} in your wallet was not successful.
               If you would like to continue listing, please try again.
             </span>
           </div>
-        </p>.
+        </div>.
       </div>;
     } else if (showProgressBar) {
       return (
