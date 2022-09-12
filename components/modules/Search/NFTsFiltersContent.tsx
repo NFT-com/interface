@@ -309,7 +309,7 @@ export const NFTsFiltersContent = () => {
     <>
       <div className="flex flex-col w-full">
         <div
-          className="block minmd:hidden flex p-5 justify-end cursor-pointer"
+          className="block minlg:hidden flex p-5 justify-end cursor-pointer"
           onClick={() => {
             setSearchModalOpen(false);
           }}>
@@ -355,7 +355,7 @@ export const NFTsFiltersContent = () => {
           className="px-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">
           Clear filters
         </div>
-        <div className="minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+        <div className="px-4 minlg:px-0 minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
           <Button
             color={'black'}
             accent={AccentType.SCALE}
