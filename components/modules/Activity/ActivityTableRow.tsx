@@ -1,3 +1,4 @@
+import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { getContractMetadata, getNftMetadata } from 'utils/alchemyNFT';

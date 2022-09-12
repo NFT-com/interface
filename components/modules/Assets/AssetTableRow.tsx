@@ -1,12 +1,12 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { NFTListingsContext, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
-import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -15,6 +15,7 @@ import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
 import { useCallback, useContext, useEffect } from 'react';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -37,7 +38,10 @@ export interface AssetTableRowProps {
 export default function AssetTableRow({ item, index, onChange, isChecked, selectAll }: AssetTableRowProps) {
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
-  const { data: collectionData } = useCollectionQuery(String( getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), item?.contract);
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.contract, async () => {
+    return await getContractMetadata(item?.contract, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
   const {
     allowedAll: openseaAllowed,
@@ -141,7 +145,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <Link href={`/app/collection/${item?.contract}`}>
           <div className='hover:cursor-pointer'>
-            <p className='-mt-1 font-bold text-[#B59007]'>{collectionData?.collection?.name}</p>
+            <p className='-mt-1 font-bold text-[#B59007]'>{collectionName}</p>
           </div>
         </Link>
       </td>

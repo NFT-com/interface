@@ -1,6 +1,6 @@
 import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
-import { useSaleActivitiesQuery } from 'graphql/hooks/useSaleActivitiesQuery';
+import { useSaleNotificationsQuery } from 'graphql/hooks/useSaleNotificationsQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
@@ -61,7 +61,7 @@ export function NotificationContextProvider(
   const { data: pendingAssociatedProfiles } = usePendingAssociationQuery();
   const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
   const { totalClaimable: totalClaimableForThisAddress } = useClaimableProfileCount(currentAddress);
-  const { data: saleActivities } = useSaleActivitiesQuery(
+  const { data: saleActivities } = useSaleNotificationsQuery(
     currentAddress,
     defaultChainId,
   );

@@ -9,7 +9,7 @@ import { tw } from 'utils/tw';
 
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { CaretDown, CaretRight } from 'phosphor-react';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
@@ -82,6 +82,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             expanded ?
               <>
                 <PriceInput
+                  initial={
+                    props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.startingPrice == null ?
+                      '' :
+                      ethers.utils.formatEther(BigNumber.from(props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.startingPrice ?? 0))
+                  }
                   currencyAddress={props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
                   currencyOptions={['WETH', 'ETH']}
                   onPriceChange={(val: BigNumber) => {
@@ -98,6 +103,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   }
                 />
                 <PriceInput
+                  initial={
+                    props.listing.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice == null ?
+                      '' :
+                      ethers.utils.formatEther(BigNumber.from(props.listing.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice ?? 0))
+                  }
                   currencyAddress={getAddress('weth', defaultChainId)}
                   currencyOptions={['WETH']}
                   onPriceChange={(val: BigNumber) => {
@@ -112,6 +122,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 />
               </> :
               <PriceInput
+                initial={
+                  props.listing?.startingPrice == null ?
+                    '' :
+                    ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
+                }
                 currencyAddress={
                   seaportEnabled && !looksrareEnabled ?
                     props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId) :

@@ -23,7 +23,6 @@ export const CollectionItem = ({ contractAddr, contractName, images, count }: Co
       customBackground={'white'}
       customBorder={'border border-grey-200'}
       contractName={contractName}
-      lightModeForced={true}
     />
   );
 };
