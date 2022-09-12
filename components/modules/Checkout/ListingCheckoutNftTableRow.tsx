@@ -3,7 +3,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { processIPFSURL } from 'utils/helpers';
+import { filterNulls, processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
@@ -112,8 +112,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 />
               </> :
               <PriceInput
-                currencyAddress={getAddress('weth', defaultChainId)}
-                currencyOptions={['WETH']}
+                currencyAddress={
+                  seaportEnabled && !looksrareEnabled ?
+                    props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId) :
+                    getAddress('weth', defaultChainId)
+                }
+                currencyOptions={filterNulls(['WETH', seaportEnabled && !looksrareEnabled ? 'ETH' : null])}
                 onPriceChange={(val: BigNumber) => {
                   setPrice(props.listing, val);
                   props.onPriceChange();

@@ -253,6 +253,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               if (success) {
                 clear();
                 setSuccess(false);
+                props.onClose();
                 return;
               }
 
