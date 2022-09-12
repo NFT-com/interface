@@ -1,15 +1,13 @@
-import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
-import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
-import { getContractMetadata } from 'utils/alchemyNFT';
+import { getContractMetadata, getNftMetadata } from 'utils/alchemyNFT';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 export interface ActivityTableRowProps {
@@ -20,12 +18,59 @@ export interface ActivityTableRowProps {
 export default function ActivityTableRow({ item, index }: ActivityTableRowProps) {
   const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
-  const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, !isNullOrEmpty(item?.nftId[0]) ? BigNumber.from(item?.nftId[0].split('/')[2]).toString() : null);
+  const nftId = BigNumber.from(item?.nftId[0].split('/')[2]).toString();
   const ethPriceUSD = useEthPriceUSD();
   const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.nftContract, async () => {
     return await getContractMetadata(item?.nftContract, defaultChainId);
   });
+  const { data: nftMetadata } = useSWR('NFTMetadata' + item?.nftContract, async () => {
+    return await getNftMetadata(item?.nftContract, nftId, defaultChainId);
+  });
+  const nftName = nftMetadata?.metadata?.name;
   const collectionName = collectionMetadata?.contractMetadata?.name;
+
+  const getPriceColumns = useCallback(() => {
+    if(type === 'order' && item[type]?.exchange === 'LooksRare'){
+      return (
+        <>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            {item?.order?.protocolData.amount || <p>—</p>}
+          </td>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            {item?.order?.protocolData.amount && ethPriceUSD ? <p>${(ethPriceUSD * item.order.protocolData.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+          </td>
+        </>
+      );
+    }
+
+    if(type === 'order' && item[type]?.exchange === 'OpenSea'){
+      return (
+        <>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            {item?.order?.protocolData.parameters.offer[0].startAmount || <p>—</p>}
+          </td>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            {item?.order?.protocolData.parameters.offer[0].startAmount && ethPriceUSD ? <p>${(ethPriceUSD * item?.order?.protocolData.parameters.offer[0].startAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+          </td>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <td className="text-body leading-body pr-8 minmd:pr-4" >
+          <p>—</p>
+        </td>
+        <td className="text-body leading-body pr-8 minmd:pr-4" >
+          <p>—</p>
+        </td>
+      </>
+    );
+  }, [
+    item,
+    type,
+    ethPriceUSD
+  ]);
   
   useEffect(() => {
     if(!isNullOrEmpty(item.transaction)){
@@ -46,13 +91,13 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
     >
       <td className="font-bold text-body leading-body pl-8" >
 
-        {!collectionName && !activityNFTInfo?.nft?.metadata?.name ?
+        {!collectionName && !nftName ?
           <p>—</p>
           :
           <>
-            <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionName || activityNFTInfo?.contract?.name}</p>
-            <Link href={`/app/nft/${item?.order?.protocolData?.collectionAddress}/${item?.order?.protocolData?.tokenId}`}>
-              <p className='text-[#B59007] hover:cursor-pointer -mt-1'>{activityNFTInfo?.nft?.metadata?.name}</p>
+            <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionName}</p>
+            <Link href={`/app/nft/${item?.nftContract}/${nftId}`}>
+              <p className='text-[#B59007] hover:cursor-pointer -mt-1'>{nftName}</p>
             </Link>
           </>
         }
@@ -63,12 +108,9 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
       <td className="text-body leading-body pr-8 minmd:pr-4" >
         {item[type]?.exchange || <p>—</p>}
       </td>
-      <td className="text-body leading-body pr-8 minmd:pr-4" >
-        {type === 'order' && item?.order?.protocolData.amount || <p>—</p>}
-      </td>
-      <td className="text-body leading-body pr-8 minmd:pr-4" >
-        {type === 'order' && item?.order?.protocolData.amount && ethPriceUSD ? <p>${(ethPriceUSD * item.order.protocolData.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
-      </td>
+
+      {getPriceColumns()}
+
       <td className="text-body leading-body pr-8 minmd:pr-4" >
         {moment(item.timestamp).fromNow() || <p>—</p>}
       </td>
@@ -105,7 +147,6 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
         </td>
       </>
       }
-      
     </tr>
   );
 }
