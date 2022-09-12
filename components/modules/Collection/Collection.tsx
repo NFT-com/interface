@@ -10,8 +10,10 @@ import { useNumberOfNFTsQuery } from 'graphql/hooks/useNumberOfNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -27,6 +29,7 @@ import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
@@ -36,8 +39,8 @@ export interface CollectionProps {
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
   const { width: screenWidth } = useWindowDimensions();
-  const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
   const { setSearchModalOpen, collectionPageSortyBy, id, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
+  const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -45,7 +48,12 @@ export function Collection(props: CollectionProps) {
   const [found, setFound] = useState(0);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const prevVal = usePrevious(currentPage);
-  const { data: collectionData } = useCollectionQuery(String( chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props.contract?.toString());
+  const defaultChainId = useDefaultChainId();
+  const { data: collectionData } = useCollectionQuery(defaultChainId, props.contract?.toString());
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contract, async () => {
+    return await getContractMetadata(props.contract, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
   const collectionSalesHistory = useGetContractSalesStatisticsQuery(props?.contract?.toString());
   const collectionNFTInfo = useGetNFTDetailsQuery(props?.contract?.toString(), collectionNfts[0]?.document?.tokenId);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collectionData?.collection?.deployer);
@@ -136,7 +144,7 @@ export function Collection(props: CollectionProps) {
       </div>
       <div className='font-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
         <h2 className="text-3xl font-bold">
-          {collectionData?.collection?.name}
+          {collectionName ?? 'Unknown Name'}
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
@@ -261,8 +269,9 @@ export function Collection(props: CollectionProps) {
         'max-w-nftcom mx-auto'
       )}
       >
-        <>
-          {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
+        {
+          <>
+            {getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) &&
             <div className='block minlg:flex minlg:flex-row-reverse w-full minlg:w-max mb-6 justify-between items-center'>
               <div className='block minlg:flex items-center mb-6 minlg:mb-0'>
                 <Tab.Group onChange={(index) => {setSelectedTab(tabs[index]);}}>
@@ -286,7 +295,9 @@ export function Collection(props: CollectionProps) {
               </div>
               {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
                 <div
-                  className='mb-6 minlg:mb-0 minlg:mr-3 items-center w-full flex minlg:flex-auto'
+                  className={tw(
+                    sideNavOpen ? 'mr-5' : '',
+                    'w-full mb-6 minlg:mb-0 minlg:mr-3 items-center flex minlg:flex-auto')}
                   onClick={() => {
                     if (screenWidth < 900) {
                       setModalType('collectionFilters');
@@ -305,7 +316,6 @@ export function Collection(props: CollectionProps) {
                       <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
                       <p>Filter</p>
                     </div>
-
                     <div className='hidden minlg:block'>
                       {!sideNavOpen && <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>}
                       {sideNavOpen && <p className="px-[6.5rem]">Close Filters</p>}
@@ -314,8 +324,8 @@ export function Collection(props: CollectionProps) {
                 </div>
               }
             </div>
-          }
-          {selectedTab === 'NFTs' &&
+            }
+            {selectedTab === 'NFTs' &&
             <div className="flex overflow-hidden pb-3.5">
               <div className="hidden minlg:block">
                 <SideNav onSideNav={() => null}/>
@@ -323,7 +333,7 @@ export function Collection(props: CollectionProps) {
               {collectionNfts.length > 0
                 ? <div className="flex-auto">
                   {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
-                  <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
+                <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
                   }
                   <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
                     {collectionNfts.map((nft, index) => {
@@ -334,7 +344,6 @@ export function Collection(props: CollectionProps) {
                             tokenId={nft.document.tokenId}
                             title={nft.document.nftName}
                             images={[nft.document.imageURL]}
-                            collectionName={nft.document.contractName}
                             onClick={() => {
                               if (nft.document.nftName) {
                                 router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
@@ -361,11 +370,12 @@ export function Collection(props: CollectionProps) {
                 </div>
                 : <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>}
             </div>
-          }
-          {selectedTab === 'Activity' &&
+            }
+            {selectedTab === 'Activity' &&
               <CollectionActivity contract={props?.contract} />
-          }
-        </>
+            }
+          </>
+        }
       </div>
     </>
   );
