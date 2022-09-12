@@ -3,7 +3,6 @@ import { ActivityStatus, PageInput, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate } from 'swr';
-import useSWRImmutable from 'swr/immutable';
 import { PartialDeep } from 'type-fest';
 
 export interface ActivitiesForAddressData {

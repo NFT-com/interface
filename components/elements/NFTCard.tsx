@@ -3,7 +3,6 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, SeaportProtocolData, SupportedExternalExchange } from 'graphql/generated/types';
-import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -11,6 +10,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -27,6 +27,7 @@ import OpenseaIcon from 'public/opensea-icon.svg';
 import { MouseEvent, useCallback, useContext, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
+import useSWR from 'swr';
 import { useAccount } from 'wagmi';
 export interface NFTCardTrait {
   key: string,
@@ -66,7 +67,10 @@ export interface NFTCardProps {
 export function NFTCard(props: NFTCardProps) {
   const defaultChainId = useDefaultChainId();
   const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
-  const { data: collectionData } = useCollectionQuery(defaultChainId, props.contractAddress);
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress, async () => {
+    return await getContractMetadata(props.contractAddress, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
   const { tileBackground, secondaryText, pink, secondaryIcon, link } = useThemeColors();
   const { address: currentAddress } = useAccount();
   const { toggleCartSidebar } = useContext(NFTListingsContext);
@@ -302,7 +306,7 @@ export function NFTCard(props: NFTCardProps) {
         {props.imageLayout !== 'row' && <span className={tw(
           'text-[#6F6F6F] text-sm pt-[10px]'
         )}>
-          {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionData?.collection?.name) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionData?.collection?.name : props.collectionName}
+          {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
         </span>}
         {props.title && <span
           className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}

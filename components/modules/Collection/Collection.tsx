@@ -317,8 +317,8 @@ export function Collection(props: CollectionProps) {
                       <p>Filter</p>
                     </div>
                     <div className='hidden minlg:block'>
-                      {!sideNavOpen && <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>}
-                      {sideNavOpen && <p className="px-[6.5rem]">Close Filters</p>}
+                      {(!sideNavOpen || (sideNavOpen && selectedTab !== 'NFTs')) && <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>}
+                      {sideNavOpen && selectedTab === 'NFTs' && <p className="px-[6.5rem]">Close Filters</p>}
                     </div>
                   </div>
                 </div>
