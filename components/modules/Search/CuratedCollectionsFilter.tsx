@@ -12,7 +12,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
   const router = useRouter();
 
   return (
-    <div className="mt-3.5 minlg:mt-0 bg-gray-100 px-4 pt-8 pb-4">
+    <div className="mt-3.5 minlg:mt-0 bg-gray-100 px-4 pt-8 pb-4 minlg:pr-2">
       <span className="text-black text-[1.4rem] minlg:text-lg font-medium">Curated Collections</span>
       <p className="minmd:text-left text-blog-text-reskin font-normal text-lg minlg:text-base w-full minxl:w-4/5">
         We’ve hand-picked NFT collections to help you find what you’re looking for.

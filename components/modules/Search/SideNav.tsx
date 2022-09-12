@@ -30,7 +30,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
       animate={{
         width: sideNavOpen ? '19rem' : 0 }}
       transition={{ duration: 0.2 }}
-      className={tw(sideNavOpen ? 'block' : '-ml-28 hidden overflow-hidden')}
+      className={tw(sideNavOpen ? 'block pr-4' : '-ml-28 hidden overflow-hidden')}
     >
       {!router.pathname.includes('/app/collection/')
         ? (

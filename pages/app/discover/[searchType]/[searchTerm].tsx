@@ -144,7 +144,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   return (
     <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen overflow-hidden">
-      <div className="w-full min-h-disc">
+      <div className="w-full min-h-disc px-2 minlg:px-0">
         <div className="flex flex-col mt-6 minmd:px-4 minxl:px-0">
           <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
           <div>
@@ -173,7 +173,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           </div>
           <div className="flex-auto minmd:px-4 minxl:px-0">
             <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>
-            <div className="minmd:mt-5 minlg:mt-0">
+            <div className="mt-5 minlg:mt-0">
               {searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) &&
                 <CollectionsResults searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
               <div className="flex justify-between items-center mt-7 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
