@@ -2,6 +2,7 @@ import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -9,6 +10,7 @@ import { BigNumber } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 
 export interface ActivityTableRowProps {
   item: any;
@@ -18,10 +20,13 @@ export interface ActivityTableRowProps {
 export default function ActivityTableRow({ item, index }: ActivityTableRowProps) {
   const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
-  const { data: collectionData } = useCollectionQuery(defaultChainId, item?.nftContract);
   const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, !isNullOrEmpty(item?.nftId[0]) ? BigNumber.from(item?.nftId[0].split('/')[2]).toString() : null);
   const ethPriceUSD = useEthPriceUSD();
-
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.nftContract, async () => {
+    return await getContractMetadata(item?.nftContract, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
+  
   useEffect(() => {
     if(!isNullOrEmpty(item.transaction)){
       setType('transaction');
@@ -41,11 +46,11 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
     >
       <td className="font-bold text-body leading-body pl-8" >
 
-        {!collectionData?.collection?.name && !activityNFTInfo?.nft?.metadata?.name ?
+        {!collectionName && !activityNFTInfo?.nft?.metadata?.name ?
           <p>—</p>
           :
           <>
-            <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionData?.collection?.name || activityNFTInfo?.contract?.name}</p>
+            <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionName || activityNFTInfo?.contract?.name}</p>
             <Link href={`/app/nft/${item?.order?.protocolData?.collectionAddress}/${item?.order?.protocolData?.tokenId}`}>
               <p className='text-[#B59007] hover:cursor-pointer -mt-1'>{activityNFTInfo?.nft?.metadata?.name}</p>
             </Link>
