@@ -20,7 +20,6 @@ export function useSaleNotificationsQuery(address: string, chainId: string): Sal
     address;
     
   const { data } = useSWRImmutable(keyString, async () => {
-    console.log('fetching sales');
     if (isNullOrEmpty(address) || isNullOrEmpty(chainId)) {
       return [];
     }
