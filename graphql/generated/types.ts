@@ -2916,6 +2916,13 @@ export type NftsForCollectionsQueryVariables = Exact<{
 
 export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, actualNumberOfNFTs: number, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
 
+export type NotificationActivitiesQueryVariables = Exact<{
+  input?: InputMaybe<TxActivitiesInput>;
+}>;
+
+
+export type NotificationActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, read: boolean, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, nftContract: string, nftId: Array<string | null>, status: ActivityStatus } | null> | null } };
+
 export type NumberOfNfTsQueryVariables = Exact<{
   contract: Scalars['Address'];
   chainId?: InputMaybe<Scalars['String']>;
@@ -4368,6 +4375,29 @@ export const NftsForCollectionsDocument = gql`
   }
 }
     `;
+export const NotificationActivitiesDocument = gql`
+    query NotificationActivities($input: TxActivitiesInput) {
+  getActivities(input: $input) {
+    totalItems
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    items {
+      id
+      read
+      chainId
+      activityType
+      activityTypeId
+      timestamp
+      walletAddress
+      nftContract
+      nftId
+      status
+    }
+  }
+}
+    `;
 export const NumberOfNfTsDocument = gql`
     query NumberOfNFTs($contract: Address!, $chainId: String) {
   numberOfNFTs(contract: $contract, chainId: $chainId)
@@ -4754,6 +4784,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     NftsForCollections(variables: NftsForCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NftsForCollectionsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<NftsForCollectionsQuery>(NftsForCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NftsForCollections', 'query');
+    },
+    NotificationActivities(variables?: NotificationActivitiesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NotificationActivitiesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<NotificationActivitiesQuery>(NotificationActivitiesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NotificationActivities', 'query');
     },
     NumberOfNFTs(variables: NumberOfNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NumberOfNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<NumberOfNfTsQuery>(NumberOfNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NumberOfNFTs', 'query');
