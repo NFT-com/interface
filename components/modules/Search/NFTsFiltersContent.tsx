@@ -140,7 +140,6 @@ const CurrencyPriceFilter = (props: any) => {
       <DropdownPicker
         placeholder={'Currency'}
         selectedIndex={0}
-        lightModeForced
         options={[
           {
             label: 'ETH',
@@ -273,7 +272,7 @@ const Filter = (props: any) => {
   );
 };
 
-export const FiltersContent = () => {
+export const NFTsFiltersContent = () => {
   const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray } = useSearchModal();
   const [sortBy, setSortBy] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
@@ -310,7 +309,7 @@ export const FiltersContent = () => {
     <>
       <div className="flex flex-col w-full">
         <div
-          className="block minmd:hidden flex p-5 justify-end cursor-pointer"
+          className="block minlg:hidden flex p-5 justify-end cursor-pointer"
           onClick={() => {
             setSearchModalOpen(false);
           }}>
@@ -356,7 +355,7 @@ export const FiltersContent = () => {
           className="px-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">
           Clear filters
         </div>
-        <div className="minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
+        <div className="px-4 minlg:px-0 minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
           <Button
             color={'black'}
             accent={AccentType.SCALE}

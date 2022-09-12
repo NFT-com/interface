@@ -11,7 +11,7 @@ export function useSearchModal() {
     {
       modalType: '',
       searchModalOpen: false,
-      sideNavOpen: !router.pathname.includes('discover/'),
+      sideNavOpen: !router.pathname.includes('discover/') && !router.pathname.includes('collection/'),
       searchFilters: [],
       filtersList: null,
       checkedFiltersList: '',
@@ -68,10 +68,10 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
-  const setModalType = useCallback((modalType: 'search' | 'filters') => {
+  const setModalType = useCallback((modalType: 'search' | 'filters' | 'collectionFilters') => {
     mutate({
       ...data,
-      modalType
+      modalType,
     });
   },[data, mutate]);
 

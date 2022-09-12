@@ -91,7 +91,6 @@ export function PriceInput(props: PriceInputProps) {
           </div>
           : <div className='relative items-center flex ml-4'>
             <DropdownPicker
-              lightModeForced
               options={currencies}
               selectedIndex={selectedCurrencyIndex}
             />

@@ -8,7 +8,7 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
   
   return(
     <>
-      <div className="flex justify-between items-center font-grotesk font-black text-base text-lg minmd:text-xl text-blog-text-reskin mt-12 mb-10">
+      <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin">
         <span> {found + ' ' + 'COLLECTION' + `${found === 1 ? '' : 'S'}`} </span>
         <span
           className="cursor-pointer hover:font-semibold"
@@ -20,7 +20,7 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
       {nftsForCollections && nftsForCollections.length > 0 ?
         <CollectionsSlider full slides={nftsForCollections} /> :
         (<div className="flex items-center justify-center min-h-[16rem]">
-          {found !== 0 && <Loader />}
+          {found === 0 && <Loader />}
         </div>)}
     </>
   );

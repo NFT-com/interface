@@ -24,7 +24,7 @@ type HeaderProps = {
 }
 
 export const Header = ({ removeBg } : HeaderProps) => {
-  const { setSearchModalOpen } = useSearchModal();
+  const { setSearchModalOpen, setModalType } = useSearchModal();
   const { primaryIcon } = useThemeColors();
   const { toggleCartSidebar, toList } = useContext(NFTListingsContext);
   const { toBuy } = useContext(NFTPurchasesContext);
@@ -96,6 +96,7 @@ export const Header = ({ removeBg } : HeaderProps) => {
               <button
                 className='block minlg:hidden cursor-pointer mr-2 h-full w-7'
                 onClick={() => {
+                  setModalType('search');
                   setSearchModalOpen(true);
                 }}
               >

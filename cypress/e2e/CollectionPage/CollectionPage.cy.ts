@@ -33,7 +33,7 @@ describe('results page tests', () => {
   it('renders no nfts in the collection', () => {
     cy.visit('/app/collection/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D');
     cy.wait(4000);
-    cy.contains('No NFTs in the collection').should('exist');
+    cy.contains('No results found').should('exist');
     cy.get('.NftCollectionItem').should('not.exist');
   });
 });
