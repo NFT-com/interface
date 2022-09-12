@@ -1552,6 +1552,7 @@ export type Query = {
   getRemovedAssociationsForReceiver: Array<Maybe<RemovedAssociationsForReceiverOutput>>;
   /** AUTHENTICATED */
   getRemovedAssociationsForSender: Array<Maybe<RemovedAssociationsForSenderOutput>>;
+  getSales?: Maybe<Array<Maybe<TransactionSales>>>;
   getSwaps: GetMarketSwap;
   getTxByContract?: Maybe<NftPortTxByContract>;
   getTxByNFT?: Maybe<NftPortTxByNft>;
@@ -1713,6 +1714,11 @@ export type QueryGetRejectedAssociationsArgs = {
 
 export type QueryGetRemovedAssociationsForSenderArgs = {
   profileUrl: Scalars['String'];
+};
+
+
+export type QueryGetSalesArgs = {
+  input?: InputMaybe<TransactionSalesInput>;
 };
 
 
@@ -2022,6 +2028,36 @@ export type TopBidsInput = {
   status?: InputMaybe<BidStatus>;
 };
 
+export type TransactionSales = {
+  __typename?: 'TransactionSales';
+  date?: Maybe<Scalars['DateTime']>;
+  priceUSD?: Maybe<Scalars['Float']>;
+  transaction?: Maybe<TransactionSalesTx>;
+  transactionHash?: Maybe<Scalars['String']>;
+};
+
+export type TransactionSalesInput = {
+  contractAddress: Scalars['Address'];
+  dateRange?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['String']>;
+};
+
+export type TransactionSalesTx = {
+  __typename?: 'TransactionSalesTx';
+  block_hash?: Maybe<Scalars['String']>;
+  block_number?: Maybe<Scalars['Int']>;
+  buyer_address?: Maybe<Scalars['String']>;
+  lister_address?: Maybe<Scalars['String']>;
+  marketplace?: Maybe<Scalars['String']>;
+  nft?: Maybe<NftPortTxByNftNft>;
+  price_details?: Maybe<NftPortTxByContractPriceDetails>;
+  quantity?: Maybe<Scalars['Int']>;
+  seller_address?: Maybe<Scalars['String']>;
+  transaction_date?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
 export type TransactionsByContractInput = {
   chain?: InputMaybe<Scalars['String']>;
   continuation?: InputMaybe<Scalars['String']>;
@@ -2078,6 +2114,7 @@ export type TxActivity = {
 
 export type TxCancel = {
   __typename?: 'TxCancel';
+  blockNumber: Scalars['String'];
   exchange: Scalars['String'];
   foreignKeyId: Scalars['String'];
   foreignType: Scalars['String'];
@@ -2119,11 +2156,13 @@ export type TxTransaction = {
   __typename?: 'TxTransaction';
   blockNumber: Scalars['String'];
   chainId?: Maybe<Scalars['String']>;
+  exchange: Scalars['String'];
   id: Scalars['ID'];
+  maker: Scalars['String'];
   nftContractAddress: Scalars['String'];
   nftContractTokenId: Scalars['String'];
-  receiver: Scalars['String'];
-  sender: Scalars['String'];
+  protocol: Scalars['String'];
+  taker: Scalars['String'];
   transactionHash: Scalars['String'];
 };
 
@@ -2638,7 +2677,7 @@ export type ActivitiesQueryVariables = Exact<{
 }>;
 
 
-export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, nftContract: string, nftId: Array<string | null>, status: ActivityStatus, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', id: string, exchange: string, foreignType: string, foreignKeyId: string, transactionHash: string, blockNumber: string } | null, transaction?: { __typename?: 'TxTransaction', id: string, chainId?: string | null, transactionHash: string, blockNumber: string, nftContractAddress: string, nftContractTokenId: string, maker: string, taker: string, protocol: string, exchange: string } | null } | null> | null } };
 
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2873,7 +2912,6 @@ export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT'
 export type NftsForCollectionsQueryVariables = Exact<{
   input: NftsForCollectionsInput;
 }>;
-
 
 
 export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, actualNumberOfNFTs: number, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
@@ -3403,6 +3441,9 @@ export const ActivitiesDocument = gql`
       activityTypeId
       timestamp
       walletAddress
+      nftContract
+      nftId
+      status
       order {
         chainId
         exchange
@@ -3463,8 +3504,24 @@ export const ActivitiesDocument = gql`
         }
       }
       cancel {
+        id
         exchange
+        foreignType
+        foreignKeyId
         transactionHash
+        blockNumber
+      }
+      transaction {
+        id
+        chainId
+        transactionHash
+        blockNumber
+        nftContractAddress
+        nftContractTokenId
+        maker
+        taker
+        protocol
+        exchange
       }
     }
   }

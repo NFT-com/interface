@@ -19,7 +19,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
   const { data: collectionData } = useCollectionQuery(defaultChainId, item?.nftContract);
-  const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, !isNullOrEmpty(item?.nftId) ? BigNumber.from(item?.nftId.split('/')[2]).toString() : null);
+  const { data: activityNFTInfo } = useGetNFTDetailsQuery(item?.nftContract, !isNullOrEmpty(item?.nftId[0]) ? BigNumber.from(item?.nftId[0].split('/')[2]).toString() : null);
   const ethPriceUSD = useEthPriceUSD();
 
   useEffect(() => {
@@ -41,11 +41,11 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
     >
       <td className="font-bold text-body leading-body pl-8" >
 
-        {!collectionData?.nftPortResults?.name && !activityNFTInfo?.nft?.metadata?.name ?
+        {!collectionData?.collection?.name && !activityNFTInfo?.nft?.metadata?.name ?
           <p>—</p>
           :
           <>
-            <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionData?.nftPortResults?.name || activityNFTInfo?.contract?.name}</p>
+            <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionData?.collection?.name || activityNFTInfo?.contract?.name}</p>
             <Link href={`/app/nft/${item?.order?.protocolData?.collectionAddress}/${item?.order?.protocolData?.tokenId}`}>
               <p className='text-[#B59007] hover:cursor-pointer -mt-1'>{activityNFTInfo?.nft?.metadata?.name}</p>
             </Link>
@@ -71,10 +71,10 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
       {type === 'transaction' &&
       <>
         <td className="text-body leading-body pr-8 minmd:pr-4" >
-          {item.transaction.sender || <p>—</p>}
+          {shortenAddress(item?.transaction?.maker, 4) || <p>—</p>}
         </td>
         <td className="text-body leading-body pr-8 minmd:pr-4" >
-          {item.transaction.receiver|| <p>—</p>}
+          {shortenAddress(item?.transaction?.taker, 4) || <p>—</p>}
         </td>
       </>
       }
