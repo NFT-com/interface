@@ -3,6 +3,7 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, SeaportProtocolData, SupportedExternalExchange } from 'graphql/generated/types';
+import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -63,10 +64,11 @@ export interface NFTCardProps {
 }
 
 export function NFTCard(props: NFTCardProps) {
+  const defaultChainId = useDefaultChainId();
   const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
+  const { data: collectionData } = useCollectionQuery(defaultChainId, props.contractAddress);
   const { tileBackground, secondaryText, pink, secondaryIcon, link } = useThemeColors();
   const { address: currentAddress } = useAccount();
-  const defaultChainId = useDefaultChainId();
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { getByContractAddress } = useSupportedCurrencies();
@@ -279,7 +281,7 @@ export function NFTCard(props: NFTCardProps) {
         <span className={tw(
           'text-[#6F6F6F] text-sm pt-[10px]'
         )}>
-          {isNullOrEmpty(props.collectionName) ? 'Unknown Name' : props.collectionName}
+          {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionData.collection.name) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionData?.collection?.name : props.collectionName}
         </span>
         {props.title && <span
           className='text-ellipsis overflow-hidden font-medium'
