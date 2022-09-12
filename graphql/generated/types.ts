@@ -1552,6 +1552,7 @@ export type Query = {
   getRemovedAssociationsForReceiver: Array<Maybe<RemovedAssociationsForReceiverOutput>>;
   /** AUTHENTICATED */
   getRemovedAssociationsForSender: Array<Maybe<RemovedAssociationsForSenderOutput>>;
+  getSales?: Maybe<Array<Maybe<TransactionSales>>>;
   getSwaps: GetMarketSwap;
   getTxByContract?: Maybe<NftPortTxByContract>;
   getTxByNFT?: Maybe<NftPortTxByNft>;
@@ -1713,6 +1714,11 @@ export type QueryGetRejectedAssociationsArgs = {
 
 export type QueryGetRemovedAssociationsForSenderArgs = {
   profileUrl: Scalars['String'];
+};
+
+
+export type QueryGetSalesArgs = {
+  input?: InputMaybe<TransactionSalesInput>;
 };
 
 
@@ -2022,6 +2028,36 @@ export type TopBidsInput = {
   status?: InputMaybe<BidStatus>;
 };
 
+export type TransactionSales = {
+  __typename?: 'TransactionSales';
+  date?: Maybe<Scalars['DateTime']>;
+  priceUSD?: Maybe<Scalars['Float']>;
+  transaction?: Maybe<TransactionSalesTx>;
+  transactionHash?: Maybe<Scalars['String']>;
+};
+
+export type TransactionSalesInput = {
+  contractAddress: Scalars['Address'];
+  dateRange?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['String']>;
+};
+
+export type TransactionSalesTx = {
+  __typename?: 'TransactionSalesTx';
+  block_hash?: Maybe<Scalars['String']>;
+  block_number?: Maybe<Scalars['Int']>;
+  buyer_address?: Maybe<Scalars['String']>;
+  lister_address?: Maybe<Scalars['String']>;
+  marketplace?: Maybe<Scalars['String']>;
+  nft?: Maybe<NftPortTxByNftNft>;
+  price_details?: Maybe<NftPortTxByContractPriceDetails>;
+  quantity?: Maybe<Scalars['Int']>;
+  seller_address?: Maybe<Scalars['String']>;
+  transaction_date?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
 export type TransactionsByContractInput = {
   chain?: InputMaybe<Scalars['String']>;
   continuation?: InputMaybe<Scalars['String']>;
@@ -2078,6 +2114,7 @@ export type TxActivity = {
 
 export type TxCancel = {
   __typename?: 'TxCancel';
+  blockNumber: Scalars['String'];
   exchange: Scalars['String'];
   foreignKeyId: Scalars['String'];
   foreignType: Scalars['String'];
@@ -2119,11 +2156,13 @@ export type TxTransaction = {
   __typename?: 'TxTransaction';
   blockNumber: Scalars['String'];
   chainId?: Maybe<Scalars['String']>;
+  exchange: Scalars['String'];
   id: Scalars['ID'];
+  maker: Scalars['String'];
   nftContractAddress: Scalars['String'];
   nftContractTokenId: Scalars['String'];
-  receiver: Scalars['String'];
-  sender: Scalars['String'];
+  protocol: Scalars['String'];
+  taker: Scalars['String'];
   transactionHash: Scalars['String'];
 };
 
@@ -2873,7 +2912,6 @@ export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT'
 export type NftsForCollectionsQueryVariables = Exact<{
   input: NftsForCollectionsInput;
 }>;
-
 
 
 export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, actualNumberOfNFTs: number, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
