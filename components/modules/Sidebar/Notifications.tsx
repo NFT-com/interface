@@ -22,7 +22,8 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     totalClaimableForThisAddress,
     setRemovedAssociationNotifClicked,
     setAddedAssociatedNotifClicked,
-    soldActivityDate
+    soldActivityDate,
+    expiredActivityDate
   } = useContext(NotificationContext);
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
@@ -37,6 +38,17 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
           router.push('/app/activity');
         },
         date:  soldActivityDate
+      }
+      : null,
+    activeNotifications.hasExpiredListings ?
+      {
+        text: 'Listing Expired. View My Activity',
+        onClick: () => {
+          setVisible(false);
+          setSidebarOpen(false);
+          router.push('/app/activity');
+        },
+        date:  expiredActivityDate
       }
       : null,
     activeNotifications.hasPendingAssociatedProfiles && pendingAssociationCount > 0 ?
