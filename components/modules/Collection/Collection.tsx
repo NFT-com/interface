@@ -6,7 +6,6 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useGetContractSalesStatisticsQuery } from 'graphql/hooks/useGetContractSalesStatisticsQuery';
 import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
-import { useNumberOfNFTsQuery } from 'graphql/hooks/useNumberOfNFTsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useSearchModal } from 'hooks/state/useSearchModal';
@@ -14,8 +13,8 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { processIPFSURL, shortenAddress } from 'utils/helpers';
+import { Doppler, getEnvBool } from 'utils/env';
+import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
@@ -39,8 +38,7 @@ export interface CollectionProps {
 export function Collection(props: CollectionProps) {
   const { chain } = useNetwork();
   const { width: screenWidth } = useWindowDimensions();
-  const { setSearchModalOpen, collectionPageSortyBy, id, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
-  const { data: nftCount } = useNumberOfNFTsQuery({ contract: props.contract?.toString(), chainId: chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) });
+  const { setSearchModalOpen, collectionPageSortyBy, id_nftName, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
   const { usePrevious } = usePreviousValue();
   const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
@@ -75,39 +73,35 @@ export function Collection(props: CollectionProps) {
     currentPage === 1 && props.contract && client.collections('nfts')
       .documents()
       .search({
-        'q'       : props.contract.toString(),
-        'query_by': 'contractAddr',
+        'q'       : props.contract.toString() + ' ' + id_nftName,
+        'query_by': 'contractAddr,nftName,tokenId',
         'per_page': 8,
         'page'    : currentPage,
         'sort_by': collectionPageSortyBy,
-        'filter_by': id,
-        'facet_by': 'tokenId'
       })
       .then(function (nftsResults) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-  }, [client, collectionPageSortyBy, currentPage, id, props.contract]);
+  }, [client, collectionPageSortyBy, currentPage, id_nftName, props.contract]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage !== prevVal) {
       props.contract && client.collections('nfts')
         .documents()
         .search({
-          'q'       : props.contract.toString(),
-          'query_by': 'contractAddr',
+          'q'       : props.contract.toString() + ' ' + id_nftName,
+          'query_by': 'contractAddr,nftName,tokenId',
           'per_page': 8,
           'page'    : currentPage,
           'sort_by': collectionPageSortyBy,
-          'filter_by': id,
-          'facet_by': 'tokenId'
         })
         .then(function (nftsResults) {
           setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
           setFound(nftsResults.found);
         });
     }
-  }, [client, collectionNfts, collectionPageSortyBy, currentPage, id, prevVal, props.contract]);
+  }, [client, collectionNfts, collectionPageSortyBy, currentPage, id_nftName, prevVal, props.contract]);
 
   const theme = {
     p: (props: any) => {
@@ -144,7 +138,14 @@ export function Collection(props: CollectionProps) {
       </div>
       <div className='font-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
         <h2 className="text-3xl font-bold">
-          {collectionName ?? 'Unknown Name'}
+          {isNullOrEmpty(collectionName) ?
+            (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+              <div className="w-full">
+                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
+              </div>
+              <span className="sr-only">Loading...</span>
+            </div>)
+            : collectionName}
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>
@@ -332,8 +333,8 @@ export function Collection(props: CollectionProps) {
               </div>
               {collectionNfts.length > 0
                 ? <div className="flex-auto">
-                  {nftCount?.numberOfNFTs && nftCount?.numberOfNFTs > 0 &&
-                <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{nftCount?.numberOfNFTs > 1 ? `${nftCount?.numberOfNFTs} NFTS` : `${nftCount?.numberOfNFTs} NFT`}</p>
+                  {found &&
+                <p className='font-medium uppercase mb-4 text-[#6F6F6F] text-[10px] '>{found > 1 ? `${found} NFTS` : `${found} NFT`}</p>
                   }
                   <div className="grid grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 gap-5 max-w-nftcom minxl:mx-auto ">
                     {collectionNfts.map((nft, index) => {
