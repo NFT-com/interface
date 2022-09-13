@@ -22,6 +22,9 @@ import { useAccount } from 'wagmi';
 type NftItem = {
   contract?: string;
   tokenId?: string;
+  wallet?: {
+    address?: string
+  }
   metadata?: {
     name?: string
   }
@@ -174,20 +177,22 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
           constrain
           selectedIndex={0}
           options={filterNulls([
-            {
-              label: 'List NFT',
-              onSelect: () => {
-                stageListing({
-                  nft: item,
-                  collectionName: item.contract,
-                  isApprovedForSeaport: openseaAllowed,
-                  isApprovedForLooksrare: looksRareAllowed,
-                  targets: []
-                });
-                toggleCartSidebar();
-              },
-              icon: null,
-            },
+            currentAddress === item?.wallet?.address
+              ? {
+                label: 'List NFT',
+                onSelect: () => {
+                  stageListing({
+                    nft: item,
+                    collectionName: item.contract,
+                    isApprovedForSeaport: openseaAllowed,
+                    isApprovedForLooksrare: looksRareAllowed,
+                    targets: []
+                  });
+                  toggleCartSidebar();
+                },
+                icon: null,
+              }
+              : null,
             {
               label: 'Share on Twitter',
               onSelect: () => window.open('https://twitter.com/share?url='+ encodeURIComponent(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`)+'&text='+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),

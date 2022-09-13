@@ -7,7 +7,7 @@ import { isNullOrEmpty, max, min } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
-import { ListingTarget, NFTListingsContext } from './NFTListingsContext';
+import { ListAllResult, ListingTarget, NFTListingsContext } from './NFTListingsContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
 import { BigNumber, ethers } from 'ethers';
@@ -35,10 +35,12 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
-
+  
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<Maybe<'ApprovalError' | 'ListingError' | 'ConnectionError'>>(null);
+  const [error, setError] = useState<Maybe<
+  'ApprovalError' | 'ListingSignatureRejected' | 'ListingUnknownError' | 'ConnectionError'
+  >>(null);
 
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
@@ -111,7 +113,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport)
     );
   }, [toList]);
-
   const getSummaryContent = useCallback(() => {
     if (success) {
       return <div className='my-8'>
@@ -120,11 +121,12 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">
-          {error === 'ApprovalError' ? 'Approval' : 'Signature'} Failed
+          {error === 'ApprovalError' ? 'Approval' : 'Listing'} Failed
           <div className='w-full my-8'>
             <span className='font-medium text-[#6F6F6F] text-base'>
-              The {error === 'ApprovalError' ? 'Approval' : 'Signature'} in your wallet was not successful.
-              If you would like to continue listing, please try again.
+              {error === 'ConnectionError' && 'Your wallet is not connected. Please connect your wallet and try again.'}
+              {error === 'ListingSignatureRejected' && 'You must sign the listing data to proceed.'}
+              {error === 'ListingUnknownError' && 'Your signature was valid, but we encountered an unexpected issue. Please try again later.'}
             </span>
           </div>
         </div>.
@@ -175,7 +177,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               },
               {
                 label: `Confirm ${getTotalListings()} Listings`,
-                error: error === 'ListingError',
+                error: error === 'ListingSignatureRejected' || error === 'ListingUnknownError',
               }
             ]}
           />
@@ -344,11 +346,15 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                   }
                 }
 
-                const result = await listAll();
-                if (result) {
+                const result: ListAllResult = await listAll();
+                if (result === ListAllResult.Success) {
                   setSuccess(true);
                 } else {
-                  setError('ListingError');
+                  setError(
+                    result === ListAllResult.SignatureRejected ?
+                      'ListingSignatureRejected' :
+                      'ListingUnknownError'
+                  );
                 }
               }}
               type={ButtonType.PRIMARY}
