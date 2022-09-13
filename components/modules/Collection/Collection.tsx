@@ -69,9 +69,6 @@ export function Collection(props: CollectionProps) {
     1: 'Activity'
   };
 
-  console.log(props.contract?.toString(), 'props.contract?.toString() fdo');
-  console.log(nftCount, 'nftcount fdo');
-
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   useEffect(() => {
