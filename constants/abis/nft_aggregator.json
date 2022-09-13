@@ -15,6 +15,11 @@
         "type": "error"
     },
     {
+        "inputs": [],
+        "name": "UNMET_BASE_FEE",
+        "type": "error"
+    },
+    {
         "anonymous": false,
         "inputs": [
             {
@@ -82,6 +87,19 @@
                 "type": "address"
             }
         ],
+        "name": "NewDao",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_new",
+                "type": "address"
+            }
+        ],
         "name": "NewNftProfile",
         "type": "event"
     },
@@ -110,6 +128,32 @@
         ],
         "name": "Upgraded",
         "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "CRYPTO_PUNK",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "MOONCAT",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     },
     {
         "inputs": [],
@@ -272,6 +316,19 @@
     },
     {
         "inputs": [],
+        "name": "dao",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "extraBool",
         "outputs": [
             {
@@ -288,6 +345,16 @@
             {
                 "internalType": "address",
                 "name": "_marketRegistry",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_cryptoPunk",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_mooncat",
                 "type": "address"
             }
         ],
@@ -725,12 +792,72 @@
     {
         "inputs": [
             {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "tokenAddr",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "to",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "ids",
+                        "type": "uint256[]"
+                    }
+                ],
+                "internalType": "struct SpecialTransferHelper.ERC721Details",
+                "name": "erc721Details",
+                "type": "tuple"
+            }
+        ],
+        "name": "rescueMooncat",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "tokenAddr",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "to",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "ids",
+                        "type": "uint256[]"
+                    }
+                ],
+                "internalType": "struct SpecialTransferHelper.ERC721Details",
+                "name": "erc721Details",
+                "type": "tuple"
+            }
+        ],
+        "name": "rescuePunk",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
                 "name": "_baseFee",
                 "type": "uint256"
             }
         ],
-        "name": "setBaseFees",
+        "name": "setBaseFee",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -743,7 +870,20 @@
                 "type": "address"
             }
         ],
-        "name": "setConvertor",
+        "name": "setConverter",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_new",
+                "type": "address"
+            }
+        ],
+        "name": "setDao",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -756,7 +896,7 @@
                 "type": "uint256"
             }
         ],
-        "name": "setDaoFees",
+        "name": "setDaoFee",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
