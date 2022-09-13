@@ -18,7 +18,7 @@ import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
-import type { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import ReactGA from 'react-ga';
 import { rainbowDark } from 'styles/RainbowKitThemes';
@@ -48,49 +48,6 @@ if (GOOGLE_ANALYTICS_ID != null) {
   ReactGA.initialize('test', { testMode: true, debug: true });
 }
 
-const { chains, provider } = configureChains(
-  getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
-    [chain.mainnet, chain.goerli, chain.rinkeby] :
-    [chain.mainnet],
-  [
-    jsonRpcProvider({
-      rpc: (chain) => {
-        const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
-        url.searchParams.set('chainId', getChainIdString(chain?.id));
-        return {
-          http: url.toString(),
-        };
-      }
-    }),
-  ]
-);
-
-const connectors = connectorsForWallets([
-  {
-    groupName: 'Recommended',
-    wallets: [
-      wallet.metaMask({ chains, shimDisconnect: true }),
-      wallet.rainbow({ chains }),
-    ],
-  },
-  {
-    groupName: 'Others',
-    wallets: [
-      wallet.walletConnect({ chains }),
-      wallet.coinbase({ chains, appName: 'NFT.com' }),
-      wallet.trust({ chains }),
-      wallet.ledger({ chains }),
-      wallet.argent({ chains })
-    ],
-  },
-]);
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider
-});
-
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode
 }
@@ -102,6 +59,56 @@ type AppPropsWithLayout = AppProps & {
 export default function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  const { chains, provider } = useMemo(() => {
+    return configureChains(
+      getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
+        [chain.mainnet, chain.goerli, chain.rinkeby] :
+        [chain.mainnet],
+      [
+        jsonRpcProvider({
+          rpc: (chain) => {
+            const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
+            url.searchParams.set('chainId', getChainIdString(chain?.id));
+            return {
+              http: url.toString(),
+            };
+          }
+        }),
+      ]
+    );
+  }, []);
+  
+  const connectors = useMemo(() => {
+    return connectorsForWallets([
+      {
+        groupName: 'Recommended',
+        wallets: [
+          wallet.metaMask({ chains, shimDisconnect: true }),
+          wallet.rainbow({ chains }),
+        ],
+      },
+      {
+        groupName: 'Others',
+        wallets: [
+          wallet.walletConnect({ chains }),
+          wallet.coinbase({ chains, appName: 'NFT.com' }),
+          wallet.trust({ chains }),
+          wallet.ledger({ chains }),
+          wallet.argent({ chains })
+        ],
+      },
+    ]);
+  }, [chains]);
+
+  const wagmiClient = useMemo(() => {
+    return createClient({
+      autoConnect: true,
+      connectors,
+      provider
+    });
+  }, [connectors, provider]);
+
   return (
     <>
       <Head>
