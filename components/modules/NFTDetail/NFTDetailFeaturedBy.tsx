@@ -8,6 +8,7 @@ import { ProfileCard } from 'components/modules/Profile/ProfileCard';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
@@ -29,7 +30,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     true
   );
 
-  if (profiles == null) {
+  if (isNullOrEmpty(profiles)) {
     return null;
   }
 
@@ -54,7 +55,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
           'delay': 4500,
           'disableOnInteraction': false
         }}
-        className="flex drop-shadow-2xl"
+        className="flex"
       >
         {profiles?.map((profile, index) => {
           return (

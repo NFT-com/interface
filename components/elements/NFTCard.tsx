@@ -56,7 +56,6 @@ export interface NFTCardProps {
   // wrap this in a container with a specified width.
   constrain?: boolean;
   customBackground?: string;
-  customBorderRadius?: string;
   imageLayout?: 'row' | 'grid';
   nftsDescriptionsVisible?: boolean;
   customBorder?: string;
@@ -158,14 +157,14 @@ export function NFTCard(props: NFTCardProps) {
   return (
     <div
       className={tw(
-        `drop-shadow-md rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
+        `rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
         props.imageLayout === 'row' ? 'p-3 rounded-xl' : 'p-2 rounded',
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
           'w-full min-h-[inherit]',
         props.customBorder ?? '',
-        'cursor-pointer transform hover:scale-105',
+        'cursor-pointer transform',
         'overflow-hidden',
         'border border-[#D5D5D5]'
       )}
@@ -267,7 +266,6 @@ export function NFTCard(props: NFTCardProps) {
               props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicMediumCard' ? 'h-[456px]' : '',
               props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicSmallCard' ? 'h-[157px]' : '',
               props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicMediumCard' ? 'h-[397px]' : '',
-              props.customBorderRadius ?? 'rounded-3xl',
               props.images[0] == null ? 'aspect-square' : '',
             )}
           >

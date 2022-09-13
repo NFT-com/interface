@@ -32,7 +32,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage({ data }: ResultsPageProps) {
-  const { setSearchModalOpen, sideNavOpen, setSideNavOpen,  setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -243,7 +243,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
                           customBackground={'white'}
                           lightModeForced
-                          customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
                         />}
                     </div>);
                 })}
