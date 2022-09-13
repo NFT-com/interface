@@ -71,8 +71,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
           return wethAllowance;
         },
         setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(weth, currentAddress, proxy),
-        // balance: balances.weth?.balance ?? 0,
-        balance: 0,
+        balance: balances.weth?.balance ?? 0,
       },
       'ETH': {
         name: 'ETH',
@@ -99,8 +98,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
           return daiAllowance;
         },
         setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(dai, currentAddress, proxy),
-        // balance: balances.dai?.balance ?? 0,
-        balance: 0,
+        balance: balances.dai?.balance ?? 0,
       },
       'USDC': {
         name: 'USDC',
@@ -113,11 +111,20 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
           return usdcAllowance;
         },
         setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(usdc, currentAddress, proxy),
-        // balance: balances.usdc?.balance ?? 0,
-        balance: 0,
+        balance: balances.usdc?.balance ?? 0,
       }
     };
-  }, [balances.eth?.balance, dai, ethPriceUSD, setAllowanceForContract, usdc, weth]);
+  }, [
+    balances.dai?.balance,
+    balances.eth?.balance,
+    balances.usdc?.balance,
+    balances.weth?.balance,
+    dai,
+    ethPriceUSD,
+    setAllowanceForContract,
+    usdc,
+    weth
+  ]);
 
   const getByContractAddress = useCallback((
     contractAddress: string
