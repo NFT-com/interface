@@ -22,7 +22,7 @@ const IdFilter = (props: {setId: (id: string) => void, clearedFilters: boolean, 
           value={clearedFilters ? '' : value}
           required maxLength={512}
           className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-          onKeyUp={(event) => {
+          onChange={(event) => {
             setId(event.target.value);
             setValue(event.target.value);
             setClearedFilters(false);
