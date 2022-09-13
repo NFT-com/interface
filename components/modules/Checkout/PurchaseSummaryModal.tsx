@@ -43,7 +43,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const { getByContractAddress } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseError' | 'ConnectionError'>>(null);
+  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
   
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
@@ -61,6 +61,27 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       (first, second) => first?.currency === second?.currency
     ).some(purchase => !purchase?.isApproved);
   }, [toBuy]);
+
+  const getHasSufficientBalance = useCallback(() => {
+    const uniqueCurrencyPurchases = filterDuplicates(
+      toBuy,
+      (first, second) => first?.currency === second?.currency
+    );
+    const remainingBalances = new Map<string, BigNumber>();
+    for (let i = 0; i < uniqueCurrencyPurchases.length; i++) {
+      const currencyData = getByContractAddress(uniqueCurrencyPurchases[i]?.currency);
+      remainingBalances.set(currencyData?.contract ?? 'unsupported', BigNumber.from(currencyData?.balance ?? 0));
+    }
+    for (let i = 0; i < toBuy.length; i++) {
+      const remainingBalance = remainingBalances.get(toBuy[i].currency);
+      const price = BigNumber.from(toBuy[i].price);
+      if (remainingBalance.lt(price)) {
+        return false;
+      }
+      remainingBalances.set(toBuy[i].currency, remainingBalance.sub(price));
+    }
+    return true;
+  }, [getByContractAddress, toBuy]);
     
   const getTotalPriceUSD = useCallback(() => {
     return toBuy?.reduce((acc, curr) => {
@@ -123,8 +144,10 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           {error === 'ApprovalError' ? 'Approval' : 'Transaction'} Failed
           <div className='w-full my-8'>
             <span className='font-medium text-[#6F6F6F] text-base'>
-              The {error === 'ApprovalError' ? 'Approval' : 'Transaction'} was not approved in your wallet
-              or execution was reverted. If you would like to continue your purchase, please try again.
+              {error === 'ConnectionError' && 'Your wallet is not connected. Please connect your wallet and try again.'}
+              {error === 'ApprovalError' && 'The approval was not accepted in your wallet. If you would like to continue your purchase, please try again.'}
+              {error === 'PurchaseBalanceError' && 'The purchase failed because your token balance is too low'}
+              {error === 'PurchaseUnknownError' && 'The transaction failed for an unknown reason. Please verify that your cart is valid and try again.'}
             </span>
           </div>
         </div>
@@ -163,7 +186,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 },
               {
                 label: 'Complete Transaction',
-                error: error === 'PurchaseError',
+                error: error === 'PurchaseUnknownError' || error === 'PurchaseBalanceError',
               }
             ])}
             activeNodeIndex={getNeedsApprovals() || isNullOrEmpty(tokens) || error === 'ApprovalError' ? 1 : success ? 3 : 2}
@@ -216,7 +239,17 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFeesUSD, getTotalPriceUSD, getTotalRoyaltiesUSD, loading, success, toBuy]);
+  }, [
+    error,
+    getByContractAddress,
+    getNeedsApprovals,
+    getTotalMarketplaceFeesUSD,
+    getTotalPriceUSD,
+    getTotalRoyaltiesUSD,
+    loading,
+    success,
+    toBuy
+  ]);
 
   return (
     <Modal
@@ -292,8 +325,10 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               if (result) {
                 setSuccess(true);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
+              } else if (!getHasSufficientBalance()) {
+                setError('PurchaseBalanceError');
               } else {
-                setError('PurchaseError');
+                setError('PurchaseUnknownError');
               }
             }}
             type={ButtonType.PRIMARY} />

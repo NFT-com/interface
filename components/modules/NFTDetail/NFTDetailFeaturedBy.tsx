@@ -8,6 +8,7 @@ import { ProfileCard } from 'components/modules/Profile/ProfileCard';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
