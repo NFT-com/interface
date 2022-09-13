@@ -12,7 +12,7 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { tw } from 'utils/tw';
 
@@ -77,8 +77,15 @@ export function ExternalListings(props: ExternalListingsProps) {
   }, [props.nft?.id, toBuy]);
   
   const getListingSummaryTitle = useCallback(() => {
-    if (listings?.length > 1) {
+    const uniqueMarketplaces = filterDuplicates(
+      listings,
+      (first, second) => first.order?.protocol === second.order?.protocol
+    );
+    if (uniqueMarketplaces?.length > 1) {
       return 'Starting price at multiple marketplaces';
+    } else if (listings?.length > 1) {
+      const protocolName = listings?.[0]?.order?.exchange;
+      return 'Starting price on ' + protocolName;
     } else {
       const protocolName = listings?.[0]?.order?.exchange;
       return 'Current price on ' + protocolName;
@@ -230,7 +237,10 @@ export function ExternalListings(props: ExternalListingsProps) {
       <div className='flex font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4 px-5'>
         <div className="flex items-center">
           {
-            listings?.map((listing, index) => {
+            filterDuplicates(
+              listings,
+              (first, second) => first.order?.protocol === second.order?.protocol
+            )?.map((listing, index) => {
               return <div key={listing?.id} className={tw(index > 0 && '-ml-4')}>
                 {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
                 {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
