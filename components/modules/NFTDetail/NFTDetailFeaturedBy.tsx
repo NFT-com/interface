@@ -34,7 +34,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     return null;
   }
 
-  return <div className='flex flex-col w-full px-[16px]'>
+  return profiles.length > 0 && <div className='flex flex-col w-full px-[16px]'>
     <span className="text-2xl font-bold font-grotesk mb-2">
         Profiles that feature this NFT
     </span>
