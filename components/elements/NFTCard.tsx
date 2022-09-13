@@ -122,12 +122,19 @@ export function NFTCard(props: NFTCardProps) {
       <span className='text-xs minmd:text-sm' style={{ color: pink }}>
         {pair.key}{isNullOrEmpty(pair.key) ? '' : ' '}
       </span>
-      <span
-        className='text-xs minmd:text-sm ml-1'
-        style={{ color: secondaryText }}
-      >
-        {pair.value}
-      </span>
+      {pair.value !== 'undefined item' ?
+        (<span
+          className='text-xs minmd:text-sm ml-1'
+          style={{ color: secondaryText }}
+        >
+          {pair.value}
+        </span>):
+        (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+          <div className="w-full">
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
+          </div>
+          <span className="sr-only">Loading...</span>
+        </div>)}
     </div>;
   }, [pink, secondaryText]);
 
