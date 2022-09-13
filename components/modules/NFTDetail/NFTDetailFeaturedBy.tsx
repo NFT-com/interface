@@ -71,7 +71,6 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     </div> :
     (
       <span className="text-2xl font-bold font-grotesk mb-2">
-        Profiles that feature this NFT
         Not Featured on a NFT Profile yet
       </span>
     );
