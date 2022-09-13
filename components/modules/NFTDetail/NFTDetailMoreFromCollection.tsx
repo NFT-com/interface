@@ -43,12 +43,12 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
   if (data == null) {
     return null;
   }
-
+  
   return <div className='flex flex-col w-full px-[16px]'>
     <span className="text-2xl font-bold font-grotesk mb-2">More from collection</span>
     <div className='flex py-2 h-full items-stretch'>
       <Swiper
-        slidesPerView={screenWidth < 600 ? 1 : screenWidth >= 600 && screenWidth < 900 ? 3 : 4}
+        slidesPerView={Math.min(data?.length ?? 4, screenWidth < 600 ? 1 : screenWidth >= 600 && screenWidth < 900 ? 3 : 4)}
         centeredSlides={false}
         loop={true}
         spaceBetween={16}

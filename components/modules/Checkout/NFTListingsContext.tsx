@@ -52,12 +52,18 @@ export type StagedListing = {
   isApprovedForLooksrare: boolean;
 }
 
+export enum ListAllResult {
+  Success = 0,
+  SignatureRejected = 1,
+  ApiError = 2,
+}
+
 interface NFTListingsContextType {
   toList: StagedListing[];
   stageListing: (listing: PartialDeep<StagedListing>) => void;
   stageListings: (listings: PartialDeep<StagedListing[]>) => void;
   clear: () => void;
-  listAll: () => Promise<boolean>;
+  listAll: () => Promise<ListAllResult>;
   prepareListings: () => Promise<void>;
   
   submitting: boolean;
@@ -342,30 +348,44 @@ export function NFTListingsContextProvider(
     setToList(preparedListings);
   }, [defaultChainId, currentAddress, looksrareRoyaltyFeeRegistry, looksrareStrategy, toList, supportedCurrencyData]);
 
-  const listAll = useCallback(async () => {
+  const listAll: () => Promise<ListAllResult> = useCallback(async () => {
     setSubmitting(true);
     const results = await Promise.all(toList.map(async (listing: StagedListing) => {
       const results = await Promise.all(listing.targets?.map(async (target: ListingTarget) => {
         if (target.protocol === ExternalProtocol.LooksRare) {
           const signature = await signOrderForLooksrare(target.looksrareOrder).catch(() => null);
           if (signature == null) {
-            return false;
+            return ListAllResult.SignatureRejected;
           }
           const result = await listNftLooksrare({ ...target.looksrareOrder, signature });
-          return result;
+          if (!result) {
+            return ListAllResult.ApiError;
+          }
+          return ListAllResult.Success;
         } else {
           const signature = await signOrderForSeaport(target.seaportParameters, seaportCounter).catch(() => null);
           if (signature == null) {
-            return false;
+            return ListAllResult.SignatureRejected;
           }
           const result = await listNftSeaport(signature , { ...target.seaportParameters, counter: seaportCounter });
-          return result;
+          if (!result) {
+            return ListAllResult.ApiError;
+          }
+          return ListAllResult.Success;
         }
       }));
-      return results.every(r => r);
+      return results.includes(ListAllResult.SignatureRejected) ?
+        ListAllResult.SignatureRejected :
+        results.includes(ListAllResult.ApiError) ?
+          ListAllResult.ApiError :
+          ListAllResult.Success;
     }));
     setSubmitting(false);
-    return results.every(r => r);
+    return results.includes(ListAllResult.SignatureRejected) ?
+      ListAllResult.SignatureRejected :
+      results.includes(ListAllResult.ApiError) ?
+        ListAllResult.ApiError :
+        ListAllResult.Success;
   }, [listNftSeaport, listNftLooksrare, seaportCounter, signOrderForLooksrare, signOrderForSeaport, toList]);
 
   const removeListing = useCallback((nft: PartialDeep<Nft>) => {

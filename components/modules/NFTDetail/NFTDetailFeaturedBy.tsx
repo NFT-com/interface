@@ -39,7 +39,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     </span>
     <div className='flex py-2 h-full items-stretch'>
       <Swiper
-        slidesPerView={screenWidth < 600
+        slidesPerView={Math.min(profiles?.length ?? 4, screenWidth < 600
           ? 1
           : (screenWidth >= 600 && screenWidth < 900)
             ? (profiles?.length >= 3)
@@ -47,7 +47,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
               : profiles?.length
             : (profiles?.length >= 4)
               ? 4
-              : profiles?.length}
+              : profiles?.length)}
         centeredSlides={false}
         loop={profiles?.length > 4}
         autoplay={{

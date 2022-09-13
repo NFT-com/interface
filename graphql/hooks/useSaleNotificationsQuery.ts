@@ -13,7 +13,7 @@ export interface SaleActivitiesData {
   mutate: () => void;
 }
 
-export function useSaleActivitiesQuery(address: string, chainId: string): SaleActivitiesData {
+export function useSaleNotificationsQuery(address: string, chainId: string): SaleActivitiesData {
   const sdk = useGraphQLSDK();
   const keyString = 'SaleActivitiesQuery ' +
     chainId +
@@ -23,7 +23,7 @@ export function useSaleActivitiesQuery(address: string, chainId: string): SaleAc
     if (isNullOrEmpty(address) || isNullOrEmpty(chainId)) {
       return [];
     }
-    const result = await sdk.Activities({
+    const result = await sdk.NotificationActivities({
       input: {
         pageInput: {
           first: 50,

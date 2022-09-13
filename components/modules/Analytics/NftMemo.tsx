@@ -50,7 +50,7 @@ export const NftMemo = (props: NftMemoProps) => {
               `${editMemo ? 'border-2' : 'border-none'}`,
             )}
             maxLength={300}
-            placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter memo (optional)' : undefined}
+            placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter message (optional)' : undefined}
             value={draftMemo ?? nft?.memo ?? ''}
             onChange={e => {
               handleMemoChange(e);
@@ -84,7 +84,7 @@ export const NftMemo = (props: NftMemoProps) => {
               />
               <Button
                 type={ButtonType.SECONDARY}
-                label={'Clear Draft'}
+                label={'Clear'}
                 onClick={() => {
                   clearDraft();
                 } } />

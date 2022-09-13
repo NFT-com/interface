@@ -24,6 +24,7 @@ export const GraphQLProviderProps = {};
 export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderProps>) {
   const { isSupported } = useSupportedNetwork();
   const { address: currentAddress, connector } = useAccount();
+  
   const { chain } = useNetwork();
   const [loading, setLoading] = useState(true);
   const [client, setClient] = useState(defaultClient);
