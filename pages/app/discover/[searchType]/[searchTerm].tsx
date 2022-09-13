@@ -258,7 +258,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
                           customBackground={'white'}
                           lightModeForced
-                          customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
                         />}
                     </div>);
                 })}
