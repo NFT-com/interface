@@ -1,12 +1,10 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { SeaportOrderComponents } from 'types';
-import { Doppler,getEnv } from 'utils/env';
-import { getChainIdString } from 'utils/helpers';
 
 import { MakerOrderWithSignature } from '@looksrare/sdk';
 import * as Sentry from '@sentry/nextjs';
 import { useCallback } from 'react';
-import { useNetwork } from 'wagmi';
 
 export interface ListNftResult {
   listNftSeaport: (
@@ -21,7 +19,7 @@ export interface ListNftResult {
 export function useListNFTMutations(): ListNftResult {
   const sdk = useGraphQLSDK();
 
-  const { chain } = useNetwork();
+  const defaultChainId = useDefaultChainId();
 
   const listNftSeaport = useCallback(
     async (
@@ -33,7 +31,7 @@ export function useListNFTMutations(): ListNftResult {
           input: {
             seaportSignature: signature,
             seaportParams: JSON.stringify(parameters),
-            chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+            chainId: defaultChainId,
           }
         });
         return result?.listNFTSeaport ?? false;
@@ -42,7 +40,7 @@ export function useListNFTMutations(): ListNftResult {
         return false;
       }
     },
-    [chain?.id, sdk]
+    [defaultChainId, sdk]
   );
 
   const listNftLooksrare = useCallback(
@@ -51,7 +49,7 @@ export function useListNFTMutations(): ListNftResult {
         const result = await sdk.ListNftLooksrare({
           input: {
             looksrareOrder: JSON.stringify(order),
-            chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+            chainId: defaultChainId
           }
         });
         return result?.listNFTLooksrare ?? false;
@@ -60,7 +58,7 @@ export function useListNFTMutations(): ListNftResult {
         return false;
       }
     },
-    [chain?.id, sdk]
+    [defaultChainId, sdk]
   );
 
   return {
