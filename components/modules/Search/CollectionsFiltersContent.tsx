@@ -12,19 +12,17 @@ const IdFilter = (props: {setId: (id: string) => void, clearedFilters: boolean, 
       'relative flex items-center rounded-xl p-3 w-full text-black bg-gray-100')}>
       <div className="w-full">
         <input
-          type="number"
-          placeholder="Example: 1234"
+          type="search"
+          placeholder="Search by name or ID"
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
           autoFocus
-          min="0"
           value={clearedFilters ? '' : value}
           required maxLength={512}
           className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-          onChange={(event) => {
-            if (['.', '-'].includes('tokenId:='+event.target.value)) return;
+          onKeyUp={(event) => {
             setId(event.target.value);
             setValue(event.target.value);
             setClearedFilters(false);
@@ -39,9 +37,8 @@ export const CollectionsFiltersContent = () => {
   const { setSearchModalOpen, setCollectionPageAppliedFilters } = useSearchModal();
   const [clearedFilters, setClearedFilters] = useState(false);
 
-  const setId = (id: string) => {
-    const paramId = id !== '' ? 'tokenId:='+id : '';
-    setCollectionPageAppliedFilters('',paramId, false);
+  const setId = (id_nftName: string) => {
+    setCollectionPageAppliedFilters('',id_nftName, false);
   };
 
   return (
@@ -56,7 +53,7 @@ export const CollectionsFiltersContent = () => {
         </div>
         <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filter</div>
         <div className="px-4 flex flex-col my-7">
-          <div className="self-start font-black text-xl font-grotesk mb-4">Filter by ID</div>
+          <div className="self-start font-black text-xl font-grotesk mb-4">Search for NFTs</div>
           <IdFilter setId={setId} clearedFilters={clearedFilters} setClearedFilters={setClearedFilters}/>
         </div>
         <div
