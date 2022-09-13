@@ -5,6 +5,8 @@ import { BalanceData } from 'types';
 
 import { useEthBalance } from './useEthBalance';
 
+import { useMemo } from 'react';
+
 export interface AllBalances {
   dai: BalanceData | null;
   weth: BalanceData | null;
@@ -17,10 +19,13 @@ export function useBalances(currentAddress: string): AllBalances {
   const usdcBalance = useUsdcBalance(currentAddress);
   const wethBalance = useWethBalance(currentAddress);
   const ethBalance = useEthBalance(currentAddress);
-  return {
-    dai: daiBalance,
-    weth: wethBalance,
-    usdc: usdcBalance,
-    eth: ethBalance.balance,
-  };
+  const balances = useMemo(() => {
+    return {
+      dai: daiBalance,
+      weth: wethBalance,
+      usdc: usdcBalance,
+      eth: ethBalance.balance,
+    };
+  }, [daiBalance, ethBalance.balance, usdcBalance, wethBalance]);
+  return balances;
 }

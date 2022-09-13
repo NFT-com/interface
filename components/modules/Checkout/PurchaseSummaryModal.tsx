@@ -146,7 +146,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             <span className='font-medium text-[#6F6F6F] text-base'>
               {error === 'ConnectionError' && 'Your wallet is not connected. Please connect your wallet and try again.'}
               {error === 'ApprovalError' && 'The approval was not accepted in your wallet. If you would like to continue your purchase, please try again.'}
-              {error === 'PurchaseBalanceError' && 'The purchase failed because your token balance is too low'}
+              {error === 'PurchaseBalanceError' && 'The purchase failed because your token balance is too low.'}
               {error === 'PurchaseUnknownError' && 'The transaction failed for an unknown reason. Please verify that your cart is valid and try again.'}
             </span>
           </div>
