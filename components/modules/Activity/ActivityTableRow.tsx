@@ -62,7 +62,6 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
     if(item[type]?.protocol === 'Seaport'){
       if(type === 'order'){
-        console.log(item[type]?.protocolData?.parameters);
         const sum = item[type]?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0).toString();
         const ethAmount = ethers.utils.formatEther(sum);
         const currencyData = getByContractAddress(item[type]?.protocolData?.parameters?.consideration[0].token);
