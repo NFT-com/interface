@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
+import { ActivityExpiration, ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback } from 'react';
@@ -33,7 +33,7 @@ export function useExpiredNotificationsQuery(address: string, chainId: string): 
         chainId,
         status: ActivityStatus.Valid,
         read: false,
-        ignoreExpired: false
+        expirationType: ActivityExpiration.Expired
       }
     });
     return result?.getActivities?.items;
