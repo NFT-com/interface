@@ -32,7 +32,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
       transition={{ duration: 0.2 }}
       className={tw(
         'w-[19rem]',
-        sideNavOpen ? 'pr-4' : '-ml-72')}
+        sideNavOpen ? 'pr-4' : '-ml-[19rem]')}
     >
       {!router.pathname.includes('/app/collection/')
         ? (
