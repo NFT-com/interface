@@ -237,7 +237,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                               collectionImages[0].nfts[1]?.metadata?.imageURL,
                               collectionImages[0].nfts[2]?.metadata?.imageURL,
                             ]}
-                            count={collectionImages.actualNumberOfNFTs}
+                            count={collectionImages[0].actualNumberOfNFTs}
                           />
                           :
                           <div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
