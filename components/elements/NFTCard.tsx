@@ -10,6 +10,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -18,7 +19,7 @@ import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
-import { RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
+import { RoundedCornerAmount,RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import { BigNumber, ethers } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg';
@@ -26,6 +27,7 @@ import OpenseaIcon from 'public/opensea-icon.svg';
 import { MouseEvent, useCallback, useContext, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
+import useSWR from 'swr';
 import { useAccount } from 'wagmi';
 export interface NFTCardTrait {
   key: string,
@@ -54,7 +56,6 @@ export interface NFTCardProps {
   // wrap this in a container with a specified width.
   constrain?: boolean;
   customBackground?: string;
-  customBorderRadius?: string;
   imageLayout?: 'row' | 'grid';
   nftsDescriptionsVisible?: boolean;
   customBorder?: string;
@@ -63,10 +64,14 @@ export interface NFTCardProps {
 }
 
 export function NFTCard(props: NFTCardProps) {
+  const defaultChainId = useDefaultChainId();
   const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress, async () => {
+    return await getContractMetadata(props.contractAddress, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
   const { tileBackground, secondaryText, pink, secondaryIcon, link } = useThemeColors();
   const { address: currentAddress } = useAccount();
-  const defaultChainId = useDefaultChainId();
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { getByContractAddress } = useSupportedCurrencies();
@@ -76,11 +81,31 @@ export function NFTCard(props: NFTCardProps) {
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images?.map(processIPFSURL);
+  
+  const variantsForRow: RoundedCornerVariant[] = useMemo(() => {
+    if (processedImageURLs.length > 2) {
+      return [
+        RoundedCornerVariant.Left,
+        RoundedCornerVariant.None,
+        RoundedCornerVariant.Right,
+      ];
+    } else if (processedImageURLs.length === 2) {
+      return [
+        RoundedCornerVariant.Left,
+        RoundedCornerVariant.Right,
+      ];
+    } else {
+      return [
+        RoundedCornerVariant.All,
+      ];
+    }
+  }, [processedImageURLs.length]);
 
   const { data: listings } = useListingActivitiesQuery(
     props?.contractAddress,
     props?.tokenId,
-    defaultChainId
+    defaultChainId,
+    nft?.wallet?.address
   );
   
   const { data: legacyListings } = useExternalListingsQuery(
@@ -96,12 +121,19 @@ export function NFTCard(props: NFTCardProps) {
       <span className='text-xs minmd:text-sm' style={{ color: pink }}>
         {pair.key}{isNullOrEmpty(pair.key) ? '' : ' '}
       </span>
-      <span
-        className='text-xs minmd:text-sm ml-1'
-        style={{ color: secondaryText }}
-      >
-        {pair.value}
-      </span>
+      {pair.value !== 'undefined item' ?
+        (<span
+          className='text-xs minmd:text-sm ml-1'
+          style={{ color: secondaryText }}
+        >
+          {pair.value}
+        </span>):
+        (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+          <div className="w-full">
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
+          </div>
+          <span className="sr-only">Loading...</span>
+        </div>)}
     </div>;
   }, [pink, secondaryText]);
 
@@ -132,15 +164,16 @@ export function NFTCard(props: NFTCardProps) {
   return (
     <div
       className={tw(
-        `drop-shadow-md rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
+        `rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
+        props.imageLayout === 'row' ? 'p-3 rounded-xl' : 'p-2 rounded',
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
           'w-full min-h-[inherit]',
         props.customBorder ?? '',
-        'cursor-pointer transform hover:scale-105',
+        'cursor-pointer transform',
         'overflow-hidden',
-        'p-2 border border-[#D5D5D5]'
+        'border border-[#D5D5D5]'
       )}
       style={{
         backgroundColor: props.customBackground ?? tileBackground
@@ -186,7 +219,7 @@ export function NFTCard(props: NFTCardProps) {
       {
         props.visible != null &&
           <div
-            className='absolute right-3 top-4'
+            className='absolute right-3 top-4 z-50'
             onClick={(e: MouseEvent<HTMLDivElement>) => {
               props.onVisibleToggle(!props.visible);
               e.stopPropagation();
@@ -240,7 +273,6 @@ export function NFTCard(props: NFTCardProps) {
               props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicMediumCard' ? 'h-[456px]' : '',
               props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicSmallCard' ? 'h-[157px]' : '',
               props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicMediumCard' ? 'h-[397px]' : '',
-              props.customBorderRadius ?? 'rounded-3xl',
               props.images[0] == null ? 'aspect-square' : '',
             )}
           >
@@ -258,8 +290,9 @@ export function NFTCard(props: NFTCardProps) {
                 return <RoundedCornerMedia
                   key={image + index}
                   src={image}
-                  variant={RoundedCornerVariant.None}
+                  variant={variantsForRow[index]}
                   containerClasses='w-1/3'
+                  amount={RoundedCornerAmount.Medium}
                 />;
               })}
             </div> :
@@ -275,14 +308,12 @@ export function NFTCard(props: NFTCardProps) {
             </div>
       }
       {props.nftsDescriptionsVisible != false && <div className="flex flex-col">
-        <span className={tw(
+        {props.imageLayout !== 'row' && <span className={tw(
           'text-[#6F6F6F] text-sm pt-[10px]'
         )}>
-          {isNullOrEmpty(props.collectionName) ? 'Unknown Name' : props.collectionName}
-        </span>
-        {props.title && <span
-          className='text-ellipsis overflow-hidden font-medium'
-        >
+          {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
+        </span>}
+        {props.title && <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
           {props.title}
         </span>}
         {(props.traits ?? []).map((pair, index) => makeTrait(pair, index))}

@@ -1,4 +1,5 @@
 import { useActivitiesForAddressQuery } from 'graphql/hooks/useActivitiesForAddressQuery';
+import { useUpdateReadByIdsMutation } from 'graphql/hooks/useUpdateReadByIdsMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { usePaginator } from 'hooks/usePaginator';
 import { filterNulls } from 'utils/helpers';
@@ -21,6 +22,7 @@ export default function ActivityPages() {
   const [activityData, setActivityData] = useState([]);
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
+  const { updateReadbyIds } = useUpdateReadByIdsMutation();
 
   const { data: loadedActivitiesNextPage } = useActivitiesForAddressQuery(
     currentAddress,
@@ -33,6 +35,12 @@ export default function ActivityPages() {
   const loadMoreActivities = useCallback(() => {
     nextPage(loadedActivitiesNextPage?.getActivities?.pageInfo?.lastCursor);
   }, [loadedActivitiesNextPage?.getActivities?.pageInfo?.lastCursor, nextPage]);
+
+  useEffect(() => {
+    if(activityData.length) {
+      updateReadbyIds({ ids: [] });
+    }
+  }, [updateReadbyIds, currentAddress, activityData]);
 
   useEffect(() => {
     if (
@@ -58,17 +66,17 @@ export default function ActivityPages() {
           My Activity
         </h2>
         <div className="my-8 font-grotesk rounded-md pt-4 pb-8 overflow-x-auto">
-          <table className="border-collapse table-fixed w-full">
+          <table className="border-collapse table-auto w-full">
             <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
               <tr className='pt-0 pb-3 text-left ...'>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pl-8 pt-0 pb-3 minmd:pr-4 w-[200px]'>Name</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[80px]'>Status</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Marketplace</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Price</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>USD Value</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Time</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[130px] minlg:w-[100px]'>From</th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[130px] minlg:w-[100px]'>To</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pl-8 pt-0 pb-3 pr-8 minmd:pr-4'>Name</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4'>Status</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4'>Marketplace</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4'>Price</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4'>USD Value</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4'>Time</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4'>From</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4'>To</th>
               </tr>
             </thead>
             <tbody className='p-4'>
@@ -82,7 +90,7 @@ export default function ActivityPages() {
           {cachedTotalCount > activityData?.length &&
             <div className='w-full flex justify-center'>
               <button onClick={() => loadMoreActivities()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
-              Load More
+                Load More
               </button>
             </div>
           }

@@ -21,6 +21,7 @@ import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useContext, useMemo, useState } from 'react';
+import React from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useSigner } from 'wagmi';
 
@@ -47,7 +48,7 @@ export enum ListingButtonType {
   AddToCart = 'AddToCart',
 }
 
-export function ExternalListingTile(props: ExternalListingTileProps) {
+function ExternalListingTile(props: ExternalListingTileProps) {
   const { listing } = props;
 
   const [cancelling, setCancelling] = useState(false);
@@ -70,7 +71,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const { mutate: mutateNftListings } = useListingActivitiesQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId ?? defaultChainId)
+    String(props.nft?.wallet.chainId ?? defaultChainId),
+    props?.nft?.wallet?.address
   );
 
   const {
@@ -252,3 +254,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     </div>
   </div>;
 }
+
+export default React.memo(ExternalListingTile, (prevProps, nextProps) => {
+  return prevProps.listing?.id === nextProps.listing?.id;
+});

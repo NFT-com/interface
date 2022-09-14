@@ -51,7 +51,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const { data: listings } = useListingActivitiesQuery(
     nft?.contract,
     nft?.tokenId,
-    defaultChainId
+    defaultChainId,
+    nft?.wallet?.address
   );
 
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
@@ -164,7 +165,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         </div>
       </div>
       <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
-        <NFTDetailMoreFromCollection collectionName={collection?.contractMetadata?.name} contract={nft?.contract} />
+        <NFTDetailMoreFromCollection hideTokenId={nft?.tokenId} collectionName={collection?.contractMetadata?.name} contract={nft?.contract} />
       </div>
       <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
         <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />

@@ -11,7 +11,7 @@ export function useSearchModal() {
     {
       modalType: '',
       searchModalOpen: false,
-      sideNavOpen: !router.pathname.includes('discover/'),
+      sideNavOpen: !router.pathname.includes('discover/') && !router.pathname.includes('collection/'),
       searchFilters: [],
       filtersList: null,
       checkedFiltersList: '',
@@ -20,7 +20,7 @@ export function useSearchModal() {
       curatedCollections: null,
       selectedCuratedCollection: null,
       collectionPageSortyBy: '',
-      id: '',
+      id_nftName: '',
       nftsResultsFilterBy: '',
       collectionsResultsFilterBy: '',
       nftsPageSortyBy: '',
@@ -68,10 +68,10 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
-  const setModalType = useCallback((modalType: 'search' | 'filters') => {
+  const setModalType = useCallback((modalType: 'search' | 'filters' | 'collectionFilters') => {
     mutate({
       ...data,
-      modalType
+      modalType,
     });
   },[data, mutate]);
 
@@ -103,11 +103,11 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
-  const setCollectionPageAppliedFilters = useCallback((collectionPageSortyBy: string, id: string, searchModalOpen = true) => {
+  const setCollectionPageAppliedFilters = useCallback((collectionPageSortyBy: string, id_nftName: string, searchModalOpen = true) => {
     mutate({
       ...data,
       searchModalOpen,
-      id,
+      id_nftName,
       collectionPageSortyBy
     });
   },[data, mutate]);
@@ -145,7 +145,7 @@ export function useSearchModal() {
     curatedCollections: data.curatedCollections,
     selectedCuratedCollection: data.selectedCuratedCollection,
     collectionPageSortyBy: data.collectionPageSortyBy,
-    id: data.id,
+    id_nftName: data.id_nftName,
     nftsPageSortyBy: data.nftsPageSortyBy,
     nftsResultsFilterBy: data.nftsResultsFilterBy,
     collectionsResultsFilterBy: data.collectionsResultsFilterBy,

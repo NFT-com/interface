@@ -11,6 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export interface PriceInputProps {
+  initial?: string,
   currencyAddress: string,
   currencyOptions: SupportedCurrency[],
   onPriceChange: (val: Maybe<BigNumber>) => void,
@@ -20,7 +21,7 @@ export interface PriceInputProps {
 }
 
 export function PriceInput(props: PriceInputProps) {
-  const [formattedPrice, setFormattedPrice] = useState('');
+  const [formattedPrice, setFormattedPrice] = useState(props.initial);
 
   const { getByContractAddress } = useSupportedCurrencies();
 
@@ -91,7 +92,6 @@ export function PriceInput(props: PriceInputProps) {
           </div>
           : <div className='relative items-center flex ml-4'>
             <DropdownPicker
-              lightModeForced
               options={currencies}
               selectedIndex={selectedCurrencyIndex}
             />

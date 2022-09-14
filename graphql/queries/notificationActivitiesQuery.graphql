@@ -1,0 +1,21 @@
+query NotificationActivities($input: TxActivitiesInput) {
+    getActivities(input: $input) {
+        totalItems
+        pageInfo {
+            firstCursor
+            lastCursor
+        }
+        items {
+            id
+            read
+            chainId
+            activityType
+            activityTypeId
+            timestamp
+            walletAddress
+            nftContract
+            nftId
+            status
+        }
+    }
+}

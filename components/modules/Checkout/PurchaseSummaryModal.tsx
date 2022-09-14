@@ -43,7 +43,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const { getByContractAddress } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseError' | 'ConnectionError'>>(null);
+  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
   
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
@@ -61,12 +61,34 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       (first, second) => first?.currency === second?.currency
     ).some(purchase => !purchase?.isApproved);
   }, [toBuy]);
+
+  const getHasSufficientBalance = useCallback(async () => {
+    const uniqueCurrencyPurchases = filterDuplicates(
+      toBuy,
+      (first, second) => first?.currency === second?.currency
+    );
+    const remainingBalances = new Map<string, BigNumber>();
+    for (let i = 0; i < uniqueCurrencyPurchases.length; i++) {
+      const currencyData = getByContractAddress(uniqueCurrencyPurchases[i]?.currency);
+      const balance = await currencyData?.balance(currentAddress);
+      remainingBalances.set(currencyData?.contract ?? 'unsupported', BigNumber.from(balance ?? 0));
+    }
+    for (let i = 0; i < toBuy.length; i++) {
+      const remainingBalance = remainingBalances.get(toBuy[i].currency);
+      const price = BigNumber.from(toBuy[i].price);
+      if (remainingBalance.lt(price)) {
+        return false;
+      }
+      remainingBalances.set(toBuy[i].currency, remainingBalance.sub(price));
+    }
+    return true;
+  }, [currentAddress, getByContractAddress, toBuy]);
     
   const getTotalPriceUSD = useCallback(() => {
     return toBuy?.reduce((acc, curr) => {
       const currencyData = getByContractAddress(curr.currency);
-      const formattedPrice = Number(ethers.utils.formatUnits(curr.price, currencyData.decimals));
-      return acc + currencyData.usd(formattedPrice);
+      const formattedPrice = Number(ethers.utils.formatUnits(curr.price, currencyData?.decimals ?? 0));
+      return acc + currencyData?.usd(formattedPrice);
     }, 0).toFixed(2);
   }, [toBuy, getByContractAddress]);
 
@@ -79,11 +101,11 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             : multiplyBasisPoints(stagedPurchase?.price ?? 0, looksrareProtocolFeeBps)
         );
         const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData.usd(Number(ethers.utils.formatUnits(fee, currencyData.decimals)));
+        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 0)));
       } else {
         const fee = BigNumber.from(multiplyBasisPoints(stagedPurchase?.price ?? 0, 250));
         const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData.usd(Number(ethers.utils.formatUnits(fee, currencyData.decimals)));
+        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 0)));
       }
     }, 0);
   }, [toBuy, looksrareProtocolFeeBps, getByContractAddress]);
@@ -100,14 +122,14 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           .mul(BigNumber.from(protocolData?.price ?? 0));
         const royalty = minAskAmount.sub(marketplaceFeeAmount);
         const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData.usd(Number(ethers.utils.formatUnits(royalty, currencyData.decimals)));
+        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 0)));
       } else {
         const protocolData = stagedPurchase?.protocolData as SeaportProtocolData;
         const royalty = BigNumber.from(protocolData?.parameters?.consideration.length === 3 ?
           protocolData?.parameters?.consideration[2].startAmount :
           0);
         const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData.usd(Number(ethers.utils.formatUnits(royalty, currencyData.decimals)));
+        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 0)));
       }
     }, 0);
   }, [getByContractAddress, looksrareProtocolFeeBps, toBuy]);
@@ -123,8 +145,10 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           {error === 'ApprovalError' ? 'Approval' : 'Transaction'} Failed
           <div className='w-full my-8'>
             <span className='font-medium text-[#6F6F6F] text-base'>
-              The {error === 'ApprovalError' ? 'Approval' : 'Transaction'} was not approved in your wallet
-              or execution was reverted. If you would like to continue your purchase, please try again.
+              {error === 'ConnectionError' && 'Your wallet is not connected. Please connect your wallet and try again.'}
+              {error === 'ApprovalError' && 'The approval was not accepted in your wallet. If you would like to continue your purchase, please try again.'}
+              {error === 'PurchaseBalanceError' && 'The purchase failed because your token balance is too low.'}
+              {error === 'PurchaseUnknownError' && 'The transaction failed for an unknown reason. Please verify that your cart is valid and try again.'}
             </span>
           </div>
         </div>
@@ -163,7 +187,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 },
               {
                 label: 'Complete Transaction',
-                error: error === 'PurchaseError',
+                error: error === 'PurchaseUnknownError' || error === 'PurchaseBalanceError',
               }
             ])}
             activeNodeIndex={getNeedsApprovals() || isNullOrEmpty(tokens) || error === 'ApprovalError' ? 1 : success ? 3 : 2}
@@ -216,7 +240,17 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFeesUSD, getTotalPriceUSD, getTotalRoyaltiesUSD, loading, success, toBuy]);
+  }, [
+    error,
+    getByContractAddress,
+    getNeedsApprovals,
+    getTotalMarketplaceFeesUSD,
+    getTotalPriceUSD,
+    getTotalRoyaltiesUSD,
+    loading,
+    success,
+    toBuy
+  ]);
 
   return (
     <Modal
@@ -253,6 +287,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               if (success) {
                 clear();
                 setSuccess(false);
+                props.onClose();
                 return;
               }
 
@@ -292,7 +327,12 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 setSuccess(true);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
               } else {
-                setError('PurchaseError');
+                const hasSuffictientBalance = await getHasSufficientBalance();
+                if (!hasSuffictientBalance) {
+                  setError('PurchaseBalanceError');
+                } else {
+                  setError('PurchaseUnknownError');
+                }
               }
             }}
             type={ButtonType.PRIMARY} />

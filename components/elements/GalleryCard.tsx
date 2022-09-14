@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { useCheckFileType } from 'hooks/useCheckFileType';
 import { tw } from 'utils/tw';
 
 import React from 'react';
@@ -12,6 +13,7 @@ export interface GalleryCardProps {
 }
 
 function GalleryCard(props: GalleryCardProps) {
+  const imageSrc = useCheckFileType(props?.imageURL);
   return (
     <div
       className={tw(
@@ -39,7 +41,7 @@ function GalleryCard(props: GalleryCardProps) {
       /> */}
       <img
         alt=""
-        src={props?.imageURL}
+        src={imageSrc}
         className={tw(
           'h-full w-full aspect-square rounded-xl absolute z-20',
         )}

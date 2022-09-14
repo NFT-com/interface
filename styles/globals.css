@@ -1579,7 +1579,7 @@ li {
 
 .emblafull {
   position: relative;
-  max-width: 100%;
+  max-width: 98%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -1624,7 +1624,7 @@ li {
 }
 @media (min-width: 900px) {
   .embla__slidefull {
-    min-width: 33%;
+    min-width: 33.5%;
   }
 }
 
@@ -1656,11 +1656,15 @@ li {
   .embla__slidefull {
     min-width: 25%;
   }
+
+  .embla__slideSideNavClosed {
+    min-width: 33.1%;
+  }
 }
 
 @media (min-width: 1900px) {
   .embla__slide__inner {
-    height: 312px;
+    height: 260px;
   }
 }
 

@@ -58,14 +58,14 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
         props.item?.['price'] &&
         <div className="flex flex-col w-1/2 items-end font-grotesk">
           <span className='font-black text-base line-clamp-1'>
-            {ethers.utils.formatEther((props.item as StagedPurchase)?.price)}
+            {ethers.utils.formatEther((props.item as StagedPurchase)?.price ?? 0)}
             {' '}
-            {getByContractAddress((props.item as StagedPurchase).currency).name}
+            {getByContractAddress((props.item as StagedPurchase).currency)?.name ?? ''}
           </span>
           <span className='font-medium text-base text-[#6F6F6F] line-clamp-1'>
-            ${getByContractAddress((props.item as StagedPurchase).currency).usd(
+            ${getByContractAddress((props.item as StagedPurchase).currency)?.usd(
               Number(ethers.utils.formatEther((props.item as StagedPurchase)?.price))
-            )}
+            ) ?? 0}
           </span>
         </div>
       }

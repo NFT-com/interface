@@ -76,8 +76,17 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
       ]
     };
 
-    if (event.keyCode === 13) {
-      router.push(`/app/discover/allResults/${target.value !== '' ? target.value : '*'}`);
+    if (event.keyCode === 13){
+      if (target.value !== '' && searchResults && searchResults[0].found === 0 && searchResults[1].found === 0 ) {
+        return;
+      }
+
+      if (target.value !== '') {
+        router.push(`/app/discover/allResults/${target.value}`);
+      } else {
+        router.push('/app/discover');
+      }
+      
       setSearchModalOpen(false);
       setShowHits(false);
     } else {
@@ -166,7 +175,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
               <input
                 ref={inputRef}
                 type="search"
-                placeholder="Keyword"
+                placeholder="Search for NFTs..."
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"

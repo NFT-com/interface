@@ -1552,6 +1552,7 @@ export type Query = {
   getRemovedAssociationsForReceiver: Array<Maybe<RemovedAssociationsForReceiverOutput>>;
   /** AUTHENTICATED */
   getRemovedAssociationsForSender: Array<Maybe<RemovedAssociationsForSenderOutput>>;
+  getSales?: Maybe<Array<Maybe<TransactionSales>>>;
   getSwaps: GetMarketSwap;
   getTxByContract?: Maybe<NftPortTxByContract>;
   getTxByNFT?: Maybe<NftPortTxByNft>;
@@ -1713,6 +1714,11 @@ export type QueryGetRejectedAssociationsArgs = {
 
 export type QueryGetRemovedAssociationsForSenderArgs = {
   profileUrl: Scalars['String'];
+};
+
+
+export type QueryGetSalesArgs = {
+  input?: InputMaybe<TransactionSalesInput>;
 };
 
 
@@ -2022,6 +2028,36 @@ export type TopBidsInput = {
   status?: InputMaybe<BidStatus>;
 };
 
+export type TransactionSales = {
+  __typename?: 'TransactionSales';
+  date?: Maybe<Scalars['DateTime']>;
+  priceUSD?: Maybe<Scalars['Float']>;
+  transaction?: Maybe<TransactionSalesTx>;
+  transactionHash?: Maybe<Scalars['String']>;
+};
+
+export type TransactionSalesInput = {
+  contractAddress: Scalars['Address'];
+  dateRange?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['String']>;
+};
+
+export type TransactionSalesTx = {
+  __typename?: 'TransactionSalesTx';
+  block_hash?: Maybe<Scalars['String']>;
+  block_number?: Maybe<Scalars['Int']>;
+  buyer_address?: Maybe<Scalars['String']>;
+  lister_address?: Maybe<Scalars['String']>;
+  marketplace?: Maybe<Scalars['String']>;
+  nft?: Maybe<NftPortTxByNftNft>;
+  price_details?: Maybe<NftPortTxByContractPriceDetails>;
+  quantity?: Maybe<Scalars['Int']>;
+  seller_address?: Maybe<Scalars['String']>;
+  transaction_date?: Maybe<Scalars['String']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
 export type TransactionsByContractInput = {
   chain?: InputMaybe<Scalars['String']>;
   continuation?: InputMaybe<Scalars['String']>;
@@ -2078,6 +2114,7 @@ export type TxActivity = {
 
 export type TxCancel = {
   __typename?: 'TxCancel';
+  blockNumber: Scalars['String'];
   exchange: Scalars['String'];
   foreignKeyId: Scalars['String'];
   foreignType: Scalars['String'];
@@ -2119,11 +2156,13 @@ export type TxTransaction = {
   __typename?: 'TxTransaction';
   blockNumber: Scalars['String'];
   chainId?: Maybe<Scalars['String']>;
+  exchange: Scalars['String'];
   id: Scalars['ID'];
+  maker: Scalars['String'];
   nftContractAddress: Scalars['String'];
   nftContractTokenId: Scalars['String'];
-  receiver: Scalars['String'];
-  sender: Scalars['String'];
+  protocol: Scalars['String'];
+  taker: Scalars['String'];
   transactionHash: Scalars['String'];
 };
 
@@ -2612,6 +2651,13 @@ export type UpdateProfileViewMutationVariables = Exact<{
 
 export type UpdateProfileViewMutation = { __typename?: 'Mutation', updateProfileView: { __typename?: 'Profile', id: string, bannerURL?: string | null, createdAt: any, chainId?: string | null, description?: string | null, displayType?: ProfileDisplayType | null, layoutType?: ProfileLayoutType | null, followersCount?: number | null, isFollowedByMe?: boolean | null, isOwnedByMe?: boolean | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, tokenId?: string | null, photoURL?: string | null, status?: ProfileStatus | null, url: string, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', id: string, address: any, chainId: string, chainName: string, network: string, createdAt: any } | null, winningBid?: { __typename?: 'Bid', id: string, nftType: NftType, price: any, stakeWeightedSeconds?: number | null, status: BidStatus, createdAt: any, updatedAt: any } | null } };
 
+export type UpdateReadByIdsMutationVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>;
+}>;
+
+
+export type UpdateReadByIdsMutation = { __typename?: 'Mutation', updateReadByIds: { __typename?: 'UpdateReadOutput', updatedIdsSuccess: Array<string | null>, idsNotFoundOrFailed: Array<string | null> } };
+
 export type UpdateWalletProfileIdMutationVariables = Exact<{
   profileId: Scalars['ID'];
 }>;
@@ -2631,7 +2677,7 @@ export type ActivitiesQueryVariables = Exact<{
 }>;
 
 
-export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', exchange: string, transactionHash: string } | null } | null> | null } };
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, nftContract: string, nftId: Array<string | null>, status: ActivityStatus, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', id: string, exchange: string, foreignType: string, foreignKeyId: string, transactionHash: string, blockNumber: string } | null, transaction?: { __typename?: 'TxTransaction', id: string, chainId?: string | null, transactionHash: string, blockNumber: string, nftContractAddress: string, nftContractTokenId: string, maker: string, taker: string, protocol: string, exchange: string } | null } | null> | null } };
 
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2660,7 +2706,7 @@ export type CollectionNfTsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
+export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
 export type DeployedCollectionsQueryVariables = Exact<{
   deployer: Scalars['String'];
@@ -2833,7 +2879,7 @@ export type MyNfTsQueryVariables = Exact<{
 }>;
 
 
-export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
+export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
 
 export type MyPhotoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2854,21 +2900,28 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, memo?: string | null, type: NftType, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, memo?: string | null, type: NftType, previewLink?: string | null, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, previewLink?: string | null, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
 
 export type NftsForCollectionsQueryVariables = Exact<{
   input: NftsForCollectionsInput;
 }>;
 
 
-export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, actualNumberOfNFTs: number, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
+export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, actualNumberOfNFTs: number, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
+
+export type NotificationActivitiesQueryVariables = Exact<{
+  input?: InputMaybe<TxActivitiesInput>;
+}>;
+
+
+export type NotificationActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, read: boolean, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, nftContract: string, nftId: Array<string | null>, status: ActivityStatus } | null> | null } };
 
 export type NumberOfNfTsQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2911,7 +2964,7 @@ export type ProfileNfTsMutationVariables = Exact<{
 }>;
 
 
-export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', contract?: any | null, id: string, tokenId: any, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
+export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', previewLink?: string | null, contract?: any | null, id: string, tokenId: any, type: NftType, metadata: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } }> } };
 
 export type ProfilesByDisplayedNftQueryVariables = Exact<{
   input: ProfilesByDisplayNftInput;
@@ -3322,6 +3375,14 @@ export const UpdateProfileViewDocument = gql`
   }
 }
     `;
+export const UpdateReadByIdsDocument = gql`
+    mutation UpdateReadByIds($ids: [String]!) {
+  updateReadByIds(ids: $ids) {
+    updatedIdsSuccess
+    idsNotFoundOrFailed
+  }
+}
+    `;
 export const UpdateWalletProfileIdDocument = gql`
     mutation UpdateWalletProfileId($profileId: ID!) {
   updateWalletProfileId(profileId: $profileId) {
@@ -3387,6 +3448,9 @@ export const ActivitiesDocument = gql`
       activityTypeId
       timestamp
       walletAddress
+      nftContract
+      nftId
+      status
       order {
         chainId
         exchange
@@ -3447,8 +3511,24 @@ export const ActivitiesDocument = gql`
         }
       }
       cancel {
+        id
         exchange
+        foreignType
+        foreignKeyId
         transactionHash
+        blockNumber
+      }
+      transaction {
+        id
+        chainId
+        transactionHash
+        blockNumber
+        nftContractAddress
+        nftContractTokenId
+        maker
+        taker
+        protocol
+        exchange
       }
     }
   }
@@ -3506,6 +3586,7 @@ export const CollectionNfTsDocument = gql`
       tokenId
       type
       isOwnedByMe
+      previewLink
       metadata {
         name
         description
@@ -4157,6 +4238,7 @@ export const MyNfTsDocument = gql`
     totalItems
     items {
       isOwnedByMe
+      previewLink
       wallet {
         address
       }
@@ -4223,6 +4305,7 @@ export const NftDocument = gql`
     tokenId
     memo
     type
+    previewLink
     wallet {
       address
       chainId
@@ -4252,6 +4335,7 @@ export const NftByIdDocument = gql`
     contract
     tokenId
     type
+    previewLink
     wallet {
       address
     }
@@ -4275,6 +4359,7 @@ export const NftsForCollectionsDocument = gql`
       tokenId
       type
       isOwnedByMe
+      previewLink
       metadata {
         name
         description
@@ -4287,6 +4372,29 @@ export const NftsForCollectionsDocument = gql`
     }
     collectionAddress
     actualNumberOfNFTs
+  }
+}
+    `;
+export const NotificationActivitiesDocument = gql`
+    query NotificationActivities($input: TxActivitiesInput) {
+  getActivities(input: $input) {
+    totalItems
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    items {
+      id
+      read
+      chainId
+      activityType
+      activityTypeId
+      timestamp
+      walletAddress
+      nftContract
+      nftId
+      status
+    }
   }
 }
     `;
@@ -4363,6 +4471,7 @@ export const ProfileNfTsDocument = gql`
     }
     totalItems
     items {
+      previewLink
       contract
       id
       tokenId
@@ -4562,6 +4671,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     UpdateProfileView(variables?: UpdateProfileViewMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateProfileViewMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateProfileViewMutation>(UpdateProfileViewDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateProfileView', 'mutation');
     },
+    UpdateReadByIds(variables: UpdateReadByIdsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateReadByIdsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateReadByIdsMutation>(UpdateReadByIdsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateReadByIds', 'mutation');
+    },
     UpdateWalletProfileId(variables: UpdateWalletProfileIdMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<UpdateWalletProfileIdMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpdateWalletProfileIdMutation>(UpdateWalletProfileIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateWalletProfileId', 'mutation');
     },
@@ -4672,6 +4784,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     NftsForCollections(variables: NftsForCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NftsForCollectionsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<NftsForCollectionsQuery>(NftsForCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NftsForCollections', 'query');
+    },
+    NotificationActivities(variables?: NotificationActivitiesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NotificationActivitiesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<NotificationActivitiesQuery>(NotificationActivitiesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NotificationActivities', 'query');
     },
     NumberOfNFTs(variables: NumberOfNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<NumberOfNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<NumberOfNfTsQuery>(NumberOfNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'NumberOfNFTs', 'query');

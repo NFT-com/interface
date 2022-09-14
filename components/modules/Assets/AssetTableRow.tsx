@@ -1,11 +1,12 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { NFTListingsContext, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
-import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -14,12 +15,16 @@ import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
 import { useCallback, useContext, useEffect } from 'react';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
 type NftItem = {
   contract?: string;
   tokenId?: string;
+  wallet?: {
+    address?: string
+  }
   metadata?: {
     name?: string
   }
@@ -34,8 +39,12 @@ export interface AssetTableRowProps {
 }
 
 export default function AssetTableRow({ item, index, onChange, isChecked, selectAll }: AssetTableRowProps) {
+  const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
-  const { data: collectionData } = useCollectionQuery(String( getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), item?.contract);
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.contract, async () => {
+    return await getContractMetadata(item?.contract, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
   const {
     allowedAll: openseaAllowed,
@@ -55,12 +64,13 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
   const { data: listings } = useListingActivitiesQuery(
     item?.contract,
     item?.tokenId,
-    String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID))
+    defaultChainId,
+    null
   );
   const { data: profiles } = useProfilesByDisplayedNft(
     item?.contract,
     item?.tokenId,
-    String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+    defaultChainId,
     true
   );
   const nftSaleHistory = useGetTxByNFTQuery(item?.contract, parseInt(item?.tokenId, 16).toString(), 'sale');
@@ -129,7 +139,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
         </div>
       </td>
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
-        <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toNumber()}`}>
+        <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`}>
           <div className='hover:cursor-pointer'>
             <p className='-mt-1 font-bold text-[#B59007]'>{item.metadata?.name}</p>
           </div>
@@ -138,7 +148,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <Link href={`/app/collection/${item?.contract}`}>
           <div className='hover:cursor-pointer'>
-            <p className='-mt-1 font-bold text-[#B59007]'>{collectionData?.collection?.name}</p>
+            <p className='-mt-1 font-bold text-[#B59007]'>{collectionName}</p>
           </div>
         </Link>
       </td>
@@ -149,12 +159,12 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data ? <p>{nftSaleHistory?.data[0]?.price_details?.price}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.transactions[0]?.price_details ? <p>{nftSaleHistory?.data?.transactions[0]?.price_details?.price}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data ? <p>${nftSaleHistory?.data[0]?.price_details?.price_usd.toFixed(2)}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.transactions[0]?.price_details?.price_usd ? <p>${nftSaleHistory?.data?.transactions[0]?.price_details?.price_usd?.toFixed(2)}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
@@ -167,23 +177,25 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
           constrain
           selectedIndex={0}
           options={filterNulls([
-            {
-              label: 'List NFT',
-              onSelect: () => {
-                stageListing({
-                  nft: item,
-                  collectionName: item.contract,
-                  isApprovedForSeaport: openseaAllowed,
-                  isApprovedForLooksrare: looksRareAllowed,
-                  targets: []
-                });
-                toggleCartSidebar();
-              },
-              icon: null,
-            },
+            currentAddress === item?.wallet?.address
+              ? {
+                label: 'List NFT',
+                onSelect: () => {
+                  stageListing({
+                    nft: item,
+                    collectionName: item.contract,
+                    isApprovedForSeaport: openseaAllowed,
+                    isApprovedForLooksrare: looksRareAllowed,
+                    targets: []
+                  });
+                  toggleCartSidebar();
+                },
+                icon: null,
+              }
+              : null,
             {
               label: 'Share on Twitter',
-              onSelect: () => window.open('https://twitter.com/share?url='+ encodeURIComponent(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toNumber()}`)+'&text='+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
+              onSelect: () => window.open('https://twitter.com/share?url='+ encodeURIComponent(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`)+'&text='+document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
               icon: null,
             },
           ])
