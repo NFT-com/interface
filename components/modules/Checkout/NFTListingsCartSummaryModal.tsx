@@ -3,7 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { ExternalProtocol } from 'types';
-import { isNullOrEmpty, max, min } from 'utils/helpers';
+import { filterDuplicates, isNullOrEmpty, max, min } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
@@ -148,7 +148,10 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               {
                 label: 'Approve Collections for Sale',
                 error: error === 'ApprovalError',
-                items: toList?.map((stagedListing) => {
+                items: filterDuplicates(
+                  toList,
+                  (first, second) => first.nft?.contract === second.nft?.contract
+                )?.map((stagedListing) => {
                   return stagedListing.targets.map((target: ListingTarget) => {
                     const approved = target.protocol === ExternalProtocol.LooksRare ?
                       stagedListing?.isApprovedForLooksrare :
@@ -300,10 +303,14 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                 }
 
                 if (getNeedsApprovals()) {
-                  for (let i = 0; i < toList.length; i++) {
-                    const stagedListing = toList[i];
-                    for (let j = 0; j < toList[i].targets.length; j++) {
-                      const protocol = toList[i].targets[j].protocol;
+                  const uniqueCollections = filterDuplicates(
+                    toList,
+                    (first, second) => first.nft?.contract === second.nft?.contract
+                  );
+                  for (let i = 0; i < uniqueCollections.length; i++) {
+                    const stagedListing = uniqueCollections[i];
+                    for (let j = 0; j < uniqueCollections[i].targets.length; j++) {
+                      const protocol = uniqueCollections[i].targets[j].protocol;
                       const approved = protocol === ExternalProtocol.LooksRare ?
                         stagedListing?.isApprovedForLooksrare :
                         stagedListing?.isApprovedForSeaport;
