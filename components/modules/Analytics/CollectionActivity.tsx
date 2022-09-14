@@ -31,12 +31,14 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
         <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
           <tr className='p-4 pt-0 pb-3 text-left ...'>
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Type</th>
-            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Token ID</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Token ID</th>
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>From</th>
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>To</th>
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Marketplace</th>
-            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Timestamp</th>
-            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Transaction Hash</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Price</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>USD Value</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Timestamp</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Transaction Hash</th>
           </tr>
         </thead>
         <tbody className='p-4'>
