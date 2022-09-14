@@ -56,7 +56,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
-      setNftsForCollections([...collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress < b.collectionAddress) ? 1 : -1)]);
+      setNftsForCollections([...sortedResults(collectionsData.nftsForCollections)]);
     }));
   });
 
