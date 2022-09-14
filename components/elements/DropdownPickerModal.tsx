@@ -120,9 +120,13 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
         bgColor={'bg-pagebg dark:bg-secondary-bg-dk'}
         hideX
       >
-        <XIcon onClick={() => {
-          setExpanded(false);
-        }} className='absolute top-14 right-3 hover:cursor-pointer w-7 h-7' color="white" />
+        <XIcon
+          onClick={() => {
+            setExpanded(false);
+          }}
+          className='absolute top-14 right-3 hover:cursor-pointer w-7 h-7'
+          color="black"
+        />
         {props.options?.map((item, index) => {
           return getOptionRow(item, index);
         })}
