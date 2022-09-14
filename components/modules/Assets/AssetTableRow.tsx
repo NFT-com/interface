@@ -1,10 +1,9 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
-import { NFTListingsContext, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
+import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
-import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnv } from 'utils/env';
@@ -14,53 +13,31 @@ import { tw } from 'utils/tw';
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
-type NftItem = {
-  contract?: string;
-  tokenId?: string;
-  wallet?: {
-    address?: string
-  }
-  metadata?: {
-    name?: string
-  }
-}
-
 export interface AssetTableRowProps {
-  item: NftItem;
+  item: PartialDeep<Nft>;
   index: number;
-  onChange: (listing: PartialDeep<StagedListing>, addAll: boolean) => void;
-  selectAll: boolean;
+  onChange: (listing: PartialDeep<Nft>) => void;
   isChecked: boolean;
 }
 
-export default function AssetTableRow({ item, index, onChange, isChecked, selectAll }: AssetTableRowProps) {
+export default function AssetTableRow({
+  item,
+  index,
+  onChange,
+  isChecked,
+}: AssetTableRowProps) {
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.contract, async () => {
     return await getContractMetadata(item?.contract, defaultChainId);
   });
   const collectionName = collectionMetadata?.contractMetadata?.name;
-  const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
-  const {
-    allowedAll: openseaAllowed,
-  } = useNftCollectionAllowance(
-    item?.contract,
-    currentAddress,
-    TransferProxyTarget.Opensea
-  );
 
-  const {
-    allowedAll: looksRareAllowed,
-  } = useNftCollectionAllowance(
-    item?.contract,
-    currentAddress,
-    TransferProxyTarget.LooksRare
-  );
   const { data: listings } = useListingActivitiesQuery(
     item?.contract,
     item?.tokenId,
@@ -74,18 +51,6 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
     true
   );
   const nftSaleHistory = useGetTxByNFTQuery(item?.contract, parseInt(item?.tokenId, 16).toString(), 'sale');
-
-  useEffect(() => {
-    if(selectAll){
-      onChange({
-        nft: item,
-        collectionName: item.contract,
-        isApprovedForSeaport: openseaAllowed,
-        isApprovedForLooksrare: looksRareAllowed,
-        targets: []
-      }, true);
-    }
-  }, [selectAll, onChange, item, openseaAllowed, looksRareAllowed]);
 
   const getDisplayedProfiles = useCallback(() => {
     if(!profiles?.length){
@@ -128,13 +93,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
         <div className='flex justify-center'>
           <input
             checked={isChecked}
-            onChange={() => onChange({
-              nft: item,
-              collectionName: item.contract,
-              isApprovedForSeaport: openseaAllowed,
-              isApprovedForLooksrare: looksRareAllowed,
-              targets: []
-            }, false)}
+            onChange={() => onChange(item)}
             className='border-2 border-[#6F6F6F] text-[#6F6F6F] form-checkbox focus:ring-[#F9D963]' type='checkbox' />
         </div>
       </td>
@@ -181,14 +140,7 @@ export default function AssetTableRow({ item, index, onChange, isChecked, select
               ? {
                 label: 'List NFT',
                 onSelect: () => {
-                  stageListing({
-                    nft: item,
-                    collectionName: item.contract,
-                    isApprovedForSeaport: openseaAllowed,
-                    isApprovedForLooksrare: looksRareAllowed,
-                    targets: []
-                  });
-                  toggleCartSidebar();
+                  onChange(item);
                 },
                 icon: null,
               }
