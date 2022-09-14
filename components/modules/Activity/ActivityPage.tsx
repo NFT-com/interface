@@ -66,7 +66,7 @@ export default function ActivityPages() {
           My Activity
         </h2>
         <div className="my-8 font-grotesk rounded-md pt-4 pb-8 overflow-x-auto min-h-[380px]">
-          <table className="border-collapse table-fixed w-full">
+          <table className="border-collapse table-auto w-full">
             <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
               <tr className='pt-0 pb-3 text-left ...'>
                 <th className='text-[#6F6F6F] text-sm font-medium leading-6 pl-8 pt-0 pb-3 pr-8 minmd:pr-4'>Name</th>
