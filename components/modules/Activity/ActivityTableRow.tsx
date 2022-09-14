@@ -32,32 +32,85 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   const collectionName = collectionMetadata?.contractMetadata?.name;
 
   const getPriceColumns = useCallback(() => {
-    if(type === 'order' && item[type]?.exchange === 'LooksRare'){
-      const ethAmount = ethers.utils.formatEther(item?.order?.protocolData.price);
-      const currencyData = getByContractAddress(item?.order?.protocolData.currencyAddress);
+    if(item[type]?.protocol === 'LooksRare'){
+      if(type === 'transaction' || type === 'order'){
+        const ethAmount = ethers.utils.formatEther(item[type]?.protocolData?.price);
+        const currencyData = getByContractAddress(item[type]?.protocolData?.currencyAddress);
+        return (
+          <>
+            <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
+              {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+            </td>
+            <td className="text-body leading-body pr-8 minmd:pr-4" >
+              {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            </td>
+          </>
+        );
+      }
+      
       return (
         <>
-          <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
-            {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            <p>—</p>
           </td>
           <td className="text-body leading-body pr-8 minmd:pr-4" >
-            {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            <p>—</p>
           </td>
         </>
       );
     }
 
-    if(type === 'order' && item[type]?.exchange === 'OpenSea'){
-      const sum = item?.order?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0).toString();
-      const ethAmount = ethers.utils.formatEther(sum);
-      const currencyData = getByContractAddress(item?.order?.protocolData?.parameters?.consideration[0].token);
+    if(item[type]?.protocol === 'Seaport'){
+      if(type === 'order'){
+        const sum = item[type]?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0).toString();
+        const ethAmount = ethers.utils.formatEther(sum);
+        const currencyData = getByContractAddress(item[type]?.protocolData?.parameters?.consideration[0].token);
+        return (
+          <>
+            <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
+              {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+            </td>
+            <td className="text-body leading-body pr-8 minmd:pr-4" >
+              {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            </td>
+          </>
+        );
+      }
+
+      if(type === 'transaction'){
+        if(!isNullOrEmpty(item?.transaction?.protocolData?.price)) {
+          const ethAmount = ethers.utils.formatEther(item?.transaction?.protocolData?.price);
+          const currencyData = getByContractAddress(item?.transaction?.protocolData?.currencyAddress);
+          return (
+            <>
+              <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
+                {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+              </td>
+              <td className="text-body leading-body pr-8 minmd:pr-4" >
+                {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+              </td>
+            </>
+          );
+        }
+        return (
+          <>
+            <td className="text-body leading-body pr-8 minmd:pr-4" >
+              <p>—</p>
+            </td>
+            <td className="text-body leading-body pr-8 minmd:pr-4" >
+              <p>—</p>
+            </td>
+          </>
+        );
+      }
+
       return (
         <>
-          <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
-            {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            <p>—</p>
           </td>
           <td className="text-body leading-body pr-8 minmd:pr-4" >
-            {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            <p>—</p>
           </td>
         </>
       );

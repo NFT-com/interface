@@ -217,7 +217,10 @@ export function ExternalListings(props: ExternalListingsProps) {
         setEditListingsModalOpen(false);
       }} />
     <SelectListingModal
-      listings={listings}
+      listings={[
+        getLowestPriceListing(listings, ethPriceUsd, chainId, ExternalProtocol.Seaport),
+        getLowestPriceListing(listings, ethPriceUsd, chainId, ExternalProtocol.LooksRare)
+      ]}
       nft={props.nft}
       collectionName={props.collectionName}
       visible={selectListingModalOpen}

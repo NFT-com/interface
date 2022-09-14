@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ActivityExpiration, ActivityStatus, ActivityType, Maybe, TxActivity } from 'graphql/generated/types';
+import { ActivityExpiration, ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback } from 'react';
@@ -7,36 +7,33 @@ import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
 import { PartialDeep } from 'type-fest';
 
-export interface ListingActivitiesData {
+export interface ExpiredActivitiesData {
   data: Array<PartialDeep<TxActivity>>;
   loading: boolean;
   mutate: () => void;
 }
 
-export function useListingActivitiesQuery(contract: string, tokenId: string, chainId: string, owner: Maybe<string>): ListingActivitiesData {
+export function useExpiredNotificationsQuery(address: string, chainId: string): ExpiredActivitiesData {
   const sdk = useGraphQLSDK();
-  const keyString = 'ListingActivitiesQuery ' +
+  const keyString = 'ExpiredActivitiesQuery ' +
     chainId +
-    contract +
-    tokenId;
+    address;
     
   const { data } = useSWRImmutable(keyString, async () => {
-    if (isNullOrEmpty(contract) || isNullOrEmpty(tokenId) || isNullOrEmpty(chainId)) {
+    if (isNullOrEmpty(address) || isNullOrEmpty(chainId)) {
       return [];
     }
-    const result = await sdk.Activities({
+    const result = await sdk.NotificationActivities({
       input: {
-        // todo: paginate to get all the listings
         pageInput: {
           first: 50,
         },
+        walletAddress: address,
         activityType: ActivityType.Listing,
         chainId,
-        contract,
-        tokenId,
         status: ActivityStatus.Valid,
-        expirationType: ActivityExpiration.Active,
-        walletAddress: owner
+        read: false,
+        expirationType: ActivityExpiration.Expired
       }
     });
     return result?.getActivities?.items;

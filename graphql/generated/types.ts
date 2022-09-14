@@ -27,6 +27,12 @@ export type Scalars = {
   Upload: any;
 };
 
+export enum ActivityExpiration {
+  Active = 'Active',
+  Both = 'Both',
+  Expired = 'Expired'
+}
+
 export enum ActivityStatus {
   Cancelled = 'Cancelled',
   Executed = 'Executed',
@@ -1067,7 +1073,7 @@ export type NftMetadata = {
   description?: Maybe<Scalars['String']>;
   imageURL?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
-  traits: Array<NftTrait>;
+  traits?: Maybe<Array<Maybe<NftTrait>>>;
 };
 
 export type NftPortContract = {
@@ -1275,8 +1281,8 @@ export enum NftSize {
 
 export type NftTrait = {
   __typename?: 'NFTTrait';
-  type: Scalars['String'];
-  value: Scalars['String'];
+  type?: Maybe<Scalars['String']>;
+  value?: Maybe<Scalars['String']>;
 };
 
 export enum NftType {
@@ -2079,7 +2085,7 @@ export type TxActivitiesInput = {
   activityType?: InputMaybe<ActivityType>;
   chainId?: InputMaybe<Scalars['String']>;
   contract?: InputMaybe<Scalars['String']>;
-  ignoreExpired?: InputMaybe<Scalars['Boolean']>;
+  expirationType?: InputMaybe<ActivityExpiration>;
   pageInput: PageInput;
   read?: InputMaybe<Scalars['Boolean']>;
   skipRelations?: InputMaybe<Scalars['Boolean']>;
@@ -2107,7 +2113,7 @@ export type TxActivity = {
   order?: Maybe<TxOrder>;
   read: Scalars['Boolean'];
   status: ActivityStatus;
-  timestamp: Scalars['Date'];
+  timestamp: Scalars['DateTime'];
   transaction?: Maybe<TxTransaction>;
   walletAddress: Scalars['String'];
 };
@@ -2131,6 +2137,26 @@ export type TxConsideration = {
   token: Scalars['String'];
 };
 
+export type TxLooksrareProtocolData = {
+  __typename?: 'TxLooksrareProtocolData';
+  amount?: Maybe<Scalars['String']>;
+  collectionAddress?: Maybe<Scalars['String']>;
+  currencyAddress?: Maybe<Scalars['String']>;
+  endTime?: Maybe<Scalars['String']>;
+  isOrderAsk?: Maybe<Scalars['Boolean']>;
+  minPercentageToAsk?: Maybe<Scalars['String']>;
+  nonce?: Maybe<Scalars['String']>;
+  params?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']>;
+  r?: Maybe<Scalars['String']>;
+  s?: Maybe<Scalars['String']>;
+  signer?: Maybe<Scalars['String']>;
+  startTime?: Maybe<Scalars['String']>;
+  strategy?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
+  v?: Maybe<Scalars['String']>;
+};
+
 export type TxOffer = {
   __typename?: 'TxOffer';
   chainId?: Maybe<Scalars['String']>;
@@ -2152,6 +2178,14 @@ export type TxOrder = {
   takerAddress?: Maybe<Scalars['String']>;
 };
 
+export type TxProtocolData = TxLooksrareProtocolData | TxSeaportProtocolData;
+
+export type TxSeaportProtocolData = {
+  __typename?: 'TxSeaportProtocolData';
+  consideration?: Maybe<Array<Maybe<SeaportConsideration>>>;
+  offer?: Maybe<Array<Maybe<SeaportOffer>>>;
+};
+
 export type TxTransaction = {
   __typename?: 'TxTransaction';
   blockNumber: Scalars['String'];
@@ -2162,6 +2196,7 @@ export type TxTransaction = {
   nftContractAddress: Scalars['String'];
   nftContractTokenId: Scalars['String'];
   protocol: Scalars['String'];
+  protocolData?: Maybe<TxProtocolData>;
   taker: Scalars['String'];
   transactionHash: Scalars['String'];
 };
@@ -2270,6 +2305,12 @@ export type UpdateHideIgnoredInput = {
 export type UpdateHideIgnoredOutput = {
   __typename?: 'UpdateHideIgnoredOutput';
   message?: Maybe<Scalars['String']>;
+};
+
+export type UpdateNftInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  contract: Scalars['String'];
+  tokenId: Scalars['String'];
 };
 
 export type UpdateNfTsForProfileInput = {
@@ -2677,7 +2718,7 @@ export type ActivitiesQueryVariables = Exact<{
 }>;
 
 
-export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, nftContract: string, nftId: Array<string | null>, status: ActivityStatus, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', id: string, exchange: string, foreignType: string, foreignKeyId: string, transactionHash: string, blockNumber: string } | null, transaction?: { __typename?: 'TxTransaction', id: string, chainId?: string | null, transactionHash: string, blockNumber: string, nftContractAddress: string, nftContractTokenId: string, maker: string, taker: string, protocol: string, exchange: string } | null } | null> | null } };
+export type ActivitiesQuery = { __typename?: 'Query', getActivities: { __typename?: 'TxActivitiesOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'TxActivity', id: string, chainId?: string | null, activityType: ActivityType, activityTypeId: string, timestamp: any, walletAddress: string, nftContract: string, nftId: Array<string | null>, status: ActivityStatus, order?: { __typename?: 'TxOrder', chainId?: string | null, exchange: string, orderHash: string, orderType: string, makerAddress: string, takerAddress?: string | null, protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', offerer?: string | null, startTime?: string | null, endTime?: string | null, orderType?: number | null, zone?: string | null, zoneHash?: string | null, salt?: string | null, conduitKey?: string | null, totalOriginalConsiderationItems?: number | null, counter?: number | null, offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null, cancel?: { __typename?: 'TxCancel', id: string, exchange: string, foreignType: string, foreignKeyId: string, transactionHash: string, blockNumber: string } | null, transaction?: { __typename?: 'TxTransaction', id: string, chainId?: string | null, transactionHash: string, blockNumber: string, nftContractAddress: string, nftContractTokenId: string, maker: string, taker: string, protocol: string, exchange: string, protocolData?: { __typename?: 'TxLooksrareProtocolData', isOrderAsk?: boolean | null, signer?: string | null, collectionAddress?: string | null, price?: string | null, tokenId?: string | null, amount?: string | null, strategy?: string | null, currencyAddress?: string | null, nonce?: string | null, startTime?: string | null, endTime?: string | null, minPercentageToAsk?: string | null, params?: string | null, v?: string | null, r?: string | null, s?: string | null } | { __typename?: 'TxSeaportProtocolData', offer?: Array<{ __typename?: 'SeaportOffer', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null } | null> | null, consideration?: Array<{ __typename?: 'SeaportConsideration', itemType?: number | null, token?: string | null, identifierOrCriteria?: string | null, startAmount?: string | null, endAmount?: string | null, recipient?: string | null } | null> | null } | null } | null } | null> | null } };
 
 export type AssociatedAddressesForContractQueryVariables = Exact<{
   contract: Scalars['Address'];
@@ -2706,7 +2747,7 @@ export type CollectionNfTsQueryVariables = Exact<{
 }>;
 
 
-export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
+export type CollectionNfTsQuery = { __typename?: 'Query', collectionNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, items: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits?: Array<{ __typename?: 'NFTTrait', type?: string | null, value?: string | null } | null> | null } }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
 export type DeployedCollectionsQueryVariables = Exact<{
   deployer: Scalars['String'];
@@ -2900,21 +2941,21 @@ export type NftQueryVariables = Exact<{
 }>;
 
 
-export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, memo?: string | null, type: NftType, previewLink?: string | null, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftQuery = { __typename?: 'Query', nft: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, memo?: string | null, type: NftType, previewLink?: string | null, wallet?: { __typename?: 'Wallet', address: any, chainId: string, preferredProfile?: { __typename?: 'Profile', url: string, photoURL?: string | null } | null } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits?: Array<{ __typename?: 'NFTTrait', type?: string | null, value?: string | null } | null> | null } } };
 
 export type NftByIdQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, previewLink?: string | null, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } } };
+export type NftByIdQuery = { __typename?: 'Query', nftById: { __typename?: 'NFT', id: string, isOwnedByMe?: boolean | null, price?: any | null, contract?: any | null, tokenId: any, type: NftType, previewLink?: string | null, wallet?: { __typename?: 'Wallet', address: any } | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, imageURL?: string | null, description?: string | null, traits?: Array<{ __typename?: 'NFTTrait', type?: string | null, value?: string | null } | null> | null } } };
 
 export type NftsForCollectionsQueryVariables = Exact<{
   input: NftsForCollectionsInput;
 }>;
 
 
-export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, actualNumberOfNFTs: number, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits: Array<{ __typename?: 'NFTTrait', type: string, value: string }> } }> }> };
+export type NftsForCollectionsQuery = { __typename?: 'Query', nftsForCollections: Array<{ __typename?: 'CollectionNFT', collectionAddress: any, actualNumberOfNFTs: number, nfts: Array<{ __typename?: 'NFT', id: string, tokenId: any, type: NftType, isOwnedByMe?: boolean | null, previewLink?: string | null, metadata: { __typename?: 'NFTMetadata', name?: string | null, description?: string | null, imageURL?: string | null, traits?: Array<{ __typename?: 'NFTTrait', type?: string | null, value?: string | null } | null> | null } }> }> };
 
 export type NotificationActivitiesQueryVariables = Exact<{
   input?: InputMaybe<TxActivitiesInput>;
@@ -3529,6 +3570,43 @@ export const ActivitiesDocument = gql`
         taker
         protocol
         exchange
+        protocolData {
+          ... on TxLooksrareProtocolData {
+            isOrderAsk
+            signer
+            collectionAddress
+            price
+            tokenId
+            amount
+            strategy
+            currencyAddress
+            nonce
+            startTime
+            endTime
+            minPercentageToAsk
+            params
+            v
+            r
+            s
+          }
+          ... on TxSeaportProtocolData {
+            offer {
+              itemType
+              token
+              identifierOrCriteria
+              startAmount
+              endAmount
+            }
+            consideration {
+              itemType
+              token
+              identifierOrCriteria
+              startAmount
+              endAmount
+              recipient
+            }
+          }
+        }
       }
     }
   }
