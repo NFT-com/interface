@@ -1,3 +1,4 @@
+import { useExpiredNotificationsQuery } from 'graphql/hooks/useExpiredNotificationsQuery';
 import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
 import { useSaleNotificationsQuery } from 'graphql/hooks/useSaleNotificationsQuery';
@@ -21,7 +22,8 @@ export interface NotificationContextType {
     profileNeedsCustomization: boolean,
     associatedProfileAdded: boolean,
     associatedProfileRemoved: boolean,
-    hasSoldActivity: boolean
+    hasSoldActivity: boolean,
+    hasExpiredListings: boolean
   },
   setUserNotificationActive: (notification: keyof UserNotifications, notificationValue: boolean) => void,
   pendingAssociationCount: number,
@@ -30,6 +32,7 @@ export interface NotificationContextType {
   setRemovedAssociationNotifClicked: (input: boolean) => void,
   setAddedAssociatedNotifClicked: (input: boolean) => void,
   soldActivityDate: string,
+  expiredActivityDate: string
 }
 
 export const NotificationContext = React.createContext<NotificationContextType>({
@@ -40,7 +43,8 @@ export const NotificationContext = React.createContext<NotificationContextType>(
     profileNeedsCustomization: false,
     associatedProfileAdded: false,
     associatedProfileRemoved: false,
-    hasSoldActivity: false
+    hasSoldActivity: false,
+    hasExpiredListings: false
   },
   setUserNotificationActive: () => null,
   pendingAssociationCount: 0,
@@ -48,7 +52,8 @@ export const NotificationContext = React.createContext<NotificationContextType>(
   totalClaimableForThisAddress: 0,
   setRemovedAssociationNotifClicked: () => null,
   setAddedAssociatedNotifClicked: () => null,
-  soldActivityDate: null
+  soldActivityDate: null,
+  expiredActivityDate: null
 });
 
 export function NotificationContextProvider(
@@ -65,6 +70,10 @@ export function NotificationContextProvider(
     currentAddress,
     defaultChainId,
   );
+  const { data: expiredListings } = useExpiredNotificationsQuery(
+    currentAddress,
+    defaultChainId
+  );
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
 
   // Notification State
@@ -75,12 +84,14 @@ export function NotificationContextProvider(
     profileNeedsCustomization: false,
     associatedProfileAdded: false,
     associatedProfileRemoved: false,
-    hasSoldActivity: false
+    hasSoldActivity: false,
+    hasExpiredListings: false
   });
   const [removedAssociationNotifClicked, setRemovedAssociationNotifClicked] = useState(false);
   const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
   const [pendingAssociationCount, setPendingAssociationCount] = useState(null);
   const [soldActivityDate, setSoldActivityDate] = useState(null);
+  const [expiredActivityDate, setExpiredActivityDate] = useState(null);
 
   const setUserNotificationActive = useCallback((notification: keyof UserNotifications, notificationValue: boolean) => {
     setNotifications({
@@ -155,7 +166,16 @@ export function NotificationContextProvider(
       setUserNotificationActive('hasSoldActivity', false);
       setSoldActivityDate(null);
     }
-  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, currentAddress, pendingAssociationCount, notifications, saleActivities]);
+
+    if(expiredListings && expiredListings.length > 0 && !notifications.hasExpiredListings && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+      setUserNotificationActive('hasExpiredListings', true);
+      setExpiredActivityDate(expiredListings[0].timestamp);
+    }
+    if((isNullOrEmpty(expiredListings) || expiredListings.length === 0) && notifications.hasExpiredListings && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)){
+      setUserNotificationActive('hasExpiredListings', false);
+      setExpiredActivityDate(null);
+    }
+  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, currentAddress, pendingAssociationCount, notifications, saleActivities, expiredListings]);
 
   return (
     <NotificationContext.Provider
@@ -174,7 +194,8 @@ export function NotificationContextProvider(
         setAddedAssociatedNotifClicked: (input: boolean) => {
           setAddedAssociatedNotifClicked(input);
         },
-        soldActivityDate: soldActivityDate
+        soldActivityDate: soldActivityDate,
+        expiredActivityDate: expiredActivityDate
       }}>
       {props.children}
     </NotificationContext.Provider>);

@@ -23,7 +23,7 @@ import { utils } from 'ethers';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Bell, GearSix, SignOut, User, Wallet, XCircle } from 'phosphor-react';
+import { Bell, ChartLine, GearSix, SignOut, User, Wallet, XCircle } from 'phosphor-react';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
@@ -141,7 +141,7 @@ export const Sidebar = () => {
                 <a onClick={() => setSidebarOpen(false)}
                   className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'
                 >
-                  <User weight='fill' className='mr-2' /> My Activity
+                  <ChartLine weight='fill' className='mr-2' /> My Activity
                 </a>
               </Link>
 

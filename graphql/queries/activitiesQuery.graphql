@@ -93,7 +93,50 @@ query Activities($input: TxActivitiesInput) {
                 taker
                 protocol
                 exchange
+                protocolData {
+                ... on TxLooksrareProtocolData {
+                    isOrderAsk
+                    signer
+                    collectionAddress
+                    price
+                    tokenId
+                    amount
+                    strategy
+                    currencyAddress
+                    nonce
+                    startTime
+                    endTime
+                    minPercentageToAsk
+                    params
+                    v
+                    r
+                    s
+                }
+                ... on TxSeaportProtocolData {
+                    offer {
+                    itemType
+                    token
+                    identifierOrCriteria
+                    startAmount
+                    endAmount
+                    }
+                    consideration {
+                    itemType
+                    token
+                    identifierOrCriteria
+                    startAmount
+                    endAmount
+                    recipient
+                    }
+                }
+                }
             }
+
+            
         }
     }
 }
+
+
+        
+      
