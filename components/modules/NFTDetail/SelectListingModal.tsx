@@ -4,7 +4,8 @@ import { Nft, TxActivity } from 'graphql/generated/types';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
-import { ExternalListingTile, ListingButtonType } from './ExternalListingTile';
+import { ListingButtonType } from './ExternalListingTile';
+import ExternalListingTile from './ExternalListingTile';
 
 import { XCircle } from 'phosphor-react';
 import { useCallback, useRef } from 'react';

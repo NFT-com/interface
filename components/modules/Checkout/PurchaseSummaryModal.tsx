@@ -62,7 +62,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     ).some(purchase => !purchase?.isApproved);
   }, [toBuy]);
 
-  const getHasSufficientBalance = useCallback(() => {
+  const getHasSufficientBalance = useCallback(async () => {
     const uniqueCurrencyPurchases = filterDuplicates(
       toBuy,
       (first, second) => first?.currency === second?.currency
@@ -70,7 +70,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     const remainingBalances = new Map<string, BigNumber>();
     for (let i = 0; i < uniqueCurrencyPurchases.length; i++) {
       const currencyData = getByContractAddress(uniqueCurrencyPurchases[i]?.currency);
-      remainingBalances.set(currencyData?.contract ?? 'unsupported', BigNumber.from(currencyData?.balance ?? 0));
+      const balance = await currencyData?.balance(currentAddress);
+      remainingBalances.set(currencyData?.contract ?? 'unsupported', BigNumber.from(balance ?? 0));
     }
     for (let i = 0; i < toBuy.length; i++) {
       const remainingBalance = remainingBalances.get(toBuy[i].currency);
@@ -81,7 +82,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       remainingBalances.set(toBuy[i].currency, remainingBalance.sub(price));
     }
     return true;
-  }, [getByContractAddress, toBuy]);
+  }, [currentAddress, getByContractAddress, toBuy]);
     
   const getTotalPriceUSD = useCallback(() => {
     return toBuy?.reduce((acc, curr) => {
@@ -325,10 +326,13 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               if (result) {
                 setSuccess(true);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
-              } else if (!getHasSufficientBalance()) {
-                setError('PurchaseBalanceError');
               } else {
-                setError('PurchaseUnknownError');
+                const hasSuffictientBalance = await getHasSufficientBalance();
+                if (!hasSuffictientBalance) {
+                  setError('PurchaseBalanceError');
+                } else {
+                  setError('PurchaseUnknownError');
+                }
               }
             }}
             type={ButtonType.PRIMARY} />
