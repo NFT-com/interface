@@ -35,6 +35,8 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>From</th>
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>To</th>
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Marketplace</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Price</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>USD Value</th>
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Timestamp</th>
             <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Transaction Hash</th>
           </tr>
