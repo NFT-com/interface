@@ -28,9 +28,11 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
   return(
     <motion.div
       animate={{
-        width: sideNavOpen ? '19rem' : 0 }}
+        x: sideNavOpen ? 0 : -310 }}
       transition={{ duration: 0.2 }}
-      className={tw(sideNavOpen ? 'block pr-4' : '-ml-28 hidden overflow-hidden')}
+      className={tw(
+        'w-[19rem]',
+        sideNavOpen ? 'pr-4' : '-ml-72')}
     >
       {!router.pathname.includes('/app/collection/')
         ? (
