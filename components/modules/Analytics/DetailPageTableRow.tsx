@@ -76,7 +76,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
             {tx.price_details.price} {tx.price_details.asset_type}
           </td>
           <td className="font-normal text-base leading-6 text-[#1F2127] p-4">
-            ${tx.price_details.price_usd.toFixed(2)}
+            ${tx.price_details.price_usd?.toFixed(2) ?? 0}
           </td></>
         :
         <>
