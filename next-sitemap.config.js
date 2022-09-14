@@ -10,7 +10,7 @@ module.exports = {
       {
         userAgent: '*',
         disallow: ['/*'],
-        allow: ['/$', '/articles', '/articles/*', '/sitemap.xml'],
+        allow: ['/$', '/articles', '/articles/*', '/*.xml'],
       }
     ]
   },
