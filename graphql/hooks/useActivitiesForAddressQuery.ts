@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ActivityStatus, PageInput, TxActivity } from 'graphql/generated/types';
+import { ActivityExpiration, ActivityStatus, PageInput, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import useSWR, { mutate } from 'swr';
@@ -35,7 +35,8 @@ export function useActivitiesForAddressQuery(address: string, chainId: string, p
         pageInput,
         chainId,
         walletAddress: address,
-        status: ActivityStatus.Valid
+        status: ActivityStatus.Valid,
+        expirationType: ActivityExpiration.Both
       }
     });
     return result;
