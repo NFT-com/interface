@@ -15,8 +15,6 @@ export default function ActivityPages() {
   const {
     nextPage,
     afterCursor,
-    setTotalCount,
-    cachedTotalCount
   } = usePaginator(ACTIVITY_LOAD_COUNT);
   const [lastAddedPage, setLastAddedPage] = useState('');
   const [activityData, setActivityData] = useState([]);
@@ -52,11 +50,8 @@ export default function ActivityPages() {
         ...filterNulls(loadedActivitiesNextPage?.getActivities?.items)
       ]);
       setLastAddedPage(loadedActivitiesNextPage?.getActivities?.pageInfo?.firstCursor);
-      setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems);
-    } else {
-      setTotalCount(loadedActivitiesNextPage?.getActivities?.totalItems || 0);
     }
-  }, [lastAddedPage, setTotalCount, activityData, loadedActivitiesNextPage, afterCursor, loadedActivitiesNextPage?.getActivities?.items, currentAddress]);
+  }, [lastAddedPage, activityData, loadedActivitiesNextPage, afterCursor, loadedActivitiesNextPage?.getActivities?.items, currentAddress]);
   
   return (
     <div className='flex flex-col justify-between pt-28 px-4 font-grotesk'>
@@ -87,7 +82,7 @@ export default function ActivityPages() {
           </table>
           {!activityData || !activityData?.length && <p className='text-[#6F6F6F] flex items-center justify-center border h-[400px] rounded-[10px]'>No activity available</p>}
 
-          {cachedTotalCount > activityData?.length &&
+          {loadedActivitiesNextPage?.getActivities?.totalItems > activityData?.length &&
             <div className='w-full flex justify-center'>
               <button onClick={() => loadMoreActivities()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
                 Load More
