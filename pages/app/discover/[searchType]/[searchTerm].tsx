@@ -1,5 +1,4 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
-import Loader from 'components/elements/Loader';
 import { NFTCard } from 'components/elements/NFTCard';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
@@ -49,11 +48,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   let addressesList = [];
   
   useSWR(collectionsSliderData, async () => {
-    searchType?.toString() !== 'nfts' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
+    searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
-      setNftsForCollections([...collectionsData.nftsForCollections.sort()]);
+      setNftsForCollections([...collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress < b.collectionAddress) ? 1 : -1)]);
     }));
   });
 
@@ -62,7 +61,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
-      setNftsForCollections([...collectionsData.nftsForCollections.sort()]);
+      setNftsForCollections([...collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress < b.collectionAddress) ? 1 : -1)]);
     }));
   });
 
@@ -120,7 +119,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       sort_by: nftsPageSortyBy,
     }] })
       .then((resp) => {
-        setResults([...resp.results[0].hits]);
+        setResults([...resp.results[0].hits.sort((a,b) =>(a.contractAddr < b.contractAddr) ? 1 : -1)]);
         setFound(resp.results[0].found);
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
@@ -140,7 +139,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         sort_by: nftsPageSortyBy,
       }] })
         .then((resp) => {
-          setResults([...results,...resp.results[0].hits]);
+          setResults([...results,...resp.results[0].hits.sort((a,b) =>(a.contractAddr < b.contractAddr) ? 1 : -1)]);
           setFound(resp.results[0].found);
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
@@ -221,6 +220,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 searchType?.toString() === 'collections' ? `minmd:grid minmd:grid-cols-2 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : 'minlg:grid-cols-3 minxl:grid-cols-4'}` : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-3' : 'minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-4'} `,
                 searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
                 {results && results.map((item, index) => {
+                  const collectionImages = nftsForCollections?.filter(i => i.collectionAddress === item.document.contractAddr);
                   return (
                     <div key={index}
                       className={tw(
@@ -233,11 +233,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             contractAddr={item.document.contractAddr}
                             contractName={item.document.contractName}
                             images={[
-                              nftsForCollections[index]?.nfts[0]?.metadata?.imageURL,
-                              nftsForCollections[index]?.nfts[1]?.metadata?.imageURL,
-                              nftsForCollections[index]?.nfts[2]?.metadata?.imageURL,
+                              collectionImages[0].nfts[0]?.metadata?.imageURL,
+                              collectionImages[0].nfts[1]?.metadata?.imageURL,
+                              collectionImages[0].nfts[2]?.metadata?.imageURL,
                             ]}
-                            count={nftsForCollections[index]?.actualNumberOfNFTs}
+                            count={collectionImages.actualNumberOfNFTs}
                           />
                           :
                           <div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">

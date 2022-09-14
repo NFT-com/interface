@@ -29,14 +29,12 @@ import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import useSWR from 'swr';
-import { useNetwork } from 'wagmi';
 
 export interface CollectionProps {
   contract: string;
 }
 
 export function Collection(props: CollectionProps) {
-  const { chain } = useNetwork();
   const { width: screenWidth } = useWindowDimensions();
   const { setSearchModalOpen, collectionPageSortyBy, id_nftName, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
   const { usePrevious } = usePreviousValue();
