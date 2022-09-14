@@ -55,8 +55,6 @@ export default function AccountDetails({ ENSName, openOptions }: AccountDetailsP
     address: string;
   };
 
-  // const balances = useBalances(currentAddress);
-
   const formatBalance = (item: Maybe<BalanceData>) => {
     if (item == null) {
       return '0';

@@ -158,7 +158,7 @@ export function MintedProfile(props: MintedProfileProps) {
       </div>
       <div className={tw(
         'flex-col',
-        'max-w-7xl min-w-[60%]',
+        'max-w-nftcom min-w-[60%]',
         isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
       )}>
         <div
@@ -249,7 +249,7 @@ export function MintedProfile(props: MintedProfileProps) {
               }}
               className={tw(
                 'cursor-pointer text-white text-lg tracking-wide mr-4',
-                selectedTab === 'nfts' ? 'dark:text-white' : 'text-secondary-txt'
+                selectedTab === 'nfts' ? 'text-black' : 'text-secondary-txt'
               )}
             >
               NFTs
@@ -260,7 +260,7 @@ export function MintedProfile(props: MintedProfileProps) {
               }}
               className={tw(
                 'cursor-pointer text-lg tracking-wide',
-                selectedTab === 'deployed' ? 'dark:text-white' : 'text-secondary-txt'
+                selectedTab === 'deployed' ? 'text-black' : 'text-secondary-txt'
               )}
             >
               Created Collections
@@ -334,7 +334,6 @@ export function MintedProfile(props: MintedProfileProps) {
           <DeployedCollectionsGallery address={addressOwner} />
         </div>
       </div>
-      <div className="flex grow" />
     </ProfileScrollContextProvider>
   );
 }

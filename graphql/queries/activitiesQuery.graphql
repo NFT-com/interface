@@ -6,11 +6,15 @@ query Activities($input: TxActivitiesInput) {
             lastCursor
         }
         items {
+            id
             chainId
             activityType
             activityTypeId
             timestamp
             walletAddress
+            nftContract
+            nftId
+            status
             order {
                 chainId
                 exchange
@@ -71,8 +75,24 @@ query Activities($input: TxActivitiesInput) {
                 }
             }
             cancel {
+                id
                 exchange
+                foreignType
+                foreignKeyId
                 transactionHash
+                blockNumber
+            }
+            transaction {
+                id
+                chainId
+                transactionHash
+                blockNumber
+                nftContractAddress
+                nftContractTokenId
+                maker
+                taker
+                protocol
+                exchange
             }
         }
     }

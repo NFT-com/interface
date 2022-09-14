@@ -1,13 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
+import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
 import { Nft, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { Doppler,getEnv, getEnvBool } from 'utils/env';
+import { getContractMetadata } from 'utils/alchemyNFT';
 import { getEtherscanLink, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -18,8 +20,9 @@ import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 export interface NFTDetailProps {
   nft: PartialDeep<Nft>;
   onRefreshSuccess?: () => void;
@@ -28,8 +31,14 @@ export interface NFTDetailProps {
 export const NFTDetail = (props: NFTDetailProps) => {
   const router = useRouter();
 
-  const { chain } = useNetwork();
-  const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.nft?.contract);
+  const defaultChainId = useDefaultChainId();
+  
+  const { data: collection } = useCollectionQuery(String(defaultChainId), props?.nft?.contract);
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
+    return await getContractMetadata(props.nft?.contract, defaultChainId);
+  });
+  const collectionName = collectionMetadata?.contractMetadata?.name;
+
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
   const { address: currentAddress } = useAccount();
@@ -63,7 +72,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
       }
     })();
   }, [props, refreshNft, refreshNftOrders]);
-  
+
   return (
     <div className="flex flex-col w-full max-w-nftcom" id="NFTDetailContainer" key={props.nft?.id}>
       <div className={tw(
@@ -72,11 +81,25 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className='flex flex-col'>
           <Link href={`/app/collection/${collection?.collection?.contract}`}>
             <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline cursor-pointer">
-              {isNullOrEmpty(collection?.collection?.name) ? 'Unknown Name' : collection?.collection?.name}
+              {isNullOrEmpty(collectionName) ?
+                (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                  <div className="w-full">
+                    <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
+                  </div>
+                  <span className="sr-only">Loading...</span>
+                </div>)
+                : collectionName}
             </div>
           </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : `${props.nft?.metadata?.name}`}
+            {isNullOrEmpty(props.nft?.metadata?.name) ?
+              (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                <div className="w-full">
+                  <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
+                </div>
+                <span className="sr-only">Loading...</span>
+              </div>)
+              : `${props.nft?.metadata?.name}`}
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12'>
@@ -92,13 +115,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
         </div>
       </div>
-      <div className='flex flex-row items-center w-full h-full p-4'>
+      <div className='flex flex-row items-center w-full p-4'>
         <div className='flex flex-col h-full aspect-square'>
           {collectionOwnerToShow?.photoURL ?
-            <img
-              className='rounded-md aspect-square h-10 w-10'
+            <RoundedCornerMedia
+              containerClasses='w-full aspect-square'
+              variant={RoundedCornerVariant.All}
+              amount={RoundedCornerAmount.Medium}
               src={collectionOwnerToShow?.photoURL}
-              alt='creator-profile-pic'
             />
             :
             <LoggedInIdenticon round border />
@@ -133,7 +157,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     }
                   </span>
                 </div> :
-                <Link href={getEtherscanLink((chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID).toString()), collection?.collection?.contract, 'address')}>
+                <Link href={getEtherscanLink(Number(defaultChainId), collection?.collection?.contract, 'address')}>
                   <span className="text-[#B59007] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
                     {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
                   </span>
@@ -144,10 +168,11 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className='flex flex-col h-full'>
           <div className='flex flex-col h-[42px] w-[42px]'>
             {profileOwnerToShow?.photoURL ?
-              <img
-                className='rounded-md aspect-square h-10 w-10'
+              <RoundedCornerMedia
+                containerClasses='w-full aspect-square'
+                variant={RoundedCornerVariant.All}
+                amount={RoundedCornerAmount.Medium}
                 src={profileOwnerToShow?.photoURL}
-                alt='owner-profile-pic'
               />
               :
               <LoggedInIdenticon round border />
@@ -186,7 +211,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         </div>
       </div>
       {
-        ((getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)) &&
+        (
           (currentAddress === props.nft?.wallet?.address) ||
           (currentAddress !== props.nft?.wallet?.address && !isNullOrEmpty(props.nft?.memo)))
           &&

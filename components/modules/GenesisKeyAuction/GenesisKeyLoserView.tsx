@@ -14,11 +14,11 @@ export function GenesisKeyLoserView(props: GenesisKeyLoserViewProps) {
   const { primaryText } = useThemeColors();
 
   return (
-    <div className="flex flex-col items-center deprecated_sm:text-center">
-      <HeroTitle items={['SORRY!']} />
-      <HeroTitle items={['YOU WERE OUTBID']} />
+    <div className="flex flex-col items-center deprecated_sm:text-center pt-20">
+      <HeroTitle color="black" items={['SORRY!']} />
+      <HeroTitle color="black" items={['YOU WERE OUTBID']} />
       <div className={tw('flex flex-col items-center text-center space-y-12 mt-8',
-        'text-white w-2/4',
+        'text-black w-2/4',
         'text-base minmd:text-lg minlg:text-xl')}
       >
         <span>
@@ -37,7 +37,7 @@ export function GenesisKeyLoserView(props: GenesisKeyLoserViewProps) {
       </div>
       {props.liveAuction === AuctionType.Blind &&
         <div className={tw(
-          'flex flex-col items-center my-6 text-white w-2/4 text-center',
+          'flex flex-col items-center my-6 text-black w-2/4 text-center',
           'text-base minmd:text-lg minlg:text-xl')}
         >
           <span className="text-xl my-6 max-w-2xl text-center" style={{ color: primaryText }}>

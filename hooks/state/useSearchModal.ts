@@ -11,7 +11,7 @@ export function useSearchModal() {
     {
       modalType: '',
       searchModalOpen: false,
-      sideNavOpen: !router.pathname.includes('discover/'),
+      sideNavOpen: !router.pathname.includes('discover/') && !router.pathname.includes('collection/'),
       searchFilters: [],
       filtersList: null,
       checkedFiltersList: '',
@@ -20,9 +20,11 @@ export function useSearchModal() {
       curatedCollections: null,
       selectedCuratedCollection: null,
       collectionPageSortyBy: '',
-      id: '',
-      nftsPageFilterBy: '',
+      id_nftName: '',
+      nftsResultsFilterBy: '',
+      collectionsResultsFilterBy: '',
       nftsPageSortyBy: '',
+      checkedArray: [],
     } });
 
   const loading = !data;
@@ -66,10 +68,10 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
-  const setModalType = useCallback((modalType: 'search' | 'filters') => {
+  const setModalType = useCallback((modalType: 'search' | 'filters' | 'collectionFilters') => {
     mutate({
       ...data,
-      modalType
+      modalType,
     });
   },[data, mutate]);
 
@@ -101,21 +103,32 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
-  const setCollectionPageAppliedFilters = useCallback((collectionPageSortyBy: string, id: string, searchModalOpen = true) => {
+  const setCollectionPageAppliedFilters = useCallback((collectionPageSortyBy: string, id_nftName: string, searchModalOpen = true) => {
     mutate({
       ...data,
       searchModalOpen,
-      id,
+      id_nftName,
       collectionPageSortyBy
     });
   },[data, mutate]);
 
-  const setNftsPageAppliedFilters = useCallback((nftsPageSortyBy: string, nftsPageFilterBy: string, searchModalOpen = true) => {
+  const setResultsPageAppliedFilters = useCallback((nftsPageSortyBy: string, nftsResultsFilterBy: string, collectionsResultsFilterBy: string, checkedArray: any) => {
     mutate({
       ...data,
-      searchModalOpen,
       nftsPageSortyBy,
-      nftsPageFilterBy
+      nftsResultsFilterBy,
+      collectionsResultsFilterBy,
+      checkedArray
+    });
+  },[data, mutate]);
+
+  const setClearedFilters = useCallback(() => {
+    mutate({
+      ...data,
+      clearedFilters: true,
+      nftsPageSortyBy: '',
+      nftsResultsFilterBy: '',
+      collectionsResultsFilterBy: ''
     });
   },[data, mutate]);
 
@@ -132,9 +145,11 @@ export function useSearchModal() {
     curatedCollections: data.curatedCollections,
     selectedCuratedCollection: data.selectedCuratedCollection,
     collectionPageSortyBy: data.collectionPageSortyBy,
-    id: data.id,
+    id_nftName: data.id_nftName,
     nftsPageSortyBy: data.nftsPageSortyBy,
-    nftsPageFilterBy: data.nftsPageFilterBy,
+    nftsResultsFilterBy: data.nftsResultsFilterBy,
+    collectionsResultsFilterBy: data.collectionsResultsFilterBy,
+    checkedArray: data.checkedArray,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
@@ -144,7 +159,8 @@ export function useSearchModal() {
     setCuratedCollections,
     setSelectedCuratedCollection,
     setCollectionPageAppliedFilters,
-    setNftsPageAppliedFilters
+    setResultsPageAppliedFilters,
+    setClearedFilters
   };
 }
 

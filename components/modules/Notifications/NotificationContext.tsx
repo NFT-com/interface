@@ -1,14 +1,17 @@
 import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
+import { useSaleNotificationsQuery } from 'graphql/hooks/useSaleNotificationsQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { UserNotifications } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 export interface NotificationContextType {
   count: number,
@@ -18,13 +21,15 @@ export interface NotificationContextType {
     profileNeedsCustomization: boolean,
     associatedProfileAdded: boolean,
     associatedProfileRemoved: boolean,
+    hasSoldActivity: boolean
   },
   setUserNotificationActive: (notification: keyof UserNotifications, notificationValue: boolean) => void,
   pendingAssociationCount: number,
   hasUnclaimedProfiles: boolean,
   totalClaimableForThisAddress: number,
   setRemovedAssociationNotifClicked: (input: boolean) => void,
-  setAddedAssociatedNotifClicked: (input: boolean) => void
+  setAddedAssociatedNotifClicked: (input: boolean) => void,
+  soldActivityDate: string,
 }
 
 export const NotificationContext = React.createContext<NotificationContextType>({
@@ -35,13 +40,15 @@ export const NotificationContext = React.createContext<NotificationContextType>(
     profileNeedsCustomization: false,
     associatedProfileAdded: false,
     associatedProfileRemoved: false,
+    hasSoldActivity: false
   },
   setUserNotificationActive: () => null,
   pendingAssociationCount: 0,
   hasUnclaimedProfiles: false,
   totalClaimableForThisAddress: 0,
   setRemovedAssociationNotifClicked: () => null,
-  setAddedAssociatedNotifClicked: () => null
+  setAddedAssociatedNotifClicked: () => null,
+  soldActivityDate: null
 });
 
 export function NotificationContextProvider(
@@ -49,11 +56,15 @@ export function NotificationContextProvider(
 ) {
   const { address: currentAddress } = useAccount();
   const { user } = useUser();
-  const { chain } = useNetwork();
+  const defaultChainId = useDefaultChainId();
   const { nftResolver } = useAllContracts();
   const { data: pendingAssociatedProfiles } = usePendingAssociationQuery();
-  const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, chain?.id.toString());
+  const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
   const { totalClaimable: totalClaimableForThisAddress } = useClaimableProfileCount(currentAddress);
+  const { data: saleActivities } = useSaleNotificationsQuery(
+    currentAddress,
+    defaultChainId,
+  );
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
 
   // Notification State
@@ -64,10 +75,12 @@ export function NotificationContextProvider(
     profileNeedsCustomization: false,
     associatedProfileAdded: false,
     associatedProfileRemoved: false,
+    hasSoldActivity: false
   });
   const [removedAssociationNotifClicked, setRemovedAssociationNotifClicked] = useState(false);
   const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
   const [pendingAssociationCount, setPendingAssociationCount] = useState(null);
+  const [soldActivityDate, setSoldActivityDate] = useState(null);
 
   const setUserNotificationActive = useCallback((notification: keyof UserNotifications, notificationValue: boolean) => {
     setNotifications({
@@ -122,16 +135,27 @@ export function NotificationContextProvider(
     if(hasUnclaimedProfiles && !notifications.hasUnclaimedProfiles) {
       setUserNotificationActive('hasUnclaimedProfiles', true);
     }
-    if(isNullOrEmpty(pendingAssociationCount) && notifications.hasPendingAssociatedProfiles){
+    if((isNullOrEmpty(pendingAssociationCount) || pendingAssociationCount === 0) && notifications.hasPendingAssociatedProfiles){
       setUserNotificationActive('hasPendingAssociatedProfiles', false);
     }
     if(pendingAssociationCount && pendingAssociationCount > 0 && !notifications.hasPendingAssociatedProfiles ) {
       setUserNotificationActive('hasPendingAssociatedProfiles', true);
     }
-    if(profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized && !notifications.profileNeedsCustomization) {
+    if(profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized && !notifications.profileNeedsCustomization && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
       setUserNotificationActive('profileNeedsCustomization', true);
     }
-  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, currentAddress, pendingAssociationCount, notifications]);
+    if(profileCustomizationStatus && profileCustomizationStatus.isProfileCustomized && notifications.profileNeedsCustomization) {
+      setUserNotificationActive('profileNeedsCustomization', false);
+    }
+    if(saleActivities && saleActivities.length > 0 && !notifications.hasSoldActivity && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+      setUserNotificationActive('hasSoldActivity', true);
+      setSoldActivityDate(saleActivities[0].timestamp);
+    }
+    if((isNullOrEmpty(saleActivities) || saleActivities.length === 0) && notifications.hasSoldActivity && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)){
+      setUserNotificationActive('hasSoldActivity', false);
+      setSoldActivityDate(null);
+    }
+  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, currentAddress, pendingAssociationCount, notifications, saleActivities]);
 
   return (
     <NotificationContext.Provider
@@ -149,7 +173,8 @@ export function NotificationContextProvider(
         },
         setAddedAssociatedNotifClicked: (input: boolean) => {
           setAddedAssociatedNotifClicked(input);
-        }
+        },
+        soldActivityDate: soldActivityDate
       }}>
       {props.children}
     </NotificationContext.Provider>);

@@ -1,5 +1,5 @@
 import { Maybe } from 'graphql/generated/types';
-import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
+import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -11,7 +11,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export interface PriceInputProps {
-  currency: SupportedCurrency,
+  initial?: string,
+  currencyAddress: string,
   currencyOptions: SupportedCurrency[],
   onPriceChange: (val: Maybe<BigNumber>) => void,
   // Omit this to just display the currency, without a dropdown picker.
@@ -20,7 +21,11 @@ export interface PriceInputProps {
 }
 
 export function PriceInput(props: PriceInputProps) {
-  const [formattedPrice, setFormattedPrice] = useState('');
+  const [formattedPrice, setFormattedPrice] = useState(props.initial);
+
+  const { getByContractAddress } = useSupportedCurrencies();
+
+  const currencyData = getByContractAddress(props.currencyAddress);
 
   const { alwaysBlack } = useThemeColors();
   const currencies = useMemo(() => (
@@ -35,34 +40,26 @@ export function PriceInput(props: PriceInputProps) {
 
   const [
     selectedCurrencyIndex, setSelectedCurrencyIndex
-  ] = useState(currencies.findIndex((c) => c.label === props.currency));
+  ] = useState(currencies.findIndex((c) => c.label === currencyData.name));
 
   useEffect(() => {
-    setSelectedCurrencyIndex(currencies.findIndex((c) => c.label === props.currency));
-  }, [currencies, props.currency]);
+    setSelectedCurrencyIndex(currencies.findIndex((c) => c.label === currencyData.name));
+  }, [currencies, currencyData.name]);
 
   return (
     <div
       className={tw(
-        'flex flex-row p-6 rounded-xl',
+        'flex flex-row rounded-xl',
       )}>
-      {props.onCurrencyChange && <div className='relative items-center flex shrink-0 grow mr-8'>
-        <DropdownPicker
-          options={currencies}
-          selectedIndex={selectedCurrencyIndex}
-        />
-      </div>
-      }
-      <div className='flex basis-3/5'>
+      <div className='flex'>
         <input
           type="text"
           className={tw(
             'text-lg min-w-0 border',
             'text-left px-3 py-3 rounded-xl font-medium',
-            'w-full',
             props.error ? 'border-red-500 border-2' : ''
           )}
-          placeholder={'e.g. 1 ' + props.currency}
+          placeholder={'e.g. 1 ' + currencyData.name}
           autoFocus={true}
           value={formattedPrice ?? ''}
           onChange={e => {
@@ -88,9 +85,18 @@ export function PriceInput(props: PriceInputProps) {
           }}
         />
       </div>
-      {props.onCurrencyChange == null && <div className='font-bold text-lg flex items-center ml-2'>
-        {props.currency}
-      </div>}
+      {
+        props.onCurrencyChange == null
+          ? <div className='font-bold text-lg flex items-center ml-4'>
+            {currencyData.name}
+          </div>
+          : <div className='relative items-center flex ml-4'>
+            <DropdownPicker
+              options={currencies}
+              selectedIndex={selectedCurrencyIndex}
+            />
+          </div>
+      }
     </div>
   );
 }

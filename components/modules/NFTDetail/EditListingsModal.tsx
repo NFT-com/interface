@@ -4,13 +4,15 @@ import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/Ro
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
+import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
-import { ExternalListingTile, ListingButtonType } from './ExternalListingTile';
+import { ListingButtonType } from './ExternalListingTile';
+import ExternalListingTile from './ExternalListingTile';
 
 import { useRouter } from 'next/router';
 import { XCircle } from 'phosphor-react';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -25,9 +27,14 @@ export interface EditListingsModalProps {
 export function EditListingsModal(props: EditListingsModalProps) {
   const { visible, onClose, nft, listings, collectionName } = props;
 
+  const modalRef = useRef();
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { stageListing } = useContext(NFTListingsContext);
+
+  useOutsideClickAlerter(modalRef, () => {
+    onClose();
+  });
 
   const {
     allowedAll: openseaAllowed,
@@ -70,11 +77,11 @@ export function EditListingsModal(props: EditListingsModalProps) {
               listing={listing}
               nft={nft}
               collectionName={collectionName}
-              buttons={[ListingButtonType.Cancel, ListingButtonType.Adjust]}
+              buttons={[ListingButtonType.Adjust, ListingButtonType.Cancel]}
             />;
           })
         }
-        <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full p-4 minmd:py-8 minmd:px-20">
+        <div className="flex flex-col items-center w-full p-4">
           <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>List item on another marketplace</span>
           <Button
             stretch
@@ -117,11 +124,11 @@ export function EditListingsModal(props: EditListingsModalProps) {
       fullModal
       pure
     >
-      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
         <div className='pt-20 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
           <XCircle onClick={onClose} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
-          {<h2 className='text-4xl tracking-wide font-bold mb-10'>Editing Listings</h2>}
+          {<h2 className='text-4xl tracking-wide font-medium mb-10'>Edit Listings</h2>}
           {getModalContent()}
         </div>
       </div>

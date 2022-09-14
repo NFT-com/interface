@@ -2,7 +2,8 @@ import { tw } from 'utils/tw';
 
 export type ProgressBarItem = {
   label: string;
-  icon?: React.ReactElement;
+  startIcon?: React.ReactElement;
+  endIcon?: React.ReactElement;
 }
 
 export type ProgressBarNode = {
@@ -27,10 +28,10 @@ export function VerticalProgressBar(props: VerticalProgressBarProps) {
             index < props.nodes.length - 1 && 'mb-12'
           )}>
           <div className={tw(
-            'h-7 aspect-square shrink-0 rounded-full border-2 border-black dark:border-white -ml-4',
+            'h-7 aspect-square shrink-0 rounded-full border border-black dark:border-white -ml-4',
             index < props.activeNodeIndex && 'bg-green-summary',
-            index === props.activeNodeIndex && 'bg-yellow-400 motion-safe:animate-bounce',
-            index > props.activeNodeIndex && 'bg-gray-300',
+            index === props.activeNodeIndex && 'border-2 bg-white',
+            index > props.activeNodeIndex && 'bg-white',
             node.error && 'bg-red-400 animate-none motion-safe:animate-none',
           )} />
           <div className='flex flex-col w-full'>
@@ -38,8 +39,9 @@ export function VerticalProgressBar(props: VerticalProgressBarProps) {
             <div className="ml-4 flex-col">
               {node.items?.map((item, index) => {
                 return <div key={index} className='flex items-center mt-4'>
-                  {item.icon}
+                  {item.startIcon}
                   <div className='ml-2 line-clamp-1'>{item.label}</div>
+                  {item.endIcon}
                 </div>;
               })}
             </div>

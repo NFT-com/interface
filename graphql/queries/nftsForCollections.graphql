@@ -5,6 +5,7 @@ query NftsForCollections($input: NftsForCollectionsInput!) {
       tokenId
       type
       isOwnedByMe
+      previewLink
       metadata {
         name
         description
@@ -16,5 +17,6 @@ query NftsForCollections($input: NftsForCollectionsInput!) {
       }
     }
     collectionAddress
+    actualNumberOfNFTs
   }
 }

@@ -1,10 +1,10 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { BalanceData } from 'types';
 import { getAddress } from 'utils/httpHooks';
 
 import { useContext } from 'react';
 import useSWR from 'swr';
-import { BalanceData } from 'types';
 import { useNetwork } from 'wagmi';
 
 export function useWethBalance(currentAddress: string): BalanceData | null {

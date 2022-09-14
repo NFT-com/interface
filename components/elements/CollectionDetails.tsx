@@ -87,7 +87,6 @@ export const CollectionDetails = (props: CollectionDetailsProps) => {
           return <NFTCard
             images={[nft?.metadata?.imageURL]}
             title={nft?.metadata?.name}
-            subtitle={props.collectionName}
             description={nft?.metadata?.description}
             contractAddress={nft?.contract}
             tokenId={nft?.tokenId}

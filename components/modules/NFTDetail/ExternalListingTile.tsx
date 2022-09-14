@@ -3,13 +3,15 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { ActivityStatus, LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
+import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
-import { filterNulls } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
@@ -18,9 +20,10 @@ import { tw } from 'utils/tw';
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
+import React from 'react';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork, useSigner } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 
 export interface ExternalListingTileProps {
   listing: PartialDeep<TxActivity>;
@@ -40,13 +43,12 @@ const Icons = {
 };
 
 export enum ListingButtonType {
-  View = 'View',
   Cancel = 'Cancel',
   Adjust = 'Adjust',
   AddToCart = 'AddToCart',
 }
 
-export function ExternalListingTile(props: ExternalListingTileProps) {
+function ExternalListingTile(props: ExternalListingTileProps) {
   const { listing } = props;
 
   const [cancelling, setCancelling] = useState(false);
@@ -54,12 +56,24 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
-  const { chain } = useNetwork();
-  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const defaultChainId = useDefaultChainId();
+  const { stagePurchase, toBuy } = useContext(NFTPurchasesContext);
   const { stageListing } = useContext(NFTListingsContext);
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
+  const { updateActivityStatus } = useUpdateActivityStatusMutation();
+
+  const nftInPurchaseCart = useMemo(() => {
+    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id) != null;
+  }, [props.nft?.id, toBuy]);
+
+  const { mutate: mutateNftListings } = useListingActivitiesQuery(
+    props?.nft?.contract,
+    props?.nft?.tokenId,
+    String(props.nft?.wallet.chainId ?? defaultChainId),
+    props?.nft?.wallet?.address
+  );
 
   const {
     allowedAll: openseaAllowed,
@@ -84,7 +98,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.Adjust: {
       return <Button
         stretch
-        color="white"
+        color="black"
         label={'Adjust Price'}
         onClick={() => {
           stageListing({
@@ -92,31 +106,17 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             collectionName: props.collectionName,
             isApprovedForSeaport: openseaAllowed,
             isApprovedForLooksrare: looksRareAllowed,
-            targets: filterNulls([listing?.order?.protocol as ExternalProtocol])
+            targets: [{
+              protocol: listing?.order?.protocol as ExternalProtocol,
+              startingPrice: 0,
+              endingPrice: 0,
+              currency: WETH.address,
+              duration: null,
+              looksrareOrder: null,
+              seaportParameters: null
+            }]
           });
           router.push('/app/list');
-        }}
-        type={ButtonType.PRIMARY}
-      />;
-    }
-    case ListingButtonType.View: {
-      return <Button
-        stretch
-        color="white"
-        label={'View Listing'}
-        onClick={() => {
-          switch(listingProtocol) {
-          case ExternalProtocol.Seaport: {
-            const order = listing?.order?.protocolData as SeaportProtocolData;
-            window.open(`https://opensea.io/assets/ethereum/${order?.parameters?.offer?.[0]?.token}/${order?.parameters?.offer?.[0]?.identifierOrCriteria}`, '_blank');
-            break;
-          }
-          case ExternalProtocol.LooksRare: {
-            const order = listing?.order?.protocolData as LooksrareProtocolData;
-            window.open(`https://looksrare.org/collections/${order?.collectionAddress ?? order?.['collection']}/${order?.tokenId}`, '_blank');
-            break;
-          }
-          }
         }}
         type={ButtonType.PRIMARY}
       />;
@@ -124,8 +124,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.Cancel: {
       return <Button
         stretch
-        type={ButtonType.ERROR}
-        color="white"
+        type={ButtonType.SECONDARY}
+        color="black"
         label={'Cancel Listing'}
         disabled={cancelling}
         loading={cancelling}
@@ -139,7 +139,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             }
             const result = await cancelLooksrareListing(BigNumber.from(order.nonce), looksrareExchange);
             if (result) {
-            // todo: notify backend of cancellation
+              updateActivityStatus([listing?.id], ActivityStatus.Cancelled);
             }
             setCancelling(false);
           } else if (listingProtocol === ExternalProtocol.Seaport) {
@@ -150,7 +150,8 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
             }
             const result = await cancelSeaportListing(order?.parameters, seaportExchange);
             if (result) {
-            // todo: notify backend of cancellation
+              updateActivityStatus([listing?.id], ActivityStatus.Cancelled);
+              mutateNftListings();
             }
             setCancelling(false);
           }
@@ -160,14 +161,15 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     case ListingButtonType.AddToCart: {
       return <Button
         stretch
-        color="white"
-        label={'Add to Cart'}
+        disabled={nftInPurchaseCart}
+        label={nftInPurchaseCart ? 'In Cart' : 'Add to Cart'}
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
-          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chain?.id ?? 1));
+          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
           const price = getListingPrice(listing);
           stagePurchase({
             nft: props.nft,
+            activityId: listing?.id,
             currency: getListingCurrencyAddress(listing) ?? WETH.address,
             price: price,
             collectionName: props.collectionName,
@@ -177,16 +179,16 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
               listing?.order?.protocolData as SeaportProtocolData :
               listing?.order?.protocolData as LooksrareProtocolData
           });
-          router.push('/app/buy');
         }}
         type={ButtonType.PRIMARY}
       />;
     }
     }
   }, [
+    nftInPurchaseCart,
     router,
     cancelling,
-    chain?.id,
+    defaultChainId,
     currentAddress,
     getByContractAddress,
     listing,
@@ -198,7 +200,9 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     props.nft,
     seaportExchange,
     stageListing,
-    stagePurchase
+    stagePurchase,
+    updateActivityStatus,
+    mutateNftListings
   ]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport].includes(listingProtocol as ExternalProtocol)) {
@@ -206,8 +210,15 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     return null;
   }
 
-  return <div className="flex flex-col bg-[#F6F6F6] rounded-xl p-5 my-6">
-    <div className='flex items-center mb-4'>
+  const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(listing));
+
+  return <div className="flex flex-col rounded-[10px] my-6 bg-[#F8F8F8] relative pt-12 font-grotesk">
+    <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
+      <span className='font-bold text-secondary-txt'>
+        Fixed Price
+      </span>
+    </div>
+    <div className='flex items-center mb-4 px-4'>
       <div className={tw(
         'relative flex items-center justify-center',
         'aspect-square h-8 w-8 rounded-full',
@@ -218,13 +229,16 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
         </div>
       </div>
       <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
-        <span className='text-sm'>
-            Listed on <span className='text-link'>{listing?.order?.exchange}</span>
+        <span className='text-sm text-secondary-txt'>
+          Current price on <span className="font-bold">{listing?.order?.exchange}</span>
         </span>
         <div className='flex items-center'>
-          <span className='text-base font-medium'>
-            {ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}{' '}
-            {getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'ETH'}
+          <span className='text-xl font-medium'>
+            {ethers.utils.formatUnits(getListingPrice(listing), listingCurrencyData?.decimals ?? 18)}{' '}
+            {listingCurrencyData?.name ?? 'ETH'}
+            <span className="text-secondary-txt text-sm ml-4">
+              ${listingCurrencyData.usd(Number(ethers.utils.formatUnits(getListingPrice(listing), listingCurrencyData?.decimals ?? 18)))}
+            </span>
           </span>
         </div>
       </div>
@@ -232,7 +246,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     <div className='flex flex-col items-center'>
       {
         props.buttons?.map(buttonType => {
-          return <div className='flex items-center basis-1 grow px-2 w-full mt-2' key={buttonType}>
+          return <div className='flex items-center basis-1 grow px-2 w-full mt-2 mb-4' key={buttonType}>
             {getButton(buttonType)}
           </div>;
         })
@@ -240,3 +254,7 @@ export function ExternalListingTile(props: ExternalListingTileProps) {
     </div>
   </div>;
 }
+
+export default React.memo(ExternalListingTile, (prevProps, nextProps) => {
+  return prevProps.listing?.id === nextProps.listing?.id;
+});

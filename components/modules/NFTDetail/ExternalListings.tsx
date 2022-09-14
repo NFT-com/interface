@@ -12,7 +12,7 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { tw } from 'utils/tw';
 
@@ -21,10 +21,9 @@ import { LegacyListingTile } from './LegacyListingTile';
 import { SelectListingModal } from './SelectListingModal';
 
 import { BigNumber, ethers } from 'ethers';
-import Image from 'next/image';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -35,7 +34,7 @@ export interface ExternalListingsProps {
 
 export function ExternalListings(props: ExternalListingsProps) {
   const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
-  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const { stagePurchase, toBuy } = useContext(NFTPurchasesContext);
   const { getByContractAddress } = useSupportedCurrencies();
   const chainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
@@ -47,7 +46,8 @@ export function ExternalListings(props: ExternalListingsProps) {
   const { data: listings } = useListingActivitiesQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId ?? chainId)
+    String(props.nft?.wallet.chainId ?? chainId),
+    props?.nft?.wallet?.address
   );
 
   const { data: legacyListings } = useExternalListingsQuery(
@@ -71,13 +71,24 @@ export function ExternalListings(props: ExternalListingsProps) {
     currentAddress,
     TransferProxyTarget.LooksRare
   );
+
+  const nftInPurchaseCart = useMemo(() => {
+    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id) != null;
+  }, [props.nft?.id, toBuy]);
   
   const getListingSummaryTitle = useCallback(() => {
-    if (listings?.length > 1) {
-      return 'Listings starting at';
+    const uniqueMarketplaces = filterDuplicates(
+      listings,
+      (first, second) => first.order?.protocol === second.order?.protocol
+    );
+    if (uniqueMarketplaces?.length > 1) {
+      return 'Starting price at multiple marketplaces';
+    } else if (listings?.length > 1) {
+      const protocolName = listings?.[0]?.order?.exchange;
+      return 'Starting price on ' + protocolName;
     } else {
       const protocolName = listings?.[0]?.order?.exchange;
-      return 'Listed on ' + protocolName;
+      return 'Current price on ' + protocolName;
     }
   }, [listings]);
 
@@ -85,7 +96,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     if (currentAddress === props.nft?.wallet?.address) {
       return <Button
         stretch
-        label={'Edit Listings'}
+        label={listings.length > 1 ? 'Edit Listings' : 'Edit Listing'}
         onClick={() => {
           setEditListingsModalOpen(true);
         }}
@@ -94,7 +105,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     } else if (listings.length > 1) {
       return <Button
         stretch
-        label={'Select Listings'}
+        label={'Select Listing'}
         onClick={() => {
           setSelectListingModalOpen(true);
         }}
@@ -104,13 +115,15 @@ export function ExternalListings(props: ExternalListingsProps) {
       const listing = listings[0];
       return <Button
         stretch
-        label={'Add to Cart'}
+        disabled={nftInPurchaseCart}
+        label={nftInPurchaseCart ? 'In Cart' : 'Add to Cart'}
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
           const price = getListingPrice(listing);
           stagePurchase({
             nft: props.nft,
+            activityId: listing?.id,
             currency: getListingCurrencyAddress(listing) ?? WETH.address,
             price: price,
             collectionName: props.collectionName,
@@ -120,13 +133,14 @@ export function ExternalListings(props: ExternalListingsProps) {
               listing?.order?.protocolData as SeaportProtocolData :
               listing?.order?.protocolData as LooksrareProtocolData
           });
-          toggleCartSidebar('buy');
+          toggleCartSidebar('Buy');
         }}
         type={ButtonType.PRIMARY}
       />;
     }
   }, [
     chainId,
+    nftInPurchaseCart,
     currentAddress,
     getByContractAddress,
     listings,
@@ -163,11 +177,16 @@ export function ExternalListings(props: ExternalListingsProps) {
         <div className={tw(
           'w-full flex p-4',
         )}>
-          <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full p-4 minmd:py-8 minmd:px-20">
-            <span className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>This item is in your wallet</span>
+          <div className="flex flex-col items-center bg-[#F8F8F8] rounded-[10px] w-full px-4 pb-4 pt-12 relative">
+            <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
+              <span className='capital font-grotesk font-bold text-[#6F6F6F]'>
+                Unlisted NFT
+              </span>
+            </div>
+            <span className='font-grotesk text-base items-center text-[#1F2127] mb-4'>You own this NFT</span>
             <Button
               stretch
-              label={'List item'}
+              label={'List NFT'}
               onClick={() => {
                 stageListing({
                   nft: props.nft,
@@ -176,7 +195,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   isApprovedForLooksrare: looksRareAllowed,
                   targets: []
                 });
-                toggleCartSidebar('sell');
+                toggleCartSidebar('Sell');
               }}
               type={ButtonType.PRIMARY}
             />
@@ -206,30 +225,45 @@ export function ExternalListings(props: ExternalListingsProps) {
         setSelectListingModalOpen(false);
       }}
     />
-    <div className="flex flex-col bg-[#F6F6F6] rounded-xl p-5 my-6 w-full max-w-nftcom max-h-52 justify-between">
-      <div className='font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4'>
-        <span className='text-sm'>
-          {getListingSummaryTitle()}
+    <div className={tw(
+      'flex flex-col bg-[#F8F8F8] rounded-[10px] my-6 w-full max-w-nftcom max-h-52 justify-between relative',
+      'pt-12 font-grotesk'
+    )}>
+      <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
+        <span className='font-bold text-secondary-txt'>
+          Fixed Price
         </span>
-        <div className='flex items-center w-full justify-between my-2'>
-          <div className='text-xl font-bold flex items-center'>
-            <span className="mx-4 flex items-center">{!isNullOrEmpty(listingCurrencyData?.logo) && <Image src={listingCurrencyData?.logo} alt="Currency Icon" height={32} width={32} />}</span>
-            {ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
-            {listingCurrencyData?.name ?? 'WETH'}
-          </div>
-          <div className="flex items-center">
-            {
-              listings?.map(listing => {
-                return <div key={listing?.id}>
-                  {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-                  {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
-                </div>;
-              })
-            }
+      </div>
+      <div className='flex font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4 px-5'>
+        <div className="flex items-center">
+          {
+            filterDuplicates(
+              listings,
+              (first, second) => first.order?.protocol === second.order?.protocol
+            )?.map((listing, index) => {
+              return <div key={listing?.id} className={tw(index > 0 && '-ml-4')}>
+                {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+                {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+              </div>;
+            })
+          }
+        </div>
+        <div className='flex flex-col mx-3'>
+          <span className='text-sm text-secondary-txt'>
+            {getListingSummaryTitle()}
+          </span>
+          <div className='flex items-center w-full justify-between'>
+            <div className='text-xl font-bold flex items-end mt-1'>
+              {ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
+              {listingCurrencyData?.name ?? 'WETH'}
+              <span className="text-secondary-txt text-sm ml-4">
+                ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-      <div className='flex w-full'>
+      <div className='flex w-full px-4 mb-4'>
         {getListingSummaryButtons()}
       </div>
     </div>

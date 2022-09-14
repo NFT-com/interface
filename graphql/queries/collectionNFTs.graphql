@@ -5,6 +5,7 @@ query CollectionNFTs($input: CollectionNFTsInput!) {
       tokenId
       type
       isOwnedByMe
+      previewLink
       metadata {
         name
         description
