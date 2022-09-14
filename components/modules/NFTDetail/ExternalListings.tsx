@@ -257,7 +257,7 @@ export function ExternalListings(props: ExternalListingsProps) {
               {ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
               {listingCurrencyData?.name ?? 'WETH'}
               <span className="text-secondary-txt text-sm ml-4">
-                ${listingCurrencyData.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)))}
+                ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}
               </span>
             </div>
           </div>
