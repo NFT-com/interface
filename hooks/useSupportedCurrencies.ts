@@ -1,13 +1,12 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Dai, Usdc, Weth } from 'constants/typechain';
-import { useBalances } from 'hooks/balances/useBalances';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { MAX_UINT_256 } from 'utils/marketplaceUtils';
 
 import { BigNumberish } from '@ethersproject/bignumber';
 import { useCallback, useMemo } from 'react';
-import { useAccount, useSigner } from 'wagmi';
+import { useProvider, useSigner } from 'wagmi';
 
 export type NFTSupportedCurrency = {
   name: string;
@@ -17,7 +16,7 @@ export type NFTSupportedCurrency = {
   usd: (val: number) => number;
   allowance: (address: string, proxy: string) => Promise<BigNumberish>;
   setAllowance: (address: string, proxy: string) => Promise<boolean>;
-  balance: BigNumberish;
+  balance: (address: string) => Promise<BigNumberish>;
 }
 
 export type SupportedCurrency = 'WETH' | 'ETH' | 'DAI' | 'USDC';
@@ -38,9 +37,8 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
     dai,
     usdc,
   } = useAllContracts();
-  const { address } = useAccount();
   const { data: signer } = useSigner();
-  const balances = useBalances(address);
+  const provider = useProvider();
 
   const setAllowanceForContract = useCallback(async (
     contract: Dai | Weth | Usdc,
@@ -71,7 +69,9 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
           return wethAllowance;
         },
         setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(weth, currentAddress, proxy),
-        balance: balances.weth?.balance ?? 0,
+        balance: async (address) => {
+          return await weth.balanceOf(address);
+        }
       },
       'ETH': {
         name: 'ETH',
@@ -85,7 +85,9 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
           return 0;
         },
         setAllowance: async () => true,
-        balance: balances.eth?.balance ?? 0,
+        balance: async (address) => {
+          return await provider?.getBalance(address);
+        }
       },
       'DAI': {
         name: 'DAI',
@@ -98,7 +100,9 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
           return daiAllowance;
         },
         setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(dai, currentAddress, proxy),
-        balance: balances.dai?.balance ?? 0,
+        balance: async (address) => {
+          return await dai.balanceOf(address);
+        }
       },
       'USDC': {
         name: 'USDC',
@@ -111,14 +115,13 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
           return usdcAllowance;
         },
         setAllowance: (currentAddress: string, proxy: string) => setAllowanceForContract(usdc, currentAddress, proxy),
-        balance: balances.usdc?.balance ?? 0,
+        balance: async (address) => {
+          return await usdc.balanceOf(address);
+        }
       }
     };
   }, [
-    balances.dai?.balance,
-    balances.eth?.balance,
-    balances.usdc?.balance,
-    balances.weth?.balance,
+    provider,
     dai,
     ethPriceUSD,
     setAllowanceForContract,
