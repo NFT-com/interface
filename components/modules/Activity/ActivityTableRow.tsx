@@ -78,9 +78,10 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
       }
 
       if(type === 'transaction'){
-        if(!isNullOrEmpty(item?.transaction?.protocolData?.price)) {
-          const ethAmount = ethers.utils.formatEther(item?.transaction?.protocolData?.price);
-          const currencyData = getByContractAddress(item?.transaction?.protocolData?.currencyAddress);
+        if(!isNullOrEmpty(item?.transaction?.protocolData?.consideration[0].startAmount)) {
+          const sum = item[type]?.protocolData?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0).toString();
+          const ethAmount = ethers.utils.formatEther(sum);
+          const currencyData = getByContractAddress(item[type]?.protocolData?.consideration[0].token);
           return (
             <>
               <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
