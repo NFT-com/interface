@@ -56,13 +56,15 @@ export const getListingCurrencyAddress = (listing: PartialDeep<TxActivity>) => {
 export const getLowestPriceListing = (
   listings: PartialDeep<TxActivity>[],
   ethPriceUSD: number,
-  chainId: number | string
+  chainId: number | string,
+  protocolFilter?: ExternalProtocol
 ) => {
-  let lowestPriceListing = listings[0];
-  const lowestPriceUSD = getListingPriceUSD(listings[0], ethPriceUSD, chainId);
-  for (let i = 1; i < listings.length; i++) {
-    if (getListingPriceUSD(listings[i], ethPriceUSD, chainId) < lowestPriceUSD) {
-      lowestPriceListing = listings[i];
+  const filteredListings = listings.filter(l => protocolFilter == null || l.order?.protocol === protocolFilter);
+  let lowestPriceListing = filteredListings[0];
+  const lowestPriceUSD = getListingPriceUSD(filteredListings[0], ethPriceUSD, chainId);
+  for (let i = 1; i < filteredListings.length; i++) {
+    if (getListingPriceUSD(filteredListings[i], ethPriceUSD, chainId) < lowestPriceUSD) {
+      lowestPriceListing = filteredListings[i];
     }
   }
   return lowestPriceListing;
