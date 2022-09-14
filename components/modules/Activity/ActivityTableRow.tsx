@@ -1,11 +1,11 @@
-import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata, getNftMetadata } from 'utils/alchemyNFT';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
@@ -17,6 +17,7 @@ export interface ActivityTableRowProps {
 }
 
 export default function ActivityTableRow({ item, index }: ActivityTableRowProps) {
+  const { getByContractAddress } = useSupportedCurrencies();
   const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
   const nftId = BigNumber.from(item?.nftId[0].split('/')[2]).toString();
@@ -32,26 +33,31 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
   const getPriceColumns = useCallback(() => {
     if(type === 'order' && item[type]?.exchange === 'LooksRare'){
+      const ethAmount = ethers.utils.formatEther(item?.order?.protocolData.price);
+      const currencyData = getByContractAddress(item?.order?.protocolData.currencyAddress);
       return (
         <>
-          <td className="text-body leading-body pr-8 minmd:pr-4" >
-            {item?.order?.protocolData.amount || <p>—</p>}
+          <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
+            {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
           </td>
           <td className="text-body leading-body pr-8 minmd:pr-4" >
-            {item?.order?.protocolData.amount && ethPriceUSD ? <p>${(ethPriceUSD * item.order.protocolData.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
           </td>
         </>
       );
     }
 
     if(type === 'order' && item[type]?.exchange === 'OpenSea'){
+      const sum = item?.order?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0).toString();
+      const ethAmount = ethers.utils.formatEther(sum);
+      const currencyData = getByContractAddress(item?.order?.protocolData?.parameters?.consideration[0].token);
       return (
         <>
-          <td className="text-body leading-body pr-8 minmd:pr-4" >
-            {item?.order?.protocolData.parameters.offer[0].startAmount || <p>—</p>}
+          <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
+            {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
           </td>
           <td className="text-body leading-body pr-8 minmd:pr-4" >
-            {item?.order?.protocolData.parameters.offer[0].startAmount && ethPriceUSD ? <p>${(ethPriceUSD * item?.order?.protocolData.parameters.offer[0].startAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
           </td>
         </>
       );
@@ -70,7 +76,8 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   }, [
     item,
     type,
-    ethPriceUSD
+    ethPriceUSD,
+    getByContractAddress
   ]);
   
   useEffect(() => {
@@ -90,7 +97,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
         index % 2 === 0 && 'bg-[#F8F8F8]'
       )}
     >
-      <td className="font-bold text-body leading-body pl-8" >
+      <td className="font-bold text-body leading-body pl-8 pr-8 minmd:pr-4 whitespace-nowrap" >
 
         {!collectionName && !nftName ?
           <p>—</p>
@@ -112,7 +119,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
       {getPriceColumns()}
 
-      <td className="text-body leading-body pr-8 minmd:pr-4" >
+      <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap" >
         {moment(item.timestamp).fromNow() || <p>—</p>}
       </td>
 

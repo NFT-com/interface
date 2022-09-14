@@ -56,7 +56,6 @@ export interface NFTCardProps {
   // wrap this in a container with a specified width.
   constrain?: boolean;
   customBackground?: string;
-  customBorderRadius?: string;
   imageLayout?: 'row' | 'grid';
   nftsDescriptionsVisible?: boolean;
   customBorder?: string;
@@ -122,12 +121,19 @@ export function NFTCard(props: NFTCardProps) {
       <span className='text-xs minmd:text-sm' style={{ color: pink }}>
         {pair.key}{isNullOrEmpty(pair.key) ? '' : ' '}
       </span>
-      <span
-        className='text-xs minmd:text-sm ml-1'
-        style={{ color: secondaryText }}
-      >
-        {pair.value}
-      </span>
+      {pair.value !== 'undefined item' ?
+        (<span
+          className='text-xs minmd:text-sm ml-1'
+          style={{ color: secondaryText }}
+        >
+          {pair.value}
+        </span>):
+        (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+          <div className="w-full">
+            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
+          </div>
+          <span className="sr-only">Loading...</span>
+        </div>)}
     </div>;
   }, [pink, secondaryText]);
 
@@ -158,14 +164,14 @@ export function NFTCard(props: NFTCardProps) {
   return (
     <div
       className={tw(
-        `drop-shadow-md rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
+        `rounded flex flex-col ${ props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max'}`,
         props.imageLayout === 'row' ? 'p-3 rounded-xl' : 'p-2 rounded',
         props.constrain ?
           // constrain self to 2 or 4 per row
           'w-2/5 minlg:w-[23%]' :
           'w-full min-h-[inherit]',
         props.customBorder ?? '',
-        'cursor-pointer transform hover:scale-105',
+        'cursor-pointer transform',
         'overflow-hidden',
         'border border-[#D5D5D5]'
       )}
@@ -267,7 +273,6 @@ export function NFTCard(props: NFTCardProps) {
               props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicMediumCard' ? 'h-[456px]' : '',
               props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicSmallCard' ? 'h-[157px]' : '',
               props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicMediumCard' ? 'h-[397px]' : '',
-              props.customBorderRadius ?? 'rounded-3xl',
               props.images[0] == null ? 'aspect-square' : '',
             )}
           >

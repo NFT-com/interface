@@ -18,7 +18,7 @@ import { useAccount } from 'wagmi';
 export default function ClaimGenesisKeyPage() {
   const [firstLoaded, setFirstLoaded] = useState(false);
 
-  const { bg: keyBackground, img: keyImg } = useKeyBackground();
+  const { img: keyImg } = useKeyBackground();
   const { address: currentAddress } = useAccount();
   const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(currentAddress);
   const {
@@ -74,9 +74,7 @@ export default function ClaimGenesisKeyPage() {
                 isNullOrEmpty(keyImg)
                   ? '' // fall through to splash key behind this component.
                   // otherwise, fill in the background behind the minted key.
-                  : keyBackground === 'white' ?
-                    'bg-[#C0C0C0]'
-                    : 'bg-black'
+                  : 'bg-[#C0C0C0]'
               )}
             >
               <video
@@ -90,8 +88,8 @@ export default function ClaimGenesisKeyPage() {
             </div>
       }
       <div className={tw(
-        'relative flex flex-col overflow-y-auto items-center mt-20',
-        'overflow-x-hidden bg-black w-screen h-screen z-50',
+        'relative flex flex-col overflow-y-auto items-center mt-32',
+        'overflow-x-hidden bg-white w-screen h-screen z-50',
       )}>
         <LoadedContainer loaded={firstLoaded}>
           {getContent()}

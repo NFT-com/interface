@@ -81,11 +81,25 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className='flex flex-col'>
           <Link href={`/app/collection/${collection?.collection?.contract}`}>
             <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline cursor-pointer">
-              {isNullOrEmpty(collectionName) ? 'Unknown Name' : collectionName}
+              {isNullOrEmpty(collectionName) ?
+                (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                  <div className="w-full">
+                    <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
+                  </div>
+                  <span className="sr-only">Loading...</span>
+                </div>)
+                : collectionName}
             </div>
           </Link>
           <div className='font-grotesk font-bold text-2xl leading-9'>
-            {isNullOrEmpty(props.nft?.metadata?.name) ? 'Unknown Name' : `${props.nft?.metadata?.name}`}
+            {isNullOrEmpty(props.nft?.metadata?.name) ?
+              (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                <div className="w-full">
+                  <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
+                </div>
+                <span className="sr-only">Loading...</span>
+              </div>)
+              : `${props.nft?.metadata?.name}`}
           </div>
         </div>
         <div className='flex flex-col pl-12 minmd:pr-12'>

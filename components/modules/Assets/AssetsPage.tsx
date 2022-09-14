@@ -85,7 +85,7 @@ export default function AssetsPages() {
             </thead>
             <tbody className='p-4'>
               {allOwnerNfts?.map((item, i) => (
-                <AssetTableRow selectAll={selectAll} isChecked={selectedAssets.some((i) => i.nft.tokenId === item.tokenId)} onChange={onChangeHandler} key={item.id} item={item} index={i} />
+                item.isOwnedByMe && <AssetTableRow selectAll={selectAll} isChecked={selectedAssets.some((i) => i.nft.tokenId === item.tokenId)} onChange={onChangeHandler} key={item.id} item={item} index={i} />
               ))}
             </tbody>
           </table>

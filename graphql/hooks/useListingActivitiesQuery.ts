@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ActivityStatus, ActivityType, Maybe, TxActivity } from 'graphql/generated/types';
+import { ActivityExpiration, ActivityStatus, ActivityType, Maybe, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback } from 'react';
@@ -35,7 +35,7 @@ export function useListingActivitiesQuery(contract: string, tokenId: string, cha
         contract,
         tokenId,
         status: ActivityStatus.Valid,
-        ignoreExpired: true,
+        expirationType: ActivityExpiration.Active,
         walletAddress: owner
       }
     });

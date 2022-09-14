@@ -7,7 +7,8 @@ import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/u
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
-import { ExternalListingTile, ListingButtonType } from './ExternalListingTile';
+import { ListingButtonType } from './ExternalListingTile';
+import ExternalListingTile from './ExternalListingTile';
 
 import { useRouter } from 'next/router';
 import { XCircle } from 'phosphor-react';

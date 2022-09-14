@@ -87,14 +87,14 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
   const getMintSuccessView = useCallback(() => {
     return (
       <div className={tw('flex flex-col items-center')}>
-        <HeroTitle items={['CONGRATULATIONS!']} />
+        <HeroTitle color="black" items={['CONGRATULATIONS!']} />
         <div className={tw('flex flex-col rounded-xl deprecated_sm:border-none',
           'px-10 drop-shadow w-[600px] deprecated_sm:w-full',
           'bg-always-black bg-opacity-60 mt-8',
           'items-center justify-center')}
         >
           <span
-            className="text-2xl text-primary-txt dark:text-primary-txt-dk py-4 text-center">
+            className="text-2xl text-primary-txt py-4 text-center">
             {props.ownedTokenID != null ?
               'You own Genesis Key #' + props.ownedTokenID :
               'You won a Genesis Key!'
@@ -179,13 +179,13 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                           props.claimData != null &&
                           <>
                             <div className='w-full flex flex-col items-center'>
-                              <HeroTitle items={['WELCOME TO']} />
-                              <HeroTitle items={['A NEW KIND']} />
-                              <HeroTitle items={['OF PLATFORM']} />
+                              <HeroTitle color="black" items={['WELCOME TO']} />
+                              <HeroTitle color="black" items={['A NEW KIND']} />
+                              <HeroTitle color="black" items={['OF PLATFORM']} />
                             </div>
                             <span className={tw(
                               'text-3xl mt-5 deprecated_sm:text-xl w-full flex flex-col items-center',
-                              'text-primary-txt dark:text-primary-txt-dk text-center max-w-2xl'
+                              'text-primary-txt text-center max-w-2xl'
                             )}>
                             Congratulations! It is time for you to mint your Genesis Key, and become a leader of this community led ecosystem!
                             </span>
@@ -202,13 +202,13 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                     'uppercase font-hero-heading1 font-extrabold tracking-wide'
                   )}>
                     <div className='mb-12'>
-                      <HeroTitle items={['Thank you for ']} />
-                      <HeroTitle items={['supporting']} />
-                      <HeroTitle items={['nft.com']} />
+                      <HeroTitle color="black" items={['Thank you for ']} />
+                      <HeroTitle color="black" items={['supporting']} />
+                      <HeroTitle color="black" items={['nft.com']} />
                     </div>
                     <span className={tw(
                       'text-lg mb-10 normal-case font-rubik',
-                      'text-primary-txt dark:text-primary-txt-dk text-center'
+                      'text-primary-txt text-center'
                     )}>
                       Click the button below to mint your Genesis Key.
                     </span>
@@ -252,7 +252,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                 {!mintSucceeded && <span className={tw(
                   'text-center items-center max-w-xl text-xs',
                   'items-center my-5 w-full',
-                  'text-primary-txt dark:text-primary-txt-dk'
+                  'text-primary-txt'
                 )}>
                   There are gas fees associated with minting your Genesis Key. {' '}
                   By clicking the {'"'}Mint Your Key{'"'} button,{' '}

@@ -1,5 +1,4 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
-import Loader from 'components/elements/Loader';
 import { NFTCard } from 'components/elements/NFTCard';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
@@ -20,7 +19,7 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
 function usePrevious(value) {
@@ -32,7 +31,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage({ data }: ResultsPageProps) {
-  const { setSearchModalOpen, sideNavOpen, setSideNavOpen,  setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -47,13 +46,26 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const [collectionsSliderData, setCollectionsSliderData] = useState(null);
   const [nftsForCollections, setNftsForCollections] = useState(null);
   let addressesList = [];
+
+  const sortedResults = useCallback((results) => {
+    return results.sort((a,b) =>(a.contractAddr < b.contractAddr) ? 1 : -1);
+  }, []);
   
   useSWR(collectionsSliderData, async () => {
-    searchType?.toString() !== 'nfts' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
+    searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
-      setNftsForCollections([...collectionsData.nftsForCollections.sort()]);
+      setNftsForCollections([...sortedResults(collectionsData.nftsForCollections)]);
+    }));
+  });
+
+  useSWR(results, async () => {
+    searchType?.toString() === 'collections' && await fetchNFTsForCollections({
+      collectionAddresses: addressesList,
+      count: 5
+    }).then((collectionsData => {
+      setNftsForCollections([...sortedResults(collectionsData.nftsForCollections)]);
     }));
   });
 
@@ -111,11 +123,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       sort_by: nftsPageSortyBy,
     }] })
       .then((resp) => {
-        setResults([...resp.results[0].hits]);
+        setResults([...sortedResults(resp.results[0].hits)]);
         setFound(resp.results[0].found);
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen]);
+  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -131,12 +143,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         sort_by: nftsPageSortyBy,
       }] })
         .then((resp) => {
-          setResults([...results,...resp.results[0].hits]);
+          setResults([...results,...sortedResults(resp.results[0].hits)]);
           setFound(resp.results[0].found);
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
+  }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
     return <NotFoundPage />;
@@ -212,6 +224,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 searchType?.toString() === 'collections' ? `minmd:grid minmd:grid-cols-2 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : 'minlg:grid-cols-3 minxl:grid-cols-4'}` : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-3' : 'minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-4'} `,
                 searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
                 {results && results.map((item, index) => {
+                  const collectionImages = nftsForCollections?.filter(i => i.collectionAddress === item.document.contractAddr);
                   return (
                     <div key={index}
                       className={tw(
@@ -224,13 +237,19 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             contractAddr={item.document.contractAddr}
                             contractName={item.document.contractName}
                             images={[
-                              nftsForCollections[index]?.nfts[0]?.metadata?.imageURL,
-                              nftsForCollections[index]?.nfts[1]?.metadata?.imageURL,
-                              nftsForCollections[index]?.nfts[2]?.metadata?.imageURL,
+                              collectionImages[0]?.nfts[0]?.metadata?.imageURL,
+                              collectionImages[0]?.nfts[1]?.metadata?.imageURL,
+                              collectionImages[0]?.nfts[2]?.metadata?.imageURL,
                             ]}
-                            count={nftsForCollections[index]?.actualNumberOfNFTs}
+                            count={collectionImages[0]?.actualNumberOfNFTs}
                           />
-                          :<div className="flex items-center justify-center"><Loader /> </div>:
+                          :
+                          <div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                            <div className="flex justify-center items-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+                              <svg className="w-12 h-12 text-gray-200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512"><path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z"/></svg>
+                            </div>
+                            <span className="sr-only">Loading...</span>
+                          </div>:
                         <NFTCard
                           title={item.document.nftName}
                           images={[item.document.imageURL]}
@@ -243,7 +262,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
                           customBackground={'white'}
                           lightModeForced
-                          customBorderRadius={'rounded-tl-2xl rounded-tr-2xl'}
                         />}
                     </div>);
                 })}
