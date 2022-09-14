@@ -19,7 +19,7 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
 function usePrevious(value) {
@@ -46,6 +46,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const [collectionsSliderData, setCollectionsSliderData] = useState(null);
   const [nftsForCollections, setNftsForCollections] = useState(null);
   let addressesList = [];
+
+  const sortedResults = useCallback((results) => {
+    return results.sort((a,b) =>(a.contractAddr < b.contractAddr) ? 1 : -1);
+  }, []);
   
   useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
@@ -61,7 +65,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
-      setNftsForCollections([...collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress < b.collectionAddress) ? 1 : -1)]);
+      setNftsForCollections([...sortedResults(collectionsData.nftsForCollections)]);
     }));
   });
 
@@ -119,11 +123,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       sort_by: nftsPageSortyBy,
     }] })
       .then((resp) => {
-        setResults([...resp.results[0].hits.sort((a,b) =>(a.contractAddr < b.contractAddr) ? 1 : -1)]);
+        setResults([...sortedResults(resp.results[0].hits)]);
         setFound(resp.results[0].found);
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen]);
+  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -139,12 +143,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         sort_by: nftsPageSortyBy,
       }] })
         .then((resp) => {
-          setResults([...results,...resp.results[0].hits.sort((a,b) =>(a.contractAddr < b.contractAddr) ? 1 : -1)]);
+          setResults([...results,...sortedResults(resp.results[0].hits)]);
           setFound(resp.results[0].found);
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
+  }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
     return <NotFoundPage />;
