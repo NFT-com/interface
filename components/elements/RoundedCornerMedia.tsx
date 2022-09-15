@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { useCheckFileType } from 'hooks/useCheckFileType';
 import { tw } from 'utils/tw';
 
-import React from 'react';
+import React, { useCallback } from 'react';
+import useSWR from 'swr';
 
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
@@ -55,7 +55,45 @@ const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmo
 };
 
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
-  const imageSrc = useCheckFileType(props?.src);
+  const fetchImageUrl = useCallback(async () => {
+    const badFileTypes = ['webp', 'svg', 'gif', 'mp4'];
+    if(props.src?.includes('base64')){
+      return props?.src;
+    }
+    if(props?.src?.includes('?width=600')){
+      const url = props?.src.split('?')[0];
+      const ext = url?.split('.').pop();
+      
+      if(badFileTypes.indexOf(ext) >= 0){
+        return url;
+      } else {
+        const response = await fetch(props.src).catch(() => null);
+        if(response.status === 200){
+          return props.src;
+        } else {
+          return props.src.split('?')[0];
+        }
+      }
+    } else {
+      const ext = props?.src?.split('.').pop();
+      if(badFileTypes.indexOf(ext) >= 0){
+        return props?.src;
+      } else {
+        const response = await fetch(props?.src + '?width=600').catch(() => null);
+        if(response.status === 200){
+          return props?.src + '?width=600';
+        } else {
+          return props.src;
+        }
+      }
+    }
+  }, [props.src]);
+
+  const { data: imgUrl } = useSWR(
+    'imageUrl' + props.src,
+    fetchImageUrl
+  );
+
   return (
     <div className={tw(
       'relative object-cover aspect-square',
@@ -69,8 +107,8 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
         muted
         loop
         key={props.src}
-        src={imageSrc}
-        poster={imageSrc}
+        src={imgUrl || props?.src}
+        poster={imgUrl || props?.src}
         className={tw(
           'object-cover absolute w-full h-full justify-center',
           getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
