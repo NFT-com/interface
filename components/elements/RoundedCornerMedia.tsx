@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { tw } from 'utils/tw';
 
-import React, { useCallback } from 'react';
-import useSWR from 'swr';
+import React, { useEffect, useState } from 'react';
 
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
@@ -55,44 +54,21 @@ const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmo
 };
 
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
-  const fetchImageUrl = useCallback(async () => {
-    const badFileTypes = ['webp', 'svg', 'gif', 'mp4'];
-    if(props.src?.includes('base64')){
-      return props?.src;
-    }
-    if(props?.src?.includes('?width=600')){
-      const url = props?.src.split('?')[0];
-      const ext = url?.split('.').pop();
-      
-      if(badFileTypes.indexOf(ext) >= 0){
-        return url;
-      } else {
-        const response = await fetch(props.src).catch(() => null);
-        if(response.status === 200){
-          return props.src;
-        } else {
-          return props.src.split('?')[0];
-        }
-      }
+  const [imageSrc, setImageSrc] = useState(null);
+  const url = props?.src.split('?')[0];
+  const ext = url?.split('.').pop();
+  const imageFileTypes = ['webp', 'svg', 'gif', 'jpg', 'jpeg', 'png'];
+  useEffect(() => {
+    if(props?.src.includes('?width=600')){
+      setImageSrc(props?.src);
     } else {
-      const ext = props?.src?.split('.').pop();
-      if(badFileTypes.indexOf(ext) >= 0){
-        return props?.src;
+      if(ext === 'svg') {
+        setImageSrc(url);
       } else {
-        const response = await fetch(props?.src + '?width=600').catch(() => null);
-        if(response.status === 200){
-          return props?.src + '?width=600';
-        } else {
-          return props.src;
-        }
+        setImageSrc(props?.src + '?width=600');
       }
     }
-  }, [props.src]);
-
-  const { data: imgUrl } = useSWR(
-    'imageUrl' + props.src,
-    fetchImageUrl
-  );
+  }, [props?.src, ext, url]);
 
   return (
     <div className={tw(
@@ -102,19 +78,36 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     )}
     onClick={props?.onClick}
     >
-      <video
-        autoPlay
-        muted
-        loop
-        key={props.src}
-        src={imgUrl || props?.src}
-        poster={imgUrl || props?.src}
-        className={tw(
-          'object-cover absolute w-full h-full justify-center',
-          getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-          props.extraClasses
-        )}
-      />
+      {imageFileTypes.indexOf(ext) < 0 ?
+        <video
+          autoPlay
+          muted
+          loop
+          key={props?.src}
+          src={props?.src}
+          poster={props?.src}
+          className={tw(
+            'object-cover absolute w-full h-full justify-center',
+            getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+            props.extraClasses
+          )}
+        />
+        :
+        <img
+          alt='NFT Image'
+          key={props.src}
+          src={imageSrc || props?.src}
+          onError={() => {
+            console.log('error', props.src);
+            setImageSrc(props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
+          }}
+          className={tw(
+            'object-cover absolute w-full h-full justify-center',
+            getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+            props.extraClasses
+          )}
+        />
+      }
     </div>
   );
 });
