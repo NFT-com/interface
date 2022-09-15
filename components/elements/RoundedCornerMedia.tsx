@@ -70,7 +70,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
         loop
         key={props.src}
         src={imageSrc}
-        poster={props.src}
+        poster={imageSrc}
         className={tw(
           'object-cover absolute w-full h-full justify-center',
           getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),

@@ -8,9 +8,9 @@ import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQue
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { tw } from 'utils/tw';
@@ -40,6 +40,9 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const [editListingsModalOpen, setEditListingsModalOpen] = useState(false);
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
+
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   
   const { data: listings } = useListingActivitiesQuery(
     props?.nft?.contract,
@@ -85,7 +88,9 @@ export function ExternalListings(props: ExternalListingsProps) {
   }, [listings]);
 
   const getListingSummaryButtons = useCallback(() => {
-    if (currentAddress === props.nft?.wallet?.address) {
+    if (!hasGks) {
+      return null;
+    } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
         stretch
         label={listings.length > 1 ? 'Edit Listings' : 'Edit Listing'}
@@ -131,6 +136,7 @@ export function ExternalListings(props: ExternalListingsProps) {
       />;
     }
   }, [
+    hasGks,
     chainId,
     nftInPurchaseCart,
     currentAddress,
@@ -144,8 +150,7 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   if (isNullOrEmpty(listings)) {
     return (
-      getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-        currentAddress === props.nft?.wallet?.address &&
+      currentAddress === props.nft?.wallet?.address && hasGks &&
         <div className={tw(
           'w-full flex p-4',
         )}>
