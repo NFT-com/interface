@@ -82,7 +82,7 @@ export function Collection(props: CollectionProps) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-  }, [client, collectionData?.collection.name, currentPage, id_nftName, props.contract]);
+  }, [client, collectionData?.collection?.name, currentPage, id_nftName, props.contract]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage !== prevVal) {
@@ -101,7 +101,7 @@ export function Collection(props: CollectionProps) {
           setFound(nftsResults.found);
         });
     }
-  }, [client, collectionData?.collection.name, collectionNfts, currentPage, id_nftName, prevVal, props.contract]);
+  }, [client, collectionData?.collection?.name, collectionNfts, currentPage, id_nftName, prevVal, props.contract]);
 
   const theme = {
     p: (props: any) => {
