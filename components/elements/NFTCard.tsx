@@ -2,8 +2,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, SeaportProtocolData, SupportedExternalExchange } from 'graphql/generated/types';
-import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { LooksrareProtocolData, SeaportProtocolData } from 'graphql/generated/types';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -107,12 +106,6 @@ export function NFTCard(props: NFTCardProps) {
     defaultChainId,
     nft?.wallet?.address
   );
-  
-  const { data: legacyListings } = useExternalListingsQuery(
-    props?.contractAddress,
-    props?.tokenId,
-    defaultChainId
-  );
 
   const lowestListing = getLowestPriceListing(listings, ethPriceUsd, defaultChainId);
   const lowestPrice = getListingPrice(lowestListing);
@@ -138,28 +131,16 @@ export function NFTCard(props: NFTCardProps) {
   }, [pink, secondaryText]);
 
   const showListingIcons: boolean = useMemo(() => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-      return !isNullOrEmpty(listings);
-    } else {
-      return !isNullOrEmpty(legacyListings?.filter((l) => !isNullOrEmpty(l.url)));
-    }
-  }, [legacyListings, listings]);
+    return !isNullOrEmpty(listings);
+  }, [listings]);
 
   const showOpenseaListingIcon: boolean = useMemo(() => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-      return listings?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
-    } else {
-      return legacyListings?.find(listing => listing.price != null && listing.exchange === SupportedExternalExchange.Opensea) != null;
-    }
-  }, [listings, legacyListings]);
+    return listings?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
+  }, [listings]);
 
   const showLooksrareListingIcon: boolean = useMemo(() => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-      return listings?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
-    } else {
-      return legacyListings?.find(listing => listing.price != null && listing.exchange === SupportedExternalExchange.Looksrare) != null;
-    }
-  }, [legacyListings, listings]);
+    return listings?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
+  }, [listings]);
 
   return (
     <div
