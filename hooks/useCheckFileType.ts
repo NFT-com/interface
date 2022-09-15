@@ -1,5 +1,5 @@
 export function useCheckFileType(src: string) {
-  const badFileTypes = ['webp', 'svg', 'gif', 'mp4', 'png'];
+  const badFileTypes = ['webp', 'svg', 'gif', 'mp4'];
 
   if(src?.includes('?width=600')){
     const url = src.split('?')[0];
@@ -11,6 +11,11 @@ export function useCheckFileType(src: string) {
       return src;
     }
   } else {
-    return src;
+    const ext = src?.split('.').pop();
+    if(badFileTypes.indexOf(ext) >= 0){
+      return src;
+    } else {
+      return src + '?width=600';
+    }
   }
 }
