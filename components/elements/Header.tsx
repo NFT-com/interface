@@ -60,12 +60,9 @@ export const Header = ({ removeBg } : HeaderProps) => {
                 </div>
               </div>
             </div>
-            {
-              getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
             <div className="hidden minlg:block w-full mr-8 ml-16 max-w-[27rem]">
               <SearchBar />
             </div>
-            }
           </div>
 
           <div className='flex items-center ...'>
@@ -79,9 +76,9 @@ export const Header = ({ removeBg } : HeaderProps) => {
                 'border-r pr-4 py-[2px]'
               )}
             >
-              {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) && <Link href ='/app/discover'>
+              <Link href ='/app/discover'>
                 <a className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Discover</a>
-              </Link>}
+              </Link>
               <Link href ='/app/gallery'>
                 <a className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Gallery</a>
               </Link>
@@ -91,38 +88,32 @@ export const Header = ({ removeBg } : HeaderProps) => {
                 href="https://docs.nft.com"
                 className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Docs</a>
             </div>
-            {
-              getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
+            <button
+              className='block minlg:hidden cursor-pointer mr-2 h-full w-7'
+              onClick={() => {
+                setModalType('search');
+                setSearchModalOpen(true);
+              }}
+            >
+              <SearchIcon color='#6F6F6F' />
+            </button>
+            <div
+              className='h-full flex items-center relative mr-4 cursor-pointer'
+              onClick={() => {
+                toggleCartSidebar();
+              }}
+            >
+              {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
+                <div className='absolute right-0 -top-4'>
+                  <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
+                </div>
+              )}
               <button
-                className='block minlg:hidden cursor-pointer mr-2 h-full w-7'
-                onClick={() => {
-                  setModalType('search');
-                  setSearchModalOpen(true);
-                }}
+                className='cursor-pointer mr-2 h-full w-7'
               >
-                <SearchIcon color='#6F6F6F' />
+                <ShoppingCartSimple size={28} color={useDarkMode ? primaryIcon : 'black'} />
               </button>
-            }
-            {
-              getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-              <div
-                className='h-full flex items-center relative mr-4 cursor-pointer'
-                onClick={() => {
-                  toggleCartSidebar();
-                }}
-              >
-                {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
-                  <div className='absolute right-0 -top-4'>
-                    <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
-                  </div>
-                )}
-                <button
-                  className='cursor-pointer mr-2 h-full w-7'
-                >
-                  <ShoppingCartSimple size={28} color={useDarkMode ? primaryIcon : 'black'} />
-                </button>
-              </div>
-            }
+            </div>
             {
               getEnvBool(Doppler.NEXT_PUBLIC_THEME_TOGGLE_ENABLED) &&
               <button

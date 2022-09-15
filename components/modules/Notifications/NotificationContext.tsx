@@ -158,20 +158,20 @@ export function NotificationContextProvider(
     if(profileCustomizationStatus && profileCustomizationStatus.isProfileCustomized && notifications.profileNeedsCustomization) {
       setUserNotificationActive('profileNeedsCustomization', false);
     }
-    if(saleActivities && saleActivities.length > 0 && !notifications.hasSoldActivity && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+    if(saleActivities && saleActivities.length > 0 && !notifications.hasSoldActivity) {
       setUserNotificationActive('hasSoldActivity', true);
       setSoldActivityDate(saleActivities[0].timestamp);
     }
-    if((isNullOrEmpty(saleActivities) || saleActivities.length === 0) && notifications.hasSoldActivity && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)){
+    if((isNullOrEmpty(saleActivities) || saleActivities.length === 0) && notifications.hasSoldActivity){
       setUserNotificationActive('hasSoldActivity', false);
       setSoldActivityDate(null);
     }
 
-    if(expiredListings && expiredListings.length > 0 && !notifications.hasExpiredListings && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
+    if(expiredListings && expiredListings.length > 0 && !notifications.hasExpiredListings) {
       setUserNotificationActive('hasExpiredListings', true);
       setExpiredActivityDate(expiredListings[0].timestamp);
     }
-    if((isNullOrEmpty(expiredListings) || expiredListings.length === 0) && notifications.hasExpiredListings && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)){
+    if((isNullOrEmpty(expiredListings) || expiredListings.length === 0) && notifications.hasExpiredListings){
       setUserNotificationActive('hasExpiredListings', false);
       setExpiredActivityDate(null);
     }

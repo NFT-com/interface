@@ -7,7 +7,6 @@ import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
 
-import { useRouter } from 'next/router';
 import GKHolderIcon from 'public/gk-holder.svg';
 import { useCallback, useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
@@ -22,7 +21,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { address: currentAddress } = useAccount();
   const { user, setCurrentProfileUrl } = useUser();
-  const router = useRouter();
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   const { profileData } = useProfileQuery(profileURI);
@@ -102,15 +100,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             }}
           />
         </div>
-        <div className='ml-4'>
-          <Button
-            type={ButtonType.SECONDARY}
-            label={'Settings'}
-            onClick={() => {
-              router.push('/app/settings');
-            }}
-          />
-        </div>
       </div>;
   }, [
     hasGks,
@@ -122,7 +111,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     editMode,
     profileURI,
     props.profileURI,
-    router,
     saveProfile,
     setCurrentProfileUrl,
     setEditMode,
