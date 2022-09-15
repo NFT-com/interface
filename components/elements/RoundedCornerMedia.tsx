@@ -98,7 +98,6 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           key={props.src}
           src={imageSrc || props?.src}
           onError={() => {
-            console.log('error', props.src);
             setImageSrc(props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
           }}
           className={tw(
