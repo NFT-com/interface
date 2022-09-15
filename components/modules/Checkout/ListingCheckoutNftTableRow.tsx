@@ -3,7 +3,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { filterNulls, processIPFSURL } from 'utils/helpers';
+import { processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
@@ -28,14 +28,20 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const { data: collection } = useSWR('ContractMetadata' + props.listing?.nft?.contract, async () => {
     return await getContractMetadata(props.listing?.nft?.contract, chain?.id);
   });
-  const { setPrice, setCurrency, toggleTargetMarketplace } = useContext(NFTListingsContext);
+  const {
+    setPrice,
+    setCurrency,
+    toggleTargetMarketplace,
+    clearGeneralConfig,
+    getTarget
+  } = useContext(NFTListingsContext);
   const defaultChainId = useDefaultChainId();
 
   const [expanded, setExpanded] = useState(false);
 
   const rowHeightClass = expanded ? 'h-48' : 'h-24';
-  const seaportEnabled = useMemo(() => props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport) != null, [props.listing.targets]);
-  const looksrareEnabled = useMemo(() => props.listing.targets?.find(target => target.protocol === ExternalProtocol.LooksRare) != null, [props.listing.targets]);
+  const seaportEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Seaport) != null, [getTarget, props.listing]);
+  const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
 
   useEffect(() => {
     if (expanded) {
@@ -54,8 +60,13 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         <div className='h-full w-full flex py-8 pr-8'>
           {
             expanded ?
-              <CaretDown onClick={() => setExpanded(false)} size={24} color="black" className='mr-4 mt-2 cursor-pointer' /> :
-              <CaretRight onClick={() => setExpanded(true)} size={24} color="black" className='mr-4 mt-2 cursor-pointer' />
+              <CaretDown onClick={() => {
+                setExpanded(false);
+              }} size={24} color="black" className='mr-4 mt-2 cursor-pointer' /> :
+              <CaretRight onClick={() => {
+                setExpanded(true);
+                clearGeneralConfig(props.listing);
+              }} size={24} color="black" className='mr-4 mt-2 cursor-pointer' />
           }
           <div className='relative h-10 aspect-square'>
             <video
@@ -77,17 +88,18 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         </div>
       </td>
       <td className={tw('flex', rowHeightClass)}>
-        <div className='h-full w-full py-4 pr-8 flex flex-col justify-around'>
+        <div className='h-full w-full py-4 flex flex-col justify-around'>
           {
             expanded ?
               <>
                 <PriceInput
+                  key={expanded + 'OpenseaPriceInput'}
                   initial={
-                    props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.startingPrice == null ?
+                    getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
                       '' :
-                      ethers.utils.formatEther(BigNumber.from(props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.startingPrice ?? 0))
+                      ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice ?? 0))
                   }
-                  currencyAddress={props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
+                  currencyAddress={getTarget(props.listing, ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
                   currencyOptions={['WETH', 'ETH']}
                   onPriceChange={(val: BigNumber) => {
                     setPrice(props.listing, val, ExternalProtocol.Seaport);
@@ -103,21 +115,22 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   }
                 />
                 <PriceInput
+                  key={expanded + 'LooksrarePriceInput'}
                   initial={
-                    props.listing.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice == null ?
+                    getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice == null ?
                       '' :
-                      ethers.utils.formatEther(BigNumber.from(props.listing.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice ?? 0))
+                      ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice ?? 0))
                   }
                   currencyAddress={getAddress('weth', defaultChainId)}
                   currencyOptions={['WETH']}
+                  onCurrencyChange={null}
                   onPriceChange={(val: BigNumber) => {
                     setPrice(props.listing, val, ExternalProtocol.LooksRare);
                     props.onPriceChange();
                   }}
-                  onCurrencyChange={null}
                   error={
-                    props.listing?.targets?.find(target => target.startingPrice == null) != null ||
-                    props.listing?.targets?.find(target => BigNumber.from(target.startingPrice).eq(0)) != null
+                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && target.startingPrice == null) != null ||
+                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null
                   }
                 />
               </> :
@@ -127,25 +140,16 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                     '' :
                     ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
                 }
-                currencyAddress={
-                  seaportEnabled && !looksrareEnabled ?
-                    props.listing.targets?.find(target => target.protocol === ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId) :
-                    getAddress('weth', defaultChainId)
-                }
-                currencyOptions={filterNulls(['WETH', seaportEnabled && !looksrareEnabled ? 'ETH' : null])}
+                currencyAddress={getAddress('weth', defaultChainId)}
+                currencyOptions={['WETH']}
+                onCurrencyChange={null}
                 onPriceChange={(val: BigNumber) => {
                   setPrice(props.listing, val);
                   props.onPriceChange();
                 }}
-                onCurrencyChange={(seaportEnabled && !looksrareEnabled)
-                  ? (currency: SupportedCurrency) => {
-                    setCurrency(props.listing, currency, ExternalProtocol.Seaport);
-                    props.onPriceChange();
-                  }
-                  : null}
                 error={
-                  (props.listing?.targets?.find(target => target.startingPrice == null) != null && props.listing.startingPrice == null) ||
-                  (props.listing?.targets?.find(target => BigNumber.from(target.startingPrice ?? 0).eq(0)) != null && BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
+                  (props.listing.startingPrice == null) ||
+                  (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
                 }
               />
           }
