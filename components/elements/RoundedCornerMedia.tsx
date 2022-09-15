@@ -55,11 +55,11 @@ const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmo
 
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   const [imageSrc, setImageSrc] = useState(null);
-  const url = props?.src.split('?')[0];
+  const url = props?.src?.split('?')[0];
   const ext = url?.split('.').pop();
   const imageFileTypes = ['webp', 'svg', 'gif', 'jpg', 'jpeg', 'png'];
   useEffect(() => {
-    if(props?.src.includes('?width=600')){
+    if(props?.src?.includes('?width=600')){
       setImageSrc(props?.src);
     } else {
       if(ext === 'svg') {
