@@ -9,13 +9,12 @@ interface CollectionItemProps {
   count?: number
 }
 
-export const CollectionItem = ({ contractAddr, contractName, images, count }: CollectionItemProps) => {
+export const CollectionItem = ({ contractAddr, contractName, images }: CollectionItemProps) => {
   const router = useRouter();
   
   return (
     <NFTCollectionCard
       contract={contractAddr}
-      count={count}
       images={images}
       onClick={() => {
         router.push(`/app/collection/${contractAddr}/`);

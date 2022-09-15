@@ -70,7 +70,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
       </div>
     </div> :
     (
-      <span className="text-2xl font-bold font-grotesk mb-2">
+      <span className="text-2xl font-bold font-grotesk mb-2 w-full px-[16px]">
         Not Featured on a NFT Profile yet
       </span>
     );
