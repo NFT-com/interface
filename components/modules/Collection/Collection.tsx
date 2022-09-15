@@ -76,7 +76,7 @@ export function Collection(props: CollectionProps) {
         'per_page': 8,
         'page'    : currentPage,
         'facet_by': 'contractName',
-        'filter_by': 'contractName:='+collectionData?.collection?.name
+        'filter_by': collectionData?.collection?.name ? ('contractName:='+collectionData?.collection?.name) : ''
       })
       .then(function (nftsResults) {
         setCollectionNfts([...nftsResults.hits]);
@@ -94,7 +94,7 @@ export function Collection(props: CollectionProps) {
           'per_page': 8,
           'page'    : currentPage,
           'facet_by': 'contractName',
-          'filter_by': 'contractName:='+collectionData?.collection?.name
+          'filter_by': collectionData?.collection?.name ? ('contractName:='+collectionData?.collection?.name) : ''
         })
         .then(function (nftsResults) {
           setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
