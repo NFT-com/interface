@@ -9,9 +9,7 @@ import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollect
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import NotFoundPage from 'pages/404';
 import { ResultsPageProps } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
@@ -149,10 +147,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         });
     }
   }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
-
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
-    return <NotFoundPage />;
-  }
 
   return (
     <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen overflow-hidden">

@@ -4,7 +4,6 @@ import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { createNftOwnerMap } from 'utils/createNftOwnerMap';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -14,12 +13,10 @@ import { NftGallery } from './NftGallery';
 import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
-import { Gear } from 'phosphor-react';
-import EditLayoutIcon from 'public/edit_layout.svg';
+import { useRouter } from 'next/router';
+import { CircleWavy, Gear, Layout, Tag, Wrench } from 'phosphor-react';
 import EyeIcon from 'public/eye.svg';
 import EyeOffIcon from 'public/eye_off.svg';
-import GKBadgeIcon from 'public/gk_badge.svg';
-import NftLabelIcon from 'public/label.svg';
 import { useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
@@ -48,7 +45,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   } = useContext(ProfileContext);
 
   const [layoutEditorOpen, setLayoutEditorOpen] = useState(false);
-  
+  const router = useRouter();
   const { address: currentAddress } = useAccount();
 
   const { profileData } = useProfileQuery(props.profileURI);
@@ -127,12 +124,12 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 props.ownedGKTokens?.length > 0 && {
                   label: `${(draftNftsDescriptionsVisible) ? 'Hide' : 'Show'} Descriptions`,
                   onSelect: () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible),
-                  icon: <NftLabelIcon className="w-5 h-5" alt="Description label" stroke="black" fill="black" />,
+                  icon: <Tag className="mr-1" weight="bold" color="black" alt="Description label"/>,
                 },
                 {
                   label: `${(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? 'Hide' : 'Show'} GK Badge`,
                   onSelect: () => setDraftGkIconVisible(!draftGkIconVisible),
-                  icon: <GKBadgeIcon className="w-5 h-5" alt="Description label" stroke="black" fill="black" />,
+                  icon: <CircleWavy className="mr-1" color="black" weight="bold" alt="Description label" />,
                 },
                 isMobile && {
                   label: 'Show All',
@@ -161,15 +158,20 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 {
                   label: 'Edit Layouts',
                   onSelect: () => setLayoutEditorOpen(!layoutEditorOpen),
-                  icon: <EditLayoutIcon className="w-5 h-5" stroke="black" fill="black" alt="Hide descriptions" />,
+                  icon: <Layout weight='bold' className="mr-1" color="black" alt="Hide descriptions" />,
                 },
-                getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED)
-                  ? {
-                    label: `${(draftDeployedContractsVisible) ? 'Hide' : 'Show'} Created Collections`,
-                    onSelect: () => setDraftDeployedContractsVisible(!draftDeployedContractsVisible),
-                    icon: <EditLayoutIcon className="" stroke="black" fill="black" alt="Collections toggle" />,
-                  }
-                  : null
+                {
+                  label: `${(draftDeployedContractsVisible) ? 'Hide' : 'Show'} Created Collections`,
+                  onSelect: () => setDraftDeployedContractsVisible(!draftDeployedContractsVisible),
+                  icon: <Layout weight='bold' className="mr-1" color="black" alt="Collections toggle" />,
+                },
+                {
+                  label: 'Advanced Settings',
+                  onSelect: () => {
+                    router.push('/app/settings');
+                  },
+                  icon: <Wrench weight="bold" className='mr-1' color="black" alt="settings link" />
+                }
               ])}>
               <Gear className="w-8 h-8 shrink-0 aspect-square" alt='Edit Menu'/>
             </DropdownPickerModal>
