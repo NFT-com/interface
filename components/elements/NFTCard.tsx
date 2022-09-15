@@ -10,7 +10,6 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
@@ -314,7 +313,7 @@ export function NFTCard(props: NFTCardProps) {
             </div>
         }
 
-        {showListingIcons && !nft?.isOwnedByMe && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
+        {showListingIcons && !nft?.isOwnedByMe &&
           <div className='flex flex-col minmd:flex-row flex-wrap mt-3 justify-between'>
             <div className='flex flex-col pr-2'>
               <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>

@@ -8,9 +8,7 @@ import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollect
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import NotFoundPage from 'pages/404';
 import { DiscoverPageProps } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -66,10 +64,6 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
     const sortedPaginatedAddresses = paginatedContracts?.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
     nftsForCollections && nftsForCollections.length > 0 && setPaginatedAddresses([...sortedPaginatedAddresses]);
   },[nftsForCollections, page, screenWidth, sideNavOpen]);
-
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
-    return <NotFoundPage />;
-  }
 
   const changeCurated = () => {
     setPage(1);

@@ -5,7 +5,6 @@ import { useUser } from 'hooks/state/useUser';
 import { useWalletSlide } from 'hooks/state/useWalletSlide';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -45,7 +44,6 @@ export default function HeroHeader(props: HeroHeaderProps) {
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGksOrTokens = !isNullOrEmpty(ownedGKTokens) || !isNullOrEmpty(ownedProfileTokens);
   const showHeaderNav = !isMobile;
-  const searchEnabled = getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED);
 
   const headerStyles = useCallback(() => {
     if(props.removeBackground && !props.heroHeader) {
@@ -125,7 +123,7 @@ export default function HeroHeader(props: HeroHeaderProps) {
                 </Link>}
               </div>
             }
-            {searchEnabled && !props.heroHeader &&
+            {!props.heroHeader &&
               <div className={tw(
                 'flex items-center mr-4 md:hidden',
                 'block lg:w-1/2 w-80'
@@ -146,9 +144,9 @@ export default function HeroHeader(props: HeroHeaderProps) {
           </div>
         </div>
       </div>
-      {searchEnabled && props.walletOnly !== true &&
+      {props.walletOnly !== true &&
         <>
-          <div className="my-4 ml-3 flex items-center mr-4 md:mr-3 pb-4 md:block hidden">
+          <div className="my-4 ml-3 items-center mr-4 md:mr-3 pb-4 md:flex hidden">
             <SearchBar />
           </div>
         </>
