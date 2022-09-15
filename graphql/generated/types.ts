@@ -703,6 +703,7 @@ export type Mutation = {
   /** AUTHENTICATED */
   updateCache: UpdateCacheOutput;
   updateCollectionImageUrls: UpdateCollectionImageUrlsOutput;
+  updateCollectionName: UpdateCollectionNameOutput;
   /** AUTHENTICATED */
   updateCuration: Curation;
   /** AUTHENTICATED */
@@ -943,6 +944,11 @@ export type MutationUpdateCacheArgs = {
 
 
 export type MutationUpdateCollectionImageUrlsArgs = {
+  count: Scalars['Int'];
+};
+
+
+export type MutationUpdateCollectionNameArgs = {
   count: Scalars['Int'];
 };
 
@@ -2278,6 +2284,11 @@ export type UpdateCollectionImageUrlsOutput = {
   message?: Maybe<Scalars['String']>;
 };
 
+export type UpdateCollectionNameOutput = {
+  __typename?: 'UpdateCollectionNameOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type UpdateCurationInput = {
   id: Scalars['ID'];
   items: Array<CurationItemInput>;
@@ -2755,15 +2766,6 @@ export type DeployedCollectionsQueryVariables = Exact<{
 
 
 export type DeployedCollectionsQuery = { __typename?: 'Query', collectionsByDeployer?: Array<{ __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null } | null> | null };
-
-export type ExternalListingsQueryVariables = Exact<{
-  contract: Scalars['Address'];
-  tokenId: Scalars['String'];
-  chainId: Scalars['String'];
-}>;
-
-
-export type ExternalListingsQuery = { __typename?: 'Query', externalListings?: { __typename?: 'ExternalListingsOutput', listings?: Array<{ __typename?: 'ExternalListing', url?: string | null, exchange?: SupportedExternalExchange | null, price?: string | null, highestOffer?: string | null, expiration?: any | null, creation?: any | null, baseCoin?: { __typename?: 'BaseCoin', symbol?: string | null, logoURI?: string | null, address?: string | null, decimals?: number | null } | null } | null> | null } | null };
 
 export type GetApprovedAssociationsQueryVariables = Exact<{
   profileUrl: Scalars['String'];
@@ -3689,26 +3691,6 @@ export const DeployedCollectionsDocument = gql`
     id
     contract
     name
-  }
-}
-    `;
-export const ExternalListingsDocument = gql`
-    query ExternalListings($contract: Address!, $tokenId: String!, $chainId: String!) {
-  externalListings(contract: $contract, tokenId: $tokenId, chainId: $chainId) {
-    listings {
-      url
-      exchange
-      price
-      highestOffer
-      expiration
-      creation
-      baseCoin {
-        symbol
-        logoURI
-        address
-        decimals
-      }
-    }
   }
 }
     `;
@@ -4775,9 +4757,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     DeployedCollections(variables: DeployedCollectionsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<DeployedCollectionsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeployedCollectionsQuery>(DeployedCollectionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeployedCollections', 'query');
-    },
-    ExternalListings(variables: ExternalListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ExternalListingsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ExternalListingsQuery>(ExternalListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ExternalListings', 'query');
     },
     getApprovedAssociations(variables: GetApprovedAssociationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetApprovedAssociationsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetApprovedAssociationsQuery>(GetApprovedAssociationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getApprovedAssociations', 'query');

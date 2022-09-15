@@ -4,7 +4,6 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
-import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -17,7 +16,6 @@ import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } fro
 import { tw } from 'utils/tw';
 
 import { EditListingsModal } from './EditListingsModal';
-import { LegacyListingTile } from './LegacyListingTile';
 import { SelectListingModal } from './SelectListingModal';
 
 import { BigNumber, ethers } from 'ethers';
@@ -48,12 +46,6 @@ export function ExternalListings(props: ExternalListingsProps) {
     props?.nft?.tokenId,
     String(props.nft?.wallet.chainId ?? chainId),
     props?.nft?.wallet?.address
-  );
-
-  const { data: legacyListings } = useExternalListingsQuery(
-    props?.nft?.contract,
-    props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId ?? chainId)
   );
 
   const {
@@ -149,26 +141,6 @@ export function ExternalListings(props: ExternalListingsProps) {
     stagePurchase,
     toggleCartSidebar
   ]);
-
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-    if (isNullOrEmpty(legacyListings)) {
-      return null;
-    }
-    return <div className={tw(
-      'flex w-full px-4',
-      'flex-col flex-wrap'
-    )}>
-      {legacyListings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
-        <div className='w-full pr-2' key={index}>
-          <LegacyListingTile
-            listing={listing}
-            nft={props.nft}
-            collectionName={props.collectionName}
-          />
-        </div>
-      ))}
-    </div>;
-  }
 
   if (isNullOrEmpty(listings)) {
     return (
