@@ -316,7 +316,7 @@ export function NFTCard(props: NFTCardProps) {
         {props.title && <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
           {props.title}
         </span>}
-        {(props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
+        {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
  
         {!isNullOrEmpty(props.description) && (
           <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
