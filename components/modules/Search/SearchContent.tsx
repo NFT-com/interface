@@ -77,7 +77,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
     };
 
     if (event.keyCode === 13){
-      if (target.value !== '' && searchResults && searchResults[0].found === 0 && searchResults[1].found === 0 ) {
+      if (target.value !== '' && searchResults && searchResults[0]?.found === 0 && searchResults[1]?.found === 0 ) {
         return;
       }
 
