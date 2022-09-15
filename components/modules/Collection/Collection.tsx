@@ -71,7 +71,7 @@ export function Collection(props: CollectionProps) {
     currentPage === 1 && props.contract && client.collections('nfts')
       .documents()
       .search({
-        'q'       : (id_nftName !== '' ? id_nftName : ''),
+        'q'       : id_nftName,
         'query_by': 'tokenId,nftName',
         'per_page': 8,
         'page'    : currentPage,
@@ -89,7 +89,7 @@ export function Collection(props: CollectionProps) {
       props.contract && client.collections('nfts')
         .documents()
         .search({
-          'q'       : (id_nftName !== '' ? id_nftName : ''),
+          'q'       : id_nftName,
           'query_by': 'tokenId,nftName',
           'per_page': 8,
           'page'    : currentPage,
