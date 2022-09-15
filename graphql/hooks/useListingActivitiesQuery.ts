@@ -21,7 +21,7 @@ export function useListingActivitiesQuery(contract: string, tokenId: string, cha
     tokenId;
     
   const { data } = useSWRImmutable(keyString, async () => {
-    if (isNullOrEmpty(contract) || isNullOrEmpty(tokenId) || isNullOrEmpty(chainId)) {
+    if (isNullOrEmpty(contract) || isNullOrEmpty(tokenId) || isNullOrEmpty(chainId) || isNullOrEmpty(owner)) {
       return [];
     }
     const result = await sdk.Activities({
