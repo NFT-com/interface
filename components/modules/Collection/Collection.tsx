@@ -76,7 +76,7 @@ export function Collection(props: CollectionProps) {
         'per_page': 8,
         'page'    : currentPage,
         'facet_by': 'contractName',
-        'filter_by': 'contractName:='+collectionData?.collection.name
+        'filter_by': 'contractName:='+collectionData?.collection?.name
       })
       .then(function (nftsResults) {
         setCollectionNfts([...nftsResults.hits]);
@@ -94,7 +94,7 @@ export function Collection(props: CollectionProps) {
           'per_page': 8,
           'page'    : currentPage,
           'facet_by': 'contractName',
-          'filter_by': 'contractName:='+collectionData?.collection.name
+          'filter_by': 'contractName:='+collectionData?.collection?.name
         })
         .then(function (nftsResults) {
           setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
@@ -138,7 +138,7 @@ export function Collection(props: CollectionProps) {
       </div>
       <div className='font-grotesk px-4 mt-9 max-w-nftcom mx-auto'>
         <h2 className="text-3xl font-bold">
-          {isNullOrEmpty(collectionName) && isNullOrEmpty(collectionData?.collection.name) ?
+          {isNullOrEmpty(collectionName) && isNullOrEmpty(collectionData?.collection?.name) ?
             (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
               <div className="w-full">
                 <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
