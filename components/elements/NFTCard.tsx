@@ -292,7 +292,14 @@ export function NFTCard(props: NFTCardProps) {
         {props.imageLayout !== 'row' && <span className={tw(
           'text-[#6F6F6F] text-sm pt-[10px]'
         )}>
-          {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
+          {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName)
+            ? (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+              <div className="w-full">
+                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
+              </div>
+              <span className="sr-only">Loading...</span>
+            </div>)
+            : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
         </span>}
         {props.title && <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
           {props.title}
