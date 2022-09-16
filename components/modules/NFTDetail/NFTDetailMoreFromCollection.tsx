@@ -77,6 +77,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 tokenId={nft.tokenId}
                 title={nft.metadata.name}
                 images={[nft?.previewLink || nft.metadata.imageURL]}
+                fallbackImage={nft.metadata.imageURL}
                 collectionName={props.collectionName}
                 onClick={() => {
                   if (nft.metadata.name) {

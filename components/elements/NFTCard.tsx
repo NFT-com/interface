@@ -43,6 +43,7 @@ export interface NFTCardProps {
   description?: string;
   profileURI?: string;
   images: Array<string | null>;
+  fallbackImage?: string;
   onClick: () => void;
   onSelectToggle?: (selected: boolean) => void;
   visible?: boolean;
@@ -262,6 +263,7 @@ export function NFTCard(props: NFTCardProps) {
                 containerClasses='w-full h-full overflow-hidden'
                 variant={RoundedCornerVariant.None}
                 src={processedImageURLs[0]}
+                fallbackImage={props.fallbackImage ? props.fallbackImage : null}
                 extraClasses="hover:scale-105 transition"
               />}
           </div> :
