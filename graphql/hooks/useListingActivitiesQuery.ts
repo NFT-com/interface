@@ -4,7 +4,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback } from 'react';
 import { mutate } from 'swr';
-import useSWRImmutable from 'swr/immutable';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 
 export interface ListingActivitiesData {
@@ -18,9 +18,10 @@ export function useListingActivitiesQuery(contract: string, tokenId: string, cha
   const keyString = 'ListingActivitiesQuery ' +
     chainId +
     contract +
-    tokenId;
+    tokenId +
+    owner;
     
-  const { data } = useSWRImmutable(keyString, async () => {
+  const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(contract) || isNullOrEmpty(tokenId) || isNullOrEmpty(chainId) || isNullOrEmpty(owner)) {
       return [];
     }
