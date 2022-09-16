@@ -73,7 +73,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
   }, [genesisKeyImage, genesisKeyMetadata, setKeyBackground]);
   
   return (
-    <div className="flex flex-col items-center text-primary-txt-dk h-max">
+    <div className="flex flex-col items-center text-primary-txt-dk h-[90%]">
       <KeyClaimVideo />
       {
         mintSuccess ?
