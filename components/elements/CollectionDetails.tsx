@@ -85,7 +85,8 @@ export const CollectionDetails = (props: CollectionDetailsProps) => {
       <div className='grid gap-4 grid-cols-4 w-full sm:grid-cols-2'>
         {(data ?? []).map((nft: Nft, index: number) => {
           return <NFTCard
-            images={[nft?.metadata?.imageURL]}
+            images={[nft?.previewLink || nft?.metadata?.imageURL]}
+            fallbackImage={nft?.metadata?.imageURL}
             title={nft?.metadata?.name}
             description={nft?.metadata?.description}
             contractAddress={nft?.contract}

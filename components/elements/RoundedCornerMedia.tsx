@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import React, { useEffect, useState } from 'react';
@@ -22,6 +23,7 @@ export enum RoundedCornerAmount {
 
 export interface RoundedCornerMediaProps {
   src: string;
+  fallbackImage?: string;
   variant: RoundedCornerVariant;
   amount?: RoundedCornerAmount;
   extraClasses?: string;
@@ -98,7 +100,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           key={props.src}
           src={imageSrc || props?.src}
           onError={() => {
-            setImageSrc(props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
+            setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
           }}
           className={tw(
             'object-cover absolute w-full h-full justify-center',
