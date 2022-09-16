@@ -75,14 +75,14 @@ export function Collection(props: CollectionProps) {
         'query_by': 'tokenId,nftName',
         'per_page': 8,
         'page'    : currentPage,
-        'facet_by': 'contractName',
-        'filter_by': collectionData?.collection?.name ? ('contractName:='+collectionData?.collection?.name) : ''
+        'facet_by': 'contractAddr',
+        'filter_by': collectionData?.collection?.contract ? ('contractAddr:='+collectionData?.collection?.contract) : ''
       })
       .then(function (nftsResults) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-  }, [client, collectionData?.collection?.name, currentPage, id_nftName, props.contract]);
+  }, [client, collectionData?.collection?.contract, currentPage, id_nftName, props.contract]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage !== prevVal) {
@@ -93,15 +93,15 @@ export function Collection(props: CollectionProps) {
           'query_by': 'tokenId,nftName',
           'per_page': 8,
           'page'    : currentPage,
-          'facet_by': 'contractName',
-          'filter_by': collectionData?.collection?.name ? ('contractName:='+collectionData?.collection?.name) : ''
+          'facet_by': 'contractAddr',
+          'filter_by': collectionData?.collection?.contract ? ('contractAddr:='+collectionData?.collection?.contract) : ''
         })
         .then(function (nftsResults) {
           setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
           setFound(nftsResults.found);
         });
     }
-  }, [client, collectionData?.collection?.name, collectionNfts, currentPage, id_nftName, prevVal, props.contract]);
+  }, [client, collectionData?.collection?.contract, collectionNfts, currentPage, id_nftName, prevVal, props.contract]);
 
   const theme = {
     p: (props: any) => {
