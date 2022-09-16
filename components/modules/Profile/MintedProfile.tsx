@@ -81,8 +81,6 @@ export function MintedProfile(props: MintedProfileProps) {
   const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
-
-  const showDeployedTab = getEnvBool(Doppler.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED) && draftDeployedContractsVisible;
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -238,7 +236,7 @@ export function MintedProfile(props: MintedProfileProps) {
           />
         </div>
         {
-          showDeployedTab &&
+          draftDeployedContractsVisible &&
           <div className={tw(
             'flex w-full px-12',
             editMode ? 'mt-8' : 'mt-8'
@@ -270,7 +268,7 @@ export function MintedProfile(props: MintedProfileProps) {
         <div
           className={tw(
             'h-full',
-            editMode && !showDeployedTab ? 'mt-28 minmd:mt-16' : 'mt-5 minmd:mt-0',
+            editMode && !draftDeployedContractsVisible ? 'mt-28 minmd:mt-16' : 'mt-5 minmd:mt-0',
             'w-full justify-start space-y-4 flex flex-col',
             selectedTab === 'nfts' ? 'flex' : 'hidden'
           )}
