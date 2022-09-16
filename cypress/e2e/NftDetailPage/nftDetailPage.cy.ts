@@ -7,8 +7,8 @@ describe('nft detail page tests', () => {
         req.alias = 'refreshNftMutation';
       } else if (req.body.operationName === 'Nft') {
         req.alias = 'NftQuery';
-      } else if (req.body.operationName === 'ExternalListings') {
-        req.alias = 'externalListings';
+      } else if (req.body.operationName === 'Activities') {
+        req.alias = 'activitiesQuery';
       }
     });
     cy.fixture('nft_details').then((json) => {
@@ -74,7 +74,7 @@ describe('nft detail page tests', () => {
   });
 
   it('should query for external marketplace listings', () => {
-    cy.wait('@externalListings').its('response.statusCode').should('eq', 200);
+    cy.wait('@activitiesQuery').its('response.statusCode').should('eq', 200);
   });
 });
   
