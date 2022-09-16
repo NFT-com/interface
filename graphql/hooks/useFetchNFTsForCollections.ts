@@ -25,7 +25,7 @@ export function useFetchNFTsForCollections(): FetchCollectionNFTsData {
     } catch (error) {
       setLoading(false);
       // todo: handle the error based on the error code.
-      return error.response.data.nftsForCollections ? error.response.data : null;
+      return null;
     }
   }, [sdk]);
 
