@@ -1,6 +1,5 @@
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { GenesisFooter } from 'components/modules/GenesisKeyAuction/GenesisFooter';
 import { SignedOutView } from 'components/modules/GenesisKeyAuction/SignedOutView';
 import { InsiderProfileClaim } from 'components/modules/ProfilePreferences/InsiderProfileClaim';
 import { ProfilePreferencesSearch } from 'components/modules/ProfilePreferences/ProfilePreferencesSearch';
@@ -76,9 +75,6 @@ export default function ProfilePreferencesPage() {
                 <ProfilePreferencesSearch />
           }
         </LoadedContainer>
-        <div className='flex items-center'>
-          <GenesisFooter />
-        </div>
       </div>
     </div>
   );

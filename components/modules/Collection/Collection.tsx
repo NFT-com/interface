@@ -75,14 +75,14 @@ export function Collection(props: CollectionProps) {
         'query_by': 'tokenId,nftName',
         'per_page': 8,
         'page'    : currentPage,
-        'facet_by': 'contractName',
-        'filter_by': collectionData?.collection?.name ? ('contractName:='+collectionData?.collection?.name) : ''
+        'facet_by': 'contractAddr',
+        'filter_by': collectionData?.collection?.contract ? ('contractAddr:='+collectionData?.collection?.contract) : ''
       })
       .then(function (nftsResults) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-  }, [client, collectionData?.collection?.name, currentPage, id_nftName, props.contract]);
+  }, [client, collectionData?.collection?.contract, currentPage, id_nftName, props.contract]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage !== prevVal) {
@@ -93,15 +93,15 @@ export function Collection(props: CollectionProps) {
           'query_by': 'tokenId,nftName',
           'per_page': 8,
           'page'    : currentPage,
-          'facet_by': 'contractName',
-          'filter_by': collectionData?.collection?.name ? ('contractName:='+collectionData?.collection?.name) : ''
+          'facet_by': 'contractAddr',
+          'filter_by': collectionData?.collection?.contract ? ('contractAddr:='+collectionData?.collection?.contract) : ''
         })
         .then(function (nftsResults) {
           setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
           setFound(nftsResults.found);
         });
     }
-  }, [client, collectionData?.collection?.name, collectionNfts, currentPage, id_nftName, prevVal, props.contract]);
+  }, [client, collectionData?.collection?.contract, collectionNfts, currentPage, id_nftName, prevVal, props.contract]);
 
   const theme = {
     p: (props: any) => {
@@ -294,36 +294,34 @@ export function Collection(props: CollectionProps) {
                   </Tab.List>
                 </Tab.Group>
               </div>
-              {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
+              <div
+                className={tw(
+                  sideNavOpen ? 'mr-5' : '',
+                  'w-full mb-6 minlg:mb-0 minlg:mr-3 items-center flex minlg:flex-auto')}
+                onClick={() => {
+                  if (screenWidth < 900) {
+                    setModalType('collectionFilters');
+                    setSearchModalOpen(true, 'collectionFilters' );
+                  } else {
+                    setSideNavOpen(!sideNavOpen);
+                  }
+                }}>
                 <div
                   className={tw(
-                    sideNavOpen ? 'mr-5' : '',
-                    'w-full mb-6 minlg:mb-0 minlg:mr-3 items-center flex minlg:flex-auto')}
-                  onClick={() => {
-                    if (screenWidth < 900) {
-                      setModalType('collectionFilters');
-                      setSearchModalOpen(true, 'collectionFilters' );
-                    } else {
-                      setSideNavOpen(!sideNavOpen);
-                    }
-                  }}>
-                  <div
-                    className={tw(
-                      'cursor-pointer w-full minlg:h-10',
-                      'bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px]',
-                      'flex items-center justify-center border border-[#D5D5D5]')}
-                  >
-                    <div className='minlg:hidden flex items-center justify-center'>
-                      <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
-                      <p>Filter</p>
-                    </div>
-                    <div className='hidden minlg:block'>
-                      {(!sideNavOpen || (sideNavOpen && selectedTab !== 'NFTs')) && <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>}
-                      {sideNavOpen && selectedTab === 'NFTs' && <p className="px-[6.5rem]">Close Filters</p>}
-                    </div>
+                    'cursor-pointer w-full minlg:h-10',
+                    'bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-[20px]',
+                    'flex items-center justify-center border border-[#D5D5D5]')}
+                >
+                  <div className='minlg:hidden flex items-center justify-center'>
+                    <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+                    <p>Filter</p>
+                  </div>
+                  <div className='hidden minlg:block'>
+                    {(!sideNavOpen || (sideNavOpen && selectedTab !== 'NFTs')) && <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>}
+                    {sideNavOpen && selectedTab === 'NFTs' && <p className="px-[6.5rem]">Close Filters</p>}
                   </div>
                 </div>
-              }
+              </div>
             </div>
             }
             {selectedTab === 'NFTs' &&

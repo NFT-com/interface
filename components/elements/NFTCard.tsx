@@ -10,7 +10,6 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
@@ -44,6 +43,7 @@ export interface NFTCardProps {
   description?: string;
   profileURI?: string;
   images: Array<string | null>;
+  fallbackImage?: string;
   onClick: () => void;
   onSelectToggle?: (selected: boolean) => void;
   visible?: boolean;
@@ -260,9 +260,11 @@ export function NFTCard(props: NFTCardProps) {
             { props.images.length === 0 || props.images[0] == null ?
               null :
               <RoundedCornerMedia
-                containerClasses='w-full h-full'
+                containerClasses='w-full h-full overflow-hidden'
                 variant={RoundedCornerVariant.None}
                 src={processedImageURLs[0]}
+                fallbackImage={props.fallbackImage ? props.fallbackImage : null}
+                extraClasses="hover:scale-105 transition"
               />}
           </div> :
           props.imageLayout === 'row' ?
@@ -272,7 +274,8 @@ export function NFTCard(props: NFTCardProps) {
                   key={image + index}
                   src={image}
                   variant={variantsForRow[index]}
-                  containerClasses='w-1/3'
+                  containerClasses='w-1/3 overflow-hidden'
+                  extraClasses='hover:scale-105 transition'
                   amount={RoundedCornerAmount.Medium}
                 />;
               })}
@@ -283,7 +286,8 @@ export function NFTCard(props: NFTCardProps) {
                   key={image + index}
                   src={image}
                   variant={RoundedCornerVariant.None}
-                  extraClasses='w-full rounded-3xl overflow-hidden'
+                  containerClasses="overflow-hidden"
+                  extraClasses='w-full rounded-3xl overflow-hidden hover:scale-105 transition'
                 />;
               })}
             </div>
@@ -314,7 +318,7 @@ export function NFTCard(props: NFTCardProps) {
             </div>
         }
 
-        {showListingIcons && !nft?.isOwnedByMe && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
+        {showListingIcons && !nft?.isOwnedByMe &&
           <div className='flex flex-col minmd:flex-row flex-wrap mt-3 justify-between'>
             <div className='flex flex-col pr-2'>
               <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>

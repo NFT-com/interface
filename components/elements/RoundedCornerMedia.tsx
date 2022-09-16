@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { useCheckFileType } from 'hooks/useCheckFileType';
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
@@ -23,6 +23,7 @@ export enum RoundedCornerAmount {
 
 export interface RoundedCornerMediaProps {
   src: string;
+  fallbackImage?: string;
   variant: RoundedCornerVariant;
   amount?: RoundedCornerAmount;
   extraClasses?: string;
@@ -55,7 +56,22 @@ const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmo
 };
 
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
-  const imageSrc = useCheckFileType(props?.src);
+  const [imageSrc, setImageSrc] = useState(null);
+  const url = props?.src?.split('?')[0];
+  const ext = url?.split('.').pop();
+  const imageFileTypes = ['webp', 'svg', 'gif', 'jpg', 'jpeg', 'png'];
+  useEffect(() => {
+    if(props?.src?.includes('?width=600')){
+      setImageSrc(props?.src);
+    } else {
+      if(ext === 'svg') {
+        setImageSrc(url);
+      } else {
+        setImageSrc(props?.src + '?width=600');
+      }
+    }
+  }, [props?.src, ext, url]);
+
   return (
     <div className={tw(
       'relative object-cover aspect-square',
@@ -64,19 +80,35 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     )}
     onClick={props?.onClick}
     >
-      <video
-        autoPlay
-        muted
-        loop
-        key={props.src}
-        src={imageSrc}
-        poster={imageSrc}
-        className={tw(
-          'object-cover absolute w-full h-full justify-center',
-          getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-          props.extraClasses
-        )}
-      />
+      {imageFileTypes.indexOf(ext) < 0 ?
+        <video
+          autoPlay
+          muted
+          loop
+          key={props?.src}
+          src={props?.src}
+          poster={props?.src}
+          className={tw(
+            'object-cover absolute w-full h-full justify-center',
+            getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+            props.extraClasses
+          )}
+        />
+        :
+        <img
+          alt='NFT Image'
+          key={props.src}
+          src={imageSrc || props?.src}
+          onError={() => {
+            setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
+          }}
+          className={tw(
+            'object-cover absolute w-full h-full justify-center',
+            getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+            props.extraClasses
+          )}
+        />
+      }
     </div>
   );
 });

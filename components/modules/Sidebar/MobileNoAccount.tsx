@@ -1,5 +1,4 @@
 import { useSidebar } from 'hooks/state/useSidebar';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -26,15 +25,13 @@ export default function MobileNoAccount({ setSignIn } : MobileNoAccountProps) {
             Sign in
         </a>
 
-        {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
-          <Link href='/app/discover' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
-            >
+        <Link href='/app/discover' passHref>
+          <a onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
+          >
             Discover
-            </a>
-          </Link>
-        }
+          </a>
+        </Link>
 
         <Link href='/app/gallery' passHref>
           <a onClick={() => setSidebarOpen(false)}
