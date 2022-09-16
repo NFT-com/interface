@@ -11,7 +11,6 @@ import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { GenesisFooter } from './GenesisFooter';
 import { AuctionType } from './GenesisKeyAuction';
 import { GenesisKeyWinnerView } from './GenesisKeyWinnerView';
 
@@ -74,7 +73,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
   }, [genesisKeyImage, genesisKeyMetadata, setKeyBackground]);
   
   return (
-    <div className="flex flex-col items-center text-primary-txt-dk h-[90%]">
+    <div className="flex flex-col items-center text-primary-txt-dk h-max">
       <KeyClaimVideo />
       {
         mintSuccess ?
@@ -224,11 +223,6 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
       {!mintSuccess && <div className='flex z-[20] justify-center px-4 minmd:px-0 mt-12 minmd:mt-40 '>
         <Image src={truststamps} alt="quant stamp" className='mb-4'/>
       </div>}
-      <div className='flex flex-col justify-end grow items-center'>
-        <div className='flex w-full items-center'>
-          <GenesisFooter />
-        </div>
-      </div>
     </div>
   );
 }

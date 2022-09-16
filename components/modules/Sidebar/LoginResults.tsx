@@ -4,8 +4,6 @@ import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 
-import SidebarNoProfiles from './NoProfiles';
-
 import { XIcon } from '@heroicons/react/solid';
 import { motion } from 'framer-motion';
 import { XCircle } from 'phosphor-react';
@@ -132,10 +130,6 @@ export default function LoginResults({ profileValue, hiddenProfile }: LoginResul
           : null
         }
       </div>
-
-      {!myOwnedProfileTokens.length &&
-        <SidebarNoProfiles/>
-      }
     </motion.div>
   );
 }
