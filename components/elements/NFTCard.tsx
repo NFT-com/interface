@@ -2,8 +2,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, SeaportProtocolData, SupportedExternalExchange } from 'graphql/generated/types';
-import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
+import { LooksrareProtocolData, SeaportProtocolData } from 'graphql/generated/types';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -11,7 +10,6 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
@@ -107,12 +105,6 @@ export function NFTCard(props: NFTCardProps) {
     defaultChainId,
     nft?.wallet?.address
   );
-  
-  const { data: legacyListings } = useExternalListingsQuery(
-    props?.contractAddress,
-    props?.tokenId,
-    defaultChainId
-  );
 
   const lowestListing = getLowestPriceListing(listings, ethPriceUsd, defaultChainId);
   const lowestPrice = getListingPrice(lowestListing);
@@ -138,28 +130,16 @@ export function NFTCard(props: NFTCardProps) {
   }, [pink, secondaryText]);
 
   const showListingIcons: boolean = useMemo(() => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-      return !isNullOrEmpty(listings);
-    } else {
-      return !isNullOrEmpty(legacyListings?.filter((l) => !isNullOrEmpty(l.url)));
-    }
-  }, [legacyListings, listings]);
+    return !isNullOrEmpty(listings);
+  }, [listings]);
 
   const showOpenseaListingIcon: boolean = useMemo(() => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-      return listings?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
-    } else {
-      return legacyListings?.find(listing => listing.price != null && listing.exchange === SupportedExternalExchange.Opensea) != null;
-    }
-  }, [listings, legacyListings]);
+    return listings?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
+  }, [listings]);
 
   const showLooksrareListingIcon: boolean = useMemo(() => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-      return listings?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
-    } else {
-      return legacyListings?.find(listing => listing.price != null && listing.exchange === SupportedExternalExchange.Looksrare) != null;
-    }
-  }, [legacyListings, listings]);
+    return listings?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
+  }, [listings]);
 
   return (
     <div
@@ -316,7 +296,7 @@ export function NFTCard(props: NFTCardProps) {
         {props.title && <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
           {props.title}
         </span>}
-        {(props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
+        {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
  
         {!isNullOrEmpty(props.description) && (
           <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
@@ -333,7 +313,7 @@ export function NFTCard(props: NFTCardProps) {
             </div>
         }
 
-        {showListingIcons && !nft?.isOwnedByMe && getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
+        {showListingIcons && !nft?.isOwnedByMe &&
           <div className='flex flex-col minmd:flex-row flex-wrap mt-3 justify-between'>
             <div className='flex flex-col pr-2'>
               <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>

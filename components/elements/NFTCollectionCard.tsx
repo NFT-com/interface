@@ -9,7 +9,7 @@ import { useNetwork } from 'wagmi';
 
 export interface NFTCollectionCardProps {
   contract: string
-  count: number
+  count?: number
   images: string[]
   onClick: () => void
   customBackground?: string

@@ -2,8 +2,9 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { Maybe } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { isNullOrEmpty, max, min } from 'utils/helpers';
+import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { multiplyBasisPoints } from 'utils/seaportHelpers';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
@@ -35,6 +36,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
+  const { getByContractAddress } = useSupportedCurrencies();
   
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -52,26 +54,36 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       revalidateOnFocus: false,
     });
 
-  const getMaxMarketplaceFees = useCallback(() => {
+  const getMaxMarketplaceFeesUSD: () => number = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
       const feesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+        const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
         if (target.protocol === ExternalProtocol.LooksRare) {
           // Looksrare fee is fetched from the smart contract.
-          return BigNumber.from(looksrareProtocolFeeBps == null
+          const fee = BigNumber.from(looksrareProtocolFeeBps == null
             ? 0
-            : multiplyBasisPoints(target?.startingPrice ?? 0, looksrareProtocolFeeBps));
+            : multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, looksrareProtocolFeeBps));
+          return currencyData?.usd(Number(ethers.utils.formatUnits(
+            fee,
+            currencyData.decimals ?? 18
+          ))) ?? 0;
         } else {
           // Seaport fee is hard-coded in our codebase and not expected to change.
-          return BigNumber.from(multiplyBasisPoints(target?.startingPrice ?? 0, 250));
+          const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, 250));
+          return currencyData?.usd(Number(ethers.utils.formatUnits(
+            fee,
+            currencyData.decimals ?? 18
+          ))) ?? 0;
         }
       });
-      return cartTotal.add(max(...feesByMarketplace) ?? 0);
-    }, BigNumber.from(0));
-  }, [toList, looksrareProtocolFeeBps]);
+      return cartTotal + Math.max(...feesByMarketplace);
+    }, 0);
+  }, [toList, getByContractAddress, looksrareProtocolFeeBps]);
  
-  const getMaxRoyaltyFees = useCallback(() => {
+  const getMaxRoyaltyFeesUSD: () => number = useCallback(() => {
     return toList?.reduce((cartTotal, stagedListing) => {
       const royaltiesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+        const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
         if (target.protocol === ExternalProtocol.LooksRare) {
           const minAskAmount = BigNumber.from(target?.looksrareOrder?.minPercentageToAsk ?? 0)
             .div(10000)
@@ -79,16 +91,24 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
           const marketplaceFeeAmount = BigNumber.from(looksrareProtocolFeeBps ?? 0)
             .div(10000)
             .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
-          return minAskAmount.sub(marketplaceFeeAmount);
+          const royalty = minAskAmount.sub(marketplaceFeeAmount);
+          return currencyData?.usd(Number(ethers.utils.formatUnits(
+            royalty,
+            currencyData.decimals ?? 18
+          ))) ?? 0;
         } else {
-          return BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
+          const royalty = BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
             target?.seaportParameters?.consideration[2].startAmount :
             0);
+          return currencyData?.usd(Number(ethers.utils.formatUnits(
+            royalty,
+            currencyData.decimals ?? 18
+          ))) ?? 0;
         }
       });
-      return cartTotal.add(max(...royaltiesByMarketplace) ?? 0);
-    }, BigNumber.from(0));
-  }, [looksrareProtocolFeeBps, toList]);
+      return cartTotal + Math.max(...royaltiesByMarketplace);
+    }, 0);
+  }, [looksrareProtocolFeeBps, toList, getByContractAddress]);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
@@ -96,16 +116,20 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     }, 0);
   }, [toList]);
 
-  const getTotalMinimumProfit = useCallback(() => {
+  const getTotalMinimumProfitUSD: () => number = useCallback(() => {
     const total = toList?.reduce((cartTotal, stagedListing) => {
       const targetValues = stagedListing.targets.map((target) => {
-        return BigNumber.from(target?.startingPrice ?? stagedListing?.startingPrice ?? 0);
+        const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          BigNumber.from(stagedListing.startingPrice ?? target.startingPrice ?? 0),
+          currencyData?.decimals ?? 18
+        ))) ?? 0;
       });
-      return cartTotal.add(min(...targetValues) ?? 0);
-    }, BigNumber.from(0));
+      return cartTotal + Math.min(...targetValues);
+    }, 0);
 
-    return total.sub(getMaxMarketplaceFees()).sub(getMaxRoyaltyFees());
-  } , [getMaxMarketplaceFees, getMaxRoyaltyFees, toList]);
+    return total - getMaxMarketplaceFeesUSD() - getMaxRoyaltyFeesUSD();
+  } , [getByContractAddress, getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, toList]);
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
@@ -113,6 +137,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport)
     );
   }, [toList]);
+  
   const getSummaryContent = useCallback(() => {
     if (success) {
       return <div className='my-8'>
@@ -148,7 +173,10 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               {
                 label: 'Approve Collections for Sale',
                 error: error === 'ApprovalError',
-                items: toList?.map((stagedListing) => {
+                items: filterDuplicates(
+                  toList,
+                  (first, second) => first.nft?.contract === second.nft?.contract
+                )?.map((stagedListing) => {
                   return stagedListing.targets.map((target: ListingTarget) => {
                     const approved = target.protocol === ExternalProtocol.LooksRare ?
                       stagedListing?.isApprovedForLooksrare :
@@ -201,8 +229,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{ethers.utils.formatEther(getMaxMarketplaceFees() ?? 0) + ' WETH'}</span>
-              {/* <span>todo: fees in usd</span> */}
+              <span className='font-semibold'>{'$' + (getMaxMarketplaceFeesUSD()?.toFixed(2) ?? 0) }</span>
             </div>
           </div>
           <div className="mx-4 my-4 flex items-center justify-between">
@@ -213,8 +240,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className="flex flex-col justify-end">
-              <span className="font-semibold">{ethers.utils.formatEther(getMaxRoyaltyFees() ?? 0) + ' WETH'}</span>
-              {/* <span>todo: royalties in USD</span> */}
+              <span className="font-semibold">{'$' + (getMaxRoyaltyFeesUSD()?.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className='px-8 border-t border-[#D5D5D5] w-full'/>
@@ -226,7 +252,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className='flex flex-col justify-end'>
-              <span className='font-semibold'>{ethers.utils.formatEther(getTotalMinimumProfit() ?? 0) + ' WETH'}</span>
+              <span className='font-semibold'>{'$' + (getTotalMinimumProfitUSD()?.toFixed(2) ?? 0)}</span>
             </div>
           </div>
         </>
@@ -234,11 +260,11 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     }
   }, [
     error,
-    getMaxMarketplaceFees,
-    getMaxRoyaltyFees,
+    getMaxMarketplaceFeesUSD,
+    getMaxRoyaltyFeesUSD,
     getNeedsApprovals,
     getTotalListings,
-    getTotalMinimumProfit,
+    getTotalMinimumProfitUSD,
     showProgressBar,
     success,
     toList
@@ -300,10 +326,14 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                 }
 
                 if (getNeedsApprovals()) {
-                  for (let i = 0; i < toList.length; i++) {
-                    const stagedListing = toList[i];
-                    for (let j = 0; j < toList[i].targets.length; j++) {
-                      const protocol = toList[i].targets[j].protocol;
+                  const uniqueCollections = filterDuplicates(
+                    toList,
+                    (first, second) => first.nft?.contract === second.nft?.contract
+                  );
+                  for (let i = 0; i < uniqueCollections.length; i++) {
+                    const stagedListing = uniqueCollections[i];
+                    for (let j = 0; j < uniqueCollections[i].targets.length; j++) {
+                      const protocol = uniqueCollections[i].targets[j].protocol;
                       const approved = protocol === ExternalProtocol.LooksRare ?
                         stagedListing?.isApprovedForLooksrare :
                         stagedListing?.isApprovedForSeaport;
@@ -365,7 +395,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             <div className='w-full mt-4'>
               <Button
                 stretch
-                label={'Cancel Purchase'}
+                label={'Cancel'}
                 onClick={() => {
                   setSuccess(false);
                   setShowProgressBar(false);

@@ -182,7 +182,7 @@ export function GenesisKeyAuction() {
         >
           <div
             className={tw(
-              'flex flex-col w-full h-full items-center mt-20',
+              'flex flex-col w-full h-full items-center pt-20',
             )}>
             {currentAddress && !isSupported && <NetworkErrorTile />}
             <LoadedContainer loaded={firstLoaded} fitToParent>

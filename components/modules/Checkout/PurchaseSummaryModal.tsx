@@ -87,7 +87,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const getTotalPriceUSD = useCallback(() => {
     return toBuy?.reduce((acc, curr) => {
       const currencyData = getByContractAddress(curr.currency);
-      const formattedPrice = Number(ethers.utils.formatUnits(curr.price, currencyData?.decimals ?? 0));
+      const formattedPrice = Number(ethers.utils.formatUnits(curr.price, currencyData?.decimals ?? 18));
       return acc + currencyData?.usd(formattedPrice);
     }, 0).toFixed(2);
   }, [toBuy, getByContractAddress]);
@@ -101,11 +101,11 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             : multiplyBasisPoints(stagedPurchase?.price ?? 0, looksrareProtocolFeeBps)
         );
         const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 0)));
+        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
       } else {
         const fee = BigNumber.from(multiplyBasisPoints(stagedPurchase?.price ?? 0, 250));
         const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 0)));
+        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
       }
     }, 0);
   }, [toBuy, looksrareProtocolFeeBps, getByContractAddress]);
@@ -122,14 +122,14 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           .mul(BigNumber.from(protocolData?.price ?? 0));
         const royalty = minAskAmount.sub(marketplaceFeeAmount);
         const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 0)));
+        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
       } else {
         const protocolData = stagedPurchase?.protocolData as SeaportProtocolData;
         const royalty = BigNumber.from(protocolData?.parameters?.consideration.length === 3 ?
           protocolData?.parameters?.consideration[2].startAmount :
           0);
         const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 0)));
+        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
       }
     }, 0);
   }, [getByContractAddress, looksrareProtocolFeeBps, toBuy]);

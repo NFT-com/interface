@@ -9,9 +9,7 @@ import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollect
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import NotFoundPage from 'pages/404';
 import { ResultsPageProps } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
@@ -37,14 +35,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const { width: screenWidth } = useWindowDimensions();
-  const [results, setResults] = useState([]);
-  const [found, setFound] = useState(0);
+  const results = useRef([]);
+  const found = useRef(0);
   const [page, setPage] = useState(1);
-  const prevVal = usePrevious(page);
-  const prevSearchTerm = usePrevious(searchTerm);
   const [filters, setFilters] = useState([]);
   const [collectionsSliderData, setCollectionsSliderData] = useState(null);
   const [nftsForCollections, setNftsForCollections] = useState(null);
+  const prevVal = usePrevious(page);
+  const prevSearchTerm = usePrevious(searchTerm);
   let addressesList = [];
 
   const sortedResults = useCallback((results) => {
@@ -90,7 +88,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       return nft.document?.contractAddr;
     });
   } else {
-    addressesList = results?.map((nft) => {
+    addressesList = results.current?.map((nft) => {
       return nft.document?.contractAddr;
     });
   }
@@ -123,8 +121,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       sort_by: nftsPageSortyBy,
     }] })
       .then((resp) => {
-        setResults([...sortedResults(resp.results[0].hits)]);
-        setFound(resp.results[0].found);
+        results.current = [...sortedResults(resp.results[0].hits)];
+        found.current = resp.results[0].found;
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
   },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
@@ -143,16 +141,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         sort_by: nftsPageSortyBy,
       }] })
         .then((resp) => {
-          setResults([...results,...sortedResults(resp.results[0].hits)]);
-          setFound(resp.results[0].found);
+          results.current = [...results.current,...sortedResults(resp.results[0].hits)];
+          found.current = resp.results[0].found;
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
   }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
-
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED)) {
-    return <NotFoundPage />;
-  }
 
   return (
     <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen overflow-hidden">
@@ -190,7 +184,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 <CollectionsResults searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
               <div className="flex justify-between items-center mt-7 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
                 <div>
-                  {found + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'COLLECTION') + `${found === 1 ? '' : 'S'}`}
+                  {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'COLLECTION') + `${found.current === 1 ? '' : 'S'}`}
                 </div>
                 {searchType?.toString() === 'allResults' && <span
                   className="cursor-pointer hover:font-semibold"
@@ -223,7 +217,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 'mt-4',
                 searchType?.toString() === 'collections' ? `minmd:grid minmd:grid-cols-2 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : 'minlg:grid-cols-3 minxl:grid-cols-4'}` : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-3' : 'minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-4'} `,
                 searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
-                {results && results.map((item, index) => {
+                {results && results.current.map((item, index) => {
                   const collectionImages = nftsForCollections?.filter(i => i.collectionAddress === item.document.contractAddr);
                   return (
                     <div key={index}
@@ -266,7 +260,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     </div>);
                 })}
               </div>
-              {results.length < found && <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
+              {results.current.length < found.current && <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
                 <Button
                   color={'black'}
                   accent={AccentType.SCALE}

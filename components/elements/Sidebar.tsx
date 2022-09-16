@@ -11,7 +11,6 @@ import { useUser } from 'hooks/state/useUser';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, prettify, shortenAddress } from 'utils/helpers';
 import { randomLabelGenerator } from 'utils/randomLabelGenerator';
 import { tw } from 'utils/tw';
@@ -23,7 +22,7 @@ import { utils } from 'ethers';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Bell, GearSix, SignOut, User, Wallet, XCircle } from 'phosphor-react';
+import { Bell, ChartLine, GearSix, SignOut, User, Wallet, XCircle } from 'phosphor-react';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
@@ -135,25 +134,22 @@ export const Sidebar = () => {
                 : <Bell weight='fill' className='mr-2' />}
                 Notifications
             </a>
-            {getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-            <>
-              <Link href='/app/activity' passHref>
-                <a onClick={() => setSidebarOpen(false)}
-                  className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'
-                >
-                  <User weight='fill' className='mr-2' /> My Activity
-                </a>
-              </Link>
 
-              <Link href='/app/assets' passHref>
-                <a onClick={() => setSidebarOpen(false)}
-                  className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'
-                >
-                  <User weight='fill' className='mr-2' /> My Assets
-                </a>
-              </Link>
-            </>
-            }
+            <Link href='/app/activity' passHref>
+              <a onClick={() => setSidebarOpen(false)}
+                className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'
+              >
+                <ChartLine weight='fill' className='mr-2' /> My Activity
+              </a>
+            </Link>
+
+            <Link href='/app/assets' passHref>
+              <a onClick={() => setSidebarOpen(false)}
+                className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'
+              >
+                <User weight='fill' className='mr-2' /> My Assets
+              </a>
+            </Link>
 
             <Link href='/app/settings' passHref>
               <a onClick={() => setSidebarOpen(false)}
@@ -175,7 +171,6 @@ export const Sidebar = () => {
             </a>
           </div>
 
-          {getEnvBool(Doppler.NEXT_PUBLIC_SEARCH_ENABLED) &&
           <Link href='/app/discover' passHref>
             <a onClick={() => setSidebarOpen(false)}
               className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
@@ -183,7 +178,6 @@ export const Sidebar = () => {
             Discover
             </a>
           </Link>
-          }
 
           <Link href='/app/gallery' passHref>
             <a onClick={() => setSidebarOpen(false)}

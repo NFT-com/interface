@@ -5,18 +5,17 @@ import ReactRotatingText from 'react-rotating-text';
 
 export interface HeroTitleProps {
   items: string[]
-  color?: 'blue' | 'pink' | 'black'
+  color?: 'blue' | 'pink' | 'black' | 'white'
 }
 
 export function HeroTitle(props: HeroTitleProps) {
   return (
     <div
       className={tw(
-        props.color === 'black'
-          ? 'text-primary-txt' :
-          props.color === 'blue' ?
-            'text-[#00A4FF]'
-            : 'text-hero-pink',
+        props.color === 'black' && 'text-primary-txt',
+        props.color === 'blue' && 'text-[#00A4FF]',
+        props.color === 'pink' && 'text-hero-pink',
+        props.color === 'white' && 'text-white',
         'text-2xl minmd:text-5xl minxl:text-6xl',
         'z-30 text-center font-normal font-grotesk',
         'max-w-[30rem] minmd:max-w-[43rem] minxl:max-w-[100rem]',

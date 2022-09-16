@@ -4,20 +4,18 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
-import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { tw } from 'utils/tw';
 
 import { EditListingsModal } from './EditListingsModal';
-import { LegacyListingTile } from './LegacyListingTile';
 import { SelectListingModal } from './SelectListingModal';
 
 import { BigNumber, ethers } from 'ethers';
@@ -42,18 +40,15 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const [editListingsModalOpen, setEditListingsModalOpen] = useState(false);
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
+
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   
   const { data: listings } = useListingActivitiesQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
     String(props.nft?.wallet.chainId ?? chainId),
     props?.nft?.wallet?.address
-  );
-
-  const { data: legacyListings } = useExternalListingsQuery(
-    props?.nft?.contract,
-    props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId ?? chainId)
   );
 
   const {
@@ -93,7 +88,9 @@ export function ExternalListings(props: ExternalListingsProps) {
   }, [listings]);
 
   const getListingSummaryButtons = useCallback(() => {
-    if (currentAddress === props.nft?.wallet?.address) {
+    if (!hasGks) {
+      return null;
+    } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
         stretch
         label={listings.length > 1 ? 'Edit Listings' : 'Edit Listing'}
@@ -139,6 +136,7 @@ export function ExternalListings(props: ExternalListingsProps) {
       />;
     }
   }, [
+    hasGks,
     chainId,
     nftInPurchaseCart,
     currentAddress,
@@ -150,30 +148,9 @@ export function ExternalListings(props: ExternalListingsProps) {
     toggleCartSidebar
   ]);
 
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-    if (isNullOrEmpty(legacyListings)) {
-      return null;
-    }
-    return <div className={tw(
-      'flex w-full px-4',
-      'flex-col flex-wrap'
-    )}>
-      {legacyListings?.filter((l) => !isNullOrEmpty(l.url))?.map((listing, index) => (
-        <div className='w-full pr-2' key={index}>
-          <LegacyListingTile
-            listing={listing}
-            nft={props.nft}
-            collectionName={props.collectionName}
-          />
-        </div>
-      ))}
-    </div>;
-  }
-
   if (isNullOrEmpty(listings)) {
     return (
-      getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED) &&
-        currentAddress === props.nft?.wallet?.address &&
+      currentAddress === props.nft?.wallet?.address && hasGks &&
         <div className={tw(
           'w-full flex p-4',
         )}>
@@ -217,7 +194,10 @@ export function ExternalListings(props: ExternalListingsProps) {
         setEditListingsModalOpen(false);
       }} />
     <SelectListingModal
-      listings={listings}
+      listings={[
+        getLowestPriceListing(listings, ethPriceUsd, chainId, ExternalProtocol.Seaport),
+        getLowestPriceListing(listings, ethPriceUsd, chainId, ExternalProtocol.LooksRare)
+      ]}
       nft={props.nft}
       collectionName={props.collectionName}
       visible={selectListingModalOpen}

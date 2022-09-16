@@ -1,11 +1,9 @@
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
-import { useExternalListingsQuery } from 'graphql/hooks/useExternalListingsQuery';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -42,12 +40,6 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return await getContractMetadata(nft?.contract, defaultChainId);
   });
   
-  const { data: legacyListings, mutate: mutateLegacyListings } = useExternalListingsQuery(
-    nft?.contract,
-    nft?.tokenId,
-    defaultChainId
-  );
-
   const { data: listings } = useListingActivitiesQuery(
     nft?.contract,
     nft?.tokenId,
@@ -64,12 +56,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
 
   const showListings = useMemo(() => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_ROUTER_ENABLED)) {
-      return !isNullOrEmpty(listings);
-    } else {
-      return !isNullOrEmpty(legacyListings.filter(x => !isNullOrEmpty(x.url)));
-    }
-  }, [legacyListings, listings]);
+    return !isNullOrEmpty(listings);
+  }, [listings]);
 
   return (
     <div className="flex flex-col pt-20 items-center w-full">
@@ -92,7 +80,6 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         <div className='flex minxl:w-1/2 w-full'>
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
-            mutateLegacyListings();
           }} key={nft?.id} />
         </div>
         {(showListings || nft?.wallet?.address === currentAddress) ?
