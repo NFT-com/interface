@@ -262,7 +262,7 @@ export function NFTCard(props: NFTCardProps) {
                 containerClasses='w-full h-full overflow-hidden'
                 variant={RoundedCornerVariant.None}
                 src={processedImageURLs[0]}
-                extraClasses="hover:scale-105"
+                extraClasses="hover:scale-105 transition"
               />}
           </div> :
           props.imageLayout === 'row' ?
@@ -273,7 +273,7 @@ export function NFTCard(props: NFTCardProps) {
                   src={image}
                   variant={variantsForRow[index]}
                   containerClasses='w-1/3 overflow-hidden'
-                  extraClasses='hover:scale-105'
+                  extraClasses='hover:scale-105 transition'
                   amount={RoundedCornerAmount.Medium}
                 />;
               })}
@@ -285,7 +285,7 @@ export function NFTCard(props: NFTCardProps) {
                   src={image}
                   variant={RoundedCornerVariant.None}
                   containerClasses="overflow-hidden"
-                  extraClasses='w-full rounded-3xl overflow-hidden hover:scale-105'
+                  extraClasses='w-full rounded-3xl overflow-hidden hover:scale-105 transition'
                 />;
               })}
             </div>
