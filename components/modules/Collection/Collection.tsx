@@ -23,7 +23,7 @@ import { CollectionInfo } from './CollectionInfo';
 import { Tab } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { ExternalLink as LinkIcon } from 'react-feather';
@@ -35,6 +35,8 @@ export interface CollectionProps {
 }
 
 export function Collection(props: CollectionProps) {
+  const router = useRouter();
+  const { contractAddr } = router.query;
   const { width: screenWidth } = useWindowDimensions();
   const { setSearchModalOpen, id_nftName, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
   const { usePrevious } = usePreviousValue();
@@ -75,14 +77,14 @@ export function Collection(props: CollectionProps) {
         'query_by': 'tokenId,nftName',
         'per_page': 8,
         'page'    : currentPage,
-        'facet_by': 'contractName',
-        'filter_by': collectionData?.collection?.name ? ('contractName:='+collectionData?.collection?.name) : ''
+        'facet_by': 'contractAddr',
+        'filter_by': 'contractAddr:='+contractAddr.toString()
       })
       .then(function (nftsResults) {
         setCollectionNfts([...nftsResults.hits]);
         setFound(nftsResults.found);
       });
-  }, [client, collectionData?.collection?.name, currentPage, id_nftName, props.contract]);
+  }, [client, contractAddr, currentPage, id_nftName, props.contract]);
 
   useEffect(() => {
     if (currentPage > 1 && currentPage !== prevVal) {
@@ -93,15 +95,15 @@ export function Collection(props: CollectionProps) {
           'query_by': 'tokenId,nftName',
           'per_page': 8,
           'page'    : currentPage,
-          'facet_by': 'contractName',
-          'filter_by': collectionData?.collection?.name ? ('contractName:='+collectionData?.collection?.name) : ''
+          'facet_by': 'contractAddr',
+          'filter_by': 'contractAddr:='+contractAddr.toString()
         })
         .then(function (nftsResults) {
           setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
           setFound(nftsResults.found);
         });
     }
-  }, [client, collectionData?.collection?.name, collectionNfts, currentPage, id_nftName, prevVal, props.contract]);
+  }, [client, collectionNfts, contractAddr, currentPage, id_nftName, prevVal, props.contract]);
 
   const theme = {
     p: (props: any) => {

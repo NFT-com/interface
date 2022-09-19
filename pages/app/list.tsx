@@ -24,7 +24,7 @@ export default function ListPage() {
             router.back();
           }}
         >
-          <ArrowLeft size={24} color="black" />
+          <ArrowLeft size={24} color="black" className='ListingPageBackButton' />
         </div>
         <h1 className='text-3xl font-normal ml-4'>Create Listings</h1>
       </div>
