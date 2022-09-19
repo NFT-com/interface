@@ -23,10 +23,10 @@ export const SearchModal = () => {
       } }
     >
       <div className={tw(
-        'absolute top-0 left-0 h-screen overflow-scroll w-screen',
+        'absolute top-0 left-0 min-h-screen overflow-scroll w-screen',
         'bg-white',
         'text-primary-txt',
-        'py-5'
+        'py-12'
       )}>
         {modalType === 'search' && <SearchContent />}
         {modalType === 'filters' && <NFTsFiltersContent />}
