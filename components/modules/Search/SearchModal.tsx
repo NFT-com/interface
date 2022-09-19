@@ -26,7 +26,7 @@ export const SearchModal = () => {
         'absolute top-0 left-0 h-screen overflow-scroll w-screen',
         'bg-white',
         'text-primary-txt',
-        'py-5'
+        'py-12'
       )}>
         {modalType === 'search' && <SearchContent />}
         {modalType === 'filters' && <NFTsFiltersContent />}

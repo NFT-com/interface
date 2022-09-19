@@ -139,7 +139,7 @@ const EmblaCarousel = (props: slidesProps) => {
           <div className="embla__viewport" ref={viewportRef}>
             <div className="embla__container">
               {props.slides.map((slide: any, index) => (
-                <div className={sideNavOpen ? 'embla__slideSideNavClosed' : 'embla__slidefull'} key={index}>
+                <div className={sideNavOpen ? screenWidth > 900 ? 'embla__slideSideNavClosed' : 'embla__slidefull' : 'embla__slidefull'} key={index}>
                   <div className="embla__slide__inner">
                     <div className="embla__slide__item">
                       <CollectionItem
