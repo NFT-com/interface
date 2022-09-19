@@ -25,9 +25,8 @@
     "cypress:record": "cypress run --record",
     "instrument": "npx nyc instrument --compact=false ./ instrumented",
     "synpress:run": "start-server-and-test dev 3000 synpress:run-only",
-    "synpress:run-only": "doppler run -- synpress run --configFile cypress.config.ts -b electron",
-    "synpress:open": "start-server-and-test dev 3000 synpress:open-only",
-    "synpress:open-only": "doppler run -- synpress open --configFile cypress.config.ts"
+    "synpress:run-only": "doppler run -- synpress run --configFile cypress.config.ts -b chrome"
+
   },
   "resolutions": {
     "glob-parent": "^6.0.1",

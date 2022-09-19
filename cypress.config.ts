@@ -5,8 +5,6 @@ import { defineConfig } from 'cypress';
 export default defineConfig({
   userAgent: 'synpress',
   chromeWebSecurity: true,
-  viewportWidth: 1920,
-  viewportHeight: 1080,
   projectId: '1gkqo9',
   component: {
     devServer: {
