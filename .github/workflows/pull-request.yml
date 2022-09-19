@@ -145,6 +145,7 @@ jobs:
       with:
         install: false
         start: yarn start
+        command: yarn synpress:run-only
         component: false
         browser: chrome
         record: true
@@ -155,6 +156,8 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NETWORK_NAME: ${{ secrets.NETWORK_NAME }}
+        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
     
     - name: ✅ Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.0
