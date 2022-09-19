@@ -1,9 +1,12 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import codeCoverageTask from '@cypress/code-coverage/task';
+import setupSynpressNodeEvents from '@synthetixio/synpress/plugins/index';
 import { defineConfig } from 'cypress';
 
 export default defineConfig({
+  userAgent: 'synpress',
+  chromeWebSecurity: true,
+  viewportWidth: 1920,
+  viewportHeight: 1080,
   projectId: '1gkqo9',
   component: {
     devServer: {
@@ -24,8 +27,9 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       codeCoverageTask(on, config);
 
-      return config;
+      return setupSynpressNodeEvents(on, config);
     },
     retries: 1
   },
 });
+
