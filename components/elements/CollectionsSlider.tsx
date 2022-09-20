@@ -1,6 +1,7 @@
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { collectionCardImages } from 'utils/helpers';
 
 import useEmblaCarousel from 'embla-carousel-react';
 import React, { useCallback,useEffect, useState } from 'react';
@@ -125,11 +126,7 @@ const EmblaCarousel = (props: slidesProps) => {
           return <CollectionItem
             key={index}
             contractAddr={slide.collectionAddress}
-            images={[
-              slide.nfts[0]?.metadata?.imageURL,
-              slide.nfts[1]?.metadata?.imageURL,
-              slide.nfts[2]?.metadata?.imageURL,
-            ]}
+            images={collectionCardImages(slide)}
             count={slide.actualNumberOfNFTs}/>;
         })}
       </div>
@@ -144,11 +141,7 @@ const EmblaCarousel = (props: slidesProps) => {
                     <div className="embla__slide__item">
                       <CollectionItem
                         contractAddr={slide?.collectionAddress}
-                        images={[
-                          slide.nfts[0]?.metadata?.imageURL,
-                          slide.nfts[1]?.metadata?.imageURL,
-                          slide.nfts[2]?.metadata?.imageURL,
-                        ]}
+                        images={collectionCardImages(slide)}
                         count={slide.nfts.length}
                       />
                     </div>

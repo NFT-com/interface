@@ -2,7 +2,6 @@ import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
-import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -38,12 +37,6 @@ export default function AssetTableRow({
   });
   const collectionName = collectionMetadata?.contractMetadata?.name;
 
-  const { data: listings } = useListingActivitiesQuery(
-    item?.contract,
-    item?.tokenId,
-    defaultChainId,
-    null
-  );
   const { data: profiles } = useProfilesByDisplayedNft(
     item?.contract,
     item?.tokenId,
@@ -113,7 +106,7 @@ export default function AssetTableRow({
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {listings.length ? <p>Listed</p> : <p>—</p>}
+          {item?.listings?.items?.length ? <p>Listed</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >

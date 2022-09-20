@@ -17,6 +17,7 @@ export type TypesenseSearchInput = {
   max_facet_values?: InputMaybe<Scalars['Int']>;
   filter_by?: InputMaybe<Scalars['String']>;
   sort_by?: InputMaybe<Scalars['String']>;
+  exhaustive_search?: boolean
 };
 export type TypesenseMultiSearchInput = {
   searches: Array<TypesenseSearchInput>;

@@ -72,9 +72,5 @@ describe('nft detail page tests', () => {
       });
     });
   });
-
-  it('should query for external marketplace listings', () => {
-    cy.wait('@activitiesQuery').its('response.statusCode').should('eq', 200);
-  });
 });
   
