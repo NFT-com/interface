@@ -3,7 +3,6 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, SeaportProtocolData } from 'graphql/generated/types';
-import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -17,7 +16,7 @@ import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
-import { RoundedCornerAmount,RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
+import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
 import { BigNumber, ethers } from 'ethers';
 import LooksrareIcon from 'public/looksrare-icon.svg';
@@ -100,14 +99,7 @@ export function NFTCard(props: NFTCardProps) {
     }
   }, [processedImageURLs.length]);
 
-  const { data: listings } = useListingActivitiesQuery(
-    props?.contractAddress,
-    props?.tokenId,
-    defaultChainId,
-    nft?.wallet?.address
-  );
-
-  const lowestListing = getLowestPriceListing(listings, ethPriceUsd, defaultChainId);
+  const lowestListing = getLowestPriceListing(nft?.listings?.items, ethPriceUsd, defaultChainId);
   const lowestPrice = getListingPrice(lowestListing);
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
@@ -131,16 +123,16 @@ export function NFTCard(props: NFTCardProps) {
   }, [pink, secondaryText]);
 
   const showListingIcons: boolean = useMemo(() => {
-    return !isNullOrEmpty(listings);
-  }, [listings]);
+    return !isNullOrEmpty(nft?.listings?.items);
+  }, [nft]);
 
   const showOpenseaListingIcon: boolean = useMemo(() => {
-    return listings?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
-  }, [listings]);
+    return nft?.listings?.items?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
+  }, [nft]);
 
   const showLooksrareListingIcon: boolean = useMemo(() => {
-    return listings?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
-  }, [listings]);
+    return nft?.listings?.items?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
+  }, [nft]);
 
   return (
     <div

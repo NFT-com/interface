@@ -2,7 +2,7 @@ import { NULL_ADDRESS } from 'constants/addresses';
 import { LooksrareProtocolData, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
 
-import { sameAddress } from './helpers';
+import { isNullOrEmpty, sameAddress } from './helpers';
 import { getAddress } from './httpHooks';
 
 import { BigNumber, ethers } from 'ethers';
@@ -59,6 +59,9 @@ export const getLowestPriceListing = (
   chainId: number | string,
   protocolFilter?: ExternalProtocol
 ) => {
+  if (isNullOrEmpty(listings)) {
+    return null;
+  }
   const filteredListings = listings.filter(l => protocolFilter == null || l.order?.protocol === protocolFilter);
   let lowestPriceListing = filteredListings[0];
   const lowestPriceUSD = getListingPriceUSD(filteredListings[0], ethPriceUSD, chainId);

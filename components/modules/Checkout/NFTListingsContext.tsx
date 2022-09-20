@@ -484,7 +484,6 @@ export function NFTListingsContextProvider(
   }}>
 
     {
-      [...(toList ?? []), ...(toBuy ?? [])].length > 0 &&
       sidebarVisible &&
       <NFTCartSidebar selectedTab={selectedTab} onChangeTab={setSelectedTab} />
     }
