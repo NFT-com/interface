@@ -7,7 +7,7 @@ export enum SearchableFields {
   NFTS_INDEX_FIELDS = 'nftName,nftType,tokenId,ownerAddr,chain,contractName,contractAddr,marketplace,listingType,currency,status',
   PROFILES_INDEX_FIELDS = 'url',
   NFTS_COLLECTION_FIELDS = 'contractName',
-  FACET_NFTS_INDEX_FIELDS = 'listedPx,nftType,chain,contractName,listingType,currency,status,traits',
+  FACET_NFTS_INDEX_FIELDS = 'listedPx,nftType,chain,contractName,listingType,currency,status',
   FACET_COLLECTIONS_INDEX_FIELDS = 'nftType,contractName'
 }
 
