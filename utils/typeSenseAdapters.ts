@@ -1,10 +1,10 @@
 import Typesense from 'typesense';
 import TypesenseInstantSearchAdapter from 'typesense-instantsearch-adapter';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 
 export enum SearchableFields {
   COLLECTIONS_INDEX_FIELDS = 'contractAddr,contractName,chain,nftType',
-  NFTS_INDEX_FIELDS = 'nftName,nftType,tokenId,ownerAddr,chain,contractName,contractAddr,marketplace,listingType,currency,status,traits.value,traits.type',
+  NFTS_INDEX_FIELDS = 'nftName,nftType,tokenId,ownerAddr,chain,contractName,contractAddr,marketplace,listingType,currency,status',
   PROFILES_INDEX_FIELDS = 'url',
   NFTS_COLLECTION_FIELDS = 'contractName',
   FACET_NFTS_INDEX_FIELDS = 'listedPx,nftType,chain,contractName,listingType,currency,status,traits',
@@ -27,11 +27,11 @@ const typeSenseServerData = {
 export const MultiIndexTypesenseInstantSearchAdapter = new TypesenseInstantSearchAdapter({
   server: typeSenseServerData,
   additionalSearchParameters: {
-    query_by: SearchableFields.NFTS_INDEX_FIELDS,
+    query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
   },
   collectionSpecificSearchParameters: {
     ntfs: {
-      query_by: SearchableFields.NFTS_INDEX_FIELDS,
+      query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
     },
     collections: {
       query_by: SearchableFields.COLLECTIONS_INDEX_FIELDS,
