@@ -9,5 +9,23 @@ describe('vault  page tests', () => {
     cy.findByText('Looking for exclusive content?').should('exist');
   });
   
-  // todo: test with wallet connected
+  it('should show exclusive content when signed in to beta', () => {
+    cy.findByText('Sign in').click().then(() => {
+      cy.findByText('Connect with Wallet').click().then(() => {
+        cy.findByText('MetaMask').click().then(() => {
+          cy.acceptMetamaskAccess(false /* allAccounts */).then(() => {
+            cy.confirmMetamaskSignatureRequest().then(() => {
+              cy.wait(500);
+              cy.findByText('synpress_goerli').click().then(() => {
+                cy.findByText('0x7128...E2e9').should('exist');
+                cy.root().click('left').then(() => {
+                  cy.findByText('Auction Metrics').should('exist');
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
 });

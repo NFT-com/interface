@@ -22,7 +22,6 @@ describe('AddressInput', () => {
           index={1}
           onChange={() => null}
           isChecked={false}
-          selectAll={false}
         />
       </WagmiConfig>
     );
@@ -45,7 +44,6 @@ describe('AddressInput', () => {
           index={1}
           onChange={() => null}
           isChecked={true}
-          selectAll={false}
         />
       </WagmiConfig>
     );
@@ -68,7 +66,6 @@ describe('AddressInput', () => {
           index={1}
           onChange={() => null}
           isChecked={false}
-          selectAll={false}
         />
       </WagmiConfig>
     );

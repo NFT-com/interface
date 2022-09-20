@@ -50,7 +50,7 @@ export const DescriptionDetail = (props: DescriptionDetailProps) => {
         </>
         :
         <>
-          {props?.nft?.metadata?.description.length > 87
+          {props?.nft?.metadata?.description?.length > 87
             ?
             <div className='inline minlg:hidden'>
               <ReactMarkdown components={theme} skipHtml linkTarget="_blank">

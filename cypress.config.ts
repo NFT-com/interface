@@ -7,6 +7,7 @@ export default defineConfig({
   chromeWebSecurity: true,
   projectId: '1gkqo9',
   component: {
+    specPattern: 'cypress/component/**/*',
     devServer: {
       framework: 'next',
       bundler: 'webpack',
@@ -18,6 +19,7 @@ export default defineConfig({
   },
 
   e2e: {
+    specPattern: 'cypress/e2e/**/*',
     baseUrl: 'http://localhost:3000',
     env: {
       url: '/api/__coverage__',

@@ -18,14 +18,13 @@
     "gql:gen": "graphql-codegen --config codegen.json",
     "doppler:pull": "doppler secrets --json >> .env.local",
     "doppler:gen": "echo 'export const dopplerNames = ' > ./scripts/doppler_variable_names.ts && doppler secrets --only-names --json >> ./scripts/doppler_variable_names.ts && ts-node -O '{\"module\":\"commonjs\"}' ./scripts/gen-doppler.ts",
-    "cypress:open-only": "doppler run -- cypress open",
-    "cypress:run-only": "doppler run -- cypress run",
-    "cypress:open": "start-server-and-test dev 3000 cypress:open-only",
-    "cypress:run": "start-server-and-test dev 3000 cypress:run-only",
+    "cypress:component": "doppler run -- cypress run --component",
+    "cypress:open": "doppler run -- cypress open",
     "cypress:record": "cypress run --record",
-    "instrument": "npx nyc instrument --compact=false ./ instrumented",
+    "instrument": "npx nyc instrument --compact=false ./ instrumented --delete",
     "synpress:run": "start-server-and-test dev 3000 synpress:run-only",
     "synpress:run-only": "doppler run -- synpress run --configFile cypress.config.ts -b chrome"
+
   },
   "resolutions": {
     "glob-parent": "^6.0.1",

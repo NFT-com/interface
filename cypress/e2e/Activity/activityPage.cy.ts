@@ -4,10 +4,8 @@ describe('activity  page tests', () => {
   beforeEach(() => {
     cy.visit('/app/activity');
   });
-  
-  it('should redirect to the home page with no wallet connected', () => {
-    cy.get('.HomePageContainer').should('exist');
+
+  it('should Display the correct title', () => {
+    cy.findByText('My Activity').should('exist');
   });
-  
-  // todo: connect wallet and test the actual activity page
 });

@@ -9,5 +9,5 @@ describe('auctions  page tests', () => {
     cy.findByText('Unlock the NFT Platform Beta').should('exist');
   });
 
-  // todo: connect wallet and test the actual auctions page
+  // todo: sign in and test the actual auction page
 });

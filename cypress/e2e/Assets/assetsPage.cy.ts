@@ -5,9 +5,7 @@ describe('assets  page tests', () => {
     cy.visit('/app/assets');
   });
   
-  it('should redirect to the home page with no wallet connected', () => {
-    cy.get('.HomePageContainer').should('exist');
+  it('should display the correct title', () => {
+    cy.findByText('My Assets').should('exist');
   });
-  
-  // todo: connect wallet and test the actual assets page
 });

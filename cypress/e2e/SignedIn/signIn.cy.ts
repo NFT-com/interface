@@ -2,8 +2,6 @@
 
 describe('Connect wallet', () => {
   before(() => {
-    cy.resetMetamaskAccount();
-  
     cy.visit('/').then(() => {
       cy.findByText('Sign in').click().then(() => {
         cy.findByText('Connect with Wallet').click().then(() => {

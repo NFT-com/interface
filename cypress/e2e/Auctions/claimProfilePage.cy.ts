@@ -9,5 +9,5 @@ describe('claim profile page tests', () => {
     cy.findByText('CONNECT YOUR WALLET').should('exist');
   });
   
-  // todo: connect wallet and test the actual claim page
+  // todo: sign in and test the actual claim page
 });
