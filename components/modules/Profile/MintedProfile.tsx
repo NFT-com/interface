@@ -20,6 +20,7 @@ import { ProfileContext } from './ProfileContext';
 import { ProfileScrollContextProvider } from './ProfileScrollContext';
 
 import { BigNumber } from 'ethers';
+import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
 import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useCallback, useContext, useState } from 'react';
@@ -205,27 +206,33 @@ export function MintedProfile(props: MintedProfileProps) {
                   >
                     <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-6 minlg:h-10 w-6 minlg:w-10  cursor-pointer'/>
                   </div>}
-                  <img
-                    src={
-                      !isNullOrEmpty(draftProfileImg?.preview)
-                        ? draftProfileImg?.preview
-                        : profileData?.profile?.photoURL ??
-                          (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
-                            ? 'https://cdn.nft.com/profile-image-default.svg' :
-                            cameraIcon.src)
-                    }
-                    alt="profilePicture"
-                    draggable={false}
+                  <div
                     className={tw(
-                      'object-center rounded-full',
+                      'object-center',
                       'h-full w-full',
                       'shrink-0 aspect-square',
                       userIsAdmin && editMode ? 'cursor-pointer' : '',
                       userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
                       'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                     )}
-                    style={{ zIndex: 101, }}
-                  />
+                  >
+                    <Image
+                      src={
+                        !isNullOrEmpty(draftProfileImg?.preview)
+                          ? draftProfileImg?.preview
+                          : profileData?.profile?.photoURL ??
+                            (!getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED)
+                              ? 'https://cdn.nft.com/profile-image-default.svg' :
+                              cameraIcon.src)
+                      }
+                      priority
+                      layout='fill'
+                      alt="profilePicture"
+                      draggable={false}
+                      className={tw('rounded-full')}
+                      style={{ zIndex: 101, overflow: 'hidden' }}
+                    />
+                  </div>
                 </div>
               )}
             </Dropzone>
