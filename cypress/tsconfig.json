@@ -12,7 +12,9 @@
       "@testing-library/react-hooks",
       "@testing-library/dom",
       "@4tw/cypress-drag-drop",
-      "node"
+      "node",
+      "@synthetixio/synpress/support",
+      "cypress-wait-until",
     ],
     "resolveJsonModule": true,
   },

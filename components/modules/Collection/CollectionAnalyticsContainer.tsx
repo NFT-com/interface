@@ -30,12 +30,12 @@ const marketplaces = {
 export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsContainerProps) => {
   const { chain } = useNetwork();
   const collectionSalesHistory = useGetContractSalesStatisticsQuery(contract);
-  const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
+  const [, setSelectedTimeFrame] = useState(timeFrames[0]);
   const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
 
-  const [singleDayVolume, setSingleDayVolume] = useState(null);
-  const [sevenDayVolume, setSevenDayVolume] = useState(null);
-  const [thirtyDayVolume, setThirtyDayVolume] = useState(null);
+  const [, setSingleDayVolume] = useState(null);
+  const [, setSevenDayVolume] = useState(null);
+  const [, setThirtyDayVolume] = useState(null);
   const [collectionLineData, setCollectionLineData] = useState(null);
 
   const now = moment();

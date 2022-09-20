@@ -23,7 +23,9 @@
     "cypress:open": "start-server-and-test dev 3000 cypress:open-only",
     "cypress:run": "start-server-and-test dev 3000 cypress:run-only",
     "cypress:record": "cypress run --record",
-    "instrument": "npx nyc instrument --compact=false ./ instrumented"
+    "instrument": "npx nyc instrument --compact=false ./ instrumented",
+    "synpress:run": "start-server-and-test dev 3000 synpress:run-only",
+    "synpress:run-only": "doppler run -- synpress run --configFile cypress.config.ts -b chrome"
   },
   "resolutions": {
     "glob-parent": "^6.0.1",
@@ -44,6 +46,7 @@
     "@looksrare/sdk": "^0.8.0",
     "@rainbow-me/rainbowkit": "0.4.4",
     "@sentry/nextjs": "^7.3.0",
+    "@synthetixio/synpress": "^2.3.2",
     "@tailwindcss/line-clamp": "^0.4.0",
     "@testing-library/cypress": "^8.0.3",
     "@testing-library/dom": "^8.16.0",
