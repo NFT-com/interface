@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 export enum RoundedCornerVariant {
@@ -72,6 +74,8 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     }
   }, [props?.src, ext, url]);
 
+  const imageUrl = imageSrc || props?.src;
+
   return (
     <div className={tw(
       'relative object-cover aspect-square',
@@ -95,10 +99,13 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           )}
         />
         :
-        <img
+        (imageUrl != 'null?width=600') && <Image
           alt='NFT Image'
           key={props.src}
-          src={imageSrc || props?.src}
+          quality='50'
+          layout='fill'
+          src={
+            (imageUrl.indexOf('.svg') < 0 && imageUrl.indexOf('.gif') < 0) ? `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}` : imageUrl}
           onError={() => {
             setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
           }}

@@ -2,11 +2,12 @@ import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnv } from 'utils/env';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber } from 'ethers';
@@ -36,6 +37,13 @@ export default function AssetTableRow({
     return await getContractMetadata(item?.contract, defaultChainId);
   });
   const collectionName = collectionMetadata?.contractMetadata?.name;
+
+  const { data: listings } = useListingActivitiesQuery(
+    item?.contract,
+    item?.tokenId,
+    defaultChainId,
+    item?.wallet?.address
+  );
 
   const { data: profiles } = useProfilesByDisplayedNft(
     item?.contract,
@@ -106,7 +114,7 @@ export default function AssetTableRow({
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {item?.listings?.items?.length ? <p>Listed</p> : <p>—</p>}
+          {!isNullOrEmpty(listings) ? <p>Listed</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
