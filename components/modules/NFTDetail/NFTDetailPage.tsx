@@ -1,4 +1,5 @@
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
+import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -39,6 +40,13 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return await getContractMetadata(nft?.contract, defaultChainId);
   });
 
+  const { data: listings } = useListingActivitiesQuery(
+    nft?.contract,
+    nft?.tokenId,
+    defaultChainId,
+    nft?.wallet?.address
+  );
+
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
   useEffect(() => {
@@ -48,8 +56,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
 
   const showListings = useMemo(() => {
-    return !isNullOrEmpty(nft?.listings?.items);
-  }, [nft]);
+    return !isNullOrEmpty(listings);
+  }, [listings]);
 
   return (
     <div className="flex flex-col pt-20 items-center w-full">
