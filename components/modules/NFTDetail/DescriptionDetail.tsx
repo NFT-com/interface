@@ -64,7 +64,7 @@ export const DescriptionDetail = (props: DescriptionDetailProps) => {
               </ReactMarkdown>
             </div>
           }
-          {props?.nft?.metadata?.description.length > 200
+          {props?.nft?.metadata?.description?.length > 200
             ?
             <div className='hidden minlg:inline'>
               <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
@@ -79,7 +79,7 @@ export const DescriptionDetail = (props: DescriptionDetailProps) => {
             </div>
           }
           {
-            props?.nft?.metadata?.description.length > 87 &&
+            props?.nft?.metadata?.description?.length > 87 &&
                     <>
                       <p className='text-[#B59007] font-bold ml-1 hover:cursor-pointer inline minlg:hidden' onClick={() => setDescriptionExpanded(true)}>
                         Show more
@@ -87,7 +87,7 @@ export const DescriptionDetail = (props: DescriptionDetailProps) => {
                     </>
           }
           {
-            props?.nft?.metadata?.description.length > 200 &&
+            props?.nft?.metadata?.description?.length > 200 &&
                     <>
                       <p className='text-[#B59007] font-bold ml-1 hover:cursor-pointer hidden minlg:inline' onClick={() => setDescriptionExpanded(true)}>
                         Show more
