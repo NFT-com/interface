@@ -9,7 +9,7 @@ import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { DiscoverPageProps } from 'types';
-import { getPerPage, isNullOrEmpty } from 'utils/helpers';
+import { collectionCardImages, getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { getCollection } from 'lib/contentful/api';
@@ -31,7 +31,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
     prevSelectedCuratedCollection !== selectedCuratedCollection && setPaginatedAddresses([]);
     await fetchNFTsForCollections({
       collectionAddresses: contractAddresses,
-      count: 4
+      count: 5
     }).then((collectionsData => {
       const sortedNftsForCollections = collectionsData.nftsForCollections.sort((a,b) =>(a.collectionAddress > b.collectionAddress) ? 1 : -1);
       nftsForCollections = sortedNftsForCollections.filter(i => i.nfts.length > 0);
@@ -113,11 +113,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                       <div key={index} className="DiscoverCollectionItem mb-2 min-h-[10.5rem] minmd:min-h-[13rem] minxl:min-h-[13.5rem]">
                         <CollectionItem
                           contractAddr={collection?.collectionAddress}
-                          images={[
-                            collection.nfts[0]?.metadata?.imageURL,
-                            collection.nfts[1]?.metadata?.imageURL,
-                            collection.nfts[2]?.metadata?.imageURL,
-                          ]}
+                          images={collectionCardImages(collection)}
                           count={collection.actualNumberOfNFTs}
                         />
                       </div>);
