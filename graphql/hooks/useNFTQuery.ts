@@ -33,7 +33,7 @@ export function useNftQuery(contract: string, id: BigNumberish): NftData {
     const result = await sdk.Nft({
       contract,
       id: BigNumber.from(id).toHexString() ,
-      chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)
+      chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
     });
     return result?.nft;
   });
