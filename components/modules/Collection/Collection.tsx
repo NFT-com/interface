@@ -4,6 +4,7 @@ import { CollectionActivity } from 'components/modules/Analytics/CollectionActiv
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { SideNav } from 'components/modules/Search/SideNav';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useGetContractSalesStatisticsQuery } from 'graphql/hooks/useGetContractSalesStatisticsQuery';
 import { useGetNFTDetailsQuery } from 'graphql/hooks/useGetNFTDetailsQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
@@ -51,6 +52,7 @@ export function Collection(props: CollectionProps) {
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contract, async () => {
     return await getContractMetadata(props.contract, defaultChainId);
   });
+  const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const collectionName = collectionMetadata?.contractMetadata?.name;
   const collectionSalesHistory = useGetContractSalesStatisticsQuery(props?.contract?.toString());
   const collectionNFTInfo = useGetNFTDetailsQuery(props?.contract?.toString(), collectionNfts[0]?.document?.tokenId);
@@ -70,40 +72,40 @@ export function Collection(props: CollectionProps) {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   useEffect(() => {
-    currentPage === 1 && props.contract && client.collections('nfts')
-      .documents()
-      .search({
+    currentPage === 1 && props.contract && fetchTypesenseMultiSearch({ searches: [{
+      'collection': 'nfts',
+      'q'       : id_nftName,
+      'query_by': 'tokenId,nftName',
+      'per_page': 8,
+      'page'    : currentPage,
+      'facet_by': 'contractAddr',
+      'filter_by': 'contractAddr:='+contractAddr.toString(),
+      'exhaustive_search' : true
+    }] })
+      .then((resp) => {
+        setCollectionNfts([...resp.results[0].hits]);
+        setFound(resp.results[0].found);
+      });
+  }, [contractAddr, currentPage, fetchTypesenseMultiSearch, id_nftName, props.contract]);
+
+  useEffect(() => {
+    if (currentPage > 1 && currentPage !== prevVal) {
+      props.contract && fetchTypesenseMultiSearch({ searches: [{
+        'collection': 'nfts',
         'q'       : id_nftName,
         'query_by': 'tokenId,nftName',
         'per_page': 8,
         'page'    : currentPage,
         'facet_by': 'contractAddr',
-        'filter_by': 'contractAddr:='+contractAddr.toString()
-      })
-      .then(function (nftsResults) {
-        setCollectionNfts([...nftsResults.hits]);
-        setFound(nftsResults.found);
-      });
-  }, [client, contractAddr, currentPage, id_nftName, props.contract]);
-
-  useEffect(() => {
-    if (currentPage > 1 && currentPage !== prevVal) {
-      props.contract && client.collections('nfts')
-        .documents()
-        .search({
-          'q'       : id_nftName,
-          'query_by': 'tokenId,nftName',
-          'per_page': 8,
-          'page'    : currentPage,
-          'facet_by': 'contractAddr',
-          'filter_by': 'contractAddr:='+contractAddr.toString()
-        })
-        .then(function (nftsResults) {
-          setCollectionNfts([...collectionNfts, ...nftsResults.hits]);
-          setFound(nftsResults.found);
+        'filter_by': 'contractAddr:='+contractAddr.toString(),
+        'exhaustive_search' : true
+      }] })
+        .then((resp) => {
+          setCollectionNfts([...collectionNfts, ...resp.results[0].hits]);
+          setFound(resp.results[0].found);
         });
     }
-  }, [client, collectionNfts, contractAddr, currentPage, id_nftName, prevVal, props.contract]);
+  }, [collectionNfts, contractAddr, currentPage, fetchTypesenseMultiSearch, id_nftName, prevVal, props.contract]);
 
   const theme = {
     p: (props: any) => {
