@@ -2,7 +2,6 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { CheckBox } from 'components/elements/CheckBox';
-import { DropdownPicker } from 'components/elements/DropdownPicker';
 
 import { motion } from 'framer-motion';
 import EllipseX from 'public/ellipse-x.svg';
@@ -101,103 +100,6 @@ const ContractNameFilter = (props: any) => {
   );
 };
 
-const CurrencyPriceFilter = (props: any) => {
-  const { filtersList, clearedFilters } = useSearchModal();
-  const [min, setMin] = useState('');
-  const [max, setMax] = useState('');
-
-  const priceOptions = (filtersList || []).find(i => i.filter === 'listedPx');
-
-  useEffect(() => {
-    let stringValue = '';
-    if (Number(min) > Number(max)) return;
-    if (Number(min) < 0 || Number(max) < 0) return;
-
-    if (min !== '' && max === '') {
-      stringValue = 'listedPx:>=' + (min);
-    } else if (min === '' && max !== '') {
-      stringValue = 'listedPx:<=' + (max);
-    } else if (min !== '' && max !== '') {
-      stringValue ='listedPx:['+ (min) + '..' + (max) + ']';
-    }
-
-    if (priceOptions){
-      priceOptions.values = stringValue;
-    }
-
-    props.onGetCheckedFilters(filtersList);
-  }, [filtersList, max, min, priceOptions, props]);
-
-  useEffect(() => {
-    if (clearedFilters) {
-      setMin('');
-      setMax('');
-    }
-  },[clearedFilters]);
-
-  return(
-    <div className="flex flex-col space-y-2 mt-3">
-      <DropdownPicker
-        placeholder={'Currency'}
-        selectedIndex={0}
-        options={[
-          {
-            label: 'ETH',
-            onSelect: () =>
-            {
-              return null;
-            }
-          },
-        ]}
-      />
-      <div className="flex space-x-2">
-        <div className={tw(
-          'relative flex items-center rounded-xl p-2 w-full text-black bg-gray-200')}>
-          <div className="w-full">
-            <input
-              type="number"
-              placeholder="MIN"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck="false"
-              autoFocus
-              min="0"
-              value={min}
-              required maxLength={512}
-              className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-              onChange={(event) => { setMin(event.target.value); }}
-              onFocus={(event) => setMin(event.target.value)}
-            />
-          </div>
-        </div>
-        <div className={tw(
-          'relative flex items-center rounded-xl p-2 w-full text-black bg-gray-200')}>
-          <div className="w-full">
-            <input
-              type="number"
-              placeholder="MAX"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck="false"
-              autoFocus
-              min="0"
-              value={max}
-              required maxLength={512}
-              className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-              onChange={(event) => {
-                setMax(event.target.value);
-              }}
-              onFocus={(event) => setMax(event.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Filter = (props: any) => {
   const { filter, setCheckedFilters, clearedFilters, setClearedFilters } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
@@ -274,7 +176,7 @@ const Filter = (props: any) => {
 
 export const NFTsFiltersContent = () => {
   const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray } = useSearchModal();
-  const [sortBy, setSortBy] = useState(nftsPageSortyBy);
+  const [sortBy,] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
 
   const updateCheckedString = useCallback(() => {
@@ -309,7 +211,7 @@ export const NFTsFiltersContent = () => {
     <>
       <div className="flex flex-col w-full">
         <div
-          className="block minlg:hidden flex p-5 justify-end cursor-pointer"
+          className="minlg:hidden flex p-5 justify-end cursor-pointer"
           onClick={() => {
             setSearchModalOpen(false);
           }}>

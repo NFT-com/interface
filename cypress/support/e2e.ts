@@ -17,6 +17,7 @@
 import './commands';
 import '@cypress/code-coverage/support';
 import '@testing-library/cypress/add-commands';
+import '@synthetixio/synpress/support/index';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

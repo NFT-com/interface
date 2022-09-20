@@ -14,11 +14,6 @@ const nftChartTypes = {
   1: 'Activity',
 };
 
-const marketplaces = {
-  0: 'OpenSea',
-  1: 'LooksRare'
-};
-
 const timeFrames = {
   0: '1D',
   1: '7D',
@@ -30,10 +25,9 @@ const timeFrames = {
 
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedChartType, setSelectedChartType] = useState(nftChartTypes[1]);
-  const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[0]);
-  const [selectedMarketplace, setSelectedMarketplace] = useState(marketplaces[0]);
+  const [,setSelectedTimeFrame] = useState(timeFrames[0]);
 
-  const [nftData, setNftData] = useState(null);
+  const [nftData,] = useState(null);
 
   return (
     <div className="bg-transparent overflow-x-auto p-4 minxl:p-10 minxl:pt-10 minxl:-mb-10">
