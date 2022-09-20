@@ -1,4 +1,10 @@
-query Nft($contract: Address!, $id: String!, $chainId: String) {
+query Nft(
+  $contract: Address!, 
+  $id: String!, 
+  $chainId: String,
+  $listingsPageInput: PageInput, 
+  $listingsExpirationType: ActivityExpiration
+) {
   nft(contract: $contract, id: $id, chainId: $chainId) {
     id
     isOwnedByMe
@@ -24,6 +30,140 @@ query Nft($contract: Address!, $id: String!, $chainId: String) {
         type
         value
       }
+    }
+    listings(listingsPageInput: $listingsPageInput, listingsExpirationType: $listingsExpirationType) {
+              totalItems
+        pageInfo {
+            firstCursor
+            lastCursor
+        }
+        items {
+            id
+            chainId
+            activityType
+            activityTypeId
+            timestamp
+            walletAddress
+            nftContract
+            nftId
+            status
+            order {
+                chainId
+                exchange
+                orderHash
+                orderType
+                makerAddress
+                takerAddress
+                protocol
+                protocolData {
+                    ... on LooksrareProtocolData {
+                        isOrderAsk
+                        signer
+                        collectionAddress
+                        price
+                        tokenId
+                        amount
+                        strategy
+                        currencyAddress
+                        nonce
+                        startTime
+                        endTime
+                        minPercentageToAsk
+                        params
+                        v
+                        r
+                        s
+                    }
+                    ... on SeaportProtocolData {
+                        signature
+                        parameters {
+                            offerer
+                            offer {
+                                itemType
+                                token
+                                identifierOrCriteria
+                                startAmount
+                                endAmount
+                            }
+                            consideration {
+                                itemType
+                                token
+                                identifierOrCriteria
+                                startAmount
+                                endAmount
+                                recipient
+                            }
+                            startTime
+                            endTime
+                            orderType
+                            zone
+                            zoneHash
+                            salt
+                            conduitKey
+                            totalOriginalConsiderationItems
+                            counter
+                        }
+                    }
+                }
+            }
+            cancel {
+                id
+                exchange
+                foreignType
+                foreignKeyId
+                transactionHash
+                blockNumber
+            }
+            transaction {
+                id
+                chainId
+                transactionHash
+                blockNumber
+                nftContractAddress
+                nftContractTokenId
+                maker
+                taker
+                protocol
+                exchange
+                protocolData {
+                ... on TxLooksrareProtocolData {
+                    isOrderAsk
+                    signer
+                    collectionAddress
+                    price
+                    tokenId
+                    amount
+                    strategy
+                    currencyAddress
+                    nonce
+                    startTime
+                    endTime
+                    minPercentageToAsk
+                    params
+                    v
+                    r
+                    s
+                }
+                ... on TxSeaportProtocolData {
+                    offer {
+                    itemType
+                    token
+                    identifierOrCriteria
+                    startAmount
+                    endAmount
+                    }
+                    consideration {
+                    itemType
+                    token
+                    identifierOrCriteria
+                    startAmount
+                    endAmount
+                    recipient
+                    }
+                }
+                }
+            }   
+        }
     }
   }
 }

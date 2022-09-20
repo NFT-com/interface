@@ -4,7 +4,6 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
-import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -43,13 +42,6 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
-  
-  const { data: listings } = useListingActivitiesQuery(
-    props?.nft?.contract,
-    props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId ?? chainId),
-    props?.nft?.wallet?.address
-  );
 
   const {
     allowedAll: openseaAllowed,
@@ -73,19 +65,19 @@ export function ExternalListings(props: ExternalListingsProps) {
   
   const getListingSummaryTitle = useCallback(() => {
     const uniqueMarketplaces = filterDuplicates(
-      listings,
+      props.nft?.listings?.items,
       (first, second) => first.order?.protocol === second.order?.protocol
     );
     if (uniqueMarketplaces?.length > 1) {
       return 'Starting price at multiple marketplaces';
-    } else if (listings?.length > 1) {
-      const protocolName = listings?.[0]?.order?.exchange;
+    } else if (props.nft?.listings?.items?.length > 1) {
+      const protocolName = props.nft?.listings?.items?.[0]?.order?.exchange;
       return 'Starting price on ' + protocolName;
     } else {
-      const protocolName = listings?.[0]?.order?.exchange;
+      const protocolName = props.nft?.listings?.items?.[0]?.order?.exchange;
       return 'Current price on ' + protocolName;
     }
-  }, [listings]);
+  }, [props.nft]);
 
   const getListingSummaryButtons = useCallback(() => {
     if (!hasGks) {
@@ -93,13 +85,13 @@ export function ExternalListings(props: ExternalListingsProps) {
     } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
         stretch
-        label={listings.length > 1 ? 'Edit Listings' : 'Edit Listing'}
+        label={props.nft?.listings?.items.length > 1 ? 'Edit Listings' : 'Edit Listing'}
         onClick={() => {
           setEditListingsModalOpen(true);
         }}
         type={ButtonType.PRIMARY}
       />;
-    } else if (listings.length > 1) {
+    } else if (props.nft?.listings?.items.length > 1) {
       return <Button
         stretch
         label={'Select Listing'}
@@ -109,7 +101,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         type={ButtonType.PRIMARY}
       />;
     } else {
-      const listing = listings[0];
+      const listing = props.nft?.listings?.items[0];
       return <Button
         stretch
         disabled={nftInPurchaseCart}
@@ -141,14 +133,13 @@ export function ExternalListings(props: ExternalListingsProps) {
     nftInPurchaseCart,
     currentAddress,
     getByContractAddress,
-    listings,
     props.collectionName,
     props.nft,
     stagePurchase,
     toggleCartSidebar
   ]);
 
-  if (isNullOrEmpty(listings)) {
+  if (isNullOrEmpty(props.nft?.listings?.items)) {
     return (
       currentAddress === props.nft?.wallet?.address && hasGks &&
         <div className={tw(
@@ -181,22 +172,22 @@ export function ExternalListings(props: ExternalListingsProps) {
     );
   }
 
-  const bestListing = getLowestPriceListing(listings, ethPriceUsd, chainId);
+  const bestListing = getLowestPriceListing(props.nft?.listings?.items, ethPriceUsd, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
   
   return <div className='w-full flex justify-center p-4'>
     <EditListingsModal
       nft={props.nft}
       collectionName={props.collectionName}
-      listings={listings}
+      listings={props.nft?.listings?.items}
       visible={editListingsModalOpen}
       onClose={() => {
         setEditListingsModalOpen(false);
       }} />
     <SelectListingModal
       listings={[
-        getLowestPriceListing(listings, ethPriceUsd, chainId, ExternalProtocol.Seaport),
-        getLowestPriceListing(listings, ethPriceUsd, chainId, ExternalProtocol.LooksRare)
+        getLowestPriceListing(props.nft?.listings?.items, ethPriceUsd, chainId, ExternalProtocol.Seaport),
+        getLowestPriceListing(props.nft?.listings?.items, ethPriceUsd, chainId, ExternalProtocol.LooksRare)
       ]}
       nft={props.nft}
       collectionName={props.collectionName}
@@ -218,7 +209,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         <div className="flex items-center">
           {
             filterDuplicates(
-              listings,
+              props.nft?.listings?.items,
               (first, second) => first.order?.protocol === second.order?.protocol
             )?.map((listing, index) => {
               return <div key={listing?.id} className={tw(index > 0 && '-ml-4')}>
