@@ -10,6 +10,7 @@ describe('Connect wallet', () => {
           cy.findByText('MetaMask').click().then(() => {
             cy.acceptMetamaskAccess(false /* allAccounts */).then(() => {
               cy.confirmMetamaskSignatureRequest().then(() => {
+                cy.wait(500);
                 cy.findByText('synpress_goerli').click().then(() => {
                   cy.findByText('0x7128...E2e9').should('exist');
                 });
