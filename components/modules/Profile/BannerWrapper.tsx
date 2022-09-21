@@ -31,7 +31,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       )}
     >
       {imageUrl && <Image
-        src={(imageUrl.indexOf('.svg') < 0 && imageUrl.indexOf('.gif') < 0) ? `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}` : imageUrl}
+        src={(imageUrl.indexOf('.svg') < 0 || imageUrl.indexOf('.gif') < 0) ? `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}` : imageUrl}
         layout='fill'
         priority
         objectFit='cover'

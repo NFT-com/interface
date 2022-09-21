@@ -104,7 +104,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           quality='50'
           layout='fill'
           src={
-            (imageUrl.indexOf('.svg') < 0 && imageUrl.indexOf('.gif') < 0) ? `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}` : imageUrl}
+            (imageUrl.indexOf('.svg') < 0 || imageUrl.indexOf('.gif') < 0) ? `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}` : imageUrl}
           onError={() => {
             setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
           }}
