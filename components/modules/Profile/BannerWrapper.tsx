@@ -31,9 +31,10 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       )}
     >
       {imageUrl && <Image
-        src={(imageUrl.indexOf('.svg') < 0 || imageUrl.indexOf('.gif') < 0) ? `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}` : imageUrl}
+        src={(imageUrl.indexOf('.svg') >= 0 && imageUrl.indexOf('nft.com') >= 0) ? imageUrl : `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}`}
         layout='fill'
         priority
+        quality='100'
         objectFit='cover'
         objectPosition='center'
         alt='banner'
