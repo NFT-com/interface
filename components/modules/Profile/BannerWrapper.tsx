@@ -2,7 +2,6 @@ import Loader from 'components/elements/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
-import Image from 'next/image';
 import { PropsWithChildren } from 'react';
 
 export interface BannerWrapperProps {
@@ -24,20 +23,13 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
     <div
       onMouseEnter={props.onMouseEnter}
       onMouseLeave={props.onMouseLeave}
+      style={{ backgroundImage: `url(${imageUrl})` }}
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
         'bg-cover bg-center',
         props.isCollection ? 'h-[320px]' : 'h-60 minxl:h-72',
       )}
     >
-      {imageUrl && <Image
-        src={(imageUrl.indexOf('.svg') < 0 || imageUrl.indexOf('.gif') < 0) ? `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}` : imageUrl}
-        layout='fill'
-        priority
-        objectFit='cover'
-        objectPosition='center'
-        alt='banner'
-      />}
       {props.loading && <div
         style={{ zIndex: 102 }}
         className={tw(
