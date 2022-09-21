@@ -1640,6 +1640,10 @@ li {
   .embla__slide__inner {
     height: 230px;
   }
+
+  .embla__slideSideNavClosed {
+    min-width: 50%;
+  }
 }
 
 @media (min-width: 900px) {
