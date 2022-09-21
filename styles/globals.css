@@ -1646,6 +1646,10 @@ li {
   .embla__slide__inner {
     height: 250px;
   }
+
+  .embla__slideSideNavClosed {
+    min-width: 33.1%;
+  }
 }
 
 @media (min-width: 1200px) {

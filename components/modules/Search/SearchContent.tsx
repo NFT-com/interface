@@ -209,21 +209,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
                   </div>):
                   <div className="py-4">
                     <ResultsContent searchResults={searchResults} />
-                    {isHeader ?
-                      <span className="px-5 text-xs text-gray-400">Press enter for all results</span> :
-                      <div className="mx-auto absolute minlg:relative bottom-0 w-full minxl:w-3/5 flex justify-center mt-7 font-medium">
-                        <Button
-                          color={'black'}
-                          accent={AccentType.SCALE}
-                          stretch={true}
-                          label={'Search'}
-                          onClick={() => {
-                            router.push(`/app/discover/allResults/${keyword}`);
-                            setSearchModalOpen(false);
-                          }}
-                          type={ButtonType.PRIMARY}
-                        />
-                      </div>}
+                    {isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span> }
                   </div>
                 }
               </>}

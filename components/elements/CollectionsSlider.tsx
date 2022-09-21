@@ -79,7 +79,7 @@ const EmblaCarousel = (props: slidesProps) => {
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isSlider, setIsSlider] = useState(false);
+  const [isSlider, setIsSlider] = useState(true);
   const [noSliderCols, setNoSliderCols] = useState(3);
 
   const scrollPrev = useCallback(() => embla && embla.scrollPrev(), [embla]);

@@ -1,4 +1,5 @@
 import CollectionsSlider from 'components/elements/CollectionsSlider';
+import Loader from 'components/elements/Loader';
 
 import router from 'next/router';
 
@@ -19,7 +20,7 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
       {nftsForCollections && nftsForCollections.length > 0 ?
         <CollectionsSlider full slides={nftsForCollections} /> :
         (<div className="flex items-center justify-center min-h-[16rem]">
-          {found === 0 && <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>}
+          {found === 0 ? <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>:<Loader />}
         </div>)}
     </>
   );
