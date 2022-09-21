@@ -44,6 +44,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
     } else {
       router.push(`/app/nft/${document.contractAddr}/${document.tokenId}`);
     }
+    setSearchModalOpen(false);
   };
 
   const search = (event) => {
