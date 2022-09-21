@@ -101,7 +101,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   }, [data?.featuredProfile, data.learnCards, data.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data.learnCardImagesCollection.items, data.learnCardImagesCollection, data.subheroTitle]);
   return (
     <>
-      <main className='flex flex-col mt-20 font-grotesk not-italic'>
+      <main className='flex flex-col mt-20 font-grotesk not-italic HomePageContainer'>
         <Link href='/app/auctions' passHref>
           <a>
             <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
