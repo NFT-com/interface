@@ -241,12 +241,10 @@ export function getDateFromTimeFrame(timeFrame: string) {
   }
 }
 
-export const isCryptoKittiesCollection = (contractAddress: string ) => contractAddress === '0x06012c8cf97BEaD5deAe237070F9587f8E7A266d';
-
 export const collectionCardImages = (collection: any) => {
   return [
-    !isCryptoKittiesCollection(collection?.collectionAddress) ? collection.nfts[0]?.metadata?.imageURL : collection.nfts[2]?.metadata?.traits?.find(i => i.type === 'image_url_cdn').value,
-    !isCryptoKittiesCollection(collection?.collectionAddress) ? collection.nfts[1]?.metadata?.imageURL : collection.nfts[3]?.metadata?.traits?.find(i => i.type === 'image_url_cdn').value,
-    !isCryptoKittiesCollection(collection?.collectionAddress) ? collection.nfts[2]?.metadata?.imageURL : collection.nfts[4]?.metadata?.traits?.find(i => i.type === 'image_url_cdn').value,
+    collection.nfts[0]?.metadata?.imageURL || collection.nfts[0]?.previewLink || collection.nfts[0]?.metadata?.traits?.find(i => i.type === 'image_url_png').value,
+    collection.nfts[1]?.metadata?.imageURL || collection.nfts[1]?.previewLink || collection.nfts[1]?.metadata?.traits?.find(i => i.type === 'image_url_png').value,
+    collection.nfts[2]?.metadata?.imageURL || collection.nfts[2]?.previewLink || collection.nfts[2]?.metadata?.traits?.find(i => i.type === 'image_url_png').value,
   ];
 };

@@ -17,7 +17,6 @@ import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
-import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
 import { CollectionInfo } from './CollectionInfo';
 
@@ -41,7 +40,6 @@ export function Collection(props: CollectionProps) {
   const { width: screenWidth } = useWindowDimensions();
   const { setSearchModalOpen, id_nftName, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
   const { usePrevious } = usePreviousValue();
-  const client = getTypesenseInstantsearchAdapterRaw;
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [found, setFound] = useState(0);
