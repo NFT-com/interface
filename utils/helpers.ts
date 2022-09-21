@@ -243,8 +243,8 @@ export function getDateFromTimeFrame(timeFrame: string) {
 
 export const collectionCardImages = (collection: any) => {
   return [
-    collection.nfts[0]?.metadata?.imageURL || collection.nfts[0]?.previewLink || collection.nfts[0]?.metadata?.traits?.find(i => i.type === 'image_url_png').value,
-    collection.nfts[1]?.metadata?.imageURL || collection.nfts[1]?.previewLink || collection.nfts[1]?.metadata?.traits?.find(i => i.type === 'image_url_png').value,
-    collection.nfts[2]?.metadata?.imageURL || collection.nfts[2]?.previewLink || collection.nfts[2]?.metadata?.traits?.find(i => i.type === 'image_url_png').value,
+    collection.nfts[0]?.metadata?.imageURL || collection.nfts[0]?.previewLink || collection.nfts[0]?.metadata?.traits?.find(i => i.type === 'image_url_png')?.value,
+    collection.nfts[1]?.metadata?.imageURL || collection.nfts[1]?.previewLink || collection.nfts[1]?.metadata?.traits?.find(i => i.type === 'image_url_png')?.value,
+    collection.nfts[2]?.metadata?.imageURL || collection.nfts[2]?.previewLink || collection.nfts[2]?.metadata?.traits?.find(i => i.type === 'image_url_png')?.value,
   ];
 };
