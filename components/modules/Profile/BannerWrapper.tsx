@@ -18,6 +18,8 @@ const defaultBanner = getEnvBool(Doppler.NEXT_PUBLIC_ANALYTICS_ENABLED) ?
   : 'https://cdn.nft.com/profile-banner-default-logo-key.png';
 
 export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
+  const imageUrl = props.imageOverride || defaultBanner;
+
   return (
     <div
       onMouseEnter={props.onMouseEnter}
@@ -28,14 +30,14 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
         props.isCollection ? 'h-[320px]' : 'h-60 minxl:h-72',
       )}
     >
-      <Image
-        src={props.imageOverride || defaultBanner}
+      {imageUrl && <Image
+        src={(imageUrl.indexOf('.svg') < 0 && imageUrl.indexOf('.gif') < 0) ? `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}` : imageUrl}
         layout='fill'
         priority
         objectFit='cover'
         objectPosition='center'
         alt='banner'
-      />
+      />}
       {props.loading && <div
         style={{ zIndex: 102 }}
         className={tw(

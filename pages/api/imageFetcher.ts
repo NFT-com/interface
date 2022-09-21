@@ -14,5 +14,6 @@ export default withSentry(imageFetcher);
 export const config = {
   api: {
     externalResolver: true,
+    responseLimit: false,
   },
 };
