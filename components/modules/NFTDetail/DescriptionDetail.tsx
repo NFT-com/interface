@@ -54,7 +54,7 @@ export const DescriptionDetail = (props: DescriptionDetailProps) => {
             ?
             <div className='inline minlg:hidden'>
               <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
-                {props?.nft?.metadata?.description.substring(0, 87) + '...'}
+                {props?.nft?.metadata?.description?.substring(0, 87) + '...'}
               </ReactMarkdown>
             </div>
             :

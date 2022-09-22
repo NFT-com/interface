@@ -35,11 +35,12 @@ export interface CollectionProps {
 }
 
 export function Collection(props: CollectionProps) {
+  const { usePrevious } = usePreviousValue();
   const router = useRouter();
   const { contractAddr } = router.query;
+  const prevContractAddr = usePrevious(contractAddr);
   const { width: screenWidth } = useWindowDimensions();
-  const { setSearchModalOpen, id_nftName, sideNavOpen, setSideNavOpen, setModalType } = useSearchModal();
-  const { usePrevious } = usePreviousValue();
+  const { setSearchModalOpen, id_nftName, sideNavOpen, setSideNavOpen, setModalType, setCollectionPageAppliedFilters, setClearedFilters } = useSearchModal();
   const [collectionNfts, setCollectionNfts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [found, setFound] = useState(0);
@@ -68,6 +69,15 @@ export function Collection(props: CollectionProps) {
   };
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
+
+  useEffect(() => {
+    if (prevContractAddr !== contractAddr){
+      setCollectionNfts([]);
+      setCurrentPage(1);
+      setFound(0);
+      setCollectionPageAppliedFilters('','', true);
+    }
+  },[contractAddr, prevContractAddr, setClearedFilters, setCollectionPageAppliedFilters]);
 
   useEffect(() => {
     currentPage === 1 && props.contract && fetchTypesenseMultiSearch({ searches: [{
