@@ -59,13 +59,13 @@ export enum ListAllResult {
   ApiError = 2,
 }
 
-interface NFTListingsContextType {
+export interface NFTListingsContextType {
   toList: StagedListing[];
   stageListing: (listing: PartialDeep<StagedListing>) => void;
   stageListings: (listings: PartialDeep<StagedListing[]>) => void;
   clear: () => void;
   listAll: () => Promise<ListAllResult>;
-  prepareListings: () => Promise<void>;
+  prepareListings: (nonceOverride?: number) => Promise<void>;
   
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
@@ -334,8 +334,11 @@ export function NFTListingsContextProvider(
     return toList?.find(l => l.nft.id === listing.nft.id)?.targets?.find(target => target.protocol === protocol);
   }, [toList]);
 
-  const prepareListings = useCallback(async () => {
-    let nonce: number = await getLooksrareNonce(currentAddress);
+  const prepareListings = useCallback(async (nonceOverride?: number) => {
+    let nonce: number = nonceOverride;
+    if (nonce == null) {
+      nonce = await getLooksrareNonce(currentAddress);
+    }
     const preparedListings = await Promise.all(toList.map(async (stagedNft) => {
       const preparedTargets: ListingTarget[] = await Promise.all(stagedNft.targets?.map(async (target: ListingTarget) => {
         if (target.protocol === ExternalProtocol.LooksRare) {
