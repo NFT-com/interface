@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -103,7 +104,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           key={props.src}
           quality='50'
           layout='fill'
-          src={(imageUrl.indexOf('.svg') >= 0 && imageUrl.indexOf('nft.com') >= 0) ? imageUrl : `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=600&width=600`}
+          src={(imageUrl.indexOf('.svg') >= 0 && imageUrl.indexOf('nft.com') >= 0) ? imageUrl : `${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}/api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=600&width=600`}
           onError={() => {
             setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
           }}
