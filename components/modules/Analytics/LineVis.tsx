@@ -21,7 +21,7 @@ export type LineChartProps = {
   setCurrentMarketplace?: Dispatch<SetStateAction<string>>,
 };
 
-export const LineVis = ({ data, label, currentMarketplace, setCurrentMarketplace, showMarketplaceOptions }: LineChartProps) => {
+export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
   const [selectedMarketplace, setSelectedMarketplace] = useState<ExternalExchange>(ExternalExchange.Opensea);
   
   return (
@@ -50,7 +50,7 @@ export const LineVis = ({ data, label, currentMarketplace, setCurrentMarketplace
                 name={selectedMarketplace}
                 value={ExternalExchange[marketplace]}
                 disabled={ExternalExchange[marketplace] === ExternalExchange.LooksRare}
-                onChange={(e) => setSelectedMarketplace(ExternalExchange[marketplace]) }
+                onChange={() => setSelectedMarketplace(ExternalExchange[marketplace]) }
                 checked={selectedMarketplace === ExternalExchange[marketplace]}
               />
               <div className='inline-flex px-2'>{ExternalExchange[marketplace]}</div>
@@ -104,7 +104,7 @@ export const LineVis = ({ data, label, currentMarketplace, setCurrentMarketplace
                 name={selectedMarketplace}
                 value={ExternalExchange[marketplace]}
                 disabled={ExternalExchange[marketplace] === ExternalExchange.LooksRare}
-                onChange={(e) => setSelectedMarketplace(ExternalExchange[marketplace]) }
+                onChange={() => setSelectedMarketplace(ExternalExchange[marketplace]) }
                 checked={selectedMarketplace === ExternalExchange[marketplace]}
               />
               <div className='inline-flex px-2'>{ExternalExchange[marketplace]}</div>
