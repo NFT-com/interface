@@ -1,14 +1,14 @@
 /// <reference types="cypress" />
 
-import '../plugins/tailwind';
+import '../../plugins/tailwind';
 
 import {
   NFTListingsContext,
   NFTListingsContextProvider,
   NFTListingsContextType
-} from '../../components/modules/Checkout/NFTListingsContext';
-import { ExternalProtocol } from '../../types';
-import { setupWagmiClient } from '../util/wagmi';
+} from '../../../components/modules/Checkout/NFTListingsContext';
+import { ExternalProtocol } from '../../../types';
+import { setupWagmiClient } from '../../util/wagmi';
 
 import { useContext } from 'react';
 import { WagmiConfig } from 'wagmi';
