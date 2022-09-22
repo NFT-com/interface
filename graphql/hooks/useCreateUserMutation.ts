@@ -1,6 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe, SignUpInput, SignUpMutation } from 'graphql/generated/types';
-import { logCreateUserFailure, logCreateUserSuccess, logEmailSubmitted } from 'utils/gaLogger';
 
 import { ethers } from 'ethers';
 import { useCallback, useState } from 'react';
@@ -32,7 +31,6 @@ export function useCreateUserMutation({
   const [loading, setLoading] = useState(false);
 
   const createUser = useCallback(async (input: SignUpInput) => {
-    logEmailSubmitted();
     setLoading(true);
     try {
       const result = await sdk.SignUp({
@@ -51,7 +49,6 @@ export function useCreateUserMutation({
           },
         },
       });
-      logCreateUserSuccess();
       onCreateSuccess();
       setLoading(false);
       return result;
@@ -66,9 +63,6 @@ export function useCreateUserMutation({
             ? 'User with email ' + input.email?.toLowerCase() + ' already exists.'
             : 'Sign Up failed. Please try again.'
       );
-      // log here because this is a failure unexpected by Apollo, so we
-      // may not have an Apollo error.
-      logCreateUserFailure();
       return null;
     }
   }, [onCreateFailure, onCreateSuccess, sdk]);

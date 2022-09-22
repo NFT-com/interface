@@ -1,15 +1,20 @@
 /// <reference types="cypress" />
 
 import {
+  collectionCardImages,
   filterNulls,
   formatID,
   getAPIURL,
   getChainIdString,
+  getDateFromTimeFrame,
   getEtherscanLink,
   getGenesisKeyThumbnail,
+  getPerPage,
   isAddress,
   isNullOrEmpty,
   joinClasses,
+  max,
+  min,
   prettify,
   processIPFSURL,
   sameAddress,
@@ -178,6 +183,150 @@ describe('Unit test our helper functions', () => {
       expect(getChainIdString(5)).to.equal('5');
       expect(getChainIdString(42)).to.equal('42');
       expect(getChainIdString(null)).to.equal(null);
+    });
+  });
+  
+  context('getPerPage', () => {
+    it('should return the right page size - collections index', () => {
+      expect(getPerPage('collections', 1200, false)).to.equal(12);
+      expect(getPerPage('collections', 1200, true)).to.equal(9);
+      expect(getPerPage('collections', 900, false)).to.equal(6);
+      expect(getPerPage('collections', 900, true)).to.equal(4);
+      expect(getPerPage('collections', 600, false)).to.equal(4);
+      expect(getPerPage('collections', 600, true)).to.equal(4);
+      expect(getPerPage('collections', 500, false)).to.equal(2);
+      expect(getPerPage('collections', 500, true)).to.equal(2);
+    });
+
+    it('should return the right page size - discover index', () => {
+      expect(getPerPage('discover', 1200, false)).to.equal(8);
+      expect(getPerPage('discover', 1200, true)).to.equal(9);
+      expect(getPerPage('discover', 900, false)).to.equal(9);
+      expect(getPerPage('discover', 900, true)).to.equal(6);
+      expect(getPerPage('discover', 600, false)).to.equal(4);
+      expect(getPerPage('discover', 600, true)).to.equal(4);
+      expect(getPerPage('discover', 500, false)).to.equal(2);
+      expect(getPerPage('discover', 500, true)).to.equal(2);
+    });
+
+    it('should return the right page size - default', () => {
+      expect(getPerPage('random', 1200, false)).to.equal(12);
+      expect(getPerPage('random', 1200, true)).to.equal(9);
+      expect(getPerPage('random', 900, false)).to.equal(8);
+      expect(getPerPage('random', 900, true)).to.equal(6);
+      expect(getPerPage('random', 600, false)).to.equal(6);
+      expect(getPerPage('random', 600, true)).to.equal(6);
+      expect(getPerPage('random', 500, false)).to.equal(4);
+      expect(getPerPage('random', 500, true)).to.equal(4);
+    });
+  });
+
+  context('max for BigNumbers', () => {
+    it('should return null', () => {
+      expect(max()).to.be.null;
+      expect(max(null)).to.be.null;
+    });
+    
+    it('should return the largest', () => {
+      const five = BigNumber.from(5);
+      const six = BigNumber.from(6);
+      expect(max(five, six)).to.equal(six);
+    });
+  });
+
+  context('min for BigNumbers', () => {
+    it('should return null', () => {
+      expect(min()).to.be.null;
+      expect(min(null)).to.be.null;
+    });
+    
+    it('should return the smallest', () => {
+      const five = BigNumber.from(5);
+      const six = BigNumber.from(6);
+      expect(min(five, six)).to.equal(five);
+    });
+  });
+
+  context('getDateFromTimeFrame', () => {
+    it('should work', () => {
+      cy.stub(Date, 'now').returns(1000000000000000); // random set timestamp
+
+      expect(getDateFromTimeFrame('1D').unix()).to.equal(999999913600);
+      expect(getDateFromTimeFrame('7D').unix()).to.equal(999999395200);
+      expect(getDateFromTimeFrame('1M').unix()).to.equal(999997321600);
+      expect(getDateFromTimeFrame('3M').unix()).to.equal(999992051200);
+      expect(getDateFromTimeFrame('1Y').unix()).to.equal(999968464000);
+    });
+  });
+
+  context('collectionCardImages', () => {
+    it('should get the right values', () => {
+      expect(collectionCardImages({
+        nfts: [
+          {
+            metadata: {
+              imageURL: 1
+            }
+          },{
+            metadata: {
+              imageURL: 2
+            }
+          },{
+            metadata: {
+              imageURL: 3
+            }
+          }
+        ]
+      })).to.deep.equal([1, 2, 3]);
+    });
+
+    it('should get the right fallback values 1', () => {
+      expect(collectionCardImages({
+        nfts: [
+          {
+            previewLink: 1
+          },{
+            previewLink: 2
+          },{
+            previewLink: 3
+          }
+        ]
+      })).to.deep.equal([1, 2, 3]);
+    });
+
+    it('should get the right fallback values 2', () => {
+      expect(collectionCardImages({
+        nfts: [
+          {
+            metadata: {
+              traits: [
+                {
+                  type: 'image_url_png',
+                  value: 1
+                }
+              ]
+            }
+          },{
+            metadata: {
+              traits: [
+                {
+                  type: 'image_url_png',
+                  value: 2
+                }
+              ]
+            }
+          },{
+            metadata: {
+              traits: [
+                {
+                  type: 'image_url_png',
+                  value: 3
+                }
+              ]
+            }
+          }
+        ]
+      })).to.deep.equal([1, 2, 3]);
     });
   });
 });

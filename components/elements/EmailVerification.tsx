@@ -9,7 +9,6 @@ import { useUpdateEmailMutation } from 'graphql/hooks/useUpdateEmailMutation';
 import { useUpdateMeMutation } from 'graphql/hooks/useUpdateMeMutation';
 import { useBidModal } from 'hooks/state/useBidModal';
 import { Doppler, getEnv } from 'utils/env';
-import { logVerificationSuccess } from 'utils/gaLogger';
 import { isNullOrEmpty, joinClasses } from 'utils/helpers';
 
 import validator from 'email-validator';
@@ -89,7 +88,6 @@ export function EmailVerification(props) {
       setSuccessVerify(true);
       mutateMeInfo();
       setBidModalOpen(false);
-      logVerificationSuccess();
       alert('Successfully verified!');
     } else {
       setLoadingEmail(false);
