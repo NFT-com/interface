@@ -8,7 +8,6 @@ const imageFetcher = async (req: NextApiRequest, res: NextApiResponse) => {
   const optimizedUrl = r.data.data;
   const result = await fetch(optimizedUrl);
   if (result.statusText == 'Unprocessable Entity') {
-    // process original if optimizer doesn't work
     const originalResult = await fetch(decodeURIComponent(`${req.query.url}`));
     const originalBody = await originalResult.body;
     originalBody.pipe(res);
