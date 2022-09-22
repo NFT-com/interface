@@ -87,7 +87,7 @@ const moduleExports = withTM({
       'images.ctfassets.net',
       'sandbox-nvf2t.netlify.app',
       'staging-raccoon.netlify.app',
-      'nft.com',
+      'www.nft.com',
       '5hi24d3w2gny6zrfhekqk6mv4e0cfois.lambda-url.us-east-1.on.aws', // image proxy layer 2
       'nftcom-dev-assets.s3.amazonaws.com'
     ],
