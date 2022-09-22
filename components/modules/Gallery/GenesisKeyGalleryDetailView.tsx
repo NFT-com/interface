@@ -79,7 +79,7 @@ export function GenesisKeyGalleryDetailView(props: GenesisKeyGalleryDetailViewPr
       'text-primary-txt dark:text-primary-txt-dk',
     )}>
       {props.hideCloseButton !== true && <div className={tw(
-        'pt-8 pr-8 absolute right-0 top-0 flex block minmd:hidden z-50'
+        'pt-8 pr-8 absolute right-0 top-0 flex minmd:hidden z-50'
       )} onClick={props.onClose}>
         <XIcon
           className="h-6 w-6 cursor-pointer"

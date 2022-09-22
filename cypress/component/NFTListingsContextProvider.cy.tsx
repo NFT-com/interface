@@ -134,6 +134,8 @@ describe('NFTListingsContextProvider', () => {
   });
 
   it('runs allListingsConfigured successfully', () => {
+    cy.get('button').contains('Stage Listing').click();
+    cy.get('button').contains('toggleTargetMarketplace').click();
     cy.get('button').contains('allListingsConfigured').click();
   });
 
@@ -142,10 +144,14 @@ describe('NFTListingsContextProvider', () => {
   });
 
   it('calls setDuration successfully', () => {
+    cy.get('button').contains('Stage Listing').click();
+    cy.get('button').contains('toggleTargetMarketplace').click();
     cy.get('button').contains('setDuration').click();
   });
 
   it('calls setCurrency successfully', () => {
+    cy.get('button').contains('Stage Listing').click();
+    cy.get('button').contains('toggleTargetMarketplace').click();
     cy.get('button').contains('setCurrency').click();
   });
 
