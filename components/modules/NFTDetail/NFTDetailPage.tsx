@@ -1,3 +1,4 @@
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -64,15 +65,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       {nft?.metadata?.imageURL &&
         <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
           <div className="flex w-full max-w-[600px] h-full object-contain drop-shadow-lg rounded aspect-square">
-            <video
-              autoPlay
-              muted
-              loop
-              poster={processIPFSURL(nft?.metadata?.imageURL)}
-              className='rounded aspect-square'
-              src={processIPFSURL(nft?.metadata?.imageURL)}
-              key={nft?.id}
-            />
+            <RoundedCornerMedia key={nft?.id} src={processIPFSURL(nft?.metadata?.imageURL)} variant={RoundedCornerVariant.None} extraClasses='rounded aspect-square' containerClasses='h-full w-full' />
           </div>
         </div>
       }
