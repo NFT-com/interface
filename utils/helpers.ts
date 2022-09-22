@@ -248,3 +248,13 @@ export const collectionCardImages = (collection: any) => {
     collection.nfts[2]?.metadata?.imageURL || collection.nfts[2]?.previewLink || collection.nfts[2]?.metadata?.traits?.find(i => i.type === 'image_url_png')?.value,
   ];
 };
+
+export const getImageFetcherBaseURL = () => {
+  switch(getEnv(Doppler.NEXT_PUBLIC_ENV)) {
+  case 'PRODUCTION':
+  case 'STAGING':
+    return getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
+  default:
+    return 'https://sandbox-nvf2t.netlify.app/';
+  }
+};

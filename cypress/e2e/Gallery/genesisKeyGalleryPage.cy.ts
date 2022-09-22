@@ -34,15 +34,6 @@ describe('GK gallery page tests', () => {
     cy.get('.ProfileGalleryCardContainer').should('be.visible');
   });
 
-  it('should scroll profile gallery', () => {
-    cy.findAllByText('Profiles').first().click().then(() => {
-      cy.get('.ProfileGalleryCardContainer').should('be.visible');
-      cy.findByText('Load More').click().then(() => {
-        cy.get('.ProfileGalleryScrollContainer').scrollTo('bottom');
-      });
-    });
-  });
-
   it('should filter by ID', () => {
     cy.get('.GenesisKeyGalleryFilters__search-input').first().click().type('900');
     cy.findByText('00900').should('be.visible');

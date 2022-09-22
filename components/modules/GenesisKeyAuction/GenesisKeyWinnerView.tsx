@@ -87,14 +87,14 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
   const getMintSuccessView = useCallback(() => {
     return (
       <div className={tw('flex flex-col items-center')}>
-        <HeroTitle color="black" items={['CONGRATULATIONS!']} />
+        <HeroTitle color="white" items={['CONGRATULATIONS!']} />
         <div className={tw('flex flex-col rounded-xl deprecated_sm:border-none',
           'px-10 drop-shadow w-[600px] deprecated_sm:w-full',
           'bg-always-black bg-opacity-60 mt-8',
           'items-center justify-center')}
         >
           <span
-            className="text-2xl text-primary-txt py-4 text-center">
+            className="text-2xl text-primary-txt-dk py-4 text-center">
             {props.ownedTokenID != null ?
               'You own Genesis Key #' + props.ownedTokenID :
               'You won a Genesis Key!'
