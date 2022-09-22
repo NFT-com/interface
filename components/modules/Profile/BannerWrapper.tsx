@@ -1,5 +1,6 @@
 import Loader from 'components/elements/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
+import { getImageFetcherBaseURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
@@ -31,7 +32,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       )}
     >
       {imageUrl && <Image
-        src={(imageUrl.indexOf('.svg') >= 0 && imageUrl.indexOf('nft.com') >= 0) ? imageUrl : `https://www.nft.com/api/imageFetcher?url=${encodeURIComponent(imageUrl)}&width=3000`}
+        src={(imageUrl.indexOf('.svg') >= 0 && imageUrl.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&width=3000`}
         layout='fill'
         priority
         quality='100'
