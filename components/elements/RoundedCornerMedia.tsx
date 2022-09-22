@@ -103,7 +103,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           key={props.src}
           quality='50'
           layout='fill'
-          src={(imageUrl.indexOf('.svg') >= 0 && imageUrl.indexOf('nft.com') >= 0) ? imageUrl : `https://5hi24d3w2gny6zrfhekqk6mv4e0cfois.lambda-url.us-east-1.on.aws?url=${encodeURIComponent(imageUrl)}`}
+          src={(imageUrl.indexOf('.svg') >= 0 && imageUrl.indexOf('nft.com') >= 0) ? imageUrl : `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=600&width=600`}
           onError={() => {
             setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
           }}
