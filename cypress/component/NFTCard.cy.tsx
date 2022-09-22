@@ -1,6 +1,7 @@
 import '../plugins/tailwind';
 
 import { NFTCard } from '../../components/elements/NFTCard';
+import { getGenesisKeyThumbnail } from '../../utils/helpers';
 import { getMockAnalytics } from '../util/analytics';
 import { setupWagmiClient } from '../util/wagmi';
 
@@ -46,5 +47,26 @@ describe('NFTCard', () => {
     );
     cy.findByText('test_collection').should('exist');
     cy.get('#eye').should('exist');
+  });
+
+  it('mounts with multiple images', () => {
+    const onClick = cy.stub();
+    const client = setupWagmiClient();
+    cy.mount(
+      <WagmiConfig client={client}>
+        <NFTCard
+          title={'test_nft'}
+          collectionName="test_collection"
+          images={[getGenesisKeyThumbnail(300), getGenesisKeyThumbnail(3)]}
+          onClick={onClick}
+          visible={true}
+          constrain
+          onSelectToggle={() => {
+            // todo
+          }}
+        />
+      </WagmiConfig>
+    );
+    cy.findByText('test_collection').should('exist').click();
   });
 });
