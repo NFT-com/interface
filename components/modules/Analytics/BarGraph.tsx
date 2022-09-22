@@ -9,7 +9,7 @@ export type BarGraphProps = {
   currentMarketplace: string;
 };
 
-export const BarGraph = ({ data, label, currentMarketplace } : BarGraphProps) => {
+export const BarGraph = ({ data, label } : BarGraphProps) => {
   return (
     <div className='bg-transparent'>
       <span className='flex flex-row w-full'>

@@ -27,7 +27,7 @@ describe('nft detail page tests', () => {
       
       cy.get('#NFTDetailContainer').should('exist');
 
-      cy.get('#NFTDetailContainer').should('exist').should('contain.text', expectedName);
+      cy.get('#NFTDetailContainer').contains(expectedName);
     });
   });
   

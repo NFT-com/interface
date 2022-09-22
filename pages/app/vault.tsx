@@ -16,19 +16,8 @@ import { useAccount } from 'wagmi';
 
 export default function RoadmapPage() {
   const contentRef = useRef<HTMLDivElement>();
-  const [headerBlack, setHeaderBlack] = useState(false);
   const [firstLoaded, setFirstLoaded] = useState(false);
-
-  const listenScrollEvent = () => {
-    window.scrollY > 10
-      ? setHeaderBlack(true)
-      : setHeaderBlack(false);
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', listenScrollEvent);
-  });
-
+  
   const { address: currentAddress } = useAccount();
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const { data: ownedGKTokens, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress);
@@ -193,11 +182,7 @@ export default function RoadmapPage() {
       className={tw(
         'relative',
         'overflow-x-hidden bg-black w-screen h-screen')}
-      onScroll={(event: React.UIEvent<HTMLDivElement>) => {
-        const containerHeight = event.currentTarget.clientHeight;
-        const scrollTop = event.currentTarget.scrollTop;
-        setHeaderBlack(scrollTop >= containerHeight);
-      }}>
+    >
       <LoadedContainer loaded={firstLoaded}>
         {
           hasGksOrTokens ?

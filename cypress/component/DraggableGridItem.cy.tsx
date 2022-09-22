@@ -12,13 +12,25 @@ describe('DraggableGridItem', () => {
     const moveItem = cy.stub();
     cy.mount(
       <GridContextProvider items={[buildItem('a'), buildItem('b'), buildItem('c')]}>
-        <DraggableGridItem id="a" onMoveItem={moveItem}>
+        <DraggableGridItem onMoveItem={moveItem} item={{
+          id: 'a',
+          hidden: false,
+          draggable: true,
+        }}>
           <div className="border">a</div>
         </DraggableGridItem>
-        <DraggableGridItem id="b" onMoveItem={moveItem}>
+        <DraggableGridItem onMoveItem={moveItem} item={{
+          id: 'b',
+          hidden: false,
+          draggable: true,
+        }}>
           <div className="border" id="b">b</div>
         </DraggableGridItem>
-        <DraggableGridItem id="c" onMoveItem={moveItem}>
+        <DraggableGridItem onMoveItem={moveItem} item={{
+          id: 'c',
+          hidden: false,
+          draggable: true,
+        }}>
           <div className="border">c</div>
         </DraggableGridItem>
       </GridContextProvider>

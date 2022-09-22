@@ -61,7 +61,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   const [imageSrc, setImageSrc] = useState(null);
   const url = props?.src?.split('?')[0];
   const ext = url?.split('.').pop();
-
+  const imageFileTypes = ['webp', 'svg', 'gif', 'jpg', 'jpeg', 'png'];
   useEffect(() => {
     if(props?.src?.includes('?width=600')){
       setImageSrc(props?.src);
@@ -84,7 +84,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     )}
     onClick={props?.onClick}
     >
-      {imageUrl.indexOf('mp4') >= 0 ?
+      {imageFileTypes.indexOf(ext) < 0 ?
         <video
           autoPlay
           muted
