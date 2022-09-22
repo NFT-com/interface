@@ -29,7 +29,9 @@ export default function ProfileURI() {
     isNullOrEmpty(tokenId) ||
     !validCollectionReg.test(collection as string)
   )
-  { return <NotFoundPage />; } else {
+  {
+    return <NotFoundPage />;
+  } else {
     return <NFTDetailPage collection={collection as string} tokenId={BigNumber.from(tokenId).toHexString()} />;
   }
 }
