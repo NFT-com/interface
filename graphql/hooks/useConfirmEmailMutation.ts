@@ -1,6 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
-import { logEmailSubmitted,logVerificationSuccess } from 'utils/gaLogger';
 
 import { useCallback, useState } from 'react';
 
@@ -23,11 +22,9 @@ export function useConfirmEmailMutation(): ConfirmEmailMutationResult {
 
   const confirmEmail = useCallback(
     async (token: string) => {
-      logEmailSubmitted();
       setLoading(true);
       try {
         await sdk.ConfirmEmail({ token });
-        logVerificationSuccess();
         setLoading(false);
         setError(null);
         return true;
