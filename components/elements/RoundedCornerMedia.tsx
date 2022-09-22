@@ -2,6 +2,7 @@
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 export enum RoundedCornerVariant {
@@ -97,10 +98,12 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           )}
         />
         :
-        <img
+        (imageUrl != 'null?width=600') && <Image
           alt='NFT Image'
           key={props.src}
-          src={imageUrl}
+          quality='50'
+          layout='fill'
+          src={(imageUrl.indexOf('.svg') >= 0 && imageUrl.indexOf('nft.com') >= 0) ? imageUrl : `/api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=600&width=600`}
           onError={() => {
             setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
           }}

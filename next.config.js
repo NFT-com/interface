@@ -85,6 +85,7 @@ const moduleExports = withTM({
       'nft-llc.mypinata.cloud',
       'cdn.nft.com/_ipx',
       'images.ctfassets.net',
+      '5hi24d3w2gny6zrfhekqk6mv4e0cfois.lambda-url.us-east-1.on.aws', // image proxy layer 2
       'nftcom-dev-assets.s3.amazonaws.com'
     ],
   },
