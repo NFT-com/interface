@@ -260,8 +260,6 @@ export function NFTCard(props: NFTCardProps) {
             { props.images.length === 0 || props.images[0] == null ?
               null :
               <RoundedCornerMedia
-                width={600}
-                height={600}
                 containerClasses='w-full h-full overflow-hidden'
                 variant={RoundedCornerVariant.None}
                 src={processedImageURLs[0]}
@@ -273,8 +271,6 @@ export function NFTCard(props: NFTCardProps) {
             <div className='flex justify-center w-full min-h-XL min-h-2XL'>
               {processedImageURLs.slice(0,3).map((image: string, index: number) => {
                 return <RoundedCornerMedia
-                  width={150}
-                  height={150}
                   key={image + index}
                   src={image}
                   variant={variantsForRow[index]}
@@ -287,8 +283,6 @@ export function NFTCard(props: NFTCardProps) {
             <div className="grid grid-cols-2">
               {processedImageURLs.slice(0, 4).map((image: string, index: number) => {
                 return <RoundedCornerMedia
-                  width={300}
-                  height={300}
                   key={image + index}
                   src={image}
                   variant={RoundedCornerVariant.None}
@@ -304,9 +298,16 @@ export function NFTCard(props: NFTCardProps) {
         )}>
           {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
         </span>}
-        {props.title && <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
-          {props.title}
-        </span>}
+        {props.title ?
+          <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
+            {props.title}
+          </span> :
+          (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+            <div className="w-full">
+              <div className="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
+            </div>
+            <span className="sr-only">Loading...</span>
+          </div>)}
         {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
  
         {!isNullOrEmpty(props.description) && (
