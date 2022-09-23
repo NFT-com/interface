@@ -304,9 +304,16 @@ export function NFTCard(props: NFTCardProps) {
         )}>
           {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
         </span>}
-        {props.title && <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
-          {props.title}
-        </span>}
+        {props.title ?
+          <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
+            {props.title}
+          </span> :
+          (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+            <div className="w-full">
+              <div className="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
+            </div>
+            <span className="sr-only">Loading...</span>
+          </div>)}
         {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
  
         {!isNullOrEmpty(props.description) && (

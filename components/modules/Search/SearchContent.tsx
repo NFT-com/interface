@@ -196,7 +196,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
             <EllipseX />
           </div>
         </div>
-        {showHits
+        {showHits && keyword !== ''
           ? (
             <div
               ref={resultsRef}
