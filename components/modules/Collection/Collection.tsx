@@ -18,6 +18,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { CollectionAnalyticsContainer } from './CollectionAnalyticsContainer';
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';
@@ -65,7 +66,8 @@ export function Collection(props: CollectionProps) {
 
   const tabs = {
     0: 'NFTs',
-    1: 'Activity'
+    1: 'Activity',
+    2: 'Analytics',
   };
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -384,6 +386,9 @@ export function Collection(props: CollectionProps) {
             }
             {selectedTab === 'Activity' &&
               <CollectionActivity contract={props?.contract} />
+            }
+            {selectedTab === 'Analytics' &&
+              <CollectionAnalyticsContainer contract={props?.contract} />
             }
           </>
         }

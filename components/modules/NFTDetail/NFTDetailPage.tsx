@@ -1,4 +1,5 @@
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
+import { useGetSales } from 'graphql/hooks/useGetSales';
 import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
@@ -16,6 +17,7 @@ import { NFTDetailMoreFromCollection } from './NFTDetailMoreFromCollection';
 import { Properties } from './Properties';
 
 import { Tab } from '@headlessui/react';
+import { BigNumber } from 'ethers';
 import { useEffect, useMemo,useState } from 'react';
 import useSWR from 'swr';
 import { useAccount } from 'wagmi';
@@ -27,10 +29,12 @@ export interface NFTDetailPageProps {
 
 const detailTabTypes = {
   0: 'Info',
-  1: 'Traits'
+  1: 'Traits',
+  2: 'Analytics',
 };
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
+  const { getSales } = useGetSales();
   const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
 
   const { address: currentAddress } = useAccount();
@@ -39,6 +43,13 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
     return await getContractMetadata(nft?.contract, defaultChainId);
   });
+
+  const { data } = useSWR('getSales' + nft?.contract, async () => {
+    console.log(nft?.contract,nft?.tokenId,'nft?.contract fdo');
+    return await getSales({ contractAddress: nft?.contract, tokenId: BigNumber.from(nft?.tokenId).toString() });
+  });
+
+  console.log(data, 'fetsales dta fdo');
 
   const { data: listings } = useListingActivitiesQuery(
     nft?.contract,
@@ -132,6 +143,15 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             </>
           }
           {selectedDetailTab === 'Traits' &&
+            <>
+              <div className='flex w-full p-4'>
+                <div className='border border-[#E1E1E1] rounded-md py-4 font-grotesk w-full'>
+                  <Properties nft={nft} />
+                </div>
+              </div>
+            </>
+          }
+          {selectedDetailTab === 'Analytics' &&
             <>
               <div className='flex w-full p-4'>
                 <div className='border border-[#E1E1E1] rounded-md py-4 font-grotesk w-full'>

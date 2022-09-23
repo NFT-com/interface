@@ -60,6 +60,7 @@ export const CollectionAnalyticsContainer = ({ contract }: CollectionAnalyticsCo
 
       setCollectionBarData(collectionSalesHistory);
     }
+    console.log(collectionSalesHistory, 'collectionBarData fdo');
   }, [chain?.id, collectionLineData, collectionSalesHistory, oneDayAgo, sevenDaysAgo, thirtyDaysAgo]);
 
   return (
