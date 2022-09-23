@@ -260,6 +260,8 @@ export function NFTCard(props: NFTCardProps) {
             { props.images.length === 0 || props.images[0] == null ?
               null :
               <RoundedCornerMedia
+                width={600}
+                height={600}
                 containerClasses='w-full h-full overflow-hidden'
                 variant={RoundedCornerVariant.None}
                 src={processedImageURLs[0]}
@@ -271,6 +273,8 @@ export function NFTCard(props: NFTCardProps) {
             <div className='flex justify-center w-full min-h-XL min-h-2XL'>
               {processedImageURLs.slice(0,3).map((image: string, index: number) => {
                 return <RoundedCornerMedia
+                  width={150}
+                  height={150}
                   key={image + index}
                   src={image}
                   variant={variantsForRow[index]}
@@ -283,6 +287,8 @@ export function NFTCard(props: NFTCardProps) {
             <div className="grid grid-cols-2">
               {processedImageURLs.slice(0, 4).map((image: string, index: number) => {
                 return <RoundedCornerMedia
+                  width={300}
+                  height={300}
                   key={image + index}
                   src={image}
                   variant={RoundedCornerVariant.None}

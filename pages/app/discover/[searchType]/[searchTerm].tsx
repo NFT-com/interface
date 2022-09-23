@@ -260,6 +260,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               {results.current.length < found.current && <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
                 <Button
                   color={'black'}
+                  accent={AccentType.SCALE}
                   stretch={true}
                   label={'Load More'}
                   onClick={() => setPage(page + 1)}
