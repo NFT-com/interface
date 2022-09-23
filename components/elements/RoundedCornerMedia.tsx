@@ -104,7 +104,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           layout='fill'
           src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=600&width=600`}
           onError={() => {
-            setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
+            setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
           }}
           className={tw(
             'object-cover absolute w-full h-full justify-center',
