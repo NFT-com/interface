@@ -21,10 +21,10 @@ jobs:
     - name: Cypress run - e2e 🧪
       uses: cypress-io/github-action@v4
       with:
-        install-command: yarn --frozen-lockfile --immutable --silent
-        build: yarn build
+        install: false
         start: yarn start
         record: true
+        component: false
         browser: chrome
         tag: ${{ github.ref_name }}
       env:
