@@ -1,6 +1,8 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 
+import useWindowDimensions from 'hooks/useWindowDimensions';
+
 import EllipseX from 'public/ellipse-x.svg';
 import { useState } from 'react';
 
@@ -34,11 +36,12 @@ const IdFilter = (props: {setId: (id: string) => void, clearedFilters: boolean, 
 };
 
 export const CollectionsFiltersContent = () => {
+  const { width: screenWidth } = useWindowDimensions();
   const { setSearchModalOpen, setCollectionPageAppliedFilters } = useSearchModal();
   const [clearedFilters, setClearedFilters] = useState(false);
 
   const setId = (id_nftName: string) => {
-    setCollectionPageAppliedFilters('',id_nftName, false);
+    setCollectionPageAppliedFilters('',id_nftName, screenWidth < 900);
   };
 
   return (

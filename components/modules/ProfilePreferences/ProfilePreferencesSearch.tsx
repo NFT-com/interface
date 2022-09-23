@@ -253,7 +253,7 @@ export function ProfilePreferencesSearch() {
               </div>
               <input
                 className={tw(
-                  'text-lg min-w-0',
+                  'text-lg min-w-0 ProfileNameInput',
                   'text-left px-3 py-3 w-full rounded-r-lg font-medium'
                 )}
                 placeholder="What should we call you?"

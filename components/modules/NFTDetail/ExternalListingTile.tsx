@@ -71,7 +71,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const { mutate: mutateNftListings } = useListingActivitiesQuery(
     props?.nft?.contract,
     props?.nft?.tokenId,
-    String(props.nft?.wallet.chainId ?? defaultChainId),
+    String(props.nft?.wallet?.chainId ?? defaultChainId),
     props?.nft?.wallet?.address
   );
 
@@ -255,6 +255,6 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   </div>;
 }
 
-export default React.memo(ExternalListingTile, (prevProps, nextProps) => {
+export default React.memo<ExternalListingTileProps>(ExternalListingTile, (prevProps, nextProps) => {
   return prevProps.listing?.id === nextProps.listing?.id;
 });

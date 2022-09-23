@@ -15,7 +15,7 @@ describe('nft detail page tests', () => {
       const contract = json[Cypress.env('NETWORK')]?.['contract'];
       const tokenId = json[Cypress.env('NETWORK')]?.['tokenId'];
       cy.visit('/app/nft/' + contract + '/' + tokenId);
-
+      cy.wait(500);
       cy.wait('@NftQuery').its('response.statusCode').should('eq', 200);
       cy.wait(500); // wait for the children to re-render with nft data
     });
@@ -27,7 +27,7 @@ describe('nft detail page tests', () => {
       
       cy.get('#NFTDetailContainer').should('exist');
 
-      cy.get('#NFTDetailContainer').should('exist').should('contain.text', expectedName);
+      cy.get('#NFTDetailContainer').contains(expectedName);
     });
   });
   

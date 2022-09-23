@@ -1,7 +1,13 @@
 ignore:
   - "**/generated/**/*"
   - "**/generated/*"
-  - "**/cypress/*/*.ts"
+  - "**/cypress/**/*"
+  - "cypress/**/*"
+  - "**/instrumented/**/*"
+  - "**/styles/**/*"
+  - "styles/**/*"
+  - "**/constants/**/*"
+  - "constants/**/*"
 
 coverage:
   status:

@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
-import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { getImageFetcherBaseURL, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 export enum RoundedCornerVariant {
@@ -26,6 +26,9 @@ export interface RoundedCornerMediaProps {
   fallbackImage?: string;
   variant: RoundedCornerVariant;
   amount?: RoundedCornerAmount;
+  width?: number;
+  height?: number;
+  videoOverride?: boolean;
   extraClasses?: string;
   containerClasses?: string;
   onClick?: () => void;
@@ -59,7 +62,6 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   const [imageSrc, setImageSrc] = useState(null);
   const url = props?.src?.split('?')[0];
   const ext = url?.split('.').pop();
-  const imageFileTypes = ['webp', 'svg', 'gif', 'jpg', 'jpeg', 'png'];
   useEffect(() => {
     if(props?.src?.includes('?width=600')){
       setImageSrc(props?.src);
@@ -67,7 +69,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
       if(ext === 'svg') {
         setImageSrc(url);
       } else {
-        setImageSrc(props?.src + '?width=600');
+        setImageSrc(props?.src);
       }
     }
   }, [props?.src, ext, url]);
@@ -82,10 +84,10 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     )}
     onClick={props?.onClick}
     >
-      {imageFileTypes.indexOf(ext) < 0 ?
+      {(props.videoOverride || imageUrl?.indexOf('data') >= 0) ?
         <video
           autoPlay
-          muted
+          muted={!props.videoOverride}
           loop
           key={props?.src}
           src={props?.src}
@@ -97,12 +99,14 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           )}
         />
         :
-        <img
+        (imageUrl != 'null?width=600') && <Image
           alt='NFT Image'
           key={props.src}
-          src={imageUrl}
+          quality='50'
+          layout='fill'
+          src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
           onError={() => {
-            setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src.includes('?width=600') ? props?.src.split('?')[0] : props.src);
+            setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
           }}
           className={tw(
             'object-cover absolute w-full h-full justify-center',
