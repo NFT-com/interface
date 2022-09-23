@@ -6,7 +6,7 @@ import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import { base32cid, cid, multihash } from 'is-ipfs';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -225,7 +225,7 @@ export function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-export function getDateFromTimeFrame(timeFrame: string) {
+export function getDateFromTimeFrame(timeFrame: string): Moment {
   if(timeFrame === '1D') {
     return moment().subtract(1, 'd');
   }
