@@ -94,7 +94,9 @@ module.exports = {
         'footer-bg': '#F8F8F8',
         'footer-bg-dk': '#0C0F17',
         'primary-yellow': '#F9D963',
-        'link-yellow': '#B59007'
+        'link-yellow': '#B59007',
+        'secondary-yellow': '#FCBB1B',
+        'key-bg': '#4D4D4D',
       },
       fontFamily: {
         'rubik': ['Rubik'],
