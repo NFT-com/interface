@@ -26,6 +26,9 @@ export interface RoundedCornerMediaProps {
   fallbackImage?: string;
   variant: RoundedCornerVariant;
   amount?: RoundedCornerAmount;
+  width?: number;
+  height?: number;
+  videoOverride?: boolean;
   extraClasses?: string;
   containerClasses?: string;
   onClick?: () => void;
@@ -59,7 +62,6 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   const [imageSrc, setImageSrc] = useState(null);
   const url = props?.src?.split('?')[0];
   const ext = url?.split('.').pop();
-  const imageFileTypes = ['webp', 'svg', 'gif', 'jpg', 'jpeg', 'png'];
   useEffect(() => {
     if(props?.src?.includes('?width=600')){
       setImageSrc(props?.src);
@@ -82,10 +84,10 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     )}
     onClick={props?.onClick}
     >
-      {imageUrl?.indexOf('data') >= 0 ?
+      {(props.videoOverride || imageUrl?.indexOf('data') >= 0) ?
         <video
           autoPlay
-          muted
+          muted={!props.videoOverride}
           loop
           key={props?.src}
           src={props?.src}
@@ -102,7 +104,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           key={props.src}
           quality='50'
           layout='fill'
-          src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=600&width=600`}
+          src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
           onError={() => {
             setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
           }}
