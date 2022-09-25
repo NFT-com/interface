@@ -132,7 +132,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
           }} key={nft?.id} />
-          <div className="hidden minxl:block minxl:pt-12">
+          <div className="hidden minxl:block minxl:pt-10">
             <DetailTabsComponent />
           </div>
         </div>
@@ -148,7 +148,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           :
           (defaultChainId === '1') &&
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
-            <div className="min-h-[13.3em]"></div>
+            <div className="min-h-[13.7em]"></div>
             <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
               <NFTAnalyticsContainer data={nft} />
             </div>
