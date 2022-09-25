@@ -60,39 +60,10 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return !isNullOrEmpty(listings);
   }, [listings]);
 
-  return (
-    <div className="flex flex-col pt-20 items-center w-full">
-      {nft?.metadata?.imageURL &&
-        <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
-          <div className="flex w-full max-w-[600px] h-full object-contain drop-shadow-lg rounded aspect-square">
-            <RoundedCornerMedia key={nft?.id} src={processIPFSURL(nft?.metadata?.imageURL)} videoOverride={true} height={1000} width={1000} variant={RoundedCornerVariant.None} extraClasses='rounded aspect-square' containerClasses='h-full w-full' />
-          </div>
-        </div>
-      }
-      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] pb-8 minxl:-mb-8">
-        <div className='flex minxl:w-1/2 w-full'>
-          <NFTDetail nft={nft} onRefreshSuccess={() => {
-            mutateNft();
-          }} key={nft?.id} />
-        </div>
-        {(showListings || nft?.wallet?.address === currentAddress) ?
-          <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
-            <div className="flex minxl:flex-row w-full items-start">
-              <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
-            </div>
-            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
-              <NFTAnalyticsContainer data={nft} />
-            </div>
-          </div>
-          :
-          (defaultChainId === '1') &&
-          <div className="minxl:w-1/2 w-full hidden minxl:flex minxl:overflow-hidden">
-            <NFTAnalyticsContainer data={nft} />
-          </div>
-        }
-      </div>
-      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
-        <div className='flex flex-col w-full minxl:w-1/2'>
+  const DetailTabsComponent = () => {
+    return (
+      <div>
+        <div className='flex flex-col w-full'>
           <div className='flex w-full items-center p-4 justify-start'>
             <div className='justify-start'>
               <Tab.Group onChange={(index) => {setSelectedDetailTab(detailTabTypes[index]);}}>
@@ -138,15 +109,56 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           'flex flex-col w-full minxl:hidden',
         )}>
           {(defaultChainId === '1') &&
-            <div className="w-full">
-              <NFTAnalyticsContainer data={nft} />
-            </div>
+          <div className="w-full">
+            <NFTAnalyticsContainer data={nft} />
+          </div>
           }
         </div>
       </div>
-      <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
-        <NFTDetailMoreFromCollection hideTokenId={nft?.tokenId} collectionName={collection?.contractMetadata?.name} contract={nft?.contract} />
+    );
+  };
+
+  return (
+    <div className="flex flex-col pt-20 items-center w-full">
+      {nft?.metadata?.imageURL &&
+        <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
+          <div className="flex w-full max-w-[600px] h-full object-contain drop-shadow-lg rounded aspect-square">
+            <RoundedCornerMedia key={nft?.id} src={processIPFSURL(nft?.metadata?.imageURL)} videoOverride={true} height={1000} width={1000} variant={RoundedCornerVariant.None} extraClasses='rounded aspect-square' containerClasses='h-full w-full' />
+          </div>
+        </div>
+      }
+      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] pb-8 minxl:-mb-8">
+        <div className='flex minxl:w-1/2 w-full minxl:flex-col'>
+          <NFTDetail nft={nft} onRefreshSuccess={() => {
+            mutateNft();
+          }} key={nft?.id} />
+          <div className="hidden minxl:block minxl:pt-12">
+            <DetailTabsComponent />
+          </div>
+        </div>
+        {(showListings || nft?.wallet?.address === currentAddress) ?
+          <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
+            <div className="flex minxl:flex-row w-full items-start">
+              <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+            </div>
+            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
+              <NFTAnalyticsContainer data={nft} />
+            </div>
+          </div>
+          :
+          (defaultChainId === '1') &&
+          <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
+            <div className="min-h-[13.3em]"></div>
+            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
+              <NFTAnalyticsContainer data={nft} />
+            </div>
+          </div>
+        }
       </div>
+      <div className="block minxl:hidden flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
+        <DetailTabsComponent />
+      </div>
+      <NFTDetailMoreFromCollection hideTokenId={nft?.tokenId} collectionName={collection?.contractMetadata?.name} contract={nft?.contract} />
       <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
         <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
       </div>

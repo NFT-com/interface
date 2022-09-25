@@ -104,6 +104,7 @@ export function useSearchModal() {
   },[data, mutate]);
 
   const setCollectionPageAppliedFilters = useCallback((collectionPageSortyBy: string, id_nftName: string, searchModalOpen = true) => {
+    console.log(id_nftName, 'sdfsdf fdo');
     mutate({
       ...data,
       searchModalOpen,
