@@ -178,7 +178,6 @@ export const NFTsFiltersContent = () => {
   const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray } = useSearchModal();
   const [sortBy,] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
-  console.log(searchFilters, 'searchFilters fdo');
 
   const updateCheckedString = useCallback(() => {
     const checkedList =[];

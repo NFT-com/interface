@@ -77,7 +77,6 @@ export function NFTCard(props: NFTCardProps) {
   const [selected, setSelected] = useState(false);
   const ethPriceUsd: number = useEthPriceUSD();
 
-  // console.log(nft, 'nft fdo');
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL];

@@ -53,7 +53,6 @@ export const CollectionsFiltersContent = () => {
   const [clearedFilters, setClearedFilters] = useState(false);
 
   const setId = (id_nftName: string) => {
-    console.log(id_nftName, 'entró fdo');
     setCollectionPageAppliedFilters('',id_nftName, false);
   };
 
