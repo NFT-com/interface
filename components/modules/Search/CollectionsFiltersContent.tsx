@@ -82,9 +82,10 @@ export const CollectionsFiltersContent = () => {
         </div>
         <div
           onClick={() =>{
-            setCollectionPageAppliedFilters('','', true);
+            setInputValue('');
             setClearedFilters(true);
             setSearchModalOpen(false, 'collectionFilters');
+            setCollectionPageAppliedFilters('','', false);
           }}
           className="px-4 self-start font-black text-xl font-grotesk cursor-pointer text-blog-text-reskin">
           Clear filter
