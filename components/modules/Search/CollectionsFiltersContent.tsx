@@ -91,7 +91,7 @@ export const CollectionsFiltersContent = () => {
           Clear filter
         </div>
         <span className="minlg:hidden px-5 mt-10 text-xs text-gray-400">Press enter for results</span>
-        <div className="minlg:hidden  mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
+        <div className="minlg:hidden px-4 mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
           <Button
             color={'black'}
             accent={AccentType.SCALE}
