@@ -31,11 +31,6 @@ describe('minted profile page tests', () => {
     // cy.get('.NFTCollectionCardContainer').should('exist');
   });
 
-  it('should allow navigation from profile to NFT detail page', () => {
-    cy.get('.NFTCardContainer').first().click();
-    cy.wait('@NftQuery').its('response.statusCode').should('eq', 200);
-  });
-
   it('should not have an announcements link', () => {
     cy.get('#FooterContainer').should('not.contain.text', 'Announcements');
   });
