@@ -31,6 +31,8 @@ jobs:
         component: false
         browser: chrome
         tag: ${{ github.ref_name }}
+        spec: |
+          cypress/e2e/stable/**/*.cy.tsx
       env:
         DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
         CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
