@@ -28,7 +28,7 @@ export interface NFTDetailPageProps {
 
 const detailTabTypes = {
   0: 'Info',
-  1: 'Traits',
+  1: 'Traits'
 };
 
 export function NFTDetailPage(props: NFTDetailPageProps) {

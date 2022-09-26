@@ -66,8 +66,7 @@ export function Collection(props: CollectionProps) {
 
   const tabs = {
     0: 'NFTs',
-    1: 'Activity',
-    2: 'Analytics',
+    1: 'Activity'
   };
 
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -386,9 +385,6 @@ export function Collection(props: CollectionProps) {
             }
             {selectedTab === 'Activity' &&
               <CollectionActivity contract={props?.contract} />
-            }
-            {selectedTab === 'Analytics' &&
-              <CollectionAnalyticsContainer contract={props?.contract} />
             }
           </>
         }
