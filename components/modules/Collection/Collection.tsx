@@ -87,7 +87,7 @@ export function Collection(props: CollectionProps) {
       'per_page': 8,
       'page'    : currentPage,
       'facet_by': 'contractAddr',
-      'filter_by': 'contractAddr:='+contractAddr.toString(),
+      'filter_by': 'contractAddr:='+contractAddr?.toString(),
       'exhaustive_search' : true
     }] })
       .then((resp) => {
@@ -105,7 +105,7 @@ export function Collection(props: CollectionProps) {
         'per_page': 8,
         'page'    : currentPage,
         'facet_by': 'contractAddr',
-        'filter_by': 'contractAddr:='+contractAddr.toString(),
+        'filter_by': 'contractAddr:='+contractAddr?.toString(),
         'exhaustive_search' : true
       }] })
         .then((resp) => {
