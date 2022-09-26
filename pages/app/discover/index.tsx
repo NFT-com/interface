@@ -110,7 +110,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                   sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-3 minxl:grid-cols-4')}>
                   {paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.map((collection, index) => {
                     return (
-                      <div key={index} className="DiscoverCollectionItem mb-2 min-h-[10.5rem] minmd:min-h-[13rem] minxl:min-h-[13.5rem]">
+                      <div key={index} className="DiscoverCollectionItem mb-2 min-h-[12.5rem]">
                         <CollectionItem
                           contractAddr={collection?.collectionAddress}
                           images={collectionCardImages(collection)}

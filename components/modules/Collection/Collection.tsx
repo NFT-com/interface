@@ -18,7 +18,6 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { CollectionAnalyticsContainer } from './CollectionAnalyticsContainer';
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';
@@ -356,7 +355,7 @@ export function Collection(props: CollectionProps) {
                             tokenId={nft.document.tokenId}
                             title={nft.document.nftName}
                             collectionName={nft.document.contractName}
-                            images={[nft.document.imageURL]}
+                            images={[]}
                             onClick={() => {
                               if (nft.document.nftName) {
                                 router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);

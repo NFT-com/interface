@@ -79,8 +79,8 @@ export function NFTCard(props: NFTCardProps) {
 
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
-    : props.images?.map(processIPFSURL);
-  
+    : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL];
+
   const variantsForRow: RoundedCornerVariant[] = useMemo(() => {
     if (processedImageURLs.length > 2) {
       return [
@@ -257,7 +257,7 @@ export function NFTCard(props: NFTCardProps) {
               props.images[0] == null ? 'aspect-square' : '',
             )}
           >
-            { props.images.length === 0 || props.images[0] == null ?
+            { (props.images.length === 0 || props.images[0] == null) && processedImageURLs.length === 0 ?
               null :
               <RoundedCornerMedia
                 width={600}

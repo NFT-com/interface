@@ -58,7 +58,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   });
 
   return (
-    <div className="bg-transparent overflow-x-auto p-4 minxl:p-10 minxl:pt-10 minxl:-mb-10 w-full">
+    <div className="bg-transparent overflow-x-auto p-4 minxl:p-10 minxl:pt-10 minxl:pb-0 minxl:-mb-10 w-full">
       <div className="w-full flex flex-col">
         <div className='justify-start flex'>
           <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
