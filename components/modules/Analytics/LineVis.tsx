@@ -17,7 +17,7 @@ export type LineChartProps = {
   data: any;
   label: string;
   showMarketplaceOptions: boolean;
-  currentMarketplace: string;
+  currentMarketplace?: string;
   setCurrentMarketplace?: Dispatch<SetStateAction<string>>,
 };
 
@@ -25,7 +25,7 @@ export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
   const [selectedMarketplace, setSelectedMarketplace] = useState<ExternalExchange>(ExternalExchange.Opensea);
   
   return (
-    <div className="bg-transparent">
+    <div className="bg-transparent min-w-full">
       {(showMarketplaceOptions && !!data) &&
       <div className="w-full px-2 py-2 -mt-16 minmd:ml-[17.5px] minmd:visible sm:hidden">
         <div className="flex flex-row items-center justify-end space-x-2">
@@ -70,7 +70,7 @@ export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
           {!data &&
             <Label position={'center'} value={'No Data Yet'} />
           }
-          <XAxis dataKey={'date'} />
+          <XAxis dataKey={'date'} style={{ fontSize: '9px' }}/>
           <YAxis orientation={'right'} />
           <Tooltip
             wrapperClassName='rounded-xl bg-[#1F2127] text-white'
