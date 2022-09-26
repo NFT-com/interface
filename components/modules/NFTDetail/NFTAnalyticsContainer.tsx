@@ -53,8 +53,6 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
       dateRange: dayTimeFrames[selectedTimeFrame] });
     
     const sales = resp.getSales.map(i => {
-      console.log(i.price,'-', i.priceUSD);
-      // console.log(i.price.toFixed(2),'-',i.priceUSD.toFixed(2));
       return { date: moment(i.date).format('MM-DD-YYYY').toString(), value: i.price ?? i.priceUSD };
     });
     return sales.sort((a,b) =>(a.date > b.date) ? 1 : -1);
