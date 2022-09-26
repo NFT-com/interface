@@ -19,7 +19,7 @@ describe('results page tests', () => {
     cy.visit('/app/collection/0xf5de760f2e916647fd766B4AD9E85ff943cE3A2b');
     cy.wait(4000);
     cy.get('.buttonContainer').should('exist');
-    cy.get('.buttonContainer').click();
+    cy.get('.buttonContainer').last().click();
     cy.wait(4000);
     cy.get('.NftCollectionItem').should('have.length', 16);
   });

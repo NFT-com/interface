@@ -7,6 +7,7 @@ import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQue
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -76,11 +77,13 @@ export function NFTCard(props: NFTCardProps) {
   const { getByContractAddress } = useSupportedCurrencies();
   const [selected, setSelected] = useState(false);
   const ethPriceUsd: number = useEthPriceUSD();
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
-    : props.images?.map(processIPFSURL);
-  
+    : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL];
+
   const variantsForRow: RoundedCornerVariant[] = useMemo(() => {
     if (processedImageURLs.length > 2) {
       return [
@@ -257,7 +260,7 @@ export function NFTCard(props: NFTCardProps) {
               props.images[0] == null ? 'aspect-square' : '',
             )}
           >
-            { props.images.length === 0 || props.images[0] == null ?
+            { (props.images.length === 0 || props.images[0] == null) && processedImageURLs.length === 0 ?
               null :
               <RoundedCornerMedia
                 width={600}
@@ -342,7 +345,7 @@ export function NFTCard(props: NFTCardProps) {
               </p>
             </div>
             <div>
-              <button onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+              {hasGks && <button onClick={async (e: MouseEvent<HTMLButtonElement>) => {
                 e.stopPropagation();
                 const listing = lowestListing;
                 const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
@@ -364,7 +367,7 @@ export function NFTCard(props: NFTCardProps) {
               }}
               className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-5 rounded focus:outline-none focus:shadow-outline w-full" type="button">
                 Add to cart
-              </button>
+              </button>}
             </div>
           </div>
         }

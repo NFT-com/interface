@@ -1,4 +1,3 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';

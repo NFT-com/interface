@@ -355,7 +355,7 @@ export function Collection(props: CollectionProps) {
                             tokenId={nft.document.tokenId}
                             title={nft.document.nftName}
                             collectionName={nft.document.contractName}
-                            images={[nft.document.imageURL]}
+                            images={[nft?.document?.previewLink ?? nft?.document?.imageURL]}
                             onClick={() => {
                               if (nft.document.nftName) {
                                 router.push(`/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`);
