@@ -12,9 +12,10 @@ const IdFilter = (props: {
   clearedFilters: boolean,
   setClearedFilters: (boolean) => void,
   id_nftName: string,
-  screenWidth: number
+  screenWidth: number,
+  setInputValue: (string) => void,
 }) => {
-  const { setId, clearedFilters, setClearedFilters, id_nftName, screenWidth } = props;
+  const { setId, clearedFilters, setClearedFilters, id_nftName, screenWidth, setInputValue } = props;
   const [value, setValue] = useState(id_nftName);
   return (
     <div className={tw(
@@ -34,7 +35,7 @@ const IdFilter = (props: {
           onChange={(event) => {
             screenWidth >= 900 ? setId(event.target.value) : setValue(event.target.value);
             setClearedFilters(false);
-            console.log(event.target.value);
+            setInputValue(event.target.value);
           }}
           onKeyUp={(event) => {
             if (event.keyCode === 13){
@@ -52,6 +53,7 @@ export const CollectionsFiltersContent = () => {
   const { width: screenWidth } = useWindowDimensions();
   const { setSearchModalOpen, setCollectionPageAppliedFilters, id_nftName } = useSearchModal();
   const [clearedFilters, setClearedFilters] = useState(false);
+  const [inputValue, setInputValue] = useState('');
 
   const setId = (id_nftName: string) => {
     setCollectionPageAppliedFilters('',id_nftName, false);
@@ -75,7 +77,8 @@ export const CollectionsFiltersContent = () => {
             clearedFilters={clearedFilters}
             setClearedFilters={setClearedFilters}
             id_nftName={id_nftName}
-            screenWidth={screenWidth}/>
+            screenWidth={screenWidth}
+            setInputValue={setInputValue}/>
         </div>
         <div
           onClick={() =>{
@@ -87,13 +90,15 @@ export const CollectionsFiltersContent = () => {
           Clear filter
         </div>
         <span className="minlg:hidden px-5 mt-10 text-xs text-gray-400">Press enter for results</span>
-        <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
+        <div className="minlg:hidden  mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
           <Button
             color={'black'}
             accent={AccentType.SCALE}
             stretch={true}
             label={'Filter'}
-            onClick={() => setId(id_nftName)}
+            onClick={() => {
+              setCollectionPageAppliedFilters('',inputValue, false);
+            }}
             type={ButtonType.PRIMARY}
           />
         </div>
