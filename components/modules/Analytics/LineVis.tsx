@@ -23,7 +23,7 @@ export type LineChartProps = {
 
 export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
   const [selectedMarketplace, setSelectedMarketplace] = useState<ExternalExchange>(ExternalExchange.Opensea);
-  console.log(data, 'data fdo');
+
   return (
     <div className="bg-transparent min-w-full">
       {(showMarketplaceOptions && !!data) &&
