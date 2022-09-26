@@ -15,8 +15,8 @@ describe('minted profile page tests', () => {
       cy.visit('/' + profileUrl);
       cy.wait(1000);
 
-      cy.wait('@ProfileQuery').its('response.statusCode').should('eq', 200);
-      cy.wait(500); // wait for the children to re-render
+      // cy.wait('@ProfileQuery').its('response.statusCode').should('eq', 200);
+      // cy.wait(500); // wait for the children to re-render
     });
   });
     
