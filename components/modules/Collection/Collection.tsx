@@ -18,6 +18,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { CollectionAnalyticsContainer } from './CollectionAnalyticsContainer';
 import { CollectionInfo } from './CollectionInfo';
 
 import { Tab } from '@headlessui/react';

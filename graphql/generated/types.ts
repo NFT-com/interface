@@ -203,6 +203,16 @@ export type ClearGkIconVisibleOutput = {
   message?: Maybe<Scalars['String']>;
 };
 
+export type ClearPreviewLinksOutput = {
+  __typename?: 'ClearPreviewLinksOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
+export type ClearQueueOutput = {
+  __typename?: 'ClearQueueOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type Collection = {
   __typename?: 'Collection';
   bannerUrl?: Maybe<Scalars['String']>;
@@ -398,6 +408,11 @@ export type FilterAskInput = {
   chainId?: InputMaybe<Scalars['String']>;
   pageInput?: InputMaybe<PageInput>;
   sortBy?: InputMaybe<AskSortType>;
+};
+
+export type FixUpdatedAtOutput = {
+  __typename?: 'FixUpdatedAtOutput';
+  message?: Maybe<Scalars['String']>;
 };
 
 export type FollowersInput = {
@@ -647,6 +662,10 @@ export type Mutation = {
   cancelMarketBid: Scalars['Boolean'];
   /** AUTHENTICATED */
   clearGKIconVisible: ClearGkIconVisibleOutput;
+  /** AUTHENTICATED */
+  clearPreviewLinks: ClearPreviewLinksOutput;
+  /** AUTHENTICATED */
+  clearQueue: ClearQueueOutput;
   confirmEmail: Scalars['Boolean'];
   /** AUTHENTICATED */
   createAsk: MarketAsk;
@@ -658,6 +677,8 @@ export type Mutation = {
   createCuration: Curation;
   deleteFromWatchlist?: Maybe<Scalars['Boolean']>;
   fillChainIds: FillChainIdsOutput;
+  /** AUTHENTICATED */
+  fixUpdatedAt: FixUpdatedAtOutput;
   /** AUTHENTICATED */
   followProfile: Profile;
   /** AUTHENTICATED */
@@ -720,6 +741,7 @@ export type Mutation = {
   /** AUTHENTICATED */
   updateNFTProfileId: Nft;
   updateNFTsForProfile: NfTsOutput;
+  updateOfficialCollections: UpdateOfficialCollectionsOutput;
   /** AUTHENTICATED */
   updateProfile: Profile;
   /** AUTHENTICATED */
@@ -780,6 +802,16 @@ export type MutationCancelMarketBidArgs = {
 };
 
 
+export type MutationClearPreviewLinksArgs = {
+  count: Scalars['Int'];
+};
+
+
+export type MutationClearQueueArgs = {
+  queue: Scalars['String'];
+};
+
+
 export type MutationConfirmEmailArgs = {
   token: Scalars['String'];
 };
@@ -812,6 +844,11 @@ export type MutationDeleteFromWatchlistArgs = {
 
 export type MutationFillChainIdsArgs = {
   input: FillChainIdsInput;
+};
+
+
+export type MutationFixUpdatedAtArgs = {
+  count: Scalars['Int'];
 };
 
 
@@ -1000,6 +1037,11 @@ export type MutationUpdateNfTsForProfileArgs = {
 };
 
 
+export type MutationUpdateOfficialCollectionsArgs = {
+  list: Scalars['Upload'];
+};
+
+
 export type MutationUpdateProfileArgs = {
   input: UpdateProfileInput;
 };
@@ -1064,7 +1106,9 @@ export type Nft = {
 
 export type NftListingsArgs = {
   listingsExpirationType?: InputMaybe<ActivityExpiration>;
+  listingsOwner?: InputMaybe<Scalars['Address']>;
   listingsPageInput?: InputMaybe<PageInput>;
+  listingsStatus?: InputMaybe<ActivityStatus>;
 };
 
 export type NftDetail = {
@@ -1545,7 +1589,6 @@ export type Query = {
   collectionsByDeployer?: Maybe<Array<Maybe<Collection>>>;
   convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
-  externalListings?: Maybe<ExternalListingsOutput>;
   filterAsks: GetMarketAsk;
   getActivities: TxActivitiesOutput;
   getActivitiesByType?: Maybe<Array<Maybe<TxActivity>>>;
@@ -1650,13 +1693,6 @@ export type QueryConvertEnsToEthAddressArgs = {
 
 export type QueryCurationNfTsArgs = {
   input: CurationInput;
-};
-
-
-export type QueryExternalListingsArgs = {
-  chainId?: InputMaybe<Scalars['String']>;
-  contract: Scalars['Address'];
-  tokenId: Scalars['String'];
 };
 
 
@@ -2050,10 +2086,13 @@ export type TopBidsInput = {
 
 export type TransactionSales = {
   __typename?: 'TransactionSales';
+  contractAddress?: Maybe<Scalars['String']>;
   date?: Maybe<Scalars['DateTime']>;
+  price?: Maybe<Scalars['Float']>;
   priceUSD?: Maybe<Scalars['Float']>;
+  symbol?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
   transaction?: Maybe<TransactionSalesTx>;
-  transactionHash?: Maybe<Scalars['String']>;
 };
 
 export type TransactionSalesInput = {
@@ -2336,6 +2375,11 @@ export type UpdateNfTsForProfileInput = {
   chainId?: InputMaybe<Scalars['String']>;
   pageInput?: InputMaybe<PageInput>;
   profileId: Scalars['ID'];
+};
+
+export type UpdateOfficialCollectionsOutput = {
+  __typename?: 'UpdateOfficialCollectionsOutput';
+  message?: Maybe<Scalars['String']>;
 };
 
 export type UpdateProfileInput = {
@@ -2855,6 +2899,13 @@ export type GetRemovedAssociationsForReceiverQueryVariables = Exact<{ [key: stri
 
 
 export type GetRemovedAssociationsForReceiverQuery = { __typename?: 'Query', getRemovedAssociationsForReceiver: Array<{ __typename?: 'RemovedAssociationsForReceiverOutput', id: string, url: string, owner: string, hidden: boolean } | null> };
+
+export type GetSalesQueryVariables = Exact<{
+  input?: InputMaybe<TransactionSalesInput>;
+}>;
+
+
+export type GetSalesQuery = { __typename?: 'Query', getSales?: Array<{ __typename?: 'TransactionSales', contractAddress?: string | null, tokenId?: string | null, priceUSD?: number | null, price?: number | null, symbol?: string | null, date?: any | null } | null> | null };
 
 export type GetTxByContractQueryVariables = Exact<{
   input?: InputMaybe<TransactionsByContractInput>;
@@ -4039,6 +4090,18 @@ export const GetRemovedAssociationsForReceiverDocument = gql`
   }
 }
     `;
+export const GetSalesDocument = gql`
+    query GetSales($input: TransactionSalesInput) {
+  getSales(input: $input) {
+    contractAddress
+    tokenId
+    priceUSD
+    price
+    symbol
+    date
+  }
+}
+    `;
 export const GetTxByContractDocument = gql`
     query GetTxByContract($input: TransactionsByContractInput) {
   getTxByContract(input: $input) {
@@ -4940,6 +5003,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetRemovedAssociationsForReceiver(variables?: GetRemovedAssociationsForReceiverQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetRemovedAssociationsForReceiverQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetRemovedAssociationsForReceiverQuery>(GetRemovedAssociationsForReceiverDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetRemovedAssociationsForReceiver', 'query');
+    },
+    GetSales(variables?: GetSalesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSalesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetSalesQuery>(GetSalesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetSales', 'query');
     },
     GetTxByContract(variables?: GetTxByContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTxByContractQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTxByContractQuery>(GetTxByContractDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTxByContract', 'query');
