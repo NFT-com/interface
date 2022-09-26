@@ -15,7 +15,7 @@ describe('nft detail page tests', () => {
       const contract = json[Cypress.env('NETWORK')]?.['contract'];
       const tokenId = json[Cypress.env('NETWORK')]?.['tokenId'];
       cy.visit('/app/nft/' + contract + '/' + tokenId);
-      cy.wait(500);
+      cy.wait(1000);
       cy.wait('@NftQuery').its('response.statusCode').should('eq', 200);
       cy.wait(500); // wait for the children to re-render with nft data
     });

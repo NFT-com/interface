@@ -13,6 +13,8 @@ describe('minted profile page tests', () => {
       const profileUrl = json[Cypress.env('NETWORK')]?.['profileUrl'];
 
       cy.visit('/' + profileUrl);
+      cy.wait(1000);
+
       cy.wait('@ProfileQuery').its('response.statusCode').should('eq', 200);
       cy.wait(500); // wait for the children to re-render
     });
