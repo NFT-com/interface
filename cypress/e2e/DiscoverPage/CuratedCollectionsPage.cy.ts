@@ -22,7 +22,6 @@ describe('discover page tests', () => {
       cy.contains('/Famous').should('exist');
       cy.contains('/Utility').should('exist');
       cy.contains('NFT.com').should('exist');
-      cy.contains('23 /DISCOVER COLLECTIONS').should('exist');
     });
   });
 });
