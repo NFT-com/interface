@@ -1,6 +1,7 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 
+import { AccentType, Button,ButtonType } from 'components/elements/Button';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 
 import EllipseX from 'public/ellipse-x.svg';
@@ -80,11 +81,22 @@ export const CollectionsFiltersContent = () => {
           onClick={() =>{
             setCollectionPageAppliedFilters('','', true);
             setClearedFilters(true);
+            setSearchModalOpen(false, 'collectionFilters');
           }}
           className="px-4 self-start font-black text-xl font-grotesk cursor-pointer text-blog-text-reskin">
           Clear filter
         </div>
         <span className="minlg:hidden px-5 mt-10 text-xs text-gray-400">Press enter for results</span>
+        <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-9 font-medium">
+          <Button
+            color={'black'}
+            accent={AccentType.SCALE}
+            stretch={true}
+            label={'Filter'}
+            onClick={() => setId(id_nftName)}
+            type={ButtonType.PRIMARY}
+          />
+        </div>
       </div>
     </>);
 };
