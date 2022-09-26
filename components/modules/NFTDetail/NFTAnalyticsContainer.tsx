@@ -16,8 +16,8 @@ export type NFTAnalyticsContainerProps = {
 }
 
 const nftChartTypes = {
-  0: 'Price',
-  1: 'Activity',
+  0: 'Activity',
+  1: 'Price',
 };
 
 const timeFrames = {
@@ -107,6 +107,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </Tab.Group>
         }
       </div>
+      {selectedChartType === 'Activity' && <NFTActivity data={data} />}
       {selectedChartType === 'Price' &&
         <LineVis
           label={'Price'}
@@ -114,7 +115,6 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
           data={nftData}
         />
       }
-      {selectedChartType === 'Activity' && <NFTActivity data={data} />}
     </div>
   );
 };
