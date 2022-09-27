@@ -100,8 +100,8 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
                   }}
                 >
                   <div>
-                    <span className={totalRemaining.gt(100) ? 'text-always-white' : 'text-hero-pink'}>
-                      {Number(totalRemaining.toString()).toLocaleString()}
+                    <span className={totalRemaining?.gt(100) ? 'text-always-white' : 'text-hero-pink'}>
+                      {Number(totalRemaining?.toString()).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export function GenesisKeyPublicSale(props: GenesisKeyPublicSaleProps) {
                 'bg-transparent minmd:bg-always-black border-accent-border-dk'
               )}
             >
-              { totalRemaining.toString() !== '0' ?
+              { totalRemaining?.toString() !== '0' ?
                 <>
                   <div className={tw('mt-14 mb-10 text-xl', isMobile ? 'text-center' : '')}>
                 Genesis Key Price: {ethers.utils.formatEther(props.currentPrice)} ETH

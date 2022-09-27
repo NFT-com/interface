@@ -6,7 +6,7 @@ import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import { base32cid, cid, multihash } from 'is-ipfs';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -100,6 +100,8 @@ export const processIPFSURL = (image: Maybe<string>): Maybe<string> => {
     return prefix + image.slice(7);
   } else if (image.indexOf('https://ipfs.io/ipfs/') === 0) {
     return prefix + image.slice(21);
+  } else if (image.indexOf('https://ipfs.infura.io/ipfs/') === 0) {
+    return prefix + image.slice(28);
   } else if (image.indexOf('https://gateway.pinata.cloud/ipfs/') === 0) {
     return prefix + image.slice(34);
   } else if (image.indexOf('https://infura-ipfs.io/ipfs/') === 0) {
@@ -223,7 +225,7 @@ export function fetcher(url: string): Promise<any> {
   return fetch(url).then((res) => res.json());
 }
 
-export function getDateFromTimeFrame(timeFrame: string) {
+export function getDateFromTimeFrame(timeFrame: string): Moment {
   if(timeFrame === '1D') {
     return moment().subtract(1, 'd');
   }
@@ -247,4 +249,15 @@ export const collectionCardImages = (collection: any) => {
     collection.nfts[1]?.metadata?.imageURL || collection.nfts[1]?.previewLink || collection.nfts[1]?.metadata?.traits?.find(i => i.type === 'image_url_png')?.value,
     collection.nfts[2]?.metadata?.imageURL || collection.nfts[2]?.previewLink || collection.nfts[2]?.metadata?.traits?.find(i => i.type === 'image_url_png')?.value,
   ];
+};
+
+export const getImageFetcherBaseURL = () => {
+  switch(getEnv(Doppler.NEXT_PUBLIC_ENV)) {
+  case 'PRODUCTION':
+    return getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
+  case 'STAGING':
+    return 'https://www.nft.com/'; // for similar image experience as prod
+  default:
+    return 'https://sandbox-nvf2t.netlify.app/';
+  }
 };

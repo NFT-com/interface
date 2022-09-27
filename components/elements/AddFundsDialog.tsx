@@ -2,13 +2,12 @@ import { Button, ButtonType } from 'components/elements/Button';
 import Copy from 'components/elements/Copy';
 import { Modal } from 'components/elements/Modal';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
-import { logAddFundsLinkClick, logAddFundsModalImpression } from 'utils/gaLogger';
 import { shorten } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import FiatBlack from 'public/fiat.svg';
 import QRCode from 'qrcode.react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
@@ -21,14 +20,7 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
 
   const { addFundsDialogOpen: isDialogOpen, setAddFundsDialogOpen } = useAddFundsDialog();
 
-  const { primaryText, primaryTextClass, secondaryText } =
-    useThemeColors();
-
-  useEffect(() => {
-    if (isDialogOpen) {
-      logAddFundsModalImpression();
-    }
-  }, [isDialogOpen]);
+  const { primaryText, primaryTextClass, secondaryText } = useThemeColors();
 
   return <Modal
     visible={isDialogOpen}
@@ -111,7 +103,6 @@ export default function AddFundsDialog(props: AddFundsDialogProps) {
             setShowWyreDisclaimer(false);
             setAddFundsDialogOpen(false);
           } else {
-            logAddFundsLinkClick();
             setShowWyreDisclaimer(true);
           }
         }}

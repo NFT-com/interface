@@ -1,4 +1,3 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
@@ -196,7 +195,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
             <EllipseX />
           </div>
         </div>
-        {showHits
+        {showHits && keyword !== ''
           ? (
             <div
               ref={resultsRef}

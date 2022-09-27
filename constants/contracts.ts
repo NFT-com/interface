@@ -79,12 +79,15 @@ export const nftAggregator: DeployedContract = {
 export function getAddressForChain(contract: DeployedContract, chainId: number | string): string {
   switch (chainId) {
   case 1:
+    return contract.mainnet;
   case '1':
     return contract.mainnet;
   case 5:
+    return contract.goerli;
   case '5':
     return contract.goerli;
   case 4:
+    return contract.rinkeby;
   case '4':
     return contract.rinkeby;
   default:

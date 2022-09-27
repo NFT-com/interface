@@ -45,17 +45,13 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const prevVal = usePrevious(page);
   const prevSearchTerm = usePrevious(searchTerm);
   let addressesList = [];
-
-  const sortedResults = useCallback((results) => {
-    return results.sort((a,b) =>(a.contractAddr < b.contractAddr) ? 1 : -1);
-  }, []);
   
   useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
-      setNftsForCollections([...sortedResults(collectionsData.nftsForCollections)]);
+      setNftsForCollections([...collectionsData.nftsForCollections]);
     }));
   });
 
@@ -64,7 +60,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
-      setNftsForCollections([...sortedResults(collectionsData.nftsForCollections)]);
+      setNftsForCollections([...collectionsData.nftsForCollections]);
     }));
   });
 
@@ -122,11 +118,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       sort_by: nftsPageSortyBy,
     }] })
       .then((resp) => {
-        results.current = [...sortedResults(resp.results[0].hits)];
+        results.current = [...resp.results[0].hits];
         found.current = resp.results[0].found;
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
+  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -142,12 +138,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         sort_by: nftsPageSortyBy,
       }] })
         .then((resp) => {
-          results.current = [...results.current,...sortedResults(resp.results[0].hits)];
+          results.current = [...results.current,...resp.results[0].hits];
           found.current = resp.results[0].found;
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
         });
     }
-  }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen, sortedResults]);
+  }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   return (
     <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen overflow-hidden">
