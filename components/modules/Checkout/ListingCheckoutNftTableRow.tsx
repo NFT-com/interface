@@ -62,11 +62,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             expanded ?
               <CaretDown onClick={() => {
                 setExpanded(false);
-              }} size={24} color="black" className='mr-4 mt-2 cursor-pointer' /> :
+              }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' /> :
               <CaretRight onClick={() => {
                 setExpanded(true);
                 clearGeneralConfig(props.listing);
-              }} size={24} color="black" className='mr-4 mt-2 cursor-pointer' />
+              }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' />
           }
           <div className='relative h-10 aspect-square'>
             <video
