@@ -19,4 +19,19 @@ describe('NFTListingsCartSummaryModal', () => {
       </WagmiConfig>
     );
   });
+
+  it('mounts and renders and closes', () => {
+    const callback = cy.stub();
+
+    cy.mount(
+      <WagmiConfig client={client}>
+        <NFTListingsCartSummaryModal
+          visible={true}
+          onClose={callback} />
+      </WagmiConfig>
+    );
+    cy.get('.closeButton').first().click().then(() => {
+      expect(callback).to.be.called;
+    });
+  });
 });

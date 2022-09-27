@@ -23,7 +23,7 @@ export type LineChartProps = {
 
 export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
   const [selectedMarketplace, setSelectedMarketplace] = useState<ExternalExchange>(ExternalExchange.Opensea);
-  
+
   return (
     <div className="bg-transparent min-w-full">
       {(showMarketplaceOptions && !!data) &&
@@ -60,7 +60,7 @@ export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
       </div>
       }
       <ResponsiveContainer height={isMobile ? 227 : 357} width={'100%'} >
-        <LineChart data={data} margin={{ top: 5, right: -30, bottom: 5, left: 0 }}>
+        <LineChart data={data} margin={{ top: 30, right: 30, bottom: 65, left: 5 }} height={isMobile ? 227 : 270}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0.2}/>
@@ -70,8 +70,8 @@ export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
           {!data &&
             <Label position={'center'} value={'No Data Yet'} />
           }
-          <XAxis dataKey={'date'} style={{ fontSize: '9px' }}/>
-          <YAxis orientation={'right'} />
+          <XAxis label={{ value: 'Date', position: 'insideBottom', offset: -10 }} dataKey={'date'} style={{ fontSize: '11px' }}/>
+          <YAxis label={{ value: 'Value (USD)', position: 'insideTopRight', offset: -30 }}  dataKey={'value'} style={{ fontSize: '11px' }} orientation={'right'} />
           <Tooltip
             wrapperClassName='rounded-xl bg-[#1F2127] text-white'
             labelClassName='bg-[#1F2127] text-white'

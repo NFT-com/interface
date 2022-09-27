@@ -29,4 +29,29 @@ describe('EditListingsModal', () => {
       </WagmiConfig>
     );
   });
+
+  it('mounts and renders and closes', () => {
+    const nft = {
+      tokenId: 'test_token_id',
+      contract: 'test_contract'
+    };
+    const callback = cy.stub();
+
+    cy.mount(
+      <WagmiConfig client={client}>
+        <EditListingsModal
+          listings={[{
+            nft,
+          }]}
+          nft={nft}
+          collectionName={'test_collection'}
+          visible={true}
+          onClose={callback}
+        />
+      </WagmiConfig>
+    );
+    cy.get('.closeButton').first().click().then(() => {
+      expect(callback).to.be.called;
+    });
+  });
 });

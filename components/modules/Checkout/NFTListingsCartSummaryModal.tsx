@@ -294,9 +294,9 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             setShowProgressBar(false);
             setError(null);
             props.onClose();
-          }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
+          }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
           {getSummaryContent()}
-          {toList.length > 0 && <div className="my-4 flex">
+          <div className="my-4 flex">
             <Button
               stretch
               loading={showProgressBar && !error && !success}
@@ -389,7 +389,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               }}
               type={ButtonType.PRIMARY}
             />
-          </div>}
+          </div>
           {
             !isNullOrEmpty(error) &&
             <div className='w-full mt-4'>
