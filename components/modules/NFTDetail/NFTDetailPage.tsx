@@ -1,11 +1,11 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
-import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { DescriptionDetail } from './DescriptionDetail';
@@ -41,13 +41,6 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return await getContractMetadata(nft?.contract, defaultChainId);
   });
 
-  const { data: listings } = useListingActivitiesQuery(
-    nft?.contract,
-    nft?.tokenId,
-    defaultChainId,
-    nft?.wallet?.address
-  );
-
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
   useEffect(() => {
@@ -57,8 +50,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
 
   const showListings = useMemo(() => {
-    return !isNullOrEmpty(listings);
-  }, [listings]);
+    return !isNullOrEmpty(filterValidListings(nft?.listings?.items));
+  }, [nft]);
 
   const DetailTabsComponent = () => {
     return (
@@ -155,7 +148,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
         }
       </div>
-      <div className="block minxl:hidden flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
+      <div className="minxl:hidden flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
         <DetailTabsComponent />
       </div>
       <NFTDetailMoreFromCollection hideTokenId={nft?.tokenId} collectionName={collection?.contractMetadata?.name} contract={nft?.contract} />

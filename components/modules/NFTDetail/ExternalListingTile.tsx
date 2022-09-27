@@ -4,7 +4,7 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { ActivityStatus, LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
-import { useListingActivitiesQuery } from 'graphql/hooks/useListingActivitiesQuery';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
@@ -68,11 +68,9 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id) != null;
   }, [props.nft?.id, toBuy]);
 
-  const { mutate: mutateNftListings } = useListingActivitiesQuery(
+  const { mutate: mutateNft } = useNftQuery(
     props?.nft?.contract,
-    props?.nft?.tokenId,
-    String(props.nft?.wallet?.chainId ?? defaultChainId),
-    props?.nft?.wallet?.address
+    props?.nft?.tokenId
   );
 
   const {
@@ -151,7 +149,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             const result = await cancelSeaportListing(order?.parameters, seaportExchange);
             if (result) {
               updateActivityStatus([listing?.id], ActivityStatus.Cancelled);
-              mutateNftListings();
+              mutateNft();
             }
             setCancelling(false);
           }
@@ -202,7 +200,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     stageListing,
     stagePurchase,
     updateActivityStatus,
-    mutateNftListings
+    mutateNft
   ]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport].includes(listingProtocol as ExternalProtocol)) {

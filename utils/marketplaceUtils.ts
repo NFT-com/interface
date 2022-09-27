@@ -1,6 +1,6 @@
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, SeaportProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 
@@ -8,6 +8,7 @@ import { filterDuplicates, sameAddress } from './helpers';
 import { multiplyBasisPoints } from './seaportHelpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { PartialDeep } from 'type-fest';
 
 export const MAX_UINT_256 = BigNumber.from(2).pow(256).sub(1);
 export type SaleDuration = '1 Hour' | '1 Day' | '7 Days' | '6 Months' | '1 Year';
@@ -113,4 +114,13 @@ export function getTotalRoyaltiesUSD(
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
     }
   }, 0);
+}
+
+export function filterValidListings(listings: PartialDeep<TxActivity>[]): PartialDeep<TxActivity>[] {
+  return listings?.filter(listing => {
+    const seaportValid = (listing.order?.protocolData as SeaportProtocolData)?.parameters &&
+      (listing.order?.protocolData as SeaportProtocolData)?.signature != null;
+    const looksrareValid = (listing.order?.protocolData as LooksrareProtocolData)?.price != null;
+    return listing.order?.protocolData != null && (looksrareValid || seaportValid);
+  }) ?? [];
 }
