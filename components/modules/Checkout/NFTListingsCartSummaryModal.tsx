@@ -5,7 +5,7 @@ import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrate
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
-import { multiplyBasisPoints } from 'utils/seaportHelpers';
+import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD } from 'utils/marketplaceUtils';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { ListAllResult, ListingTarget, NFTListingsContext } from './NFTListingsContext';
@@ -54,60 +54,12 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       revalidateOnFocus: false,
     });
 
-  const getMaxMarketplaceFeesUSD: () => number = useCallback(() => {
-    return toList?.reduce((cartTotal, stagedListing) => {
-      const feesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
-        const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
-        if (target.protocol === ExternalProtocol.LooksRare) {
-          // Looksrare fee is fetched from the smart contract.
-          const fee = BigNumber.from(looksrareProtocolFeeBps == null
-            ? 0
-            : multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, looksrareProtocolFeeBps));
-          return currencyData?.usd(Number(ethers.utils.formatUnits(
-            fee,
-            currencyData.decimals ?? 18
-          ))) ?? 0;
-        } else {
-          // Seaport fee is hard-coded in our codebase and not expected to change.
-          const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, 250));
-          return currencyData?.usd(Number(ethers.utils.formatUnits(
-            fee,
-            currencyData.decimals ?? 18
-          ))) ?? 0;
-        }
-      });
-      return cartTotal + Math.max(...feesByMarketplace);
-    }, 0);
+  const getMaxMarketplaceFees: () => number = useCallback(() => {
+    return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
   }, [toList, getByContractAddress, looksrareProtocolFeeBps]);
  
-  const getMaxRoyaltyFeesUSD: () => number = useCallback(() => {
-    return toList?.reduce((cartTotal, stagedListing) => {
-      const royaltiesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
-        const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
-        if (target.protocol === ExternalProtocol.LooksRare) {
-          const minAskAmount = BigNumber.from(target?.looksrareOrder?.minPercentageToAsk ?? 0)
-            .div(10000)
-            .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
-          const marketplaceFeeAmount = BigNumber.from(looksrareProtocolFeeBps ?? 0)
-            .div(10000)
-            .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
-          const royalty = minAskAmount.sub(marketplaceFeeAmount);
-          return currencyData?.usd(Number(ethers.utils.formatUnits(
-            royalty,
-            currencyData.decimals ?? 18
-          ))) ?? 0;
-        } else {
-          const royalty = BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
-            target?.seaportParameters?.consideration[2].startAmount :
-            0);
-          return currencyData?.usd(Number(ethers.utils.formatUnits(
-            royalty,
-            currencyData.decimals ?? 18
-          ))) ?? 0;
-        }
-      });
-      return cartTotal + Math.max(...royaltiesByMarketplace);
-    }, 0);
+  const getMaxRoyaltyFees: () => number = useCallback(() => {
+    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
   }, [looksrareProtocolFeeBps, toList, getByContractAddress]);
 
   const getTotalListings = useCallback(() => {
@@ -128,8 +80,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       return cartTotal + Math.min(...targetValues);
     }, 0);
 
-    return total - getMaxMarketplaceFeesUSD() - getMaxRoyaltyFeesUSD();
-  } , [getByContractAddress, getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, toList]);
+    return total - getMaxMarketplaceFees() - getMaxRoyaltyFees();
+  } , [getByContractAddress, getMaxMarketplaceFees, getMaxRoyaltyFees, toList]);
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
@@ -229,7 +181,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{'$' + (getMaxMarketplaceFeesUSD()?.toFixed(2) ?? 0) }</span>
+              <span className='font-semibold'>{'$' + (getMaxMarketplaceFees()?.toFixed(2) ?? 0) }</span>
             </div>
           </div>
           <div className="mx-4 my-4 flex items-center justify-between">
@@ -240,7 +192,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className="flex flex-col justify-end">
-              <span className="font-semibold">{'$' + (getMaxRoyaltyFeesUSD()?.toFixed(2) ?? 0)}</span>
+              <span className="font-semibold">{'$' + (getMaxRoyaltyFees()?.toFixed(2) ?? 0)}</span>
             </div>
           </div>
           <div className='px-8 border-t border-[#D5D5D5] w-full'/>
@@ -260,8 +212,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     }
   }, [
     error,
-    getMaxMarketplaceFeesUSD,
-    getMaxRoyaltyFeesUSD,
+    getMaxMarketplaceFees,
+    getMaxRoyaltyFees,
     getNeedsApprovals,
     getTotalListings,
     getTotalMinimumProfitUSD,
