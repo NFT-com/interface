@@ -2,7 +2,7 @@
 
 import { NULL_ADDRESS } from '../../../constants/addresses';
 import { ExternalProtocol } from '../../../types';
-import { convertDurationToSec, getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from '../../../utils/marketplaceUtils';
+import { convertDurationToSec, getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from '../../../utils/marketplaceUtils';
 
 import { BigNumber, BigNumberish } from 'ethers';
   
@@ -293,6 +293,79 @@ describe('Unit test our marketplace helper functions', () => {
           usd: (val: number) => val
         })
       )).to.equal(88.1);
+    });
+  });
+
+  context('getMaxMarketplaceFeesUSD' , () => {
+    it('should return the max total fees', () => {
+      expect(getMaxMarketplaceFeesUSD(
+        [
+          {
+            // first nft
+            startingPrice: BigNumber.from('100000000000000000000'),
+            currency: 'test_currency',
+            targets: [{
+              protocol: ExternalProtocol.LooksRare,
+            }]
+          },
+          {
+            // second nft 
+            startingPrice: BigNumber.from('1000000000000000000000000'),
+            currency: 'test_currency',
+            targets: [{
+              protocol: ExternalProtocol.Seaport,
+            }]
+          }
+        ],
+        BigNumber.from('1000'),
+        () => ({
+          decimals: 18,
+          usd: (val: number) => val
+        })
+      )).to.equal(25010);
+    });
+  });
+
+  context('getMaxRoyaltyFeesUSD', () => {
+    it('should return the correct max total fees', () => {
+      expect(getMaxRoyaltyFeesUSD(
+        [
+          {
+            // first nft
+            startingPrice: BigNumber.from('1000000000000000000000000'),
+            currency: 'test_currency',
+            targets: [{
+              protocol: ExternalProtocol.LooksRare,
+              looksrareOrder: {
+                minPercentageToAsk: 9000,
+                price: '1000000000000000000000000'
+              }
+            }]
+          },
+          {
+            // second nft 
+            startingPrice: BigNumber.from('1000000000000000000000000'),
+            currency: 'test_currency',
+            targets: [{
+              protocol: ExternalProtocol.Seaport,
+              seaportParameters: {
+                consideration: [
+                  {}, // price
+                  {}, // marketplace fee
+                  {
+                    startAmount: '1000000000000' // royalty
+                  }
+                ]
+              }
+            }]
+          }
+        ],
+        BigNumber.from('100'),
+        () => ({
+          decimals: 18,
+          usd: (val: number) => val
+        })
+      )).to.equal(0.000001);
     });
   });
 });
