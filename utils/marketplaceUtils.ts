@@ -1,3 +1,4 @@
+import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { LooksrareProtocolData, SeaportProtocolData } from 'graphql/generated/types';
@@ -112,5 +113,69 @@ export function getTotalRoyaltiesUSD(
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
     }
+  }, 0);
+}
+
+export function getMaxMarketplaceFeesUSD(
+  stagedListings: StagedListing[],
+  looksrareProtocolFeeBps: BigNumberish,
+  getByContractAddress: (contract: string) => NFTSupportedCurrency
+): number {
+  return stagedListings?.reduce((cartTotal, stagedListing) => {
+    const feesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+      const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
+      if (target.protocol === ExternalProtocol.LooksRare) {
+        // Looksrare fee is fetched from the smart contract.
+        const fee = BigNumber.from(looksrareProtocolFeeBps == null
+          ? 0
+          : multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, looksrareProtocolFeeBps));
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          fee,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
+      } else {
+        // Seaport fee is hard-coded in our codebase and not expected to change.
+        const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, 250));
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          fee,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
+      }
+    });
+    return cartTotal + Math.max(...feesByMarketplace);
+  }, 0);
+}
+
+export function getMaxRoyaltyFeesUSD(
+  stagedListings: StagedListing[],
+  looksrareProtocolFeeBps: BigNumberish,
+  getByContractAddress: (contract: string) => NFTSupportedCurrency
+): number {
+  return stagedListings?.reduce((cartTotal, stagedListing) => {
+    const royaltiesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+      const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
+      if (target.protocol === ExternalProtocol.LooksRare) {
+        const minAskAmount = BigNumber.from(target?.looksrareOrder?.minPercentageToAsk ?? 0)
+          .div(10000)
+          .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
+        const marketplaceFeeAmount = BigNumber.from(looksrareProtocolFeeBps ?? 0)
+          .div(10000)
+          .mul(BigNumber.from(target?.looksrareOrder?.price ?? 0));
+        const royalty = minAskAmount.sub(marketplaceFeeAmount);
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          royalty,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
+      } else {
+        const royalty = BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
+          target?.seaportParameters?.consideration[2].startAmount :
+          0);
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          royalty,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
+      }
+    });
+    return cartTotal + Math.max(...royaltiesByMarketplace);
   }, 0);
 }
