@@ -26,7 +26,8 @@ export type NFTSupportedCurrencies = {
 }
 
 export type NFTSupportedCurrenciesInterface = {
-  getByContractAddress: (address: string) => NFTSupportedCurrency
+  getByContractAddress: (address: string) => NFTSupportedCurrency,
+  getBalanceMap: (address: string, currencies: SupportedCurrency[]) => Promise<Map<string, BigNumberish>>
   data: NFTSupportedCurrencies
 };
 
@@ -146,8 +147,22 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
     return null;
   }, [dai.address, data.DAI, data.ETH, data.USDC, data.WETH, usdc.address, weth.address]);
 
+  const getBalanceMap = useCallback(async (
+    currentAddress: string,
+    currencies: SupportedCurrency[]
+  ) => {
+    const balances = new Map<string, BigNumberish>();
+    for (let i = 0; i < currencies.length; i++) {
+      const currencyData = data[currencies[i]];
+      const balance = await currencyData.balance(currentAddress);
+      balances.set(currencyData.contract, balance);
+    }
+    return balances;
+  }, [data]);
+
   return {
     data,
+    getBalanceMap,
     getByContractAddress
   };
 }
