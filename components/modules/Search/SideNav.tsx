@@ -6,7 +6,6 @@ import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
 import { NFTsFiltersContent } from './NFTsFiltersContent';
 
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 export interface OptionNavProps {
@@ -17,9 +16,12 @@ export interface OptionNavProps {
   filtersData?: any;
 }
 
-export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?: any}) => {
+export const SideNav = (props: {
+  onSideNav: (term: string) => void,
+  filtersData?: any,
+  isCollectionView?: boolean
+}) => {
   const { sideNavOpen, setSearchFilters } = useSearchModal();
-  const router = useRouter();
 
   useEffect(() => {
     setSearchFilters(props.filtersData);
@@ -34,7 +36,7 @@ export const SideNav = (props: {onSideNav: (term: string) => void, filtersData?:
         'w-[19rem]',
         sideNavOpen ? 'pr-4' : '-ml-[19rem]')}
     >
-      {!router.pathname.includes('/app/collection/')
+      {!props.isCollectionView
         ? (
           <>
             <CuratedCollectionsFilter onClick={props.onSideNav} collapsed={false}/>
