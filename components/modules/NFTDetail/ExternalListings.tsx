@@ -234,7 +234,7 @@ export function ExternalListings(props: ExternalListingsProps) {
           </span>
           <div className='flex items-center w-full justify-between'>
             <div className='text-xl font-bold flex items-end mt-1'>
-              {ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
+              {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
               {listingCurrencyData?.name ?? 'WETH'}
               <span className="text-secondary-txt text-sm ml-4">
                 ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}
