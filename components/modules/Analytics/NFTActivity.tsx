@@ -47,7 +47,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
           </thead>
           <tbody className='p-4'>
             {nftData?.map((tx, index) => (
-              <DetailPageTableRow tx={tx} index={index} key={tx?.id} isNftDetailPage={true} />
+              <DetailPageTableRow tx={tx} index={index} key={tx?.id ?? index} isNftDetailPage={true} />
             ))}
           </tbody>
         </table>
