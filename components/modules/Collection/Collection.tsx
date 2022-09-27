@@ -87,7 +87,7 @@ export function Collection(props: CollectionProps) {
       'per_page': 8,
       'page'    : currentPage,
       'facet_by': 'contractAddr',
-      'filter_by': 'contractAddr:='+contractAddr?.toString(),
+      'filter_by': 'contractAddr:='+(contractAddr?.toString() || props.contract),
       'exhaustive_search' : true
     }] })
       .then((resp) => {
@@ -105,7 +105,7 @@ export function Collection(props: CollectionProps) {
         'per_page': 8,
         'page'    : currentPage,
         'facet_by': 'contractAddr',
-        'filter_by': 'contractAddr:='+contractAddr?.toString(),
+        'filter_by': 'contractAddr:='+(contractAddr?.toString() || props.contract),
         'exhaustive_search' : true
       }] })
         .then((resp) => {
@@ -339,7 +339,7 @@ export function Collection(props: CollectionProps) {
             {selectedTab === 'NFTs' &&
             <div className="flex overflow-hidden pb-3.5">
               <div className="hidden minlg:block">
-                <SideNav onSideNav={() => null}/>
+                <SideNav onSideNav={() => null} isCollectionView/>
               </div>
               {collectionNfts.length > 0
                 ? <div className="flex-auto">

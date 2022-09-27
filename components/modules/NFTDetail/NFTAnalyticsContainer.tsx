@@ -2,6 +2,7 @@ import { LineVis } from 'components/modules/Analytics/LineVis';
 import { NFTActivity } from 'components/modules/Analytics/NFTActivity';
 import { Nft } from 'graphql/generated/types';
 import { useGetSales } from 'graphql/hooks/useGetSales';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
@@ -17,7 +18,7 @@ export type NFTAnalyticsContainerProps = {
 
 const nftChartTypes = {
   0: 'Activity',
-  1: 'Price',
+  1: getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && 'Price',
 };
 
 const timeFrames = {
@@ -54,11 +55,11 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
     const sales = resp.getSales.map(i => {
       return { date: moment(i.date).format('MM-DD-YYYY').toString(), value: i.price ?? i.priceUSD };
     });
-    return sales;
+    return sales.sort((a,b) =>(a.date > b.date) ? 1 : -1);
   });
 
   return (
-    <div className="bg-transparent overflow-x-auto p-4 minxl:p-10 minxl:pt-10 minxl:pb-0 minxl:-mb-10 w-full">
+    <div className="bg-transparent overflow-x-auto p-4 minxl:p-5 minxl:pb-0 minxl:-mb-10 w-full">
       <div className="w-full flex flex-col">
         <div className='justify-start flex'>
           <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
@@ -108,13 +109,13 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         }
       </div>
       {selectedChartType === 'Activity' && <NFTActivity data={data} />}
-      {selectedChartType === 'Price' &&
+      {getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && selectedChartType === 'Price' && nftData?.length > 0 &&
         <LineVis
           label={'Price'}
           showMarketplaceOptions={false}
           data={nftData}
-        />
-      }
+        />}
+      {getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && selectedChartType === 'Price' && nftData?.length === 0 && <div className="my-14 font-grotesk mx-auto text-center">No data yet</div>}
     </div>
   );
 };
