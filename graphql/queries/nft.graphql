@@ -32,7 +32,7 @@ query Nft(
       }
     }
     listings(listingsPageInput: $listingsPageInput, listingsExpirationType: $listingsExpirationType) {
-              totalItems
+        totalItems
         pageInfo {
             firstCursor
             lastCursor

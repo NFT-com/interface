@@ -2,19 +2,17 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
-import { ActivityStatus, LooksrareProtocolData, Maybe, SeaportProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, Maybe } from 'graphql/generated/types';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
-import { multiplyBasisPoints } from 'utils/seaportHelpers';
+import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from 'utils/marketplaceUtils';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
-import { BigNumber, ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X, XCircle } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -40,7 +38,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
 
-  const { getByContractAddress } = useSupportedCurrencies();
+  const { getByContractAddress, getBalanceMap } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
@@ -56,82 +54,24 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     });
 
   const getNeedsApprovals = useCallback(() => {
-    return filterDuplicates(
-      toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
-      (first, second) => first?.currency === second?.currency
-    ).some(purchase => !purchase?.isApproved);
+    return needsApprovals(toBuy);
   }, [toBuy]);
 
   const getHasSufficientBalance = useCallback(async () => {
-    const uniqueCurrencyPurchases = filterDuplicates(
-      toBuy,
-      (first, second) => first?.currency === second?.currency
-    );
-    const remainingBalances = new Map<string, BigNumber>();
-    for (let i = 0; i < uniqueCurrencyPurchases.length; i++) {
-      const currencyData = getByContractAddress(uniqueCurrencyPurchases[i]?.currency);
-      const balance = await currencyData?.balance(currentAddress);
-      remainingBalances.set(currencyData?.contract ?? 'unsupported', BigNumber.from(balance ?? 0));
-    }
-    for (let i = 0; i < toBuy.length; i++) {
-      const remainingBalance = remainingBalances.get(toBuy[i].currency);
-      const price = BigNumber.from(toBuy[i].price);
-      if (remainingBalance.lt(price)) {
-        return false;
-      }
-      remainingBalances.set(toBuy[i].currency, remainingBalance.sub(price));
-    }
-    return true;
-  }, [currentAddress, getByContractAddress, toBuy]);
+    const balances = await getBalanceMap(currentAddress, ['WETH', 'ETH', 'USDC', 'DAI']);
+    return hasSufficientBalances(toBuy, balances);
+  }, [currentAddress, getBalanceMap, toBuy]);
     
   const getTotalPriceUSD = useCallback(() => {
-    return toBuy?.reduce((acc, curr) => {
-      const currencyData = getByContractAddress(curr.currency);
-      const formattedPrice = Number(ethers.utils.formatUnits(curr.price, currencyData?.decimals ?? 18));
-      return acc + currencyData?.usd(formattedPrice);
-    }, 0).toFixed(2);
+    return getTotalFormattedPriceUSD(toBuy, getByContractAddress);
   }, [toBuy, getByContractAddress]);
 
-  const getTotalMarketplaceFeesUSD = useCallback(() => {
-    return toBuy?.reduce((cartTotal, stagedPurchase) => {
-      if (stagedPurchase.protocol === ExternalProtocol.LooksRare) {
-        const fee = BigNumber.from(
-          looksrareProtocolFeeBps == null
-            ? 0
-            : multiplyBasisPoints(stagedPurchase?.price ?? 0, looksrareProtocolFeeBps)
-        );
-        const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
-      } else {
-        const fee = BigNumber.from(multiplyBasisPoints(stagedPurchase?.price ?? 0, 250));
-        const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
-      }
-    }, 0);
+  const getTotalMarketplaceFees = useCallback(() => {
+    return getTotalMarketplaceFeesUSD(toBuy, looksrareProtocolFeeBps, getByContractAddress);
   }, [toBuy, looksrareProtocolFeeBps, getByContractAddress]);
  
-  const getTotalRoyaltiesUSD = useCallback(() => {
-    return toBuy?.reduce((cartTotal, stagedPurchase) => {
-      if (stagedPurchase.protocol === ExternalProtocol.LooksRare) {
-        const protocolData = stagedPurchase?.protocolData as LooksrareProtocolData;
-        const minAskAmount = BigNumber.from(protocolData?.minPercentageToAsk ?? 0)
-          .div(10000)
-          .mul(BigNumber.from(protocolData?.price ?? 0));
-        const marketplaceFeeAmount = BigNumber.from(looksrareProtocolFeeBps ?? 0)
-          .div(10000)
-          .mul(BigNumber.from(protocolData?.price ?? 0));
-        const royalty = minAskAmount.sub(marketplaceFeeAmount);
-        const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
-      } else {
-        const protocolData = stagedPurchase?.protocolData as SeaportProtocolData;
-        const royalty = BigNumber.from(protocolData?.parameters?.consideration.length === 3 ?
-          protocolData?.parameters?.consideration[2].startAmount :
-          0);
-        const currencyData = getByContractAddress(stagedPurchase.currency);
-        return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
-      }
-    }, 0);
+  const getTotalRoyalties = useCallback(() => {
+    return getTotalRoyaltiesUSD(toBuy, looksrareProtocolFeeBps, getByContractAddress);
   }, [getByContractAddress, looksrareProtocolFeeBps, toBuy]);
 
   const getSummaryContent = useCallback(() => {
@@ -223,7 +163,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{'$' + getTotalMarketplaceFeesUSD()}</span>
+              <span className='font-semibold'>{'$' + getTotalMarketplaceFees()}</span>
             </div>
           </div>
           <div className="mx-4 my-4 flex items-center justify-between">
@@ -234,7 +174,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{'$' + getTotalRoyaltiesUSD()}</span>
+              <span className='font-semibold'>{'$' + getTotalRoyalties()}</span>
             </div>
           </div>
         </div>
@@ -244,9 +184,9 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     error,
     getByContractAddress,
     getNeedsApprovals,
-    getTotalMarketplaceFeesUSD,
+    getTotalMarketplaceFees,
     getTotalPriceUSD,
-    getTotalRoyaltiesUSD,
+    getTotalRoyalties,
     loading,
     success,
     toBuy
