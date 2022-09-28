@@ -32,7 +32,7 @@ const xAxisFormatter = (item) => {
 
 const yAxisFormatter = (item) => {
   if (moment(item).isValid()) {
-    return Number(item.toFixed(2));
+    return Number(item.toFixed(2)).toLocaleString('en-US');
   } else {
     return item;
   }
@@ -44,7 +44,7 @@ const CustomTooltip = (props: any) => {
     return (
       <div className="rounded-xl bg-[#1F2127] text-white py-4 px-5">
         <p className="bg-[#1F2127] text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
-        <p className="text-[#18A0FB]">{`${payload[0].value.toFixed(2)} USD`}</p>
+        <p className="text-[#18A0FB]">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
       </div>
     );
   }
