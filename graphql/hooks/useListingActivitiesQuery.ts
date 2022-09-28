@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ActivityExpiration, ActivityStatus, ActivityType, Maybe, TxActivity } from 'graphql/generated/types';
+import { ActivityExpiration, ActivityStatus, ActivityType, LooksrareProtocolData, Maybe, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback } from 'react';
@@ -48,7 +48,12 @@ export function useListingActivitiesQuery(contract: string, tokenId: string, cha
   }, [keyString]);
 
   return {
-    data: data ?? [],
+    data: (data ?? []).filter(listing => {
+      const seaportValid = (listing.order?.protocolData as SeaportProtocolData)?.parameters &&
+        (listing.order?.protocolData as SeaportProtocolData)?.signature != null;
+      const looksrareValid = (listing.order?.protocolData as LooksrareProtocolData)?.price != null;
+      return listing.order?.protocolData != null && (looksrareValid || seaportValid);
+    }),
     loading: data == null,
     mutate: mutateActivities,
   };

@@ -1,6 +1,7 @@
 import ImageWithZoom from 'components/modules/BlogPage/ImageWithZoom';
 
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const theme = {
   p: (props: any) => {
@@ -73,11 +74,15 @@ const theme = {
   hr: () => {
     return <hr className="mb-8 border-share-icon" />;
   },
+  table: (props: any) => {
+    const { children } = props;
+    return <table className='mx-auto mb-8 text-xs'>{children}</table>;
+  },
 };
 
 const Markdown = ({ content }: any) => {
   return (
-    <ReactMarkdown components={theme} skipHtml linkTarget="_blank">
+    <ReactMarkdown components={theme} skipHtml linkTarget="_blank" remarkPlugins={[remarkGfm]}>
       {content}
     </ReactMarkdown>
   );
