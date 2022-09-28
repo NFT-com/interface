@@ -1,6 +1,7 @@
 import { ExternalExchange } from 'types';
 import { tw } from 'utils/tw';
 
+import moment from 'moment';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import {
@@ -19,6 +20,36 @@ export type LineChartProps = {
   showMarketplaceOptions: boolean;
   currentMarketplace?: string;
   setCurrentMarketplace?: Dispatch<SetStateAction<string>>,
+};
+
+const xAxisFormatter = (item) => {
+  if (moment(item).isValid()) {
+    return moment(item).format('MM-DD-YYYY');
+  } else {
+    return item;
+  }
+};
+
+const yAxisFormatter = (item) => {
+  if (moment(item).isValid()) {
+    return Number(item.toFixed(2));
+  } else {
+    return item;
+  }
+};
+
+const CustomTooltip = (props: any) => {
+  const { active, payload } = props;
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-xl bg-[#1F2127] text-white py-4 px-5">
+        <p className="bg-[#1F2127] text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
+        <p className="text-[#18A0FB]">{`${payload[0].value.toFixed(2)} USD`}</p>
+      </div>
+    );
+  }
+
+  return null;
 };
 
 export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
@@ -60,7 +91,7 @@ export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
       </div>
       }
       <ResponsiveContainer height={isMobile ? 227 : 357} width={'100%'} >
-        <LineChart data={data} margin={{ top: 30, right: 30, bottom: 65, left: 5 }} height={isMobile ? 227 : 270}>
+        <LineChart data={data} margin={{ top: 60, right: 30, bottom: 65, left: 5 }} height={isMobile ? 227 : 357}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0.2}/>
@@ -70,14 +101,15 @@ export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
           {!data &&
             <Label position={'center'} value={'No Data Yet'} />
           }
-          <XAxis label={{ value: 'Date', position: 'insideBottom', offset: -10 }} dataKey={'date'} style={{ fontSize: '11px' }}/>
-          <YAxis label={{ value: 'Value (USD)', position: 'insideTopRight', offset: -30 }}  dataKey={'value'} style={{ fontSize: '11px' }} orientation={'right'} />
+          <XAxis label={{ value: 'Date', position: 'insideBottom', offset: -10 }} dataKey={'date'} style={{ fontSize: '11px', fontFamily: 'Grotesk' }} tickFormatter={xAxisFormatter}/>
+          <YAxis label={{ value: 'Value (USD)', position: 'insideTopRight', offset: -30 }} dataKey={'value'} style={{ fontSize: '11px', fontFamily: 'Grotesk' }} orientation={'right'} tickFormatter={yAxisFormatter} />
           <Tooltip
             wrapperClassName='rounded-xl bg-[#1F2127] text-white'
             labelClassName='bg-[#1F2127] text-white'
             contentStyle={{ backgroundColor: '#1F2127' }}
+            content={<CustomTooltip />}
           />
-          <Line type="monotone" dataKey="value" stroke="#18A0FB" />
+          <Line type="monotone" dataKey="value" stroke="#18A0FB" dot={false} />
         </LineChart>
       </ResponsiveContainer>
       {(showMarketplaceOptions && !!data) &&
