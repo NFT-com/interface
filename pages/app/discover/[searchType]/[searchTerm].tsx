@@ -18,7 +18,7 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
 function usePrevious(value) {
@@ -107,7 +107,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   useEffect(() => {
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits' : '') : '',
+      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : '') : '',
       max_facet_values: 200,
       collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : '') : SearchableFields.COLLECTIONS_INDEX_FIELDS,
@@ -127,7 +127,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
-        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits' : '') : '',
+        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : '') : '',
         max_facet_values: 200,
         collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
