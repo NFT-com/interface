@@ -1827,6 +1827,10 @@ input[type="search"]::-webkit-search-cancel-button {
   background: #c0a0b9;
 }
 
+.recharts-label {
+  font-family: "Grotesk";
+}
+
 @tailwind utilities;
 
 @layer utilities {
