@@ -290,218 +290,220 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       </>
     )
   } else {
-    <>
-      <main className='flex flex-col mt-20 font-grotesk not-italic HomePageContainer'>
-        <Link href='/app/auctions' passHref>
-          <a>
-            <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
-              <span>Unlock the NFT Platform Beta with a Genesis Key</span>
-              <div className='flex flex-col rounded items-center p-[1px] ml-2'>
-                <Vector />
-              </div>
-            </div>
-          </a>
-        </Link>
-        <div className={tw('flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between p-6 space-x-0 minmd:space-x-10 max-w-screen minxl:px-0 px-5 w-full minlg:max-w-[1100px] mx-auto h-full',
-          'break-after-all ',
-        )}
-          style={{
-            backgroundImage: 'url(\'/home-banner-bg.png\')',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-          }}>
-          <div className='break-after-all space-y-2 w-full ...'>
-            <div className={tw(
-              'font-header text-black text-5xl minxl:text-7xl leading-header',
-              'break-after-all space-y-2'
-            )}>
-              <div>
-                {data?.subheroTitle}
-              </div>
-              <div>
-                {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
-              </div>
-              <div className='py-5 text-base minlg:text-xl block w-[100%] text-body text-[#A09E9E] leading-10 tracking-wide font-body minlg:w-[70%]'>
-                Collect, Display, and Trade your NFTs. We&apos;re building the hub for all things Web3. Get started by building your NFT Profile.
-              </div>
-            </div>
-            <div className='w-full pt-1 h-full inline-flex grow space-x-4'>
-              <WalletRainbowKitButton signInButton showWhenConnected={false} />
-              <button
-                onClick={() => {
-                  router.push('/articles');
-                }}
-                className={tw(
-                  'w-max',
-                  'block',
-                  'font-bold bg-transparent rounded-xl text-[#4D4412]',
-                  'flex flex-row items-center text cursor-pointer tracking-wide opacity-80 hover:opacity-100',
-                  'font-grotesk font-body',
-                  'py-2'
-                )}
-                type="button">
-                Learn More
-              </button>
-            </div>
-          </div>
-          <div className='flex flex-row justify-center pl-0 minxl:pl-20 minmd:justify-end py-10 minmd:py-0 w-full'>
-            <FeaturedProfile
-              profileOwner={featuredProfile}
-              gkId={1}
-              featuredNfts={featuredProfileNfts}
-            />
-          </div>
-        </div>
-        <div className='space-y-12 w-full items-center max-w-[1100px] mx-auto minlg:px-3 minxl:px-0 ...'>
-          <div className='h-full px-6 minlg:px-2 py-12 ...'>
-            <div className='text-section leading-header font-header justify-center ...'>
-              {data?.feedTitle}
-              <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-nowrap sm:whitespace-normal ...'>
-                {data?.feedDescription}
-              </div>
-              <ProfileFeed profiles={[profileFeed1, profileFeed2, profileFeed3, profileFeed4, profileFeed5, profileFeed6, profileFeed7, profileFeed8]} />
-              <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
-                <Link href={'/app/gallery?type=profile'}>
-                  <button
-                    className={tw(
-                      'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
-                      'flex flex-row items-center cursor-pointer hover:opacity-80 w-max ',
-                      'py-2 px-5'
-                    )}
-                    type="button">
-                    Discover more NFT Profiles
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className='h-full px-2 rounded-none minxl:rounded-xl bg-always-black py-6 drop-shadow-lg w-full mx-auto ...'>
-            {tickerStats && (
-              <HomePageTicker tickerStats={data.tickerStats} />
-            )}
-          </div>
-          <div className='h-full px-6 minxl:px-2 ...'>
-            <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
-              {data?.leaderboardTitle}
-            </div>
-            <LeaderBoard data={leaderboardData} />
-          </div>
-          <div className='flex px-6 flex-row flex-wrap w-full h-full justify-center minlg:px-2 ...'>
-            <div className='h-full w-full ...'>
-              <div className='text-section font-header justify-center py-6 ...'>
-                {data?.threeCardTitle}
-              </div>
-            </div>
-            <div className='h-full minmd:w-[33%] w-full ...'>
-              <div
-                className={tw(
-                  'drop-shadow-md rounded-xl flex flex-col',
-                  'w-full h-full',
-                  'justify-center',
-                  'overflow-hidden',
-                  'mb-3',
-                  'p-2'
-                )}>
-                <RoundedCornerMedia
-                  src={data?.threeCardImage1['url']}
-                  variant={RoundedCornerVariant.All}
-                />
-              </div>
-              <div className='text-section font-header text-3xl justify-center px-4 ...'>
-                {data?.threeCardTitle2}
-                <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
-                  {data?.threeCardDescription2}
+    return (
+      <>
+        <main className='flex flex-col mt-20 font-grotesk not-italic HomePageContainer'>
+          <Link href='/app/auctions' passHref>
+            <a>
+              <div className='mx-auto flex flex-row items-center justify-center w-full h-[55px] font-grotesk minmd:text-lg text-base leading-6 text-white font-[500] bg-[#111111] whitespace-pre-wrap py-2'>
+                <span>Unlock the NFT Platform Beta with a Genesis Key</span>
+                <div className='flex flex-col rounded items-center p-[1px] ml-2'>
+                  <Vector />
                 </div>
               </div>
-            </div>
-            <div className='h-full minmd:w-[33%] w-full ...'>
-              <div
-                className={tw(
-                  'drop-shadow-md rounded-xl flex flex-col',
-                  'w-full h-full',
-                  'overflow-hidden',
-                  'mb-3',
-                  'p-2'
-                )}>
-                <RoundedCornerMedia
-                  src={data?.threeCardImage2['url']}
-                  variant={RoundedCornerVariant.All}
-                />
-              </div>
-              <div className='text-section font-header text-3xl justify-center px-4 ...'>
-                {data?.threeCardTitle3}
-                <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
-                  {data?.threeCardDescription3}
+            </a>
+          </Link>
+          <div className={tw('flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between p-6 space-x-0 minmd:space-x-10 max-w-screen minxl:px-0 px-5 w-full minlg:max-w-[1100px] mx-auto h-full',
+            'break-after-all ',
+          )}
+            style={{
+              backgroundImage: 'url(\'/home-banner-bg.png\')',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+            }}>
+            <div className='break-after-all space-y-2 w-full ...'>
+              <div className={tw(
+                'font-header text-black text-5xl minxl:text-7xl leading-header',
+                'break-after-all space-y-2'
+              )}>
+                <div>
+                  {data?.subheroTitle}
+                </div>
+                <div>
+                  {data?.subheroDescription.substring(0, data?.subheroDescription.lastIndexOf(' '))} <span className='text-[#F9D963]'>{data?.subheroDescription.split(' ').pop()}</span>
+                </div>
+                <div className='py-5 text-base minlg:text-xl block w-[100%] text-body text-[#A09E9E] leading-10 tracking-wide font-body minlg:w-[70%]'>
+                  Collect, Display, and Trade your NFTs. We&apos;re building the hub for all things Web3. Get started by building your NFT Profile.
                 </div>
               </div>
-            </div>
-            <div className='h-full minmd:w-[33%] w-full ...'>
-              <div
-                className={tw(
-                  'drop-shadow-md rounded-xl flex flex-col',
-                  'w-full h-full',
-                  'overflow-hidden',
-                  'mb-3',
-                  'p-2'
-                )}>
-                <RoundedCornerMedia
-                  src={data?.threeCardImage3['url']}
-                  variant={RoundedCornerVariant.All}
-                />
-              </div>
-              <div className='text-section font-header text-3xl justify-center px-4 ...'>
-                {data?.communityCtaTitle}
-                <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
-                  {data?.communityCtaDescription}
-                </div>
+              <div className='w-full pt-1 h-full inline-flex grow space-x-4'>
+                <WalletRainbowKitButton signInButton showWhenConnected={false} />
+                <button
+                  onClick={() => {
+                    router.push('/articles');
+                  }}
+                  className={tw(
+                    'w-max',
+                    'block',
+                    'font-bold bg-transparent rounded-xl text-[#4D4412]',
+                    'flex flex-row items-center text cursor-pointer tracking-wide opacity-80 hover:opacity-100',
+                    'font-grotesk font-body',
+                    'py-2'
+                  )}
+                  type="button">
+                  Learn More
+                </button>
               </div>
             </div>
-            <div className='flex flex-row justify-center sm:w-full items-center py-6 -mb-12 ...'>
-              <button
-                onClick={() => window.open('https://docs.nft.com')}
-                className={tw(
-                  'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
-                  'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
-                  'py-2 px-5'
-                )}
-                type="button">
-                Learn more
-              </button>
+            <div className='flex flex-row justify-center pl-0 minxl:pl-20 minmd:justify-end py-10 minmd:py-0 w-full'>
+              <FeaturedProfile
+                profileOwner={featuredProfile}
+                gkId={1}
+                featuredNfts={featuredProfileNfts}
+              />
             </div>
           </div>
-          <div className='h-full px-6 w-full pb-10 pt-3 minlg:px-2'>
-            <div className='text-section leading-header font-header justify-center ...'>
-              {data?.learnTitle}
-              <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-normal ...'>
-                {data?.learnDescription}
-              </div>
-              <div className='w-full items-center ...'>
-                <div className='h-full w-full cursor-pointer ...'>
-                  <LearnCards
-                    cards={learnCards}
-                    cardImages={learnCardImages}
-                  />
+          <div className='space-y-12 w-full items-center max-w-[1100px] mx-auto minlg:px-3 minxl:px-0 ...'>
+            <div className='h-full px-6 minlg:px-2 py-12 ...'>
+              <div className='text-section leading-header font-header justify-center ...'>
+                {data?.feedTitle}
+                <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-nowrap sm:whitespace-normal ...'>
+                  {data?.feedDescription}
                 </div>
-                <div className='flex flex-row justify-center minmd:w-auto w-full items-center pt-6 ...'>
-                  <Link href={'/articles'}>
+                <ProfileFeed profiles={[profileFeed1, profileFeed2, profileFeed3, profileFeed4, profileFeed5, profileFeed6, profileFeed7, profileFeed8]} />
+                <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
+                  <Link href={'/app/gallery?type=profile'}>
                     <button
                       className={tw(
                         'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
-                        'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
+                        'flex flex-row items-center cursor-pointer hover:opacity-80 w-max ',
                         'py-2 px-5'
                       )}
                       type="button">
-                      Read more
+                      Discover more NFT Profiles
                     </button>
                   </Link>
                 </div>
               </div>
             </div>
+            <div className='h-full px-2 rounded-none minxl:rounded-xl bg-always-black py-6 drop-shadow-lg w-full mx-auto ...'>
+              {tickerStats && (
+                <HomePageTicker tickerStats={data.tickerStats} />
+              )}
+            </div>
+            <div className='h-full px-6 minxl:px-2 ...'>
+              <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
+                {data?.leaderboardTitle}
+              </div>
+              <LeaderBoard data={leaderboardData} />
+            </div>
+            <div className='flex px-6 flex-row flex-wrap w-full h-full justify-center minlg:px-2 ...'>
+              <div className='h-full w-full ...'>
+                <div className='text-section font-header justify-center py-6 ...'>
+                  {data?.threeCardTitle}
+                </div>
+              </div>
+              <div className='h-full minmd:w-[33%] w-full ...'>
+                <div
+                  className={tw(
+                    'drop-shadow-md rounded-xl flex flex-col',
+                    'w-full h-full',
+                    'justify-center',
+                    'overflow-hidden',
+                    'mb-3',
+                    'p-2'
+                  )}>
+                  <RoundedCornerMedia
+                    src={data?.threeCardImage1['url']}
+                    variant={RoundedCornerVariant.All}
+                  />
+                </div>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
+                  {data?.threeCardTitle2}
+                  <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
+                    {data?.threeCardDescription2}
+                  </div>
+                </div>
+              </div>
+              <div className='h-full minmd:w-[33%] w-full ...'>
+                <div
+                  className={tw(
+                    'drop-shadow-md rounded-xl flex flex-col',
+                    'w-full h-full',
+                    'overflow-hidden',
+                    'mb-3',
+                    'p-2'
+                  )}>
+                  <RoundedCornerMedia
+                    src={data?.threeCardImage2['url']}
+                    variant={RoundedCornerVariant.All}
+                  />
+                </div>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
+                  {data?.threeCardTitle3}
+                  <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
+                    {data?.threeCardDescription3}
+                  </div>
+                </div>
+              </div>
+              <div className='h-full minmd:w-[33%] w-full ...'>
+                <div
+                  className={tw(
+                    'drop-shadow-md rounded-xl flex flex-col',
+                    'w-full h-full',
+                    'overflow-hidden',
+                    'mb-3',
+                    'p-2'
+                  )}>
+                  <RoundedCornerMedia
+                    src={data?.threeCardImage3['url']}
+                    variant={RoundedCornerVariant.All}
+                  />
+                </div>
+                <div className='text-section font-header text-3xl justify-center px-4 ...'>
+                  {data?.communityCtaTitle}
+                  <div className='text-[#6F6F6F] leading-body text-base font-normal tracking-wide mr-6 py-2 ...'>
+                    {data?.communityCtaDescription}
+                  </div>
+                </div>
+              </div>
+              <div className='flex flex-row justify-center sm:w-full items-center py-6 -mb-12 ...'>
+                <button
+                  onClick={() => window.open('https://docs.nft.com')}
+                  className={tw(
+                    'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
+                    'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
+                    'py-2 px-5'
+                  )}
+                  type="button">
+                  Learn more
+                </button>
+              </div>
+            </div>
+            <div className='h-full px-6 w-full pb-10 pt-3 minlg:px-2'>
+              <div className='text-section leading-header font-header justify-center ...'>
+                {data?.learnTitle}
+                <div className='text-[#7F7F7F] text-body leading-body font-normal tracking-wide py-2 whitespace-normal ...'>
+                  {data?.learnDescription}
+                </div>
+                <div className='w-full items-center ...'>
+                  <div className='h-full w-full cursor-pointer ...'>
+                    <LearnCards
+                      cards={learnCards}
+                      cardImages={learnCardImages}
+                    />
+                  </div>
+                  <div className='flex flex-row justify-center minmd:w-auto w-full items-center pt-6 ...'>
+                    <Link href={'/articles'}>
+                      <button
+                        className={tw(
+                          'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
+                          'flex flex-row items-center cursor-pointer hover:opacity-80 w-max',
+                          'py-2 px-5'
+                        )}
+                        type="button">
+                        Read more
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </main>
-      {preview && <PreviewBanner />}
-    </>
+        </main>
+        {preview && <PreviewBanner />}
+      </>
+    )
   }
 };
 
