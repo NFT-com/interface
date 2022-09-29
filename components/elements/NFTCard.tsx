@@ -62,7 +62,7 @@ export interface NFTCardProps {
   customBorder?: string;
   lightModeForced?: boolean;
   layoutType?: string;
-  redirectTo: string;
+  redirectTo?: string;
 }
 
 export function NFTCard(props: NFTCardProps) {
