@@ -15,9 +15,10 @@ type MintProfileModalProps = {
   setIsOpen: (input:boolean) => void;
   currentURI: string;
   gasCost: number;
+  transactionCost?: number;
 };
 
-export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost }: MintProfileModalProps) {
+export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, transactionCost }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
   const [minting, setMinting] = useState(false);
   const [, setMintSuccess] = useState(false);
@@ -82,9 +83,15 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost }: 
                         Profile
                       </p>
                     </div>
-                    <p className="text-lg text-[#2AAE47] font-medium">
-                      Free
-                    </p>
+                    {transactionCost ?
+                      <p className="font-medium text-lg flex justify-center items-center">
+                        {transactionCost} <ETHIcon className='ml-1' stroke="black" />
+                      </p>
+                      :
+                      <p className="text-lg text-[#2AAE47] font-medium">
+                        Free
+                      </p>
+                    }
                   </div>
                   <div className='flex justify-between'>
                     <p className="font-medium">
