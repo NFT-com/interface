@@ -29,7 +29,6 @@ export interface NFTDetailMoreFromCollectionProps {
 export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionProps) {
   const { width: screenWidth } = useWindowDimensions();
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
-  const router = useRouter();
   const { chain } = useNetwork();
   const { data } = useSWR('NFTDetailMoreFromCollection' + props.contract + props.hideTokenId, async () => {
     const result = await fetchCollectionsNFTs({

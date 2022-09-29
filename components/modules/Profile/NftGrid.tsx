@@ -34,7 +34,6 @@ export function NftGrid(props: NftGridProps) {
   const { profileData } = useProfileQuery(props.profileURI);
 
   const { tileBackgroundSecondary } = useThemeColors();
-  const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
 
   const mosaicArray = [0];
