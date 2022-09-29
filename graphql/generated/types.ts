@@ -2261,40 +2261,6 @@ export type TxWalletAddressAndTypeInput = {
   walletAddress: Scalars['String'];
 };
 
-export type UbiquityCollection = {
-  __typename?: 'UbiquityCollection';
-  banner?: Maybe<Scalars['String']>;
-  contracts?: Maybe<Array<Maybe<UbiquityContract>>>;
-  description?: Maybe<Scalars['String']>;
-  id?: Maybe<Scalars['String']>;
-  logo?: Maybe<Scalars['String']>;
-  meta?: Maybe<UbiquityMeta>;
-  name?: Maybe<Scalars['String']>;
-  verified?: Maybe<Scalars['Boolean']>;
-};
-
-export type UbiquityContract = {
-  __typename?: 'UbiquityContract';
-  address?: Maybe<Scalars['String']>;
-  description?: Maybe<Scalars['String']>;
-  image_url?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  symbol?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-export type UbiquityMeta = {
-  __typename?: 'UbiquityMeta';
-  discord_url?: Maybe<Scalars['String']>;
-  external_url?: Maybe<Scalars['String']>;
-  twitter_username?: Maybe<Scalars['String']>;
-};
-
-export type UbiquityResults = {
-  __typename?: 'UbiquityResults';
-  collection?: Maybe<UbiquityCollection>;
-};
-
 export type UpdateAssociatedAddressesInput = {
   chainId?: InputMaybe<Scalars['String']>;
   profileUrl: Scalars['String'];
