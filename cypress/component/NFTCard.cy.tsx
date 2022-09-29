@@ -21,6 +21,7 @@ describe('NFTCard', () => {
           title={'test_nft'}
           images={[]}
           onClick={onClick}
+          redirectTo={'/'}
         />
       </WagmiConfig>
     );
@@ -42,6 +43,7 @@ describe('NFTCard', () => {
           onClick={onClick}
           visible={true}
           constrain
+          redirectTo={'/'}
         />
       </WagmiConfig>
     );
@@ -64,6 +66,7 @@ describe('NFTCard', () => {
           onSelectToggle={() => {
             // todo
           }}
+          redirectTo={'/'}
         />
       </WagmiConfig>
     );

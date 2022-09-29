@@ -12,7 +12,6 @@ import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, BigNumberish } from 'ethers';
-import { useRouter } from 'next/router';
 import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';

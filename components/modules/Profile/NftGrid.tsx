@@ -10,7 +10,6 @@ import { tw } from 'utils/tw';
 import { ProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
-import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
