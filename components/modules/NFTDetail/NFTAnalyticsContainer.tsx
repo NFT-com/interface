@@ -35,7 +35,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[6]);
   const { getSales } = useGetSales();
   
-  const { data: nftData } = useSWR('getSales' + data?.contract + selectedTimeFrame, async () => {
+  const { data: nftData } = useSWR('getSales' + data?.contract + data?.tokenId + selectedTimeFrame, async () => {
     const dayTimeFrames = {
       '1D': '24h',
       '7D': '7d',

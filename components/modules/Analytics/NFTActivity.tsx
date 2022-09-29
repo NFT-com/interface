@@ -19,7 +19,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
     if(defaultChainId !== '1' || !nftTransactionHistory) {
       return;
     } else {
-      if(!nftData && nftTransactionHistory) {
+      if(nftTransactionHistory) {
         setNftdata(nftTransactionHistory?.data?.transactions);
       }
     }
