@@ -141,38 +141,37 @@ export function NFTCard(props: NFTCardProps) {
   }, [nft]);
 
   return (
-    <Link href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} passHref>
-      <a
-        onClick={() => {
-          // TODO: move to helper / logger class at some point
-          analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
-            ethereumAddress: currentAddress,
-            title: props?.title,
-            processedImageURLs: processedImageURLs?.[0],
-            profile: props?.profileURI,
-          });
+    <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'}
+      onClick={() => {
+        // TODO: move to helper / logger class at some point
+        analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
+          ethereumAddress: currentAddress,
+          title: props?.title,
+          processedImageURLs: processedImageURLs?.[0],
+          profile: props?.profileURI,
+        });
 
-          props.onClick && props.onClick();
-        }}>
-        <div
-          className={tw(
-            'rounded flex flex-col',
-            // props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max',
-            props.imageLayout === 'row' ? 'p-3 rounded-xl' : 'p-2 rounded',
-            props.constrain ?
-              // constrain self to 2 or 4 per row
-              'w-2/5 minlg:w-[23%]' :
-              'w-full min-h-[inherit]',
-            props.customBorder ?? '',
-            'cursor-pointer transform',
-            'overflow-hidden',
-            'border border-[#D5D5D5]'
-          )}
-          style={{
-            backgroundColor: props.customBackground ?? tileBackground
-          }}
-        >
-          {(props.header || props.onSelectToggle != null) &&
+        props.onClick && props.onClick();
+      }}>
+      <div
+        className={tw(
+          'rounded flex flex-col',
+          // props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max',
+          props.imageLayout === 'row' ? 'p-3 rounded-xl' : 'p-2 rounded',
+          props.constrain ?
+          // constrain self to 2 or 4 per row
+            'w-2/5 minlg:w-[23%]' :
+            'w-full min-h-[inherit]',
+          props.customBorder ?? '',
+          'cursor-pointer transform',
+          'overflow-hidden',
+          'border border-[#D5D5D5]'
+        )}
+        style={{
+          backgroundColor: props.customBackground ?? tileBackground
+        }}
+      >
+        {(props.header || props.onSelectToggle != null) &&
             <div className='flex w-full px-4 minlg:px-5 pt-4 minlg:pt-5 pb-2 minlg:pb-3  justify-between'>
               <div className='flex flex-col'>
                 <span className='text-xs text-secondary-txt font-semibold'>
@@ -197,9 +196,9 @@ export function NFTCard(props: NFTCardProps) {
                 </div>
               }
             </div>
-          }
-          {
-            props.visible != null &&
+        }
+        {
+          props.visible != null &&
               <div
                 className='absolute right-3 top-4 z-50'
                 onClick={(e: MouseEvent<HTMLDivElement>) => {
@@ -209,10 +208,10 @@ export function NFTCard(props: NFTCardProps) {
               >
                 {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }
               </div>
-          }
-          {showListingIcons && (
-            <div className='absolute left-3 top-4 z-50'>
-              {showOpenseaListingIcon &&
+        }
+        {showListingIcons && (
+          <div className='absolute left-3 top-4 z-50'>
+            {showOpenseaListingIcon &&
                   <OpenseaIcon
                     onClick={(e: MouseEvent<any>) => {
                       window.open(
@@ -225,8 +224,8 @@ export function NFTCard(props: NFTCardProps) {
                     alt="Opensea logo redirect"
                     layout="fill"
                   />
-              }
-              {showLooksrareListingIcon &&
+            }
+            {showLooksrareListingIcon &&
                   <LooksrareIcon
                     onClick={(e: MouseEvent<any>) => {
                       window.open(
@@ -239,100 +238,100 @@ export function NFTCard(props: NFTCardProps) {
                     alt="Looksrare logo redirect"
                     layout="fill"
                   />
-              }
+            }
+          </div>
+        )}
+        {
+          props.images.length <= 1 && props.imageLayout !== 'row' ?
+            <div
+              className={tw(
+                'w-full overflow-hidden aspect-square',
+                props.nftsDescriptionsVisible != false ? 'bg-[#F0F0F0]' : '',
+                props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicLargeCard' ? 'h-[592px]' : '',
+                props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicSmallCard' ? 'h-[133px]' : '',
+                props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicMediumCard' ? 'h-[363px]' : '',
+                props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicSmallCard' ? 'h-[181px]' : '',
+                props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicMediumCard' ? 'h-[456px]' : '',
+                props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicSmallCard' ? 'h-[157px]' : '',
+                props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicMediumCard' ? 'h-[397px]' : '',
+                props.images[0] == null ? 'aspect-square' : '',
+              )}
+            >
+              { (props.images.length === 0 || props.images[0] == null) && processedImageURLs.length === 0 ?
+                null :
+                <RoundedCornerMedia
+                  width={600}
+                  height={600}
+                  containerClasses='w-full h-full overflow-hidden'
+                  variant={RoundedCornerVariant.None}
+                  src={processedImageURLs[0]}
+                  fallbackImage={props.fallbackImage ? props.fallbackImage : null}
+                  extraClasses="hover:scale-105 transition"
+                />}
+            </div> :
+            props.imageLayout === 'row' ?
+              <div className='flex justify-center w-full min-h-XL min-h-2XL'>
+                {processedImageURLs.slice(0,3).map((image: string, index: number) => {
+                  return <RoundedCornerMedia
+                    width={150}
+                    height={150}
+                    key={image + index}
+                    src={image}
+                    variant={variantsForRow[index]}
+                    containerClasses='w-1/3 overflow-hidden'
+                    extraClasses='hover:scale-105 transition'
+                    amount={RoundedCornerAmount.Medium}
+                  />;
+                })}
+              </div> :
+              <div className="grid grid-cols-2">
+                {processedImageURLs.slice(0, 4).map((image: string, index: number) => {
+                  return <RoundedCornerMedia
+                    width={300}
+                    height={300}
+                    key={image + index}
+                    src={image}
+                    variant={RoundedCornerVariant.None}
+                    containerClasses="overflow-hidden"
+                    extraClasses='w-full rounded-3xl overflow-hidden hover:scale-105 transition'
+                  />;
+                })}
+              </div>
+        }
+        {props.nftsDescriptionsVisible != false && <div className="flex flex-col">
+          {props.imageLayout !== 'row' && <span className={tw(
+            'text-[#6F6F6F] text-sm pt-[10px]'
+          )}>
+            {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
+          </span>}
+          {props.title ?
+            <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
+              {props.title}
+            </span> :
+            (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+              <div className="w-full">
+                <div className="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
+              </div>
+              <span className="sr-only">Loading...</span>
+            </div>)}
+          {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
+    
+          {!isNullOrEmpty(props.description) && (
+            <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
+              {props.description}
             </div>
           )}
           {
-            props.images.length <= 1 && props.imageLayout !== 'row' ?
-              <div
-                className={tw(
-                  'w-full overflow-hidden aspect-square',
-                  props.nftsDescriptionsVisible != false ? 'bg-[#F0F0F0]' : '',
-                  props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicLargeCard' ? 'h-[592px]' : '',
-                  props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicSmallCard' ? 'h-[133px]' : '',
-                  props.nftsDescriptionsVisible != false && props.layoutType === 'LargeMosaicMediumCard' ? 'h-[363px]' : '',
-                  props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicSmallCard' ? 'h-[181px]' : '',
-                  props.nftsDescriptionsVisible != false && props.layoutType === 'MediumMosaicMediumCard' ? 'h-[456px]' : '',
-                  props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicSmallCard' ? 'h-[157px]' : '',
-                  props.nftsDescriptionsVisible != false && props.layoutType === 'SmallMosaicMediumCard' ? 'h-[397px]' : '',
-                  props.images[0] == null ? 'aspect-square' : '',
-                )}
-              >
-                { (props.images.length === 0 || props.images[0] == null) && processedImageURLs.length === 0 ?
-                  null :
-                  <RoundedCornerMedia
-                    width={600}
-                    height={600}
-                    containerClasses='w-full h-full overflow-hidden'
-                    variant={RoundedCornerVariant.None}
-                    src={processedImageURLs[0]}
-                    fallbackImage={props.fallbackImage ? props.fallbackImage : null}
-                    extraClasses="hover:scale-105 transition"
-                  />}
-              </div> :
-              props.imageLayout === 'row' ?
-                <div className='flex justify-center w-full min-h-XL min-h-2XL'>
-                  {processedImageURLs.slice(0,3).map((image: string, index: number) => {
-                    return <RoundedCornerMedia
-                      width={150}
-                      height={150}
-                      key={image + index}
-                      src={image}
-                      variant={variantsForRow[index]}
-                      containerClasses='w-1/3 overflow-hidden'
-                      extraClasses='hover:scale-105 transition'
-                      amount={RoundedCornerAmount.Medium}
-                    />;
-                  })}
-                </div> :
-                <div className="grid grid-cols-2">
-                  {processedImageURLs.slice(0, 4).map((image: string, index: number) => {
-                    return <RoundedCornerMedia
-                      width={300}
-                      height={300}
-                      key={image + index}
-                      src={image}
-                      variant={RoundedCornerVariant.None}
-                      containerClasses="overflow-hidden"
-                      extraClasses='w-full rounded-3xl overflow-hidden hover:scale-105 transition'
-                    />;
-                  })}
-                </div>
-          }
-          {props.nftsDescriptionsVisible != false && <div className="flex flex-col">
-            {props.imageLayout !== 'row' && <span className={tw(
-              'text-[#6F6F6F] text-sm pt-[10px]'
-            )}>
-              {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
-            </span>}
-            {props.title ?
-              <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
-                {props.title}
-              </span> :
-              (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-                <div className="w-full">
-                  <div className="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
-                </div>
-                <span className="sr-only">Loading...</span>
-              </div>)}
-            {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
-    
-            {!isNullOrEmpty(props.description) && (
-              <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
-                {props.description}
-              </div>
-            )}
-            {
-              props.cta &&
+            props.cta &&
                 <div
                   className="mt-4 text-xs minmd:text-sm cursor-pointer hover:underline"
                   style={{ color: link }}
                 >
                   {props.cta}
                 </div>
-            }
+          }
 
-            {showListingIcons && !nft?.isOwnedByMe &&
+          {showListingIcons && !nft?.isOwnedByMe &&
               <div className='flex flex-col minmd:flex-row flex-wrap mt-3 justify-between'>
                 <div className='flex flex-col pr-2'>
                   <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>
@@ -368,10 +367,9 @@ export function NFTCard(props: NFTCardProps) {
                   </button>}
                 </div>
               </div>
-            }
-          </div>}
-        </div>
-      </a>
-    </Link>
+          }
+        </div>}
+      </div>
+    </a>
   );
 }
