@@ -141,7 +141,7 @@ export function NFTCard(props: NFTCardProps) {
   }, [nft]);
 
   return (
-    <Link href={props.redirectTo || '#'} passHref>
+    <Link href={props.redirectTo ?? '#'} passHref>
       <a
         onClick={() => {
           // TODO: move to helper / logger class at some point
