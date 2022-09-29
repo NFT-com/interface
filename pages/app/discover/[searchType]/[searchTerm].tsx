@@ -241,11 +241,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           title={item.document.nftName}
                           images={[item.document.imageURL]}
                           collectionName={item.document.contractName}
-                          onClick={() => {
-                            if (item.document.nftName) {
-                              router.push(`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`);
-                            }
-                          }}
+                          redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
                           description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
                           customBackground={'white'}
                           lightModeForced

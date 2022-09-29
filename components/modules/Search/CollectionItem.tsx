@@ -1,7 +1,5 @@
 import { NFTCollectionCard } from 'components/elements/NFTCollectionCard';
 
-import { useRouter } from 'next/router';
-
 interface CollectionItemProps {
   contractAddr: string;
   contractName?: string;
@@ -10,15 +8,11 @@ interface CollectionItemProps {
 }
 
 export const CollectionItem = ({ contractAddr, contractName, images }: CollectionItemProps) => {
-  const router = useRouter();
-  
   return (
     <NFTCollectionCard
       contract={contractAddr}
       images={images}
-      onClick={() => {
-        router.push(`/app/collection/${contractAddr}/`);
-      }}
+      redirectTo={`/app/collection/${contractAddr}/`}
       customBackground={'white'}
       customBorder={'border border-grey-200'}
       contractName={contractName}

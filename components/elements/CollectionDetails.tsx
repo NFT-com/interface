@@ -92,9 +92,7 @@ export const CollectionDetails = (props: CollectionDetailsProps) => {
             contractAddress={nft?.contract}
             tokenId={nft?.tokenId}
             key={index}
-            onClick={() => {
-              router.push(`/app/nft/${props.address}/${nft?.tokenId}`);
-            }}
+            redirectTo={`/app/nft/${props.address}/${nft?.tokenId}`}
             customBackground={'LightGrey'}
           />;
         })}

@@ -121,10 +121,9 @@ export function NftGrid(props: NftGridProps) {
             onClick={() => {
               if (editMode) {
                 toggleHidden(nft?.id, !nft?.hidden);
-              } else {
-                router.push('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString());
               }
             }}
+            redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
             customBackground={tileBackgroundSecondary}
             nftsDescriptionsVisible={draftNftsDescriptionsVisible}
             layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}

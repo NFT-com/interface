@@ -61,7 +61,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 ? 4
                 : data?.length)}
           centeredSlides={false}
-          loop={data?.length > 3}
+          loop={ screenWidth < 1200 ? data?.length > 3 : true}
           autoplay={{
             'delay': 4500,
             'disableOnInteraction': false
@@ -80,11 +80,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                   images={[nft?.previewLink || nft.metadata.imageURL]}
                   fallbackImage={nft.metadata.imageURL}
                   collectionName={props.collectionName}
-                  onClick={() => {
-                    if (nft.metadata.name) {
-                      router.push(`/app/nft/${props.contract}/${nft.tokenId}`);
-                    }
-                  }}
+                  redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
                 />
               </SwiperSlide>
             );
