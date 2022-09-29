@@ -141,19 +141,8 @@ export function NFTCard(props: NFTCardProps) {
   }, [nft]);
 
   return (
-    <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'}
-      onClick={() => {
-        // TODO: move to helper / logger class at some point
-        analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
-          ethereumAddress: currentAddress,
-          title: props?.title,
-          processedImageURLs: processedImageURLs?.[0],
-          profile: props?.profileURI,
-        });
-
-        props.onClick && props.onClick();
-      }}>
-      <div
+    <Link href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} passHref>
+      <a
         className={tw(
           'rounded flex flex-col',
           // props.nftsDescriptionsVisible != false ? 'h-full' : 'h-max',
@@ -170,7 +159,17 @@ export function NFTCard(props: NFTCardProps) {
         style={{
           backgroundColor: props.customBackground ?? tileBackground
         }}
-      >
+        onClick={() => {
+        // TODO: move to helper / logger class at some point
+          analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
+            ethereumAddress: currentAddress,
+            title: props?.title,
+            processedImageURLs: processedImageURLs?.[0],
+            profile: props?.profileURI,
+          });
+
+          props.onClick && props.onClick();
+        }}>
         {(props.header || props.onSelectToggle != null) &&
             <div className='flex w-full px-4 minlg:px-5 pt-4 minlg:pt-5 pb-2 minlg:pb-3  justify-between'>
               <div className='flex flex-col'>
@@ -369,7 +368,7 @@ export function NFTCard(props: NFTCardProps) {
               </div>
           }
         </div>}
-      </div>
-    </a>
+      </a>
+    </Link>
   );
 }

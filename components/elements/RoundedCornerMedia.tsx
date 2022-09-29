@@ -113,7 +113,6 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
             props.extraClasses
           )}
-          onContextMenu={(e)=> e.preventDefault()}
         />
       }
     </div>
