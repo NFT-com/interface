@@ -104,7 +104,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
       <>
-        <main className='flex flex-col font-grotesk not-italic'>
+        <main className='flex flex-col font-grotesk not-italic HomePageContainer'>
           {/* Block: Intro */}
           <div className='bg-black h-[960px] minlg:h-[1200px]'>
             <div className='max-w-nftcom mx-auto relative z-0 pt-52 minlg:pt-[14rem] pb-44 minlg:pb-80'>
