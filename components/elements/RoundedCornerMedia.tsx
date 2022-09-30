@@ -32,6 +32,7 @@ export interface RoundedCornerMediaProps {
   extraClasses?: string;
   containerClasses?: string;
   onClick?: () => void;
+  objectFit?: 'contain' | 'cover';
 }
 
 const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmount): string => {
@@ -93,7 +94,8 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           src={props?.src}
           poster={props?.src}
           className={tw(
-            'object-cover absolute w-full h-full justify-center',
+            props.objectFit === 'contain' ? 'object-contain' : 'object-cover',
+            'absolute w-full h-full justify-center',
             getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
             props.extraClasses
           )}
@@ -109,7 +111,8 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
           }}
           className={tw(
-            'object-cover absolute w-full h-full justify-center',
+            props.objectFit === 'contain' ? 'object-contain' : 'object-cover',
+            'absolute w-full h-full justify-center',
             getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
             props.extraClasses
           )}
