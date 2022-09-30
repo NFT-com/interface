@@ -134,24 +134,47 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   }
                 />
               </> :
-              <PriceInput
-                initial={
-                  props.listing?.startingPrice == null ?
-                    '' :
-                    ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
-                }
-                currencyAddress={getAddress('weth', defaultChainId)}
-                currencyOptions={['WETH']}
-                onCurrencyChange={null}
-                onPriceChange={(val: BigNumber) => {
-                  setPrice(props.listing, val);
-                  props.onPriceChange();
-                }}
-                error={
-                  (props.listing.startingPrice == null) ||
+              seaportEnabled && !looksrareEnabled ?
+                <PriceInput
+                  initial={
+                    getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
+                      '' :
+                      ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice ?? 0))
+                  }
+                  currencyAddress={getTarget(props.listing, ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
+                  currencyOptions={['WETH', 'ETH']}
+                  onPriceChange={(val: BigNumber) => {
+                    setPrice(props.listing, val, ExternalProtocol.Seaport);
+                    props.onPriceChange();
+                  }}
+                  onCurrencyChange={(currency: SupportedCurrency) => {
+                    setCurrency(props.listing, currency, ExternalProtocol.Seaport);
+                    props.onPriceChange();
+                  }}
+                  error={
+                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && target.startingPrice == null) != null ||
+                props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && BigNumber.from(target.startingPrice).eq(0)) != null
+                  }
+                />
+                :
+                <PriceInput
+                  initial={
+                    props.listing?.startingPrice == null ?
+                      '' :
+                      ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
+                  }
+                  currencyAddress={getAddress('weth', defaultChainId)}
+                  currencyOptions={['WETH']}
+                  onCurrencyChange={null}
+                  onPriceChange={(val: BigNumber) => {
+                    setPrice(props.listing, val);
+                    props.onPriceChange();
+                  }}
+                  error={
+                    (props.listing.startingPrice == null) ||
                   (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
-                }
-              />
+                  }
+                />
           }
         </div>
       </td>

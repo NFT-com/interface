@@ -13,17 +13,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Equivalent to solidity's address type */
   Address: any;
-  /** Equivalent to solidity's bytes type */
   Bytes: any;
-  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   Date: any;
-  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: any;
-  /** Equivalent to solidity's uint256 type */
   Uint256: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -200,11 +194,6 @@ export type CancelBidInput = {
 
 export type ClearGkIconVisibleOutput = {
   __typename?: 'ClearGKIconVisibleOutput';
-  message?: Maybe<Scalars['String']>;
-};
-
-export type ClearPreviewLinksOutput = {
-  __typename?: 'ClearPreviewLinksOutput';
   message?: Maybe<Scalars['String']>;
 };
 
@@ -408,11 +397,6 @@ export type FilterAskInput = {
   chainId?: InputMaybe<Scalars['String']>;
   pageInput?: InputMaybe<PageInput>;
   sortBy?: InputMaybe<AskSortType>;
-};
-
-export type FixUpdatedAtOutput = {
-  __typename?: 'FixUpdatedAtOutput';
-  message?: Maybe<Scalars['String']>;
 };
 
 export type FollowersInput = {
@@ -663,8 +647,6 @@ export type Mutation = {
   /** AUTHENTICATED */
   clearGKIconVisible: ClearGkIconVisibleOutput;
   /** AUTHENTICATED */
-  clearPreviewLinks: ClearPreviewLinksOutput;
-  /** AUTHENTICATED */
   clearQueue: ClearQueueOutput;
   confirmEmail: Scalars['Boolean'];
   /** AUTHENTICATED */
@@ -677,8 +659,6 @@ export type Mutation = {
   createCuration: Curation;
   deleteFromWatchlist?: Maybe<Scalars['Boolean']>;
   fillChainIds: FillChainIdsOutput;
-  /** AUTHENTICATED */
-  fixUpdatedAt: FixUpdatedAtOutput;
   /** AUTHENTICATED */
   followProfile: Profile;
   /** AUTHENTICATED */
@@ -756,8 +736,6 @@ export type Mutation = {
   /** AUTHENTICATED */
   uploadFileSession: FileUploadOutput;
   /** AUTHENTICATED */
-  uploadMetadataImagesToS3: UploadMetadataImagesToS3Output;
-  /** AUTHENTICATED */
   uploadProfileImages: Profile;
 };
 
@@ -802,11 +780,6 @@ export type MutationCancelMarketBidArgs = {
 };
 
 
-export type MutationClearPreviewLinksArgs = {
-  count: Scalars['Int'];
-};
-
-
 export type MutationClearQueueArgs = {
   queue: Scalars['String'];
 };
@@ -844,11 +817,6 @@ export type MutationDeleteFromWatchlistArgs = {
 
 export type MutationFillChainIdsArgs = {
   input: FillChainIdsInput;
-};
-
-
-export type MutationFixUpdatedAtArgs = {
-  count: Scalars['Int'];
 };
 
 
@@ -1071,11 +1039,6 @@ export type MutationUpdateStatusByIdsArgs = {
 
 export type MutationUpdateWalletProfileIdArgs = {
   profileId: Scalars['ID'];
-};
-
-
-export type MutationUploadMetadataImagesToS3Args = {
-  count: Scalars['Int'];
 };
 
 
@@ -2947,7 +2910,7 @@ export type MyNfTsQueryVariables = Exact<{
 }>;
 
 
-export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
+export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, listings?: { __typename?: 'TxActivitiesOutput', items?: Array<{ __typename?: 'TxActivity', status: ActivityStatus, order?: { __typename?: 'TxOrder', protocolData?: { __typename?: 'LooksrareProtocolData', price?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', orderType?: number | null } | null } | null } | null } | null> | null } | null, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
 
 export type MyPhotoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4345,6 +4308,24 @@ export const MyNfTsDocument = gql`
       tokenId
       id
       type
+      listings {
+        items {
+          status
+          order {
+            protocolData {
+              ... on LooksrareProtocolData {
+                price
+              }
+              ... on SeaportProtocolData {
+                parameters {
+                  orderType
+                }
+                signature
+              }
+            }
+          }
+        }
+      }
       metadata {
         imageURL
         description
