@@ -8,6 +8,10 @@ const withTM = require('next-transpile-modules')([
   '@react-dnd/shallowequal',
 ]);
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const sentryWebpackPluginOptions = {
   silent: true,
 };
@@ -94,4 +98,4 @@ const moduleExports = withTM({
   },
 });
 
-module.exports = withSentryConfig(moduleExports, sentryWebpackPluginOptions);
+module.exports = withBundleAnalyzer(withSentryConfig(moduleExports, sentryWebpackPluginOptions));

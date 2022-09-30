@@ -1,12 +1,12 @@
 import { FeaturedProfile } from 'components/elements/FeaturedProfile';
 import HomePageTicker from 'components/elements/HomePageTicker';
 import { LearnCards } from 'components/elements/LearnCards';
-import PreviewBanner from 'components/elements/PreviewBanner';
+import StaticPreviewBanner from 'components/elements/PreviewBanner';
 import { ProfileFeed } from 'components/elements/ProfileFeed';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { WalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
+import { WalletRainbowKitButton as StaticWalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { LeaderBoard } from 'components/modules/Profile/LeaderBoard';
+import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -18,10 +18,15 @@ import { NextPageWithLayout } from './_app';
 import { BigNumber } from 'ethers';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Vector from 'public/Vector.svg';
 import { useEffect, useState } from 'react';
+
+const DynamicLeaderBoard = dynamic<React.ComponentProps<typeof StaticLeaderboard>>(() => import('components/modules/Profile/LeaderBoard').then(mod => mod.LeaderBoard));
+const DynamicWalletRainbowKitButton = dynamic<React.ComponentProps<typeof StaticWalletRainbowKitButton>>(() => import('components/elements/WalletRainbowKitButton').then(mod => mod.WalletRainbowKitButton));
+const DynamicPreviewBanner = dynamic<React.ComponentProps<typeof StaticPreviewBanner>>(() => import('components/elements/PreviewBanner'));
 
 type HomePageProps = {
   preview: boolean;
@@ -99,6 +104,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       setLearnCardImages([data.learnCardImagesCollection.items[0], data.learnCardImagesCollection.items[1]]);
     }
   }, [data?.featuredProfile, data.learnCards, data.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data.learnCardImagesCollection.items, data.learnCardImagesCollection, data.subheroTitle]);
+  
   return (
     <>
       <main className='flex flex-col mt-20 font-grotesk not-italic HomePageContainer'>
@@ -136,7 +142,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </div>
             </div>
             <div className='w-full pt-1 h-full inline-flex grow space-x-4'>
-              <WalletRainbowKitButton signInButton showWhenConnected={false} />
+              <DynamicWalletRainbowKitButton signInButton showWhenConnected={false} />
               <button
                 onClick={() => {
                   router.push('/articles');
@@ -194,7 +200,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div className='text-section leading-header font-header justify-center mb-6 mt-14 ...'>
               {data?.leaderboardTitle}
             </div>
-            <LeaderBoard data={leaderboardData} />
+            <DynamicLeaderBoard data={leaderboardData} />
           </div>
           <div className='flex px-6 flex-row flex-wrap w-full h-full justify-center minlg:px-2 ...'>
             <div className='h-full w-full ...'>
@@ -310,7 +316,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
         </div>
       </main>
-      {preview && <PreviewBanner />}
+      {preview && <DynamicPreviewBanner />}
     </>
   );
 };
