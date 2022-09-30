@@ -123,6 +123,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
               <img className='absolute bottom-0 left-0 -z-20' src="temp-intro.png" alt="" />
               <span className='absolute w-full h-[460px] -bottom-[122px] left-0 -z-10 bg-img-shadow'></span>
+
             </div>
           </div>
 
