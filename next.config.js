@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const { withSentryConfig } = require('@sentry/nextjs');
+const path = require('path');
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const withTM = require('next-transpile-modules')([
   'react-dnd',
   'dnd-core',
@@ -34,6 +36,26 @@ const moduleExports = withTM({
       resourceQuery: { not: [/url/] }, // exclude react component if *.svg?url
       use: ['@svgr/webpack'],
     });
+
+    config.plugins.push(new DuplicatePackageCheckerPlugin());
+    [
+      'axios',
+      'bn.js',
+      'buffer',
+      'clsx',
+      'color-name',
+      'eth-rpc-errors',
+      'pify',
+      'preact',
+      'qrcode',
+      'react-is',
+      'tslib',
+      'typesense'
+    ].map(i => config.resolve.alias[i] = path.resolve(
+      __dirname,
+      'node_modules',
+      i
+    ));
     
     return config;
   },
