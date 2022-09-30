@@ -94,7 +94,9 @@ module.exports = {
         'footer-bg': '#F8F8F8',
         'footer-bg-dk': '#0C0F17',
         'primary-yellow': '#F9D963',
-        'link-yellow': '#B59007'
+        'link-yellow': '#B59007',
+        'secondary-yellow': '#FCBB1B',
+        'key-bg': '#4D4D4D',
       },
       fontFamily: {
         'rubik': ['Rubik'],
@@ -157,9 +159,11 @@ module.exports = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'hero-radial-gradient':
-      'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)',
+          'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)',
         'hero-gradient':
-      'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
+          'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
+        'img-shadow':
+          'linear-gradient(0deg, #000000 32.93%, rgba(0, 0, 0, 0) 100%)'
       },
       aspectRatio: {
         '4/3': '4/3',

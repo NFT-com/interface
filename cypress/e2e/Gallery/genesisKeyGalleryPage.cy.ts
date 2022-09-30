@@ -44,7 +44,6 @@ describe('GK gallery page tests', () => {
     cy.get('.GenesisKeyGalleryFilters__myassets-toggle').first().click();
     // no wallet connected, no assets should appear
     cy.get('.MyGKSearchResultContainer').should('have.length', 0);
-    cy.findAllByText('Sign in').should('have.length', 2);
   });
 });
       
