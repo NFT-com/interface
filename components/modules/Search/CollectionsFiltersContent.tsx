@@ -63,7 +63,7 @@ export const CollectionsFiltersContent = () => {
     <>
       <div className="flex flex-col w-full">
         <div
-          className="block minmd:hidden flex p-5 justify-end cursor-pointer"
+          className="block minmd:hidden p-5 justify-end cursor-pointer"
           onClick={() => {
             setSearchModalOpen(false, 'collectionFilters');
           }}>
