@@ -10,7 +10,6 @@ import { tw } from 'utils/tw';
 import { ProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
-import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { PartialDeep } from 'type-fest';
@@ -34,7 +33,6 @@ export function NftGrid(props: NftGridProps) {
   const { profileData } = useProfileQuery(props.profileURI);
 
   const { tileBackgroundSecondary } = useThemeColors();
-  const router = useRouter();
   const { width: screenWidth } = useWindowDimensions();
 
   const mosaicArray = [0];
@@ -121,10 +119,9 @@ export function NftGrid(props: NftGridProps) {
             onClick={() => {
               if (editMode) {
                 toggleHidden(nft?.id, !nft?.hidden);
-              } else {
-                router.push('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString());
               }
             }}
+            redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
             customBackground={tileBackgroundSecondary}
             nftsDescriptionsVisible={draftNftsDescriptionsVisible}
             layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}

@@ -11,11 +11,12 @@ export interface NFTCollectionCardProps {
   contract: string
   count?: number
   images: string[]
-  onClick: () => void
+  onClick?: () => void
   customBackground?: string
   customBorder?: string
   contractName?: string
   lightModeForced?: boolean
+  redirectTo?: string
 }
 
 /**
@@ -42,6 +43,7 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
       contractAddress={collection?.collection?.contract}
       customBackground={props.customBackground}
       customBorder={props.customBorder}
+      redirectTo={props.redirectTo}
     />
   );
 }
