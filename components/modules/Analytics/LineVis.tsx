@@ -32,19 +32,22 @@ const xAxisFormatter = (item) => {
 
 const yAxisFormatter = (item) => {
   if (moment(item).isValid()) {
-    return Number(item.toFixed(2));
+    return Number(item.toFixed(2)).toLocaleString('en-US');
   } else {
     return item;
   }
 };
 
 const CustomTooltip = (props: any) => {
-  const { active, payload } = props;
+  const { active, payload, dataLength } = props;
   if (active && payload && payload.length) {
+    if (dataLength > 1000 && Number(payload[0].value.toFixed(0)) % 2 === 0) {
+      return null;
+    }
     return (
-      <div className="rounded-xl bg-[#1F2127] text-white py-4 px-5">
-        <p className="bg-[#1F2127] text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
-        <p className="text-[#18A0FB]">{`${payload[0].value.toFixed(2)} USD`}</p>
+      <div className="bg-[#1F2127] py-4 px-5">
+        <p className="text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
+        <p className="text-[#18A0FB]">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
       </div>
     );
   }
@@ -104,10 +107,7 @@ export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
           <XAxis label={{ value: 'Date', position: 'insideBottom', offset: -10 }} dataKey={'date'} style={{ fontSize: '11px', fontFamily: 'Grotesk' }} tickFormatter={xAxisFormatter}/>
           <YAxis label={{ value: 'Value (USD)', position: 'insideTopRight', offset: -30 }} dataKey={'value'} style={{ fontSize: '11px', fontFamily: 'Grotesk' }} orientation={'right'} tickFormatter={yAxisFormatter} />
           <Tooltip
-            wrapperClassName='rounded-xl bg-[#1F2127] text-white'
-            labelClassName='bg-[#1F2127] text-white'
-            contentStyle={{ backgroundColor: '#1F2127' }}
-            content={<CustomTooltip />}
+            content={<CustomTooltip dataLength={data.length}/>}
           />
           <Line type="monotone" dataKey="value" stroke="#18A0FB" dot={false} />
         </LineChart>

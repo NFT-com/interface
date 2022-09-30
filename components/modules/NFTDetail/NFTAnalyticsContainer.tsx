@@ -15,7 +15,7 @@ export type NFTAnalyticsContainerProps = {
   data: PartialDeep<Nft>;
 }
 
-const nftChartTypes = {
+const nftActivityTabs = {
   0: 'Activity',
   1: getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && 'Sales',
 };
@@ -31,11 +31,11 @@ const timeFrames = {
 };
 
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
-  const [selectedChartType, setSelectedChartType] = useState(nftChartTypes[0]);
+  const [selectedTab, setSelectedTab] = useState(nftActivityTabs[0]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[6]);
   const { getSales } = useGetSales();
   
-  const { data: nftData } = useSWR('getSales' + data?.contract + selectedTimeFrame, async () => {
+  const { data: nftData } = useSWR('getSales' + data?.contract + data?.tokenId + selectedTimeFrame, async () => {
     const dayTimeFrames = {
       '1D': '24h',
       '7D': '7d',
@@ -61,9 +61,9 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
     <div className="bg-transparent overflow-x-auto p-4 minxl:p-5 minxl:pb-0 minxl:-mb-10 w-full">
       <div className="w-full flex flex-col">
         <div className='justify-start flex'>
-          <Tab.Group onChange={(index) => {setSelectedChartType(nftChartTypes[index]);}}>
+          <Tab.Group onChange={(index) => {setSelectedTab(nftActivityTabs[index]);}}>
             <Tab.List className="flex rounded-3xl font-grotesk">
-              {Object.keys(nftChartTypes).map((chartType) => (
+              {Object.keys(nftActivityTabs).map((chartType) => (
                 <Tab
                   key={chartType}
                   className={({ selected }) =>
@@ -73,13 +73,13 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                     )
                   }
                 >
-                  {nftChartTypes[chartType]}
+                  {nftActivityTabs[chartType]}
                 </Tab>
               ))}
             </Tab.List>
           </Tab.Group>
         </div>
-        {selectedChartType === 'Sales' &&
+        {selectedTab === 'Sales' &&
         <Tab.Group
           defaultIndex={6}
           onChange={(index) => {
@@ -107,14 +107,14 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </Tab.Group>
         }
       </div>
-      {selectedChartType === 'Activity' && <NFTActivity data={data} />}
-      {getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && selectedChartType === 'Sales' && nftData?.length > 0 &&
+      {selectedTab === 'Activity' && <NFTActivity data={data} />}
+      {nftData?.length > 0 && selectedTab === 'Sales' &&
         <LineVis
           label={'Sales'}
           showMarketplaceOptions={false}
           data={nftData}
         />}
-      {getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && selectedChartType === 'Sales' && nftData?.length === 0 && <div className="my-14 font-grotesk mx-auto text-center">No data yet</div>}
+      {selectedTab === 'Sales' && nftData?.length === 0 && <div className="my-14 font-grotesk mx-auto text-center">No data yet</div>}
     </div>
   );
 };
