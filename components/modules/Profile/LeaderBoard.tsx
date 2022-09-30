@@ -3,10 +3,10 @@ import { LeaderboardQuery } from 'graphql/generated/types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
-// import { usePaginator } from 'hooks/usePaginator';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 type LeaderBoardProps = {
