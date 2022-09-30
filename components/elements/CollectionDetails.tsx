@@ -9,16 +9,18 @@ import { LoadingRow } from './LoadingRow';
 import { NFTCard } from './NFTCard';
 
 import { SearchIcon } from '@heroicons/react/solid';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useCallback, useRef, useState } from 'react';
 import {
   Configure,
   connectStateResults,
   InfiniteHits,
-  InstantSearch,
+  InstantSearch as StaticInstantSearch,
   SearchBox,
 } from 'react-instantsearch-dom';
 
+const DynamicInstantSearch = dynamic<React.ComponentProps<typeof StaticInstantSearch>>(() => import('react-instantsearch-dom').then(mod => mod.InstantSearch));
 export interface CollectionDetailsProps {
   address: string;
   collectionName: string;
@@ -103,7 +105,7 @@ export const CollectionDetails = (props: CollectionDetailsProps) => {
         <LoadingRow />
       </div>}
       <div className="hidden">
-        {props.collectionName && <InstantSearch
+        {props.collectionName && <DynamicInstantSearch
           searchClient={getTypesenseInstantsearchAdapter(SearchableFields.NFTS_COLLECTION_FIELDS)}
           indexName="nfts">
           <Configure hitsPerPage={12}/>
@@ -124,7 +126,7 @@ export const CollectionDetails = (props: CollectionDetailsProps) => {
               </div>
             </div>
           </div>
-        </InstantSearch>}
+        </DynamicInstantSearch>}
       </div>
     </>
   );

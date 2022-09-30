@@ -7,7 +7,6 @@ import { tw } from 'utils/tw';
 
 import { Dialog } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/solid';
-//import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
