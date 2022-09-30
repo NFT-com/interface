@@ -103,14 +103,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
       <>
-        <main className='flex flex-col mt-20 font-grotesk not-italic'>
+        <main className='flex flex-col font-grotesk not-italic'>
           {/* Block: Intro */}
-          <div className='bg-black h-[1200px]'>
-            <div className='max-w-nftcom mx-auto relative z-0 pt-44 pb-80'>
+          <div className='bg-black h-[960px] minlg:h-[1200px]'>
+            <div className='max-w-nftcom mx-auto relative z-0 pt-52 minlg:pt-[14rem] pb-44 minlg:pb-80'>
               <div className={tw(
-                'bg-[#121212] drop-shadow-lg max-w-4xl h-[182px] mx-auto',
+                'bg-[#121212] drop-shadow-lg max-w-[21rem] minmd:max-w-lg minlg:max-w-4xl h-[74px] minlg:h-[182px] mx-auto',
                 'flex items-center justify-center text-center',
-                'rounded-full text-[60px] minlg:text-[105px] font-medium leading-none tracking-tight'
+                'rounded-full text-[42px] minmd:text-[60px] minlg:text-[105px] font-medium leading-none tracking-tight'
               )}>
                 <span className='text-white/40'>NFT.COM</span><span className='text-[.75em] -mt-4 font-bold text-secondary-yellow'>/</span><span className='text-white'>IDEAS</span>
               </div>
@@ -121,15 +121,15 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
 
           {/* Block: NFT profile */}
-          <div className='bg-black rounded-3xl max-w-nftcom w-full mx-auto -mt-[513px] pt-10 px-9 mb-44 relative z-10'>
-            <h2 className='text-[82px] text-white leading-none mb-14'>
-              What you can do <br />
+          <div className='bg-black minlg:rounded-3xl max-w-nftcom w-full mx-auto -mt-[513px] pt-10 px-9 mb-44 relative z-10'>
+            <h2 className='text-5xl text-[82px] text-white leading-none mb-14'>
+              What you can do <br className='hidden minlg:block' />
               with an
-              <img className='lg:max-w-[6rem] inline-block lg:mr-[-20px] mr-[-25px] ml-[-20px] mt-[-10px] mb-[-48px]' src="ico-discover.png" alt="" />
+              <img className='inline-block max-w-[6rem] minlg:max-w-none mr-[-20px] minlg:mr-[-25px] ml-[-20px] mt-[-10px] mb-[-48px]' src="ico-discover.png" alt="" />
               <span className='text-secondary-yellow'>NFT Profile</span></h2>
 
             <div className='minlg:grid grid-cols-2 gap-2 minlg:space-x-4 -mb-24'>
-              <div className='bg-white rounded-3xl rounded-tr-none px-9 pt-14 pb-5 border-black border-2 relative z-0 overflow-hidden'>
+              <div className='bg-white mb-[18px] minlg:mb-0 rounded-3xl rounded-tr-none px-9 pt-14 pb-5 border-black border-2 relative z-0 overflow-hidden'>
                 <svg className='absolute -z-10 -top-[269px] -right-20' width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g filter="url(#filter0_d_114_76)">
                     <path d="M167.421 0H119.359C118.63 0 117.975 0.449617 117.713 1.13093L4.921 294.604C4.47705 295.759 5.32974 297 6.56724 297H53.2259C53.9532 297 54.6058 296.554 54.8695 295.876L169.065 2.40319C169.515 1.24701 168.662 0 167.421 0Z" fill="black" />
@@ -138,7 +138,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     <path d="M280.421 81H232.359C231.63 81 230.975 81.4496 230.713 82.1309L117.921 375.604C117.477 376.759 118.33 378 119.567 378H166.226C166.953 378 167.606 377.554 167.87 376.876L282.065 83.4032C282.515 82.247 281.662 81 280.421 81Z" fill="black" />
                   </g>
                   <defs>
-                    <filter id="filter0_d_114_76" x="0.802002" y="0" width="285.385" height="386" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <filter id="filter0_d_114_76" x="0.802002" y="0" width="285.385" height="386" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
                       <feFlood flood-opacity="0" result="BackgroundImageFix" />
                       <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
                       <feOffset dy="4" />
@@ -161,7 +161,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <span className='text-white/40'>NFT.COM</span><span className='text-[.75em] -mt-4 font-bold text-secondary-yellow'>/</span><span className='text-white'>IDEAS</span>
                 </div>
                 <div className='text-center'>
-                  <a href="" className='text-xl underline underline-offset-4'>Create a Profile →</a>
+                  <a href="" className='text-xl underline underline-offset-4 hover:no-underline'>Create a Profile →</a>
                 </div>
               </div>
 
@@ -220,7 +220,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div>
               <h2 className='text-5xl minxl:text-8xl leading-none mb-6'><span className='text-secondary-yellow'>
                 Discover <br />
-                <img className='lg:max-w-[6rem] inline-block lg:mr-[-20px] mr-[-36px] ml-[-20px] mt-[-10px] mb-[-30px]' src="ico-discover.png" alt="" /> a</span><br />
+                <img className='max-w-[6rem] minlg:max-w-none inline-block mr-[-20px] minlg:mr-[-36px] ml-[-20px] mt-[-10px] mb-[-30px]' src="ico-discover.png" alt="" /> a</span><br />
                 New World
               </h2>
               <p className='text-base minxl:text-xll'>NFTs enable new forms of community engagement. Collect, Display, and Trade your NFTs through a social network that you own. Get started by building your NFT Profile.</p>
