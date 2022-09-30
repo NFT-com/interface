@@ -45,8 +45,8 @@ const CustomTooltip = (props: any) => {
       return null;
     }
     return (
-      <div className="rounded-xl bg-[#1F2127] text-white py-4 px-5">
-        <p className="bg-[#1F2127] text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
+      <div className="bg-[#1F2127] py-4 px-5">
+        <p className="text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
         <p className="text-[#18A0FB]">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
       </div>
     );
