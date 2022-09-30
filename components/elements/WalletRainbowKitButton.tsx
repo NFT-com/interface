@@ -3,6 +3,7 @@ import { NotificationContext } from 'components/modules/Notifications/Notificati
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 

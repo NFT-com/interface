@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { FeaturedProfile } from 'components/elements/FeaturedProfile';
 import HomePageTicker from 'components/elements/HomePageTicker';
 import { LearnCards } from 'components/elements/LearnCards';
@@ -11,6 +12,7 @@ import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { TickerStat } from 'types';
+import { Doppler,getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { NextPageWithLayout } from './_app';
@@ -22,7 +24,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Vector from 'public/Vector.svg';
 import { useEffect, useState } from 'react';
-import { getEnvBool, Doppler } from 'utils/env';
 
 type HomePageProps = {
   preview: boolean;
@@ -139,7 +140,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   </g>
                   <defs>
                     <filter id="filter0_d_114_76" x="0.802002" y="0" width="285.385" height="386" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
                       <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
                       <feOffset dy="4" />
                       <feGaussianBlur stdDeviation="2" />
@@ -174,8 +175,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     <path d="M280.421 81H232.359C231.63 81 230.975 81.4496 230.713 82.1309L117.921 375.604C117.477 376.759 118.33 378 119.567 378H166.226C166.953 378 167.606 377.554 167.87 376.876L282.065 83.4032C282.515 82.247 281.662 81 280.421 81Z" fill="black" />
                   </g>
                   <defs>
-                    <filter id="filter0_d_114_76" x="0.802002" y="0" width="285.385" height="386" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <filter id="filter0_d_114_76" x="0.802002" y="0" width="285.385" height="386" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                      <feFlood floodOpacity="0" result="BackgroundImageFix" />
                       <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
                       <feOffset dy="4" />
                       <feGaussianBlur stdDeviation="2" />
@@ -288,7 +289,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         </main>
         {preview && <PreviewBanner />}
       </>
-    )
+    );
   } else {
     return (
       <>
@@ -306,11 +307,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <div className={tw('flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between p-6 space-x-0 minmd:space-x-10 max-w-screen minxl:px-0 px-5 w-full minlg:max-w-[1100px] mx-auto h-full',
             'break-after-all ',
           )}
-            style={{
-              backgroundImage: 'url(\'/home-banner-bg.png\')',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-            }}>
+          style={{
+            backgroundImage: 'url(\'/home-banner-bg.png\')',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}>
             <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
                 'font-header text-black text-5xl minxl:text-7xl leading-header',
@@ -503,7 +504,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         </main>
         {preview && <PreviewBanner />}
       </>
-    )
+    );
   }
 };
 

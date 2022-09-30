@@ -1,6 +1,7 @@
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
