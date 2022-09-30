@@ -86,7 +86,7 @@ export function Collection(props: CollectionProps) {
       'query_by': 'tokenId,nftName',
       'per_page': 8,
       'page'    : currentPage,
-      'facet_by': 'contractAddr',
+      'facet_by': 'contractAddr'+(getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
       'filter_by': 'contractAddr:='+(contractAddr?.toString() || props.contract),
       'exhaustive_search' : true
     }] })
@@ -104,7 +104,7 @@ export function Collection(props: CollectionProps) {
         'query_by': 'tokenId,nftName',
         'per_page': 8,
         'page'    : currentPage,
-        'facet_by': 'contractAddr',
+        'facet_by': 'contractAddr'+(getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
         'filter_by': 'contractAddr:='+(contractAddr?.toString() || props.contract),
         'exhaustive_search' : true
       }] })

@@ -70,7 +70,7 @@ export function ListingCheckout() {
           <span className='text-2xl w-full flex font-bold'>Set Duration</span>
           <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
             {
-              ['1 Hour', '1 Day', '7 Days', '6 Months', '1 Year'].map(duration => {
+              ['1 Hour', '1 Day', '7 Days', '6 Months'].map(duration => {
                 return <div
                   key={duration}
                   onClick={() => {

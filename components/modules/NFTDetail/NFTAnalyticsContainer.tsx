@@ -7,7 +7,6 @@ import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
 import { BigNumber } from 'ethers';
-import moment from 'moment';
 import { useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -18,7 +17,7 @@ export type NFTAnalyticsContainerProps = {
 
 const nftChartTypes = {
   0: 'Activity',
-  1: getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && 'Price',
+  1: getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && 'Sales',
 };
 
 const timeFrames = {
@@ -36,7 +35,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[6]);
   const { getSales } = useGetSales();
   
-  const { data: nftData } = useSWR('getSales' + data?.contract + selectedTimeFrame, async () => {
+  const { data: nftData } = useSWR('getSales' + data?.contract + data?.tokenId + selectedTimeFrame, async () => {
     const dayTimeFrames = {
       '1D': '24h',
       '7D': '7d',
@@ -53,7 +52,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
       dateRange: dayTimeFrames[selectedTimeFrame] });
     
     const sales = resp.getSales.map(i => {
-      return { date: moment(i.date).format('MM-DD-YYYY').toString(), value: i.price ?? i.priceUSD };
+      return { date: i.date, value: i.priceUSD };
     });
     return sales.sort((a,b) =>(a.date > b.date) ? 1 : -1);
   });
@@ -80,7 +79,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
             </Tab.List>
           </Tab.Group>
         </div>
-        {selectedChartType === 'Price' &&
+        {selectedChartType === 'Sales' &&
         <Tab.Group
           defaultIndex={6}
           onChange={(index) => {
@@ -109,13 +108,13 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         }
       </div>
       {selectedChartType === 'Activity' && <NFTActivity data={data} />}
-      {getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && selectedChartType === 'Price' && nftData?.length > 0 &&
+      {getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && selectedChartType === 'Sales' && nftData?.length > 0 &&
         <LineVis
-          label={'Price'}
+          label={'Sales'}
           showMarketplaceOptions={false}
           data={nftData}
         />}
-      {getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && selectedChartType === 'Price' && nftData?.length === 0 && <div className="my-14 font-grotesk mx-auto text-center">No data yet</div>}
+      {getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && selectedChartType === 'Sales' && nftData?.length === 0 && <div className="my-14 font-grotesk mx-auto text-center">No data yet</div>}
     </div>
   );
 };
