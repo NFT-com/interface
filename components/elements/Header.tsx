@@ -1,6 +1,6 @@
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
-import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
+import { NotificationBadge as StaticNotificationBadge } from 'components/modules/Notifications/NotificationBadge';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
@@ -12,12 +12,15 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ShoppingCartSimple } from 'phosphor-react';
 import NavLogo from 'public/Logo.svg';
 import LightNavLogo from 'public/LogoLight.svg';
 import React, { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
+
+const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotificationBadge>>(() => import('components/modules/Notifications/NotificationBadge').then(mod => mod.NotificationBadge));
 
 type HeaderProps = {
   removeBg?: boolean
@@ -113,7 +116,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
               >
                 {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
                   <div className='absolute right-0 -top-4'>
-                    <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
+                    <DynamicNotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
                   </div>
                 )}
                 <button
@@ -199,7 +202,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
               >
                 {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
                   <div className='absolute right-0 -top-4'>
-                    <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
+                    <DynamicNotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
                   </div>
                 )}
                 <button
