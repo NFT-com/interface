@@ -1,4 +1,5 @@
 import { useSidebar } from 'hooks/state/useSidebar';
+import { Doppler, getEnvBool } from 'utils/env';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
