@@ -25,9 +25,6 @@ describe('NFTCard', () => {
       </WagmiConfig>
     );
     cy.findByText('test_nft').should('exist');
-    // cy.findByText('test_nft').click().then(() => {
-    // expect(onClick).to.be.calledOnce;
-    //});
   });
 
   it('mounts with more props', () => {

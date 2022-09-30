@@ -220,7 +220,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     <div key={index}
                       className={tw(
                         'DiscoverCollectionItem',
-                        searchType?.toString() === 'collections' ? 'min-h-[10.5rem] minmd:min-h-[13rem]' : '')}
+                        searchType?.toString() === 'collections' ? 'min-h-[10.5rem]' : '')}
                     >
                       {searchType?.toString() === 'collections' ?
                         nftsForCollections
