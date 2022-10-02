@@ -85,7 +85,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     )}
     onClick={props?.onClick}
     >
-      {(props.videoOverride || imageUrl?.indexOf('data') >= 0) ?
+      {(props.videoOverride || imageUrl?.indexOf('data:') >= 0) ?
         <video
           autoPlay
           muted={!props.videoOverride}
