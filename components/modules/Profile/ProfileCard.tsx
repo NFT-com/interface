@@ -5,7 +5,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { PartialDeep } from 'type-fest';
 
 export interface ProfileCardProps {
@@ -13,7 +13,6 @@ export interface ProfileCardProps {
 }
 
 export function ProfileCard(props: ProfileCardProps) {
-  const router = useRouter();
   const defaultChainId = useDefaultChainId();
   const {
     totalItems: publicProfileNftsCount,
@@ -23,26 +22,25 @@ export function ProfileCard(props: ProfileCardProps) {
     1000
   );
 
-  return <div className={tw(
-    'flex flex-col snap-always snap-center sn:no-scrollbar h-full w-72 shrink-0 p-4 border border-[#D5D5D5] rounded-md cursor-pointer mr-4 text-black text-base',
-  )}
-  onClick={() => {
-    router.push('/' + props.profile?.url);
-  }}
-  >
-    <RoundedCornerMedia
-      containerClasses='w-full aspect-square'
-      variant={RoundedCornerVariant.All}
-      amount={RoundedCornerAmount.Medium}
-      src={processIPFSURL(props.profile?.photoURL)}
-    />
-    <div className="flex w-full font-grotesk my-4">
-      <span className='text-xl font-medium font-dm-mono text-primary-yellow'>/</span>
-      <span className='text-xl font-bold ml-1'>{props.profile?.url}</span>
-    </div>
-    <div className='flex w-full font-grotesk'>
-      <span className='text-secondary-txt'>NFTs Displayed:</span>
-      <span className='font-bold ml-1'>{publicProfileNftsCount}</span>
-    </div>
-  </div>;
+  return <Link href={'/' + props.profile?.url} passHref>
+    <a className={tw(
+      'flex flex-col snap-always snap-center sn:no-scrollbar h-full w-72 shrink-0 p-4 border border-[#D5D5D5] rounded-md cursor-pointer mr-4 text-black text-base',
+    )}
+    >
+      <RoundedCornerMedia
+        containerClasses='w-full aspect-square'
+        variant={RoundedCornerVariant.All}
+        amount={RoundedCornerAmount.Medium}
+        src={processIPFSURL(props.profile?.photoURL)}
+      />
+      <div className="flex w-full font-grotesk my-4">
+        <span className='text-xl font-medium font-dm-mono text-primary-yellow'>/</span>
+        <span className='text-xl font-bold ml-1'>{props.profile?.url}</span>
+      </div>
+      <div className='flex w-full font-grotesk'>
+        <span className='text-secondary-txt'>NFTs Displayed:</span>
+        <span className='font-bold ml-1'>{publicProfileNftsCount}</span>
+      </div>
+    </a>
+  </Link>;
 }
