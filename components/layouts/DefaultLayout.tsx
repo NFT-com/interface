@@ -11,9 +11,10 @@ import { tw } from 'utils/tw';
 type DefaultLayoutProps = {
   children: React.ReactNode;
   hideFooter?: boolean
+  hideHeader?: boolean
 };
 
-export default function DefaultLayout({ children, hideFooter }: DefaultLayoutProps) {
+export default function DefaultLayout({ children, hideFooter, hideHeader }: DefaultLayoutProps) {
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   const { toggleSidebar } = useSidebar();
   return (
@@ -24,11 +25,14 @@ export default function DefaultLayout({ children, hideFooter }: DefaultLayoutPro
         className='flex-1 w-full'
         style={{ minHeight: '100vh' }}
       >
+        {!hideHeader &&
         <ClientOnly>
           <Header />
           <Sidebar />
           <SearchModal />
         </ClientOnly>
+        }
+        
         {children}
         <SignOutModal
           visible={signOutDialogOpen}
