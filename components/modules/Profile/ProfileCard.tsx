@@ -5,9 +5,8 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { useRouter } from 'next/router';
-import { PartialDeep } from 'type-fest';
 import Link from 'next/link';
+import { PartialDeep } from 'type-fest';
 
 export interface ProfileCardProps {
   profile: PartialDeep<Profile>
