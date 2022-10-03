@@ -97,7 +97,7 @@ export default function MintProfilesPage() {
 
 MintProfilesPage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideHeader>
+    <DefaultLayout hideHeader={getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) ? true : false}>
       { page }
     </DefaultLayout>
   );
