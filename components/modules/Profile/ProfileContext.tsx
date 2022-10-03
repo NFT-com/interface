@@ -14,6 +14,7 @@ import { DetailedNft } from './NftGrid';
 
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
@@ -307,12 +308,13 @@ export function ProfileContextProvider(
           mutatePublicProfileNfts();
           mutateAllOwnerNfts();
           clearDrafts();
+          toast.success('Profile changes saved');
         }
         setSaving(false);
       }
     } catch (err) {
       console.log('error while saving profile: ', err);
-      alert('Error while saving profile.');
+      toast.error('Error while saving profile.');
       clearDrafts();
       setSaving(false);
     }

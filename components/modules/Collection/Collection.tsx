@@ -45,7 +45,8 @@ export function Collection(props: CollectionProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [found, setFound] = useState(0);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
-  const prevVal = usePrevious(currentPage);
+  const prevPage = usePrevious(currentPage);
+  const prevId_nftName = usePrevious(id_nftName);
   const defaultChainId = useDefaultChainId();
   const { data: collectionData } = useCollectionQuery(defaultChainId, props.contract?.toString());
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contract, async () => {
@@ -77,7 +78,13 @@ export function Collection(props: CollectionProps) {
       setFound(0);
       setCollectionPageAppliedFilters('','', true);
     }
-  },[contractAddr, prevContractAddr, setClearedFilters, setCollectionPageAppliedFilters]);
+
+    if (prevId_nftName !== id_nftName){
+      setCollectionNfts([]);
+      setCurrentPage(1);
+      setFound(0);
+    }
+  },[contractAddr, id_nftName, prevContractAddr, prevId_nftName, setClearedFilters, setCollectionPageAppliedFilters]);
 
   useEffect(() => {
     currentPage === 1 && props.contract && fetchTypesenseMultiSearch({ searches: [{
@@ -97,7 +104,7 @@ export function Collection(props: CollectionProps) {
   }, [contractAddr, currentPage, fetchTypesenseMultiSearch, id_nftName, props.contract]);
 
   useEffect(() => {
-    if (currentPage > 1 && currentPage !== prevVal) {
+    if (currentPage > 1 && (currentPage !== prevPage)) {
       props.contract && fetchTypesenseMultiSearch({ searches: [{
         'collection': 'nfts',
         'q'       : id_nftName,
@@ -113,7 +120,7 @@ export function Collection(props: CollectionProps) {
           setFound(resp.results[0].found);
         });
     }
-  }, [collectionNfts, contractAddr, currentPage, fetchTypesenseMultiSearch, id_nftName, prevVal, props.contract]);
+  }, [collectionNfts, contractAddr, currentPage, fetchTypesenseMultiSearch, id_nftName, prevPage, props.contract]);
 
   const theme = {
     p: (props: any) => {
