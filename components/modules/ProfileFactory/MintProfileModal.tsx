@@ -54,15 +54,6 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, transaction
   });
 
   const gasCost = data && feeData ? utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber()) : null;
-  console.log('🚀 ~ file: MintProfileModal.tsx ~ line 57 ~ RemoveModal ~ gasCost', gasCost);
-  function format_output(output) {
-    const n = Math.log(output) / Math.LN10;
-    let x = 4-n;
-    if(x<0)
-      x=0;
-    output = output.toFixed(x);
-    return output;
-  }
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[105]" onClose={() => setIsOpen(false)}>
