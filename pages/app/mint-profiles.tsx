@@ -45,7 +45,7 @@ export default function MintProfilesPage() {
           <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
             <h2 className='text-[32px] w-5/6'>Claim your free NFT Profile</h2>
             <p className='mt-6 text-xl w-5/6'>Every wallet receives one <span className='text-[#EAC232]'>free mint!</span></p>
-            <p className='mt-4 text-[#707070] hidden minlg:block '>Create your NFT Profile to build your social identity</p>
+            <p className='mt-4 text-[#707070]'>Create your NFT Profile to build your social identity</p>
 
             <input
               className={tw(
