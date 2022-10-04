@@ -1,6 +1,7 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
+import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
@@ -9,6 +10,7 @@ import { Doppler,getEnv, getEnvBool } from 'utils/env';
 import { getChainIdString } from 'utils/helpers';
 
 import {
+  AvatarComponent,
   connectorsForWallets,
   RainbowKitProvider,
   wallet
@@ -109,6 +111,10 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
     });
   }, [connectors, provider]);
 
+  const CustomAvatar: AvatarComponent = () => {
+    return <LoggedInIdenticon />;
+  };
+
   return (
     <>
       <Head>
@@ -124,6 +130,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           theme={rainbowDark}
           chains={chains}
           initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
+          avatar={CustomAvatar}
         >
           <AnimatePresence exitBeforeEnter>
             <GraphQLProvider>
