@@ -1,6 +1,7 @@
 import { BidStatusIcon } from 'components/elements/BidStatusIcon';
 import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
+import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { ProfileStatus } from 'graphql/generated/types';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
@@ -29,6 +30,7 @@ export default function MintProfilesPage() {
   const [currentURI, setCurrentURI] = useState('');
   const [minting, setMinting] = useState(false);
   const [claimableIndex, setClaimableIndex] = useState(0);
+  const [mintModalOpen, setMintModalOpen] = useState(false);
   const [nextTokenIdWithClaimable, setNextTokenIdWithClaimable] = useState(null);
   const {
     profileTokenId,
@@ -39,6 +41,11 @@ export default function MintProfilesPage() {
   const {
     claimable,
   } = useClaimableProfileCount(currentAddress);
+
+  const closeModal = () => {
+    setMintModalOpen(false);
+    setMinting(false);
+  };
 
   useEffect(() => {
     const allClaimableIds = (claimable ?? [])
@@ -129,9 +136,9 @@ export default function MintProfilesPage() {
             <p className='mt-6 text-xl w-5/6'>Every wallet receives one <span className='text-secondary-yellow'>free mint!</span></p>
             <p className='mt-4 text-[#707070]'>Create your NFT Profile to build your social identity</p>
 
-            <div className="relative w-full flex items-center deprecated_sm:px-8 mt-6">
+            <div className="relative w-full flex items-center  mt-6">
               <div className={tw(
-                'left-0 pl-4 flex deprecated_sm:right-8 font-bold text-black',
+                'left-0 pl-4 flex font-bold text-black',
                 'rounded-l-lg bg-white py-3 text-lg',
                 'bg-[#F8F8F8]'
               )}>
@@ -201,6 +208,7 @@ export default function MintProfilesPage() {
                   return;
                 }
                 setMinting(true);
+                setMintModalOpen(true);
               }}
             >
               {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
@@ -231,6 +239,7 @@ export default function MintProfilesPage() {
           <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the build in marketplace aggregator.</p>
         </div>
       </div>
+      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} currentURI={currentURI} gasCost={.001} />
     </div>
   );
 }
