@@ -1,25 +1,30 @@
+import maxProfilesABI from 'constants/abis/MaxProfiles.json';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useMaxProfilesSigner } from 'hooks/contracts/useMaxProfilesSigner';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
+import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
+import { utils } from 'ethers';
 import ETHIcon from 'public/eth_icon.svg';
 import { Fragment, useState } from 'react';
-import { useAccount } from 'wagmi';
+import useSWR from 'swr';
+import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 
 type MintProfileModalProps = {
   isOpen: boolean;
   setIsOpen: (input:boolean) => void;
   currentURI: string;
-  gasCost: number;
   transactionCost?: number;
 };
 
-export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, transactionCost }: MintProfileModalProps) {
+export default function RemoveModal({ isOpen, setIsOpen, currentURI, transactionCost }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
+  const defaultChainId = useDefaultChainId();
   const [minting, setMinting] = useState(false);
   const [, setMintSuccess] = useState(false);
   const { profileClaimHash, mutate: mutateProfileHash } = useGetProfileClaimHash(currentURI);
@@ -28,7 +33,36 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, tr
   const maxProfilesSigner = useMaxProfilesSigner();
   const { mutate: mutateTokenId } = useProfileTokenQuery(currentURI);
   const ethPriceUSD = useEthPriceUSD();
+  const contractAddress = getAddress('maxProfiles', defaultChainId);
+  const provider = useProvider();
 
+  const { data: feeData } = useSWR(
+    `${currentAddress}_eth_est_${currentURI}`,
+    async () => {
+      const feeData = await provider.getFeeData();
+      return feeData;
+    });
+  
+  const { data } = usePrepareContractWrite({
+    addressOrName: contractAddress,
+    contractInterface: maxProfilesABI,
+    functionName: 'publicClaim',
+    args: [currentURI, profileClaimHash?.hash, profileClaimHash?.signature,],
+    onError(err){
+      console.log('err:', err);
+    }
+  });
+
+  const gasCost = data && feeData ? utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber()) : null;
+  console.log('🚀 ~ file: MintProfileModal.tsx ~ line 57 ~ RemoveModal ~ gasCost', gasCost);
+  function format_output(output) {
+    const n = Math.log(output) / Math.LN10;
+    let x = 4-n;
+    if(x<0)
+      x=0;
+    output = output.toFixed(x);
+    return output;
+  }
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[105]" onClose={() => setIsOpen(false)}>
@@ -99,7 +133,7 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, tr
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="font-medium text-lg flex justify-center items-center">
-                        {gasCost} <ETHIcon className='ml-1' stroke="black" />
+                        {parseFloat(Number(gasCost).toFixed(7))} <ETHIcon className='ml-1' stroke="black" />
                       </p>
                       <p className="text-[#686868]">
                         ${(ethPriceUSD * Number(gasCost)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -115,7 +149,7 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, tr
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="text-xl font-medium">
-                        {gasCost} ETH
+                        {parseFloat(Number(gasCost).toFixed(7))} ETH
                       </p>
                       <p className="text-lg text-[#686868]">
                         (${(ethPriceUSD * Number(gasCost)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})

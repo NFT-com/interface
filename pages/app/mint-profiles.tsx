@@ -239,7 +239,7 @@ export default function MintProfilesPage() {
           <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the build in marketplace aggregator.</p>
         </div>
       </div>
-      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} currentURI={currentURI} gasCost={.001} />
+      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} currentURI={currentURI} />
     </div>
   );
 }
