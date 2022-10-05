@@ -10,8 +10,10 @@ import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { utils } from 'ethers';
+import { useRouter } from 'next/router';
 import ETHIcon from 'public/eth_icon.svg';
 import { Fragment, useState } from 'react';
+import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 
@@ -24,6 +26,7 @@ type MintProfileModalProps = {
 
 export default function RemoveModal({ isOpen, setIsOpen, currentURI, transactionCost }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
+  const router = useRouter();
   const defaultChainId = useDefaultChainId();
   const [minting, setMinting] = useState(false);
   const [, setMintSuccess] = useState(false);
@@ -167,15 +170,16 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, transaction
                           mutateMyProfileTokens();
                         }
                         mutateProfileHash();
-                        setMinting(false);
                         mutateTokenId();
                         mutateFreeMintStatus();
+                        router.push(`/${currentURI}`);
+                        setMinting(false);
                       } catch (err) {
                         setMinting(false);
                       }
                     }}
                   >
-                    {!minting ? 'Mint your profile' : 'Minting'}
+                    {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your profile</span>}
                   </button>
                 </div>
               </Dialog.Panel>
