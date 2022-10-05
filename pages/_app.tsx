@@ -23,7 +23,7 @@ import Script from 'next/script';
 import { ReactElement, ReactNode, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import ReactGA from 'react-ga';
-import { rainbowDark } from 'styles/RainbowKitThemes';
+import { rainbowDark, rainbowLight } from 'styles/RainbowKitThemes';
 import { v4 as uuid } from 'uuid';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
@@ -127,7 +127,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
             appName: 'NFT.com',
             learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
           }}
-          theme={rainbowDark}
+          theme={!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) ? rainbowDark : rainbowLight}
           chains={chains}
           initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
           avatar={CustomAvatar}

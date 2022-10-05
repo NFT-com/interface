@@ -1513,7 +1513,8 @@ export enum ProfileSortType {
 export enum ProfileStatus {
   Available = 'Available',
   Owned = 'Owned',
-  Pending = 'Pending'
+  Pending = 'Pending',
+  Listed = 'Listed'
 }
 
 export enum ProfileViewType {

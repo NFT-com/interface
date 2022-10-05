@@ -60,6 +60,19 @@ export function BidStatusIcon(props: BidStatusIconProps) {
           <ExclamationCircleIcon className="h-5 w-5" aria-hidden="true" style={{ color: pink }} />
         </div>
       );
+
+  case ProfileStatus.Listed:
+    return props.isOwner
+      ? (
+        <div className="flex item-center">
+          <ExclamationCircleIcon className="h-5 w-5" style={{ color: green }} aria-hidden="true" />
+        </div>
+      )
+      : (
+        <div className="flex item-center">
+          <CheckCircleIcon className="h-5 w-5" style={{ color: 'EAC232' }} aria-hidden="true" />
+        </div>
+      );
   default:
     return null;
   }
