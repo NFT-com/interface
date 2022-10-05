@@ -103,88 +103,175 @@ export const Footer = () => {
     },
   ];
 
-  return (
-    <div id="FooterContainer" className='bg-[#222222] pb-6 font-grotesk text-primary-txt-dk'>
-      <div className={tw(
-        'flex flex-col minlg:flex-row relative content-between minlg:content-center pt-12'
-      )}>
+  if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
+    return (
+      <div id="FooterContainer" className='bg-black rounded-t-[75px] -mt-[75px] pb-6 font-grotesk text-primary-txt-dk relative'>
         <div className={tw(
-          'minlg:w-max w-full flex-shrink-0 flex',
-          'items-start justify-between flex-col text-base minlg:pl-5 pl-0 minlg:items-start'
+          'flex flex-col minlg:flex-row relative content-between minlg:content-center pt-16'
         )}>
-          <Link href="/">
-            <div className={tw(
-              'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
-            )}>
-              <Link href='/' passHref>
-                <div className='w-10 h-10'>
-                  <Logo className='w-10 h-10 justify-start' />
-                </div>
-              </Link>
-            </div>
-          </Link>
-        </div>
-        <div className="w-full grid minlg:grid-cols-4 minmd:grid-cols-3 grid-cols-2 minlg:ml-20 minxl:pl-24">
-          {filterNulls(footerData).map((item, index) => {
-            return (
+          <div className={tw(
+            'minlg:w-max w-full flex-shrink-0 flex',
+            'items-start justify-between flex-col text-base minlg:pl-14 pl-0 minlg:items-start'
+          )}>
+            <Link href="/">
               <div className={tw(
-                'text-base mt-12 minlg:mt-0 pl-[30%] minmd:pl-[35%] minlg:pl-0',
-                index === 3 && 'col-start-2 minlg:row-auto minlg:col-auto',
-              )} key={index}>
-                <span className="font-medium">
-                  <b>{item.title}</b>
-                </span>
-                <div className='flex flex-col'>
-                  {item.links?.map((item, index) => {
-                    return (
-                      <Link
-                        href={item.link}
-                        key={index}
-                      >
-                        {item.newTab ?
-                          <a
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
-                            style={item?.stylize
-                              ? {
-                                background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
-                                backgroundSize: '200% 200%',
-                                animation: 'gradient 20s ease infinite',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent'
-                              }
-                              : null}
-                          >
-                            {item.name}
-                          </a>
-                          :
-                          <a
-                            className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
-                            style={item?.stylize
-                              ? {
-                                background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
-                                backgroundSize: '200% 200%',
-                                animation: 'gradient 20s ease infinite',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent'
-                              }
-                              : null}
-                          >
-                            {item.name}
-                          </a>
-                        }
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>);
-          })}
+                'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
+              )}>
+                <Link href='/' passHref>
+                  <div className='w-10 h-10'>
+                    <Logo className='w-10 h-10 justify-start' />
+                  </div>
+                </Link>
+              </div>
+            </Link>
+          </div>
+          <div className="w-full grid minlg:grid-cols-4 minmd:grid-cols-3 grid-cols-2 minlg:ml-20 minxl:pl-24">
+            {filterNulls(footerData).map((item, index) => {
+              return (
+                <div className={tw(
+                  'text-base mt-12 minlg:mt-0 pl-[30%] minmd:pl-[35%] minlg:pl-0',
+                  index === 3 && 'col-start-2 minlg:row-auto minlg:col-auto',
+                )} key={index}>
+                  <span className="font-medium">
+                    <b>{item.title}</b>
+                  </span>
+                  <div className='flex flex-col'>
+                    {item.links?.map((item, index) => {
+                      return (
+                        <Link
+                          href={item.link}
+                          key={index}
+                        >
+                          {item.newTab ?
+                            <a
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
+                              style={item?.stylize
+                                ? {
+                                  background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
+                                  backgroundSize: '200% 200%',
+                                  animation: 'gradient 20s ease infinite',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent'
+                                }
+                                : null}
+                            >
+                              {item.name}
+                            </a>
+                            :
+                            <a
+                              className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
+                              style={item?.stylize
+                                ? {
+                                  background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
+                                  backgroundSize: '200% 200%',
+                                  animation: 'gradient 20s ease infinite',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent'
+                                }
+                                : null}
+                            >
+                              {item.name}
+                            </a>
+                          }
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>);
+            })}
+          </div>
+        </div>
+        <div className="w-full mx-auto text-xs text-center minlg:text-left minlg:pl-14 mt-9 minlg:mt-4">
+          © {new Date().getFullYear()} NFT.com. All rights reserved
         </div>
       </div>
-      <div className="w-full mx-auto text-xs text-center minlg:text-left minlg:pl-4 mt-9 minlg:mt-4">
-            © {new Date().getFullYear()} NFT.com. All rights reserved
+    );
+  } else {
+    return (
+      <div id="FooterContainer" className='bg-[#222222] pb-6 font-grotesk text-primary-txt-dk'>
+        <div className={tw(
+          'flex flex-col minlg:flex-row relative content-between minlg:content-center pt-12'
+        )}>
+          <div className={tw(
+            'minlg:w-max w-full flex-shrink-0 flex',
+            'items-start justify-between flex-col text-base minlg:pl-5 pl-0 minlg:items-start'
+          )}>
+            <Link href="/">
+              <div className={tw(
+                'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
+              )}>
+                <Link href='/' passHref>
+                  <div className='w-10 h-10'>
+                    <Logo className='w-10 h-10 justify-start' />
+                  </div>
+                </Link>
+              </div>
+            </Link>
+          </div>
+          <div className="w-full grid minlg:grid-cols-4 minmd:grid-cols-3 grid-cols-2 minlg:ml-20 minxl:pl-24">
+            {filterNulls(footerData).map((item, index) => {
+              return (
+                <div className={tw(
+                  'text-base mt-12 minlg:mt-0 pl-[30%] minmd:pl-[35%] minlg:pl-0',
+                  index === 3 && 'col-start-2 minlg:row-auto minlg:col-auto',
+                )} key={index}>
+                  <span className="font-medium">
+                    <b>{item.title}</b>
+                  </span>
+                  <div className='flex flex-col'>
+                    {item.links?.map((item, index) => {
+                      return (
+                        <Link
+                          href={item.link}
+                          key={index}
+                        >
+                          {item.newTab ?
+                            <a
+                              target="_blank"
+                              rel="noreferrer noopener"
+                              className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
+                              style={item?.stylize
+                                ? {
+                                  background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
+                                  backgroundSize: '200% 200%',
+                                  animation: 'gradient 20s ease infinite',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent'
+                                }
+                                : null}
+                            >
+                              {item.name}
+                            </a>
+                            :
+                            <a
+                              className="mt-4 font-normal list-none cursor-pointer hover:font-bold"
+                              style={item?.stylize
+                                ? {
+                                  background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
+                                  backgroundSize: '200% 200%',
+                                  animation: 'gradient 20s ease infinite',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent'
+                                }
+                                : null}
+                            >
+                              {item.name}
+                            </a>
+                          }
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>);
+            })}
+          </div>
+        </div>
+        <div className="w-full mx-auto text-xs text-center minlg:text-left minlg:pl-4 mt-9 minlg:mt-4">
+          © {new Date().getFullYear()} NFT.com. All rights reserved
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };

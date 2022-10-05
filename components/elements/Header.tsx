@@ -38,8 +38,8 @@ export const Header = ({ removeBg }: HeaderProps) => {
     return (
       <nav className={tw(
         'fixed left-5 right-5 minlg:left-14 minlg:right-14 top-6 minlg:top-7',
-        'h-20 rounded-full z-[104] shadow-md',
-        removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
+        'h-20 rounded-full z-[104] shadow-md', //
+        removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-white',
       )}>
         <div className="w-full mx-auto px-5">
           <div className="flex items-center justify-between h-20">
