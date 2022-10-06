@@ -46,7 +46,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
       )}>
         <div className="w-full mx-auto px-5">
           <div className="flex items-center justify-between h-20">
-            <div className="flex items-center h-20">
+            <div className="flex items-center h-20 minlg:w-[60%]">
               <div className="flex items-center">
                 <div className="flex-shrink-0 flex items-center hover:cursor-pointer mr-7">
                   <Link href='/' passHref>
@@ -74,7 +74,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
               <div
                 className={tw(
                   'hidden minlg:block',
-                  'mr-5',
+                  'ml-auto mr-8',
                   'h-max flex-shrink-0',
                   'font-grotesk text-[#6F6F6F] font-medium tracking-wide',
                   'flex items-center',
@@ -82,14 +82,14 @@ export const Header = ({ removeBg }: HeaderProps) => {
                 )}
               >
                 <Link href='/app/discover'>
-                  <a className='p-2 text-black text-lg cursor-pointer hover:text-secondary-yellow'>Discover</a>
+                  <a className='p-2 text-black text-[2.5rem] minlg:text-xl minxxl:text-3xl cursor-pointer hover:text-secondary-yellow'>Discover</a>
                 </Link>
                 <Link href='/app/gallery'>
-                  <a className='p-2 text-black text-lg cursor-pointer hover:text-secondary-yellow'>Gallery</a>
+                  <a className='p-2 text-black text-[2.5rem] minlg:text-xl minxxl:text-3xl cursor-pointer hover:text-secondary-yellow'>Gallery</a>
                 </Link>
                 <a
                   href=""
-                  className='p-2 text-black text-lg cursor-pointer hover:text-secondary-yellow'>Learn</a>
+                  className='p-2 text-black text-[2.5rem] minlg:text-xl minxxl:text-3xl cursor-pointer hover:text-secondary-yellow'>Learn</a>
               </div>
             </div>
 
