@@ -1,7 +1,7 @@
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { Doppler, getEnvBool } from 'utils/env';
+import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Link from 'next/link';

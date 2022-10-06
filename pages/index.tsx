@@ -14,10 +14,10 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { TickerStat } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
-import { Player } from '@lottiefiles/react-lottie-player';
 
 import { NextPageWithLayout } from './_app';
 
+import { Player } from '@lottiefiles/react-lottie-player';
 import { BigNumber } from 'ethers';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
