@@ -114,19 +114,19 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <h2 className='text-5xl text-[82px] font-medium text-black leading-none mb-14'>
                   Own your <img className={tw(
                     'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                    'mr-[20px] ml-[14px] mt-[-17px] mb-[-17px]'
+                    'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
                   )} src="ico-discover.png" alt="" />
                   <br className='hidden minlg:block' />
                   NFT <img className={tw(
                     'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                    'mr-[20px] ml-[14px] mt-[-17px] mb-[-17px]'
+                    'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
                   )}
                     src="ico-discover.png" alt="" />
                   <span className='text-secondary-yellow'>identity</span></h2>
 
                 <a href="" className={tw(
                   'bg-[#121212] drop-shadow-lg',
-                  'inline-flex items-center justify-center text-center h-[67px] px-6',
+                  'inline-flex items-center justify-center text-center h-[4.1875rem] px-6',
                   'rounded-full text-xl text-white font-medium uppercase'
                 )}>create a Profile</a>
               </div>
@@ -161,7 +161,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 with an
                 <img className={tw(
                   'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                  'mr-[20px] ml-[14px] mt-[-17px] mb-[-17px]'
+                  'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
                 )}
                   src="ico-discover.png" alt="" />
                 <span className='text-secondary-yellow'>NFT Profile</span></h2>
@@ -263,7 +263,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   Discover <br />
                   <img className={tw(
                     'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                    'ml-[14px] mt-[-17px] mb-[-17px]'
+                    'ml-[1rem] mt-[-1rem] mb-[-1rem]'
                   )} src="ico-discover.png" alt="" /> a</span><br />
                   New World
                 </h2>
@@ -290,7 +290,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </svg>
 
                 <div className='relative'>
-                  <h2 className='text-5xl font-medium minxl:text-[82px] mb-[14px]'>How it works?</h2>
+                  <h2 className='text-5xl font-medium minxl:text-[82px] mb-[1rem]'>How it works?</h2>
                   <p className='text-base minxl:text-2xl mb-8'>How nft.com works</p>
                 </div>
 
@@ -465,13 +465,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <h2 className='tex t-3xl minlg:text-[122px] font-medium text-black leading-none relative'>
                     Build <img className={tw(
                       'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                      'mr-[10px] ml-[14px] mt-[-25px] mb-[-17px]'
+                      'mr-[10px] ml-[1rem] mt-[-25px] mb-[-1rem]'
                     )} src="ico-discover.png" alt="" />
                     your <br />
                     <span className='inline-block pl-24 -mr-24'>
                       NFT <img className={tw(
                         'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                        'mr-[20px] ml-[14px] mt-[-17px] mb-[-17px]'
+                        'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
                       )} src="ico-discover.png" alt="" />
                       profile
                     </span>
