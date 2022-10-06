@@ -1,4 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
+import Toast from 'components/elements/Toast';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
@@ -101,22 +102,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           />
         </div>
       </div>;
-  }, [
-    hasGks,
-    clearDrafts,
-    currentAddress,
-    draftBio,
-    draftHeaderImg?.preview,
-    draftProfileImg?.preview,
-    editMode,
-    profileURI,
-    props.profileURI,
-    saveProfile,
-    setCurrentProfileUrl,
-    setEditMode,
-    user?.currentProfileUrl,
-    userIsAdmin
-  ]);
+  }, [clearDrafts, currentAddress, draftBio, draftHeaderImg?.preview, draftProfileImg?.preview, editMode, hasGks, profileURI, props.profileURI, saveProfile, setCurrentProfileUrl, setEditMode, user?.currentProfileUrl, userIsAdmin]);
   
   const handleBioChange = (event) => {
     let bioValue = event.target.value;
@@ -130,6 +116,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
       'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 px-4',
       'w-4/5 minxl:w-3/5 minmd:min-h-52 min-h-32')}>
+      <Toast />
       <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
         <div
           id="MintedProfileNameContainer"

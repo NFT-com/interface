@@ -2,6 +2,7 @@ import { Maybe, Nft } from 'graphql/generated/types';
 import { useUpdateNftMemoMutation } from 'graphql/hooks/useUpdateNftMemoMutation';
 
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { PartialDeep } from 'type-fest';
 
 export interface NFTDetailContextType {
@@ -58,10 +59,11 @@ export function NFTDetailContextProvider(
       });
       if (memoUpdateResult) {
         setSaving(false);
+        toast.success('Profile changes saved');
       }
     } catch (err) {
       console.log('error while saving memo: ', err);
-      alert('Error while saving profile.');
+      toast.error('Error while saving profile.');
       clearDraft();
       setSaving(false);
     }

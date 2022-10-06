@@ -113,6 +113,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
           label={'Sales'}
           showMarketplaceOptions={false}
           data={nftData}
+          selectedTimeFrame={selectedTimeFrame}
         />}
       {selectedTab === 'Sales' && nftData?.length === 0 && <div className="my-14 font-grotesk mx-auto text-center">No data yet</div>}
     </div>

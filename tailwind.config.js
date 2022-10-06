@@ -18,7 +18,7 @@ module.exports = {
       'md': { 'max' : '899px' },
       'sm': { 'max': '599px' },
       'xs': { 'max' : '374px' },
-      
+
       // maxes
       'deprecated_2xl': { 'max': '1800px' },
       'deprecated_md': { 'max': '960px' },

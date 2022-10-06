@@ -17,46 +17,58 @@ import {
 export type LineChartProps = {
   data: any;
   label: string;
+  selectedTimeFrame?: string;
   showMarketplaceOptions: boolean;
   currentMarketplace?: string;
   setCurrentMarketplace?: Dispatch<SetStateAction<string>>,
 };
 
-const xAxisFormatter = (item) => {
-  if (moment(item).isValid()) {
-    return moment(item).format('MM-DD-YYYY');
-  } else {
-    return item;
-  }
-};
-
-const yAxisFormatter = (item) => {
-  if (moment(item).isValid()) {
-    return Number(item.toFixed(2)).toLocaleString('en-US');
-  } else {
-    return item;
-  }
-};
-
-const CustomTooltip = (props: any) => {
-  const { active, payload, dataLength } = props;
-  if (active && payload && payload.length) {
-    if (dataLength > 1000 && Number(payload[0].value.toFixed(0)) % 2 === 0) {
-      return null;
-    }
-    return (
-      <div className="bg-[#1F2127] py-4 px-5">
-        <p className="text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
-        <p className="text-[#18A0FB]">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-export const LineVis = ({ data, showMarketplaceOptions }: LineChartProps) => {
+export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: LineChartProps) => {
   const [selectedMarketplace, setSelectedMarketplace] = useState<ExternalExchange>(ExternalExchange.Opensea);
+
+  const xAxisFormatter = (item) => {
+    const xAxisTimeFrames = {
+      '1D': { format: 'HH' },
+      '7D': { format: 'DD' },
+      '1M': { format: 'MMM DD' },
+      '3M': { format: 'MMM' },
+      '6M': { format: 'MMM' },
+      '1Y': { format: 'MMM' },
+      'ALL': { format: 'MMM' }
+    };
+
+    if (moment(item).isValid()) {
+      const tick = moment(item).format(xAxisTimeFrames[selectedTimeFrame].format);
+      return tick;
+    } else {
+      return item;
+    }
+  };
+
+  const yAxisFormatter = (item) => {
+    if (moment(item).isValid()) {
+      return Number(item.toFixed(2)).toLocaleString('en-US');
+    } else {
+      return item;
+    }
+  };
+
+  const CustomTooltip = (props: any) => {
+    const { active, payload, dataLength } = props;
+    if (active && payload && payload.length) {
+      if (dataLength > 1000 && Number(payload[0].value.toFixed(0)) % 2 === 0) {
+        return null;
+      }
+      return (
+        <div className="bg-[#1F2127] py-4 px-5">
+          <p className="text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
+          <p className="text-[#18A0FB]">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className="bg-transparent min-w-full">

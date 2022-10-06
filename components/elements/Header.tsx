@@ -1,6 +1,6 @@
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
-import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
+import { NotificationBadge as StaticNotificationBadge } from 'components/modules/Notifications/NotificationBadge';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
@@ -12,12 +12,15 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ShoppingCartSimple } from 'phosphor-react';
 import NavLogo from 'public/Logo.svg';
 import LightNavLogo from 'public/LogoLight.svg';
 import React, { useContext } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
+
+const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotificationBadge>>(() => import('components/modules/Notifications/NotificationBadge').then(mod => mod.NotificationBadge));
 
 type HeaderProps = {
   removeBg?: boolean
@@ -38,8 +41,8 @@ export const Header = ({ removeBg }: HeaderProps) => {
     return (
       <nav className={tw(
         'fixed left-5 right-5 minlg:left-14 minlg:right-14 top-6 minlg:top-7',
-        'h-20 rounded-full z-[104] shadow-md', //
-        removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-white',
+        'h-20 rounded-full z-[104] shadow-md',
+        removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
       )}>
         <div className="w-full mx-auto px-5">
           <div className="flex items-center justify-between h-20">
@@ -113,7 +116,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
               >
                 {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
                   <div className='absolute right-0 -top-4'>
-                    <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
+                    <DynamicNotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
                   </div>
                 )}
                 <button
@@ -199,7 +202,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
               >
                 {[...(toList ?? []), ...(toBuy ?? [])].length > 0 && (
                   <div className='absolute right-0 -top-4'>
-                    <NotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
+                    <DynamicNotificationBadge count={[...(toList ?? []), ...(toBuy ?? [])].length} />
                   </div>
                 )}
                 <button
