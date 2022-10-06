@@ -2,7 +2,7 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
@@ -19,6 +19,7 @@ export interface DropdownPickerProps {
   constrain?: boolean;
   above?: boolean;
   placeholder?: string;
+  onChange?: (label: string) => void;
 }
 
 /**
@@ -40,12 +41,23 @@ export function DropdownPicker(props: DropdownPickerProps) {
   const [selected, setSelected] = useState(null);
   const { primaryIcon, secondaryText } =
     useThemeColors();
-
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const wrapperRef = useRef(null);
   const activeRowRef = useRef(null);
   useOutsideClickAlerter(wrapperRef, () => {
     setExpanded(false);
   });
+
+  const onChangeHandler = useCallback(
+    () => props.onChange ? props.onChange(selected?.label || props.options[selectedIndex].label) : null
+    ,
+    [selected, props, selectedIndex],
+  );
+
+  useEffect(() => {
+    setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : 0);
+    onChangeHandler();
+  }, [selected, props, onChangeHandler]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
     return (
@@ -97,18 +109,18 @@ export function DropdownPicker(props: DropdownPickerProps) {
           'border py-2 h-full',
           'bg-gray-100 dark:bg-black',
           'justify-between rounded-xl border-select-brdr w-full')}
-        key={props?.options[props?.selectedIndex]?.label}
+        key={props?.options[selectedIndex]?.label}
       >
-        {props?.options[props?.selectedIndex]?.icon &&
+        {props?.options[selectedIndex]?.icon &&
           <Image
             className="h-4 mr-2"
-            src={props?.options[props?.selectedIndex]?.icon}
-            alt={props?.options[props?.selectedIndex]?.label} />
+            src={props?.options[selectedIndex]?.icon}
+            alt={props?.options[selectedIndex]?.label} />
         }
         <div className='mr-2'>
           {(props.placeholder && !selected) ?
             <span style={{ color: secondaryText }}>{props.placeholder}</span>
-            : props.options[props.selectedIndex].label
+            : props.options[selectedIndex]?.label
           }
         </div>
         {expanded

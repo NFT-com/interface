@@ -24,7 +24,7 @@ type MintProfileModalProps = {
   transactionCost?: number;
 };
 
-export default function RemoveModal({ isOpen, setIsOpen, currentURI, transactionCost }: MintProfileModalProps) {
+export default function MintProfileModal({ isOpen, setIsOpen, currentURI, transactionCost }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
   const router = useRouter();
   const defaultChainId = useDefaultChainId();
@@ -172,6 +172,7 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, transaction
                         mutateProfileHash();
                         mutateTokenId();
                         mutateFreeMintStatus();
+                        setIsOpen(false);
                         router.push(`/${currentURI}`);
                         setMinting(false);
                       } catch (err) {
