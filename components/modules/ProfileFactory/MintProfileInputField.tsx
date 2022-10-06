@@ -26,7 +26,7 @@ export default function MintProfileInputField({ listings, currentURI, minting, s
     switch (profileStatus) {
     case ProfileStatus.Available:
       return (
-        <p className='text-[#2AAE47]'>Great! Profile name is available :)</p>
+        <p className='text-[#2AAE47] mb-3'>Great! Profile name is available :)</p>
       );
     case ProfileStatus.Pending:
       return (
@@ -35,20 +35,20 @@ export default function MintProfileInputField({ listings, currentURI, minting, s
     case ProfileStatus.Owned:
       return isOwner
         ? (
-          <p className='text-[#2AAE47]'>You are the owner!</p>
+          <p className='text-[#2AAE47] mb-3'>You are the owner!</p>
         )
         : (
-          <p className='text-[#F02D21]'>Sorry, profile name unavailable</p>
+          <p className='text-[#F02D21] mb-3'>Sorry, profile name unavailable</p>
         );
     case ProfileStatus.Listed:
       return isOwner
         ? (
-          <p className='text-[#2AAE47]'>You are the owner!</p>
+          <p className='text-[#2AAE47] mb-3'>You are the owner!</p>
         )
         :
         (
           listings.length === 2
-            ? <p className='font-normal flex items-center justify-center'>
+            ? <p className='font-normal flex items-center justify-center mb-3'>
                   This profile is available on
               <span className='font-medium inline-flex items-center mx-1'>
                 <LooksrareIcon className='h-6 w-6 relative shrink-0 mr-1' alt="Opensea logo redirect" layout="fill"/>
@@ -61,7 +61,7 @@ export default function MintProfileInputField({ listings, currentURI, minting, s
               </span>
             </p>
             :
-            <p className='font-normal flex items-center justify-center'>
+            <p className='font-normal flex items-center justify-center mb-3'>
                   This profile is available on
               {listings[0]?.order?.protocol === ExternalProtocol.Seaport ?
                 <span className='font-medium inline-flex items-center mx-1'>
