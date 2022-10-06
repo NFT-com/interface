@@ -116,7 +116,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div className='max-w-[90%] mx-auto h-screen'>
               {/* Block Text */}
               <div className='py-32 h-full flex flex-col justify-center items-start'>
-                <h2 className='text-5xl text-[82px] font-medium text-black leading-none mb-14'>
+                <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium font-medium text-black leading-none mb-14'>
                   Own your <img className={tw(
                     'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
                     'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
@@ -129,38 +129,46 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <span className='text-secondary-yellow'>identity</span></h2>
 
                 <a href="" className={tw(
-                  'bg-[#121212] drop-shadow-lg',
-                  'inline-flex items-center justify-center text-center h-[4.1875rem] px-6',
-                  'rounded-full text-xl text-white font-medium uppercase'
+                  'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
+                  'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
+                  'text-xl minxxl:text-3xl text-white font-medium uppercase'
                 )}>create a Profile</a>
               </div>
 
               {/* Block Anim */}
               <div className='bg-[#F9D54C] overflow-hidden w-2/5 absolute right-0 top-0 z-[105] h-full'>
                 <Player
-                  autoplay
+                  autoplay={false}
                   loop
                   src="/anim/cycle.json"
                   style={{ height: '100vh', width: '100%', transform: 'skew(-34deg, 18deg) scale(1.6)' }}
                 >
                 </Player>
                 <div className={tw(
-                  'absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 scale-75',
-                  'bg-[#121212] drop-shadow-lg max-w-[21rem] minmd:max-w-lg minlg:max-w-4xl h-[74px] minlg:h-[182px]',
+                  'absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 rounded-full scale-[.30]',
+                  'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
                   'flex items-center justify-center text-center px-7',
-                  'rounded-full text-[42px] minmd:text-[60px] minlg:text-[105px] font-medium leading-none tracking-tight'
+                  'text-[2.625rem] minlg:text-[12.125rem] minxxl:text-[18.125rem] font-medium leading-none tracking-tight'
                 )}>
                   <span className='text-white/40'>NFT.COM</span><span className='text-[.75em] -mt-4 font-bold text-secondary-yellow'>/</span><span className='text-white'>IDEAS</span>
                 </div>
                 <span className='absolute w-full h-[460px] -bottom-[122px] left-0 z-10 bg-img-shadow pointer-events-none'></span>
               </div>
+
+              <img className='absolute bottom-0 left-0 -z-20' src="temp-intro.png" alt="" />
+              <span className='absolute w-full h-[460px] -bottom-[122px] left-0 -z-10 bg-img-shadow'></span>
+
             </div>
           </div>
 
           {/* Block: NFT profile */}
-          <div className="px-24">
-            <div className='bg-black minlg:rounded-3xl w-full mx-auto pt-10 px-9 mb-44 relative z-10'>
-              <h2 className='text-5xl text-[82px] text-white leading-[1.0854] mb-14'>
+          <div className={tw(
+            'px-3 minlg:px-14 minxxl:px-20 relative',
+            'before:block before:absolute before:left-0 before:right-0 before:top-0',
+            'before:bg-black before:h-[34rem]'
+          )}>
+            <div className='bg-black minlg:rounded-3xl w-full mx-auto pt-10 px-9 mb-44 relative z-10 flow-root'>
+              <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium text-white mb-14'>
                 What you can do <br className='hidden minlg:block' />
                 with an
                 <img className={tw(
@@ -192,21 +200,22 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     </defs>
                   </svg>
 
-                  <h3 className='text-black text-6xl leading-[1.15] font-medium mb-6 pr-36'>Claim Your Profile</h3>
-                  <p className='text-[22px] leading-normal'>NFT Profiles are personalized NFT galleries which form the foundation for a decentralized web3 social network. NFT Profiles are transferable and customizable. </p>
+                  <h3 className='text-black text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.15] font-medium mb-6 pr-36'>Claim Your Profile</h3>
+                  <p className='text-base minlg:text-[22px] minxxl:text-3xl leading-normal'>NFT Profiles are personalized NFT galleries which form the foundation for a decentralized web3 social network. NFT Profiles are transferable and customizable. </p>
                   <div className={tw(
-                    'bg-[#121212] drop-shadow-lg w-full h-[105px] mx-auto mt-10 mb-6',
+                    'w-full h-[58px] minlg:h-[105px] minxxl:h-36 mx-auto mt-10 mb-6',
+                    'bg-[#121212] drop-shadow-lg rounded-full',
                     'flex items-center justify-center text-center',
-                    'rounded-full text-[60px] minlg:text-[62px] font-medium leading-none tracking-tight'
+                    'text-4xl minlg:text-[63px] minxxl:text-[5rem] font-medium leading-none tracking-tight'
                   )}>
                     <span className='text-white/40'>NFT.COM</span><span className='text-[.75em] -mt-4 font-bold text-secondary-yellow'>/</span><span className='text-white'>IDEAS</span>
                   </div>
                   <div className='text-center'>
-                    <a href="" className='text-xl underline underline-offset-4 hover:no-underline'>Create a Profile →</a>
+                    <a href="" className='text-base minmd:text-xl minxl:text-3xl underline underline-offset-4 hover:no-underline'>Create a Profile →</a>
                   </div>
                 </div>
 
-                <div className='bg-white rounded-3xl rounded-tr-none px-9 pt-12 pb-3 border-black border-2 relative z-0 overflow-hidden'>
+                <div className='bg-white rounded-3xl rounded-tr-none px-9 pt-14 pb-5 border-black border-2 relative z-0 overflow-hidden'>
                   <svg className='absolute -z-10 -top-[229px] -right-20' width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_114_76)">
                       <path d="M167.421 0H119.359C118.63 0 117.975 0.449617 117.713 1.13093L4.921 294.604C4.47705 295.759 5.32974 297 6.56724 297H53.2259C53.9532 297 54.6058 296.554 54.8695 295.876L169.065 2.40319C169.515 1.24701 168.662 0 167.421 0Z" fill="black" />
@@ -228,28 +237,28 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     </defs>
                   </svg>
 
-                  <h3 className='text-black text-6xl leading-[1.15] font-medium mb-6 pr-36'>Buy and Sell NFTs</h3>
-                  <p className='text-[22px] leading-normal mb-4'>NFT.com has a built in marketplace aggregator for buying and selling NFTs wherever they live. Promote your collection with a single NFT Profile wherever it is for sale.</p>
+                  <h3 className='text-black text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.15] font-medium mb-6 pr-36'>Buy and Sell NFTs</h3>
+                  <p className='text-base minlg:text-[22px] minxxl:text-3xl leading-normal mb-4'>NFT.com has a built in marketplace aggregator for buying and selling NFTs wherever they live. Promote your collection with a single NFT Profile wherever it is for sale.</p>
 
                   <div className='overflow-hidden -mx-9'>
                     <div className="w-[150%] -translate-x-10 flex items-center gap-5 mb-5">
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                     </div>
 
                     <div className="w-[150%] -translate-x-2 flex items-center gap-5">
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
-                      <img src="medici.png" className='w-28 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
+                      <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                     </div>
                   </div>
                 </div>
@@ -258,10 +267,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
 
           {/* Block: Discover */}
-          <div className="px-5">
-            <div className='max-w-nftcom w-full mx-auto grid minmd:grid-cols-2 items-center mb-16 minmd:mb-[5.5rem]'>
+          <div className="px-3 minmd:px-14 minxxl:px-20">
+            <div className='grid minmd:grid-cols-2 items-center mb-16 minmd:mb-[5.5rem]'>
               <div className='minmd:ml-7'>
-                <h2 className='text-5xl minxl:text-8xl leading-none mb-6'><span className='text-secondary-yellow'>
+                <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium mb-6'><span className='text-secondary-yellow'>
                   Discover <br />
                   <img className={tw(
                     'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
@@ -269,18 +278,18 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   )} src="ico-discover.png" alt="" /> a</span><br />
                   New World
                 </h2>
-                <p className='text-base minxl:text-xll'>NFTs enable new forms of community engagement. Collect, Display, and Trade your NFTs through a social network that you own. Get started by building your NFT Profile.</p>
+                <p className='text-base minlg:text-xl minxxl:text-3xl'>NFTs enable new forms of community engagement. Collect, Display, and Trade your NFTs through a social network that you own. Get started by building your NFT Profile.</p>
               </div>
 
               <div className='minmd:-order-1 -mx-5'>
-                <img src="nft-illo.jpg" alt="" />
+                <img className='w-full' src="nft-illo.jpg" alt="" />
               </div>
             </div>
           </div>
 
           {/* Block: How it works */}
-          <div className="px-5">
-            <div className='max-w-nftcom w-full mx-auto overflow-hidden'>
+          <div className="px-3 minlg:px-14 minxxl:px-20">
+            <div className='overflow-hidden'>
               <div className='relative z-0 p-6 pt-[3.15rem] bg-primary-yellow rounded-3xl mt-5 mb-[120px]'>
                 <svg className='absolute -z-10 top-[-25%] minmd:top-[-80%] -right-6 max-w-[43.5%]' aria-hidden="true" width="522" height="625" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
                   <path d="M391.42 0H305.875C305.146 0 304.492 0.449257 304.23 1.13017L108.923 508.603C108.478 509.758 109.331 511 110.568 511H193.683C194.41 511 195.063 510.554 195.327 509.877L393.063 2.40395C393.514 1.24765 392.661 0 391.42 0Z" fill="white" />
@@ -292,27 +301,27 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </svg>
 
                 <div className='relative'>
-                  <h2 className='text-5xl font-medium minxl:text-[82px] mb-[1rem]'>How it works?</h2>
-                  <p className='text-base minxl:text-2xl mb-8'>How nft.com works</p>
+                  <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium mb-[1rem]'>How it works?</h2>
+                  <p className='text-base minlg:text-2xl minxxl:text-4xl mb-8'>How nft.com works</p>
                 </div>
 
                 <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 mb-[-127px]'>
                   <div className='bg-black rounded-2xl p-4 pb-12 md:mb-5 text-white'>
                     <img className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                    <h3 className='text-2xl minxl:text-[40px] leading-tight mb-4'>Claim a <br />Profile</h3>
-                    <p className='text-base minxl:text-xl'>Create an NFT Profile for your unique username that is itself an NFT. You own the profile that will go anywhere your NFTs do.</p>
+                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl leading-tight mb-4'>Claim a <br />Profile</h3>
+                    <p className='text-base minlg:text-xl minxxl:text-3xl'>Create an NFT Profile for your unique username that is itself an NFT. You own the profile that will go anywhere your NFTs do.</p>
                   </div>
 
                   <div className=' bg-black rounded-2xl p-4 pb-12 md:mb-5 text-white'>
                     <img className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                    <h3 className='text-2xl minxl:text-[40px] leading-tight mb-4'>Customize your Collection</h3>
-                    <p className='text-base minxl:text-xl'>Customize your NFT Profile to display your personal collection from any address or to promote your NFT collection.</p>
+                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl leading-tight mb-4'>Customize your Collection</h3>
+                    <p className='text-base minlg:text-xl minxxl:text-3xl'>Customize your NFT Profile to display your personal collection from any address or to promote your NFT collection.</p>
                   </div>
 
                   <div className=' bg-black rounded-2xl p-4 pb-12 text-white'>
                     <img className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                    <h3 className='text-2xl minxl:text-[40px] leading-tight mb-4'>Grow your Community</h3>
-                    <p className='text-base minxl:text-xl'>Promote your NFT Profile with your unique NFT.com url to drive purchasing and growth wherever your NFTs are listed.</p>
+                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl leading-tight mb-4'>Grow your Community</h3>
+                    <p className='text-base minlg:text-xl minxxl:text-3xl'>Promote your NFT Profile with your unique NFT.com url to drive purchasing and growth wherever your NFTs are listed.</p>
                   </div>
                 </div>
               </div>
@@ -320,12 +329,12 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
 
           {/* Block: Table */}
-          <div className='overflow-hidden relative pt-[223px] px-5'>
+          <div className='px-3 minmd:px-14 minxxl:px-20 overflow-hidden relative pt-[223px]'>
             <svg className='absolute -z-10 top-0 left-1/2 -translate-x-1/2' width="2102" height="940" viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
 
-            <div className='max-w-nftcom w-full mx-auto bg-white shadow-2xl rounded-3xl mb-28 px-4 minmd:px-10 pt-12 pb-5 ...'>
+            <div className='bg-white shadow-2xl rounded-3xl mb-28 px-4 minmd:px-10 pt-12 pb-5 ...'>
               <div className="minmd:flex justify-between items-center mb-4 minmd:mb-0">
-                <h2 className='text-5xl minmd:text-[62px] minlg:text-[82px] minlg:leading-header max-w-2xl font-normal justify-center minmd:mb-16 ...'>
+                <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium max-w-2xl justify-center minmd:mb-16 ...'>
                   {data?.leaderboardTitle}
                 </h2>
                 <span className='text-2xl minmd:ml-4 text-[#B2B2B2]'><span className='text-[#FBC214]'>Top 10</span> collectors</span>
@@ -336,8 +345,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
 
           {/* Block: News */}
-          <div className="px-5">
-            <div className='max-w-nftcom w-full mx-auto minmd:px-0 overflow-hidden'>
+          <div className="px-3 minmd:px-14 minxxl:px-20">
+            <div className='minmd:px-0 overflow-hidden'>
               <div className='relative z-0 px-9 pt-[3.15rem] pb-12 bg-black rounded-3xl mt-5 mb-24'>
                 <svg className='absolute -z-10 top-[-25%] minmd:top-[-60%] -right-6 max-w-[43.5%]' aria-hidden="true" width="522" height="625" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
                   <path d="M391.42 0H305.875C305.146 0 304.492 0.449257 304.23 1.13017L108.923 508.603C108.478 509.758 109.331 511 110.568 511H193.683C194.41 511 195.063 510.554 195.327 509.877L393.063 2.40395C393.514 1.24765 392.661 0 391.42 0Z" fill="white" />
@@ -349,16 +358,19 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </svg>
 
                 <div className='relative'>
-                  <h2 className='text-5xl mb-5 text-white minxl:text-[82px]'>News</h2>
-                  <p className='text-base text-[#8B8B8B] minxl:text-2xl mb-[2.6rem]'>Latest from the blog</p>
+                  <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium mb-5 text-white'>News</h2>
+                  <p className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>Latest from the blog</p>
                 </div>
 
-                <div className='-mr-9 overflow-hidden mb-[50px]'>
-                  <div className='minlg:flex gap-5'>
-                    <div className='bg-white w-80 basis-80 flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black'>
+                <div className='-mr-9 overflow-hidden mb-12'>
+                  <div className='flex gap-5'>
+                    <div className={tw(
+                      'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
+                      'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
+                    )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
                       <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-2xl minxl:text-[2rem] mb-8'>7 NFT Games You Can Play Right Now</h3>
+                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>7 NFT Games You Can Play Right Now</h3>
                         <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
                           <img className='rounded-full mr-3' src="ava.png" alt="" />
                           Ryan Ancill
@@ -366,10 +378,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       </div>
                     </div>
 
-                    <div className='bg-white w-80 basis-80 flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black'>
+                    <div className={tw(
+                      'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
+                      'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
+                    )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
                       <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-2xl minxl:text-[2rem] mb-8'>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
+                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
                         <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
                           <img className='rounded-full mr-3' src="ava.png" alt="" />
                           Alec Otto
@@ -377,10 +392,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       </div>
                     </div>
 
-                    <div className='bg-white w-80 basis-80 flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black'>
+                    <div className={tw(
+                      'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
+                      'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
+                    )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
                       <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-2xl minxl:text-[2rem] mb-8'>Buyers Hold to Their CryptoPunk-Themed NFTs by Tiffany after Swift Sale</h3>
+                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>Buyers Hold to Their CryptoPunk-Themed NFTs by Tiffany after Swift Sale</h3>
                         <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
                           <img className='rounded-full mr-3' src="ava.png" alt="" />
                           Raphael Wild
@@ -388,10 +406,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       </div>
                     </div>
 
-                    <div className='bg-white w-80 basis-80 flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black opacity-40'>
+                    <div className={tw(
+                      'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
+                      'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]',
+                      'opacity-40'
+                    )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
                       <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-2xl minxl:text-[2rem] mb-8'>The Most Expensive NFT Sales</h3>
+                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>The Most Expensive NFT Sales</h3>
                         <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
                           <img className='rounded-full mr-3' src="ava.png" alt="" />
                           Ryan Ancill
@@ -399,10 +421,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       </div>
                     </div>
 
-                    <div className='bg-white w-80 basis-80 flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black opacity-40'>
+                    <div className={tw(
+                      'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
+                      'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]',
+                      'opacity-40'
+                    )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
                       <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-2xl minxl:text-[2rem] mb-8'>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
+                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
                         <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
                           <img className='rounded-full mr-3' src="ava.png" alt="" />
                           Alec Otto
@@ -414,9 +440,9 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
                 <div className='text-center'>
                   <a href="" className={tw(
-                    'bg-[#F9D54C] drop-shadow-lg',
-                    'inline-flex items-center justify-center h-[67px] px-6',
-                    'rounded-full text-xl text-black font-medium uppercase'
+                    'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
+                    'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
+                    'text-xl minxxl:text-3xl text-black font-medium uppercase'
                   )}>READ OUR BLOG</a>
                 </div>
               </div>
@@ -425,7 +451,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
           {/* Block: Ticker */}
           <div className='overflow-hidden mb-12'>
-            <div className='text-[#B2B2B2] italic font-medium text-7xl flex mb-5 -translate-x-28'>
+            <div className={tw(
+              'text-4xl minlg:text-7xl minxxl:text-9xl',
+              'text-[#B2B2B2] italic font-medium flex mb-5',
+              '-translate-x-28'
+            )}>
               <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> defi</div>
               <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> cars</div>
               <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> arts</div>
@@ -438,7 +468,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> marketing</div>
             </div>
 
-            <div className='text-[#B2B2B2] italic font-medium text-7xl flex mb-5 -translate-x-[10%]'>
+            <div className={tw(
+              'text-4xl minlg:text-7xl minxxl:text-9xl',
+              'text-[#B2B2B2] italic font-medium flex mb-5',
+              '-translate-x-[10%]'
+            )}>
               <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> gaming</div>
               <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> nba2k</div>
               <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> draft</div>
@@ -453,7 +487,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
           {/* Block: Profile */}
           <div className='bg-[#F9D54C] overflow-hidden'>
-            <div className='max-w-nftcom w-full mx-auto px-5'>
+            <div className='px-3 minmd:px-14 minxxl:px-20'>
               <div className='relative z-0 p-9 pt-11 pb-12 mt-5 mb-24'>
                 <svg className='absolute -z-10 top-[-25%] minmd:top-[-205%] -right-6 max-w-[43.5%]' width="684" height="1048" viewBox="0 0 684 1048" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M393.64 0H273.667C272.937 0 272.282 0.449648 272.021 1.13096L0.921002 706.501C0.477046 707.657 1.32973 708.898 2.56724 708.898H119.168C119.896 708.898 120.548 708.451 120.812 707.774L395.284 2.40319C395.734 1.24701 394.881 0 393.64 0Z" fill="white" />
@@ -464,10 +498,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </svg>
 
                 <div className='flex justify-between items-end'>
-                  <h2 className='tex t-3xl minlg:text-[122px] font-medium text-black leading-none relative'>
+                  <h2 className='text-[3.375rem] minlg:text-[7.625rem] minxxl:text-[10rem] font-medium text-black leading-none relative'>
                     Build <img className={tw(
                       'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                      'mr-[10px] ml-[1rem] mt-[-25px] mb-[-1rem]'
+                      'mr-[.625rem] ml-[1rem] mt-[-1.5rem] mb-[-1rem]'
                     )} src="ico-discover.png" alt="" />
                     your <br />
                     <span className='inline-block pl-24 -mr-24'>
@@ -484,9 +518,9 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   </h2>
 
                   <a href="" className={tw(
-                    'bg-[#121212] drop-shadow-lg',
-                    'inline-flex items-center justify-center text-center h-[67px] px-6',
-                    'rounded-full text-xl text-white font-medium uppercase'
+                    'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
+                    'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
+                    'text-xl minxxl:text-3xl text-white font-medium uppercase'
                   )}>create a Profile</a>
                 </div>
               </div>
