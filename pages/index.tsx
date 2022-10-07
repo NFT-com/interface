@@ -114,9 +114,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           {/* Block: Intro */}
           <div className='bg-white'>
             <div className='max-w-[90%] mx-auto h-screen'>
-              {/* Block Text */}
+
+              {/* Intro Text */}
               <div className='py-32 h-full flex flex-col justify-center items-start'>
-                <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium font-medium text-black leading-none mb-14'>
+                <h2 className={tw(
+                  'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854]',
+                  'text-black font-medium mb-14'
+                )}>
                   Own your <img className={tw(
                     'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
                     'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
@@ -135,40 +139,46 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 )}>create a Profile</a>
               </div>
 
-              {/* Block Anim */}
-              <div className='bg-[#F9D54C] overflow-hidden w-2/5 absolute right-0 top-0 z-[105] h-full'>
+              {/* Animation */}
+              <div className='bg-black overflow-hidden absolute right-0 top-0 h-full w-full'> {/* Animation style: bg-[#F9D54C] w-2/5 z-[105] */}
                 <Player
                   autoplay={false}
                   loop
                   src="/anim/cycle.json"
-                  style={{ height: '100vh', width: '100%', transform: 'skew(-34deg, 18deg) scale(1.6)' }}
+                  style={{ height: '100vh', width: '100%', minWidth: '45rem' }} //, Animation style: transform: 'skew(-34deg, 18deg) scale(1.6)'
                 >
                 </Player>
                 <div className={tw(
-                  'absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 rounded-full scale-[.30]',
+                  'absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 rounded-full',
                   'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
                   'flex items-center justify-center text-center px-7',
-                  'text-[2.625rem] minlg:text-[12.125rem] minxxl:text-[18.125rem] font-medium leading-none tracking-tight'
+                  'text-[2.625rem] minmd:text-[5rem] minlg:text-[7rem] minxxl:text-[9rem]',
+                  'font-medium leading-none tracking-tight'
                 )}>
-                  <span className='text-white/40'>NFT.COM</span><span className='text-[.75em] -mt-4 font-bold text-secondary-yellow'>/</span><span className='text-white'>IDEAS</span>
+                  <span className='text-white/40'>NFT.COM</span>
+                  <span className='text-[.75em] -mt-3 font-bold text-secondary-yellow'>/</span>
+                  <span className='text-white'>IDEAS</span>
                 </div>
-                <span className='absolute w-full h-[460px] -bottom-[122px] left-0 z-10 bg-img-shadow pointer-events-none'></span>
+                <span className='absolute w-full h-[28.75rem] bottom-0 left-0 z-10 bg-img-shadow-dark pointer-events-none'></span>
+                {/* Animation shadow <span className='absolute w-full h-[28.75rem] bottom-0 left-0 z-10 bg-img-shadow-light pointer-events-none'></span> */}
               </div>
-
-              <img className='absolute bottom-0 left-0 -z-20' src="temp-intro.png" alt="" />
-              <span className='absolute w-full h-[460px] -bottom-[122px] left-0 -z-10 bg-img-shadow'></span>
-
             </div>
           </div>
 
           {/* Block: NFT profile */}
           <div className={tw(
-            'px-3 minlg:px-14 minxxl:px-20 relative',
+            'minlg:px-14 minxxl:px-20 relative',
             'before:block before:absolute before:left-0 before:right-0 before:top-0',
             'before:bg-black before:h-[34rem]'
           )}>
-            <div className='bg-black minlg:rounded-3xl w-full mx-auto pt-10 px-9 mb-44 relative z-10 flow-root'>
-              <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium text-white mb-14'>
+            <div className={tw(
+              'w-full mx-auto pt-10 px-5 mb-40 minmd:px-9 bg-black ',
+              'minlg:rounded-3xl flow-root relative z-10'
+            )}>
+              <h2 className={tw(
+                'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px]',
+                'leading-[1.0854] font-medium text-white mb-14'
+              )}>
                 What you can do <br className='hidden minlg:block' />
                 with an
                 <img className={tw(
@@ -178,8 +188,15 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <span className='text-secondary-yellow'>NFT Profile</span></h2>
 
               <div className='minlg:grid grid-cols-2 gap-2 minlg:gap-4 -mb-24'>
-                <div className='bg-white mb-[18px] minlg:mb-0 rounded-3xl rounded-tr-none px-9 pt-12 pb-3 border-black border-2 relative z-0 overflow-hidden'>
-                  <svg className='absolute -z-10 -top-[271px] -right-28' width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div className={tw(
+                  'mb-5 minlg:mb-0',
+                  'px-8 pt-12 pb-4 relative z-0 overflow-hidden',
+                  'bg-white border-black border-2 rounded-3xl rounded-tr-none'
+                )}>
+                  <svg className={tw(
+                    'absolute -z-10 -top-[14.5rem] -right-10 w-[9rem]',
+                    'minlg:-top-[16.875rem] minlg:-right-28 minlg:w-[18rem]'
+                  )} width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_114_76)">
                       <path d="M167.421 0H119.359C118.63 0 117.975 0.449617 117.713 1.13093L4.921 294.604C4.47705 295.759 5.32974 297 6.56724 297H53.2259C53.9532 297 54.6058 296.554 54.8695 295.876L169.065 2.40319C169.515 1.24701 168.662 0 167.421 0Z" fill="black" />
                       <path d="M188.421 66H140.359C139.63 66 138.975 66.4496 138.713 67.1309L25.921 360.604C25.477 361.759 26.3297 363 27.5672 363H74.2259C74.9532 363 75.6058 362.554 75.8695 361.876L190.065 68.4032C190.515 67.247 189.662 66 188.421 66Z" fill="black" />
@@ -200,23 +217,38 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     </defs>
                   </svg>
 
-                  <h3 className='text-black text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.15] font-medium mb-6 pr-36'>Claim Your Profile</h3>
+                  <h3 className={tw(
+                    'text-black font-bold mb-6 minlg:pr-44',
+                    'text-3xl minxl:text-6xl minxxl:text-[5.5rem]',
+                    'leading-[1.125] minxl:leading-[1.125]'
+                  )}>Claim Your Profile</h3>
                   <p className='text-base minlg:text-[22px] minxxl:text-3xl leading-normal'>NFT Profiles are personalized NFT galleries which form the foundation for a decentralized web3 social network. NFT Profiles are transferable and customizable. </p>
                   <div className={tw(
-                    'w-full h-[58px] minlg:h-[105px] minxxl:h-36 mx-auto mt-10 mb-6',
+                    'w-full h-[1.7em] mx-auto mt-10 mb-6',
                     'bg-[#121212] drop-shadow-lg rounded-full',
                     'flex items-center justify-center text-center',
-                    'text-4xl minlg:text-[63px] minxxl:text-[5rem] font-medium leading-none tracking-tight'
+                    'text-3xl minlg:text-[4rem] minxxl:text-[5rem] font-medium leading-none tracking-tight'
                   )}>
-                    <span className='text-white/40'>NFT.COM</span><span className='text-[.75em] -mt-4 font-bold text-secondary-yellow'>/</span><span className='text-white'>IDEAS</span>
+                    <span className='text-white/40'>NFT.COM</span>
+                    <span className='text-[.75em] leading-loose font-bold text-secondary-yellow'>/</span>
+                    <span className='text-white'>IDEAS</span>
                   </div>
-                  <div className='text-center'>
-                    <a href="" className='text-base minmd:text-xl minxl:text-3xl underline underline-offset-4 hover:no-underline'>Create a Profile →</a>
+                  <div className='text-center mb-10'>
+                    <a href="" className={tw(
+                      'text-base minlg:text-xl minxxl:text-3xl',
+                      'underline underline-offset-4 hover:no-underline'
+                    )}>Create a Profile →</a>
                   </div>
                 </div>
 
-                <div className='bg-white rounded-3xl rounded-tr-none px-9 pt-14 pb-5 border-black border-2 relative z-0 overflow-hidden'>
-                  <svg className='absolute -z-10 -top-[229px] -right-20' width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <div className={tw(
+                  'px-8 pt-12 pb-4 relative z-0 overflow-hidden',
+                  'bg-white border-black border-2 rounded-3xl rounded-tr-none'
+                )}>
+                  <svg className={tw(
+                    'absolute -z-10 -top-[14.5rem] -right-10 w-[9rem]',
+                    'minlg:-top-[229px] minlg:-right-20 minlg:w-[18rem]'
+                  )} width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_114_76)">
                       <path d="M167.421 0H119.359C118.63 0 117.975 0.449617 117.713 1.13093L4.921 294.604C4.47705 295.759 5.32974 297 6.56724 297H53.2259C53.9532 297 54.6058 296.554 54.8695 295.876L169.065 2.40319C169.515 1.24701 168.662 0 167.421 0Z" fill="black" />
                       <path d="M188.421 66H140.359C139.63 66 138.975 66.4496 138.713 67.1309L25.921 360.604C25.477 361.759 26.3297 363 27.5672 363H74.2259C74.9532 363 75.6058 362.554 75.8695 361.876L190.065 68.4032C190.515 67.247 189.662 66 188.421 66Z" fill="black" />
@@ -237,11 +269,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     </defs>
                   </svg>
 
-                  <h3 className='text-black text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.15] font-medium mb-6 pr-36'>Buy and Sell NFTs</h3>
+                  <h3 className={tw(
+                    'text-black font-bold mb-6 minlg:pr-44',
+                    'text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.125] minxl:leading-[1.125]'
+                  )}>Buy and Sell NFTs</h3>
                   <p className='text-base minlg:text-[22px] minxxl:text-3xl leading-normal mb-4'>NFT.com has a built in marketplace aggregator for buying and selling NFTs wherever they live. Promote your collection with a single NFT Profile wherever it is for sale.</p>
 
                   <div className='overflow-hidden -mx-9'>
-                    <div className="w-[150%] -translate-x-10 flex items-center gap-5 mb-5">
+                    <div className="w-[150%] -translate-x-5 flex items-center gap-5 mb-4">
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
@@ -251,7 +286,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                     </div>
 
-                    <div className="w-[150%] -translate-x-2 flex items-center gap-5">
+                    <div className="w-[150%] -translate-x-20 flex items-center gap-5">
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
@@ -273,7 +308,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium mb-6'><span className='text-secondary-yellow'>
                   Discover <br />
                   <img className={tw(
-                    'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
+                    'drop-shadow-md inline-block max-w-[1.15em] minlg:max-w-none',
                     'ml-[1rem] mt-[-1rem] mb-[-1rem]'
                   )} src="ico-discover.png" alt="" /> a</span><br />
                   New World
@@ -291,7 +326,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <div className="px-3 minlg:px-14 minxxl:px-20">
             <div className='overflow-hidden'>
               <div className='relative z-0 p-6 pt-[3.15rem] bg-primary-yellow rounded-3xl mt-5 mb-[120px]'>
-                <svg className='absolute -z-10 top-[-25%] minmd:top-[-80%] -right-6 max-w-[43.5%]' aria-hidden="true" width="522" height="625" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
+                <svg className='absolute -z-10 top-0 right-0 translate-x-1/3 -translate-y-2/3 minmd:translate-x-1/3 -minmd:translate-y-3/4 max-w-full' aria-hidden="true" width="522" height="625" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
                   <path d="M391.42 0H305.875C305.146 0 304.492 0.449257 304.23 1.13017L108.923 508.603C108.478 509.758 109.331 511 110.568 511H193.683C194.41 511 195.063 510.554 195.327 509.877L393.063 2.40395C393.514 1.24765 392.661 0 391.42 0Z" fill="white" />
                   <path d="M283.42 57H197.875C197.146 57 196.492 57.4493 196.23 58.1302L0.922552 565.603C0.477943 566.758 1.33065 568 2.5685 568H85.6835C86.4104 568 87.0629 567.554 87.3268 566.877L285.063 59.4039C285.514 58.2477 284.661 57 283.42 57Z" fill="white" />
                   <path d="M443.42 88H357.875C357.146 88 356.492 88.4493 356.23 89.1302L160.923 596.603C160.478 597.758 161.331 599 162.568 599H245.683C246.41 599 247.063 598.554 247.327 597.877L445.063 90.4039C445.514 89.2477 444.661 88 443.42 88Z" fill="white" />
@@ -308,7 +343,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 mb-[-127px]'>
                   <div className='bg-black rounded-2xl p-4 pb-12 md:mb-5 text-white'>
                     <img className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl leading-tight mb-4'>Claim a <br />Profile</h3>
+                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl leading-tight mb-4'>Claim a <br className='hidden minlg:block' />Profile</h3>
                     <p className='text-base minlg:text-xl minxxl:text-3xl'>Create an NFT Profile for your unique username that is itself an NFT. You own the profile that will go anywhere your NFTs do.</p>
                   </div>
 
@@ -329,12 +364,12 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
 
           {/* Block: Table */}
-          <div className='px-3 minmd:px-14 minxxl:px-20 overflow-hidden relative pt-[223px]'>
-            <svg className='absolute -z-10 top-0 left-1/2 -translate-x-1/2' width="2102" height="940" viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
+          <div className='px-3 minmd:px-14 minxxl:px-20 overflow-hidden relative pt-[11.625rem]'>
+            <svg className='absolute -z-10 top-0 left-1/2 -translate-x-[58%] -translate-y-[2.2rem]' width="2102" height="940" viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
 
-            <div className='bg-white shadow-2xl rounded-3xl mb-28 px-4 minmd:px-10 pt-12 pb-5 ...'>
+            <div className='bg-white shadow-2xl rounded-3xl mb-[5.5rem] px-4 minmd:px-10 pt-12 pb-5 ...'>
               <div className="minmd:flex justify-between items-center mb-4 minmd:mb-0">
-                <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium max-w-2xl justify-center minmd:mb-16 ...'>
+                <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] minxl:leading-[.842] font-medium max-w-2xl justify-center minmd:mb-16 ...'>
                   {data?.leaderboardTitle}
                 </h2>
                 <span className='text-2xl minmd:ml-4 text-[#B2B2B2]'><span className='text-[#FBC214]'>Top 10</span> collectors</span>
@@ -347,8 +382,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           {/* Block: News */}
           <div className="px-3 minmd:px-14 minxxl:px-20">
             <div className='minmd:px-0 overflow-hidden'>
-              <div className='relative z-0 px-9 pt-[3.15rem] pb-12 bg-black rounded-3xl mt-5 mb-24'>
-                <svg className='absolute -z-10 top-[-25%] minmd:top-[-60%] -right-6 max-w-[43.5%]' aria-hidden="true" width="522" height="625" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
+              <div className='relative z-0 px-9 pt-[3.15rem] pb-12 bg-black rounded-3xl mt-5 mb-32'>
+                <svg className={tw(
+                  'absolute -z-10 top-0 right-0 max-w-[300px] minlg:max-w-[522px]',
+                  'translate-x-1/3 -translate-y-2/3 minmd:translate-x-1/3 -minmd:translate-y-3/4'
+                )} aria-hidden="true" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
                   <path d="M391.42 0H305.875C305.146 0 304.492 0.449257 304.23 1.13017L108.923 508.603C108.478 509.758 109.331 511 110.568 511H193.683C194.41 511 195.063 510.554 195.327 509.877L393.063 2.40395C393.514 1.24765 392.661 0 391.42 0Z" fill="white" />
                   <path d="M283.42 57H197.875C197.146 57 196.492 57.4493 196.23 58.1302L0.922552 565.603C0.477943 566.758 1.33065 568 2.5685 568H85.6835C86.4104 568 87.0629 567.554 87.3268 566.877L285.063 59.4039C285.514 58.2477 284.661 57 283.42 57Z" fill="white" />
                   <path d="M443.42 88H357.875C357.146 88 356.492 88.4493 356.23 89.1302L160.923 596.603C160.478 597.758 161.331 599 162.568 599H245.683C246.41 599 247.063 598.554 247.327 597.877L445.063 90.4039C445.514 89.2477 444.661 88 443.42 88Z" fill="white" />
@@ -450,46 +488,49 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
 
           {/* Block: Ticker */}
-          <div className='overflow-hidden mb-12'>
+          <div className='overflow-hidden mb-20'>
             <div className={tw(
               'text-4xl minlg:text-7xl minxxl:text-9xl',
-              'text-[#B2B2B2] italic font-medium flex mb-5',
+              'text-[#B2B2B2] italic font-medium flex mb-6',
               '-translate-x-28'
             )}>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> defi</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> cars</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> arts</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> marketing</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> gym</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> tech</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> defi</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> cars</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> arts</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> marketing</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> defi</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> cars</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> arts</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> marketing</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> gym</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> tech</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> defi</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> cars</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> arts</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> marketing</div>
             </div>
 
             <div className={tw(
               'text-4xl minlg:text-7xl minxxl:text-9xl',
-              'text-[#B2B2B2] italic font-medium flex mb-5',
+              'text-[#B2B2B2] italic font-medium flex mb-6',
               '-translate-x-[10%]'
             )}>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> gaming</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> nba2k</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> draft</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> swift</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> running</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> gaming</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> nba2k</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> draft</div>
-              <div className='ml-12 flex items-center'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> swift</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> gaming</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> nba2k</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> draft</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> swift</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> running</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> gaming</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> nba2k</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> draft</div>
+              <div className='ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='text-[.6em] mt-2 font-bold not-italic'>/</span> swift</div>
             </div>
           </div>
 
           {/* Block: Profile */}
           <div className='bg-[#F9D54C] overflow-hidden'>
             <div className='px-3 minmd:px-14 minxxl:px-20'>
-              <div className='relative z-0 p-9 pt-11 pb-12 mt-5 mb-24'>
-                <svg className='absolute -z-10 top-[-25%] minmd:top-[-205%] -right-6 max-w-[43.5%]' width="684" height="1048" viewBox="0 0 684 1048" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <div className='relative z-0 pt-24 pb-12 mt-5 mb-24'>
+                <svg className={tw(
+                  'absolute -z-10 top-0 right-0 max-w-[43.5%]',
+                  '-translate-x-1/3 -translate-y-2/4 minmd:translate-x-1/3 -minmd:translate-y-3/4'
+                )} width="684" height="1048" viewBox="0 0 684 1048" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M393.64 0H273.667C272.937 0 272.282 0.449648 272.021 1.13096L0.921002 706.501C0.477046 707.657 1.32973 708.898 2.56724 708.898H119.168C119.896 708.898 120.548 708.451 120.812 707.774L395.284 2.40319C395.734 1.24701 394.881 0 393.64 0Z" fill="white" />
                   <path d="M474.793 90.7009H354.82C354.09 90.7009 353.435 91.1506 353.174 91.8319L82.0741 797.202C81.6301 798.358 82.4828 799.599 83.7203 799.599H200.321C201.049 799.599 201.701 799.152 201.965 798.475L476.437 93.1041C476.887 91.9479 476.034 90.7009 474.793 90.7009Z" fill="white" />
                   <path d="M817.64 339H697.667C696.937 339 696.282 339.45 696.021 340.131L424.921 1045.5C424.477 1046.66 425.33 1047.9 426.567 1047.9H543.168C543.896 1047.9 544.548 1047.45 544.812 1046.77L819.284 341.403C819.734 340.247 818.881 339 817.64 339Z" fill="white" />
@@ -497,31 +538,40 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <path d="M624.794 210.701H504.82C504.09 210.701 503.436 211.15 503.174 211.832L232.074 917.202C231.63 918.357 232.483 919.599 233.721 919.599H350.322C351.049 919.599 351.701 919.152 351.965 918.474L626.437 213.104C626.887 211.948 626.034 210.701 624.794 210.701Z" fill="white" />
                 </svg>
 
-                <div className='flex justify-between items-end'>
-                  <h2 className='text-[3.375rem] minlg:text-[7.625rem] minxxl:text-[10rem] font-medium text-black leading-none relative'>
+                <div className='minlg:flex justify-between items-end'>
+                  <h2 className={tw(
+                    'text-[3.25rem] minlg:text-[7.625rem] minxxl:text-[10rem]',
+                    'text-black font-medium leading-tight relative',
+                    'mb-44 minlg:mb-0'
+                  )}>
                     Build <img className={tw(
-                      'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
+                      'drop-shadow-md inline-block max-w-[4rem] minlg:max-w-none',
                       'mr-[.625rem] ml-[1rem] mt-[-1.5rem] mb-[-1rem]'
                     )} src="ico-discover.png" alt="" />
                     your <br />
-                    <span className='inline-block pl-24 -mr-24'>
+                    <span className='inline-block -mr-10 minlg:pl-24 minlg:-mr-24'>
                       NFT <img className={tw(
-                        'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
+                        'drop-shadow-md inline-block max-w-[4rem] minlg:max-w-none',
                         'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
                       )} src="ico-discover.png" alt="" />
                       profile
                     </span>
-
-                    <svg className='absolute left-[100%] top-[60px]' width="397" height="93" viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg className='hidden minlg:block absolute left-[100%] top-[60px]' width="397" height="93" viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fillRule="evenodd" clipRule="evenodd" d="M1.04904e-05 0.61084L341.924 0.610877C352.896 0.610883 361.792 9.47563 361.792 20.4109V59.0953L384.119 36.7397L396.636 49.1557L352.961 92.8851L309.287 49.1557L321.804 36.7397L344.131 59.0953V20.4109C344.131 19.1958 343.143 18.2109 341.924 18.2109L0 18.2108L1.04904e-05 0.61084Z" fill="black" />
+                    </svg>
+
+                    <svg className='minlg:hidden absolute top-[100%] left-1/2 translate-y-10 -translate-x-1/2' width="33" height="96" viewBox="0 0 33 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M19.8361 0C19.8361 0 19.8361 62.9869 19.8361 67.315V82.6261L28.2712 73.7779L33 78.6921L16.5 96L0 78.6921L4.72878 73.7779L13.164 82.6261V67.315V0H19.8361Z" fill="black" />
                     </svg>
                   </h2>
 
-                  <a href="" className={tw(
-                    'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
-                    'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
-                    'text-xl minxxl:text-3xl text-white font-medium uppercase'
-                  )}>create a Profile</a>
+                  <div className="text-center minlg:text-left">
+                    <a href="" className={tw(
+                      'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
+                      'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
+                      'text-xl minxxl:text-3xl text-white font-medium uppercase'
+                    )}>create a Profile</a>
+                  </div>
                 </div>
               </div>
             </div>
