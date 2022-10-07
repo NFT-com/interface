@@ -1,4 +1,4 @@
-import { Footer } from 'components/elements/Footer';
+import { Footer as StaticFooter } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
@@ -8,11 +8,15 @@ import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
+import dynamic from 'next/dynamic';
+
 type DefaultLayoutProps = {
   children: React.ReactNode;
   hideFooter?: boolean
   hideHeader?: boolean
 };
+
+const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => import('components/elements/Footer').then(mod => mod.Footer));
 
 export default function DefaultLayout({ children, hideFooter, hideHeader }: DefaultLayoutProps) {
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
@@ -41,7 +45,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader }: Defa
             toggleSidebar();
           }}
         />
-        {!hideFooter && <Footer />}
+        {!hideFooter && <DynamicFooter />}
       </div>
     </div>
   );

@@ -8,11 +8,12 @@ import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { CollectionGallery } from './CollectionGallery';
-import { GalleryToggleAllButtons } from './GalleryToggleAllButtons';
+import { GalleryToggleAllButtons as StaticGalleryToggleAllButtons } from './GalleryToggleAllButtons';
 import { NftGallery } from './NftGallery';
 import { ProfileContext } from './ProfileContext';
 import { ProfileLayoutEditorModalContent } from './ProfileLayoutEditorModalContent';
 
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { CircleWavy, Gear, Layout, Tag, Wrench } from 'phosphor-react';
 import EyeIcon from 'public/eye.svg';
@@ -25,6 +26,8 @@ export interface MintedProfileGalleryProps {
   profileURI: string;
   ownedGKTokens?: number[];
 }
+
+const DynamicNFTActivity = dynamic<React.ComponentProps<typeof StaticGalleryToggleAllButtons>>(() => import('./GalleryToggleAllButtons').then(mod => mod.GalleryToggleAllButtons));
 
 export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const {
@@ -98,7 +101,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           </div>
           {editMode &&
           <div className="flex flex-row justify-end">
-            {!isMobile && <GalleryToggleAllButtons
+            {!isMobile && <DynamicNFTActivity
               publicNFTCount={publiclyVisibleNftCount}
               onShowAll={() => {
                 showNftIds(allOwnerNfts?.map(nft => nft.id));
