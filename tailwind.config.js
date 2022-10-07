@@ -163,8 +163,10 @@ module.exports = {
           'radial-gradient(59.6% 80.37% at 50.68% 83.52%, #272F46 0%, #202F56 46.87%, #030406 100%)',
         'hero-gradient':
           'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
-        'img-shadow':
-          'linear-gradient(0deg, #F9D54C 32.93%, rgba(249, 213, 76, 0) 100%)'
+        'img-shadow-light':
+          'linear-gradient(0deg, #F9D54C 32.93%, rgba(249, 213, 76, 0) 100%)',
+        'img-shadow-dark':
+          'linear-gradient(0deg, #000000 32.93%, rgba(0, 0, 0, 0) 100%)',
       },
       aspectRatio: {
         '4/3': '4/3',

@@ -168,10 +168,10 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
       <>
-        <div className="w-24 flex flex-col">
-          <div className="flex">
+        <div className="minlg:w-[6.25rem] flex flex-col">
+          <div className="flex space-x-2 p-5 minlg:space-x-0 minlg:p-0">
             <div className={tw(
-              'relative flex items-center text-black')}>
+              'relative flex items-center w-full text-black')}>
               <SearchIcon color='#000000' className='mr-2 shrink-0 aspect-square' />
               <div className="w-full">
                 <input
