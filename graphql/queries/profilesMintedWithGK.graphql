@@ -1,0 +1,6 @@
+query ProfilesMintedWithGK($tokenId: String!) {
+  profilesMintedWithGK(tokenId: $tokenId) {
+    url
+    photoURL
+  }
+}
