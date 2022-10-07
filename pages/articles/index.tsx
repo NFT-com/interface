@@ -1,7 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import PreviewBanner from 'components/elements/PreviewBanner';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import BlogSlider from 'components/modules/BlogPage/BlogSlider';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
 import { PostData } from 'types/blogs';
@@ -9,6 +7,7 @@ import { getPaginatedPosts } from 'utils/contentful';
 
 import { getCollection } from 'lib/contentful/api';
 import { BLOG_LIST_HOME_FIELDS } from 'lib/contentful/schemas';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -25,6 +24,9 @@ type PostListProps = {
   }
 };
 
+const DynamicBlogSlider = dynamic(() => import('components/modules/BlogPage/BlogSlider'));
+const DynamicPreviewBanner = dynamic(() => import('components/elements/PreviewBanner'));
+
 export default function BlogListPage({ postData, preview, data, totalPosts }: PostListProps) {
   const [posts, setPosts] = useState(postData);
   const router = useRouter();
@@ -37,7 +39,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
       <div className='bg-white'>
         <div className='px-2.5 pt-28 max-w-nftcom mx-auto'>
           <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
-          {posts && <BlogSlider posts={data?.blogSlidesCollection.items} />}
+          {posts && <DynamicBlogSlider posts={data?.blogSlidesCollection.items} />}
       
           <h2 className='font-bold font-grotesk minlg:text-4xl text-lg minlg:mb-6 mb-4 mt-10 '>{data?.listTitle}</h2>
           <div className="grid minmd:gap-x-4 gap-x-3 gap-y-7 minlg:grid-cols-3 grid-cols-2 minxl:pb-24 pb-12 ">
@@ -59,7 +61,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
           </div>
         )}
       </div>
-      {preview && <PreviewBanner />}
+      {preview && <DynamicPreviewBanner />}
     </>
   );
 }
