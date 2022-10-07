@@ -43,6 +43,7 @@
     "@headlessui/react": "^1.6.1",
     "@heroicons/react": "^1.0.6",
     "@looksrare/sdk": "^0.8.0",
+    "@lottiefiles/react-lottie-player": "^3.4.7",
     "@rainbow-me/rainbowkit": "0.4.4",
     "@sentry/nextjs": "^7.3.0",
     "@tailwindcss/line-clamp": "^0.4.0",
