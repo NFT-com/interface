@@ -10,6 +10,7 @@ module.exports = {
       'minmd': '600px',
       'minlg': '900px',
       'minxl': '1200px',
+      'minxxl': '1600px',
       // "small" is handled as the default
 
       // if all other sizes below are specified, then the "default" value wil apply to the XL range too.
@@ -18,7 +19,7 @@ module.exports = {
       'md': { 'max' : '899px' },
       'sm': { 'max': '599px' },
       'xs': { 'max' : '374px' },
-      
+
       // maxes
       'deprecated_2xl': { 'max': '1800px' },
       'deprecated_md': { 'max': '960px' },
@@ -163,7 +164,7 @@ module.exports = {
         'hero-gradient':
           'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
         'img-shadow':
-          'linear-gradient(0deg, #000000 32.93%, rgba(0, 0, 0, 0) 100%)'
+          'linear-gradient(0deg, #F9D54C 32.93%, rgba(249, 213, 76, 0) 100%)'
       },
       aspectRatio: {
         '4/3': '4/3',
