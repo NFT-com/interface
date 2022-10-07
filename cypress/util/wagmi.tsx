@@ -1,7 +1,7 @@
 import { setupWagmiClient } from './utils';
 
 import { QueryClient } from '@tanstack/react-query';
-import * as React from 'react';
+import { JSXElementConstructor,ReactElement, ReactNode } from 'react';
 import { WagmiConfig, WagmiConfigProps } from 'wagmi';
 
 export const queryClient = new QueryClient({
@@ -23,8 +23,8 @@ export const queryClient = new QueryClient({
 
 type Props = WagmiConfigProps & {
   children?:
-  | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-  | React.ReactNode
+  | ReactElement<any, string | JSXElementConstructor<any>>
+  | ReactNode
 }
 export function wrapper(props: Props) {
   const client = props.client ?? setupWagmiClient({ queryClient });

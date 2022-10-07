@@ -1,6 +1,6 @@
 import { Doppler, getEnv } from 'utils/env';
 
-import * as Sentry from '@sentry/nextjs';
+import { captureException, flush } from '@sentry/nextjs';
 import { NextPageContext } from 'next';
 import NextErrorComponent, { ErrorProps as NextErrorProps } from 'next/error';
 import { ReactElement } from 'react';
@@ -18,7 +18,7 @@ type ErrorProps = {
 
 function ErrorPage({ statusCode, hasGetInitialPropsRun, err }: ErrorPageProps) {
   if (!hasGetInitialPropsRun && err && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'DEBUG') {
-    Sentry.captureException(err);
+    captureException(err);
   }
   return <NextErrorComponent statusCode={statusCode} />;
 }
@@ -36,13 +36,13 @@ ErrorPage.getInitialProps = async ({ res, err, asPath }: NextPageContext) => {
   }
   
   if (err && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'DEBUG') {
-    Sentry.captureException(err);
-    await Sentry.flush(2000);
+    captureException(err);
+    await flush(2000);
     return errorInitialProps;
   }
 
-  Sentry.captureException(new Error(`_error.tsx getInitialProps missing data at path: ${asPath}`));
-  await Sentry.flush(2000);
+  captureException(new Error(`_error.tsx getInitialProps missing data at path: ${asPath}`));
+  await flush(2000);
 
   return errorInitialProps;
 };

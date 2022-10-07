@@ -1,13 +1,12 @@
-import PreviewBanner from 'components/elements/PreviewBanner';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
-import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
 import NotFoundPage from 'pages/404';
 import { PostData } from 'types/blogs';
 
 import { getPost } from 'lib/contentful/api';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
@@ -17,6 +16,9 @@ type PostProps = {
   post: PostData;
   preview: boolean;
 };
+
+const DynamicRelatedPostCard = dynamic(() => import('components/modules/BlogPage/RelatedPostsCard'));
+const DynamicPreviewBanner = dynamic(() => import('components/elements/PreviewBanner'));
 
 export default function Post({ post, preview }: PostProps) {
   const router = useRouter();
@@ -77,7 +79,7 @@ export default function Post({ post, preview }: PostProps) {
                 </h2>
                 <div className="grid minmd:gap-x-4 gap-x-3 gap-y-7 minlg:grid-cols-3 grid-cols-2 minxl:pb-24 pb-12">
                   {post.relatedPostsCollection.items.map((post) => (
-                    post && <RelatedPostCard key={post?.sys.id} post={post} />
+                    post && <DynamicRelatedPostCard key={post?.sys.id} post={post} />
                   ))}
                 </div>
               </div>
@@ -85,7 +87,7 @@ export default function Post({ post, preview }: PostProps) {
             : null}
         </div>
       </div>
-      {preview && <PreviewBanner />}
+      {preview && <DynamicPreviewBanner />}
     </>
   );
 }

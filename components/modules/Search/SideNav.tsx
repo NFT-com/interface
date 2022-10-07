@@ -3,9 +3,10 @@ import { tw } from 'utils/tw';
 
 import { CollectionsFiltersContent } from './CollectionsFiltersContent';
 import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
-import { NFTsFiltersContent } from './NFTsFiltersContent';
+import { NFTsFiltersContent as StaticNFTsFiltersContent } from './NFTsFiltersContent';
 
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 
 export interface OptionNavProps {
@@ -15,6 +16,8 @@ export interface OptionNavProps {
   backgroundColor?: string;
   filtersData?: any;
 }
+
+const DynamicNFTsFiltersContent = dynamic<React.ComponentProps<typeof StaticNFTsFiltersContent>>(() => import('./NFTsFiltersContent').then(mod => mod.NFTsFiltersContent));
 
 export const SideNav = (props: {
   onSideNav: (term: string) => void,
@@ -40,7 +43,7 @@ export const SideNav = (props: {
         ? (
           <>
             <CuratedCollectionsFilter onClick={props.onSideNav} collapsed={false}/>
-            {props.filtersData?.length > 0 && <NFTsFiltersContent />}
+            {props.filtersData?.length > 0 && <DynamicNFTsFiltersContent />}
           </>
         )
         : (

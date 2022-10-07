@@ -1,5 +1,5 @@
 import { LoadedContainer } from 'components/elements/LoadedContainer';
-import { NetworkErrorTile } from 'components/elements/NetworkErrorTile';
+import { NetworkErrorTile as StaticNetworkErrorTile } from 'components/elements/NetworkErrorTile';
 import { useKeyBackground } from 'hooks/state/useKeyBackground';
 import { useGenesisKeyPublicSaleData } from 'hooks/useGenesisKeyPublicSaleData';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
@@ -11,6 +11,7 @@ import { tw } from 'utils/tw';
 import { GenesisKeyPublicSale } from './GenesisKeyPublicSale';
 import { SignedOutView } from './SignedOutView';
 
+import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useAccount } from 'wagmi';
@@ -19,6 +20,8 @@ export enum AuctionType {
   Blind = 'Blind',
   Public = 'Public'
 }
+
+const DynamicNetworkErrorTile = dynamic<React.ComponentProps<typeof StaticNetworkErrorTile>>(() => import('components/elements/NetworkErrorTile').then(mod => mod.NetworkErrorTile));
 
 /**
  * the whole genesis key auction flow, with the following steps:
@@ -184,7 +187,7 @@ export function GenesisKeyAuction() {
             className={tw(
               'flex flex-col w-full h-full items-center pt-20',
             )}>
-            {currentAddress && !isSupported && <NetworkErrorTile />}
+            {currentAddress && !isSupported && <DynamicNetworkErrorTile />}
             <LoadedContainer loaded={firstLoaded} fitToParent>
               {getAuctionContent()}
             </LoadedContainer>
