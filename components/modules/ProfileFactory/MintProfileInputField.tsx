@@ -2,26 +2,62 @@ import { BidStatusIcon } from 'components/elements/BidStatusIcon';
 import Loader from 'components/elements/Loader';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { ProfileStatus } from 'graphql/generated/types';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useProfileBlocked } from 'hooks/useProfileBlocked';
+import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { ExternalProtocol } from 'types';
+import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
+import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 type MintProfileInputFieldProps = {
-  listings: any[];
-  currentURI: string;
-  setCurrentURI: (URI: string) => void
+  setCurrentURI: (value: string, status: string, name: string, hash: string, signature: string) => void
   minting: boolean;
-  loadingTokenId: boolean;
-  getProfileStatus: () => any;
+  name: string
 };
 
-export default function MintProfileInputField({ listings, currentURI, minting, setCurrentURI, loadingTokenId, getProfileStatus }: MintProfileInputFieldProps) {
+export default function MintProfileInputField({ minting, setCurrentURI, name }: MintProfileInputFieldProps) {
+  const [inputValue, setInputValue] = useState('');
+  const [profileStatus, setProfileStatus] = useState('');
+  
   const { profileTokens } = useMyNftProfileTokens();
+  const defaultChainId = useDefaultChainId();
+  const { blocked: currentURIBlocked } = useProfileBlocked(inputValue, true);
+  const { profileTokenId, loading: loadingTokenId } = useProfileTokenQuery(inputValue);
+  const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
+  const { profileClaimHash } = useGetProfileClaimHash(inputValue);
 
+  const listings = filterDuplicates(
+    filterValidListings(nft?.listings?.items),
+    (first, second) => first.order?.protocol === second.order?.protocol
+  );
+
+  const getProfileStatus = useCallback(() => {
+    if (isNullOrEmpty(inputValue)) {
+      return null;
+    }
+    if (currentURIBlocked) {
+      return ProfileStatus.Owned;
+    }
+    return profileTokenId == null ? ProfileStatus.Available : nft?.listings?.items?.length ? ProfileStatus.Listed : ProfileStatus.Owned;
+  }, [inputValue, currentURIBlocked, profileTokenId, nft]);
+
+  useEffect(() => {
+    setCurrentURI(inputValue, profileStatus, name, profileClaimHash?.hash, profileClaimHash?.signature);
+  }, [inputValue, profileStatus, name, profileClaimHash]);
+
+  useEffect(() => {
+    setProfileStatus(profileTokenId ? 'Owned' : 'Available');
+  }, [profileTokenId, inputValue]);
+  
   const getProfileStatusText = useCallback((profileStatus, isOwner) => {
     switch (profileStatus) {
     case ProfileStatus.Available:
@@ -91,6 +127,7 @@ export default function MintProfileInputField({ listings, currentURI, minting, s
       NFT.com/
         </div>
         <input
+          name={name}
           className={tw(
             'text-lg min-w-0 ProfileNameInput',
             'text-left px-3 py-3 w-full rounded-r-lg font-medium',
@@ -98,7 +135,7 @@ export default function MintProfileInputField({ listings, currentURI, minting, s
           )}
           placeholder="Enter Profile Name"
           autoFocus={true}
-          value={currentURI ?? ''}
+          value={inputValue}
           spellCheck={false}
           onChange={async e => {
             if (minting) {
@@ -110,7 +147,7 @@ export default function MintProfileInputField({ listings, currentURI, minting, s
               validReg.test(e.target.value.toLowerCase()) &&
                     e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
             ) {
-              setCurrentURI(e.target.value.toLowerCase());
+              setInputValue(e.target.value);
             } else {
               e.preventDefault();
             }
@@ -122,12 +159,12 @@ export default function MintProfileInputField({ listings, currentURI, minting, s
             : <BidStatusIcon
               whiteBackgroundOverride
               status={getProfileStatus()}
-              isOwner={profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(currentURI)}
+              isOwner={profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(inputValue)}
             />}
         </div>
       </div>
         
-      {getProfileStatusText(getProfileStatus(), profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(currentURI))}
+      {getProfileStatusText(getProfileStatus(), profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(inputValue))}
     </>
   );
 }

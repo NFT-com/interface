@@ -16,9 +16,10 @@ import ProfileKeyIcon from 'public/profile-key-icon.svg';
 import { useState } from 'react';
 
 export default function MintProfilesPage() {
-  const [currentURI, setCurrentURI] = useState('');
+  const [profilesToMint, setProfilesToMint] = useState([]);
   const [minting, setMinting] = useState(false);
   const [mintModalOpen, setMintModalOpen] = useState(false);
+  const [selectedGK, setSelectedGK] = useState(null);
 
   const closeModal = () => {
     setMintModalOpen(false);
@@ -53,7 +54,16 @@ export default function MintProfilesPage() {
         </div>
 
         {/* Input Card Component */}
-        <MintProfileInputCard currentURI={currentURI} setCurrentURI={setCurrentURI} setMintModalOpen={setMintModalOpen} minting={minting} setMinting={setMinting} />
+        <MintProfileInputCard
+          inputs={profilesToMint}
+          setInputs={setProfilesToMint}
+          setProfilesToMint={setProfilesToMint}
+          setMintModalOpen={setMintModalOpen}
+          minting={minting}
+          setMinting={setMinting}
+          selectedGK={selectedGK}
+          setSelectedGK={setSelectedGK}
+        />
         <span className='absolute w-full h-[460px] left-0 bottom-0 bg-img-shadow'></span>
       </div>
       
@@ -75,7 +85,7 @@ export default function MintProfilesPage() {
           <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the build in marketplace aggregator.</p>
         </div>
       </div>
-      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} currentURI={currentURI} />
+      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={profilesToMint} gkTokenId={selectedGK?.tokenId} />
     </div>
   );
 }

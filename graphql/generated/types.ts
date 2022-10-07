@@ -3013,6 +3013,13 @@ export type ProfilesByDisplayedNftQueryVariables = Exact<{
 
 export type ProfilesByDisplayedNftQuery = { __typename?: 'Query', profilesByDisplayNft: { __typename?: 'ProfilesOutput', totalItems?: number | null, items: Array<{ __typename?: 'Profile', id: string, photoURL?: string | null, url: string }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
+export type ProfilesMintedWithGkQueryVariables = Exact<{
+  tokenId: Scalars['String'];
+}>;
+
+
+export type ProfilesMintedWithGkQuery = { __typename?: 'Query', profilesMintedWithGK: Array<{ __typename?: 'Profile', url: string, photoURL?: string | null }> };
+
 export type RecentProfilesQueryVariables = Exact<{
   input?: InputMaybe<LatestProfilesInput>;
 }>;
@@ -4725,6 +4732,14 @@ export const ProfilesByDisplayedNftDocument = gql`
   }
 }
     `;
+export const ProfilesMintedWithGkDocument = gql`
+    query ProfilesMintedWithGK($tokenId: String!) {
+  profilesMintedWithGK(tokenId: $tokenId) {
+    url
+    photoURL
+  }
+}
+    `;
 export const RecentProfilesDocument = gql`
     query RecentProfiles($input: LatestProfilesInput) {
   latestProfiles(input: $input) {
@@ -5032,6 +5047,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     ProfilesByDisplayedNft(variables: ProfilesByDisplayedNftQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfilesByDisplayedNftQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfilesByDisplayedNftQuery>(ProfilesByDisplayedNftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfilesByDisplayedNft', 'query');
+    },
+    ProfilesMintedWithGK(variables: ProfilesMintedWithGkQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfilesMintedWithGkQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfilesMintedWithGkQuery>(ProfilesMintedWithGkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfilesMintedWithGK', 'query');
     },
     RecentProfiles(variables?: RecentProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RecentProfilesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<RecentProfilesQuery>(RecentProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RecentProfiles', 'query');

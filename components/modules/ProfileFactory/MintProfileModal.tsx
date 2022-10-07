@@ -9,54 +9,135 @@ import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
+import { isEmpty } from 'cypress/types/lodash';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import ETHIcon from 'public/eth_icon.svg';
-import { Fragment, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 
+type Inputs = {
+  value: string;
+  hash: string;
+  signature: string;
+  status: string;
+  name: string;
+};
+
 type MintProfileModalProps = {
   isOpen: boolean;
   setIsOpen: (input:boolean) => void;
-  currentURI: string;
+  profilesToMint: Inputs[];
   transactionCost?: number;
+  gkTokenId?: number
 };
 
-export default function MintProfileModal({ isOpen, setIsOpen, currentURI, transactionCost }: MintProfileModalProps) {
+export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, profilesToMint, gkTokenId }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
+  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
   const router = useRouter();
   const defaultChainId = useDefaultChainId();
   const [minting, setMinting] = useState(false);
   const [, setMintSuccess] = useState(false);
-  const { profileClaimHash, mutate: mutateProfileHash } = useGetProfileClaimHash(currentURI);
   const { mutate: mutateMyProfileTokens } = useMyNftProfileTokens();
   const { mutate: mutateFreeMintStatus } = useFreeMintAvailable(currentAddress);
   const maxProfilesSigner = useMaxProfilesSigner();
-  const { mutate: mutateTokenId } = useProfileTokenQuery(currentURI);
   const ethPriceUSD = useEthPriceUSD();
   const contractAddress = getAddress('maxProfiles', defaultChainId);
   const provider = useProvider();
 
   const { data: feeData } = useSWR(
-    `${currentAddress}_eth_est_${currentURI}`,
+    `${currentAddress}_eth_est_${JSON.stringify(profilesToMint)}`,
     async () => {
       const feeData = await provider.getFeeData();
       return feeData;
     });
-  
+
+  const freeMintProfile = profilesToMint[0];
   const { data } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: maxProfilesABI,
     functionName: 'publicClaim',
-    args: [currentURI, profileClaimHash?.hash, profileClaimHash?.signature,],
+    args: [freeMintProfile?.value, freeMintProfile?.hash, freeMintProfile?.signature],
     onError(err){
       console.log('err:', err);
     }
   });
 
-  const gasCost = data && feeData ? utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber()) : null;
+  const gkMintProfiles = profilesToMint.map((profile) => {
+    return {
+      profileUrl: profile.value,
+      tokenId: gkTokenId,
+      recipient: currentAddress,
+      hash: profile.hash,
+      signature: profile.signature
+    };
+  });
+
+  const { data: gkData } = usePrepareContractWrite({
+    addressOrName: contractAddress,
+    contractInterface: maxProfilesABI,
+    functionName: 'genesisKeyBatchClaimProfile',
+    args: [gkMintProfiles],
+    onError(err){
+      console.log('err:', err);
+    }
+  });
+
+  const submitHandler = async () => {
+    if(freeMintAvailable){
+      try {
+        const tx = await (await (maxProfilesSigner)).publicClaim(
+          freeMintProfile?.value,
+          freeMintProfile?.hash,
+          freeMintProfile?.signature,
+        );
+        setMinting(true);
+        if (tx) {
+          await tx.wait(1);
+          setMintSuccess(true);
+          mutateMyProfileTokens();
+        }
+        mutateFreeMintStatus();
+        setIsOpen(false);
+        router.push(`/${freeMintProfile?.value}`);
+        setMinting(false);
+      } catch (err) {
+        setMinting(false);
+      }
+    } else {
+      try {
+        const tx = await(await(maxProfilesSigner)).genesisKeyBatchClaimProfile(
+          gkMintProfiles
+        );
+        setMinting(true);
+        if (tx) {
+          await tx.wait(1);
+          setMintSuccess(true);
+          mutateMyProfileTokens();
+        }
+        mutateFreeMintStatus();
+        setIsOpen(false);
+        router.push(`/${gkMintProfiles[0].profileUrl}`);
+        setMinting(false);
+      } catch (err) {
+        setMinting(false);
+      }
+    }
+  };
+
+  const getGasCost = useCallback(() => {
+    if(feeData && data){
+      return utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
+    }
+    if(feeData && gkData){
+      utils.formatEther(gkData?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
+    }
+    return 0;
+  }, [feeData, data, gkData]);
+  
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[105]" onClose={() => setIsOpen(false)}>
@@ -102,35 +183,38 @@ export default function MintProfileModal({ isOpen, setIsOpen, currentURI, transa
                 </div>
 
                 <div className="mt-5 pb-6 border-b">
-                  <div className='flex justify-between mb-5'>
-                    <div>
-                      <p className="text-lg font-medium">
-                        nft.com/{currentURI}
-                      </p>
-                      <p className="text-md text-[#686868] font-normal">
-                        Profile
-                      </p>
+                  {profilesToMint && profilesToMint.map((profile) => (
+                    <div className='flex justify-between mb-5' key={profile.value}>
+                      <div>
+                        <p className="text-lg font-medium">
+                              nft.com/{profile.value}
+                        </p>
+                        <p className="text-md text-[#686868] font-normal">
+                              Profile
+                        </p>
+                      </div>
+                      {transactionCost ?
+                        <p className="font-medium text-lg flex justify-center items-center">
+                          {transactionCost} <ETHIcon className='ml-1' stroke="black" />
+                        </p>
+                        :
+                        <p className="text-lg text-[#2AAE47] font-medium">
+                              Free
+                        </p>
+                      }
                     </div>
-                    {transactionCost ?
-                      <p className="font-medium text-lg flex justify-center items-center">
-                        {transactionCost} <ETHIcon className='ml-1' stroke="black" />
-                      </p>
-                      :
-                      <p className="text-lg text-[#2AAE47] font-medium">
-                        Free
-                      </p>
-                    }
-                  </div>
+                  ))}
+                  
                   <div className='flex justify-between'>
                     <p className="font-medium">
                       Estimated Gas
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="font-medium text-lg flex justify-center items-center">
-                        {parseFloat(Number(gasCost).toFixed(7))} <ETHIcon className='ml-1' stroke="black" />
+                        {parseFloat(Number(getGasCost()).toFixed(7))} <ETHIcon className='ml-1' stroke="black" />
                       </p>
                       <p className="text-[#686868]">
-                        ${(ethPriceUSD * Number(gasCost)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        ${(ethPriceUSD * Number(getGasCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                     </div>
                   </div>
@@ -143,10 +227,10 @@ export default function MintProfileModal({ isOpen, setIsOpen, currentURI, transa
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="text-xl font-medium">
-                        {parseFloat(Number(gasCost).toFixed(7))} ETH
+                        {parseFloat(Number(getGasCost()).toFixed(7))} ETH
                       </p>
                       <p className="text-lg text-[#686868]">
-                        (${(ethPriceUSD * Number(gasCost)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
+                        (${(ethPriceUSD * Number(getGasCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
                       </p>
                     </div>
                   </div>
@@ -157,27 +241,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, currentURI, transa
                     type="button"
                     className="inline-flex w-full justify-center rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E] px-4 py-4 text-lg font-medium text-black focus:outline-none focus-visible:bg-[#E4BA18]"
                     onClick={async () => {
-                      try {
-                        const tx = await (await (maxProfilesSigner)).publicClaim(
-                          currentURI,
-                          profileClaimHash?.hash,
-                          profileClaimHash?.signature,
-                        );
-                        setMinting(true);
-                        if (tx) {
-                          await tx.wait(1);
-                          setMintSuccess(true);
-                          mutateMyProfileTokens();
-                        }
-                        mutateProfileHash();
-                        mutateTokenId();
-                        mutateFreeMintStatus();
-                        setIsOpen(false);
-                        router.push(`/${currentURI}`);
-                        setMinting(false);
-                      } catch (err) {
-                        setMinting(false);
-                      }
+                      submitHandler();
                     }}
                   >
                     {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your profile</span>}
