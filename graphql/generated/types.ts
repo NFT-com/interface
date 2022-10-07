@@ -1513,8 +1513,7 @@ export enum ProfileSortType {
 export enum ProfileStatus {
   Available = 'Available',
   Owned = 'Owned',
-  Pending = 'Pending',
-  Listed = 'Listed'
+  Pending = 'Pending'
 }
 
 export enum ProfileViewType {
@@ -1613,6 +1612,7 @@ export type Query = {
   profilesByDisplayNft: ProfilesOutput;
   /** AUTHENTICATED */
   profilesFollowedByMe: ProfilesOutput;
+  profilesMintedWithGK: Array<Profile>;
   topBids: BidsOutput;
   watchlist: Watchlist;
 };
@@ -1871,6 +1871,12 @@ export type QueryProfilesByDisplayNftArgs = {
 
 export type QueryProfilesFollowedByMeArgs = {
   input?: InputMaybe<ProfilesInput>;
+};
+
+
+export type QueryProfilesMintedWithGkArgs = {
+  chainId?: InputMaybe<Scalars['String']>;
+  tokenId: Scalars['String'];
 };
 
 
