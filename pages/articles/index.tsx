@@ -9,6 +9,7 @@ import { getCollection } from 'lib/contentful/api';
 import { BLOG_LIST_HOME_FIELDS } from 'lib/contentful/schemas';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
 import { useState } from 'react';
 
 type PostListProps = {
@@ -36,6 +37,19 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
   }
   return (
     <>
+      <NextSeo
+        title='NFT.com Blog | NFT Insights, Updates, and Education'
+        description='Learn about latest trends and updates in the NFT and crypto industry'
+        openGraph={{
+          url: 'https://www.nft.com/articles',
+          title: 'NFT.com Blog | NFT Insights, Updates, and Education',
+          description: 'Learn about latest trends and updates in the NFT and crypto industry',
+          site_name: 'NFT.com',
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
+        }}
+      />
       <div className='bg-white'>
         <div className='px-2.5 pt-28 max-w-nftcom mx-auto'>
           <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
