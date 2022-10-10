@@ -163,7 +163,8 @@ module.exports = {
         'hero-gradient':
           'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
         'img-shadow':
-          'linear-gradient(0deg, #000000 32.93%, rgba(0, 0, 0, 0) 100%)'
+          'linear-gradient(0deg, #000000 32.93%, rgba(0, 0, 0, 0) 100%)',
+        'text-gradient': 'linear-gradient(#FAC213, #FAC213)'
       },
       aspectRatio: {
         '4/3': '4/3',

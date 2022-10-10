@@ -13,6 +13,7 @@ import MintProfileInputField from './MintProfileInputField';
 import MintProfileModal from './MintProfileModal';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
@@ -55,7 +56,7 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
       setInputs(prevState => [...prevState, {
         name: currentValue[1],
         status: profileStatus,
-        value: currentValue[0],
+        profileURI: currentValue[0],
         hash: profileClaimHash?.hash,
         signature: profileClaimHash?.signature
       }]);
@@ -65,7 +66,7 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
           return {
             ...item,
             status: profileStatus,
-            value: currentValue[0],
+            profileURI: currentValue[0],
             hash: profileClaimHash?.hash,
             signature: profileClaimHash?.signature
           };
@@ -128,10 +129,10 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
   };
   
   return (
-    <div className='relative mt-28 minlg:mt-12 z-50 px-5'>
+    <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
       <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
-        <h2 className='text-[32px] w-5/6'>Claim your free NFT Profile</h2>
-        <p className='mt-6 text-xl w-5/6'>Genesis Key holders receive <span className='text-secondary-yellow'>four free mints!</span></p>
+        <h2 className='text-[32px] font-medium'>Claim your free NFT Profile</h2>
+        <p className='mt-9 text-xl font-normal'>Genesis Key holders receive <span className='font-bold text-transparent bg-text-gradient bg-clip-text'>four free mints!</span></p>
 
         <div className='mt-9'>
           {mintedProfiles && mintedProfiles?.profilesMintedWithGK.map((profile) =>
@@ -149,19 +150,18 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
               <CheckCircle size={28} color="black" weight="fill" />
             </div>
           )}
+          {
+            [...Array(inputCount)].map((_,i) =>
+              <MintProfileInputField
+                key={i}
+                minting={minting}
+                setGKProfile={setCurrentValue}
+                name={`input${i}`}
+                type='GK'
+              />
+            )
+          }
         </div>
-
-        {
-          [...Array(inputCount)].map((_,i) =>
-            <MintProfileInputField
-              key={i}
-              minting={minting}
-              setGKProfile={setCurrentValue}
-              name={`input${i}`}
-              type='GK'
-            />
-          )
-        }
         
         {!isNullOrEmpty(claimable) && gkOptions &&
           <div className='flex justify-between items-center'>
@@ -172,6 +172,7 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
                 options={filterNulls(
                   gkOptions
                 )}
+                showKeyIcon
               />
             </div>
             {inputCount <= 4 && selectedGK?.claimable > 0 && selectedGK?.claimable - inputCount !== 0 ? <p className='hover:cursor-pointer' onClick={() => setInputCount(inputCount + 1)}>Add NFT Profile</p> : null}
@@ -196,7 +197,7 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
               'focus:outline-none focus-visible:bg-[#E4BA18]',
               'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
             )}
-            disabled={inputs.some(item => item.status === 'Owned') || isNullOrEmpty(inputs) || inputs.some(item => item.value === '') }
+            disabled={inputs.some(item => item.status === 'Owned') || isNullOrEmpty(inputs) || inputs.some(item => item.profileURI === '') }
             onClick={async () => {
               if (
                 minting
@@ -214,11 +215,15 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
           </button>
               
         </div>
-        <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
-            Already have an account? <span className='text-black block minlg:inline font-medium'>Sign in</span>
-        </p>
+        <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
+          <a target="_blank" >
+            <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
+            Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
+            </p>
+          </a>
+        </Link>
       </div>
-      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={inputs} gkTokenId={selectedGK?.tokenId} type='Paid' />
+      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={inputs} gkTokenId={selectedGK?.tokenId} type='GK' />
     </div>
   );
 }

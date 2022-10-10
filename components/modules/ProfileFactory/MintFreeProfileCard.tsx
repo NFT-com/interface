@@ -59,13 +59,13 @@ export default function MintFreeProfileCard({ type }: MintFreeProfileCardProps )
   };
   
   return (
-    <div className='relative mt-28 minlg:mt-12 z-50 px-5'>
+    <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
       <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
-        <h2 className='text-[32px] w-5/6'>Claim your free NFT Profile</h2>
+        <h2 className='text-[32px] font-medium'>Claim your free NFT Profile</h2>
         {type === 'Free' ?
-          <p className='mt-6 text-xl w-5/6'>Every wallet receives one <span className='text-secondary-yellow'>free mint!</span></p>
+          <p className='mt-9 text-xl font-normal'>Every wallet receives one <span className='font-bold text-transparent bg-text-gradient bg-clip-text'>free mint!</span></p>
           :
-          <p className='mt-6 text-xl w-5/6'>You have already received one free mint</p>
+          <p className='mt-9 text-xl '>You have already received one free mint</p>
         }
 
         <MintProfileInputField
@@ -122,9 +122,13 @@ export default function MintFreeProfileCard({ type }: MintFreeProfileCardProps )
           }
               
         </div>
-        <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
-            Already have an account? <span className='text-black block minlg:inline font-medium'>Sign in</span>
-        </p>
+        <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
+          <a target="_blank" >
+            <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
+            Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
+            </p>
+          </a>
+        </Link>
       </div>
       <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={input} type={type} />
     </div>

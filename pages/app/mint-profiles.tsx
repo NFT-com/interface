@@ -23,8 +23,6 @@ export default function MintProfilesPage() {
   const { address: currentAddress } = useAccount();
   const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
   const { claimable } = useClaimableProfileCount(currentAddress);
-  // const [profilesToMint, setProfilesToMint] = useState([]);
-  // const [minting, setMinting] = useState(false);
  
   const [selectedGK, setSelectedGK] = useState(null);
 
@@ -43,16 +41,26 @@ export default function MintProfilesPage() {
         className='bg-black h-max w-full relative'
       >
         <div className='h-full w-full absolute top-0 opacity-60' style={{ backgroundImage: 'url(/temp-intro.png)' }}></div>
-        <div className='flex justify-end mt-10 mr-5'>
+        <div className='justify-end mt-10 mr-5 hidden minmd:flex'>
           <ConnectButton />
         </div>
-        <div className='w-full max-w-nftcom mx-auto relative mt-4'>
+        
+        <div className='w-full max-w-nftcom mx-auto relative mt-10 minmd:mt-4'>
+          <Link href='/'>
+            <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
+          </Link>
           <div className='absolute top-2 left-6 minlg:right-1 hover:cursor-pointer w-7 h-7 bg-black rounded-full'></div>
           <Link href='/'>
-            <ArrowCircleLeft className='absolute top-0 left-5 hover:cursor-pointer' size={45} color="white" weight="fill" />
+            <ArrowCircleLeft className='absolute bottom-0 minmd:top-0 left-5 hover:cursor-pointer' size={45} color="white" weight="fill" />
           </Link>
-          <NFTLogo className='mx-auto hidden minmd:block' />
-          <NFTLogoSmall className='mx-auto block minmd:hidden' />
+
+          <Link href='/'>
+            <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
+          </Link>
+          <div className=' justify-end mt-10 mr-5 flex minmd:hidden'>
+            <ConnectButton />
+          </div>
+          
         </div>
 
         {/* Mint Card Component */}

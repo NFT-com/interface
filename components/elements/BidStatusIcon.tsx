@@ -61,7 +61,7 @@ export function BidStatusIcon(props: BidStatusIconProps) {
         </div>
       );
 
-  case ProfileStatus.Listed:
+  case 'Listed':
     return props.isOwner
       ? (
         <div className="flex item-center">

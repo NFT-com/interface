@@ -66,7 +66,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
         : (
           <p className='text-[#F02D21] mb-3'>Sorry, profile name unavailable</p>
         );
-    case ProfileStatus.Listed:
+    case 'Listed':
       return isOwner
         ? (
           <p className='text-[#2AAE47] mb-3'>You are the owner!</p>
@@ -121,7 +121,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
 
   return (
     <>
-      <div className="relative w-full flex items-center mt-6 mb-3">
+      <div className="relative w-full flex items-center mt-4 mb-3">
         <div className={tw(
           'left-0 pl-4 flex font-bold text-black',
           'rounded-l-lg bg-white py-3 text-lg',
@@ -156,7 +156,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
             }
           }}
         />
-        <div className='absolute right-0 flex pointer-events-none pr-4 deprecated_sm:right-8'>
+        <div className='absolute right-0 flex pointer-events-none pr-4'>
           {loadingTokenId
             ? <Loader />
             : <BidStatusIcon

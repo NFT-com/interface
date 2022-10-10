@@ -2,6 +2,7 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
+import KeyIcon from 'public/mint-key.svg';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -20,6 +21,7 @@ export interface DropdownPickerProps {
   above?: boolean;
   placeholder?: string;
   onChange?: (label: string) => void;
+  showKeyIcon?: boolean;
 }
 
 /**
@@ -111,6 +113,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
           'justify-between rounded-xl shadow-lg border-0 w-full')}
         key={props?.options[selectedIndex]?.label}
       >
+        {props.showKeyIcon && <KeyIcon className='inline mr-1' stroke="black" />}
         {props?.options[selectedIndex]?.icon &&
           <Image
             className="h-4 mr-2"

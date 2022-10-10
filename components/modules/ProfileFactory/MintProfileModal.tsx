@@ -16,7 +16,7 @@ import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 
 type Inputs = {
-  value: string;
+  profileURI: string;
   hash: string;
   signature: string;
   status: string;
@@ -54,19 +54,9 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     });
 
   const freeMintProfile = profilesToMint[0];
-  const { data } = usePrepareContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: maxProfilesABI,
-    functionName: 'publicClaim',
-    args: [freeMintProfile?.value, freeMintProfile?.hash, freeMintProfile?.signature],
-    onError(err){
-      console.log('err:', err);
-    }
-  });
-
   const gkMintProfiles = profilesToMint.map((profile) => {
     return {
-      profileUrl: profile.value,
+      profileUrl: profile.profileURI,
       tokenId: gkTokenId,
       recipient: currentAddress,
       hash: profile.hash,
@@ -74,11 +64,11 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     };
   });
 
-  const { data: gkData } = usePrepareContractWrite({
+  const { data } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: maxProfilesABI,
-    functionName: 'genesisKeyBatchClaimProfile',
-    args: [gkMintProfiles],
+    functionName: type === 'GK' ? 'genesisKeyBatchClaimProfile' : 'publicClaim',
+    args: type === 'GK' ? [gkMintProfiles] : [freeMintProfile?.profileURI, freeMintProfile?.hash, freeMintProfile?.signature],
     onError(err){
       console.log('err:', err);
     }
@@ -88,7 +78,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     if(freeMintAvailable){
       try {
         const tx = await (await (maxProfilesSigner)).publicClaim(
-          freeMintProfile?.value,
+          freeMintProfile?.profileURI,
           freeMintProfile?.hash,
           freeMintProfile?.signature,
         );
@@ -100,7 +90,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
         }
         mutateFreeMintStatus();
         setIsOpen(false);
-        router.push(`/${freeMintProfile?.value}`);
+        router.push(`/${freeMintProfile?.profileURI}`);
         setMinting(false);
       } catch (err) {
         setMinting(false);
@@ -128,17 +118,16 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
 
   const getGasCost = useCallback(() => {
     if(feeData?.gasPrice){
-      if(data?.request.gasLimit){
+      if(data?.request.gasLimit) {
         return utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
-      } else if(gkData?.request?.gasLimit) {
-        return utils.formatEther(gkData?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
-      } else {
+      }
+      else {
         return 0;
       }
     } else {
       return 0;
     }
-  }, [feeData, data, gkData]);
+  }, [feeData, data]);
   
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -186,10 +175,10 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
 
                 <div className="mt-5 pb-6 border-b">
                   {profilesToMint && profilesToMint.map((profile) => (
-                    <div className='flex justify-between mb-5' key={profile.value}>
+                    <div className='flex justify-between mb-5' key={profile.profileURI}>
                       <div>
                         <p className="text-lg font-medium">
-                              nft.com/{profile.value}
+                              nft.com/{profile.profileURI}
                         </p>
                         <p className="text-md text-[#686868] font-normal">
                               Profile
