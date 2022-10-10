@@ -1,15 +1,12 @@
 import maxProfilesABI from 'constants/abis/MaxProfiles.json';
-import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useMaxProfilesSigner } from 'hooks/contracts/useMaxProfilesSigner';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { isEmpty } from 'cypress/types/lodash';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import ETHIcon from 'public/eth_icon.svg';
@@ -129,13 +126,17 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   };
 
   const getGasCost = useCallback(() => {
-    if(feeData && data){
-      return utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
+    if(feeData?.gasPrice){
+      if(data?.request.gasLimit){
+        return utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
+      } else if(gkData?.request?.gasLimit) {
+        return utils.formatEther(gkData?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
     }
-    if(feeData && gkData){
-      utils.formatEther(gkData?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
-    }
-    return 0;
   }, [feeData, data, gkData]);
   
   return (
