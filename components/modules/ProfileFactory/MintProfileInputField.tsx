@@ -55,8 +55,8 @@ export default function MintProfileInputField({ minting, setCurrentURI, name }: 
   }, [inputValue, profileStatus, name, profileClaimHash]);
 
   useEffect(() => {
-    setProfileStatus(profileTokenId ? 'Owned' : 'Available');
-  }, [profileTokenId, inputValue]);
+    setProfileStatus(profileTokenId ? nft?.listings?.totalItems > 0 ? 'Listed' : 'Owned' : 'Available');
+  }, [profileTokenId, inputValue, nft]);
   
   const getProfileStatusText = useCallback((profileStatus, isOwner) => {
     switch (profileStatus) {
