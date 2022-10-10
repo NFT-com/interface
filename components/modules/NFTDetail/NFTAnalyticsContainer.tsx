@@ -1,5 +1,5 @@
 import { LineVis } from 'components/modules/Analytics/LineVis';
-import { NFTActivity } from 'components/modules/Analytics/NFTActivity';
+import { NFTActivity as StaticNFTActivity } from 'components/modules/Analytics/NFTActivity';
 import { Nft } from 'graphql/generated/types';
 import { useGetSales } from 'graphql/hooks/useGetSales';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -7,6 +7,7 @@ import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
 import { BigNumber } from 'ethers';
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -29,6 +30,8 @@ const timeFrames = {
   5: '1Y',
   6: 'ALL'
 };
+
+const DynamicNFTActivity = dynamic<React.ComponentProps<typeof StaticNFTActivity>>(() => import('components/modules/Analytics/NFTActivity').then(mod => mod.NFTActivity));
 
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedTab, setSelectedTab] = useState(nftActivityTabs[0]);
@@ -107,12 +110,13 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </Tab.Group>
         }
       </div>
-      {selectedTab === 'Activity' && <NFTActivity data={data} />}
+      {selectedTab === 'Activity' && <DynamicNFTActivity data={data} />}
       {nftData?.length > 0 && selectedTab === 'Sales' &&
         <LineVis
           label={'Sales'}
           showMarketplaceOptions={false}
           data={nftData}
+          selectedTimeFrame={selectedTimeFrame}
         />}
       {selectedTab === 'Sales' && nftData?.length === 0 && <div className="my-14 font-grotesk mx-auto text-center">No data yet</div>}
     </div>

@@ -3,9 +3,15 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { tw } from 'utils/tw';
 
-import { CollectionsFiltersContent } from './CollectionsFiltersContent';
-import { NFTsFiltersContent } from './NFTsFiltersContent';
-import { SearchContent } from './SearchContent';
+import { CollectionsFiltersContent as StaticCollectionsFiltersContent } from './CollectionsFiltersContent';
+import { NFTsFiltersContent as StaticNFTsFiltersContent } from './NFTsFiltersContent';
+import { SearchContent as StaticSearchContent } from './SearchContent';
+
+import dynamic from 'next/dynamic';
+
+const DynamicCollectionsFiltersContent = dynamic<React.ComponentProps<typeof StaticCollectionsFiltersContent>>(() => import('./CollectionsFiltersContent').then(mod => mod.CollectionsFiltersContent));
+const DynamicNFTsFiltersContent = dynamic<React.ComponentProps<typeof StaticNFTsFiltersContent>>(() => import('./NFTsFiltersContent').then(mod => mod.NFTsFiltersContent));
+const DynamicSearchContent = dynamic<React.ComponentProps<typeof StaticSearchContent>>(() => import('./SearchContent').then(mod => mod.SearchContent));
 
 export const SearchModal = () => {
   const { searchModalOpen, setSearchModalOpen, modalType } = useSearchModal();
@@ -28,9 +34,9 @@ export const SearchModal = () => {
         'text-primary-txt',
         'py-12'
       )}>
-        {modalType === 'search' && <SearchContent />}
-        {modalType === 'filters' && <NFTsFiltersContent />}
-        {modalType === 'collectionFilters' && <CollectionsFiltersContent />}
+        {modalType === 'search' && <DynamicCollectionsFiltersContent />}
+        {modalType === 'filters' && <DynamicNFTsFiltersContent />}
+        {modalType === 'collectionFilters' && <DynamicSearchContent />}
       </div>
     </Modal>);
 };

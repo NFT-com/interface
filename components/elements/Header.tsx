@@ -40,17 +40,17 @@ export const Header = ({ removeBg }: HeaderProps) => {
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
       <nav className={tw(
-        'fixed left-5 right-5 minlg:left-14 minlg:right-14 top-6 minlg:top-7',
-        'h-20 rounded-full z-[104] shadow-md',
+        'fixed inset-x-5 minlg:inset-x-8 minxl:inset-x-14 top-6 minlg:top-7',
+        'h-[5.5rem] rounded-full z-[104] shadow-md',
         removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
       )}>
-        <div className="w-full mx-auto px-5">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center h-20">
+        <div className="w-full h-full mx-auto px-11">
+          <div className="flex items-center justify-between h-full">
+            <div className="flex items-center h-full minlg:w-[60%]">
               <div className="flex items-center">
                 <div className="flex-shrink-0 flex items-center hover:cursor-pointer mr-7">
                   <Link href='/' passHref>
-                    <div className='w-8 h-8'>
+                    <div className='w-10 h-10'>
                       {useDarkMode ? <LightNavLogo className='justify-start' /> : <NavLogo className='justify-start' />}
                     </div>
                   </Link>
@@ -74,32 +74,31 @@ export const Header = ({ removeBg }: HeaderProps) => {
               <div
                 className={tw(
                   'hidden minlg:block',
-                  'mr-5',
                   'h-max flex-shrink-0',
                   'font-grotesk text-[#6F6F6F] font-medium tracking-wide',
                   'flex items-center',
-                  'pr-4 py-[2px]'
+                  'pr-4 py-[2px] mr-8'
                 )}
               >
                 <Link href='/app/discover'>
-                  <a className='p-2 text-black text-lg cursor-pointer hover:text-secondary-yellow'>Discover</a>
+                  <a className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Discover</a>
                 </Link>
                 <Link href='/app/gallery'>
-                  <a className='p-2 text-black text-lg cursor-pointer hover:text-secondary-yellow'>Gallery</a>
+                  <a className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Gallery</a>
                 </Link>
                 <a
                   href=""
-                  className='p-2 text-black text-lg cursor-pointer hover:text-secondary-yellow'>Learn</a>
+                  className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Learn</a>
               </div>
             </div>
 
             <div className='flex items-center ...'>
-              <div className="hidden minlg:block mr-6">
+              <div className="hidden minlg:block mr-2">
                 <SearchBar />
               </div>
 
               <button
-                className='block minlg:hidden cursor-pointer mr-2 h-full w-7'
+                className='block minlg:hidden cursor-pointer mr-4 minlg:mr-0 h-full w-7'
                 onClick={() => {
                   setModalType('search');
                   setSearchModalOpen(true);
@@ -109,7 +108,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
               </button>
               <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
               <div
-                className='h-full flex items-center relative ml-6 cursor-pointer'
+                className='h-full flex items-center relative ml-3 -mr-5 cursor-pointer'
                 onClick={() => {
                   toggleCartSidebar();
                 }}
@@ -120,7 +119,10 @@ export const Header = ({ removeBg }: HeaderProps) => {
                   </div>
                 )}
                 <button
-                  className='cursor-pointer mr-2 h-full w-7'
+                  className={tw(
+                    'mr-1 h-12 w-12 rounded-full hover:bg-[#FFF4CA] transition-colors',
+                    'flex items-center justify-center cursor-pointer'
+                  )}
                 >
                   <ShoppingCartSimple size={20} color={useDarkMode ? primaryIcon : 'black'} />
                 </button>

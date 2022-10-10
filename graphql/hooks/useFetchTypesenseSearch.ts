@@ -2,7 +2,7 @@
 import { InputMaybe, Scalars } from 'graphql/generated/types';
 import { getTypesenseInstantsearchAdapterRaw } from 'utils/typeSenseAdapters';
 
-import * as Sentry from '@sentry/nextjs';
+import { captureException, flush } from '@sentry/nextjs';
 import { useCallback, useState } from 'react';
 
 export type TypesenseSearchInput = {
@@ -49,8 +49,8 @@ export function useFetchTypesenseSearch(): FetchTypesenseSearchData {
       return result;
     } catch (err) {
       setLoading(false);
-      Sentry.captureException(err);
-      await Sentry.flush(2000);
+      captureException(err);
+      await flush(2000);
       return null;
     }
   }, [client]);
