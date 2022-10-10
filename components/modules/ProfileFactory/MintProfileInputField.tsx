@@ -7,7 +7,6 @@ import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
-import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -19,21 +18,20 @@ import OpenseaIcon from 'public/opensea-icon.svg';
 import { useCallback, useEffect, useState } from 'react';
 
 type MintProfileInputFieldProps = {
-  setCurrentURI: (value: string, status: string, name: string, hash: string, signature: string) => void
+  setGKProfile?: (input: string[]) => void
   minting: boolean;
-  name: string
+  name: string;
+  setFreeProfile?: (value: string) => void;
+  type: 'GK' | 'Free'
 };
 
-export default function MintProfileInputField({ minting, setCurrentURI, name }: MintProfileInputFieldProps) {
+export default function MintProfileInputField({ minting, setGKProfile, name, setFreeProfile, type }: MintProfileInputFieldProps) {
   const [inputValue, setInputValue] = useState('');
-  const [profileStatus, setProfileStatus] = useState('');
-  
   const { profileTokens } = useMyNftProfileTokens();
   const defaultChainId = useDefaultChainId();
   const { blocked: currentURIBlocked } = useProfileBlocked(inputValue, true);
   const { profileTokenId, loading: loadingTokenId } = useProfileTokenQuery(inputValue);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
-  const { profileClaimHash } = useGetProfileClaimHash(inputValue);
 
   const listings = filterDuplicates(
     filterValidListings(nft?.listings?.items),
@@ -47,16 +45,8 @@ export default function MintProfileInputField({ minting, setCurrentURI, name }: 
     if (currentURIBlocked) {
       return ProfileStatus.Owned;
     }
-    return profileTokenId == null ? ProfileStatus.Available : nft?.listings?.items?.length ? ProfileStatus.Listed : ProfileStatus.Owned;
+    return profileTokenId == null ? ProfileStatus.Available : nft?.listings?.items?.length ? 'Listed' : ProfileStatus.Owned;
   }, [inputValue, currentURIBlocked, profileTokenId, nft]);
-
-  useEffect(() => {
-    setCurrentURI(inputValue, profileStatus, name, profileClaimHash?.hash, profileClaimHash?.signature);
-  }, [inputValue, profileStatus, name, profileClaimHash]);
-
-  useEffect(() => {
-    setProfileStatus(profileTokenId ? nft?.listings?.totalItems > 0 ? 'Listed' : 'Owned' : 'Available');
-  }, [profileTokenId, inputValue, nft]);
   
   const getProfileStatusText = useCallback((profileStatus, isOwner) => {
     switch (profileStatus) {
@@ -116,6 +106,19 @@ export default function MintProfileInputField({ minting, setCurrentURI, name }: 
       return null;
     }
   }, [listings]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if(type === 'Free'){
+        setFreeProfile(inputValue);
+      } else {
+        setGKProfile([inputValue, name]);
+      }
+    }, 200);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [inputValue, name, type, setFreeProfile, setGKProfile]);
+
   return (
     <>
       <div className="relative w-full flex items-center mt-6 mb-3">

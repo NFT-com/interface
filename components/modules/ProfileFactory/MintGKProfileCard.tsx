@@ -1,86 +1,83 @@
 import { DropdownPicker } from 'components/elements/DropdownPicker';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfilesMintedWithGKQuery } from 'graphql/hooks/useProfilesMintedWithGK';
-import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
+import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
+import MintProfileModal from './MintProfileModal';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
-import ETHIcon from 'public/eth_icon.svg';
 import { useCallback, useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
 import { useAccount } from 'wagmi';
-
-type Inputs = {
-  name: string;
-  value: string;
-  status: string;
-  hash: string;
-  signature: string;
-}
 
 type selectedGK = {
   tokenId: number;
   claimable: number
 }
 
-type MintProfileInputCardProps = {
-  setProfilesToMint: (URIs: string[]) => void;
-  setMintModalOpen: (isOpen: boolean) => void;
-  minting: boolean;
-  setMinting: (isMinting: boolean) => void;
-  inputs: Inputs[];
-  setInputs: (inputs: Inputs[] | any) => void;
+type MintGKProfileCardProps = {
   selectedGK: selectedGK;
   setSelectedGK: (selected: selectedGK) => void;
 };
 
-export default function MintProfileInputCard({ setMintModalOpen, minting, setMinting, inputs, setInputs, selectedGK, setSelectedGK }: MintProfileInputCardProps) {
+export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKProfileCardProps) {
+  const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const [claimableIndex, setClaimableIndex] = useState(0);
-  const [hasListings, setHasListings] = useState(false);
+  const [profileStatus, setProfileStatus] = useState('');
+  const [mintModalOpen, setMintModalOpen] = useState(false);
+  const [minting, setMinting] = useState(false);
+  const [currentValue, setCurrentValue] = useState(null);
+  const [inputs, setInputs] = useState([]);
+  const { claimable } = useClaimableProfileCount(currentAddress);
   const [nextTokenIdWithClaimable, setNextTokenIdWithClaimable] = useState(null);
   const [gkOptions, setGKOptions] = useState(null);
   const [inputCount, setInputCount] = useState(0);
   const { data: mintedProfiles } = useProfilesMintedWithGKQuery(selectedGK?.tokenId.toString());
+  const { profileClaimHash } = useGetProfileClaimHash(currentValue && currentValue[0]);
+  const { profileTokenId } = useProfileTokenQuery(currentValue && currentValue[0]);
+  const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
+  const index = inputs.findIndex(x => x.name === currentValue[1]);
 
-  const handleChange = (value, status, name, hash, signature) => {
-    if(status === 'Listed') {
-      setHasListings(true);
-    } else {
-      setHasListings(false);
+  useEffect(() => {
+    if(isNullOrEmpty(currentValue)){
+      return;
     }
-    const index = inputs.findIndex(x => x.name === name);
     if(index === -1) {
-      setInputs([...inputs, {
-        name,
-        status,
-        value,
-        hash,
-        signature
+      setInputs(prevState => [...prevState, {
+        name: currentValue[1],
+        status: profileStatus,
+        value: currentValue[0],
+        hash: profileClaimHash?.hash,
+        signature: profileClaimHash?.signature
       }]);
     } else {
       setInputs(prevState => prevState.map(item => {
-        if (item.name === name) {
+        if (item.name === currentValue[1]) {
           return {
             ...item,
-            value,
-            status,
-            hash,
-            signature
+            status: profileStatus,
+            value: currentValue[0],
+            hash: profileClaimHash?.hash,
+            signature: profileClaimHash?.signature
           };
         }
         return item;
       }));
     }
-  };
+  }, [currentValue, profileClaimHash, profileStatus, index]);
 
-  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
-  const { claimable } = useClaimableProfileCount(currentAddress);
+  useEffect(() => {
+    setProfileStatus(profileTokenId ? nft?.listings?.totalItems > 0 ? 'Listed' : 'Owned' : 'Available');
+  }, [profileTokenId, currentValue, nft]);
 
   useEffect(() => {
     if(mintedProfiles?.profilesMintedWithGK.length === 4){
@@ -124,14 +121,17 @@ export default function MintProfileInputCard({ setMintModalOpen, minting, setMin
       setClaimableIndex(0);
     }
   }, [claimable, claimableIndex, getGKOptions]);
+
+  const closeModal = () => {
+    setMintModalOpen(false);
+    setMinting(false);
+  };
   
   return (
     <div className='relative mt-28 minlg:mt-12 z-50 px-5'>
       <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
         <h2 className='text-[32px] w-5/6'>Claim your free NFT Profile</h2>
-        {freeMintAvailable ? <p className='mt-6 text-xl w-5/6'>Every wallet receives one <span className='text-secondary-yellow'>free mint!</span></p> : null}
-        {!freeMintAvailable && isNullOrEmpty(claimable) ? <p className='mt-6 text-xl w-5/6'>You have already received one free mint</p> : null}
-        {!freeMintAvailable && !isNullOrEmpty(claimable) ? <p className='mt-6 text-xl w-5/6'>Genesis Key holders receive <span className='text-secondary-yellow'>four free mints!</span></p> : null}
+        <p className='mt-6 text-xl w-5/6'>Genesis Key holders receive <span className='text-secondary-yellow'>four free mints!</span></p>
 
         <div className='mt-9'>
           {mintedProfiles && mintedProfiles?.profilesMintedWithGK.map((profile) =>
@@ -156,13 +156,14 @@ export default function MintProfileInputCard({ setMintModalOpen, minting, setMin
             <MintProfileInputField
               key={i}
               minting={minting}
-              setCurrentURI={handleChange}
+              setGKProfile={setCurrentValue}
               name={`input${i}`}
+              type='GK'
             />
           )
         }
         
-        {!freeMintAvailable && !isNullOrEmpty(claimable) && gkOptions &&
+        {!isNullOrEmpty(claimable) && gkOptions &&
           <div className='flex justify-between items-center'>
             <div>
               <DropdownPicker
@@ -173,73 +174,51 @@ export default function MintProfileInputCard({ setMintModalOpen, minting, setMin
                 )}
               />
             </div>
-
             {inputCount <= 4 && selectedGK?.claimable > 0 && selectedGK?.claimable - inputCount !== 0 ? <p className='hover:cursor-pointer' onClick={() => setInputCount(inputCount + 1)}>Add NFT Profile</p> : null}
-          
           </div>
         }
             
         <div className='mt-12 minlg:mt-[59px]'>
-          {!freeMintAvailable && isNullOrEmpty(claimable) &&
-              <p className="text-[#5B5B5B] text-center mb-3">
-                Transaction fee {' '}<span className='text-black font-medium text-lg inline-flex items-center'> 0.1000<ETHIcon className='inline ml-1' stroke="black" /></span>
-              </p>
-          }
           {
-            !freeMintAvailable && !isNullOrEmpty(claimable) &&
+            !isNullOrEmpty(claimable) &&
             <p className="text-[#5B5B5B] text-center mb-3 font-normal">
               {selectedGK?.claimable < 3 ? `Minted ${4 - selectedGK?.claimable} ` : `Minting ${inputCount} `}
               out of 4 free NFT Profiles
             </p>
           }
-          {hasListings && !freeMintAvailable ?
-            <Link href={'/app/nft/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D'}>
-              <button
-                type="button"
-                className={tw(
-                  'inline-flex w-full justify-center',
-                  'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                  'px-4 py-4 text-lg font-medium text-black',
-                  'focus:outline-none focus-visible:bg-[#E4BA18]',
-                  'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                )}
-              >
-                  View NFT.com listing
-              </button>
-            </Link>
-            :
-            <button
-              type="button"
-              className={tw(
-                'inline-flex w-full justify-center',
-                'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                'px-4 py-4 text-lg font-medium text-black',
-                'focus:outline-none focus-visible:bg-[#E4BA18]',
-                'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-              )}
-              disabled={inputs.some(item => item.status === 'Owned') || isNullOrEmpty(inputs) || inputs.some(item => item.value === '') }
-              onClick={async () => {
-                if (
-                  minting
-                ) {
-                  return;
-                }
-                if (nextTokenIdWithClaimable == null && !freeMintAvailable) {
-                  return;
-                }
-                setMinting(true);
-                setMintModalOpen(true);
-              }}
-            >
-              {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
-            </button>
-          }
+         
+          <button
+            type="button"
+            className={tw(
+              'inline-flex w-full justify-center',
+              'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
+              'px-4 py-4 text-lg font-medium text-black',
+              'focus:outline-none focus-visible:bg-[#E4BA18]',
+              'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
+            )}
+            disabled={inputs.some(item => item.status === 'Owned') || isNullOrEmpty(inputs) || inputs.some(item => item.value === '') }
+            onClick={async () => {
+              if (
+                minting
+              ) {
+                return;
+              }
+              if (nextTokenIdWithClaimable == null) {
+                return;
+              }
+              setMinting(true);
+              setMintModalOpen(true);
+            }}
+          >
+            {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
+          </button>
               
         </div>
         <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
             Already have an account? <span className='text-black block minlg:inline font-medium'>Sign in</span>
         </p>
       </div>
+      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={inputs} gkTokenId={selectedGK?.tokenId} type='Paid' />
     </div>
   );
 }

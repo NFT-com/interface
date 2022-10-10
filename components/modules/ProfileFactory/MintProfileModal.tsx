@@ -28,10 +28,11 @@ type MintProfileModalProps = {
   setIsOpen: (input:boolean) => void;
   profilesToMint: Inputs[];
   transactionCost?: number;
-  gkTokenId?: number
+  gkTokenId?: number;
+  type: 'GK' | 'Free' | 'Paid'
 };
 
-export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, profilesToMint, gkTokenId }: MintProfileModalProps) {
+export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, profilesToMint, gkTokenId, type }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
   const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
   const router = useRouter();

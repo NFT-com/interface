@@ -6,7 +6,7 @@ import { rgba } from 'polished';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 export interface BidStatusIconProps {
-  status: ProfileStatus;
+  status: ProfileStatus | 'Listed';
   isOwner: boolean;
   whiteBackgroundOverride?: boolean;
 }

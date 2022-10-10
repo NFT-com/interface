@@ -1,8 +1,11 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import MintProfileInputCard from 'components/modules/ProfileFactory/MintProfileInputCard';
-import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
+import MintFreeProfileCard from 'components/modules/ProfileFactory/MintFreeProfileCard';
+import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
+import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
+import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -14,17 +17,16 @@ import ProfileClickIcon from 'public/profile-click-icon.svg';
 import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
 import { useState } from 'react';
+import { useAccount } from 'wagmi';
 
 export default function MintProfilesPage() {
-  const [profilesToMint, setProfilesToMint] = useState([]);
-  const [minting, setMinting] = useState(false);
-  const [mintModalOpen, setMintModalOpen] = useState(false);
+  const { address: currentAddress } = useAccount();
+  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
+  const { claimable } = useClaimableProfileCount(currentAddress);
+  // const [profilesToMint, setProfilesToMint] = useState([]);
+  // const [minting, setMinting] = useState(false);
+ 
   const [selectedGK, setSelectedGK] = useState(null);
-
-  const closeModal = () => {
-    setMintModalOpen(false);
-    setMinting(false);
-  };
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
     return <NotFoundPage />;
@@ -53,17 +55,16 @@ export default function MintProfilesPage() {
           <NFTLogoSmall className='mx-auto block minmd:hidden' />
         </div>
 
-        {/* Input Card Component */}
-        <MintProfileInputCard
-          inputs={profilesToMint}
-          setInputs={setProfilesToMint}
-          setProfilesToMint={setProfilesToMint}
-          setMintModalOpen={setMintModalOpen}
-          minting={minting}
-          setMinting={setMinting}
-          selectedGK={selectedGK}
-          setSelectedGK={setSelectedGK}
-        />
+        {/* Mint Card Component */}
+        {isNullOrEmpty(claimable) ?
+          <MintFreeProfileCard
+            type={freeMintAvailable ? 'Free' : 'Paid'}
+          />
+          : <MintGKProfileCard
+            selectedGK={selectedGK}
+            setSelectedGK={setSelectedGK}
+          />
+        }
         <span className='absolute w-full h-[460px] left-0 bottom-0 bg-img-shadow'></span>
       </div>
       
@@ -85,7 +86,6 @@ export default function MintProfilesPage() {
           <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the build in marketplace aggregator.</p>
         </div>
       </div>
-      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={profilesToMint} gkTokenId={selectedGK?.tokenId} />
     </div>
   );
 }
