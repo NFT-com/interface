@@ -117,6 +117,7 @@ export function MintedProfile(props: MintedProfileProps) {
     <ProfileScrollContextProvider>
       <div className='w-full'>
         <BannerWrapper
+          draft={!isNullOrEmpty(draftHeaderImg?.preview)}
           imageOverride={
             editMode ?
               (isNullOrEmpty(draftHeaderImg?.preview) ?
