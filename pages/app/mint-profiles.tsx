@@ -1,6 +1,7 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintFreeProfileCard from 'components/modules/ProfileFactory/MintFreeProfileCard';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
+import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import NotFoundPage from 'pages/404';
@@ -10,25 +11,44 @@ import { tw } from 'utils/tw';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { ArrowCircleLeft } from 'phosphor-react';
 import NFTLogo from 'public/nft_logo.svg';
 import NFTLogoSmall from 'public/nft_logo_small.svg';
 import ProfileClickIcon from 'public/profile-click-icon.svg';
 import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-
 export default function MintProfilesPage() {
+  const router = useRouter();
   const { address: currentAddress } = useAccount();
-  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
-  const { claimable } = useClaimableProfileCount(currentAddress);
- 
+  const { freeMintAvailable, loading: loadingFreeMint } = useFreeMintAvailable(currentAddress);
+  const { claimable, loading: loadingClaimable } = useClaimableProfileCount(currentAddress);
   const [selectedGK, setSelectedGK] = useState(null);
+
+  useEffect(() => {
+    if(!currentAddress) {
+      router.push('/');
+    }
+  }, [currentAddress, router]);
+
+  const getMintProfileCard = useCallback(() => {
+    if(!loadingClaimable && !isNullOrEmpty(claimable) && !freeMintAvailable && !loadingFreeMint) {
+      return <MintGKProfileCard selectedGK={selectedGK} setSelectedGK={setSelectedGK} />;
+    }
+
+    if(!loadingFreeMint && freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
+      return <MintFreeProfileCard type={freeMintAvailable ? 'Free' : 'Paid'} />;
+    }
+
+    return <MintProfileCardSkeleton />;
+  }, [claimable, freeMintAvailable, loadingClaimable, loadingFreeMint, selectedGK]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
     return <NotFoundPage />;
   }
+  
   return (
     <div
       className={tw(
@@ -64,15 +84,8 @@ export default function MintProfilesPage() {
         </div>
 
         {/* Mint Card Component */}
-        {isNullOrEmpty(claimable) ?
-          <MintFreeProfileCard
-            type={freeMintAvailable ? 'Free' : 'Paid'}
-          />
-          : <MintGKProfileCard
-            selectedGK={selectedGK}
-            setSelectedGK={setSelectedGK}
-          />
-        }
+        {getMintProfileCard()}
+        
         <span className='absolute w-full h-[460px] left-0 bottom-0 bg-img-shadow'></span>
       </div>
       
