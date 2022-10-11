@@ -26,7 +26,7 @@ type MintProfileInputFieldProps = {
 };
 
 export default function MintProfileInputField({ minting, setGKProfile, name, setFreeProfile, type }: MintProfileInputFieldProps) {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(null);
   const { profileTokens } = useMyNftProfileTokens();
   const defaultChainId = useDefaultChainId();
   const { blocked: currentURIBlocked } = useProfileBlocked(inputValue, true);
