@@ -30,36 +30,76 @@ type MintGKProfileCardProps = {
 };
 
 export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKProfileCardProps) {
-  const defaultChainId = useDefaultChainId();
-  const { address: currentAddress } = useAccount();
-  const [claimableIndex, setClaimableIndex] = useState(0);
+  const [currentValue, setCurrentValue] = useState(null);
+  const [minting, setMinting] = useState(false);
   const [profileStatus, setProfileStatus] = useState('');
   const [mintModalOpen, setMintModalOpen] = useState(false);
-  const [minting, setMinting] = useState(false);
-  const [currentValue, setCurrentValue] = useState(null);
-  const [inputs, setInputs] = useState([]);
+
+  const defaultChainId = useDefaultChainId();
+  const { address: currentAddress } = useAccount();
   const { claimable } = useClaimableProfileCount(currentAddress);
-  const [nextTokenIdWithClaimable, setNextTokenIdWithClaimable] = useState(null);
-  const [gkOptions, setGKOptions] = useState(null);
-  const [inputCount, setInputCount] = useState(0);
   const { data: mintedProfiles } = useProfilesMintedWithGKQuery(selectedGK?.tokenId.toString());
   const { profileClaimHash } = useGetProfileClaimHash(currentValue && currentValue[0]);
   const { profileTokenId } = useProfileTokenQuery(currentValue && currentValue[0]);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
-  const index = inputs.findIndex(x => x.name === currentValue[1]);
+  const [inputs, setInputs] = useState(
+    [
+      {
+        name: 'input0',
+        isVisible: true,
+        status: null,
+        profileURI: null,
+        hash: null,
+        signature: null
+      },
+      {
+        name: 'input1',
+        isVisible: false,
+        status: null,
+        profileURI: null,
+        hash: null,
+        signature: null
+      },
+      {
+        name: 'input2',
+        isVisible: false,
+        status: null,
+        profileURI: null,
+        hash: null,
+        signature: null
+      },
+      {
+        name: 'input3',
+        isVisible: false,
+        status: null,
+        profileURI: null,
+        hash: null,
+        signature: null
+      }
+    ]);
+  const index = currentValue && inputs.findIndex(x => x.name === currentValue[1]);
+  const filteredInputs = inputs.filter(input => !Object.values(input).includes(null));
+  const inputCount = inputs.filter(input => {return input.isVisible;})?.length;
 
   useEffect(() => {
     if(isNullOrEmpty(currentValue)){
       return;
     }
-    if(index === -1) {
-      setInputs(prevState => [...prevState, {
-        name: currentValue[1],
-        status: profileStatus,
-        profileURI: currentValue[0],
-        hash: profileClaimHash?.hash,
-        signature: profileClaimHash?.signature
-      }]);
+    if(currentValue[0] === '') {
+      setInputs(prevState => prevState.map(item => {
+        if (item.name === currentValue[1]) {
+          return {
+            ...item,
+            isVisible: inputCount > 1 ? false : true,
+            profileURI: null,
+            hash: null,
+            signature: null,
+            status: null
+          };
+        }
+        return item;
+      }));
+      setCurrentValue([]);
     } else {
       setInputs(prevState => prevState.map(item => {
         if (item.name === currentValue[1]) {
@@ -74,20 +114,24 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
         return item;
       }));
     }
-  }, [currentValue, profileClaimHash, profileStatus, index]);
+  }, [currentValue, profileClaimHash, profileStatus, index, inputCount]);
 
   useEffect(() => {
     setProfileStatus(profileTokenId ? nft?.listings?.totalItems > 0 ? 'Listed' : 'Owned' : 'Available');
   }, [profileTokenId, currentValue, nft]);
 
-  useEffect(() => {
-    if(mintedProfiles?.profilesMintedWithGK.length === 4){
-      setInputCount(0);
-    } else {
-      setInputCount(1);
-    }
-    setInputs([]);
-  }, [selectedGK, mintedProfiles, setInputs]);
+  const setInputVisible = useCallback(() => {
+    const found = inputs.find(element => !element.isVisible);
+    setInputs(prevState => prevState.map(item => {
+      if (item.name === found.name) {
+        return {
+          ...item,
+          isVisible: true
+        };
+      }
+      return item;
+    }));
+  }, [inputs]);
 
   const getGKOptions = useCallback(() => {
     const gks = [];
@@ -97,7 +141,7 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
         onSelect: () => null,
       });
     });
-    setGKOptions(gks);
+    return gks;
   }, [claimable]);
 
   const setActiveGK = useCallback((tokenId) => {
@@ -107,21 +151,6 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
     });
     setSelectedGK(gk);
   }, [claimable, setSelectedGK]);
-
-  useEffect(() => {
-    const allClaimableIds = (claimable ?? [])
-      .filter(maybeClaimable => maybeClaimable?.claimable > 0)
-      .map(maybeClaimable => maybeClaimable.tokenId)
-      .sort();
-    const nextClaimableToken = claimableIndex < allClaimableIds?.length ?
-      allClaimableIds[claimableIndex] :
-      allClaimableIds[0];
-    setNextTokenIdWithClaimable(nextClaimableToken);
-    getGKOptions();
-    if (claimableIndex >= allClaimableIds?.length) {
-      setClaimableIndex(0);
-    }
-  }, [claimable, claimableIndex, getGKOptions]);
 
   const closeModal = () => {
     setMintModalOpen(false);
@@ -151,31 +180,33 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
             </div>
           )}
           {
-            [...Array(inputCount)].map((_,i) =>
-              <MintProfileInputField
-                key={i}
-                minting={minting}
-                setGKProfile={setCurrentValue}
-                name={`input${i}`}
-                type='GK'
-              />
-            )
+            inputs.map((input, i) => {
+              if (input.isVisible && mintedProfiles && mintedProfiles?.profilesMintedWithGK.length < 4){
+                return <MintProfileInputField
+                  key={i}
+                  minting={minting}
+                  setGKProfile={setCurrentValue}
+                  name={input.name}
+                  type='GK'
+                />;
+              }
+            })
           }
         </div>
         
-        {!isNullOrEmpty(claimable) && gkOptions &&
+        {!isNullOrEmpty(claimable) &&
           <div className='flex justify-between items-center'>
             <div>
               <DropdownPicker
                 onChange={setActiveGK}
                 selectedIndex={0}
                 options={filterNulls(
-                  gkOptions
+                  getGKOptions()
                 )}
                 showKeyIcon
               />
             </div>
-            {inputCount <= 4 && selectedGK?.claimable > 0 && selectedGK?.claimable - inputCount !== 0 ? <p className='hover:cursor-pointer' onClick={() => setInputCount(inputCount + 1)}>Add NFT Profile</p> : null}
+            {inputCount <= 4 && selectedGK?.claimable > 0 && selectedGK?.claimable - inputCount !== 0 ? <p className='hover:cursor-pointer' onClick={() => setInputVisible()}>Add NFT Profile</p> : null}
           </div>
         }
             
@@ -197,14 +228,16 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
               'focus:outline-none focus-visible:bg-[#E4BA18]',
               'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
             )}
-            disabled={inputs.some(item => item.status === 'Owned') || isNullOrEmpty(inputs) || inputs.some(item => item.profileURI === '') }
+            disabled={
+              inputs.some(item => item.status === 'Owned') ||
+              inputs.some(item => item.isVisible === true && item.profileURI === null) ||
+              isNullOrEmpty(inputs) ||
+              inputs.some(item => item.profileURI === '')
+            }
             onClick={async () => {
               if (
                 minting
               ) {
-                return;
-              }
-              if (nextTokenIdWithClaimable == null) {
                 return;
               }
               setMinting(true);
@@ -223,7 +256,7 @@ export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKP
           </a>
         </Link>
       </div>
-      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={inputs} gkTokenId={selectedGK?.tokenId} type='GK' />
+      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={filteredInputs} gkTokenId={selectedGK?.tokenId} type='GK' />
     </div>
   );
 }
