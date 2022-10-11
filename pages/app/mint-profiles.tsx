@@ -39,7 +39,11 @@ export default function MintProfilesPage() {
     }
 
     if(!loadingFreeMint && freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
-      return <MintFreeProfileCard type={freeMintAvailable ? 'Free' : 'Paid'} />;
+      return <MintFreeProfileCard type='Free'/>;
+    }
+
+    if(!loadingFreeMint && !freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
+      return <MintFreeProfileCard type='Paid' />;
     }
 
     return <MintProfileCardSkeleton />;
