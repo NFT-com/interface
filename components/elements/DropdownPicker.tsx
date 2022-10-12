@@ -140,7 +140,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
           style={{
             maxWidth: wrapperRef.current.clientWidth,
             marginTop: props.above ?
-              (props.options.length - 1) * -1 * activeRowRef.current.clientHeight - 12 :
+              (props.options?.length - 1) * -1 * activeRowRef.current.clientHeight - 12 :
               activeRowRef.current.clientHeight + 12
           }}
           className={tw(

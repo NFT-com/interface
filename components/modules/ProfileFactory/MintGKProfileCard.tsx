@@ -51,7 +51,7 @@ export default function MintGKProfileCard() {
   const [inputs, setInputs] = useState(resetInputs());
   const index = currentValue && inputs.findIndex(x => x.name === currentValue[1]);
   const filteredInputs = inputs.filter(input => !Object.values(input).includes(null));
-  const inputCount = inputs.filter(input => {return input.isVisible;})?.length;
+  const inputCount = inputs.filter(input => {return input.isVisible;})?.length || 0;
 
   useEffect(() => {
     if(isNullOrEmpty(currentValue)){

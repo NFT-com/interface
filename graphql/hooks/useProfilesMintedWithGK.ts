@@ -30,7 +30,6 @@ export function useProfilesMintedWithGKQuery(tokenId: string, chainId?: string):
       setLoading(false);
       return result;
     } catch (error) {
-      console.log(error);
       setLoading(false);
       console.log('Failed to load profiles minted with GK.');
     }

@@ -73,7 +73,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
         )
         :
         (
-          listings.length === 2
+          listings?.length === 2
             ? <p className='font-normal flex items-center justify-center mb-3'>
                   This profile is available on
               <span className='font-medium inline-flex items-center mx-1'>

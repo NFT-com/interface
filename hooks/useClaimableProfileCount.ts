@@ -30,7 +30,7 @@ export function useClaimableProfileCount(address: string): ClaimableProfileCount
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(address);
 
-  const keyString = 'ClaimableProfileCount ' + address + ownedGKTokens?.length;
+  const keyString = 'ClaimableProfileCount ' + address + JSON.stringify(ownedGKTokens);
 
   const { data } = useSWR(keyString,
     async () => {
