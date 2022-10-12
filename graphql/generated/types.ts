@@ -3015,6 +3015,7 @@ export type ProfilesByDisplayedNftQuery = { __typename?: 'Query', profilesByDisp
 
 export type ProfilesMintedWithGkQueryVariables = Exact<{
   tokenId: Scalars['String'];
+  chainId?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -4733,8 +4734,8 @@ export const ProfilesByDisplayedNftDocument = gql`
 }
     `;
 export const ProfilesMintedWithGkDocument = gql`
-    query ProfilesMintedWithGK($tokenId: String!) {
-  profilesMintedWithGK(tokenId: $tokenId) {
+    query ProfilesMintedWithGK($tokenId: String!, $chainId: String) {
+  profilesMintedWithGK(tokenId: $tokenId, chainId: $chainId) {
     url
     photoURL
   }

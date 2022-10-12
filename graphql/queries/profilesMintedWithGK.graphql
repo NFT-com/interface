@@ -1,5 +1,5 @@
-query ProfilesMintedWithGK($tokenId: String!) {
-  profilesMintedWithGK(tokenId: $tokenId) {
+query ProfilesMintedWithGK($tokenId: String!, $chainId: String) {
+  profilesMintedWithGK(tokenId: $tokenId, chainId: $chainId) {
     url
     photoURL
   }
