@@ -252,12 +252,5 @@ export const collectionCardImages = (collection: any) => {
 };
 
 export const getImageFetcherBaseURL = () => {
-  switch(getEnv(Doppler.NEXT_PUBLIC_ENV)) {
-  case 'PRODUCTION':
-    return getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
-  case 'STAGING':
-    return 'https://www.nft.com/'; // for similar image experience as prod
-  default:
-    return 'https://sandbox-nvf2t.netlify.app/';
-  }
+  return 'https://www.nft.com/';
 };
