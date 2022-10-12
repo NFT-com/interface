@@ -76,6 +76,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   }, [props?.src, ext, url]);
 
   const imageUrl = imageSrc || props?.src;
+  const rawImageBool = imageUrl?.indexOf('.svg') >= 0 || imageUrl?.indexOf('ens.domains') >= 0;
 
   return (
     <div className={tw(
@@ -106,7 +107,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           key={props.src}
           quality='50'
           layout='fill'
-          src={imageUrl?.indexOf('.svg') >= 0 ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
+          src={rawImageBool ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
           onError={() => {
             setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
           }}
