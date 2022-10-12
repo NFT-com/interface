@@ -12,12 +12,14 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ShoppingCartSimple } from 'phosphor-react';
 import NavLogo from 'public/Logo.svg';
 import LightNavLogo from 'public/LogoLight.svg';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotificationBadge>>(() => import('components/modules/Notifications/NotificationBadge').then(mod => mod.NotificationBadge));
@@ -25,6 +27,8 @@ const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotif
 type HeaderProps = {
   removeBg?: boolean
 }
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const Header = ({ removeBg }: HeaderProps) => {
   const { setSearchModalOpen, setModalType } = useSearchModal();
@@ -37,18 +41,56 @@ export const Header = ({ removeBg }: HeaderProps) => {
   useMaybeCreateUser();
 
   const useDarkMode = user?.isDarkMode;
+
+  useEffect(() => {
+    const headerAnim = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.hero-parent',
+        start: '1px top',
+        end: '+=50%',
+        toggleActions: 'play none none none',
+      }
+    })
+      .to('#header-right', {
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        ease: 'power2.out'
+      }, 0)
+      .to('#header-left', {
+        width: 'auto',
+        duration: 1.25,
+        ease: 'power2.out'
+      }, 0)
+      .to('#header-shadow', {
+        opacity: 1,
+        scaleY: 1,
+        duration: 1.5,
+        ease: 'power2.out'
+      }, 0)
+      .to('#header', {
+        scaleX: 1,
+        duration: 1.5,
+        ease: 'power2.out'
+      }, 0);
+
+    return () => {
+      headerAnim.kill();
+    };
+  });
+
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <nav className={tw(
+      <nav id='header' className={tw(
+        'scale-[1.05]',
         'fixed inset-x-5 minlg:inset-x-8 minxl:inset-x-14 top-6 minlg:top-7',
-        'h-[5.5rem] rounded-full z-[104] shadow-md',
-        removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
+        'h-[5.5rem] z-[104]',
       )}>
         <div className="w-full h-full mx-auto px-11">
           <div className="flex items-center justify-between h-full">
-            <div className="flex items-center h-full minlg:w-[60%]">
+            <div id='header-left' className="flex items-center h-full minlg:w-[60%]">
               <div className="flex items-center">
-                <div className="flex-shrink-0 flex items-center hover:cursor-pointer mr-7">
+                <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-14">
                   <Link href='/' passHref>
                     <div className='w-10 h-10'>
                       {useDarkMode ? <LightNavLogo className='justify-start' /> : <NavLogo className='justify-start' />}
@@ -77,7 +119,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
                   'h-max flex-shrink-0',
                   'font-grotesk text-[#6F6F6F] font-medium tracking-wide',
                   'flex items-center',
-                  'pr-4 py-[2px] mr-8'
+                  'pr-4 py-[2px] mr-8 ml-auto'
                 )}
               >
                 <Link href='/app/discover'>
@@ -92,7 +134,10 @@ export const Header = ({ removeBg }: HeaderProps) => {
               </div>
             </div>
 
-            <div className='flex items-center ...'>
+            <div id='header-right' className={tw(
+              'opacity-0 scale-50',
+              'flex items-center ...'
+            )}>
               <div className="hidden minlg:block mr-2">
                 <SearchBar />
               </div>
@@ -130,6 +175,11 @@ export const Header = ({ removeBg }: HeaderProps) => {
             </div>
           </div>
         </div>
+        <span id='header-shadow' className={tw(
+          'opacity-0 scale-y-[.3]',
+          'rounded-full shadow-md absolute left-0 top-0 right-0 bottom-0 -z-10',
+          removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
+        )}></span>
       </nav>
     );
   } else {
