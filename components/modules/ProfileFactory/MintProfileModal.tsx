@@ -174,8 +174,8 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                 </div>
 
                 <div className="mt-5 pb-6 border-b">
-                  {profilesToMint && profilesToMint.map((profile) => (
-                    <div className='flex justify-between mb-5' key={profile.profileURI}>
+                  {profilesToMint && profilesToMint.map((profile, index) => (
+                    <div className='flex justify-between mb-5' key={profile.profileURI + index}>
                       <div>
                         <p className="text-lg font-medium">
                               nft.com/{profile.profileURI}

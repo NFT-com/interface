@@ -18,14 +18,13 @@ import NFTLogoSmall from 'public/nft_logo_small.svg';
 import ProfileClickIcon from 'public/profile-click-icon.svg';
 import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 export default function MintProfilesPage() {
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { freeMintAvailable, loading: loadingFreeMint } = useFreeMintAvailable(currentAddress);
   const { claimable, loading: loadingClaimable } = useClaimableProfileCount(currentAddress);
-  const [selectedGK, setSelectedGK] = useState(null);
 
   useEffect(() => {
     if(!currentAddress) {
@@ -35,7 +34,7 @@ export default function MintProfilesPage() {
 
   const getMintProfileCard = useCallback(() => {
     if(!loadingClaimable && !isNullOrEmpty(claimable) && !freeMintAvailable && !loadingFreeMint) {
-      return <MintGKProfileCard selectedGK={selectedGK} setSelectedGK={setSelectedGK} />;
+      return <MintGKProfileCard />;
     }
 
     if(!loadingFreeMint && freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
@@ -47,7 +46,7 @@ export default function MintProfilesPage() {
     }
 
     return <MintProfileCardSkeleton />;
-  }, [claimable, freeMintAvailable, loadingClaimable, loadingFreeMint, selectedGK]);
+  }, [claimable, freeMintAvailable, loadingClaimable, loadingFreeMint]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
     return <NotFoundPage />;
@@ -71,7 +70,9 @@ export default function MintProfilesPage() {
         
         <div className='w-full max-w-nftcom mx-auto relative mt-10 minmd:mt-4'>
           <Link href='/'>
-            <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
+            <a>
+              <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
+            </a>
           </Link>
           <div className='absolute top-2 left-6 minlg:right-1 hover:cursor-pointer w-7 h-7 bg-black rounded-full'></div>
           <Link href='/'>
@@ -79,7 +80,9 @@ export default function MintProfilesPage() {
           </Link>
 
           <Link href='/'>
-            <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
+            <a>
+              <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
+            </a>
           </Link>
           <div className=' justify-end mt-10 mr-5 flex minmd:hidden'>
             <ConnectButton />

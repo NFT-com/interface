@@ -19,26 +19,17 @@ import { useCallback, useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
 import { useAccount } from 'wagmi';
 
-type selectedGK = {
-  tokenId: number;
-  claimable: number
-}
-
-type MintGKProfileCardProps = {
-  selectedGK: selectedGK;
-  setSelectedGK: (selected: selectedGK) => void;
-};
-
-export default function MintGKProfileCard({ selectedGK, setSelectedGK }: MintGKProfileCardProps) {
+export default function MintGKProfileCard() {
   const [currentValue, setCurrentValue] = useState(null);
   const [minting, setMinting] = useState(false);
   const [profileStatus, setProfileStatus] = useState('');
   const [mintModalOpen, setMintModalOpen] = useState(false);
+  const [selectedGK, setSelectedGK] = useState(null);
 
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const { claimable } = useClaimableProfileCount(currentAddress);
-  const { data: mintedProfiles } = useProfilesMintedWithGKQuery(selectedGK?.tokenId.toString());
+  const { data: mintedProfiles } = useProfilesMintedWithGKQuery(selectedGK?.tokenId.toString(), defaultChainId);
   const { profileClaimHash } = useGetProfileClaimHash(currentValue && currentValue[0]);
   const { profileTokenId } = useProfileTokenQuery(currentValue && currentValue[0]);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
