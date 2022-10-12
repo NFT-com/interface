@@ -48,6 +48,7 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftProfileImg,
     userIsAdmin,
     publiclyVisibleNftCount,
+    loading,
     draftDeployedContractsVisible
   } = useContext(ProfileContext);
 
@@ -112,6 +113,8 @@ export function MintedProfile(props: MintedProfileProps) {
       <Collection contract={associatedContract?.chainAddr} />
     </div>;
   }
+
+  console.log(publiclyVisibleNftCount, loading);
 
   return (
     <ProfileScrollContextProvider>
@@ -287,47 +290,50 @@ export function MintedProfile(props: MintedProfileProps) {
                 profileURI={profileURI}
                 ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
               /> :
-              <>
-                <div className={tw(
-                  'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
-                  addressOwner !== currentAddress ? 'cursor-pointer ' : ''
-                )}
-                >
-                  <div className="mx-auto text-base minlg:text-lg minxl:text-xl w-3/5 text-center minlg:text-left font-bold">
-                    <div
-                      onClick={() => {
-                        if (addressOwner !== currentAddress) {
-                          window.open(
-                            getEtherscanLink(chain?.id, addressOwner, 'address'),
-                            '_blank'
-                          );
-                        }
-                      }}
-                      className="text-sm minxl:text-lg text-center font-bold"
-                    >
-                      {addressOwner === currentAddress ? 'You own this profile.' :'This profile is owned by ' + shortenAddress(addressOwner)}
+              loading
+                ? <div className="min-h-[10rem] w-full items-center flex justify-center"><Loader /></div>
+                :
+                <>
+                  <div className={tw(
+                    'text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col mt-4',
+                    addressOwner !== currentAddress ? 'cursor-pointer ' : ''
+                  )}
+                  >
+                    <div className="mx-auto text-base minlg:text-lg minxl:text-xl w-3/5 text-center minlg:text-left font-bold">
+                      <div
+                        onClick={() => {
+                          if (addressOwner !== currentAddress) {
+                            window.open(
+                              getEtherscanLink(chain?.id, addressOwner, 'address'),
+                              '_blank'
+                            );
+                          }
+                        }}
+                        className="text-sm minxl:text-lg text-center font-bold"
+                      >
+                        {addressOwner === currentAddress ? 'You own this profile.' :'This profile is owned by ' + shortenAddress(addressOwner)}
+                      </div>
                     </div>
-                  </div>
-                  <div className="mx-auto text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col">
-                    <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
-                      {addressOwner === currentAddress ?
-                        <p className='mx-8'>
+                    <div className="mx-auto text-primary-txt dark:text-primary-txt-dk w-full flex justify-center flex-col">
+                      <div className="text-sm minxl:text-lg mb-8 minlg:mb-0 mt-8 w-full text-center">
+                        {addressOwner === currentAddress ?
+                          <p className='mx-8'>
                         As we roll out new features, you can return here for the latest NFT.com news, discover{' '}
                         other minted Genesis Keys and profiles in our community, and more.{' '}
                         We have so much in store!
-                        </p>
-                        :
-                        <p className='mx-8'>
+                          </p>
+                          :
+                          <p className='mx-8'>
                         Do you want your own NFT.com Profile?<br />
                         Learn how to claim a profile for your own by visiting either NFT.com or our Support knowledge base.
-                        </p>}
-                    </div>
-                    <div className="mt-10 minxl:mt-24 w-full flex justify-center mb-24 px-4 minmd:px-0">
-                      <LinksToSection isAddressOwner={addressOwner === currentAddress}/>
+                          </p>}
+                      </div>
+                      <div className="mt-10 minxl:mt-24 w-full flex justify-center mb-24 px-4 minmd:px-0">
+                        <LinksToSection isAddressOwner={addressOwner === currentAddress}/>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
+                </>
           }
         </div>
         <div

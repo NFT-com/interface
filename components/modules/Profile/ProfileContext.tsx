@@ -60,6 +60,7 @@ export interface ProfileContextType {
   setSelectedCollection: (collectionAddress: string) => void;
   draftNftsDescriptionsVisible: Maybe<boolean>;
   setDraftNftsDescriptionsVisible: (val: boolean) => void;
+  loading: boolean;
 }
 
 // initialize with default values
@@ -98,6 +99,7 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   setSelectedCollection: () => null,
   draftNftsDescriptionsVisible: true,
   setDraftNftsDescriptionsVisible: () => null,
+  loading: false,
 });
 
 export interface ProfileContextProviderProps {
@@ -117,11 +119,12 @@ export function ProfileContextProvider(
    */
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
-  const [loadedCount, setLoadedCount] = useState(1000);
+  const [loadedCount, setLoadedCount] = useState(8);
   const {
     nfts: publicProfileNfts,
     totalItems: publicProfileNftsCount,
     mutate: mutatePublicProfileNfts,
+    loading
   } = useProfileNFTsQuery(
     profileData?.profile?.id,
     String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
@@ -358,7 +361,7 @@ export function ProfileContextProvider(
     publiclyVisibleNfts: publiclyVisibleNfts ?? [],
     publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
     loadMoreNfts: () => {
-      setLoadedCount(loadedCount + 100);
+      setLoadedCount(loadedCount + 8);
     },
     setAllItemsOrder,
     userIsAdmin: ownedProfileTokens
@@ -414,6 +417,7 @@ export function ProfileContextProvider(
     clearDrafts,
     selectedCollection,
     setSelectedCollection,
+    loading,
   }}>
     {props.children}
   </ProfileContext.Provider>;
