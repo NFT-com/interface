@@ -26,6 +26,7 @@ import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { NextSeo } from 'next-seo';
 import Vector from 'public/Vector.svg';
 import { useEffect, useRef, useState } from 'react';
 
@@ -173,6 +174,19 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
       <>
+        <NextSeo
+          title='NFT.com | The Social NFT Marketplace'
+          description='Join NFT.com to display, trade, and engage with your NFTs.'
+          openGraph={{
+            url: 'https://www.nft.com',
+            title: 'NFT.com | The Social NFT Marketplace',
+            description: 'Join NFT.com to display, trade, and engage with your NFTs.',
+            site_name: 'NFT.com',
+          }}
+          twitter={{
+            cardType: 'summary_large_image',
+          }}
+        />
         <main className='font-grotesk not-italic HomePageContainer'>
           {/* Block: Intro */}
           <div className='bg-white hero-parent' ref={el}>
@@ -654,6 +668,19 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
   } else {
     return (
       <>
+        <NextSeo
+          title='NFT.com | The Social NFT Marketplace'
+          description='Join NFT.com to display, trade, and engage with your NFTs.'
+          openGraph={{
+            url: 'https://www.nft.com',
+            title: 'NFT.com | The Social NFT Marketplace',
+            description: 'Join NFT.com to display, trade, and engage with your NFTs.',
+            site_name: 'NFT.com',
+          }}
+          twitter={{
+            cardType: 'summary_large_image',
+          }}
+        />
         <main className='flex flex-col mt-20 font-grotesk not-italic HomePageContainer'>
           <Link href='/app/auctions' passHref>
             <a>
@@ -668,11 +695,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <div className={tw('flex flex-row minmd:flex-nowrap flex-wrap items-center justify-between p-6 space-x-0 minmd:space-x-10 max-w-screen minxl:px-0 px-5 w-full minlg:max-w-[1100px] mx-auto h-full',
             'break-after-all ',
           )}
-            style={{
-              backgroundImage: 'url(\'/home-banner-bg.png\')',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-            }}>
+          style={{
+            backgroundImage: 'url(\'/home-banner-bg.png\')',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}>
             <div className='break-after-all space-y-2 w-full ...'>
               <div className={tw(
                 'font-header text-black text-5xl minxl:text-7xl leading-header',
