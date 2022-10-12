@@ -53,9 +53,13 @@ export default function MintFreeProfileCard({ type }: MintFreeProfileCardProps )
     setProfileStatus(profileTokenId ? nft?.listings?.totalItems > 0 ? 'Listed' : 'Owned' : 'Available');
   }, [profileTokenId, nft]);
 
-  const closeModal = () => {
-    setMintModalOpen(false);
-    setMinting(false);
+  const modalToggle = (setOpen: boolean) => {
+    if(setOpen){
+      setMintModalOpen(true);
+    } else {
+      setMintModalOpen(false);
+      setMinting(false);
+    }
   };
   
   return (
@@ -130,7 +134,7 @@ export default function MintFreeProfileCard({ type }: MintFreeProfileCardProps )
           </a>
         </Link>
       </div>
-      <MintProfileModal isOpen={mintModalOpen} setIsOpen={closeModal} profilesToMint={input} type={type} />
+      <MintProfileModal isOpen={mintModalOpen} setIsOpen={modalToggle} profilesToMint={input} type={type} />
     </div>
   );
 }
