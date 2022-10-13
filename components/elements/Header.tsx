@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { ShoppingCartSimple } from 'phosphor-react';
 import NavLogo from 'public/Logo.svg';
 import LightNavLogo from 'public/LogoLight.svg';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotificationBadge>>(() => import('components/modules/Notifications/NotificationBadge').then(mod => mod.NotificationBadge));

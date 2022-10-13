@@ -47,7 +47,6 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftHeaderImg,
     setDraftProfileImg,
     userIsAdmin,
-    publiclyVisibleNftCount,
     publiclyVisibleNfts,
     loading,
     draftDeployedContractsVisible

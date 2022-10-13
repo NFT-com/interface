@@ -121,7 +121,7 @@ export function ProfileContextProvider(
    */
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
-  const [loadedCount, setLoadedCount] = useState(8);
+  const [loadedCount,] = useState(8);
   const [afterCursor, setAfterCursor] = useState('');
   const {
     nfts: publicProfileNfts,
@@ -374,7 +374,6 @@ export function ProfileContextProvider(
     publiclyVisibleNfts: publiclyVisibleNfts ?? [],
     publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
     loadMoreNfts: () => {
-      // setLoadedCount(loadedCount + 8);
       pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
     },
     setAllItemsOrder,
