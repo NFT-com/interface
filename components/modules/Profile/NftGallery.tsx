@@ -34,6 +34,7 @@ export function NftGallery(props: NftGalleryProps) {
     publiclyVisibleNftCount,
     loading,
     loadMoreNfts,
+    loadMoreNftsEditMode,
     draftLayoutType
   } = useContext(ProfileContext);
   
@@ -123,7 +124,7 @@ export function NftGallery(props: NftGalleryProps) {
               accent={AccentType.SCALE}
               stretch={true}
               label={'Load More'}
-              onClick={loadMoreNfts}
+              onClick={loadMoreNftsEditMode}
               type={ButtonType.PRIMARY}
             />
           </div>

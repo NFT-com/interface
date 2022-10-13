@@ -33,6 +33,7 @@ export interface ProfileContextType {
   allOwnerNftCount: number;
   userIsAdmin: boolean;
   loadMoreNfts: () => void;
+  loadMoreNftsEditMode: () => void;
   setAllItemsOrder: (items: PartialDeep<Nft>[]) => void;
   // editor state
   toggleHidden: (id: string, currentVisibility: boolean) => void;
@@ -72,6 +73,7 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   allOwnerNfts: [],
   allOwnerNftCount: 0,
   loadMoreNfts: () => null,
+  loadMoreNftsEditMode: () => null,
   setAllItemsOrder: () => null,
   userIsAdmin: false,
   toggleHidden: () => null,
@@ -378,8 +380,10 @@ export function ProfileContextProvider(
     publiclyVisibleNfts: publiclyVisibleNfts ?? [],
     publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
     loadMoreNfts: () => {
-      setLoadedCount(loadedCount + 100);
       pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
+    },
+    loadMoreNftsEditMode: () => {
+      setLoadedCount(loadedCount + 100);
     },
     setAllItemsOrder,
     userIsAdmin: ownedProfileTokens
