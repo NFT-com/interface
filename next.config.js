@@ -106,6 +106,8 @@ const moduleExports = withTM({
     ];
   },
   images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: 'default-src "self"; script-src "none"; sandbox;',
     domains: [
       'cdn.nft.com',
       'nft-llc.mypinata.cloud',

@@ -76,7 +76,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   }, [props?.src, ext, url]);
 
   const imageUrl = imageSrc || props?.src;
-  const rawImageBool = imageUrl?.indexOf('.svg') >= 0 || imageUrl?.indexOf('ens.domains') >= 0;
+  const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) || imageUrl?.indexOf('ens.domains') >= 0;
 
   return (
     <div className={tw(
