@@ -107,6 +107,9 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
+
+const PUBLIC_PROFILE_LOAD_COUNT = 8;
+
 /**
  * This context provides state management and helper functions for viewing and editing Profiles.
  */
@@ -119,9 +122,10 @@ export function ProfileContextProvider(
   /**
    * Queries
    */
+
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
-  const [loadedCount,] = useState(8);
+  const [loadedCount, setLoadedCount] = useState(1000);
   const [afterCursor, setAfterCursor] = useState('');
   const {
     nfts: publicProfileNfts,
@@ -132,7 +136,7 @@ export function ProfileContextProvider(
   } = useProfileNFTsQuery(
     profileData?.profile?.id,
     String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-    loadedCount,
+    PUBLIC_PROFILE_LOAD_COUNT,
     afterCursor
   );
   const {
@@ -374,6 +378,7 @@ export function ProfileContextProvider(
     publiclyVisibleNfts: publiclyVisibleNfts ?? [],
     publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
     loadMoreNfts: () => {
+      setLoadedCount(loadedCount + 100);
       pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
     },
     setAllItemsOrder,

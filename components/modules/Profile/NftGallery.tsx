@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -41,7 +41,7 @@ export function NftGallery(props: NftGalleryProps) {
 
   useSWR(scrollDir + yScroll, async () => {
     if (scrollDir === 'DOWN' && yScroll > 100) {
-      if (editMode ? allOwnerNftCount > editModeNfts?.length : publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
+      if (!editMode && publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
         loadMoreNfts();
       }
     }
@@ -110,7 +110,24 @@ export function NftGallery(props: NftGalleryProps) {
           </div>
         </div>
       }
-      {loading && <DynamicPlaceHolderGrid />}
+      {!editMode && loading &&
+      <div className= 'min-h-[10rem] text-primary-txt flex flex-col items-center justify-center'>
+        <div className="mb-2">Loading...</div>
+        <Loader />
+      </div>}
+      {
+        (editMode && allOwnerNftCount > nftsToShow?.length) &&
+          <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium">
+            <Button
+              color={'white'}
+              accent={AccentType.SCALE}
+              stretch={true}
+              label={'Load More'}
+              onClick={loadMoreNfts}
+              type={ButtonType.PRIMARY}
+            />
+          </div>
+      }
     </>
   );
 }
