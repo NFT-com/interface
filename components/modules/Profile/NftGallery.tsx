@@ -1,16 +1,22 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useScrollY } from 'graphql/hooks/useScrollY';
 import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
+import { PlaceHolderGrid as StaticPlaceHolderGrid } from './PlaceHolderGrid';
 import { ProfileContext } from './ProfileContext';
 
+import dynamic from 'next/dynamic';
 import { useContext, useState } from 'react';
+import useSWR from 'swr';
 export interface NftGalleryProps {
   profileURI: string;
 }
+
+const DynamicPlaceHolderGrid = dynamic<React.ComponentProps<typeof StaticPlaceHolderGrid>>(() => import('components/modules/Profile/PlaceHolderGrid').then(mod => mod.PlaceHolderGrid));
 
 export function NftGallery(props: NftGalleryProps) {
   const { profileURI } = props;
@@ -26,9 +32,20 @@ export function NftGallery(props: NftGalleryProps) {
     allOwnerNftCount,
     publiclyVisibleNfts,
     publiclyVisibleNftCount,
+    loading,
     loadMoreNfts,
     draftLayoutType
   } = useContext(ProfileContext);
+  
+  const { scrollDir, yScroll } = useScrollY();
+
+  useSWR(scrollDir + yScroll, async () => {
+    if (scrollDir === 'DOWN' && yScroll > 100) {
+      if (editMode ? allOwnerNftCount > editModeNfts?.length : publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
+        loadMoreNfts();
+      }
+    }
+  });
 
   const savedLayoutType = profileData?.profile?.layoutType;
 
@@ -93,19 +110,7 @@ export function NftGallery(props: NftGalleryProps) {
           </div>
         </div>
       }
-      {
-        (editMode ? allOwnerNftCount > nftsToShow?.length : publiclyVisibleNftCount > nftsToShow?.length) &&
-          <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium">
-            <Button
-              color={'white'}
-              accent={AccentType.SCALE}
-              stretch={true}
-              label={'Load More'}
-              onClick={loadMoreNfts}
-              type={ButtonType.PRIMARY}
-            />
-          </div>
-      }
+      {loading && <DynamicPlaceHolderGrid />}
     </>
   );
 }
