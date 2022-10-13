@@ -40,7 +40,7 @@ export function NftGallery(props: NftGalleryProps) {
   const { scrollDir, yScroll } = useScrollY();
 
   useSWR(scrollDir + yScroll, async () => {
-    if (scrollDir === 'DOWN' && yScroll > 500) {
+    if (scrollDir === 'DOWN' && yScroll > 200) {
       if (editMode ? allOwnerNftCount > editModeNfts?.length : publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
         loadMoreNfts();
       }
