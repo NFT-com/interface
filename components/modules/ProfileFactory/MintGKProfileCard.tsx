@@ -2,7 +2,6 @@ import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfilesMintedByGKQuery } from 'graphql/hooks/useProfilesMintedByGK';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
-import { useMintModal } from 'hooks/state/useMintModal';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
@@ -11,7 +10,6 @@ import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
-import MintProfileModal from './MintProfileModal';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,10 +27,8 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState }: Min
   const [currentValue, setCurrentValue] = useState(null);
   const [minting, setMinting] = useState(false);
   const [profileStatus, setProfileStatus] = useState('');
-  // const [mintModalOpen, setMintModalOpen] = useState(false);
   const [selectedGK, setSelectedGK] = useState(null);
-
-  // const { modalOpen, setModalOpen } = useMintModal();
+  
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const { claimable } = useClaimableProfileCount(currentAddress);
@@ -134,15 +130,6 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState }: Min
     });
     setSelectedGK(gk);
   }, [claimable, setSelectedGK]);
-
-  const modalToggle = (setOpen: boolean) => {
-    if(setOpen){
-      setModalOpen(true);
-    } else {
-      setModalOpen(false);
-      setMinting(false);
-    }
-  };
   
   return (
     <div className='relative mt-16 minlg:mt-12 z-50 px-5'>

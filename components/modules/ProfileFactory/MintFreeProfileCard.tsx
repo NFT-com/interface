@@ -52,15 +52,6 @@ export default function MintFreeProfileCard({ type, setModalOpen, setMintingStat
   useEffect(() => {
     setProfileStatus(profileTokenId ? nft?.listings?.totalItems > 0 ? 'Listed' : 'Owned' : 'Available');
   }, [profileTokenId, nft]);
-
-  const modalToggle = (setOpen: boolean) => {
-    if(setOpen){
-      setModalOpen(true);
-    } else {
-      setModalOpen(false);
-      setMinting(false);
-    }
-  };
   
   return (
     <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
