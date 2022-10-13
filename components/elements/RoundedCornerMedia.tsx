@@ -101,23 +101,36 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             props.extraClasses
           )}
         />
-        :
-        (imageUrl != 'null?width=600') && <Image
-          alt='NFT Image'
-          key={props.src}
-          quality='50'
-          layout='fill'
-          src={rawImageBool ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
-          onError={() => {
-            setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
-          }}
-          className={tw(
-            props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-            'absolute w-full h-full justify-center',
-            getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-            props.extraClasses
-          )}
-        />
+        : rawImageBool ?
+        // SVG has hard time displaying on Next Image
+        // eslint-disable-next-line @next/next/no-img-element
+          <img
+            alt='NFT Image'
+            key={props.src}
+            src={imageUrl}
+            className={tw(
+              props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
+              'absolute w-full h-full justify-center',
+              getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+              props.extraClasses
+            )}
+          /> :
+          (imageUrl != 'null?width=600') && <Image
+            alt='NFT Image'
+            key={props.src}
+            quality='50'
+            layout='fill'
+            src={`${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
+            onError={() => {
+              setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
+            }}
+            className={tw(
+              props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
+              'absolute w-full h-full justify-center',
+              getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+              props.extraClasses
+            )}
+          />
       }
     </div>
   );
