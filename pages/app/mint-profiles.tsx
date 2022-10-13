@@ -2,8 +2,10 @@ import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintFreeProfileCard from 'components/modules/ProfileFactory/MintFreeProfileCard';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
+import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
+import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -18,13 +20,23 @@ import NFTLogoSmall from 'public/nft_logo_small.svg';
 import ProfileClickIcon from 'public/profile-click-icon.svg';
 import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 export default function MintProfilesPage() {
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { freeMintAvailable, loading: loadingFreeMint } = useFreeMintAvailable(currentAddress);
   const { claimable, loading: loadingClaimable } = useClaimableProfileCount(currentAddress);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [mintingState, setMintingState] = useState(
+    {
+      inputs: null,
+      tokenId: null,
+      type: null
+    }
+  );
+  
+  useMaybeCreateUser();
 
   useEffect(() => {
     if(!currentAddress) {
@@ -34,15 +46,15 @@ export default function MintProfilesPage() {
 
   const getMintProfileCard = useCallback(() => {
     if(!loadingClaimable && !isNullOrEmpty(claimable) && !freeMintAvailable && !loadingFreeMint) {
-      return <MintGKProfileCard />;
+      return <MintGKProfileCard setModalOpen={setModalOpen} setMintingState={setMintingState} />;
     }
 
     if(!loadingFreeMint && freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
-      return <MintFreeProfileCard type='Free'/>;
+      return <MintFreeProfileCard type='Free' setModalOpen={setModalOpen} setMintingState={setMintingState}/>;
     }
 
     if(!loadingFreeMint && !freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
-      return <MintFreeProfileCard type='Paid' />;
+      return <MintFreeProfileCard type='Paid' setModalOpen={setModalOpen} setMintingState={setMintingState} />;
     }
 
     return <MintProfileCardSkeleton />;
@@ -114,6 +126,8 @@ export default function MintProfilesPage() {
           <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the build in marketplace aggregator.</p>
         </div>
       </div>
+
+      <MintProfileModal isOpen={modalOpen} setIsOpen={setModalOpen} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} />
     </div>
   );
 }

@@ -53,8 +53,8 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
       return feeData;
     });
 
-  const freeMintProfile = profilesToMint[0];
-  const gkMintProfiles = profilesToMint.map((profile) => {
+  const freeMintProfile = profilesToMint && profilesToMint[0];
+  const gkMintProfiles = profilesToMint?.map((profile) => {
     return {
       profileUrl: profile.profileURI,
       tokenId: gkTokenId,

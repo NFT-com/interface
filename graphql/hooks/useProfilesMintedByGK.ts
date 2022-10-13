@@ -1,38 +1,40 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ProfilesMintedWithGkQuery } from 'graphql/generated/types';
+import { ProfilesMintedByGkQuery } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
 
-export interface ProfilesMintedWithGKQueryData {
-  data: ProfilesMintedWithGkQuery
+export interface ProfilesMintedByGKQueryData {
+  data: ProfilesMintedByGkQuery;
   loading: boolean;
   mutate: () => void;
 }
 
-export function useProfilesMintedWithGKQuery(tokenId: string, chainId?: string): ProfilesMintedWithGKQueryData {
+export function useProfilesMintedByGKQuery(tokenId: string, chainId?: string): ProfilesMintedByGKQueryData {
   const sdk = useGraphQLSDK();
   const [loading, setLoading] = useState(false);
 
   const keyString =
-    'profilesMintedWithGKQuery' +
+    'profilesMintedByGKQuery' +
     tokenId +
     chainId;
 
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(tokenId) || isNullOrEmpty(chainId)) {
-      return { profilesMintedWithGK: [] };
+      return { profilesMintedByGK: [] };
     }
     setLoading(true);
     try {
-      const result = await sdk.ProfilesMintedWithGK({ tokenId, chainId });
+      const result = await sdk.ProfilesMintedByGK({ tokenId, chainId });
       setLoading(false);
       return result;
     } catch (error) {
       setLoading(false);
-      console.log('Failed to load profiles minted with GK.');
+      console.log('Failed to load profiles minted by GK.');
     }
+  }, {
+    revalidateOnFocus: false
   });
   return {
     data: data,

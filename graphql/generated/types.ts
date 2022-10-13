@@ -411,6 +411,11 @@ export type FollowersOutput = {
   totalItems?: Maybe<Scalars['Int']>;
 };
 
+export type FullFillEventTokenIdsOutput = {
+  __typename?: 'FullFillEventTokenIdsOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type GetContracts = {
   __typename?: 'GetContracts';
   genesisKey: Scalars['String'];
@@ -662,6 +667,8 @@ export type Mutation = {
   /** AUTHENTICATED */
   followProfile: Profile;
   /** AUTHENTICATED */
+  fullFillEventTokenIds: FullFillEventTokenIdsOutput;
+  /** AUTHENTICATED */
   ignoreAssociations: Array<Maybe<Event>>;
   listNFTLooksrare: Scalars['Boolean'];
   listNFTSeaport: Scalars['Boolean'];
@@ -822,6 +829,11 @@ export type MutationFillChainIdsArgs = {
 
 export type MutationFollowProfileArgs = {
   url?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationFullFillEventTokenIdsArgs = {
+  count: Scalars['Int'];
 };
 
 
@@ -1612,7 +1624,7 @@ export type Query = {
   profilesByDisplayNft: ProfilesOutput;
   /** AUTHENTICATED */
   profilesFollowedByMe: ProfilesOutput;
-  profilesMintedWithGK: Array<Profile>;
+  profilesMintedByGK: Array<Profile>;
   topBids: BidsOutput;
   watchlist: Watchlist;
 };
@@ -1874,7 +1886,7 @@ export type QueryProfilesFollowedByMeArgs = {
 };
 
 
-export type QueryProfilesMintedWithGkArgs = {
+export type QueryProfilesMintedByGkArgs = {
   chainId?: InputMaybe<Scalars['String']>;
   tokenId: Scalars['String'];
 };
@@ -3013,13 +3025,13 @@ export type ProfilesByDisplayedNftQueryVariables = Exact<{
 
 export type ProfilesByDisplayedNftQuery = { __typename?: 'Query', profilesByDisplayNft: { __typename?: 'ProfilesOutput', totalItems?: number | null, items: Array<{ __typename?: 'Profile', id: string, photoURL?: string | null, url: string }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
-export type ProfilesMintedWithGkQueryVariables = Exact<{
+export type ProfilesMintedByGkQueryVariables = Exact<{
   tokenId: Scalars['String'];
   chainId?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ProfilesMintedWithGkQuery = { __typename?: 'Query', profilesMintedWithGK: Array<{ __typename?: 'Profile', url: string, photoURL?: string | null }> };
+export type ProfilesMintedByGkQuery = { __typename?: 'Query', profilesMintedByGK: Array<{ __typename?: 'Profile', photoURL?: string | null, url: string }> };
 
 export type RecentProfilesQueryVariables = Exact<{
   input?: InputMaybe<LatestProfilesInput>;
@@ -4733,11 +4745,11 @@ export const ProfilesByDisplayedNftDocument = gql`
   }
 }
     `;
-export const ProfilesMintedWithGkDocument = gql`
-    query ProfilesMintedWithGK($tokenId: String!, $chainId: String) {
-  profilesMintedWithGK(tokenId: $tokenId, chainId: $chainId) {
-    url
+export const ProfilesMintedByGkDocument = gql`
+    query ProfilesMintedByGK($tokenId: String!, $chainId: String) {
+  profilesMintedByGK(tokenId: $tokenId, chainId: $chainId) {
     photoURL
+    url
   }
 }
     `;
@@ -5049,8 +5061,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     ProfilesByDisplayedNft(variables: ProfilesByDisplayedNftQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfilesByDisplayedNftQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<ProfilesByDisplayedNftQuery>(ProfilesByDisplayedNftDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfilesByDisplayedNft', 'query');
     },
-    ProfilesMintedWithGK(variables: ProfilesMintedWithGkQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfilesMintedWithGkQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ProfilesMintedWithGkQuery>(ProfilesMintedWithGkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfilesMintedWithGK', 'query');
+    ProfilesMintedByGK(variables: ProfilesMintedByGkQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ProfilesMintedByGkQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ProfilesMintedByGkQuery>(ProfilesMintedByGkDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ProfilesMintedByGK', 'query');
     },
     RecentProfiles(variables?: RecentProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RecentProfilesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<RecentProfilesQuery>(RecentProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RecentProfiles', 'query');

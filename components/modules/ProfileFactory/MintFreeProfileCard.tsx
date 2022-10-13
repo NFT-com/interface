@@ -7,7 +7,6 @@ import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
-import MintProfileModal from './MintProfileModal';
 
 import Link from 'next/link';
 import ETHIcon from 'public/eth_icon.svg';
@@ -15,11 +14,12 @@ import { useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
 
 type MintFreeProfileCardProps = {
-  type: 'Free' | 'Paid'
+  type: 'Free' | 'Paid';
+  setModalOpen: (open: boolean) => void;
+  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string}) => void;
 };
 
-export default function MintFreeProfileCard({ type }: MintFreeProfileCardProps ) {
-  const [mintModalOpen, setMintModalOpen] = useState(false);
+export default function MintFreeProfileCard({ type, setModalOpen, setMintingState }: MintFreeProfileCardProps ) {
   const [minting, setMinting] = useState(false);
   const [profileURI, setProfileURI] = useState(null);
   const [input, setInput] = useState([]);
@@ -55,9 +55,9 @@ export default function MintFreeProfileCard({ type }: MintFreeProfileCardProps )
 
   const modalToggle = (setOpen: boolean) => {
     if(setOpen){
-      setMintModalOpen(true);
+      setModalOpen(true);
     } else {
-      setMintModalOpen(false);
+      setModalOpen(false);
       setMinting(false);
     }
   };
@@ -118,7 +118,12 @@ export default function MintFreeProfileCard({ type }: MintFreeProfileCardProps )
                   return;
                 }
                 setMinting(true);
-                setMintModalOpen(true);
+                setMintingState({
+                  inputs: input,
+                  type: type,
+                  tokenId: null
+                });
+                setModalOpen(true);
               }}
             >
               {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
@@ -134,7 +139,6 @@ export default function MintFreeProfileCard({ type }: MintFreeProfileCardProps )
           </a>
         </Link>
       </div>
-      <MintProfileModal isOpen={mintModalOpen} setIsOpen={modalToggle} profilesToMint={input} type={type} />
     </div>
   );
 }

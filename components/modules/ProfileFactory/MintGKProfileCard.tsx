@@ -1,7 +1,8 @@
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
-import { useProfilesMintedWithGKQuery } from 'graphql/hooks/useProfilesMintedWithGK';
+import { useProfilesMintedByGKQuery } from 'graphql/hooks/useProfilesMintedByGK';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
+import { useMintModal } from 'hooks/state/useMintModal';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
@@ -19,17 +20,23 @@ import { useCallback, useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
 import { useAccount } from 'wagmi';
 
-export default function MintGKProfileCard() {
+type MintGKProfileCardProps = {
+  setModalOpen: (open: boolean) => void
+  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string}) => void
+};
+
+export default function MintGKProfileCard({ setModalOpen, setMintingState }: MintGKProfileCardProps) {
   const [currentValue, setCurrentValue] = useState(null);
   const [minting, setMinting] = useState(false);
   const [profileStatus, setProfileStatus] = useState('');
-  const [mintModalOpen, setMintModalOpen] = useState(false);
+  // const [mintModalOpen, setMintModalOpen] = useState(false);
   const [selectedGK, setSelectedGK] = useState(null);
 
+  // const { modalOpen, setModalOpen } = useMintModal();
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const { claimable } = useClaimableProfileCount(currentAddress);
-  const { data: mintedProfiles } = useProfilesMintedWithGKQuery(selectedGK?.tokenId.toString(), defaultChainId);
+  const { data: mintedProfiles, loading: loadingMintedProfiles } = useProfilesMintedByGKQuery(selectedGK?.tokenId.toString(), defaultChainId);
   const { profileClaimHash } = useGetProfileClaimHash(currentValue && currentValue[0]);
   const { profileTokenId } = useProfileTokenQuery(currentValue && currentValue[0]);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
@@ -130,9 +137,9 @@ export default function MintGKProfileCard() {
 
   const modalToggle = (setOpen: boolean) => {
     if(setOpen){
-      setMintModalOpen(true);
+      setModalOpen(true);
     } else {
-      setMintModalOpen(false);
+      setModalOpen(false);
       setMinting(false);
     }
   };
@@ -144,7 +151,7 @@ export default function MintGKProfileCard() {
         <p className='mt-9 text-xl font-normal'>Genesis Key holders receive <span className='font-bold text-transparent bg-text-gradient bg-clip-text'>four free mints!</span></p>
 
         <div className='mt-9'>
-          {mintedProfiles && mintedProfiles?.profilesMintedWithGK.map((profile) =>
+          {mintedProfiles && !loadingMintedProfiles && mintedProfiles?.profilesMintedByGK.map((profile) =>
             <div className='h-14 flex justify-between items-center bg-[#FCE795] rounded-xl px-4 py-2 mb-4' key={profile.url}>
               <div className='flex flex-row items-center gap-[14px]'>
                 <Image
@@ -159,6 +166,15 @@ export default function MintGKProfileCard() {
               <CheckCircle size={28} color="black" weight="fill" />
             </div>
           )}
+
+          {loadingMintedProfiles &&
+            <>
+              <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
+              <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
+              <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
+              <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
+            </>
+          }
           {
             inputs.map((input, i) => {
               if (input.isVisible && selectedGK && selectedGK?.claimable > 0){
@@ -194,7 +210,7 @@ export default function MintGKProfileCard() {
           {
             !isNullOrEmpty(claimable) &&
             <p className="text-[#5B5B5B] text-center mb-3 font-normal">
-              {selectedGK?.claimable < 3 ? `Minted ${4 - selectedGK?.claimable} ` : `Minting ${inputCount} `}
+              {selectedGK?.claimable <= 3 ? `Minted ${4 - selectedGK?.claimable} ` : `Minting ${inputCount} `}
               out of 4 free NFT Profiles
             </p>
           }
@@ -223,7 +239,12 @@ export default function MintGKProfileCard() {
                 return;
               }
               setMinting(true);
-              setMintModalOpen(true);
+              setMintingState({
+                inputs: filteredInputs,
+                type: 'GK',
+                tokenId: selectedGK?.tokenId
+              });
+              setModalOpen(true);
             }}
           >
             {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
@@ -238,7 +259,6 @@ export default function MintGKProfileCard() {
           </a>
         </Link>
       </div>
-      <MintProfileModal isOpen={mintModalOpen} setIsOpen={modalToggle} profilesToMint={filteredInputs} gkTokenId={selectedGK?.tokenId} type='GK' />
     </div>
   );
 }
