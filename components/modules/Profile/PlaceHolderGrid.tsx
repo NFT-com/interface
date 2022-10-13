@@ -1,6 +1,6 @@
 export const PlaceHolderGrid = () => {
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full mt-5">
       <div className='grid w-full gap-8 mt-2 grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4'>
         {[1,2,3,4,5,6,7,8].map((placeholder) => (
           <div key={placeholder} role="status" className="animate-pulse min-h-[18rem] border border-[#D5D5D5] p-2">

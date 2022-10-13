@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import Loader from 'components/elements/Loader';
 import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
@@ -26,6 +25,7 @@ import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
+import { Loader } from 'react-feather';
 import useSWR from 'swr';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -283,13 +283,17 @@ export function MintedProfile(props: MintedProfileProps) {
           )}
         >
           {
-            (userIsAdmin && editMode) || (publiclyVisibleNfts.length > 0) ?
+            (userIsAdmin && editMode) || (publiclyVisibleNfts?.length > 0) ?
               <MintedProfileGallery
                 profileURI={profileURI}
                 ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
               /> :
               loading
-                ? <div className="min-h-[10rem] w-full items-center flex justify-center"><Loader /></div>
+                ?
+                <div className= 'min-h-[10rem] text-primary-txt flex flex-col items-center justify-center'>
+                  <div className="mb-2">Loading...</div>
+                  <Loader />
+                </div>
                 :
                 <>
                   <div className={tw(
