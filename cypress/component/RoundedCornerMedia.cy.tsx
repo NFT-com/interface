@@ -51,7 +51,7 @@ describe('RoundedCornerMedia', () => {
   it('svg - mounts with all props, top right variant, correct img element', () => {
     cy.mount(
       <RoundedCornerMedia
-        src="https://test.svg"
+        src="/test.svg"
         variant={RoundedCornerVariant.TopRight}
         extraClasses="test"
       />
