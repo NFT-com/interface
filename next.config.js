@@ -111,6 +111,7 @@ const moduleExports = withTM({
       'cdn.nft.com',
       'nft-llc.mypinata.cloud',
       'cdn.nft.com/_ipx',
+      'metadata.ens.domains',
       'images.ctfassets.net',
       'sandbox-nvf2t.netlify.app',
       'staging-raccoon.netlify.app',
