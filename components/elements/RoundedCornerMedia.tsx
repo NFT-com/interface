@@ -76,7 +76,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   }, [props?.src, ext, url]);
 
   const imageUrl = imageSrc || props?.src;
-  const rawImageBool = imageUrl?.indexOf('.svg') >= 0 || imageUrl?.indexOf('ens.domains') >= 0;
+  const rawImageBool = imageUrl?.indexOf('.svg') >= 0;
 
   return (
     <div className={tw(
@@ -86,7 +86,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     )}
     onClick={props?.onClick}
     >
-      {(props.videoOverride || imageUrl?.indexOf('data:') >= 0) ?
+      {(props.videoOverride || imageUrl?.indexOf('data:') >= 0 || imageUrl?.indexOf('ens.domains') >= 0) ?
         <video
           autoPlay
           muted={!props.videoOverride}
