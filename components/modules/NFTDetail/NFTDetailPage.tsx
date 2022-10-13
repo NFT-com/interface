@@ -158,7 +158,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
       <div className="minxl:hidden flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px]">
         <DetailTabsComponent />
       </div>
-      <NFTDetailMoreFromCollection hideTokenId={nft?.tokenId} collectionName={collection?.contractMetadata?.name} contract={nft?.contract} />
+      <NFTDetailMoreFromCollection hideTokenId={nft?.tokenId} collectionName={nft?.contract?.toLowerCase() === '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'.toLowerCase() ? 'ENS' : collection?.contractMetadata?.name} contract={nft?.contract} />
       <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
         <NFTDetailFeaturedBy contract={nft?.contract} tokenId={nft?.tokenId} />
       </div>

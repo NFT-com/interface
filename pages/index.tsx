@@ -19,6 +19,8 @@ import { NextPageWithLayout } from './_app';
 
 import { Player } from '@lottiefiles/react-lottie-player';
 import { BigNumber } from 'ethers';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
 import dynamic from 'next/dynamic';
@@ -26,11 +28,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Vector from 'public/Vector.svg';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const DynamicLeaderBoard = dynamic<React.ComponentProps<typeof StaticLeaderboard>>(() => import('components/modules/Profile/LeaderBoard').then(mod => mod.LeaderBoard));
 const DynamicWalletRainbowKitButton = dynamic<React.ComponentProps<typeof StaticWalletRainbowKitButton>>(() => import('components/elements/WalletRainbowKitButton').then(mod => mod.WalletRainbowKitButton));
 const DynamicPreviewBanner = dynamic<React.ComponentProps<typeof StaticPreviewBanner>>(() => import('components/elements/PreviewBanner'));
+
+gsap.registerPlugin(ScrollTrigger);
 
 type HomePageProps = {
   preview: boolean;
@@ -94,7 +98,61 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
 
+  const el = useRef(null);
+  //const q = gsap.utils.selector(el);
+
   useEffect(() => {
+    const imagesAnim = gsap.to('#hero-anim', {
+      scrollTrigger: {
+        trigger: '.hero-parent',
+        scrub: false,
+        pin: true,
+        start: '1px top',
+        end: '+=50%',
+        toggleActions: 'play none none none',
+      },
+      width: '100vw',
+      backgroundColor: '#000',
+      duration: 1.5,
+      ease: 'power2.out'
+    });
+
+    const heroAnim = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.hero-parent',
+        start: '1px top',
+        end: '+=50%',
+        toggleActions: 'play none none none',
+      }
+    })
+      .to('#hero-player', {
+        rotate: '0deg',
+        skewX: '0deg',
+        skewY: '0deg',
+        duration: 1.5,
+        ease: 'power2.out',
+      }, 0)
+      .to('#hero-text-anim', {
+        y: '-50%',
+        duration: 1.5,
+        ease: 'power2.out'
+      }, 0)
+      .to('#hero-shadow-dark', {
+        opacity: 1,
+        duration: 1.5,
+        ease: 'power2.out'
+      }, 0)
+      .to('#hero-shadow-light', {
+        opacity: 0,
+        duration: 1.5,
+        ease: 'power2.out'
+      }, 0)
+      .to('#hero-caption', {
+        scale: 1,
+        duration: 1.5,
+        ease: 'power2.out'
+      }, 0);
+
     if (data?.tickerStats) {
       setTickerStats(data.tickerStats);
     }
@@ -107,6 +165,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
     if (data?.learnCardImagesCollection) {
       setLearnCardImages([data.learnCardImagesCollection.items[0], data.learnCardImagesCollection.items[1]]);
     }
+
+    return () => {
+      imagesAnim.kill();
+      heroAnim.kill();
+    };
   }, [data?.featuredProfile, data.learnCards, data.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data.learnCardImagesCollection.items, data.learnCardImagesCollection, data.subheroTitle]);
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
@@ -124,58 +187,66 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             cardType: 'summary_large_image',
           }}
         />
-        <main className='flex flex-col font-grotesk not-italic HomePageContainer'>
+        <main className='font-grotesk not-italic HomePageContainer'>
           {/* Block: Intro */}
-          <div className='bg-white'>
-            <div className='max-w-[90%] mx-auto h-screen'>
+          <div className='bg-white hero-parent' ref={el}>
+            {/* Intro Text */}
+            <div id='hero-text-anim' className='py-32 pl-[5vw] h-screen flex flex-col justify-center items-start'>
+              <h2 className={tw(
+                'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854]',
+                'text-black font-medium mb-14'
+              )}>
+                Own your <img className={tw(
+                  'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
+                  'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
+                )} src="ico-discover.png" alt="" />
+                <br className='hidden minlg:block' />
+                NFT <img className={tw(
+                  'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
+                  'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
+                )} src="ico-discover.png" alt="" />
+                <span className='text-secondary-yellow'>identity</span></h2>
 
-              {/* Intro Text */}
-              <div className='py-32 h-full flex flex-col justify-center items-start'>
-                <h2 className={tw(
-                  'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854]',
-                  'text-black font-medium mb-14'
-                )}>
-                  Own your <img className={tw(
-                    'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                    'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
-                  )} src="ico-discover.png" alt="" />
-                  <br className='hidden minlg:block' />
-                  NFT <img className={tw(
-                    'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                    'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
-                  )} src="ico-discover.png" alt="" />
-                  <span className='text-secondary-yellow'>identity</span></h2>
+              <a href="" className={tw(
+                'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
+                'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
+                'text-xl minxxl:text-3xl text-white font-medium uppercase'
+              )}>create a Profile</a>
+            </div>
 
-                <a href="" className={tw(
-                  'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
-                  'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
-                  'text-xl minxxl:text-3xl text-white font-medium uppercase'
-                )}>create a Profile</a>
-              </div>
-
-              {/* Animation */}
-              <div className='bg-black overflow-hidden absolute right-0 top-0 h-full w-full'> {/* Animation style: bg-[#F9D54C] w-2/5 z-[105] */}
+            {/* Animation */}
+            <div id='hero-anim' className='overflow-hidden absolute right-0 top-0 h-screen bg-[#F9D54C] z-[105]'>
+              <div id="hero-player" className='-skew-x-[34deg] skew-y-[18deg] scale-[1.6]'>
                 <Player
-                  autoplay={false}
+                  autoplay
                   loop
                   src="/anim/cycle.json"
-                  style={{ height: '100vh', width: '100%', minWidth: '45rem' }} //, Animation style: transform: 'skew(-34deg, 18deg) scale(1.6)'
+                  style={{ height: '100%', width: '100%', minWidth: '45rem' }}
                 >
                 </Player>
-                <div className={tw(
-                  'absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 rounded-full',
-                  'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
-                  'flex items-center justify-center text-center px-7',
-                  'text-[2.625rem] minmd:text-[5rem] minlg:text-[7rem] minxxl:text-[9rem]',
-                  'font-medium leading-none tracking-tight'
-                )}>
-                  <span className='text-white/40'>NFT.COM</span>
-                  <span className='text-[.75em] -mt-3 font-bold text-secondary-yellow'>/</span>
-                  <span className='text-white'>IDEAS</span>
-                </div>
-                <span className='absolute w-full h-[28.75rem] bottom-0 left-0 z-10 bg-img-shadow-dark pointer-events-none'></span>
-                {/* Animation shadow <span className='absolute w-full h-[28.75rem] bottom-0 left-0 z-10 bg-img-shadow-light pointer-events-none'></span> */}
               </div>
+
+              <div id='hero-caption' className={tw(
+                'scale-[.6]',
+                'absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 rounded-full',
+                'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
+                'flex items-center justify-center text-center px-7',
+                'text-[2.625rem] minmd:text-[5rem] minlg:text-[7rem] minxxl:text-[9rem]',
+                'font-medium leading-none tracking-tight'
+              )}>
+                <span className='text-white/40'>NFT.COM</span>
+                <span className='text-[.75em] -mt-3 font-bold text-secondary-yellow'>/</span>
+                <span className='text-white'>IDEAS</span>
+              </div>
+
+              <span id='hero-shadow-light' className={tw(
+                'opacity-1',
+                'absolute w-full h-[28.75rem] bottom-0 left-0 z-10 bg-img-shadow-light pointer-events-none'
+              )}></span>
+              <span id='hero-shadow-dark' className={tw(
+                'opacity-0',
+                'absolute w-full h-[28.75rem] bottom-0 left-0 z-10 bg-img-shadow-dark pointer-events-none'
+              )}></span>
             </div>
           </div>
 
