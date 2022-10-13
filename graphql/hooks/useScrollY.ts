@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export function useScrollY() {
-  const [scrollDir, setScrollDir] = useState('DOWN');
+  const [scrollDir, setScrollDir] = useState('');
   const [yScroll, setYScroll] = useState(0);
 
   useEffect(() => {
@@ -30,8 +30,6 @@ export function useScrollY() {
     };
 
     window.addEventListener('scroll', onScroll);
-
-    console.log(scrollDir);
 
     return () => window.removeEventListener('scroll', onScroll);
   }, [scrollDir]);

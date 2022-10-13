@@ -48,6 +48,7 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftProfileImg,
     userIsAdmin,
     publiclyVisibleNftCount,
+    publiclyVisibleNfts,
     loading,
     draftDeployedContractsVisible
   } = useContext(ProfileContext);
@@ -113,8 +114,6 @@ export function MintedProfile(props: MintedProfileProps) {
       <Collection contract={associatedContract?.chainAddr} />
     </div>;
   }
-
-  console.log(publiclyVisibleNftCount, loading);
 
   return (
     <ProfileScrollContextProvider>
@@ -285,7 +284,7 @@ export function MintedProfile(props: MintedProfileProps) {
           )}
         >
           {
-            (userIsAdmin && editMode) || (publiclyVisibleNftCount > 0) ?
+            (userIsAdmin && editMode) || (publiclyVisibleNfts.length > 0) ?
               <MintedProfileGallery
                 profileURI={profileURI}
                 ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}

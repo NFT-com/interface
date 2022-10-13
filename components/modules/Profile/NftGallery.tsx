@@ -1,4 +1,4 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -6,6 +6,7 @@ import { useScrollY } from 'graphql/hooks/useScrollY';
 import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
+import { PlaceHolderGrid } from './PlaceHolderGrid';
 import { ProfileContext } from './ProfileContext';
 
 import { useContext, useState } from 'react';
@@ -28,6 +29,7 @@ export function NftGallery(props: NftGalleryProps) {
     allOwnerNftCount,
     publiclyVisibleNfts,
     publiclyVisibleNftCount,
+    loading,
     loadMoreNfts,
     draftLayoutType
   } = useContext(ProfileContext);
@@ -36,7 +38,9 @@ export function NftGallery(props: NftGalleryProps) {
 
   useSWR(scrollDir + yScroll, async () => {
     if (scrollDir === 'DOWN' && yScroll > 500) {
-      if (editMode ? allOwnerNftCount > editModeNfts?.length : publiclyVisibleNftCount > publiclyVisibleNfts?.length) loadMoreNfts();
+      if (editMode ? allOwnerNftCount > editModeNfts?.length : publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
+        loadMoreNfts();
+      }
     }
   });
 
@@ -103,6 +107,7 @@ export function NftGallery(props: NftGalleryProps) {
           </div>
         </div>
       }
+      {loading && <PlaceHolderGrid />}
     </>
   );
 }
