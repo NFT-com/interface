@@ -98,6 +98,7 @@ module.exports = {
         'link-yellow': '#B59007',
         'secondary-yellow': '#FCBB1B',
         'key-bg': '#4D4D4D',
+        'key-gray': '#8B8B8B',
       },
       fontFamily: {
         'rubik': ['Rubik'],

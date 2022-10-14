@@ -25,9 +25,6 @@ describe('Footer', () => {
         cy.findByText('Resources').should('exist');
         cy.findByText('Support').should('exist');
         cy.findByText('Careers').should('exist');
-        cy.findByText('Social').should('exist');
-        cy.findByText('Discord').should('exist');
-        cy.findByText('Twitter').should('exist');
       });
     });
   });
