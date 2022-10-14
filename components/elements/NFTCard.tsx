@@ -3,6 +3,7 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, SeaportProtocolData } from 'graphql/generated/types';
+import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -28,6 +29,7 @@ import { MouseEvent, useCallback, useContext, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import useSWR from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NFTCardTrait {
   key: string,
@@ -39,9 +41,11 @@ export interface NFTCardProps {
   cta?: string;
   contractAddress?: string;
   collectionName?: string;
+  listings?: PartialDeep<TxActivity>[]
   tokenId?: string;
   header?: NFTCardTrait;
   traits?: NFTCardTrait[];
+  isOwnedByMe?: boolean;
   description?: string;
   profileURI?: string;
   images: Array<string | null>;
@@ -67,9 +71,9 @@ export interface NFTCardProps {
 
 export function NFTCard(props: NFTCardProps) {
   const defaultChainId = useDefaultChainId();
-  const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
-  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress, async () => {
-    return await getContractMetadata(props.contractAddress, defaultChainId);
+  const { data: nft } = useNftQuery(props.contractAddress, props?.listings ? null : props.tokenId); // skip query if listings are passed by setting tokenId to null
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress + props.collectionName, async () => {
+    return props.collectionName || await getContractMetadata(props.contractAddress, defaultChainId);
   });
   const collectionName = collectionMetadata?.contractMetadata?.name;
   const { tileBackground, secondaryText, pink, secondaryIcon, link } = useThemeColors();
@@ -105,7 +109,7 @@ export function NFTCard(props: NFTCardProps) {
     }
   }, [processedImageURLs.length]);
 
-  const lowestListing = getLowestPriceListing(filterValidListings(nft?.listings?.items), ethPriceUsd, defaultChainId);
+  const lowestListing = getLowestPriceListing(filterValidListings(props?.listings || nft?.listings?.items), ethPriceUsd, defaultChainId);
   const lowestPrice = getListingPrice(lowestListing);
   const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
     return <div key={key} className="flex mt-2">
@@ -129,16 +133,16 @@ export function NFTCard(props: NFTCardProps) {
   }, [pink, secondaryText]);
 
   const showListingIcons: boolean = useMemo(() => {
-    return !isNullOrEmpty(filterValidListings(nft?.listings?.items));
-  }, [nft]);
+    return !isNullOrEmpty(filterValidListings(props?.listings || nft?.listings?.items));
+  }, [props, nft]);
 
   const showOpenseaListingIcon: boolean = useMemo(() => {
-    return filterValidListings(nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
-  }, [nft]);
+    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
+  }, [props, nft]);
 
   const showLooksrareListingIcon: boolean = useMemo(() => {
-    return filterValidListings(nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
-  }, [nft]);
+    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
+  }, [props, nft]);
 
   return (
     <Link href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} passHref>
@@ -330,7 +334,7 @@ export function NFTCard(props: NFTCardProps) {
                 </div>
           }
 
-          {showListingIcons && !nft?.isOwnedByMe &&
+          {showListingIcons && (props.isOwnedByMe || !nft?.isOwnedByMe) &&
               <div className='flex flex-col minmd:flex-row flex-wrap mt-3 justify-between'>
                 <div className='flex flex-col pr-2'>
                   <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>
