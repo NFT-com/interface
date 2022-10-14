@@ -18,6 +18,7 @@ import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
+import { DefaultSeo } from 'next-seo';
 import { ReactElement, ReactNode, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import ReactGA from 'react-ga';
@@ -115,6 +116,19 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
         <title>NFT.com</title>
       </Head>
       <Script strategy="afterInteractive" src="/js/pageScripts.js" />
+      <DefaultSeo
+        title='NFT.com | The Social NFT Marketplace'
+        description='Join NFT.com to display, trade, and engage with your NFTs.'
+        openGraph={{
+          url: 'https://www.nft.com',
+          title: 'NFT.com | The Social NFT Marketplace',
+          description: 'Join NFT.com to display, trade, and engage with your NFTs.',
+          site_name: 'NFT.com',
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
+        }}
+      />
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider
           appInfo={{
