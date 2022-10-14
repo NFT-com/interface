@@ -411,6 +411,11 @@ export type FollowersOutput = {
   totalItems?: Maybe<Scalars['Int']>;
 };
 
+export type FullFillEventTokenIdsOutput = {
+  __typename?: 'FullFillEventTokenIdsOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type GetContracts = {
   __typename?: 'GetContracts';
   genesisKey: Scalars['String'];
@@ -662,6 +667,8 @@ export type Mutation = {
   /** AUTHENTICATED */
   followProfile: Profile;
   /** AUTHENTICATED */
+  fullFillEventTokenIds: FullFillEventTokenIdsOutput;
+  /** AUTHENTICATED */
   ignoreAssociations: Array<Maybe<Event>>;
   listNFTLooksrare: Scalars['Boolean'];
   listNFTSeaport: Scalars['Boolean'];
@@ -822,6 +829,11 @@ export type MutationFillChainIdsArgs = {
 
 export type MutationFollowProfileArgs = {
   url?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationFullFillEventTokenIdsArgs = {
+  count: Scalars['Int'];
 };
 
 
@@ -1612,6 +1624,7 @@ export type Query = {
   profilesByDisplayNft: ProfilesOutput;
   /** AUTHENTICATED */
   profilesFollowedByMe: ProfilesOutput;
+  profilesMintedByGK: Array<Profile>;
   topBids: BidsOutput;
   watchlist: Watchlist;
 };
@@ -1870,6 +1883,12 @@ export type QueryProfilesByDisplayNftArgs = {
 
 export type QueryProfilesFollowedByMeArgs = {
   input?: InputMaybe<ProfilesInput>;
+};
+
+
+export type QueryProfilesMintedByGkArgs = {
+  chainId?: InputMaybe<Scalars['String']>;
+  tokenId: Scalars['String'];
 };
 
 
@@ -2997,7 +3016,7 @@ export type ProfileNfTsMutationVariables = Exact<{
 }>;
 
 
-export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', previewLink?: string | null, contract?: any | null, id: string, tokenId: any, type: NftType, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
+export type ProfileNfTsMutation = { __typename?: 'Mutation', updateNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, id: string, tokenId: any, type: NftType, collection?: { __typename?: 'Collection', contract?: any | null, name?: string | null } | null, listings?: { __typename?: 'TxActivitiesOutput', items?: Array<{ __typename?: 'TxActivity', status: ActivityStatus, order?: { __typename?: 'TxOrder', protocolData?: { __typename?: 'LooksrareProtocolData', price?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', orderType?: number | null } | null } | null } | null } | null> | null } | null, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
 
 export type ProfilesByDisplayedNftQueryVariables = Exact<{
   input: ProfilesByDisplayNftInput;
@@ -4688,11 +4707,34 @@ export const ProfileNfTsDocument = gql`
     }
     totalItems
     items {
+      isOwnedByMe
       previewLink
       contract
       id
       tokenId
       type
+      collection {
+        contract
+        name
+      }
+      listings {
+        items {
+          status
+          order {
+            protocolData {
+              ... on LooksrareProtocolData {
+                price
+              }
+              ... on SeaportProtocolData {
+                parameters {
+                  orderType
+                }
+                signature
+              }
+            }
+          }
+        }
+      }
       metadata {
         imageURL
         description
