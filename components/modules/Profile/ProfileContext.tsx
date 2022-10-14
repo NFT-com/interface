@@ -109,7 +109,6 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
-
 const PUBLIC_PROFILE_LOAD_COUNT = 8;
 
 /**
