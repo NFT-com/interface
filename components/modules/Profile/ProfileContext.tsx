@@ -250,7 +250,7 @@ export function ProfileContextProvider(
     }
   }, [allOwnerNfts, publiclyVisibleNfts]);
 
-  const clearDrafts = useCallback((clearPubliclyVisibleNfts = true) => {
+  const clearDrafts = useCallback(() => {
     // reset
     setDraftProfileImg({ preview: '', raw: null });
     setDraftHeaderImg({ preview: '', raw: null });
@@ -260,7 +260,7 @@ export function ProfileContextProvider(
     setDraftDeployedContractsVisible(profileData?.profile?.deployedContractsVisible);
     setEditMode(false);
     setDraftLayoutType(null);
-    clearPubliclyVisibleNfts && setPubliclyVisibleNfts(null);
+    setPubliclyVisibleNfts(null);
   }, [
     draftGkIconVisible,
     draftNftsDescriptionsVisible,
