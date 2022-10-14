@@ -1,3 +1,4 @@
+import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
@@ -21,6 +22,7 @@ import { MouseEvent, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import useSWR from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NFTCardTrait {
   key: string,
@@ -32,9 +34,11 @@ export interface NFTCardProps {
   cta?: string;
   contractAddress?: string;
   collectionName?: string;
+  listings?: PartialDeep<TxActivity>[]
   tokenId?: string;
   header?: NFTCardTrait;
   traits?: NFTCardTrait[];
+  isOwnedByMe?: boolean;
   description?: string;
   profileURI?: string;
   images: Array<string | null>;
@@ -62,9 +66,9 @@ const DynamicNFTCardDescription = dynamic<React.ComponentProps<typeof StaticNFTC
 
 export function NFTCard(props: NFTCardProps) {
   const defaultChainId = useDefaultChainId();
-  const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
-  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress, async () => {
-    return await getContractMetadata(props.contractAddress, defaultChainId);
+  const { data: nft } = useNftQuery(props.contractAddress, props?.listings ? null : props.tokenId); // skip query if listings are passed by setting tokenId to null
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress + props.collectionName, async () => {
+    return props.collectionName || await getContractMetadata(props.contractAddress, defaultChainId);
   });
   const collectionName = collectionMetadata?.contractMetadata?.name;
   const { tileBackground, pink, secondaryIcon } = useThemeColors();
@@ -95,16 +99,16 @@ export function NFTCard(props: NFTCardProps) {
   }, [processedImageURLs.length]);
 
   const showListingIcons: boolean = useMemo(() => {
-    return !isNullOrEmpty(filterValidListings(nft?.listings?.items));
-  }, [nft]);
+    return !isNullOrEmpty(filterValidListings(props?.listings || nft?.listings?.items));
+  }, [props, nft]);
 
   const showOpenseaListingIcon: boolean = useMemo(() => {
-    return filterValidListings(nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
-  }, [nft]);
+    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
+  }, [props, nft]);
 
   const showLooksrareListingIcon: boolean = useMemo(() => {
-    return filterValidListings(nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
-  }, [nft]);
+    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
+  }, [props, nft]);
 
   return (
     <Link href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} passHref>

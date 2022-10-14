@@ -6,11 +6,34 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
     }
     totalItems
     items {
+      isOwnedByMe
       previewLink
       contract
       id
       tokenId
       type
+      collection {
+          contract
+          name
+      }
+      listings {
+        items {
+          status
+          order {
+            protocolData {
+              ... on LooksrareProtocolData {
+                price
+              }
+              ... on SeaportProtocolData {
+                parameters {
+                  orderType
+                }
+                signature
+              }
+            }
+          }
+        }
+      }
       metadata {
         imageURL
         description
