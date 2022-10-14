@@ -1,33 +1,30 @@
-import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
-import { getAddressForChain, nftAggregator } from 'constants/contracts';
-import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, SeaportProtocolData } from 'graphql/generated/types';
+import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
-import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
+import { getLowestPriceListing } from 'utils/listingUtils';
 import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 
+import { NFTCardDescription as StaticNFTCardDescription } from './NFTCardDescription';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
 
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber } from 'ethers';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import { MouseEvent, useCallback, useContext, useMemo, useState } from 'react';
+import { MouseEvent, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import useSWR from 'swr';
+import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NFTCardTrait {
   key: string,
@@ -39,9 +36,11 @@ export interface NFTCardProps {
   cta?: string;
   contractAddress?: string;
   collectionName?: string;
+  listings?: PartialDeep<TxActivity>[]
   tokenId?: string;
   header?: NFTCardTrait;
   traits?: NFTCardTrait[];
+  isOwnedByMe?: boolean;
   description?: string;
   profileURI?: string;
   images: Array<string | null>;
@@ -65,22 +64,19 @@ export interface NFTCardProps {
   redirectTo?: string;
 }
 
+const DynamicNFTCardDescription = dynamic<React.ComponentProps<typeof StaticNFTCardDescription>>(() => import('components/elements/NFTCardDescription').then(mod => mod.NFTCardDescription));
+
 export function NFTCard(props: NFTCardProps) {
   const defaultChainId = useDefaultChainId();
-  const { data: nft } = useNftQuery(props.contractAddress, props.tokenId);
-  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress, async () => {
-    return await getContractMetadata(props.contractAddress, defaultChainId);
+  const ethPriceUSD = useEthPriceUSD();
+  const { data: nft } = useNftQuery(props.contractAddress, props?.listings ? null : props.tokenId); // skip query if listings are passed by setting tokenId to null
+  const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress + props.collectionName, async () => {
+    return props.collectionName || await getContractMetadata(props.contractAddress, defaultChainId);
   });
   const collectionName = collectionMetadata?.contractMetadata?.name;
-  const { tileBackground, secondaryText, pink, secondaryIcon, link } = useThemeColors();
+  const { tileBackground, pink, secondaryIcon } = useThemeColors();
   const { address: currentAddress } = useAccount();
-  const { toggleCartSidebar } = useContext(NFTListingsContext);
-  const { stagePurchase } = useContext(NFTPurchasesContext);
-  const { getByContractAddress } = useSupportedCurrencies();
   const [selected, setSelected] = useState(false);
-  const ethPriceUsd: number = useEthPriceUSD();
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
@@ -105,40 +101,18 @@ export function NFTCard(props: NFTCardProps) {
     }
   }, [processedImageURLs.length]);
 
-  const lowestListing = getLowestPriceListing(filterValidListings(nft?.listings?.items), ethPriceUsd, defaultChainId);
-  const lowestPrice = getListingPrice(lowestListing);
-  const makeTrait = useCallback((pair: NFTCardTrait, key: any) => {
-    return <div key={key} className="flex mt-2">
-      <span className='text-xs minmd:text-sm' style={{ color: pink }}>
-        {pair.key}{isNullOrEmpty(pair.key) ? '' : ' '}
-      </span>
-      {pair.value !== 'undefined item' ?
-        (<span
-          className='text-xs minmd:text-sm ml-1'
-          style={{ color: secondaryText }}
-        >
-          {pair.value}
-        </span>):
-        (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-          <div className="w-full">
-            <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
-          </div>
-          <span className="sr-only">Loading...</span>
-        </div>)}
-    </div>;
-  }, [pink, secondaryText]);
-
+  const lowestListing = getLowestPriceListing(filterValidListings(props?.listings || nft?.listings?.items), ethPriceUSD, defaultChainId);
   const showListingIcons: boolean = useMemo(() => {
-    return !isNullOrEmpty(filterValidListings(nft?.listings?.items));
-  }, [nft]);
+    return !isNullOrEmpty(filterValidListings(props?.listings || nft?.listings?.items));
+  }, [props, nft]);
 
   const showOpenseaListingIcon: boolean = useMemo(() => {
-    return filterValidListings(nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
-  }, [nft]);
+    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.Seaport) != null;
+  }, [props, nft]);
 
   const showLooksrareListingIcon: boolean = useMemo(() => {
-    return filterValidListings(nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
-  }, [nft]);
+    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
+  }, [props, nft]);
 
   return (
     <Link href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} passHref>
@@ -297,77 +271,18 @@ export function NFTCard(props: NFTCardProps) {
                 })}
               </div>
         }
-        {props.nftsDescriptionsVisible != false && <div className="flex flex-col">
-          {props.imageLayout !== 'row' && <span className={tw(
-            'text-[#6F6F6F] text-sm pt-[10px]'
-          )}>
-            {isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
-          </span>}
-          {props.title ?
-            <span className={`whitespace-nowrap text-ellipsis overflow-hidden font-medium ${props.imageLayout === 'row' ? 'pt-[10px]' : ''}`}>
-              {props.title}
-            </span> :
-            (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-              <div className="w-full">
-                <div className="h-4 bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-4"></div>
-              </div>
-              <span className="sr-only">Loading...</span>
-            </div>)}
-          {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
-    
-          {!isNullOrEmpty(props.description) && (
-            <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
-              {props.description}
-            </div>
-          )}
-          {
-            props.cta &&
-                <div
-                  className="mt-4 text-xs minmd:text-sm cursor-pointer hover:underline"
-                  style={{ color: link }}
-                >
-                  {props.cta}
-                </div>
-          }
-
-          {showListingIcons && !nft?.isOwnedByMe &&
-              <div className='flex flex-col minmd:flex-row flex-wrap mt-3 justify-between'>
-                <div className='flex flex-col pr-2'>
-                  <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>
-                  <p className='font-medium'>
-                    {lowestPrice && ethers.utils.formatEther(lowestPrice)}
-                    {' '}
-                    {lowestListing && getByContractAddress(getListingCurrencyAddress(lowestListing) ?? WETH.address).name}
-                  </p>
-                </div>
-                <div>
-                  {hasGks && <button onClick={async (e: MouseEvent<HTMLButtonElement>) => {
-                    e.stopPropagation();
-                    const listing = lowestListing;
-                    const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
-                    const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
-                    const price = getListingPrice(listing);
-                    stagePurchase({
-                      nft: nft,
-                      activityId: listing?.id,
-                      currency: getListingCurrencyAddress(listing) ?? WETH.address,
-                      price: price,
-                      collectionName: props.collectionName,
-                      protocol: listing?.order?.protocol as ExternalProtocol,
-                      isApproved: BigNumber.from(allowance ?? 0).gt(price),
-                      protocolData: listing?.order?.protocol === ExternalProtocol.Seaport ?
-                        listing?.order?.protocolData as SeaportProtocolData :
-                        listing?.order?.protocolData as LooksrareProtocolData
-                    });
-                    toggleCartSidebar('Buy');
-                  }}
-                  className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-5 rounded focus:outline-none focus:shadow-outline w-full" type="button">
-                    Add to cart
-                  </button>}
-                </div>
-              </div>
-          }
-        </div>}
+        {props.nftsDescriptionsVisible != false &&
+          <DynamicNFTCardDescription
+            imageLayout={props.imageLayout}
+            collectionName={isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
+            title={props.title}
+            traits={props.traits}
+            lowestListing={lowestListing}
+            description={props.description}
+            cta={props.cta}
+            showListingIcons={showListingIcons}
+            nft={nft}
+          />}
       </a>
     </Link>
   );

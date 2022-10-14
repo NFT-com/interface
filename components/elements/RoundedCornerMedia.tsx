@@ -1,9 +1,11 @@
 import { getImageFetcherBaseURL, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { RoundedCornerMediaImage as StaticRoundedCornerMediaImage } from './RoundedCornerMediaImage';
+
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
   TopLeft = 'topleft',
@@ -35,7 +37,7 @@ export interface RoundedCornerMediaProps {
   objectFit?: 'contain' | 'cover';
 }
 
-const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmount): string => {
+export const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmount): string => {
   switch (variant) {
   case RoundedCornerVariant.TopOnly:
     return `${amount === RoundedCornerAmount.Medium ? 'rounded-t-md' : 'rounded-t-3xl'} object-cover`;
@@ -58,6 +60,8 @@ const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCornerAmo
     return '';
   }
 };
+
+const DynamicRoundedCornerMediaImage = dynamic<React.ComponentProps<typeof StaticRoundedCornerMediaImage>>(() => import('components/elements/RoundedCornerMediaImage').then(mod => mod.RoundedCornerMediaImage));
 
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   const [imageSrc, setImageSrc] = useState(null);
@@ -115,12 +119,8 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
               props.extraClasses
             )}
           /> :
-          (imageUrl != 'null?width=600') && <Image
-            alt='NFT Image'
-            key={props.src}
-            quality='50'
-            layout='fill'
-            src={`${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
+          (imageUrl != 'null?width=600') && <DynamicRoundedCornerMediaImage
+            src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
             onError={() => {
               setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
             }}

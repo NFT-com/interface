@@ -104,7 +104,8 @@ module.exports = {
         'rubik': ['Rubik'],
         'hero-heading1': ['Stretch Pro'],
         'dm-mono': ['DM Mono'],
-        'grotesk': ['Grotesk']
+        'grotesk': ['Grotesk'],
+        'noi-grotesk': ['Noi Grotesk Trial'],
       },
       fontSize: {
         'copy-size': '0.825rem',
@@ -168,7 +169,8 @@ module.exports = {
           'linear-gradient(0deg, #000000 32.93%, rgba(0, 0, 0, 0) 100%)',
         'text-gradient': 'linear-gradient(#FAC213, #FAC213)',
         'img-shadow-light':
-          'linear-gradient(0deg, #F9D54C 32.93%, rgba(249, 213, 76, 0) 100%)',
+          //'linear-gradient(0deg, #F9D54C 32.93%, rgba(249, 213, 76, 0) 100%)',
+          'linear-gradient(180deg, rgba(252, 194, 21, 0) 0%, #F9D54C 100%)',
         'img-shadow-dark':
           'linear-gradient(0deg, #000000 32.93%, rgba(0, 0, 0, 0) 100%)',
       },
