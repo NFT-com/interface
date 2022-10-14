@@ -12,12 +12,14 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ShoppingCartSimple } from 'phosphor-react';
 import NavLogo from 'public/Logo.svg';
 import LightNavLogo from 'public/LogoLight.svg';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotificationBadge>>(() => import('components/modules/Notifications/NotificationBadge').then(mod => mod.NotificationBadge));
@@ -25,6 +27,8 @@ const DynamicNotificationBadge = dynamic<React.ComponentProps<typeof StaticNotif
 type HeaderProps = {
   removeBg?: boolean
 }
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const Header = ({ removeBg }: HeaderProps) => {
   const { setSearchModalOpen, setModalType } = useSearchModal();
@@ -37,20 +41,58 @@ export const Header = ({ removeBg }: HeaderProps) => {
   useMaybeCreateUser();
 
   const useDarkMode = user?.isDarkMode;
+
+  useEffect(() => {
+    const headerAnim = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.hero-parent',
+        start: '1px top',
+        end: '+=50%',
+        toggleActions: 'play none none none',
+      }
+    })
+      .to('#header-right', {
+        opacity: 1,
+        scale: 1,
+        duration: 1,
+        ease: 'power2.out'
+      }, 0)
+      .to('#header-left', {
+        width: 'auto',
+        duration: 1.25,
+        ease: 'power2.out'
+      }, 0)
+      .to('#header-shadow', {
+        opacity: 1,
+        scaleY: 1,
+        duration: 1.5,
+        ease: 'power2.out'
+      }, 0)
+      .to('#header', {
+        scaleX: 1,
+        duration: 1.5,
+        ease: 'power2.out'
+      }, 0);
+
+    return () => {
+      headerAnim.kill();
+    };
+  });
+
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <nav className={tw(
-        'fixed left-5 right-5 minlg:left-14 minlg:right-14 top-6 minlg:top-7',
-        'h-20 rounded-full z-[104] shadow-md',
-        removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
+      <nav id='header' className={tw(
+        'scale-[1.05]',
+        'fixed inset-x-5 minlg:inset-x-8 minxl:inset-x-14 top-6 minlg:top-7',
+        'h-[5.5rem] z-[104]',
       )}>
-        <div className="w-full mx-auto px-5">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center h-20 minlg:w-[60%]">
+        <div className="w-full h-full mx-auto px-11">
+          <div className="flex items-center justify-between h-full">
+            <div id='header-left' className="flex items-center h-full minlg:w-[60%]">
               <div className="flex items-center">
-                <div className="flex-shrink-0 flex items-center hover:cursor-pointer mr-7">
+                <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-14">
                   <Link href='/' passHref>
-                    <div className='w-8 h-8'>
+                    <div className='w-10 h-10'>
                       {useDarkMode ? <LightNavLogo className='justify-start' /> : <NavLogo className='justify-start' />}
                     </div>
                   </Link>
@@ -74,32 +116,34 @@ export const Header = ({ removeBg }: HeaderProps) => {
               <div
                 className={tw(
                   'hidden minlg:block',
-                  'ml-auto mr-8',
                   'h-max flex-shrink-0',
                   'font-grotesk text-[#6F6F6F] font-medium tracking-wide',
                   'flex items-center',
-                  'pr-4 py-[2px]'
+                  'pr-4 py-[2px] mr-8 ml-auto'
                 )}
               >
                 <Link href='/app/discover'>
-                  <a className='p-2 text-black text-[2.5rem] minlg:text-xl minxxl:text-3xl cursor-pointer hover:text-secondary-yellow'>Discover</a>
+                  <a className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Discover</a>
                 </Link>
                 <Link href='/app/gallery'>
-                  <a className='p-2 text-black text-[2.5rem] minlg:text-xl minxxl:text-3xl cursor-pointer hover:text-secondary-yellow'>Gallery</a>
+                  <a className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Gallery</a>
                 </Link>
                 <a
                   href=""
-                  className='p-2 text-black text-[2.5rem] minlg:text-xl minxxl:text-3xl cursor-pointer hover:text-secondary-yellow'>Learn</a>
+                  className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Learn</a>
               </div>
             </div>
 
-            <div className='flex items-center ...'>
-              <div className="hidden minlg:block mr-6">
+            <div id='header-right' className={tw(
+              'opacity-0 scale-50',
+              'flex items-center ...'
+            )}>
+              <div className="hidden minlg:block mr-2">
                 <SearchBar />
               </div>
 
               <button
-                className='block minlg:hidden cursor-pointer mr-2 h-full w-7'
+                className='block minlg:hidden cursor-pointer mr-4 minlg:mr-0 h-full w-7'
                 onClick={() => {
                   setModalType('search');
                   setSearchModalOpen(true);
@@ -109,7 +153,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
               </button>
               <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
               <div
-                className='h-full flex items-center relative ml-6 cursor-pointer'
+                className='h-full flex items-center relative ml-3 -mr-5 cursor-pointer'
                 onClick={() => {
                   toggleCartSidebar();
                 }}
@@ -120,7 +164,10 @@ export const Header = ({ removeBg }: HeaderProps) => {
                   </div>
                 )}
                 <button
-                  className='cursor-pointer mr-2 h-full w-7'
+                  className={tw(
+                    'mr-1 h-12 w-12 rounded-full hover:bg-[#FFF4CA] transition-colors',
+                    'flex items-center justify-center cursor-pointer'
+                  )}
                 >
                   <ShoppingCartSimple size={20} color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
@@ -128,6 +175,11 @@ export const Header = ({ removeBg }: HeaderProps) => {
             </div>
           </div>
         </div>
+        <span id='header-shadow' className={tw(
+          'opacity-0 scale-y-[.3]',
+          'rounded-full shadow-md absolute left-0 top-0 right-0 bottom-0 -z-10',
+          removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
+        )}></span>
       </nav>
     );
   } else {

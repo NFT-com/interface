@@ -1,6 +1,7 @@
 import { Maybe, Nft, ProfileDisplayType, ProfileLayoutType } from 'graphql/generated/types';
 import { useFileUploadMutation } from 'graphql/hooks/useFileUploadMutation';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
+import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileOrderingUpdateMutation } from 'graphql/hooks/useProfileOrderingUpdateMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -32,6 +33,7 @@ export interface ProfileContextType {
   allOwnerNftCount: number;
   userIsAdmin: boolean;
   loadMoreNfts: () => void;
+  loadMoreNftsEditMode: () => void;
   setAllItemsOrder: (items: PartialDeep<Nft>[]) => void;
   // editor state
   toggleHidden: (id: string, currentVisibility: boolean) => void;
@@ -60,6 +62,7 @@ export interface ProfileContextType {
   setSelectedCollection: (collectionAddress: string) => void;
   draftNftsDescriptionsVisible: Maybe<boolean>;
   setDraftNftsDescriptionsVisible: (val: boolean) => void;
+  loading: boolean;
 }
 
 // initialize with default values
@@ -70,6 +73,7 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   allOwnerNfts: [],
   allOwnerNftCount: 0,
   loadMoreNfts: () => null,
+  loadMoreNftsEditMode: () => null,
   setAllItemsOrder: () => null,
   userIsAdmin: false,
   toggleHidden: () => null,
@@ -98,11 +102,15 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   setSelectedCollection: () => null,
   draftNftsDescriptionsVisible: true,
   setDraftNftsDescriptionsVisible: () => null,
+  loading: false,
 });
 
 export interface ProfileContextProviderProps {
   profileURI: string;
 }
+
+
+const PUBLIC_PROFILE_LOAD_COUNT = 8;
 
 /**
  * This context provides state management and helper functions for viewing and editing Profiles.
@@ -111,21 +119,27 @@ export function ProfileContextProvider(
   props: PropsWithChildren<ProfileContextProviderProps>
 ) {
   const { chain } = useNetwork();
+  const { usePrevious } = usePreviousValue();
 
   /**
    * Queries
    */
+
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const [loadedCount, setLoadedCount] = useState(1000);
+  const [afterCursor, setAfterCursor] = useState('');
   const {
     nfts: publicProfileNfts,
     totalItems: publicProfileNftsCount,
     mutate: mutatePublicProfileNfts,
+    loading,
+    pageInfo
   } = useProfileNFTsQuery(
     profileData?.profile?.id,
     String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-    loadedCount
+    PUBLIC_PROFILE_LOAD_COUNT,
+    afterCursor
   );
   const {
     data: allOwnerNfts,
@@ -133,7 +147,7 @@ export function ProfileContextProvider(
     totalItems: allOwnerNftCount,
     mutate: mutateAllOwnerNfts
   } = useMyNFTsQuery(loadedCount, profileData?.profile?.id);
-
+ 
   /**
    * Edit mode state
    */
@@ -177,6 +191,8 @@ export function ProfileContextProvider(
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
   const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);
   const [editModeNfts, setEditModeNfts] = useState<PartialDeep<DetailedNft>[]>(null);
+  
+  const prevPublicProfileNfts = usePrevious(publicProfileNfts);
 
   useEffect(() => {
     if (!loadingAllOwnerNfts) {
@@ -199,10 +215,16 @@ export function ProfileContextProvider(
   }, []);
   
   useEffect(() => {
-    if (publiclyVisibleNfts == null || !editMode) {
-      setPubliclyVisibleNfts(publicProfileNfts);
+    if (!editMode) {
+      if (publiclyVisibleNfts == null ) {
+        setPubliclyVisibleNfts(publicProfileNfts);
+      }
+
+      if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
+        setPubliclyVisibleNfts([...publiclyVisibleNfts, ...publicProfileNfts]);
+      }
     }
-  }, [publicProfileNfts, publiclyVisibleNfts, editMode]);
+  }, [afterCursor, editMode, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNfts]);
   
   /**
    * Mutations
@@ -358,6 +380,9 @@ export function ProfileContextProvider(
     publiclyVisibleNfts: publiclyVisibleNfts ?? [],
     publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
     loadMoreNfts: () => {
+      pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
+    },
+    loadMoreNftsEditMode: () => {
       setLoadedCount(loadedCount + 100);
     },
     setAllItemsOrder,
@@ -414,6 +439,7 @@ export function ProfileContextProvider(
     clearDrafts,
     selectedCollection,
     setSelectedCollection,
+    loading,
   }}>
     {props.children}
   </ProfileContext.Provider>;
