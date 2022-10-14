@@ -74,7 +74,7 @@ export const NFTCardDescription = (props: {
             {props.cta}
           </div>
       }
-      {props.showListingIcons && !props.nft?.isOwnedByMe && <DynamicNFTCardListingIcons collectionName={props.collectionName} nft={props.nft}/>}
+      {props.showListingIcons && !props.nft?.isOwnedByMe && <DynamicNFTCardListingIcons lowestListing={props.lowestListing} collectionName={props.collectionName} nft={props.nft}/>}
     </div>
   );
 };
