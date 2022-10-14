@@ -15,12 +15,12 @@ import ReactLoading from 'react-loading';
 
 type MintFreeProfileCardProps = {
   type: 'Free' | 'Paid';
+  minting: boolean;
   setModalOpen: (open: boolean) => void;
   setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string}) => void;
 };
 
-export default function MintFreeProfileCard({ type, setModalOpen, setMintingState }: MintFreeProfileCardProps ) {
-  const [minting, setMinting] = useState(false);
+export default function MintFreeProfileCard({ type, minting, setModalOpen, setMintingState }: MintFreeProfileCardProps ) {
   const [profileURI, setProfileURI] = useState(null);
   const [input, setInput] = useState([]);
   const [profileStatus, setProfileStatus] = useState('');
@@ -108,13 +108,12 @@ export default function MintFreeProfileCard({ type, setModalOpen, setMintingStat
                 ) {
                   return;
                 }
-                setMinting(true);
+                setModalOpen(true);
                 setMintingState({
                   inputs: input,
                   type: type,
                   tokenId: null
                 });
-                setModalOpen(true);
               }}
             >
               {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}

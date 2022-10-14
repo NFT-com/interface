@@ -19,13 +19,13 @@ import ReactLoading from 'react-loading';
 import { useAccount } from 'wagmi';
 
 type MintGKProfileCardProps = {
-  setModalOpen: (open: boolean) => void
-  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string}) => void
+  minting: boolean;
+  setModalOpen: (open: boolean) => void;
+  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string}) => void;
 };
 
-export default function MintGKProfileCard({ setModalOpen, setMintingState }: MintGKProfileCardProps) {
+export default function MintGKProfileCard({ setModalOpen, setMintingState, minting }: MintGKProfileCardProps) {
   const [currentValue, setCurrentValue] = useState(null);
-  const [minting, setMinting] = useState(false);
   const [profileStatus, setProfileStatus] = useState('');
   const [selectedGK, setSelectedGK] = useState(null);
   
@@ -225,13 +225,12 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState }: Min
               ) {
                 return;
               }
-              setMinting(true);
+              setModalOpen(true);
               setMintingState({
                 inputs: filteredInputs,
                 type: 'GK',
                 tokenId: selectedGK?.tokenId
               });
-              setModalOpen(true);
             }}
           >
             {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}

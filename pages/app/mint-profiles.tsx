@@ -27,6 +27,7 @@ export default function MintProfilesPage() {
   const { address: currentAddress } = useAccount();
   const { freeMintAvailable, loading: loadingFreeMint } = useFreeMintAvailable(currentAddress);
   const { claimable, loading: loadingClaimable } = useClaimableProfileCount(currentAddress);
+  const [minting, setMinting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [mintingState, setMintingState] = useState(
     {
@@ -44,21 +45,31 @@ export default function MintProfilesPage() {
     }
   }, [currentAddress, router]);
 
+  const setMintingModal = useCallback((isOpen) => {
+    if(isOpen){
+      setMinting(true);
+      setModalOpen(true);
+    } else {
+      setMinting(false);
+      setModalOpen(false);
+    }
+  }, [setModalOpen]);
+
   const getMintProfileCard = useCallback(() => {
+    if(freeMintAvailable) {
+      return <MintFreeProfileCard type='Free' minting={minting} setModalOpen={setModalOpen} setMintingState={setMintingState}/>;
+    }
     if(!loadingClaimable && !isNullOrEmpty(claimable) && !freeMintAvailable && !loadingFreeMint) {
-      return <MintGKProfileCard setModalOpen={setModalOpen} setMintingState={setMintingState} />;
+      return <MintGKProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
     }
-
     if(!loadingFreeMint && freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
-      return <MintFreeProfileCard type='Free' setModalOpen={setModalOpen} setMintingState={setMintingState}/>;
+      return <MintFreeProfileCard type='Free' minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState}/>;
     }
-
     if(!loadingFreeMint && !freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
-      return <MintFreeProfileCard type='Paid' setModalOpen={setModalOpen} setMintingState={setMintingState} />;
+      return <MintFreeProfileCard type='Paid' minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
     }
-
     return <MintProfileCardSkeleton />;
-  }, [claimable, freeMintAvailable, loadingClaimable, loadingFreeMint]);
+  }, [claimable, freeMintAvailable, loadingClaimable, loadingFreeMint, minting, setMintingModal]);
 
   if (!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
     return <NotFoundPage />;
@@ -127,7 +138,7 @@ export default function MintProfilesPage() {
         </div>
       </div>
 
-      <MintProfileModal isOpen={modalOpen} setIsOpen={setModalOpen} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} />
+      <MintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} />
     </div>
   );
 }
