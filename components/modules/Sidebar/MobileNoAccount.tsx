@@ -15,7 +15,7 @@ export default function MobileNoAccount({ setSignIn }: MobileNoAccountProps) {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <motion.div className='text-white font-grotesk bg-black h-full px-5 py-10'>
+      <motion.div className='text-white font-noi-grotesk bg-black h-full px-5 py-10'>
         <div className="flex-shrink-0 flex items-center hover:cursor-pointer mr-7">
           <Link href='/' passHref>
             <div className='w-8 h-8'>

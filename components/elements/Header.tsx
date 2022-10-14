@@ -16,7 +16,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { ShoppingCartSimple } from 'phosphor-react';
+import ShoppingCartSimple from 'public/cart.svg';
 import NavLogo from 'public/Logo.svg';
 import LightNavLogo from 'public/LogoLight.svg';
 import React, { useContext, useEffect } from 'react';
@@ -43,12 +43,12 @@ export const Header = ({ removeBg }: HeaderProps) => {
   const useDarkMode = user?.isDarkMode;
 
   useEffect(() => {
-    const headerAnim = gsap.timeline({
+    gsap.timeline({
       scrollTrigger: {
         trigger: '.hero-parent',
         start: '1px top',
-        end: '+=50%',
-        toggleActions: 'play none none none',
+        end: '+=30%',
+        toggleActions: 'play none reverse none',
       }
     })
       .to('#header-right', {
@@ -73,16 +73,12 @@ export const Header = ({ removeBg }: HeaderProps) => {
         duration: 1.5,
         ease: 'power2.out'
       }, 0);
-
-    return () => {
-      headerAnim.kill();
-    };
   });
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <nav id='header' className={tw(
-        'scale-[1.05]',
+      <header id='header' className={tw(
+        'scale-[1.05] font-noi-grotesk',
         'fixed inset-x-5 minlg:inset-x-8 minxl:inset-x-14 top-6 minlg:top-7',
         'h-[5.5rem] z-[104]',
       )}>
@@ -113,11 +109,11 @@ export const Header = ({ removeBg }: HeaderProps) => {
                 </div>
               </div>
 
-              <div
+              <nav
                 className={tw(
                   'hidden minlg:block',
                   'h-max flex-shrink-0',
-                  'font-grotesk text-[#6F6F6F] font-medium tracking-wide',
+                  'text-[#6F6F6F] font-medium tracking-wide',
                   'flex items-center',
                   'pr-4 py-[2px] mr-8 ml-auto'
                 )}
@@ -131,7 +127,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
                 <a
                   href=""
                   className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Learn</a>
-              </div>
+              </nav>
             </div>
 
             <div id='header-right' className={tw(
@@ -169,7 +165,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
                     'flex items-center justify-center cursor-pointer'
                   )}
                 >
-                  <ShoppingCartSimple size={20} color={useDarkMode ? primaryIcon : 'black'} />
+                  <ShoppingCartSimple size={24} color={useDarkMode ? primaryIcon : 'black'} />
                 </button>
               </div>
             </div>
@@ -180,7 +176,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
           'rounded-full shadow-md absolute left-0 top-0 right-0 bottom-0 -z-10',
           removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
         )}></span>
-      </nav>
+      </header>
     );
   } else {
     return (

@@ -109,7 +109,6 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
-
 const PUBLIC_PROFILE_LOAD_COUNT = 8;
 
 /**
@@ -147,7 +146,7 @@ export function ProfileContextProvider(
     totalItems: allOwnerNftCount,
     mutate: mutateAllOwnerNfts
   } = useMyNFTsQuery(loadedCount, profileData?.profile?.id);
- 
+
   /**
    * Edit mode state
    */
@@ -160,7 +159,7 @@ export function ProfileContextProvider(
   const [draftHeaderImg, setDraftHeaderImg] = useState({ preview: '', raw: null });
   const [draftDisplayType, setDraftDisplayType] = useState(null);
   const [selectedCollection, setSelectedCollection] = useState<string>(null);
-  const [draftLayoutType , setDraftLayoutType] = useState<ProfileLayoutType>(null);
+  const [draftLayoutType, setDraftLayoutType] = useState<ProfileLayoutType>(null);
   const [draftDeployedContractsVisible, setDraftDeployedContractsVisible] = useState<boolean>(profileData?.profile?.deployedContractsVisible);
 
   useEffect(() => {
@@ -187,11 +186,11 @@ export function ProfileContextProvider(
     profileData?.profile?.gkIconVisible,
     profileData?.profile?.nftsDescriptionsVisible
   ]);
-  
+
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
   const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);
   const [editModeNfts, setEditModeNfts] = useState<PartialDeep<DetailedNft>[]>(null);
-  
+
   const prevPublicProfileNfts = usePrevious(publicProfileNfts);
 
   useEffect(() => {
@@ -213,10 +212,10 @@ export function ProfileContextProvider(
       ...orderedItems.filter((nft: DetailedNft) => nft.hidden),
     ]);
   }, []);
-  
+
   useEffect(() => {
     if (!editMode) {
-      if (publiclyVisibleNfts == null ) {
+      if (publiclyVisibleNfts == null) {
         setPubliclyVisibleNfts(publicProfileNfts);
       }
 
@@ -225,7 +224,7 @@ export function ProfileContextProvider(
       }
     }
   }, [afterCursor, editMode, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNfts]);
-  
+
   /**
    * Mutations
    */
@@ -285,7 +284,7 @@ export function ProfileContextProvider(
           avatar: draftProfileImg.raw ?? null,
           banner: draftHeaderImg.raw ?? null
         });
-  
+
         let headerUploadImage: string;
         let profileUploadImage: string;
         if (!imageUploadResult) {
@@ -324,7 +323,7 @@ export function ProfileContextProvider(
               photoURL: profileUploadImage,
             })
         });
-  
+
         if (result) {
           mutateProfileData();
           mutatePublicProfileNfts();
