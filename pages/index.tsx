@@ -108,8 +108,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         scrub: false,
         pin: true,
         start: '1px top',
-        end: '+=50%',
-        toggleActions: 'play none none none',
+        end: '+=30%',
+        toggleActions: 'play none reverse none',
       },
       width: '100vw',
       backgroundColor: '#000',
@@ -117,12 +117,12 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       ease: 'power2.out'
     });
 
-    const heroAnim = gsap.timeline({
+    gsap.timeline({
       scrollTrigger: {
         trigger: '.hero-parent',
         start: '1px top',
-        end: '+=50%',
-        toggleActions: 'play none none none',
+        end: '+=30%',
+        toggleActions: 'play none reverse none',
       }
     })
       .to('#hero-player', {
@@ -168,7 +168,6 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
     return () => {
       imagesAnim.kill();
-      heroAnim.kill();
     };
   }, [data?.featuredProfile, data.learnCards, data.tickerStats, featuredProfileNFT1, featuredProfileNFT2, featuredProfileNFT3, data.learnCardImagesCollection.items, data.learnCardImagesCollection, data.subheroTitle]);
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
@@ -187,52 +186,54 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             cardType: 'summary_large_image',
           }}
         />
-        <main className='font-grotesk not-italic HomePageContainer'>
+        <main className='font-noi-grotesk not-italic HomePageContainer'>
           {/* Block: Intro */}
           <div className='bg-white hero-parent' ref={el}>
             {/* Intro Text */}
-            <div id='hero-text-anim' className='py-32 pl-[5vw] h-screen flex flex-col justify-center items-start'>
+            <div id='hero-text-anim' className='py-[4vh] pl-[5vw] h-screen flex flex-col justify-center items-start'>
               <h2 className={tw(
-                'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854]',
-                'text-black font-medium mb-14'
+                'text-[3rem] minmd:text-header minxl:text-[6.25rem] minxxl:text-[7.5rem] leading-[1.15]',
+                'text-black font-normal tracking-tight mb-14'
               )}>
-                Own your <img className={tw(
-                  'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                  'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
+                Own your<img className={tw(
+                  'drop-shadow-md inline-block minxxl:w-[5.5rem]',
+                  'mx-[1.8rem] -my-[.5rem]',
+                  'rotate-[40deg] rounded-xl'
                 )} src="ico-discover.png" alt="" />
                 <br className='hidden minlg:block' />
-                NFT <img className={tw(
-                  'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                  'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
+                NFT<img className={tw(
+                  'drop-shadow-md inline-block minxxl:w-[5.5rem]',
+                  'mx-[1.8rem] -my-[.5rem]',
+                  'rotate-[40deg] rounded-xl'
                 )} src="ico-discover.png" alt="" />
                 <span className='text-secondary-yellow'>identity</span></h2>
 
               <a href="" className={tw(
                 'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
-                'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
+                'inline-flex items-center justify-center text-center h-[4.1875rem] minxxl:h-[6rem] px-6 minxxl:px-9',
                 'text-xl minxxl:text-3xl text-white font-medium uppercase'
               )}>create a Profile</a>
             </div>
 
             {/* Animation */}
-            <div id='hero-anim' className='overflow-hidden absolute right-0 top-0 h-screen bg-[#F9D54C] z-[105]'>
-              <div id="hero-player" className='-skew-x-[34deg] skew-y-[18deg] scale-[1.6]'>
+            <div id='hero-anim' className='w-[40%] overflow-hidden absolute right-0 top-0 h-screen bg-[#F9D54C] z-[105]'>
+              <div id="hero-player" className='-skew-x-[34deg] skew-y-[18deg] scale-[1.6] translate-y-[22%]'> {/* */}
                 <Player
                   autoplay
                   loop
                   src="/anim/cycle.json"
-                  style={{ height: '100%', width: '100%', minWidth: '45rem' }}
+                  style={{ height: '100%', width: '100%' }}
                 >
                 </Player>
               </div>
 
               <div id='hero-caption' className={tw(
-                'scale-[.6]',
+                'scale-[.71]',
                 'absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 rounded-full',
                 'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
-                'flex items-center justify-center text-center px-7',
+                'flex items-center justify-center text-center px-7 minxxl: px-10',
                 'text-[2.625rem] minmd:text-[5rem] minlg:text-[7rem] minxxl:text-[9rem]',
-                'font-medium leading-none tracking-tight'
+                'leading-none tracking-tight'
               )}>
                 <span className='text-white/40'>NFT.COM</span>
                 <span className='text-[.75em] -mt-3 font-bold text-secondary-yellow'>/</span>
@@ -241,7 +242,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
               <span id='hero-shadow-light' className={tw(
                 'opacity-1',
-                'absolute w-full h-[28.75rem] bottom-0 left-0 z-10 bg-img-shadow-light pointer-events-none'
+                'absolute w-full h-[41.25rem] bottom-0 left-0 z-10 bg-img-shadow-light pointer-events-none'
               )}></span>
               <span id='hero-shadow-dark' className={tw(
                 'opacity-0',
@@ -262,20 +263,20 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             )}>
               <h2 className={tw(
                 'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px]',
-                'leading-[1.0854] font-medium text-white mb-14'
+                'leading-[1.0854] font-normal text-white mb-14 minxxl:mb-20'
               )}>
                 What you can do <br className='hidden minlg:block' />
-                with an
-                <img className={tw(
-                  'drop-shadow-md inline-block max-w-[6rem] minlg:max-w-none',
-                  'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
+                with an<img className={tw(
+                  'drop-shadow-md inline-block minxxl:w-[5.5rem]',
+                  'mx-[1.8rem] -my-[.5rem]',
+                  'rotate-[40deg] rounded-xl'
                 )} src="ico-discover.png" alt="" />
                 <span className='text-secondary-yellow'>NFT Profile</span></h2>
 
               <div className='minlg:grid grid-cols-2 gap-2 minlg:gap-4 -mb-24'>
                 <div className={tw(
                   'mb-5 minlg:mb-0',
-                  'px-8 pt-12 pb-4 relative z-0 overflow-hidden',
+                  'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                   'bg-white border-black border-2 rounded-3xl rounded-tr-none'
                 )}>
                   <svg className={tw(
@@ -303,16 +304,16 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   </svg>
 
                   <h3 className={tw(
-                    'text-black font-bold mb-6 minlg:pr-44',
+                    'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
                     'text-3xl minxl:text-6xl minxxl:text-[5.5rem]',
                     'leading-[1.125] minxl:leading-[1.125]'
                   )}>Claim Your Profile</h3>
-                  <p className='text-base minlg:text-[22px] minxxl:text-3xl leading-normal'>NFT Profiles are personalized NFT galleries which form the foundation for a decentralized web3 social network. NFT Profiles are transferable and customizable. </p>
+                  <p className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>NFT Profiles are personalized NFT galleries which form the foundation for a decentralized web3 social network. NFT Profiles are transferable and customizable. </p>
                   <div className={tw(
-                    'w-full h-[1.7em] mx-auto mt-10 mb-6',
+                    'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9',
                     'bg-[#121212] drop-shadow-lg rounded-full',
                     'flex items-center justify-center text-center',
-                    'text-3xl minlg:text-[4rem] minxxl:text-[5rem] font-medium leading-none tracking-tight'
+                    'text-3xl minlg:text-[4rem] minxxl:text-[5rem] leading-none tracking-tight'
                   )}>
                     <span className='text-white/40'>NFT.COM</span>
                     <span className='text-[.75em] leading-loose font-bold text-secondary-yellow'>/</span>
@@ -320,14 +321,15 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   </div>
                   <div className='text-center mb-10'>
                     <a href="" className={tw(
-                      'text-base minlg:text-xl minxxl:text-3xl',
+                      'text-base font-medium minlg:text-xl minxxl:text-3xl',
                       'underline underline-offset-4 hover:no-underline'
-                    )}>Create a Profile →</a>
+                    )}>Create a Profile <span className='text-[.75em] font-bold'>&#129122;</span></a>
                   </div>
                 </div>
 
                 <div className={tw(
-                  'px-8 pt-12 pb-4 relative z-0 overflow-hidden',
+                  'mb-5 minlg:mb-0',
+                  'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                   'bg-white border-black border-2 rounded-3xl rounded-tr-none'
                 )}>
                   <svg className={tw(
@@ -355,13 +357,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   </svg>
 
                   <h3 className={tw(
-                    'text-black font-bold mb-6 minlg:pr-44',
+                    'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
                     'text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.125] minxl:leading-[1.125]'
                   )}>Buy and Sell NFTs</h3>
-                  <p className='text-base minlg:text-[22px] minxxl:text-3xl leading-normal mb-4'>NFT.com has a built in marketplace aggregator for buying and selling NFTs wherever they live. Promote your collection with a single NFT Profile wherever it is for sale.</p>
+                  <p className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>NFT.com has a built in marketplace aggregator for buying and selling NFTs wherever they live. Promote your collection with a single NFT Profile wherever it is for sale.</p>
 
-                  <div className='overflow-hidden -mx-9'>
-                    <div className="w-[150%] -translate-x-5 flex items-center gap-5 mb-4">
+                  <div className='overflow-hidden -mx-9 mt-4 minxxl:mt-6'>
+                    <div className="w-[150%] -translate-x-5 flex items-center gap-5 mb-4 minxxl:mb-6">
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
                       <img src="medici.png" className='w-16 minxl:w-28 minxxl:w-36 rounded-full' alt="" />
@@ -389,13 +391,19 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           {/* Block: Discover */}
           <div className="px-3 minmd:px-14 minxxl:px-20">
             <div className='grid minmd:grid-cols-2 items-center mb-16 minmd:mb-[5.5rem]'>
-              <div className='minmd:ml-7'>
-                <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium mb-6'><span className='text-secondary-yellow'>
-                  Discover <br />
-                  <img className={tw(
-                    'drop-shadow-md inline-block max-w-[1.15em] minlg:max-w-none',
-                    'ml-[1rem] mt-[-1rem] mb-[-1rem]'
-                  )} src="ico-discover.png" alt="" /> a</span><br />
+              <div className='minmd:ml-7 pr-[25%]'>
+                <h2 className={tw(
+                  'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal',
+                  'mb-6 minxxl:mb-9'
+                )}>
+                  <span className='text-secondary-yellow'>
+                    Discover <br />
+                    <img className={tw(
+                      'drop-shadow-md inline-block minxxl:w-[5.5rem]',
+                      'mx-[1.8rem] -my-[.5rem]',
+                      'rotate-[40deg] rounded-xl'
+                    )} src="ico-discover.png" alt="" />a</span>
+                  <br />
                   New World
                 </h2>
                 <p className='text-base minlg:text-xl minxxl:text-3xl'>NFTs enable new forms of community engagement. Collect, Display, and Trade your NFTs through a social network that you own. Get started by building your NFT Profile.</p>
@@ -411,7 +419,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <div className="px-3 minlg:px-14 minxxl:px-20">
             <div className='overflow-hidden'>
               <div className='relative z-0 p-6 pt-[3.15rem] bg-primary-yellow rounded-3xl mt-5 mb-[120px]'>
-                <svg className='absolute -z-10 top-0 right-0 translate-x-1/3 -translate-y-2/3 minmd:translate-x-1/3 -minmd:translate-y-3/4 max-w-full' aria-hidden="true" width="522" height="625" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
+                <svg className='absolute -z-10 top-0 right-0 translate-x-4 -translate-y-3/4 max-w-full' aria-hidden="true" width="522" height="625" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
                   <path d="M391.42 0H305.875C305.146 0 304.492 0.449257 304.23 1.13017L108.923 508.603C108.478 509.758 109.331 511 110.568 511H193.683C194.41 511 195.063 510.554 195.327 509.877L393.063 2.40395C393.514 1.24765 392.661 0 391.42 0Z" fill="white" />
                   <path d="M283.42 57H197.875C197.146 57 196.492 57.4493 196.23 58.1302L0.922552 565.603C0.477943 566.758 1.33065 568 2.5685 568H85.6835C86.4104 568 87.0629 567.554 87.3268 566.877L285.063 59.4039C285.514 58.2477 284.661 57 283.42 57Z" fill="white" />
                   <path d="M443.42 88H357.875C357.146 88 356.492 88.4493 356.23 89.1302L160.923 596.603C160.478 597.758 161.331 599 162.568 599H245.683C246.41 599 247.063 598.554 247.327 597.877L445.063 90.4039C445.514 89.2477 444.661 88 443.42 88Z" fill="white" />
@@ -421,26 +429,26 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </svg>
 
                 <div className='relative'>
-                  <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium mb-[1rem]'>How it works?</h2>
-                  <p className='text-base minlg:text-2xl minxxl:text-4xl mb-8'>How nft.com works</p>
+                  <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal mb-[1rem]'>How it works?</h2>
+                  <p className='text-base minlg:text-[1.625rem] minxxl:text-4xl mb-8'>How nft.com works</p>
                 </div>
 
-                <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 mb-[-127px]'>
-                  <div className='bg-black rounded-2xl p-4 pb-12 md:mb-5 text-white'>
+                <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 minxxl:gap-7 mb-[-127px]'>
+                  <div className='bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'>
                     <img className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl leading-tight mb-4'>Claim a <br className='hidden minlg:block' />Profile</h3>
+                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Claim a <br className='hidden minlg:block' />Profile</h3>
                     <p className='text-base minlg:text-xl minxxl:text-3xl'>Create an NFT Profile for your unique username that is itself an NFT. You own the profile that will go anywhere your NFTs do.</p>
                   </div>
 
-                  <div className=' bg-black rounded-2xl p-4 pb-12 md:mb-5 text-white'>
+                  <div className=' bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'>
                     <img className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl leading-tight mb-4'>Customize your Collection</h3>
+                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Customize your Collection</h3>
                     <p className='text-base minlg:text-xl minxxl:text-3xl'>Customize your NFT Profile to display your personal collection from any address or to promote your NFT collection.</p>
                   </div>
 
-                  <div className=' bg-black rounded-2xl p-4 pb-12 text-white'>
+                  <div className=' bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 text-white'>
                     <img className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl leading-tight mb-4'>Grow your Community</h3>
+                    <h3 className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Grow your Community</h3>
                     <p className='text-base minlg:text-xl minxxl:text-3xl'>Promote your NFT Profile with your unique NFT.com url to drive purchasing and growth wherever your NFTs are listed.</p>
                   </div>
                 </div>
@@ -448,16 +456,19 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             </div>
           </div>
 
-          {/* Block: Table */}
+          {/* Block: Leaderboard */}
           <div className='px-3 minmd:px-14 minxxl:px-20 overflow-hidden relative pt-[11.625rem]'>
             <svg className='absolute -z-10 top-0 left-1/2 -translate-x-[58%] -translate-y-[2.2rem]' width="2102" height="940" viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
 
-            <div className='bg-white shadow-2xl rounded-3xl mb-[5.5rem] px-4 minmd:px-10 pt-12 pb-5 ...'>
+            <div className='bg-white shadow-2xl rounded-3xl mb-[5.5rem] px-4 minmd:px-10 pt-12 ...'>
               <div className="minmd:flex justify-between items-center mb-4 minmd:mb-0">
-                <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] minxl:leading-[.842] font-medium max-w-2xl justify-center minmd:mb-16 ...'>
+                <h2 className={tw(
+                  'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px]',
+                  'minxl:leading-[.842] font-normal max-w-2xl justify-center minmd:mb-16 ...'
+                )}>
                   {data?.leaderboardTitle}
                 </h2>
-                <span className='text-2xl minmd:ml-4 text-[#B2B2B2]'><span className='text-[#FBC214]'>Top 10</span> collectors</span>
+                <span className='text-[1.25rem] minmd:text-[1.625rem] minxxl:text-[2.25rem] minmd:ml-4 text-[#B2B2B2]'><span className='text-[#FBC214]'>Top 10</span> collectors</span>
               </div>
 
               <DynamicLeaderBoard data={leaderboardData} />
@@ -481,21 +492,24 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </svg>
 
                 <div className='relative'>
-                  <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-medium mb-5 text-white'>News</h2>
+                  <h2 className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal mb-5 text-white'>News</h2>
                   <p className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>Latest from the blog</p>
                 </div>
 
                 <div className='-mr-9 overflow-hidden mb-12'>
-                  <div className='flex gap-5'>
+                  <div className='flex gap-5 minxxl:gap-8'>
                     <div className={tw(
                       'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
                       'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
                     )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
-                      <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>7 NFT Games You Can Play Right Now</h3>
-                        <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
-                          <img className='rounded-full mr-3' src="ava.png" alt="" />
+                      <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
+                        <h3 className={tw(
+                          'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
+                          'mb-11 minxxl:mb-16'
+                        )}>7 NFT Games You Can Play Right Now</h3>
+                        <div className='flex items-center mt-auto text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
+                          <img className='rounded-full mr-3 minxxl:w-12' src="ava.png" alt="" />
                           Ryan Ancill
                         </div>
                       </div>
@@ -506,10 +520,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
                     )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
-                      <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
-                        <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
-                          <img className='rounded-full mr-3' src="ava.png" alt="" />
+                      <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
+                        <h3 className={tw(
+                          'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
+                          'mb-11 minxxl:mb-16'
+                        )}>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
+                        <div className='flex items-center mt-auto text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
+                          <img className='rounded-full mr-3 minxxl:w-12' src="ava.png" alt="" />
                           Alec Otto
                         </div>
                       </div>
@@ -520,10 +537,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
                     )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
-                      <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>Buyers Hold to Their CryptoPunk-Themed NFTs by Tiffany after Swift Sale</h3>
-                        <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
-                          <img className='rounded-full mr-3' src="ava.png" alt="" />
+                      <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
+                        <h3 className={tw(
+                          'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
+                          'mb-11 minxxl:mb-16'
+                        )}>Buyers Hold to Their CryptoPunk-Themed NFTs by Tiffany after Swift Sale</h3>
+                        <div className='flex items-center mt-auto text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
+                          <img className='rounded-full mr-3 minxxl:w-12' src="ava.png" alt="" />
                           Raphael Wild
                         </div>
                       </div>
@@ -535,10 +555,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       'opacity-40'
                     )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
-                      <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>The Most Expensive NFT Sales</h3>
-                        <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
-                          <img className='rounded-full mr-3' src="ava.png" alt="" />
+                      <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
+                        <h3 className={tw(
+                          'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
+                          'mb-11 minxxl:mb-16'
+                        )}>The Most Expensive NFT Sales</h3>
+                        <div className='flex items-center mt-auto text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
+                          <img className='rounded-full mr-3 minxxl:w-12' src="ava.png" alt="" />
                           Ryan Ancill
                         </div>
                       </div>
@@ -550,10 +573,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       'opacity-40'
                     )}>
                       <img className='w-full rounded-t-lg' src="news01.png" alt="" />
-                      <div className='pt-6 px-4 pb-5 flex-grow flex flex-col items-start'>
-                        <h3 className='text-lg minlg:text-[2rem] minxxl:text-5xl mb-8'>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
-                        <div className='flex items-center mt-auto text-xl text-[rgba(96,90,69,.6)]'>
-                          <img className='rounded-full mr-3' src="ava.png" alt="" />
+                      <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
+                        <h3 className={tw(
+                          'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
+                          'mb-11 minxxl:mb-16'
+                        )}>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
+                        <div className='flex items-center mt-auto text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
+                          <img className='rounded-full mr-3 minxxl:w-12' src="ava.png" alt="" />
                           Alec Otto
                         </div>
                       </div>
@@ -611,7 +637,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           {/* Block: Profile */}
           <div className='bg-[#F9D54C] overflow-hidden'>
             <div className='px-3 minmd:px-14 minxxl:px-20'>
-              <div className='relative z-0 pt-24 pb-12 mt-5 mb-24'>
+              <div className='relative z-0 pt-24 pb-12 minxxl:pt-36 minxxl:pb-20 mt-5 mb-24'>
                 <svg className={tw(
                   'absolute -z-10 top-0 right-0 max-w-[43.5%]',
                   '-translate-x-1/3 -translate-y-2/4 minmd:translate-x-1/3 -minmd:translate-y-3/4'
@@ -626,31 +652,37 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div className='minlg:flex justify-between items-end'>
                   <h2 className={tw(
                     'text-[3.25rem] minlg:text-[7.625rem] minxxl:text-[10rem]',
-                    'text-black font-medium leading-tight relative',
+                    'text-black font-normal leading-tight relative',
                     'mb-44 minlg:mb-0'
                   )}>
-                    Build <img className={tw(
-                      'drop-shadow-md inline-block max-w-[4rem] minlg:max-w-none',
-                      'mr-[.625rem] ml-[1rem] mt-[-1.5rem] mb-[-1rem]'
+                    Build<img className={tw(
+                      'drop-shadow-md inline-block minxxl:w-[5.5rem]',
+                      'mx-[1.8rem] -my-[.5rem]',
+                      'rotate-[40deg] rounded-xl'
                     )} src="ico-discover.png" alt="" />
                     your <br />
                     <span className='inline-block -mr-10 minlg:pl-24 minlg:-mr-24'>
-                      NFT <img className={tw(
-                        'drop-shadow-md inline-block max-w-[4rem] minlg:max-w-none',
-                        'mr-[1.25rem] ml-[1rem] mt-[-1rem] mb-[-1rem]'
+                      NFT<img className={tw(
+                        'drop-shadow-md inline-block minxxl:w-[5.5rem]',
+                        'mx-[1.8rem] -my-[.5rem]',
+                        'rotate-[40deg] rounded-xl'
                       )} src="ico-discover.png" alt="" />
                       profile
                     </span>
-                    <svg className='hidden minlg:block absolute left-[100%] top-[60px]' width="397" height="93" viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  </h2>
+
+                  <div className="text-center minlg:text-right pb-8">
+                    <svg className={tw(
+                      'hidden minlg:block mb-4 minxxl:w-[36.5rem] minxxl:h-[8.5rem]',
+                      '-translate-x-[18%]'
+                    )} width="397" height="93" viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fillRule="evenodd" clipRule="evenodd" d="M1.04904e-05 0.61084L341.924 0.610877C352.896 0.610883 361.792 9.47563 361.792 20.4109V59.0953L384.119 36.7397L396.636 49.1557L352.961 92.8851L309.287 49.1557L321.804 36.7397L344.131 59.0953V20.4109C344.131 19.1958 343.143 18.2109 341.924 18.2109L0 18.2108L1.04904e-05 0.61084Z" fill="black" />
                     </svg>
 
-                    <svg className='minlg:hidden absolute top-[100%] left-1/2 translate-y-10 -translate-x-1/2' width="33" height="96" viewBox="0 0 33 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg className='minlg:hidden block mx-auto' width="33" height="96" viewBox="0 0 33 96" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fillRule="evenodd" clipRule="evenodd" d="M19.8361 0C19.8361 0 19.8361 62.9869 19.8361 67.315V82.6261L28.2712 73.7779L33 78.6921L16.5 96L0 78.6921L4.72878 73.7779L13.164 82.6261V67.315V0H19.8361Z" fill="black" />
                     </svg>
-                  </h2>
 
-                  <div className="text-center minlg:text-left">
                     <a href="" className={tw(
                       'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
                       'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
