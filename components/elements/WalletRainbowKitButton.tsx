@@ -71,12 +71,12 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
                   onClick={() => toggleSidebar()}
                   className={tw(
                     `${props?.signInButton ? 'block' : 'hidden'}`,
-                    'font-header text-lg',
                     `${props?.headerButtonColor ? props.bgLight && props.header ? 'bg-[#F9D54C]' : 'bg-black' : 'bg-[#F9D963]'}`,
                     !props.bgLight && props.header && 'border-[#6F6F6F] border',
                     'rounded-3xl',
                     props.header ? (props.bgLight ? 'text-[#000000]' : 'text-white') : 'text-[#4d4412]',
-                    'hidden minlg:flex flex-row items-center font-bold cursor-pointer hover:opacity-80 font-grotesk',
+                    'hidden minlg:flex flex-row items-center cursor-pointer hover:opacity-80',
+                    'font-noi-grotesk text-lg font-medium',
                     'py-3 pr-5 pl-[18px]'
                   )}
                   type="button">
@@ -94,7 +94,7 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
               <button className={tw(
                 'block font-bold rounded-xl text-white',
                 'bg-primary-button-bckg',
-                'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
+                'flex flex-row items-center cursor-pointer hover:opacity-80 font-noi-grotesk',
                 'border',
                 'py-2 px-5'
               )} onClick={openChainModal} type="button">
@@ -122,7 +122,7 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
                 <button className={tw(
                   'block font-bold rounded-xl text-white',
                   'bg-primary-button-bckg',
-                  'flex flex-row items-center cursor-pointer hover:opacity-80 font-grotesk',
+                  'flex flex-row items-center cursor-pointer hover:opacity-80 font-noi-grotesk',
                   'py-2 pr-5 pl-[18px]',
                   (!props.bgLight && props.header) && 'border-[#6F6F6F] border',
                 )} onClick={() => {

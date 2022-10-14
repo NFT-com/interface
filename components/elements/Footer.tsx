@@ -108,7 +108,7 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className='bg-black rounded-t-[75px] -mt-[75px] font-grotesk text-primary-txt-dk relative'>
+      <footer id="FooterContainer" className='bg-black rounded-t-[75px] -mt-[75px] font-noi-grotesk text-primary-txt-dk relative'>
         <div className={tw(
           'flex flex-col minlg:flex-row relative justify-between',
           'pt-16 pb-10 pr-32'
@@ -215,7 +215,7 @@ export const Footer = () => {
         )}>
           <div className="w-full text-[14px] text-[#8B8B8B] minlg:pl-14">
             <p className='minlg:mb-16'>© {new Date().getFullYear()} NFT.com. All rights reserved</p>
-            <span className='-skew-x-[20deg] w-[115px] h-[110px] bg-[#F9D54C] block'></span>
+            <span className='-skew-x-[20deg] w-[115px] h-[110px] bg-[#F9D54C] block ml-24'></span>
           </div>
 
           <div className='w-full minlg:max-w-[50%] minlg:pt-8 flex-shrink-0 basis-2/4'>
@@ -224,7 +224,7 @@ export const Footer = () => {
             <div className='flex border-b border-b-[#2A2A2A] pb-4'>
               <input type="email" placeholder='Enter your email' className={tw(
                 'bg-transparent border-none px-0 w-full',
-                'shadow-none'
+                'shadow-none focus:border-transparent focus:ring-0'
               )} />
               <button type="submit" className={tw(
                 'rounded-full border-2 border-white',

@@ -75,22 +75,16 @@ const EmblaCarousel = (props: slidesProps) => {
     slidesToScroll : screenWidth > 599 ? 2 : 1,
   });
 
-  const [scrollSnaps, setScrollSnaps] = useState([]);
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [isSlider, setIsSlider] = useState(true);
   const [noSliderCols, setNoSliderCols] = useState(3);
 
   const scrollPrev = useCallback(() => embla && embla.scrollPrev(), [embla]);
   const scrollNext = useCallback(() => embla && embla.scrollNext(), [embla]);
-  const scrollTo = useCallback((index) => embla && embla.scrollTo(index), [
-    embla
-  ]);
 
   const onSelect = useCallback(() => {
     if (!embla) return;
-    setSelectedIndex(embla.selectedScrollSnap());
     setPrevBtnEnabled(embla.canScrollPrev());
     setNextBtnEnabled(embla.canScrollNext());
   }, [embla]);
@@ -99,7 +93,6 @@ const EmblaCarousel = (props: slidesProps) => {
     if (!embla) return;
     embla.on('select', onSelect);
     onSelect();
-    setScrollSnaps(embla.scrollSnapList());
   }, [embla, onSelect]);
 
   useEffect(() => {
@@ -153,15 +146,6 @@ const EmblaCarousel = (props: slidesProps) => {
           <PrevButton onClick={scrollPrev} enabled={prevBtnEnabled} />
           <NextButton onClick={scrollNext} enabled={nextBtnEnabled} />
         </div>
-        {!props.full && <div className="embla__dots">
-          {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              selected={index === selectedIndex}
-              onClick={() => scrollTo(index)}
-            />
-          ))}
-        </div>}
       </>
   );
 };
