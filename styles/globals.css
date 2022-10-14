@@ -178,6 +178,36 @@
   font-weight: 700;
 }
 
+@font-face {
+  font-family: "Noi Grotesk Trial";
+  src: url("./fonts/NoiGroteskTrial/NoiGroteskTrial-Light.woff2");
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: "Noi Grotesk Trial";
+  src: url("./fonts/NoiGroteskTrial/NoiGroteskTrial-Regular.woff2");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Noi Grotesk Trial";
+  src: url("./fonts/NoiGroteskTrial/NoiGroteskTrial-Medium.woff2");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Noi Grotesk Trial";
+  src: url("./fonts/NoiGroteskTrial/NoiGroteskTrial-Semibold.woff2");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Noi Grotesk Trial";
+  src: url("./fonts/NoiGroteskTrial/NoiGroteskTrial-Bold.woff2");
+  font-weight: 700;
+}
+
 html,
 input,
 textarea,

@@ -168,7 +168,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
       <>
-        <div className="minlg:w-[6.25rem] flex flex-col">
+        <div className="flex flex-col font-noi-grotesk">
           <div className="flex space-x-2 p-5 minlg:space-x-0 minlg:p-0">
             <div className={tw(
               'relative flex items-center w-full text-black')}>
@@ -177,14 +177,16 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
                 <input
                   ref={inputRef}
                   type="search"
-                  placeholder="Search"
+                  placeholder="Search profiles and ntfs by name..."
                   autoComplete="off"
                   autoCorrect="off"
                   autoCapitalize="off"
                   spellCheck="false"
-                  autoFocus
                   maxLength={512}
-                  className="w-full text-black text-lg placeholder:text-black bg-inherit border-none focus:border-transparent focus:ring-0 p-0"
+                  className={tw(
+                    'minlg:w-[4.65rem] text-black text-lg placeholder:text-black bg-inherit border-none p-0',
+                    'focus:w-[18.4rem] focus:border-transparent focus:ring-0 focus:placeholder:text-[#B2B2B2] transition-[width]'
+                  )}
                   onKeyUp={(event) => search(event)}
                   onFocus={(event) => event.target.value !== '' && search(event)}
                   onChange={(event) => !event.target.value && setShowHits(false)}
@@ -206,7 +208,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
                   'bg-always-white flex flex-col w-full text-rubik')}>
                 {searchResults.length > 0 && <>
                   {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                    (<div className="mt-10 self-center text-base font-grotesk font-medium text-gray-500 pb-4">
+                    (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4">
                       No results found. Please try another keyword.
                     </div>) :
                     <div className="py-4">
@@ -219,7 +221,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
             :
             isHeader
               ? '' :
-              (<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500 pb-4">
+              (<div className="mt-14 minlg:mt-5 self-center text-base font-medium text-gray-500 pb-4">
                 Enter a keyword to begin searching.
               </div>)}
         </div>

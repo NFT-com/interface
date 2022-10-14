@@ -150,24 +150,6 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
             }   
         }
       }
-      # listings {
-      #   items {
-      #     status
-      #     order {
-      #       protocolData {
-      #         ... on LooksrareProtocolData {
-      #           price
-      #         }
-      #         ... on SeaportProtocolData {
-      #           parameters {
-      #             orderType
-      #           }
-      #           signature
-      #         }
-      #       }
-      #     }
-      #   }
-      # }
       metadata {
         imageURL
         description
