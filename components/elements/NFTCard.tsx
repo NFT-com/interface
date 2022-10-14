@@ -1,10 +1,12 @@
 import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { getLowestPriceListing } from 'utils/listingUtils';
 import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
@@ -66,6 +68,7 @@ const DynamicNFTCardDescription = dynamic<React.ComponentProps<typeof StaticNFTC
 
 export function NFTCard(props: NFTCardProps) {
   const defaultChainId = useDefaultChainId();
+  const ethPriceUSD = useEthPriceUSD();
   const { data: nft } = useNftQuery(props.contractAddress, props?.listings ? null : props.tokenId); // skip query if listings are passed by setting tokenId to null
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress + props.collectionName, async () => {
     return props.collectionName || await getContractMetadata(props.contractAddress, defaultChainId);
@@ -98,6 +101,7 @@ export function NFTCard(props: NFTCardProps) {
     }
   }, [processedImageURLs.length]);
 
+  const lowestListing = getLowestPriceListing(filterValidListings(props?.listings || nft?.listings?.items), ethPriceUSD, defaultChainId);
   const showListingIcons: boolean = useMemo(() => {
     return !isNullOrEmpty(filterValidListings(props?.listings || nft?.listings?.items));
   }, [props, nft]);
@@ -273,6 +277,7 @@ export function NFTCard(props: NFTCardProps) {
             collectionName={isNullOrEmpty(props.collectionName) && isNullOrEmpty(collectionName) ? 'Unknown Name' : isNullOrEmpty(props.collectionName) ? collectionName : props.collectionName}
             title={props.title}
             traits={props.traits}
+            lowestListing={lowestListing}
             description={props.description}
             cta={props.cta}
             showListingIcons={showListingIcons}
