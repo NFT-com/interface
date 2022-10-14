@@ -80,7 +80,7 @@ export function NFTCard(props: NFTCardProps) {
 
   const processedImageURLs = sameAddress(props.contractAddress, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
-    : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL];
+    : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
 
   const variantsForRow: RoundedCornerVariant[] = useMemo(() => {
     if (processedImageURLs.length > 2) {
