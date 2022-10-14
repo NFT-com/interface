@@ -57,3 +57,4 @@ instrumented
 # seo
 public/robots.txt
 public/sitemap*
+.idea/*

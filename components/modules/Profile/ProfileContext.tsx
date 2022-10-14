@@ -33,6 +33,7 @@ export interface ProfileContextType {
   allOwnerNftCount: number;
   userIsAdmin: boolean;
   loadMoreNfts: () => void;
+  loadMoreNftsEditMode: () => void;
   setAllItemsOrder: (items: PartialDeep<Nft>[]) => void;
   // editor state
   toggleHidden: (id: string, currentVisibility: boolean) => void;
@@ -72,6 +73,7 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   allOwnerNfts: [],
   allOwnerNftCount: 0,
   loadMoreNfts: () => null,
+  loadMoreNftsEditMode: () => null,
   setAllItemsOrder: () => null,
   userIsAdmin: false,
   toggleHidden: () => null,
@@ -107,6 +109,9 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
+
+const PUBLIC_PROFILE_LOAD_COUNT = 8;
+
 /**
  * This context provides state management and helper functions for viewing and editing Profiles.
  */
@@ -119,9 +124,10 @@ export function ProfileContextProvider(
   /**
    * Queries
    */
+
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
-  const [loadedCount,] = useState(8);
+  const [loadedCount, setLoadedCount] = useState(1000);
   const [afterCursor, setAfterCursor] = useState('');
   const {
     nfts: publicProfileNfts,
@@ -132,7 +138,7 @@ export function ProfileContextProvider(
   } = useProfileNFTsQuery(
     profileData?.profile?.id,
     String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-    loadedCount,
+    PUBLIC_PROFILE_LOAD_COUNT,
     afterCursor
   );
   const {
@@ -375,6 +381,9 @@ export function ProfileContextProvider(
     publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
     loadMoreNfts: () => {
       pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
+    },
+    loadMoreNftsEditMode: () => {
+      setLoadedCount(loadedCount + 100);
     },
     setAllItemsOrder,
     userIsAdmin: ownedProfileTokens
