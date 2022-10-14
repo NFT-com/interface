@@ -137,13 +137,13 @@ export const Footer = () => {
               <a className={tw(
                 'transition-colors text-white hover:text-[#F9D54C]'
               )}
-                target="_blank" href="https://twitter.com" rel="noopener noreferrer">
+              target="_blank" href="https://twitter.com" rel="noopener noreferrer">
                 <TwitterLogo width='28' height='28' viewBox="0 0 38 32" fill="currentColor" />
               </a>
               <a className={tw(
                 'transition-colors text-white hover:text-[#F9D54C]'
               )}
-                target="_blank" href="https://discord.com/" rel="noopener noreferrer">
+              target="_blank" href="https://discord.com/" rel="noopener noreferrer">
                 <DiscordLogo width='28' height='28' viewBox="0 0 39 38" fill="currentColor" />
               </a>
             </div>
