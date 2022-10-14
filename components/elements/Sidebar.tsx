@@ -24,7 +24,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Bell, ChartLine, GearSix, SignOut, User, Wallet, XCircle } from 'phosphor-react';
-import FlickrLogo from 'public/flickr.svg';
+import DiscordLogo from 'public/discord.svg';
 import TwitterLogo from 'public/twitter.svg';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -349,8 +349,8 @@ export const Sidebar = () => {
                   'flex flex-col fixed inset-y-0 right-0',
                   'w-screen max-w-md h-full',
                   'shadow-xl overflow-y-auto overflow-x-hidden',
-                  'bg-black',
-                  'font-grotesk')
+                  'bg-black font-noi-grotesk'
+                )
               }
             >
               {getSidebarPanel()}
@@ -362,10 +362,10 @@ export const Sidebar = () => {
                   <TwitterLogo fill="#8B8B8B" />
                 </a>
                 <a
-                  target="_blank" href="https://flickr.com" rel="noopener noreferrer"
+                  target="_blank" href="https://discord.com/" rel="noopener noreferrer"
                   className='minlg:hidden'
                 >
-                  <FlickrLogo fill="#8B8B8B" />
+                  <DiscordLogo fill="#8B8B8B" />
                 </a>
               </div>
             </motion.div>

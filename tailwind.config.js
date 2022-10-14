@@ -98,12 +98,14 @@ module.exports = {
         'link-yellow': '#B59007',
         'secondary-yellow': '#FCBB1B',
         'key-bg': '#4D4D4D',
+        'key-gray': '#8B8B8B',
       },
       fontFamily: {
         'rubik': ['Rubik'],
         'hero-heading1': ['Stretch Pro'],
         'dm-mono': ['DM Mono'],
-        'grotesk': ['Grotesk']
+        'grotesk': ['Grotesk'],
+        'noi-grotesk': ['Noi Grotesk Trial'],
       },
       fontSize: {
         'copy-size': '0.825rem',
@@ -164,7 +166,8 @@ module.exports = {
         'hero-gradient':
           'linear-gradient(180deg, rgba(0, 0, 0, 0) 63.02%, #000000 100%)',
         'img-shadow-light':
-          'linear-gradient(0deg, #F9D54C 32.93%, rgba(249, 213, 76, 0) 100%)',
+          //'linear-gradient(0deg, #F9D54C 32.93%, rgba(249, 213, 76, 0) 100%)',
+          'linear-gradient(180deg, rgba(252, 194, 21, 0) 0%, #F9D54C 100%)',
         'img-shadow-dark':
           'linear-gradient(0deg, #000000 32.93%, rgba(0, 0, 0, 0) 100%)',
       },

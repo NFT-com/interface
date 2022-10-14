@@ -151,7 +151,7 @@ export function Collection(props: CollectionProps) {
     <>
       <div className="mt-20">
         <BannerWrapper
-          imageOverride={collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url}
+          imageOverride={collectionNFTInfo?.data?.contract?.metadata?.banner_url?.replace('?w=500', '?w=3000') || collectionNFTInfo?.data?.contract?.metadata?.cached_banner_url}
           isCollection
         />
       </div>
