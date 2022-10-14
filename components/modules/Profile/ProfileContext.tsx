@@ -109,7 +109,6 @@ export interface ProfileContextProviderProps {
   profileURI: string;
 }
 
-
 const PUBLIC_PROFILE_LOAD_COUNT = 8;
 
 /**
@@ -247,7 +246,7 @@ export function ProfileContextProvider(
     }
   }, [allOwnerNfts, publiclyVisibleNfts]);
 
-  const clearDrafts = useCallback(() => {
+  const clearDrafts = useCallback((clearPubliclyVisibleNfts = true) => {
     // reset
     setDraftProfileImg({ preview: '', raw: null });
     setDraftHeaderImg({ preview: '', raw: null });
@@ -257,7 +256,7 @@ export function ProfileContextProvider(
     setDraftDeployedContractsVisible(profileData?.profile?.deployedContractsVisible);
     setEditMode(false);
     setDraftLayoutType(null);
-    setPubliclyVisibleNfts(null);
+    clearPubliclyVisibleNfts && setPubliclyVisibleNfts(null);
   }, [
     draftGkIconVisible,
     draftNftsDescriptionsVisible,
@@ -329,7 +328,7 @@ export function ProfileContextProvider(
           mutateProfileData();
           mutatePublicProfileNfts();
           mutateAllOwnerNfts();
-          clearDrafts();
+          clearDrafts(false);
           toast.success('Profile changes saved');
         }
         setSaving(false);
@@ -432,7 +431,7 @@ export function ProfileContextProvider(
           additions.push(nft);
         }
       });
-      setPubliclyVisibleNfts([...(publiclyVisibleNfts ?? []), ...additions]);
+      setPubliclyVisibleNfts([...(allOwnerNfts.length === additions.length? [] : publiclyVisibleNfts), ...additions]);
     },
     saveProfile,
     saving,
