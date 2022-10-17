@@ -206,6 +206,10 @@ export function ProfileContextProvider(
     setDraftDisplayType(null);
   }, [editMode]);
 
+  useEffect(() => {
+    saving && setAfterCursor('');
+  }, [saving]);
+
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
     setEditModeNfts([
       ...orderedItems.filter((nft: DetailedNft) => !nft.hidden),
@@ -215,7 +219,7 @@ export function ProfileContextProvider(
 
   useEffect(() => {
     if (!editMode) {
-      if (publiclyVisibleNfts == null) {
+      if (publiclyVisibleNfts == null || afterCursor === '') {
         setPubliclyVisibleNfts(publicProfileNfts);
       }
 
@@ -431,7 +435,7 @@ export function ProfileContextProvider(
           additions.push(nft);
         }
       });
-      setPubliclyVisibleNfts([...(publiclyVisibleNfts ?? []), ...additions]);
+      setPubliclyVisibleNfts([...(allOwnerNfts.length === additions.length? [] : publiclyVisibleNfts), ...additions]);
     },
     saveProfile,
     saving,

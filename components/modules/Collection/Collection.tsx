@@ -362,7 +362,7 @@ export function Collection(props: CollectionProps) {
                             tokenId={nft.document.tokenId}
                             title={nft.document.nftName}
                             collectionName={nft.document.contractName}
-                            images={[nft?.document?.previewLink ?? nft?.document?.imageURL]}
+                            images={[]}
                             redirectTo={nft.document.nftName && `/app/nft/${nft.document.contractAddr}/${nft.document.tokenId}`}
                             description={nft.document.nftDescription ? nft.document.nftDescription.slice(0,50) + '...': '' }
                           />
