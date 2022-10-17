@@ -4,7 +4,6 @@ import { tw } from 'utils/tw';
 import { RoundedCornerMediaImage as StaticRoundedCornerMediaImage } from './RoundedCornerMediaImage';
 
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 export enum RoundedCornerVariant {
   TopOnly = 'topOnly',
@@ -25,6 +24,7 @@ export enum RoundedCornerAmount {
 
 export interface RoundedCornerMediaProps {
   src: string;
+  priority?: boolean;
   fallbackImage?: string;
   variant: RoundedCornerVariant;
   amount?: RoundedCornerAmount;
@@ -120,6 +120,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             )}
           /> :
           (imageUrl != 'null?width=600') && <DynamicRoundedCornerMediaImage
+            priority={props?.priority}
             src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
             onError={() => {
               setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);

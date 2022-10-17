@@ -33,7 +33,7 @@ export const ProfileFeed = ({ profiles }: ProfileFeedProps) => {
     >
       {profiles.map((profile, index) => (
         <SwiperSlide key={profile?.profile?.id ?? index} virtualIndex={index} className='flex-none cursor-pointer ml-12'>
-          <ProfileCard profile={profile?.profile} />
+          <ProfileCard priority={true} profile={profile?.profile} />
         </SwiperSlide>
       ))}
     </Swiper>
