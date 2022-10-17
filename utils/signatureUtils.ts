@@ -1,5 +1,7 @@
 import { AssetClass } from 'graphql/generated/types';
 
+import { isNullOrEmpty } from './helpers';
+
 import {
   defaultAbiCoder,
   keccak256,
@@ -7,6 +9,9 @@ import {
 } from 'ethers/lib/utils';
 
 export const convertToHash = (text: string) => {
+  if(isNullOrEmpty(text) ){
+    return;
+  }
   return keccak256(toUtf8Bytes(text));
 };
 

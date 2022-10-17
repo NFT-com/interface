@@ -2,7 +2,8 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import KeyIcon from 'public/mint-key.svg';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
@@ -19,6 +20,8 @@ export interface DropdownPickerProps {
   constrain?: boolean;
   above?: boolean;
   placeholder?: string;
+  onChange?: (label: string) => void;
+  showKeyIcon?: boolean;
 }
 
 /**
@@ -40,12 +43,23 @@ export function DropdownPicker(props: DropdownPickerProps) {
   const [selected, setSelected] = useState(null);
   const { primaryIcon, secondaryText } =
     useThemeColors();
-
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const wrapperRef = useRef(null);
   const activeRowRef = useRef(null);
   useOutsideClickAlerter(wrapperRef, () => {
     setExpanded(false);
   });
+
+  const onChangeHandler = useCallback(
+    () => props.onChange ? props.onChange(selected?.label || props.options[selectedIndex]?.label) : null
+    ,
+    [selected, props, selectedIndex],
+  );
+
+  useEffect(() => {
+    setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : 0);
+    onChangeHandler();
+  }, [selected, props, onChangeHandler]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
     return (
@@ -53,7 +67,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
         className={`flex flex-row w-full pl-2.5 py-3
-        ${ index === optionHoverIndex ? 'dark:text-always-white text-primary-txt' : 'text-secondary-txt'}`}
+        ${ index === optionHoverIndex ? 'text-primary-txt' : 'text-secondary-txt'}`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
@@ -84,7 +98,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         'cursor-pointer flex flex-col items-center rounded-xl',
         'text-sm',
         props.constrain ? '' : 'w-full h-full shrink-0',
-        'dark:text-always-white text-primary-txt',
+        'text-primary-txt',
         'whitespace-nowrap justify-between'
       )}
       onClick={() => {
@@ -95,20 +109,21 @@ export function DropdownPicker(props: DropdownPickerProps) {
         ref={activeRowRef}
         className={tw('flex flex-row items-center px-2.5',
           'border py-2 h-full',
-          'bg-gray-100 dark:bg-black',
-          'justify-between rounded-xl border-select-brdr w-full')}
-        key={props?.options[props?.selectedIndex]?.label}
+          'bg-white',
+          'justify-between rounded-xl shadow-lg border-0 w-full')}
+        key={props?.options[selectedIndex]?.label}
       >
-        {props?.options[props?.selectedIndex]?.icon &&
+        {props.showKeyIcon && <KeyIcon className='inline mr-1' stroke="black" />}
+        {props?.options[selectedIndex]?.icon &&
           <Image
             className="h-4 mr-2"
-            src={props?.options[props?.selectedIndex]?.icon}
-            alt={props?.options[props?.selectedIndex]?.label} />
+            src={props?.options[selectedIndex]?.icon}
+            alt={props?.options[selectedIndex]?.label} />
         }
         <div className='mr-2'>
           {(props.placeholder && !selected) ?
             <span style={{ color: secondaryText }}>{props.placeholder}</span>
-            : props.options[props.selectedIndex].label
+            : props.options[selectedIndex]?.label
           }
         </div>
         {expanded
@@ -125,14 +140,15 @@ export function DropdownPicker(props: DropdownPickerProps) {
           style={{
             maxWidth: wrapperRef.current.clientWidth,
             marginTop: props.above ?
-              (props.options.length - 1) * -1 * activeRowRef.current.clientHeight - 12 :
+              (props.options?.length - 1) * -1 * activeRowRef.current.clientHeight - 12 :
               activeRowRef.current.clientHeight + 12
           }}
           className={tw(
-            'border rounded-xl border-select-brdr',
+            'border-b rounded-xl border-select-brdr',
             'divide-y',
-            'bg-gray-100 dark:bg-black',
-            'w-full absolute z-50'
+            'bg-white',
+            'w-full absolute z-50',
+            'shadow-lg'
           )}
         >
             
