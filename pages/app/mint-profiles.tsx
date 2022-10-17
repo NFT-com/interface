@@ -1,21 +1,80 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
+import MintFreeProfileCard from 'components/modules/ProfileFactory/MintFreeProfileCard';
+import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
+import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
+import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
+import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
+import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
+import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { ArrowCircleLeft } from 'phosphor-react';
 import NFTLogo from 'public/nft_logo.svg';
 import NFTLogoSmall from 'public/nft_logo_small.svg';
 import ProfileClickIcon from 'public/profile-click-icon.svg';
 import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
-
+import { useCallback, useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 export default function MintProfilesPage() {
+  const router = useRouter();
+  const { address: currentAddress } = useAccount();
+  const { freeMintAvailable, loading: loadingFreeMint } = useFreeMintAvailable(currentAddress);
+  const { claimable, loading: loadingClaimable } = useClaimableProfileCount(currentAddress);
+  const [minting, setMinting] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [mintingState, setMintingState] = useState(
+    {
+      inputs: null,
+      tokenId: null,
+      type: null
+    }
+  );
+  
+  useMaybeCreateUser();
+
+  useEffect(() => {
+    if(!currentAddress) {
+      router.push('/');
+    }
+  }, [currentAddress, router]);
+
+  const setMintingModal = useCallback((isOpen) => {
+    if(isOpen){
+      setMinting(true);
+      setModalOpen(true);
+    } else {
+      setMinting(false);
+      setModalOpen(false);
+    }
+  }, [setModalOpen]);
+
+  const getMintProfileCard = useCallback(() => {
+    if(freeMintAvailable) {
+      return <MintFreeProfileCard type='Free' minting={minting} setModalOpen={setModalOpen} setMintingState={setMintingState}/>;
+    }
+    if(!loadingClaimable && !isNullOrEmpty(claimable) && !freeMintAvailable && !loadingFreeMint) {
+      return <MintGKProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
+    }
+    if(!loadingFreeMint && freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
+      return <MintFreeProfileCard type='Free' minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState}/>;
+    }
+    if(!loadingFreeMint && !freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
+      return <MintFreeProfileCard type='Paid' minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
+    }
+    return <MintProfileCardSkeleton />;
+  }, [claimable, freeMintAvailable, loadingClaimable, loadingFreeMint, minting, setMintingModal]);
+
   if (!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
     return <NotFoundPage />;
   }
+  
   return (
     <div
       className={tw(
@@ -28,48 +87,35 @@ export default function MintProfilesPage() {
         className='bg-black h-max w-full relative'
       >
         <div className='h-full w-full absolute top-0 opacity-60' style={{ backgroundImage: 'url(/temp-intro.png)' }}></div>
-        <div className='flex justify-end mt-10 mr-5'>
+        <div className='justify-end mt-10 mr-5 hidden minmd:flex'>
           <ConnectButton />
         </div>
-        <div className='w-full max-w-nftcom mx-auto relative mt-4'>
+        
+        <div className='w-full max-w-nftcom mx-auto relative mt-10 minmd:mt-4'>
+          <Link href='/'>
+            <a>
+              <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
+            </a>
+          </Link>
           <div className='absolute top-2 left-6 minlg:right-1 hover:cursor-pointer w-7 h-7 bg-black rounded-full'></div>
           <Link href='/'>
-            <ArrowCircleLeft className='absolute top-0 left-5 hover:cursor-pointer' size={45} color="white" weight="fill" />
+            <ArrowCircleLeft className='absolute bottom-0 minmd:top-0 left-5 hover:cursor-pointer' size={45} color="white" weight="fill" />
           </Link>
-          <NFTLogo className='mx-auto hidden minmd:block' />
-          <NFTLogoSmall className='mx-auto block minmd:hidden' />
-        </div>
 
-        {/* Input Card Component */}
-        <div className='relative mt-28 minlg:mt-12 z-50 px-5'>
-          <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
-            <h2 className='text-[32px] w-5/6'>Claim your free NFT Profile</h2>
-            <p className='mt-6 text-xl w-5/6'>Every wallet receives one <span className='text-[#EAC232]'>free mint!</span></p>
-            <p className='mt-4 text-[#707070] hidden minlg:block '>Create your NFT Profile to build your social identity</p>
-
-            <input
-              className={tw(
-                'text-lg min-w-0 mt-6',
-                'text-left px-3 py-3 w-full rounded-lg font-medium',
-                'bg-[#F8F8F8] border-0'
-              )}
-              placeholder="nft.com/ Enter Profile Name"
-              autoFocus={true}
-              type='text'
-              spellCheck={false}
-            />
-            <button
-              type="button"
-              className="inline-flex w-full justify-center rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E] px-4 py-4 text-lg font-medium text-black focus:outline-none focus-visible:bg-[#E4BA18] mt-12 minlg:mt-[59px]"
-                    
-            >
-                Mint your NFT profile
-            </button>
-            <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
-                Already have an account? <span className='text-black block minlg:inline font-medium'>Sign in</span>
-            </p>
+          <Link href='/'>
+            <a>
+              <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
+            </a>
+          </Link>
+          <div className=' justify-end mt-10 mr-5 flex minmd:hidden'>
+            <ConnectButton />
           </div>
+          
         </div>
+
+        {/* Mint Card Component */}
+        {getMintProfileCard()}
+        
         <span className='absolute w-full h-[460px] left-0 bottom-0 bg-img-shadow'></span>
       </div>
       
@@ -91,6 +137,8 @@ export default function MintProfilesPage() {
           <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the build in marketplace aggregator.</p>
         </div>
       </div>
+
+      <MintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} />
     </div>
   );
 }

@@ -1,13 +1,13 @@
 import { Maybe } from 'graphql/generated/types';
 import { AlchemyOwnedNFT } from 'types';
 import { getNftsByContractAndOwner } from 'utils/alchemyNFT';
-import { Doppler,getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
+import { useDefaultChainId } from './useDefaultChainId';
+
 import { useState } from 'react';
 import useSWR, { mutate } from 'swr';
-import { useNetwork } from 'wagmi';
 
 /**
  * Return array of token information for the owned Genesis Key tokens for this address.
@@ -19,9 +19,8 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
   mutate: () => void
 } {
   const [loading, setLoading] = useState(false);
-  const { chain } = useNetwork();
-
-  const keyString = 'OwnedGenesisKeyTokens' + address + chain?.id;
+  const defaultChainId = useDefaultChainId();
+  const keyString = 'OwnedGenesisKeyTokens' + address + defaultChainId;
 
   const { data } = useSWR(keyString, async () => {
     if (
@@ -34,8 +33,8 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
 
     const result = await getNftsByContractAndOwner(
       address,
-      getAddress('genesisKey', chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-      chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+      getAddress('genesisKey', defaultChainId),
+      defaultChainId,
       null // pageKey
     );
     const ownedTokens = result?.ownedNfts;
@@ -44,8 +43,8 @@ export function useOwnedGenesisKeyTokens(address: Maybe<string>): {
       // There are further pages to load.
       const nextPage = await getNftsByContractAndOwner(
         address,
-        getAddress('genesisKey', chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-        chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+        getAddress('genesisKey', defaultChainId),
+        defaultChainId,
         pageKey
       );
       ownedTokens.push(...nextPage?.ownedNfts as AlchemyOwnedNFT[]);

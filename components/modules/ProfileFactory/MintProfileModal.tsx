@@ -1,34 +1,134 @@
-import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
+import maxProfilesABI from 'constants/abis/MaxProfiles.json';
 import { useMaxProfilesSigner } from 'hooks/contracts/useMaxProfilesSigner';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
+import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
+import { utils } from 'ethers';
+import { useRouter } from 'next/router';
 import ETHIcon from 'public/eth_icon.svg';
-import { Fragment, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { Fragment, useCallback, useState } from 'react';
+import ReactLoading from 'react-loading';
+import useSWR from 'swr';
+import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
+
+type Inputs = {
+  profileURI: string;
+  hash: string;
+  signature: string;
+  status: string;
+  name: string;
+};
 
 type MintProfileModalProps = {
   isOpen: boolean;
   setIsOpen: (input:boolean) => void;
-  currentURI: string;
-  gasCost: number;
+  profilesToMint: Inputs[];
   transactionCost?: number;
+  gkTokenId?: number;
+  type: 'GK' | 'Free' | 'Paid'
 };
 
-export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, transactionCost }: MintProfileModalProps) {
+export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, profilesToMint, gkTokenId, type }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
+  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
+  const router = useRouter();
+  const defaultChainId = useDefaultChainId();
   const [minting, setMinting] = useState(false);
   const [, setMintSuccess] = useState(false);
-  const { profileClaimHash, mutate: mutateProfileHash } = useGetProfileClaimHash(currentURI);
   const { mutate: mutateMyProfileTokens } = useMyNftProfileTokens();
   const { mutate: mutateFreeMintStatus } = useFreeMintAvailable(currentAddress);
   const maxProfilesSigner = useMaxProfilesSigner();
-  const { mutate: mutateTokenId } = useProfileTokenQuery(currentURI);
   const ethPriceUSD = useEthPriceUSD();
+  const contractAddress = getAddress('maxProfiles', defaultChainId);
+  const provider = useProvider();
 
+  const { data: feeData } = useSWR(
+    `${currentAddress}_eth_est_${JSON.stringify(profilesToMint)}`,
+    async () => {
+      const feeData = await provider.getFeeData();
+      return feeData;
+    });
+
+  const freeMintProfile = profilesToMint && profilesToMint[0];
+  const gkMintProfiles = profilesToMint?.map((profile) => {
+    return {
+      profileUrl: profile.profileURI,
+      tokenId: gkTokenId,
+      recipient: currentAddress,
+      hash: profile.hash,
+      signature: profile.signature
+    };
+  });
+
+  const { data } = usePrepareContractWrite({
+    addressOrName: contractAddress,
+    contractInterface: maxProfilesABI,
+    functionName: type === 'GK' ? 'genesisKeyBatchClaimProfile' : 'publicClaim',
+    args: type === 'GK' ? [gkMintProfiles] : [freeMintProfile?.profileURI, freeMintProfile?.hash, freeMintProfile?.signature],
+    onError(err){
+      console.log('err:', err);
+    }
+  });
+
+  const submitHandler = async () => {
+    if(freeMintAvailable){
+      try {
+        const tx = await (await (maxProfilesSigner)).publicClaim(
+          freeMintProfile?.profileURI,
+          freeMintProfile?.hash,
+          freeMintProfile?.signature,
+        );
+        setMinting(true);
+        if (tx) {
+          await tx.wait(1);
+          setMintSuccess(true);
+          mutateMyProfileTokens();
+        }
+        mutateFreeMintStatus();
+        setIsOpen(false);
+        router.push(`/${freeMintProfile?.profileURI}`);
+        setMinting(false);
+      } catch (err) {
+        setMinting(false);
+      }
+    } else {
+      try {
+        const tx = await(await(maxProfilesSigner)).genesisKeyBatchClaimProfile(
+          gkMintProfiles
+        );
+        setMinting(true);
+        if (tx) {
+          await tx.wait(1);
+          setMintSuccess(true);
+          mutateMyProfileTokens();
+        }
+        mutateFreeMintStatus();
+        setIsOpen(false);
+        router.push(`/${gkMintProfiles[0].profileUrl}`);
+        setMinting(false);
+      } catch (err) {
+        setMinting(false);
+      }
+    }
+  };
+
+  const getGasCost = useCallback(() => {
+    if(feeData?.gasPrice){
+      if(data?.request.gasLimit) {
+        return utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
+      }
+      else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }, [feeData, data]);
+  
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[105]" onClose={() => setIsOpen(false)}>
@@ -74,35 +174,38 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, tr
                 </div>
 
                 <div className="mt-5 pb-6 border-b">
-                  <div className='flex justify-between mb-5'>
-                    <div>
-                      <p className="text-lg font-medium">
-                        nft.com/{currentURI}
-                      </p>
-                      <p className="text-md text-[#686868] font-normal">
-                        Profile
-                      </p>
+                  {profilesToMint && profilesToMint.map((profile, index) => (
+                    <div className='flex justify-between mb-5' key={profile.profileURI + index}>
+                      <div>
+                        <p className="text-lg font-medium">
+                              nft.com/{profile.profileURI}
+                        </p>
+                        <p className="text-md text-[#686868] font-normal">
+                              Profile
+                        </p>
+                      </div>
+                      {transactionCost ?
+                        <p className="font-medium text-lg flex justify-center items-center">
+                          {transactionCost} <ETHIcon className='ml-1' stroke="black" />
+                        </p>
+                        :
+                        <p className="text-lg text-[#2AAE47] font-medium">
+                              Free
+                        </p>
+                      }
                     </div>
-                    {transactionCost ?
-                      <p className="font-medium text-lg flex justify-center items-center">
-                        {transactionCost} <ETHIcon className='ml-1' stroke="black" />
-                      </p>
-                      :
-                      <p className="text-lg text-[#2AAE47] font-medium">
-                        Free
-                      </p>
-                    }
-                  </div>
+                  ))}
+                  
                   <div className='flex justify-between'>
                     <p className="font-medium">
                       Estimated Gas
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="font-medium text-lg flex justify-center items-center">
-                        {gasCost} <ETHIcon className='ml-1' stroke="black" />
+                        {parseFloat(Number(getGasCost()).toFixed(7))} <ETHIcon className='ml-1' stroke="black" />
                       </p>
                       <p className="text-[#686868]">
-                        ${(ethPriceUSD * Number(gasCost)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        ${(ethPriceUSD * Number(getGasCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                     </div>
                   </div>
@@ -115,10 +218,10 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, tr
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="text-xl font-medium">
-                        {gasCost} ETH
+                        {parseFloat(Number(getGasCost()).toFixed(7))} ETH
                       </p>
                       <p className="text-lg text-[#686868]">
-                        (${(ethPriceUSD * Number(gasCost)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
+                        (${(ethPriceUSD * Number(getGasCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
                       </p>
                     </div>
                   </div>
@@ -129,28 +232,10 @@ export default function RemoveModal({ isOpen, setIsOpen, currentURI, gasCost, tr
                     type="button"
                     className="inline-flex w-full justify-center rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E] px-4 py-4 text-lg font-medium text-black focus:outline-none focus-visible:bg-[#E4BA18]"
                     onClick={async () => {
-                      try {
-                        const tx = await (await (maxProfilesSigner)).publicClaim(
-                          currentURI,
-                          profileClaimHash?.hash,
-                          profileClaimHash?.signature,
-                        );
-                        setMinting(true);
-                        if (tx) {
-                          await tx.wait(1);
-                          setMintSuccess(true);
-                          mutateMyProfileTokens();
-                        }
-                        mutateProfileHash();
-                        setMinting(false);
-                        mutateTokenId();
-                        mutateFreeMintStatus();
-                      } catch (err) {
-                        setMinting(false);
-                      }
+                      submitHandler();
                     }}
                   >
-                    {!minting ? 'Mint your profile' : 'Minting'}
+                    {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your profile</span>}
                   </button>
                 </div>
               </Dialog.Panel>

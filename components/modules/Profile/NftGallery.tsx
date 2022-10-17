@@ -2,7 +2,7 @@ import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useScrollY } from 'graphql/hooks/useScrollY';
+import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
 import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
@@ -34,10 +34,10 @@ export function NftGallery(props: NftGalleryProps) {
     draftLayoutType
   } = useContext(ProfileContext);
   
-  const { scrollDir, yScroll } = useScrollY();
+  const { closeToBottom, currentScrollPosition } = useScrollToBottom();
 
-  useSWR(scrollDir + yScroll, async () => {
-    if (scrollDir === 'DOWN' && yScroll > 100) {
+  useSWR(closeToBottom.toString() + currentScrollPosition, async () => {
+    if (closeToBottom && publiclyVisibleNfts?.length > 0 && !loading) {
       if (!editMode && publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
         loadMoreNfts();
       }
@@ -108,7 +108,7 @@ export function NftGallery(props: NftGalleryProps) {
         </div>
       }
       {!editMode && loading &&
-      <div className= 'min-h-[10rem] text-primary-txt flex flex-col items-center justify-center'>
+      <div className= 'min-h-[25rem] minmd:min-h-[20rem] text-primary-txt flex flex-col items-center justify-center'>
         <div className="mb-2">Loading...</div>
         <Loader />
       </div>}
