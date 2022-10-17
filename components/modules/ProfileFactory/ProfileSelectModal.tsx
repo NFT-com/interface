@@ -1,3 +1,4 @@
+import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
@@ -5,7 +6,6 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { CheckCircle } from 'phosphor-react';
 import { X } from 'phosphor-react';
@@ -68,12 +68,14 @@ export default function ProfileSelectModal() {
                         onClick={() => setCurrentProfileUrl(profile?.metadata.name)}
                       >
                         <div className='flex flex-row items-center gap-[14px]'>
-                          <Image
-                            className='rounded-lg mr-[14px]'
+                          <RoundedCornerMedia
+                            extraClasses='mr-4'
+                            containerClasses='h-10 w-10'
                             src={profile?.metadata.image}
-                            alt={`profile image for ${profile?.metadata.name}`}
-                            width='40px'
-                            height='40px'
+                            variant={RoundedCornerVariant.All}
+                            height={40}
+                            width={40}
+                            amount={RoundedCornerAmount.Medium}
                           />
                           <p>{profile?.metadata.name}</p>
                         </div>
@@ -81,7 +83,7 @@ export default function ProfileSelectModal() {
                       </div>
                     )}
                   </div>
-                  <p className='text-[#5B5B5B] font-normal flex items-center'>
+                  <p className='text-[#5B5B5B] font-normal flex items-center mt-3'>
                     {claimable &&
                         <>
                           <KeyIcon className='inline mr-3 h-9 w-9' stroke="black" />

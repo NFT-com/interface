@@ -12,6 +12,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowCircleLeft } from 'phosphor-react';
@@ -22,6 +23,8 @@ import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
 import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+
+const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 export default function MintProfilesPage() {
   const router = useRouter();
   const { address: currentAddress } = useAccount();
@@ -138,7 +141,7 @@ export default function MintProfilesPage() {
         </div>
       </div>
 
-      <MintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} />
+      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} />
     </div>
   );
 }
