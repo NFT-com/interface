@@ -9,9 +9,10 @@ describe('MintFreeProfileCard', () => {
   const client = setupWagmiClient();
 
   it('mounts and renders when free profile available', () => {
+    const onOpen = cy.stub();
     cy.mount(
       <WagmiConfig client={client}>
-        <MintFreeProfileCard type='Free' />
+        <MintFreeProfileCard minting={false} setMintingState={onOpen} setModalOpen={onOpen} type='Free' />
       </WagmiConfig>
     );
     cy.findByText('Claim your free NFT Profile').should('exist');
@@ -23,9 +24,10 @@ describe('MintFreeProfileCard', () => {
   });
 
   it('mounts and renders when free profile not available', () => {
+    const onOpen = cy.stub();
     cy.mount(
       <WagmiConfig client={client}>
-        <MintFreeProfileCard type='Paid' />
+        <MintFreeProfileCard minting={false} setMintingState={onOpen} setModalOpen={onOpen} type='Paid' />
       </WagmiConfig>
     );
     cy.findByText('You have already received one free mint').should('exist');
