@@ -10,9 +10,9 @@ import { Fragment } from 'react';
 
 export default function MintProfileSuccessModal() {
   const router = useRouter();
-  const { profileSelectModal, setMintSuccessModalOpen }= useMintSuccessModal();
+  const { mintSuccesssModal, setMintSuccessModalOpen }= useMintSuccessModal();
   return (
-    <Transition appear show={profileSelectModal} as={Fragment}>
+    <Transition appear show={mintSuccesssModal} as={Fragment}>
       <Dialog as="div" className="relative z-[105]" onClose={() => setMintSuccessModalOpen(false)}>
         <Transition.Child
           as={Fragment}

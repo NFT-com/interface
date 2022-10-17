@@ -15,7 +15,7 @@ export function useMintSuccessModal() {
 
   return {
     loading,
-    profileSelectModal: data,
+    mintSuccesssModal: data,
     useToggleMintSuccessModal,
     setMintSuccessModalOpen,
   };
