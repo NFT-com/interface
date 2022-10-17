@@ -2,6 +2,8 @@ import { NullState } from 'components/elements/NullState';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
 import { ProfileContextProvider } from 'components/modules/Profile/ProfileContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
+import MintProfileSuccessModal from 'components/modules/ProfileFactory/MintProfileSuccessModal';
+import ProfileSelectModal from 'components/modules/ProfileFactory/ProfileSelectModal';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
@@ -80,6 +82,8 @@ export function ProfilePage(props: ProfilePageProps) {
             profileURI={processedProfileURI}
             addressOwner={profileOwner}
           />
+          <ProfileSelectModal />
+          <MintProfileSuccessModal />
         </ProfileContextProvider>
       );
     }
