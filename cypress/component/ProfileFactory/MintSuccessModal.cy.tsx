@@ -8,10 +8,10 @@ import { setupWagmiClient } from '../../util/utils';
 import { WagmiConfig } from 'wagmi';
 
 const TestComponent = () => {
-  const { setMintSuccessModalOpen, mintSuccesssModal } = useMintSuccessModal();
+  const { setMintSuccessModalOpen, mintSuccessModal } = useMintSuccessModal();
 
   return <div>
-    <div id="isOpen">{mintSuccesssModal + ''}</div>
+    <div id="isOpen">{mintSuccessModal + ''}</div>
     <button id="openButton" onClick={() => setMintSuccessModalOpen(true)}>Open</button>
     <MintProfileSuccessModal />
   </div>;

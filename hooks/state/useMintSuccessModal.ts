@@ -15,7 +15,7 @@ export function useMintSuccessModal() {
 
   return {
     loading,
-    mintSuccesssModal: data,
+    mintSuccessModal: data,
     useToggleMintSuccessModal,
     setMintSuccessModalOpen,
   };
