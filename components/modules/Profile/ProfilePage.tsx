@@ -1,3 +1,4 @@
+import Loader from 'components/elements/Loader';
 import { NullState } from 'components/elements/NullState';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
 import { ProfileContextProvider } from 'components/modules/Profile/ProfileContext';
@@ -13,7 +14,6 @@ import { tw } from 'utils/tw';
 
 import dynamic from 'next/dynamic';
 import { useCallback } from 'react';
-import { Loader } from 'react-feather';
 
 export interface ProfilePageProps {
   uri: string | string[];
