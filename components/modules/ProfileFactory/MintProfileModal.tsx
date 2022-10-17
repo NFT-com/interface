@@ -1,6 +1,7 @@
 import maxProfilesABI from 'constants/abis/MaxProfiles.json';
 import { useMaxProfilesSigner } from 'hooks/contracts/useMaxProfilesSigner';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
+import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -45,6 +46,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   const ethPriceUSD = useEthPriceUSD();
   const contractAddress = getAddress('maxProfiles', defaultChainId);
   const provider = useProvider();
+  const { setMintSuccessModalOpen }= useMintSuccessModal();
 
   const { data: feeData } = useSWR(
     `${currentAddress}_eth_est_${JSON.stringify(profilesToMint)}`,
@@ -90,6 +92,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
         }
         mutateFreeMintStatus();
         setIsOpen(false);
+        setMintSuccessModalOpen(true);
         router.push(`/${freeMintProfile?.profileURI}`);
         setMinting(false);
       } catch (err) {
@@ -108,6 +111,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
         }
         mutateFreeMintStatus();
         setIsOpen(false);
+        setMintSuccessModalOpen(true);
         router.push(`/${gkMintProfiles[0].profileUrl}`);
         setMinting(false);
       } catch (err) {

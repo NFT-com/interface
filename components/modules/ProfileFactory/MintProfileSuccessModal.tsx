@@ -1,18 +1,19 @@
-import { ProfileFactoryModalContext } from 'components/modules/ProfileFactory/ProfileFactoryModalContext';
+import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
 import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { X } from 'phosphor-react';
-import { Fragment, useContext } from 'react';
+import { Fragment } from 'react';
 
-export default function RemoveModal() {
-  const { successModalOpen, setSuccessModalOpen } = useContext(ProfileFactoryModalContext);
-
+export default function MintProfileSuccessModal() {
+  const router = useRouter();
+  const { profileSelectModal, setMintSuccessModalOpen }= useMintSuccessModal();
   return (
-    <Transition appear show={successModalOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-[105]" onClose={() => setSuccessModalOpen(false)}>
+    <Transition appear show={profileSelectModal} as={Fragment}>
+      <Dialog as="div" className="relative z-[105]" onClose={() => setMintSuccessModalOpen(false)}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -39,7 +40,7 @@ export default function RemoveModal() {
               <Dialog.Panel className="w-full relative max-w-[873px] min-h-[560px] minmd:h-[700px] transform overflow-hidden rounded-[20px] bg-white text-left align-middle shadow-xl transition-all">
 
                 <X
-                  onClick={() => setSuccessModalOpen(false)}
+                  onClick={() => setMintSuccessModalOpen(false)}
                   className='z-10 absolute top-5 right-5 hover:cursor-pointer'
                   size={30}
                   color="black"
@@ -62,7 +63,7 @@ export default function RemoveModal() {
                     <h3 className='text-[32px] mt minmd:text-[42px] font-medium'>Congratulations!</h3>
                     <div className='mt-9 minmd:mt-5 font-medium text-xl minmd:text-[22px]'>
                       <p>Cheers to your first profile! </p>
-                      <p>You officially own <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#FAC213] to-[#FF9B37] font-bold '>nft.com/johndoe</span></p>
+                      <p>You officially own <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#FAC213] to-[#FF9B37] font-bold '>nft.com/{router?.query?.profileURI}</span></p>
                     </div>
 
                     <p className='mt-9 minmd:mt-20 font-normal text-xl'>Let’s continue your Web3 journey</p>
@@ -76,7 +77,7 @@ export default function RemoveModal() {
                           'px-4 py-4 mt-9 minmd:mt-8 text-lg font-medium text-black',
                           'focus:outline-none focus-visible:bg-[#E4BA18]'
                         )}
-                        onClick={() => setSuccessModalOpen(false)}
+                        onClick={() => setMintSuccessModalOpen(false)}
                       >
                       Customize your profile
                       </button>
