@@ -8,6 +8,7 @@ import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { useCallback } from 'react';
@@ -82,8 +83,12 @@ export function ProfilePage(props: ProfilePageProps) {
             profileURI={processedProfileURI}
             addressOwner={profileOwner}
           />
-          <ProfileSelectModal />
-          <MintProfileSuccessModal />
+          {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) &&
+            <>
+              <ProfileSelectModal />
+              <MintProfileSuccessModal />
+            </>
+          }
         </ProfileContextProvider>
       );
     }
