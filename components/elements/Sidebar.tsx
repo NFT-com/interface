@@ -269,7 +269,7 @@ export const Sidebar = () => {
           }}
           className='h-full'
         >
-          <div className='block minlg:hidden'>
+          <div className='block h-full minlg:hidden'>
             {signIn ? <SignIn /> : <MobileNoAccount setSignIn={setSignIn} />}
           </div>
 
@@ -349,12 +349,12 @@ export const Sidebar = () => {
                   'flex flex-col fixed inset-y-0 right-0',
                   'w-screen max-w-md h-full',
                   'shadow-xl overflow-y-auto overflow-x-hidden',
-                  'bg-black font-noi-grotesk'
+                  'bg-white font-noi-grotesk'
                 )
               }
             >
               {getSidebarPanel()}
-              <div className='flex gap-6 items-center justify-end px-5 py-10'>
+              <div className='bg-black flex gap-6 items-center justify-end px-5 py-10'>
                 <a
                   target="_blank" href="https://twitter.com" rel="noopener noreferrer"
                   className='minlg:hidden'
