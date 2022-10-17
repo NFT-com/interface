@@ -1,6 +1,7 @@
 import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
+import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
@@ -9,6 +10,7 @@ import { Doppler,getEnv, getEnvBool } from 'utils/env';
 import { getChainIdString } from 'utils/helpers';
 
 import {
+  AvatarComponent,
   connectorsForWallets,
   RainbowKitProvider,
   wallet
@@ -18,10 +20,11 @@ import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
+import { DefaultSeo } from 'next-seo';
 import { ReactElement, ReactNode, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import ReactGA from 'react-ga';
-import { rainbowDark } from 'styles/RainbowKitThemes';
+import { rainbowDark, rainbowLight } from 'styles/RainbowKitThemes';
 import { v4 as uuid } from 'uuid';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
@@ -109,21 +112,39 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
     });
   }, [connectors, provider]);
 
+  const CustomAvatar: AvatarComponent = () => {
+    return <LoggedInIdenticon />;
+  };
+
   return (
     <>
       <Head>
         <title>NFT.com</title>
       </Head>
       <Script strategy="afterInteractive" src="/js/pageScripts.js" />
+      <DefaultSeo
+        title='NFT.com | The Social NFT Marketplace'
+        description='Join NFT.com to display, trade, and engage with your NFTs.'
+        openGraph={{
+          url: 'https://www.nft.com',
+          title: 'NFT.com | The Social NFT Marketplace',
+          description: 'Join NFT.com to display, trade, and engage with your NFTs.',
+          site_name: 'NFT.com',
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
+        }}
+      />
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider
           appInfo={{
             appName: 'NFT.com',
             learnMoreUrl: 'https://docs.nft.com/what-is-a-wallet',
           }}
-          theme={rainbowDark}
+          theme={!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) ? rainbowDark : rainbowLight}
           chains={chains}
           initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
+          avatar={CustomAvatar}
         >
           <AnimatePresence exitBeforeEnter>
             <GraphQLProvider>

@@ -68,7 +68,7 @@ export function useAllContracts(): Contracts {
     useState(getNftProfileContract(getAddress('nftProfile', chainId), provider, signer));
   useState(getNftProfileContract(getAddress('nftProfile', chainId), provider));
   const [maxProfilesContract, setMaxProfilesContract] = useState(
-    getMaxProfilesContract(getAddress('profileAuction', chainId), provider)
+    getMaxProfilesContract(getAddress('maxProfiles', chainId), provider)
   );
   const [profileAuctionContract, setProfileAuctionContract] = useState(
     getProfileAuctionContract(getAddress('profileAuction', chainId), provider));

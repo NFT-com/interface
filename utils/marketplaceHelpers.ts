@@ -54,6 +54,9 @@ export const looksrareLib = new ethers.utils.Interface(
 );
 
 export const libraryCall = (fnSig: string, entireHex: string): string => {
+  if(isNullOrEmpty(fnSig) || isNullOrEmpty(entireHex)){
+    return;
+  }
   return (
     `${(ethers.utils.keccak256(ethers.utils.toUtf8Bytes(fnSig)) as unknown as Buffer)
       .toString('hex')

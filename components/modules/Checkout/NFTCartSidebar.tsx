@@ -26,7 +26,7 @@ export interface NFTCartSidebarProps {
 
 export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const router = useRouter();
-  
+
   const {
     toggleCartSidebar,
     toList,
@@ -48,7 +48,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
 
   return (
     <div ref={sidebarRef} className={tw(
-      'z-50 fixed pt-20 right-0 w-full h-full minmd:max-w-md bg-white flex flex-col grow',
+      'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-md bg-white flex flex-col grow',
       'drop-shadow-md'
     )}>
       <div className="absolute top-24 right-4 h-10 w-10 flex items-center justify-center">
@@ -118,7 +118,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           onClick={() => {
             if (props.selectedTab === 'Sell') {
               toggleCartSidebar();
-              router.push('/app/list' );
+              router.push('/app/list');
             } else {
               togglePurchaseSummaryModal();
             }

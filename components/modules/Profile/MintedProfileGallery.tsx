@@ -27,7 +27,7 @@ export interface MintedProfileGalleryProps {
   ownedGKTokens?: number[];
 }
 
-const DynamicNFTActivity = dynamic<React.ComponentProps<typeof StaticGalleryToggleAllButtons>>(() => import('./GalleryToggleAllButtons').then(mod => mod.GalleryToggleAllButtons));
+const DynamicGalleryToggleAllButtons = dynamic<React.ComponentProps<typeof StaticGalleryToggleAllButtons>>(() => import('./GalleryToggleAllButtons').then(mod => mod.GalleryToggleAllButtons));
 
 export function MintedProfileGallery(props: MintedProfileGalleryProps) {
   const {
@@ -101,7 +101,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           </div>
           {editMode &&
           <div className="flex flex-row justify-end">
-            {!isMobile && <DynamicNFTActivity
+            {!isMobile && <DynamicGalleryToggleAllButtons
               publicNFTCount={publiclyVisibleNftCount}
               onShowAll={() => {
                 showNftIds(allOwnerNfts?.map(nft => nft.id));

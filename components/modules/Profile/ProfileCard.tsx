@@ -10,6 +10,7 @@ import { PartialDeep } from 'type-fest';
 
 export interface ProfileCardProps {
   profile: PartialDeep<Profile>
+  priority?: boolean
 }
 
 export function ProfileCard(props: ProfileCardProps) {
@@ -28,6 +29,7 @@ export function ProfileCard(props: ProfileCardProps) {
     )}
     >
       <RoundedCornerMedia
+        priority={props?.priority}
         containerClasses='w-full aspect-square'
         variant={RoundedCornerVariant.All}
         amount={RoundedCornerAmount.Medium}
