@@ -47,9 +47,9 @@ export const Header = ({ removeBg }: HeaderProps) => {
   useEffect(() => {
     gsap.timeline({
       scrollTrigger: {
-        trigger: '.hero-parent',
-        start: '1px top',
-        end: '+=30%',
+        trigger: '#anim-hero-trigger',
+        start: 'center center',
+        end: '+=10%',
         toggleActions: 'play none reverse none',
       }
     })
@@ -78,14 +78,14 @@ export const Header = ({ removeBg }: HeaderProps) => {
   });
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
-    if(router.pathname === '/'){
+    if (router.pathname === '/') {
       return (
         <header id='header' className={tw(
           'scale-[1.05] font-noi-grotesk',
           'fixed inset-x-5 minlg:inset-x-8 minxl:inset-x-14 top-6 minlg:top-7',
-          'h-[5.5rem] z-[104]',
+          'h-[5rem] minlg:h-[5.5rem] z-[11]',
         )}>
-          <div className="w-full h-full mx-auto px-11">
+          <div className="w-full h-full mx-auto px-5 min:px-11">
             <div className="flex items-center justify-between h-full">
               <div id='header-left' className="flex items-center h-full minlg:w-[60%]">
                 <div className="flex items-center">
@@ -148,7 +148,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
                     setSearchModalOpen(true);
                   }}
                 >
-                  <SearchIcon color='#6F6F6F' />
+                  <SearchIcon color='#0F0F0F' />
                 </button>
                 <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
                 <div
@@ -182,7 +182,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
         </header>
       );
     }
-    
+
     return (
       <nav className={tw(
         'fixed z-[104] top-0 w-full h-20 drop-shadow-md',

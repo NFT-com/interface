@@ -108,17 +108,20 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className='bg-black rounded-t-[75px] -mt-[75px] font-noi-grotesk text-primary-txt-dk relative'>
+      <footer id="FooterContainer" className={tw(
+        '-mt-[75px] font-noi-grotesk text-primary-txt-dk relative',
+        'bg-black rounded-t-[40px] minlg:rounded-t-[75px]'
+      )}>
         <div className={tw(
-          'flex flex-col minlg:flex-row relative justify-between',
-          'pt-16 pb-10 pr-32'
+          'minlg:flex minlg:flex-row relative justify-between',
+          'pt-16 pb-10 px-5 minlg:pl-0 minlg:pr-32'
         )}>
           <div className={tw(
-            'minlg:max-w-[50%] flex-shrink-0 basis-2/4 flex flex-col',
+            'minlg:max-w-[50%] minlg:flex-shrink-0 minlg:basis-2/4 flex flex-col',
             'items-start justify-between text-base minlg:pl-14 minlg:pt-[3.25rem]'
           )}>
             {/* Logo */}
-            <div className='flex items-center'>
+            <div className='flex items-center mb-[2.625rem] minlg:mb-0'>
               <Link href='/' passHref>
                 <div className='w-10 h-10'>
                   <Logo className='w-10 h-10 justify-start' />
@@ -154,7 +157,7 @@ export const Footer = () => {
             {filterNulls(footerData).slice(0, 3).map((item, index) => {
               return (
                 <div className={tw(
-                  'text-base mt-12 minlg:mt-0 pl-[30%] minmd:pl-[35%] minlg:pl-0',
+                  'text-base mt-12 minlg:mt-0 minmd:pl-[35%] minlg:pl-0',
                   index === 3 && 'col-start-2 minlg:row-auto minlg:col-auto',
                 )} key={index}>
                   <span className="font-medium text-[0.9375rem]">
@@ -210,16 +213,22 @@ export const Footer = () => {
         </div>
 
         <div className={tw(
-          'flex flex-col minlg:flex-row relative justify-between',
-          'pr-32'
+          'flex flex-col minlg:flex-row justify-between',
+          'relative px-5 minlg:pl-0 minlg:pr-32'
         )}>
-          <div className="w-full text-[14px] text-[#8B8B8B] minlg:pl-14">
-            <p className='minlg:mb-16'>© {new Date().getFullYear()} NFT.com. All rights reserved</p>
-            <span className='-skew-x-[20deg] w-[115px] h-[110px] bg-[#F9D54C] block ml-24'></span>
+          <div className={tw(
+            'w-full text-[14px] text-[#8B8B8B] minlg:pl-14',
+            'order-1 minlg:-order-1'
+          )}>
+            <p className='mb-6 minlg:mb-16'>© {new Date().getFullYear()} NFT.com. <br className='minlg:hidden' /> All rights reserved</p>
+            <span className={tw(
+              '-skew-x-[20deg] w-[115px] h-[110px] bg-[#F9D54C] block',
+              'mr-5 ml-auto minlg:ml-24 minlg:mr-0'
+            )}></span>
           </div>
 
           <div className='w-full minlg:max-w-[50%] minlg:pt-8 flex-shrink-0 basis-2/4'>
-            <h4 className='text-[.9375rem] text-[#8B8B8B]'>Subscribe to our notifications</h4>
+            <h4 className='minlg:text-[.9375rem] text-[#8B8B8B]'>Subscribe to our notifications</h4>
 
             <div className='flex border-b border-b-[#2A2A2A] pb-4'>
               <input type="email" placeholder='Enter your email' className={tw(
@@ -231,7 +240,7 @@ export const Footer = () => {
                 'px-4 h-9 ml-6'
               )}>Subscribe</button>
             </div>
-            <span className='text-xs text-key-gray/50 block pt-3'>Subscribe to our notifications</span>
+            <span className='text-[.875rem] minlg:text-xs text-key-gray/50 block pt-3 mb-[3.75rem] minlg:mb-0'>Subscribe to our notifications</span>
           </div>
         </div>
       </footer>

@@ -1,19 +1,26 @@
+import Loader from 'components/elements/Loader';
 import { NullState } from 'components/elements/NullState';
 import { MintedProfile } from 'components/modules/Profile/MintedProfile';
 import { ProfileContextProvider } from 'components/modules/Profile/ProfileContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
+import MintSuccessModal from 'components/modules/ProfileFactory/MintSuccessModal';
+import ProfileSelectModal from 'components/modules/ProfileFactory/ProfileSelectModal';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
+import dynamic from 'next/dynamic';
 import { useCallback } from 'react';
-import { Loader } from 'react-feather';
 
 export interface ProfilePageProps {
   uri: string | string[];
 }
+
+const DynamicProfileSelectModal = dynamic<React.ComponentProps<typeof ProfileSelectModal>>(() => import('components/modules/ProfileFactory/ProfileSelectModal').then(mod => mod.default));
+const DynamicMintSuccessModal = dynamic<React.ComponentProps<typeof MintSuccessModal>>(() => import('components/modules/ProfileFactory/MintSuccessModal').then(mod => mod.default));
 
 /**
  * Shows a public profile e.g. nft.com/satoshi
@@ -80,6 +87,12 @@ export function ProfilePage(props: ProfilePageProps) {
             profileURI={processedProfileURI}
             addressOwner={profileOwner}
           />
+          {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) &&
+            <>
+              <DynamicProfileSelectModal />
+              <DynamicMintSuccessModal />
+            </>
+          }
         </ProfileContextProvider>
       );
     }
