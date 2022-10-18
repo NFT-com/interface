@@ -54,6 +54,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/react-scroll": "^1.8.4",
     "@types/tailwindcss": "^3.0.10",
+    "aos": "^2.3.4",
     "d3-color": "3.1.0",
     "email-validator": "^2.0.4",
     "embla-carousel-autoplay": "^6.2.0",
