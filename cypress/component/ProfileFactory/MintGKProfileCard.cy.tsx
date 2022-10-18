@@ -9,9 +9,10 @@ describe('MintGKProfileCard', () => {
   const client = setupWagmiClient();
 
   it('mounts and renders when GK profiles available to mint', () => {
+    const onOpen = cy.stub();
     cy.mount(
       <WagmiConfig client={client}>
-        <MintGKProfileCard />
+        <MintGKProfileCard minting={false} setModalOpen={onOpen} setMintingState={onOpen} />
       </WagmiConfig>
     );
     cy.findByText('Claim your free NFT Profile').should('exist');

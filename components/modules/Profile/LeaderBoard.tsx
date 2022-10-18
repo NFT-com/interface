@@ -31,26 +31,26 @@ export function LeaderBoard({ data }: LeaderBoardProps) {
     );
   }
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
-    return <div className="overflow-x-auto relative w-full">
+    return <div className="overflow-x-auto relative -mx-4 minmd:mx-0">
       <table className="border-x-0 w-full min-w-[700px]">
         <thead>
           <tr className={tw(
             'text-body leading-body font-body text-[#FDB720] uppercase',
             'border-x-0 border-b-[1px] border-row-border'
           )}>
-            <th scope="col" className='text-left pb-4 minmd:text-body text-sm leading-body font-body'>Profile</th>
-            <th scope="col" className='text-left pb-4 minmd:text-body text-sm leading-body font-body'>Number of Genesis Keys</th>
+            <th scope="col" className='text-left pb-4 pl-4 minmd:text-body text-sm leading-body font-body'>Profile</th>
+            <th scope="col" className='text-left pb-4 min-w-[8.75rem] minmd:text-body text-sm leading-body font-body'>Number of <br className='minmd:hidden' /> Genesis Keys</th>
             <th scope="col" className='text-left pb-4 pr-3 minmd:text-body text-sm leading-body font-body'>Number of NFT Collections</th>
             <th scope="col" className='text-left pb-4 pr-3 minmd:text-body text-sm leading-body font-body'>Items Collected</th>
           </tr>
         </thead>
-        <tbody className="bg-always-white">
+        <tbody>
           {data?.leaderboard?.items.map((item, i) => (
             <tr key={i}
               className={tw('cursor-pointer min-w-[5.5rem] h-20 group',
                 i > 0 && 'border-x-0 border-y border-row-border last:border-b-0')}
               style={{
-                backgroundColor: i === hoverIndex ? rowBackgroundActive : alwaysWhite,
+                backgroundColor: i === hoverIndex ? rowBackgroundActive : 'transparent',
               }}
             >
               <td className='group-hover:text-[#FF9B37] group-hover:bg-[#FFF0CB] transition-colors'>
