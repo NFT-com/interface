@@ -1,4 +1,5 @@
 import { DropdownPicker } from 'components/elements/DropdownPicker';
+import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfilesMintedByGKQuery } from 'graphql/hooks/useProfilesMintedByGK';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
@@ -11,7 +12,6 @@ import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -141,12 +141,14 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
           {mintedProfiles && !loadingMintedProfiles && mintedProfiles?.profilesMintedByGK.map((profile) =>
             <div className='h-14 flex justify-between items-center bg-[#FCE795] rounded-xl px-4 py-2 mb-4' key={profile.url}>
               <div className='flex flex-row items-center gap-[14px]'>
-                <Image
-                  className='rounded-lg mr-[14px]'
+                <RoundedCornerMedia
+                  extraClasses='mr-[14px]'
+                  containerClasses='h-10 w-10'
                   src={profile.photoURL}
-                  alt={`profile image for ${profile.url}`}
-                  width='40px'
-                  height='40px'
+                  variant={RoundedCornerVariant.All}
+                  height={40}
+                  width={40}
+                  amount={RoundedCornerAmount.Medium}
                 />
                 <p>{profile.url}</p>
               </div>
