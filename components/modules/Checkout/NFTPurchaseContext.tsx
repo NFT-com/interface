@@ -77,7 +77,7 @@ export function NFTPurchaseContextProvider(
   const stagePurchase = useCallback((
     purchase: StagedPurchase
   ) => {
-    if (toBuy.find(l => l?.nft?.id === purchase?.nft?.id)) {
+    if (toBuy.find(l => l.nft.id === purchase.nft.id)) {
       toggleCartSidebar();
       return;
     }
