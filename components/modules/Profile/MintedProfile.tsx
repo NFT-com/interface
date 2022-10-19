@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Loader from 'components/elements/Loader';
 import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
@@ -25,7 +26,6 @@ import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
-import { Loader } from 'react-feather';
 import useSWR from 'swr';
 import { useAccount, useNetwork } from 'wagmi';
 
