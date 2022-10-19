@@ -63,6 +63,7 @@ export interface ProfileContextType {
   draftNftsDescriptionsVisible: Maybe<boolean>;
   setDraftNftsDescriptionsVisible: (val: boolean) => void;
   loading: boolean;
+  loadingAllOwnerNfts: boolean;
 }
 
 // initialize with default values
@@ -103,6 +104,7 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   draftNftsDescriptionsVisible: true,
   setDraftNftsDescriptionsVisible: () => null,
   loading: false,
+  loadingAllOwnerNfts: false,
 });
 
 export interface ProfileContextProviderProps {
@@ -126,8 +128,9 @@ export function ProfileContextProvider(
 
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
-  const [loadedCount, setLoadedCount] = useState(1000);
+  const [paginatedAllOwnerNfts, setPaginatedAllOwnerNfts] = useState([]);
   const [afterCursor, setAfterCursor] = useState('');
+  const [afterCursorEditMode, setAfterCursorEditMode] = useState('');
   const {
     nfts: publicProfileNfts,
     totalItems: publicProfileNftsCount,
@@ -144,8 +147,9 @@ export function ProfileContextProvider(
     data: allOwnerNfts,
     loading: loadingAllOwnerNfts,
     totalItems: allOwnerNftCount,
+    pageInfo: allOwnerNftsPageInfo,
     mutate: mutateAllOwnerNfts
-  } = useMyNFTsQuery(loadedCount, profileData?.profile?.id);
+  } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode);
 
   /**
    * Edit mode state
@@ -190,24 +194,42 @@ export function ProfileContextProvider(
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
   const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);
   const [editModeNfts, setEditModeNfts] = useState<PartialDeep<DetailedNft>[]>(null);
+  const [currentScrolledPosition, setCurrentScrolledPosition] = useState(0);
 
   const prevPublicProfileNfts = usePrevious(publicProfileNfts);
+  const prevAllOwnerNfts = usePrevious(allOwnerNfts);
+
+  useEffect(() => {
+    currentScrolledPosition !== 0 && window.scrollTo(0, currentScrolledPosition);
+    if (!loadingAllOwnerNfts) {
+      if (paginatedAllOwnerNfts.length == 0 || afterCursorEditMode === '') {
+        setPaginatedAllOwnerNfts(allOwnerNfts);
+      }
+
+      if (allOwnerNfts && prevAllOwnerNfts !== allOwnerNfts && afterCursorEditMode !== '') {
+        setPaginatedAllOwnerNfts([...paginatedAllOwnerNfts, ...allOwnerNfts]);
+      }
+    }
+  }, [afterCursorEditMode, allOwnerNfts, currentScrolledPosition, loadingAllOwnerNfts, paginatedAllOwnerNfts, prevAllOwnerNfts]);
 
   useEffect(() => {
     if (!loadingAllOwnerNfts) {
       setEditModeNfts([
         ...setHidden(publiclyVisibleNfts ?? [], false),
-        ...setHidden(allOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
+        ...setHidden(paginatedAllOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [], true)
       ]);
     }
-  }, [allOwnerNfts, publiclyVisibleNfts, loadingAllOwnerNfts]);
+  }, [paginatedAllOwnerNfts, publiclyVisibleNfts, loadingAllOwnerNfts]);
 
   useEffect(() => {
     setDraftDisplayType(null);
   }, [editMode]);
 
   useEffect(() => {
-    saving && setAfterCursor('');
+    if (saving) {
+      setAfterCursor('');
+      setAfterCursorEditMode('');
+    }
   }, [saving]);
 
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
@@ -223,11 +245,11 @@ export function ProfileContextProvider(
         setPubliclyVisibleNfts(publicProfileNfts);
       }
 
-      if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
+      if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '' && !loading) {
         setPubliclyVisibleNfts([...publiclyVisibleNfts, ...publicProfileNfts]);
       }
     }
-  }, [afterCursor, editMode, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNfts]);
+  }, [afterCursor, editMode, loading, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNfts]);
 
   /**
    * Mutations
@@ -237,18 +259,19 @@ export function ProfileContextProvider(
   const { uploadProfileImages } = useUpdateProfileImagesMutation();
   const { updateOrder } = useProfileOrderingUpdateMutation();
 
-  const toggleHidden = useCallback((
+  const toggleHidden = useCallback(async (
     id: string,
     currentVisibility: boolean
   ) => {
+    setCurrentScrolledPosition(window.pageYOffset);
     if (currentVisibility) {
-      setPubliclyVisibleNfts((publiclyVisibleNfts ?? []).slice().filter(nft => nft.id !== id));
+      await setPubliclyVisibleNfts((publiclyVisibleNfts ?? []).slice().filter(nft => nft.id !== id));
     } else {
       // NFT is currently hidden.
-      const nft = allOwnerNfts.find(nft => nft.id === id);
-      setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
+      const nft = paginatedAllOwnerNfts.find(nft => nft.id === id);
+      await setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
     }
-  }, [allOwnerNfts, publiclyVisibleNfts]);
+  }, [paginatedAllOwnerNfts, publiclyVisibleNfts]);
 
   const clearDrafts = useCallback(() => {
     // reset
@@ -317,7 +340,7 @@ export function ProfileContextProvider(
           gkIconVisible: draftGkIconVisible,
           nftsDescriptionsVisible: draftNftsDescriptionsVisible,
           deployedContractsVisible: draftDeployedContractsVisible,
-          hideNFTIds: allOwnerNfts?.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null)?.map(nft => nft.id),
+          hideNFTIds: paginatedAllOwnerNfts?.filter(nft => publiclyVisibleNfts.find(nft2 => nft2.id === nft.id) == null)?.map(nft => nft.id),
           showNFTIds: publiclyVisibleNfts?.map(nft => nft.id),
           layoutType: draftLayoutType,
           ...(imageUploadResult
@@ -343,29 +366,7 @@ export function ProfileContextProvider(
       clearDrafts();
       setSaving(false);
     }
-  }, [
-    editModeNfts,
-    updateOrder,
-    draftProfileImg,
-    draftHeaderImg,
-    clearDrafts,
-    uploadProfileImages,
-    profileData?.profile?.id,
-    profileData?.profile?.description,
-    updateProfile,
-    draftBio,
-    draftGkIconVisible,
-    draftNftsDescriptionsVisible,
-    draftDeployedContractsVisible,
-    draftLayoutType,
-    fileUpload,
-    props.profileURI,
-    mutateProfileData,
-    mutatePublicProfileNfts,
-    mutateAllOwnerNfts,
-    allOwnerNfts,
-    publiclyVisibleNfts
-  ]);
+  }, [draftProfileImg, draftHeaderImg, clearDrafts, uploadProfileImages, profileData?.profile?.id, profileData?.profile?.description, updateProfile, draftBio, draftGkIconVisible, draftNftsDescriptionsVisible, draftDeployedContractsVisible, paginatedAllOwnerNfts, publiclyVisibleNfts, draftLayoutType, fileUpload, props.profileURI, updateOrder, editModeNfts, mutateProfileData, mutatePublicProfileNfts, mutateAllOwnerNfts]);
 
   const setHidden: (
     nfts: PartialDeep<Nft>[], hidden: boolean
@@ -378,7 +379,8 @@ export function ProfileContextProvider(
 
   return <ProfileContext.Provider value={{
     editModeNfts: editModeNfts ?? [],
-    allOwnerNfts: allOwnerNfts ?? [],
+    // allOwnerNfts: allOwnerNfts ?? [],
+    allOwnerNfts: paginatedAllOwnerNfts ?? [],
     allOwnerNftCount: allOwnerNftCount ?? 0,
     publiclyVisibleNfts: publiclyVisibleNfts ?? [],
     publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
@@ -386,7 +388,8 @@ export function ProfileContextProvider(
       pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
     },
     loadMoreNftsEditMode: () => {
-      setLoadedCount(loadedCount + 100);
+      // setLoadedCount(loadedCount + 100);
+      allOwnerNftsPageInfo.lastCursor && setAfterCursorEditMode(allOwnerNftsPageInfo.lastCursor);
     },
     setAllItemsOrder,
     userIsAdmin: ownedProfileTokens
@@ -430,12 +433,12 @@ export function ProfileContextProvider(
     },
     showNftIds: (toShow: string[]) => {
       const additions = [];
-      allOwnerNfts?.filter(nft => toShow?.includes(nft.id))?.forEach((nft) => {
+      paginatedAllOwnerNfts?.filter(nft => toShow?.includes(nft.id))?.forEach((nft) => {
         if (!publiclyVisibleNfts?.includes(nft) && !additions?.includes(nft)) {
           additions.push(nft);
         }
       });
-      setPubliclyVisibleNfts([...(allOwnerNfts.length === additions.length? [] : publiclyVisibleNfts), ...additions]);
+      setPubliclyVisibleNfts([...(paginatedAllOwnerNfts.length === additions.length? [] : publiclyVisibleNfts), ...additions]);
     },
     saveProfile,
     saving,
@@ -443,6 +446,7 @@ export function ProfileContextProvider(
     selectedCollection,
     setSelectedCollection,
     loading,
+    loadingAllOwnerNfts
   }}>
     {props.children}
   </ProfileContext.Provider>;
