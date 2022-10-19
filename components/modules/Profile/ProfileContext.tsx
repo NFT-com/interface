@@ -379,7 +379,6 @@ export function ProfileContextProvider(
 
   return <ProfileContext.Provider value={{
     editModeNfts: editModeNfts ?? [],
-    // allOwnerNfts: allOwnerNfts ?? [],
     allOwnerNfts: paginatedAllOwnerNfts ?? [],
     allOwnerNftCount: allOwnerNftCount ?? 0,
     publiclyVisibleNfts: publiclyVisibleNfts ?? [],
@@ -388,7 +387,6 @@ export function ProfileContextProvider(
       pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
     },
     loadMoreNftsEditMode: () => {
-      // setLoadedCount(loadedCount + 100);
       allOwnerNftsPageInfo.lastCursor && setAfterCursorEditMode(allOwnerNftsPageInfo.lastCursor);
     },
     setAllItemsOrder,
