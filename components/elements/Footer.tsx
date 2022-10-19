@@ -4,16 +4,28 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import AOS from 'aos';
 import Link from 'next/link';
 import DiscordLogo from 'public/discord.svg';
 import Logo from 'public/LogoFooterWhite.svg';
 import TwitterLogo from 'public/twitter.svg';
+import React, { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 
 export const Footer = () => {
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
+
+  useEffect(() => {
+    AOS.init({
+      disable: function() {
+        const maxWidth = 900;
+        return window.innerWidth >= maxWidth;
+      },
+      duration : 700
+    });
+  });
 
   const footerData = [
     {
@@ -121,7 +133,7 @@ export const Footer = () => {
             'items-start justify-between text-base minlg:pl-14 minlg:pt-[3.25rem]'
           )}>
             {/* Logo */}
-            <div className='flex items-center mb-[2.625rem] minlg:mb-0'>
+            <div data-aos="fade-right" data-aos-delay="100" className='flex items-center mb-[2.625rem] minlg:mb-0'>
               <Link href='/' passHref>
                 <div className='w-10 h-10'>
                   <Logo className='w-10 h-10 justify-start' />
@@ -137,13 +149,13 @@ export const Footer = () => {
 
             {/* Socials */}
             <div className='flex gap-6'>
-              <a className={tw(
+              <a data-aos="fade-left" data-aos-delay="200" className={tw(
                 'transition-colors text-white hover:text-[#F9D54C]'
               )}
               target="_blank" href="https://twitter.com" rel="noopener noreferrer">
                 <TwitterLogo width='28' height='28' viewBox="0 0 38 32" fill="currentColor" />
               </a>
-              <a className={tw(
+              <a data-aos="fade-left" data-aos-delay="300" className={tw(
                 'transition-colors text-white hover:text-[#F9D54C]'
               )}
               target="_blank" href="https://discord.com/" rel="noopener noreferrer">
@@ -153,7 +165,7 @@ export const Footer = () => {
           </div>
 
           {/* Nav */}
-          <div className="w-full minlg:w-1/2 grid minmd:grid-cols-3 grid-cols-2 minmd:pb-14">
+          <div data-aos="fade-up" data-aos-delay="100" className="w-full minlg:w-1/2 grid minmd:grid-cols-3 grid-cols-2 minmd:pb-14">
             {filterNulls(footerData).slice(0, 3).map((item, index) => {
               return (
                 <div className={tw(
@@ -216,7 +228,7 @@ export const Footer = () => {
           'flex flex-col minlg:flex-row justify-between',
           'relative px-5 minlg:pl-0 minlg:pr-32'
         )}>
-          <div className={tw(
+          <div data-aos="fade-right" data-aos-delay="200" className={tw(
             'w-full text-[14px] text-[#8B8B8B] minlg:pl-14',
             'order-1 minlg:-order-1'
           )}>
@@ -227,7 +239,7 @@ export const Footer = () => {
             )}></span>
           </div>
 
-          <div className='w-full minlg:max-w-[50%] minlg:pt-8 flex-shrink-0 basis-2/4'>
+          <div data-aos="fade-up" data-aos-delay="100" className='w-full minlg:max-w-[50%] minlg:pt-8 flex-shrink-0 basis-2/4'>
             <h4 className='minlg:text-[.9375rem] text-[#8B8B8B]'>Subscribe to our notifications</h4>
 
             <div className='flex border-b border-b-[#2A2A2A] pb-4'>
