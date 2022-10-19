@@ -354,16 +354,14 @@ export const Sidebar = () => {
               }
             >
               {getSidebarPanel()}
-              <div className='bg-black flex gap-6 items-center justify-end px-5 py-10'>
+              <div className='bg-black flex gap-6 items-center justify-end px-5 py-10 minlg:hidden'>
                 <a
                   target="_blank" href="https://twitter.com" rel="noopener noreferrer"
-                  className='minlg:hidden'
                 >
                   <TwitterLogo fill="#8B8B8B" />
                 </a>
                 <a
                   target="_blank" href="https://discord.com/" rel="noopener noreferrer"
-                  className='minlg:hidden'
                 >
                   <DiscordLogo fill="#8B8B8B" />
                 </a>
