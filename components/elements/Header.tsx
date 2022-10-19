@@ -79,7 +79,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
         .to('#header-shadow', {
           opacity: 1,
           scaleY: 1,
-          duration: 1.5,
+          duration: 1,
           ease: 'power2.out'
         }, 0)
         .to('#header', {
