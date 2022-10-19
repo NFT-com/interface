@@ -105,6 +105,7 @@ export function NftGrid(props: NftGridProps) {
             collectionName={nft?.collection?.name}
             isOwnedByMe={nft?.isOwnedByMe}
             listings={nft?.listings?.items || []}
+            nft={nft}
             fallbackImage={nft?.metadata?.imageURL}
             profileURI={props.profileURI}
             contractAddress={nft?.contract}
