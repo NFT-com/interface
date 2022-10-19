@@ -27,6 +27,7 @@ export const NFTCardAddToCartButton = ( props: {
   
   return (
     <button onClick={async (e: MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
       e.stopPropagation();
       const listing = lowestListing;
       const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
@@ -47,7 +48,7 @@ export const NFTCardAddToCartButton = ( props: {
       toggleCartSidebar('Buy');
     }}
     className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-5 rounded focus:outline-none focus:shadow-outline w-full" type="button">
-          Add to cart
+      Add to cart
     </button>
   );
 };
