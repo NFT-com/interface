@@ -1,4 +1,5 @@
 import { TxActivity } from 'graphql/generated/types';
+import { Nft } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -31,6 +32,8 @@ export interface NFTCardTrait {
   value: string,
 }
 
+export type DetailedNft = Nft & { hidden?: boolean };
+
 export interface NFTCardProps {
   title: string;
   cta?: string;
@@ -41,6 +44,7 @@ export interface NFTCardProps {
   header?: NFTCardTrait;
   traits?: NFTCardTrait[];
   isOwnedByMe?: boolean;
+  nft?: PartialDeep<DetailedNft>;
   description?: string;
   profileURI?: string;
   images: Array<string | null>;
@@ -69,7 +73,7 @@ const DynamicNFTCardDescription = dynamic<React.ComponentProps<typeof StaticNFTC
 export function NFTCard(props: NFTCardProps) {
   const defaultChainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
-  const { data: nft } = useNftQuery(props.contractAddress, props?.listings ? null : props.tokenId); // skip query if listings are passed by setting tokenId to null
+  const { data: nft } = useNftQuery(props.contractAddress, (props?.listings || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nfts is passed by setting tokenId to null
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.contractAddress + props.collectionName, async () => {
     return props.collectionName || await getContractMetadata(props.contractAddress, defaultChainId);
   });
@@ -281,7 +285,7 @@ export function NFTCard(props: NFTCardProps) {
             description={props.description}
             cta={props.cta}
             showListingIcons={showListingIcons}
-            nft={nft}
+            nft={props?.nft || nft}
           />}
       </a>
     </Link>
