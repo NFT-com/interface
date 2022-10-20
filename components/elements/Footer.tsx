@@ -130,17 +130,17 @@ export const Footer = () => {
         )}>
           <div className={tw(
             'minlg:max-w-[50%] minlg:flex-shrink-0 minlg:basis-2/4 flex flex-col',
-            'items-start justify-between text-base minlg:pl-14 minlg:pt-[3.25rem]'
+            'items-start justify-between text-base minlg:pl-14 minlg:pt-[2.35rem]'
           )}>
             {/* Logo */}
             <div data-aos="fade-right" data-aos-delay="100" className='flex items-center mb-[2.625rem] minlg:mb-0'>
               <Link href='/' passHref>
-                <div className='w-10 h-10'>
-                  <Logo className='w-10 h-10 justify-start' />
+                <div className='w-[3.8rem] h-[3.8rem]'>
+                  <Logo className='w-[3.8rem] h-[3.8rem] justify-start' />
                 </div>
               </Link>
 
-              <svg className='ml-3' width="63" height="18" viewBox="0 0 63 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg className='ml-3' width="87" height="23" viewBox="0 0 63 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M16.3704 0.875H19.9551V17.1235H16.3704L3.51321 5.26179L3.58454 7.83843V17.1235H-6.10352e-05V0.875H3.58454L16.4418 12.7603L16.3704 10.1601V0.875Z" fill="white" />
                 <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="white" />
                 <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="white" />
@@ -148,18 +148,22 @@ export const Footer = () => {
             </div>
 
             {/* Socials */}
-            <div className='flex gap-6'>
+            <div className='flex gap-4'>
               <a data-aos="fade-left" data-aos-delay="200" className={tw(
                 'transition-colors text-white hover:text-[#F9D54C]'
               )}
               target="_blank" href="https://twitter.com" rel="noopener noreferrer">
-                <TwitterLogo width='28' height='28' viewBox="0 0 38 32" fill="currentColor" />
+                <TwitterLogo className={tw(
+                  'w-7 h-7 minxxl:w-9 minxxl:h-9'
+                )} viewBox="0 0 38 32" fill="currentColor" />
               </a>
               <a data-aos="fade-left" data-aos-delay="300" className={tw(
                 'transition-colors text-white hover:text-[#F9D54C]'
               )}
               target="_blank" href="https://discord.com/" rel="noopener noreferrer">
-                <DiscordLogo width='28' height='28' viewBox="0 0 39 38" fill="currentColor" />
+                <DiscordLogo className={tw(
+                  'w-7 h-7 minxxl:w-9 minxxl:h-9'
+                )} viewBox="0 0 39 38" fill="currentColor" />
               </a>
             </div>
           </div>
@@ -169,10 +173,10 @@ export const Footer = () => {
             {filterNulls(footerData).slice(0, 3).map((item, index) => {
               return (
                 <div className={tw(
-                  'text-base mt-12 minlg:mt-0 minmd:pl-[35%] minlg:pl-0',
+                  'text-base minxxl:text-xl mt-12 minlg:mt-0 minmd:pl-[35%] minlg:pl-0',
                   index === 3 && 'col-start-2 minlg:row-auto minlg:col-auto',
                 )} key={index}>
-                  <span className="font-medium text-[0.9375rem]">
+                  <span className="font-medium text-[0.9375rem] minxxl:text-[1.5rem]">
                     {item.title}
                   </span>
                   <div className='flex flex-col'>
@@ -229,30 +233,33 @@ export const Footer = () => {
           'relative px-5 minlg:pl-0 minlg:pr-32'
         )}>
           <div data-aos="fade-right" data-aos-delay="200" className={tw(
-            'w-full text-[14px] text-[#8B8B8B] minlg:pl-14',
+            'w-full text-sm minxxl:text-lg text-[#8B8B8B] minlg:pl-14',
             'order-1 minlg:-order-1'
           )}>
-            <p className='mb-6 minlg:mb-16'>© {new Date().getFullYear()} NFT.com. <br className='minlg:hidden' /> All rights reserved</p>
+            <p className='mb-6 minlg:mb-[6.8rem]'>© {new Date().getFullYear()} NFT.com. <br className='minlg:hidden' /> All rights reserved</p>
             <span className={tw(
               '-skew-x-[20deg] w-[115px] h-[110px] bg-[#F9D54C] block',
               'mr-5 ml-auto minlg:ml-24 minlg:mr-0'
             )}></span>
           </div>
 
-          <div data-aos="fade-up" data-aos-delay="100" className='w-full minlg:max-w-[50%] minlg:pt-8 flex-shrink-0 basis-2/4'>
-            <h4 className='minlg:text-[.9375rem] text-[#8B8B8B]'>Subscribe to our notifications</h4>
+          <div data-aos="fade-up" data-aos-delay="100" className='w-full minlg:max-w-[50%] minlg:pt-[4.5rem] flex-shrink-0 basis-2/4'>
+            <h4 className='minlg:text-[.9375rem] minxxl:text-[1.5rem] mb-4 text-[#8B8B8B]'>Subscribe to our notifications</h4>
 
             <div className='flex border-b border-b-[#2A2A2A] pb-4'>
               <input type="email" placeholder='Enter your email' className={tw(
+                'minxxl:text-xl',
                 'bg-transparent border-none px-0 w-full',
                 'shadow-none focus:border-transparent focus:ring-0'
               )} />
               <button type="submit" className={tw(
+                'text-sm minxxl:text-lg',
                 'rounded-full border-2 border-white',
-                'px-4 h-9 ml-6'
+                'px-4 h-9 minxxl:px-6 minxxl:h-11 ml-6',
+                'transition-colors hover:bg-white hover:text-black'
               )}>Subscribe</button>
             </div>
-            <span className='text-[.875rem] minlg:text-xs text-key-gray/50 block pt-3 mb-[3.75rem] minlg:mb-0'>Subscribe to our notifications</span>
+            <span className='text-[.875rem] minlg:text-xs minxxl:text-sm text-key-gray/50 block pt-3 mb-[3.75rem] minlg:mb-0'>Subscribe to our notifications</span>
           </div>
         </div>
       </footer>

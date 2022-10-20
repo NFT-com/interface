@@ -69,8 +69,8 @@ export const Header = ({ removeBg }: HeaderProps) => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-hero-trigger',
-          start: 'center center',
-          end: '+=10%',
+          start: '5px top',
+          end: '+=15%',
           toggleActions: 'play none reverse none',
         }
       })
@@ -107,11 +107,11 @@ export const Header = ({ removeBg }: HeaderProps) => {
           'fixed inset-x-5 minlg:inset-x-8 minxl:inset-x-14 top-6 minlg:top-7',
           'h-[5rem] minlg:h-[5.5rem] z-[11]',
         )}>
-          <div className="w-full h-full mx-auto px-5 min:px-11">
+          <div className="w-full h-full mx-auto pr-5 pl-[1.5rem] min:px-11">
             <div className="flex items-center justify-between h-full">
               <div data-aos="fade-right" data-aos-delay="100" id='header-left' className="flex items-center h-full minlg:max-w-[60%]">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-14">
+                  <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-9 minxxl:mr-11">
                     <Link href='/' passHref>
                       <div className='w-10 h-10'>
                         {useDarkMode ? <LightNavLogo className='justify-start' /> : <NavLogo className='justify-start' />}
