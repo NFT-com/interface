@@ -121,12 +121,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           trigger: '#anim-hero-trigger',
           pin: '#anim-hero-trigger',
           start: '1px top',
-          end: '+=50%',
+          end: '+=20%',
+          markers: true,
           toggleActions: 'play none reverse none',
         }
       })
         .to('#anim-hero', {
           maxWidth: '100vw',
+          backgroundColor: '#000',
           duration: 1.25,
           ease: 'power2.out'
         }, 0)
@@ -146,7 +148,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         }, 0)
         .to('#anim-hero-shadow-dark', {
           opacity: 1,
-          duration: 1.5,
+          duration: 1,
           ease: 'power2.out'
         }, 0)
         .to('#anim-hero-shadow-light', {
@@ -164,63 +166,60 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-profile-trigger',
-          start: 'top center',
-          end: '+=10%',
+          start: 'top 80%',
+          end: '+=20%',
+          markers: true,
           toggleActions: 'play none reverse none',
         }
       })
         .to('#anim-profile-head', {
           y: 0,
-          duration: 1.4,
+          duration: 1,
           ease: 'power2.out',
         }, 0)
         .to('#anim-profile-content', {
           y: 0,
-          duration: 1.6,
+          duration: 1.2,
           ease: 'power2.out',
         }, 0)
         .to('#anim-hero-shadow-dark', {
           y: -200,
-          duration: 1.2,
+          duration: 1,
           ease: 'power1.out',
         }, 0)
         .to('#anim-profile', {
           y: -200,
-          duration: 1.2,
+          duration: 0.8,
           ease: 'power1.out',
         }, 0)
         .to('#anim-profile-bg', {
           scaleY: 1,
-          delay: .5,
-          duration: 1.2,
+          duration: 0.8,
           ease: 'power1.out',
         }, 0)
         .to('#anim-profile-first-item', {
           y: 0,
-          delay: 0,
-          duration: 1.2,
+          duration: 0.8,
           ease: 'power1.out',
         }, 0)
         .to('#anim-profile-second-item', {
           y: 0,
-          delay: 0,
-          duration: 1.5,
+          duration: 1,
           ease: 'power1.out',
         }, 0)
         .to('.anim-profile-corner-decor', {
           y: 0,
           x: 0,
-          delay: 1,
           duration: 2.5,
-          ease: 'power1.out',
-        }, 0);
+          ease: 'circ.out',
+        });
 
       // Discover
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-discover-trigger',
           start: 'top 75%',
-          end: '+=10%',
+          end: '+=20%',
           //toggleActions: 'play none none reset',
           toggleActions: 'play none reverse none',
         }
@@ -251,33 +250,33 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         scrollTrigger: {
           trigger: '#anim-hiw-trigger',
           start: 'top 75%',
-          end: '+=10%',
+          end: '+=20%',
           toggleActions: 'play none reverse none',
         }
       })
         .to('#anim-hiw-content', {
           y: 0,
           opacity: 1,
-          duration: .5,
-          ease: 'power4.out',
+          duration: 1,
+          ease: 'power2.out',
         })
         .to('.anim-hiw-item:nth-child(1)', {
           y: 0,
           opacity: 1,
-          duration: 1,
-          ease: 'circ.out',
+          duration: 1.2,
+          ease: 'power2.out',
         }, '>-0.7')
         .to('.anim-hiw-item:nth-child(2)', {
           y: 0,
           opacity: 1,
-          duration: 1,
-          ease: 'circ.out',
+          duration: 1.2,
+          ease: 'power2.out',
         }, '>-0.8')
         .to('.anim-hiw-item:nth-child(3)', {
           y: 0,
           opacity: 1,
-          duration: 1,
-          ease: 'circ.out',
+          duration: 1.2,
+          ease: 'power2.out',
         }, '>-0.9');
 
       // Leaderboard
@@ -354,7 +353,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'mx-[1.8rem] -my-[.5rem]',
                     'rotate-[40deg] rounded-xl'
                   )} src="ico-discover.png" alt="" />
-                  <span data-aos="fade-left" data-aos-delay="200" className='text-secondary-yellow'>identity</span></h2>
+                  <span data-aos="fade-left" data-aos-delay="200"
+                    className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>identity</span></h2>
 
                 <a data-aos="zoom-out" data-aos-delay="300" href="" className={tw(
                   'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
@@ -363,7 +363,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 )}>create a Profile</a>
               </div>
 
-              {/* Animation */}
+              {/* Hero */}
               <div id='anim-hero' data-aos="fade-up" data-aos-delay="200" className={tw(
                 'minmd:max-w-[40%] minlg:h-[calc(100vh+1px)] overflow-hidden bg-[#F9D54C] z-[10]',
                 'relative minlg:absolute minmd:right-0 minmd:top-0',
@@ -376,7 +376,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     '-skew-x-[41deg] skew-y-[19deg]'
                   )}>
                     <Player
-                      autoplay
+                      autoplay={false}
                       loop
                       src="/anim/cycle.json"
                       style={{ height: '1600px', width: '1600px' }}
@@ -444,7 +444,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'mx-[1.8rem] -my-[.5rem]',
                     'rotate-[40deg] rounded-xl'
                   )} src="ico-discover.png" alt="" />
-                  <span className='text-secondary-yellow'>NFT Profile</span></h2>
+                  <span className='bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Profile</span></h2>
 
                 <div id='anim-profile-content' className={tw(
                   'minlg:translate-y-[400px]',
@@ -527,7 +527,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       </div>
 
                       <div data-aos="fade-left" data-aos-delay="250" className="image-ticker h-16 minxl:h-28 minxxl:h-36">
-                        <Ticker speed={7} offset={'-100%'}>
+                        <Ticker speed={7} offset='-100%'>
                           {() => (
                             <>
                               <img src="medici.png" className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px] rounded-full' alt="" />
@@ -550,13 +550,18 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal',
                   'mb-6 minxxl:mb-9'
                 )}>
-                  <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200" className='text-secondary-yellow block translate-y-20'>
+                  <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
+                    className={tw(
+                      'bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]',
+                      'block translate-y-20'
+                    )}>
                     Discover <br />
                     <img className={tw(
                       'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
                       'mx-[1.8rem] -my-[.5rem]',
                       'rotate-[40deg] rounded-xl'
-                    )} src="ico-discover.png" alt="" />a</span>
+                    )} src="ico-discover.png" alt="" />a
+                  </span>
                   <span id='anim-discover-ttl-line-2' className='block translate-y-20'>New World</span>
                 </h2>
                 <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className='translate-y-24 text-base minlg:text-xl minxxl:text-3xl'>NFTs enable new forms of community engagement. Collect, Display, and Trade your NFTs through a social network that you own. Get started by building your NFT Profile.</p>
@@ -665,12 +670,13 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </div>
 
                 <div className='-mx-9 overflow-hidden mb-12'>
-                  <Ticker speed={7}>
+                  <Ticker speed={7} offset='-100%'>
                     {() => (
                       <>
                         <div className={tw(
                           'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
-                          'mx-[10px] minxxl:mx-4 w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
+                          'mx-[10px] minlg:mx-4 minxxl:mx-5',
+                          'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
                         )}>
                           <div className='before:pb-[54.129%] before:block relative'>
                             <img className='absolute top-0 w-full rounded-t-lg' src="news01.png" alt="" />
@@ -706,26 +712,50 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           {/* Block: Ticker */}
           <div className='overflow-hidden mb-[4.625rem] minlg:mb-20'>
             <div className={tw(
-              'text-4xl minlg:text-7xl minxxl:text-9xl',
-              'text-[#B2B2B2] italic mb-2',
+              'text-4xl minlg:text-7xl minxxl:text-9xl mb-2 -ml-7'
             )}>
-              <Ticker speed={7} offset='100%' direction='toRight'>
+              <Ticker speed={7} offset='100%' direction='toRight' move={false}>
                 {() => (
                   <>
-                    <div className='ml-3 pb-4 minlg:ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='mr-[4px] text-[3.5rem] mt-2 font-bold not-italic'>/</span> defi</div>
+                    <div className={tw(
+                      'pl-3 minlg:pl-12 minxxl:pl-36 flex items-baseline group'
+                    )}
+                    ><div className={tw(
+                        'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                        'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                        'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
+                      )}></div>
+                      
+                      <i className={tw(
+                        'animate-text-gadient bg-[length:200%_200%]',
+                        'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
+                        'transition-colors group-hover:text-transparent'
+                      )}>defi</i></div>
                   </>
                 )}
               </Ticker>
             </div>
 
             <div className={tw(
-              'text-4xl minlg:text-7xl minxxl:text-9xl',
-              'text-[#B2B2B2] italic mb-2',
+              'text-4xl minlg:text-7xl minxxl:text-9xl mb-2'
             )}>
-              <Ticker speed={7} offset='-100%'>
+              <Ticker speed={7} offset='-100%' move={false}>
                 {() => (
                   <>
-                    <div className='ml-3 pb-4 minlg:ml-12 flex items-center hover:text-[#FFAA2C] transition-colors cursor-pointer'><span className='mr-[4px] text-[3.5rem] mt-2 font-bold not-italic'>/</span> gaming</div>
+                    <div className={tw(
+                      'pl-3 minlg:pl-12 minxxl:pl-36 flex items-baseline group'
+                    )}
+                    ><div className={tw(
+                        'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                        'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                        'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
+                      )}></div>
+                      
+                      <i className={tw(
+                        'animate-text-gadient bg-[length:200%_200%]',
+                        'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
+                        'transition-colors group-hover:text-transparent'
+                      )}>gaming</i></div>
                   </>
                 )}
               </Ticker>

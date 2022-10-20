@@ -60,8 +60,8 @@ export const Header = ({ removeBg }: HeaderProps) => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-hero-trigger',
-          start: 'center center',
-          end: '+=10%',
+          start: '1px top',
+          end: '+=20%',
           toggleActions: 'play none reverse none',
         }
       })

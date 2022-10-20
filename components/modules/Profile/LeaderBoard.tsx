@@ -69,7 +69,7 @@ export function LeaderBoard({ data }: LeaderBoardProps) {
                 <div className={tw('flex items-end text-[1.125rem] minmd:text-[1.1875rem] minxxl:text-[1.5rem] leading-body font-medium',
                   'whitespace-nowrap text-right')}>
                   <span className={tw(
-                    'bg-key-bg group-hover:bg-[#FF9B37]',
+                    'bg-key-bg group-hover:bg-gradient-to-r from-[#FAC213] to-[#FF9B37]',
                     'rounded-full flex items-center py-1 px-2 minxxl:py-2 minxxl:px-3',
                     'text-white group-hover:text-white transition-colors'
                   )}>
