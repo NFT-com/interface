@@ -32,7 +32,7 @@ export const NFTCardListingIcons = (props: {
         <p className='font-medium'>
           {lowestPrice && ethers.utils.formatEther(lowestPrice)}
           {' '}
-          {props.lowestListing && getByContractAddress(getListingCurrencyAddress(props.lowestListing) ?? WETH.address).name}
+          {props.lowestListing && getByContractAddress(getListingCurrencyAddress(props.lowestListing) ?? WETH.address)?.name}
         </p>
       </div>
       <div>

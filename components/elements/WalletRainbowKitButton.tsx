@@ -1,3 +1,4 @@
+import { SignedInProfileButtonDropdown } from 'components/modules/Header/SignedInProfileButtonDropdown';
 import { NotificationBadge } from 'components/modules/Notifications/NotificationBadge';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useSidebar } from 'hooks/state/useSidebar';
@@ -75,7 +76,7 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
                     !props.bgLight && props.header && 'border-[#6F6F6F] border',
                     'rounded-3xl',
                     props.header ? (props.bgLight ? 'text-[#000000]' : 'text-white') : 'text-[#4d4412]',
-                    'hidden minlg:flex flex-row items-center cursor-pointer hover:opacity-80',
+                    'hidden minlg:flex flex-row items-center cursor-pointer hover:bg-[#EFC71E]',
                     'font-noi-grotesk text-lg font-medium',
                     'py-3 pr-5 pl-[18px]'
                   )}
@@ -92,10 +93,9 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
           if (chain.unsupported) {
             return (
               <button className={tw(
-                'block font-bold rounded-xl text-white',
-                'bg-primary-button-bckg',
+                'block font-medium rounded-full text-black',
+                'bg-[#F9D54C]',
                 'flex flex-row items-center cursor-pointer hover:opacity-80 font-noi-grotesk',
-                'border',
                 'py-2 px-5'
               )} onClick={openChainModal} type="button">
                 Unsupported network
@@ -103,46 +103,7 @@ export const WalletRainbowKitButton = (props: WalletRainbowKitButtonProps) => {
             );
           }
           return (
-            <>
-              {(count > 0) && (
-                <NotificationBadge count={count} />
-              )
-              }
-              <button
-                className='block minlg:hidden cursor-pointer z-[51] relative'
-                onClick={() => {
-                  toggleSidebar();
-                }}
-              >
-                <Menu color='#6F6F6F' />
-              </button>
-              <div
-                className="gap-3 hidden minlg:block cursor-pointer"
-              >
-                <button className={tw(
-                  'block font-bold rounded-xl text-white',
-                  'bg-primary-button-bckg',
-                  'flex flex-row items-center cursor-pointer hover:opacity-80 font-noi-grotesk',
-                  'py-2 pr-5 pl-[18px]',
-                  (!props.bgLight && props.header) && 'border-[#6F6F6F] border',
-                )} onClick={() => {
-                  toggleSidebar();
-                }} type="button">
-
-                  {myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
-                    <>
-                      <UserCircle className="h-6 w-6 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'} />
-                      {user.currentProfileUrl}
-                    </>
-                    :
-                    <>
-                      <Wallet className="h-5 w-5 mr-2 fill-white" weight='fill' color="#F3F3F3" alt={'Logged in wallet'} />
-                      {shortenAddress(currentAddress, 3)}
-                    </>
-                  }
-                </button>
-              </div>
-            </>
+            <SignedInProfileButtonDropdown />
           );
         })()}
       </div>
