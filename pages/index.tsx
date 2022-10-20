@@ -120,9 +120,9 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         scrollTrigger: {
           trigger: '#anim-hero-trigger',
           pin: '#anim-hero-trigger',
-          start: '1px top',
-          end: '+=20%',
-          markers: true,
+          start: '5px top',
+          end: '+=15%',
+          //markers: true,
           toggleActions: 'play none reverse none',
         }
       })
@@ -167,11 +167,16 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         scrollTrigger: {
           trigger: '#anim-profile-trigger',
           start: 'top 80%',
-          end: '+=20%',
-          markers: true,
+          end: '+=15%',
+          //markers: true,
           toggleActions: 'play none reverse none',
         }
       })
+        .to('#anim-profile', {
+          y: -200,
+          duration: 0.8,
+          ease: 'power1.out',
+        }, 0)
         .to('#anim-profile-head', {
           y: 0,
           duration: 1,
@@ -182,14 +187,10 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           duration: 1.2,
           ease: 'power2.out',
         }, 0)
-        .to('#anim-hero-shadow-dark', {
-          y: -200,
+        .to('#anim-profile-shadow-dark', {
+          y: 0,
+          opacity: 1,
           duration: 1,
-          ease: 'power1.out',
-        }, 0)
-        .to('#anim-profile', {
-          y: -200,
-          duration: 0.8,
           ease: 'power1.out',
         }, 0)
         .to('#anim-profile-bg', {
@@ -206,42 +207,36 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           y: 0,
           duration: 1,
           ease: 'power1.out',
-        }, 0)
-        .to('.anim-profile-corner-decor', {
-          y: 0,
-          x: 0,
-          duration: 2.5,
-          ease: 'circ.out',
-        });
+        }, 0);
 
       // Discover
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-discover-trigger',
-          start: 'top 75%',
-          end: '+=20%',
+          start: 'top 70%',
+          end: '+=15%',
           //toggleActions: 'play none none reset',
           toggleActions: 'play none reverse none',
         }
       })
         .to('#anim-discover-img', {
-          y: '-200px',
-          duration: 1,
-          ease: 'power2.out',
-        }, 0)
-        .to('#anim-discover-ttl-line-1', {
-          y: '-200px',
-          duration: 1.1,
-          ease: 'power2.out',
-        }, 0)
-        .to('#anim-discover-ttl-line-2', {
-          y: '-200px',
+          y: 0,
           duration: 1.2,
           ease: 'power2.out',
         }, 0)
-        .to('#anim-discover-txt', {
-          y: '-200px',
+        .to('#anim-discover-ttl-line-1', {
+          y: 0,
           duration: 1.3,
+          ease: 'power2.out',
+        }, 0)
+        .to('#anim-discover-ttl-line-2', {
+          y: 0,
+          duration: 1.5,
+          ease: 'power2.out',
+        }, 0)
+        .to('#anim-discover-txt', {
+          y: 0,
+          duration: 1.5,
           ease: 'power2.out',
         }, 0);
 
@@ -250,7 +245,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
         scrollTrigger: {
           trigger: '#anim-hiw-trigger',
           start: 'top 75%',
-          end: '+=20%',
+          end: '+=15%',
           toggleActions: 'play none reverse none',
         }
       })
@@ -283,8 +278,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-leaderboard-trigger',
-          start: 'top 30%',
-          end: '+=10%',
+          start: 'top 80%',
+          end: '+=15%',
           toggleActions: 'play none reverse none',
         }
       })
@@ -372,7 +367,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <div className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2'>
                   <div id="anim-hero-player" className={tw(
                     'pointer-events-none',
-                    'scale-x-[.55] scale-y-[.3] minlg:scale-x-[.7] minlg:scale-y-[.5] minxxl:scale-x-100 minxxl:scale-y-[.65]',
+                    'scale-x-[.55] scale-y-[.3] minlg:scale-x-[.7] minlg:scale-y-[.5] minxxl:scale-x-100 minxxl:scale-y-[.65] minhd:scale-[.92]',
                     '-skew-x-[41deg] skew-y-[19deg]'
                   )}>
                     <Player
@@ -387,25 +382,56 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
                 <div id='anim-hero-caption' className={tw(
                   'absolute left-1/2 top-1/2 z-20',
-                  'minlg:scale-[.59] -translate-y-1/2 -translate-x-1/2',
+                  'minlg:scale-[.58] -translate-y-1/2 -translate-x-1/2',
                   'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
                   'px-7 minxxl:px-10',
                   'text-[calc(42px+112*(100vw-375px)/1545)]',
                   'leading-none tracking-tight rounded-full'
                 )}>
-                  <div className='text-transparent'>NFT.COM<span className='text-[1em]'>/</span>PLANTS</div>
+                  <div className='text-transparent flex'>NFT.COM
+                    <div className={tw(
+                      'mx-2 minlg:mx-4 minxxl:mx-8',
+                      'h-[.68em] w-[.1081em] basis-[.1081em]'
+                    )}></div>
+                    PLANTS
+                  </div>
+
                   <div className={tw(
-                    'flex items-center justify-center text-center',
-                    'absolute inset-x-7 minxxl:inset-x-10 top-1/2 -translate-y-1/2'
+                    'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
+                    'text-white flex'
                   )}>
-                    <span className='text-white/40'>NFT.COM</span>
-                    <span className='text-[1em] -mt-3 font-bold text-secondary-yellow'>/</span>
-                    <span className="anim-profile-parent text-white">
-                      <span className='anim-profile-ttl'>NEWS</span>
-                      <span className='anim-profile-ttl'>IDEAS</span>
-                      <span className='anim-profile-ttl'>VIDEOS</span>
-                      <span className='anim-profile-ttl'>PLANTS</span>
-                    </span>
+                    <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                      <span className='text-white/40'>NFT.COM</span>
+                      <span className={tw(
+                        'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                        'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                        'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                      )}></span>NEWS
+                    </a>
+                    <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                      <span className='text-white/40'>NFT.COM</span>
+                      <span className={tw(
+                        'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                        'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                        'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                      )}></span>IDEAS
+                    </a>
+                    <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                      <span className='text-white/40'>NFT.COM</span>
+                      <span className={tw(
+                        'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                        'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                        'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                      )}></span>VIDEOS
+                    </a>
+                    <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                      <span className='text-white/40'>NFT.COM</span>
+                      <span className={tw(
+                        'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                        'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                        'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                      )}></span>PLANTS
+                    </a>
                   </div>
                 </div>
 
@@ -426,43 +452,49 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           {/* Block: NFT profile */}
           <div id='anim-profile-trigger'>
             <div id='anim-profile' className={tw(
-              'minlg:px-14 minxxl:px-20 relative z-[10]',
+              'minlg:px-14 minxxl:px-20 mb-[6.5rem] relative z-[10]',
             )}>
-              <span id='anim-profile-bg' className='bg-black scale-y-150 origin-top-left h-[34rem] absolute left-0 right-0 top-[-1px]'></span>
+              <span id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span> {/* scale-y-150 */}
+              <span id='anim-profile-shadow-dark' className={tw(
+                'opacity-0 translate-y-1/2',
+                'absolute bottom-full left-0 -z-10 bg-img-shadow-dark',
+                'w-full h-[28.75rem] pointer-events-none'
+              )}></span>
               <div className={tw(
-                'w-full mx-auto pt-10 px-5 mb-[8.5rem] minlg:mb-40 minmd:px-9 bg-black ',
-                'minlg:rounded-3xl flow-root relative z-10'
+                'w-full mx-auto pt-10 px-5 minmd:px-9 bg-black', /* pb-[8.5rem] minlg:pb-40 */
+                'minlg:rounded-3xl flow-root relative z-10',
               )}>
                 <h2 data-aos="fade-up" data-aos-delay="200" id='anim-profile-head' className={tw(
                   'minlg:translate-y-[400px]',
                   'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px]',
-                  'leading-[1.0854] font-normal text-white mb-14 minxxl:mb-20'
+                  'leading-[1.0854] font-normal text-white mb-16 minxxl:mb-20'
                 )}>
                   What you can do <br className='hidden minlg:block' />
                   with an<img className={tw(
-                    'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                    'mx-[1.8rem] -my-[.5rem]',
+                    'drop-shadow-md inline-block w-[4.525rem] minxxl:w-[5.5rem]',
+                    'mx-[1.8rem] -mb-[1.3rem]',
                     'rotate-[40deg] rounded-xl'
                   )} src="ico-discover.png" alt="" />
                   <span className='bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Profile</span></h2>
 
                 <div id='anim-profile-content' className={tw(
                   'minlg:translate-y-[400px]',
-                  'minlg:grid grid-cols-2 gap-2 minlg:gap-4 -mb-12 minlg:-mb-24'
+                  'minlg:grid grid-cols-2 gap-2 minlg:gap-4 -mb-12 minlg:-mb-[6.5rem]'
                 )}>
-                  <div id='anim-profile-first-item' className={tw(
-                    'mb-5 minlg:mb-0 minlg:translate-y-[15%]',
+                  <div id='anim-profile-first-item' data-aos="fade-up" data-aos-delay="100" className={tw(
+                    'minlg:translate-y-1/4',
+                    'mb-5 minlg:mb-0',
                     'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
-                    'bg-white border-black border-2 rounded-3xl rounded-tr-none'
+                    'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
                   )}>
                     <svg className={tw(
                       'absolute -z-10 -top-[14.5rem] -right-10 w-[9rem]',
-                      'minlg:-top-[16.875rem] minlg:-right-28 minlg:w-[18rem]'
+                      'minlg:-top-[17.5rem] minlg:-right-28 minlg:w-[18rem]'
                     )} width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path className='anim-profile-corner-decor translate-y-[2%]' d="M167.421 0H119.359C118.63 0 117.975 0.449617 117.713 1.13093L4.921 294.604C4.47705 295.759 5.32974 297 6.56724 297H53.2259C53.9532 297 54.6058 296.554 54.8695 295.876L169.065 2.40319C169.515 1.24701 168.662 0 167.421 0Z" fill="black" />
-                      <path className='anim-profile-corner-decor translate-y-[2%]' d="M188.421 66H140.359C139.63 66 138.975 66.4496 138.713 67.1309L25.921 360.604C25.477 361.759 26.3297 363 27.5672 363H74.2259C74.9532 363 75.6058 362.554 75.8695 361.876L190.065 68.4032C190.515 67.247 189.662 66 188.421 66Z" fill="black" />
-                      <path className='anim-profile-corner-decor translate-x-[1%] translate-y-[-2%]' d="M246.421 43H198.359C197.63 43 196.975 43.4496 196.713 44.1309L83.921 337.604C83.477 338.759 84.3297 340 85.5672 340H132.226C132.953 340 133.606 339.554 133.87 338.876L248.065 45.4032C248.515 44.247 247.662 43 246.421 43Z" fill="black" />
-                      <path className='anim-profile-corner-decor translate-y-[1%]' d="M280.421 81H232.359C231.63 81 230.975 81.4496 230.713 82.1309L117.921 375.604C117.477 376.759 118.33 378 119.567 378H166.226C166.953 378 167.606 377.554 167.87 376.876L282.065 83.4032C282.515 82.247 281.662 81 280.421 81Z" fill="black" />
+                      <path className='anim-profile-corner' d="M167.421 0H119.359C118.63 0 117.975 0.449617 117.713 1.13093L4.921 294.604C4.47705 295.759 5.32974 297 6.56724 297H53.2259C53.9532 297 54.6058 296.554 54.8695 295.876L169.065 2.40319C169.515 1.24701 168.662 0 167.421 0Z" fill="black" />
+                      <path className='anim-profile-corner' d="M188.421 66H140.359C139.63 66 138.975 66.4496 138.713 67.1309L25.921 360.604C25.477 361.759 26.3297 363 27.5672 363H74.2259C74.9532 363 75.6058 362.554 75.8695 361.876L190.065 68.4032C190.515 67.247 189.662 66 188.421 66Z" fill="black" />
+                      <path className='anim-profile-corner anim-corner-2' d="M246.421 43H198.359C197.63 43 196.975 43.4496 196.713 44.1309L83.921 337.604C83.477 338.759 84.3297 340 85.5672 340H132.226C132.953 340 133.606 339.554 133.87 338.876L248.065 45.4032C248.515 44.247 247.662 43 246.421 43Z" fill="black" />
+                      <path className='anim-profile-corner anim-corner-3' d="M280.421 81H232.359C231.63 81 230.975 81.4496 230.713 82.1309L117.921 375.604C117.477 376.759 118.33 378 119.567 378H166.226C166.953 378 167.606 377.554 167.87 376.876L282.065 83.4032C282.515 82.247 281.662 81 280.421 81Z" fill="black" />
                     </svg>
 
                     <h3 data-aos="fade-up" data-aos-delay="100" className={tw(
@@ -477,36 +509,78 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       'flex items-center justify-center text-center',
                       'text-3xl minlg:text-[4rem] minxxl:text-[5rem] leading-none tracking-tight'
                     )}>
-                      <span className='text-white/40'>NFT.COM</span>
-                      <span className='text-[.75em] leading-loose font-bold text-secondary-yellow'>/</span>
-                      <span className="anim-profile-parent text-white">
-                        <span className='anim-profile-ttl'>NEWS</span>
-                        <span className='anim-profile-ttl'>IDEAS</span>
-                        <span className='anim-profile-ttl'>VIDEOS</span>
-                        <span className='anim-profile-ttl'>PLANTS</span>
-                      </span>
+                      <div className='text-transparent flex'>NFT.COM
+                        <div className={tw(
+                          'mx-1 minlg:mx-2 minxxl:mx-4',
+                          'h-[.68em] w-[.1081em] basis-[.1081em]'
+                        )}></div>
+                        PLANTS
+                      </div>
+
+                      <div className={tw(
+                        'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
+                        'text-white/40 flex'
+                      )}>
+                        <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                        NFT.COM
+                          <span className={tw(
+                            'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
+                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                          )}></span>NEWS
+                        </a>
+                        <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                          NFT.COM
+                          <span className={tw(
+                            'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
+                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                          )}></span>IDEAS
+                        </a>
+                        <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                          NFT.COM
+                          <span className={tw(
+                            'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
+                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                          )}></span>VIDEOS
+                        </a>
+                        <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                          NFT.COM
+                          <span className={tw(
+                            'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
+                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                          )}></span>PLANTS
+                        </a>
+                      </div>
                     </div>
                     <div className='text-center mb-10'>
                       <a href="" className={tw(
                         'text-base font-medium minlg:text-xl minxxl:text-3xl',
-                        'underline underline-offset-4 hover:no-underline'
-                      )}>Create a Profile <span className='text-[.75em] font-bold'>&#129122;</span></a>
+                        'link-underline flex items-center'
+                      )}>Create a Profile
+                        <svg className='w-[.7em] ml-2' viewBox="0 0 13.932 14.472" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M 13.932,7.236 6.723,14.472 5.346,13.095 10.287,8.262 H 0 V 6.21 H 10.287 L 5.346,1.377 6.723,0 Z" fill="currentColor" />
+                        </svg>
+                      </a>
                     </div>
                   </div>
 
-                  <div data-aos="fade-up" data-aos-delay="300" id='anim-profile-second-item' className={tw(
-                    'mb-5 minlg:mb-0 minlg:translate-y-1/3',
+                  <div id='anim-profile-second-item' data-aos="fade-up" data-aos-delay="100" className={tw(
+                    'minlg:translate-y-1/2',
+                    'mb-5 minlg:mb-0',
                     'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
-                    'bg-white border-black border-2 rounded-3xl rounded-tr-none'
+                    'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
                   )}>
                     <svg className={tw(
                       'absolute -z-10 -top-[14.5rem] -right-10 w-[9rem]',
                       'minlg:-top-[229px] minlg:-right-20 minlg:w-[18rem]'
                     )} width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path className='anim-profile-corner-decor translate-y-[-2%]' d="M167.421 0H119.359C118.63 0 117.975 0.449617 117.713 1.13093L4.921 294.604C4.47705 295.759 5.32974 297 6.56724 297H53.2259C53.9532 297 54.6058 296.554 54.8695 295.876L169.065 2.40319C169.515 1.24701 168.662 0 167.421 0Z" fill="black" />
-                      <path className='anim-profile-corner-decor translate-y-[-2%]' d="M188.421 66H140.359C139.63 66 138.975 66.4496 138.713 67.1309L25.921 360.604C25.477 361.759 26.3297 363 27.5672 363H74.2259C74.9532 363 75.6058 362.554 75.8695 361.876L190.065 68.4032C190.515 67.247 189.662 66 188.421 66Z" fill="black" />
-                      <path className='anim-profile-corner-decor translate-x-[-2%] translate-y-[2%]' d="M246.421 43H198.359C197.63 43 196.975 43.4496 196.713 44.1309L83.921 337.604C83.477 338.759 84.3297 340 85.5672 340H132.226C132.953 340 133.606 339.554 133.87 338.876L248.065 45.4032C248.515 44.247 247.662 43 246.421 43Z" fill="black" />
-                      <path className='anim-profile-corner-decor translate-y-[-1%]' d="M280.421 81H232.359C231.63 81 230.975 81.4496 230.713 82.1309L117.921 375.604C117.477 376.759 118.33 378 119.567 378H166.226C166.953 378 167.606 377.554 167.87 376.876L282.065 83.4032C282.515 82.247 281.662 81 280.421 81Z" fill="black" />
+                      <path className='anim-profile-corner reverse' d="M167.421 0H119.359C118.63 0 117.975 0.449617 117.713 1.13093L4.921 294.604C4.47705 295.759 5.32974 297 6.56724 297H53.2259C53.9532 297 54.6058 296.554 54.8695 295.876L169.065 2.40319C169.515 1.24701 168.662 0 167.421 0Z" fill="black" />
+                      <path className='anim-profile-corner reverse' d="M188.421 66H140.359C139.63 66 138.975 66.4496 138.713 67.1309L25.921 360.604C25.477 361.759 26.3297 363 27.5672 363H74.2259C74.9532 363 75.6058 362.554 75.8695 361.876L190.065 68.4032C190.515 67.247 189.662 66 188.421 66Z" fill="black" />
+                      <path className='anim-profile-corner reverse anim-corner-2' d="M246.421 43H198.359C197.63 43 196.975 43.4496 196.713 44.1309L83.921 337.604C83.477 338.759 84.3297 340 85.5672 340H132.226C132.953 340 133.606 339.554 133.87 338.876L248.065 45.4032C248.515 44.247 247.662 43 246.421 43Z" fill="black" />
+                      <path className='anim-profile-corner reverse anim-corner-3' d="M280.421 81H232.359C231.63 81 230.975 81.4496 230.713 82.1309L117.921 375.604C117.477 376.759 118.33 378 119.567 378H166.226C166.953 378 167.606 377.554 167.87 376.876L282.065 83.4032C282.515 82.247 281.662 81 280.421 81Z" fill="black" />
                     </svg>
 
                     <h3 data-aos="fade-up" data-aos-delay="100" className={tw(
@@ -543,7 +617,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
 
           {/* Block: Discover */}
-          <div id='anim-discover-trigger' className="px-5 minmd:px-14 minxxl:px-20">
+          <div id='anim-discover-trigger' className="px-5 pt-8 minlg:mt-[-200px] minlg:pt-16 minxxl:pt-24 minmd:px-14 minxxl:px-20">
             <div className='grid minmd:grid-cols-2 items-center mb-16 minmd:mb-[5.5rem]'>
               <div className='minmd:ml-7 minxl:pr-[25%]'>
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
@@ -552,8 +626,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 )}>
                   <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
                     className={tw(
-                      'bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]',
-                      'block translate-y-20'
+                      'minlg:translate-y-40',
+                      'block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
                     )}>
                     Discover <br />
                     <img className={tw(
@@ -562,12 +636,18 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       'rotate-[40deg] rounded-xl'
                     )} src="ico-discover.png" alt="" />a
                   </span>
-                  <span id='anim-discover-ttl-line-2' className='block translate-y-20'>New World</span>
+                  <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40'>New World</span>
                 </h2>
-                <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className='translate-y-24 text-base minlg:text-xl minxxl:text-3xl'>NFTs enable new forms of community engagement. Collect, Display, and Trade your NFTs through a social network that you own. Get started by building your NFT Profile.</p>
+                <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className={tw(
+                  'minlg:translate-y-40',
+                  'text-base minlg:text-xl minxxl:text-3xl'
+                )}>NFTs enable new forms of community engagement. Collect, Display, and Trade your NFTs through a social network that you own. Get started by building your NFT Profile.</p>
               </div>
 
-              <div id='anim-discover-img' data-aos="fade-up" data-aos-delay="400" className='minmd:-order-1 -mx-5 translate-y-24'>
+              <div id='anim-discover-img' data-aos="fade-up" data-aos-delay="400" className={tw(
+                'minlg:translate-y-1/2',
+                'minmd:-order-1 -mx-5'
+              )}>
                 <img className='w-full' src="nft-illo.jpg" alt="" />
               </div>
             </div>
@@ -575,12 +655,12 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
           {/* Block: How it works */}
           <div id='anim-hiw-trigger' className={tw(
-            'px-3 minlg:px-14 minxxl:px-20 mb-[4.75rem] minlg:mb-[5.5625rem] minxxl:mb-28',
-            'minlg:mt-[-200px] overflow-hidden'
+            'px-3 minlg:px-14 minxxl:px-20 minxxl:mb-8',
+            'overflow-hidden'
           )}>
             <div id='anim-hiw-content' className={tw(
-              'flow-root translate-y-1/2',
-              'relative z-0 bg-primary-yellow rounded-3xl',
+              'minlg:translate-y-1/2',
+              'flow-root relative z-0 bg-primary-yellow rounded-3xl',
               'mt-5 mb-[7.5rem] px-3 minlg:p-6 pt-[3.15rem]'
             )}>
               <svg className='absolute -z-10 top-0 right-0 translate-x-4 -translate-y-3/4 max-w-full' aria-hidden="true" width="522" height="625" viewBox="0 0 522 625" xmlns="http://www.w3.org/2000/svg">
@@ -598,19 +678,28 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </div>
 
               <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 minxxl:gap-7 mb-[-7.5rem]'>
-                <div className='anim-hiw-item translate-y-full opacity-0 bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'>
+                <div className={tw(
+                  'minlg:translate-y-full minlg:opacity-0',
+                  'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
+                )}>
                   <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
                   <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Claim a <br className='hidden minlg:block' />Profile</h3>
                   <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>Create an NFT Profile for your unique username that is itself an NFT. You own the profile that will go anywhere your NFTs do.</p>
                 </div>
 
-                <div className='anim-hiw-item translate-y-full opacity-0 bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'>
+                <div className={tw(
+                  'minlg:translate-y-full minlg:opacity-0',
+                  'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
+                )}>
                   <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
                   <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Customize your Collection</h3>
                   <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>Customize your NFT Profile to display your personal collection from any address or to promote your NFT collection.</p>
                 </div>
 
-                <div className='anim-hiw-item translate-y-full opacity-0 bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'>
+                <div className={tw(
+                  'minlg:translate-y-full minlg:opacity-0',
+                  'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
+                )}>
                   <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
                   <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Grow your Community</h3>
                   <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>Promote your NFT Profile with your unique NFT.com url to drive purchasing and growth wherever your NFTs are listed.</p>
@@ -621,14 +710,20 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
           {/* Block: Leaderboard */}
           <div id='anim-leaderboard-trigger' className={tw(
-            'px-3 minmd:px-14 minxxl:px-20 pt-[10rem] minlg:pt-[11.625rem]',
+            'px-3 minmd:px-14 minxxl:px-20 pt-[10rem] minlg:pt-[11.725rem]',
             'overflow-hidden relative'
           )}>
             <div id="anim-leaderboard-decor" className='absolute -z-10 top-0 left-0 right-0 translate-y-1/2'>
-              <svg className='relative left-1/2 -translate-x-[58%] -translate-y-[2.2rem]' width="2102" height="940" viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
+              <svg className={tw(
+                'relative left-1/2 -translate-x-1/2 -translate-y-[2.2rem]',
+                'ml-[-10%] w-[160%]'
+              )} viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
             </div>
 
-            <div id='anim-leaderboard-content' className='translate-y-[200px] bg-white shadow-2xl rounded-3xl mb-[5rem] minlg:mb-[6.75rem] px-4 minmd:px-10 pt-12 ...'>
+            <div id='anim-leaderboard-content' className={tw(
+              'translate-y-[200px]',
+              'bg-white shadow-2xl rounded-3xl mb-[5rem] minlg:mb-[6.75rem] px-4 minmd:px-10 pt-12 ...'
+            )}>
               <div className="minmd:flex justify-between items-center mb-4 minmd:mb-0">
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
                   'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px]',
@@ -649,7 +744,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           <div className="px-3 minmd:px-14 minxxl:px-20">
             <div className='minmd:px-0 overflow-hidden'>
               <div className={tw(
-                'relative z-0 px-9 pt-[2.5rem] minlg:pt-[3.15rem] pb-12 mb-20 minlg:mb-32',
+                'relative z-0 px-9 py-[2.5rem] minlg:py-[3.2rem] mb-20 minlg:mb-32',
                 'bg-black rounded-3xl'
               )}>
                 <svg className={tw(
@@ -686,7 +781,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                             <h3 className={tw(
                               'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
                               'mb-11 minxxl:mb-16'
-                            )}>7 NFT Games You Can Play Right Now</h3>
+                            )}>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
                             <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
                               <img className='rounded-full mr-[6px] minlg:mr-3 h-5 minlg:h-9 minxxl:h-12 block' src="ava.png" alt="" />
                               Ryan Ancill
@@ -710,7 +805,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
           </div>
 
           {/* Block: Ticker */}
-          <div className='overflow-hidden mb-[4.625rem] minlg:mb-20'>
+          <div className='overflow-hidden mb-[4.625rem] minlg:mb-24'>
             <div className={tw(
               'text-4xl minlg:text-7xl minxxl:text-9xl mb-2 -ml-7'
             )}>
@@ -767,11 +862,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             <div className='px-3 minmd:px-14 minxxl:px-20'>
               <div className={tw(
                 'relative z-0',
-                'pt-[5.625rem] minxxl:pt-[7.625rem] pb-12 minxxl:pb-20 mb-[4.75rem] minlg:mb-24'
+                'pt-[5.625rem] minlg:pt-28 minxxl:pt-32 pb-16 minxxl:pb-20 mb-[4.75rem] minlg:mb-24'
               )}>
                 <svg className={tw(
                   'absolute -z-10 top-0 right-0 max-w-[43.5%]',
-                  '-translate-x-1/3 -translate-y-2/4 minmd:translate-x-1/3 -minmd:translate-y-3/4'
+                  '-translate-x-1/3 -translate-y-2/4 minmd:translate-x-0 minmd:-translate-y-2/3'
                 )} width="684" height="1048" viewBox="0 0 684 1048" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M393.64 0H273.667C272.937 0 272.282 0.449648 272.021 1.13096L0.921002 706.501C0.477046 707.657 1.32973 708.898 2.56724 708.898H119.168C119.896 708.898 120.548 708.451 120.812 707.774L395.284 2.40319C395.734 1.24701 394.881 0 393.64 0Z" fill="white" />
                   <path d="M474.793 90.7009H354.82C354.09 90.7009 353.435 91.1506 353.174 91.8319L82.0741 797.202C81.6301 798.358 82.4828 799.599 83.7203 799.599H200.321C201.049 799.599 201.701 799.152 201.965 798.475L476.437 93.1041C476.887 91.9479 476.034 90.7009 474.793 90.7009Z" fill="white" />
@@ -780,22 +875,22 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <path d="M624.794 210.701H504.82C504.09 210.701 503.436 211.15 503.174 211.832L232.074 917.202C231.63 918.357 232.483 919.599 233.721 919.599H350.322C351.049 919.599 351.701 919.152 351.965 918.474L626.437 213.104C626.887 211.948 626.034 210.701 624.794 210.701Z" fill="white" />
                 </svg>
 
-                <div className='minlg:flex justify-between items-end'>
+                <div className='minlg:flex justify-between items-end pr-9'>
                   <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
                     'text-[3.25rem] minlg:text-[7.625rem] minxxl:text-[10rem]',
-                    'text-black font-normal leading-tight relative',
-                    'mb-14 minlg:mb-0'
+                    'text-black font-normal leading-[1.1] relative',
+                    'mb-14 minlg:mb-0 minlg:pl-8 tracking-[-3px]'
                   )}>
                     Build<img className={tw(
-                      'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                      'mx-[1.8rem] -my-[.5rem]',
+                      'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
+                      '-mt-7 mr-9 ml-12',
                       'rotate-[40deg] rounded-xl'
                     )} src="ico-discover.png" alt="" />
                     your <br />
                     <span data-aos="fade-up" data-aos-delay="200" className='inline-block -mr-10 minlg:pl-24 minlg:-mr-24'>
                       NFT<img className={tw(
-                        'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                        'mx-[1.8rem] -my-[.5rem]',
+                        'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
+                        '-mt-7 mr-9 ml-12',
                         'rotate-[40deg] rounded-xl'
                       )} src="ico-discover.png" alt="" />
                       profile
@@ -804,8 +899,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
                   <div className="text-center minlg:text-right pb-8">
                     <svg className={tw(
-                      'hidden minlg:block mb-4 minxxl:w-[36.5rem] minxxl:h-[8.5rem]',
-                      '-translate-x-[18%]'
+                      'hidden minlg:block mb-4 minxxl:w-[30rem] minxxl:h-28',
+                      '-translate-x-[24%]'
                     )} width="397" height="93" viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fillRule="evenodd" clipRule="evenodd" d="M1.04904e-05 0.61084L341.924 0.610877C352.896 0.610883 361.792 9.47563 361.792 20.4109V59.0953L384.119 36.7397L396.636 49.1557L352.961 92.8851L309.287 49.1557L321.804 36.7397L344.131 59.0953V20.4109C344.131 19.1958 343.143 18.2109 341.924 18.2109L0 18.2108L1.04904e-05 0.61084Z" fill="black" />
                     </svg>

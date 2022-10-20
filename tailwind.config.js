@@ -11,6 +11,7 @@ module.exports = {
       'minlg': '900px',
       'minxl': '1200px',
       'minxxl': '1600px',
+      'minhd': '1921px',
       // "small" is handled as the default
 
       // if all other sizes below are specified, then the "default" value wil apply to the XL range too.
