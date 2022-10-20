@@ -5,7 +5,6 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
 import { utils } from 'ethers';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import ETHIcon from 'public/eth_icon.svg';
