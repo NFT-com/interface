@@ -177,7 +177,7 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
                 <input
                   ref={inputRef}
                   type="search"
-                  placeholder="Search profiles and ntfs by name..."
+                  placeholder="Search profiles and NFTs by name..."
                   autoComplete="off"
                   autoCorrect="off"
                   autoCapitalize="off"
