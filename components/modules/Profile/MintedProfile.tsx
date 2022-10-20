@@ -159,7 +159,7 @@ export function MintedProfile(props: MintedProfileProps) {
       </div>
       <div className={tw(
         'flex-col',
-        'max-w-nftcom min-w-[60%]',
+        'max-w-nftcom min-w-[60%] minxl:w-full',
         isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
       )}>
         <div

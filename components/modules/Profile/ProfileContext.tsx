@@ -190,8 +190,13 @@ export function ProfileContextProvider(
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
   const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);
   const [editModeNfts, setEditModeNfts] = useState<PartialDeep<DetailedNft>[]>(null);
+  const [currentScrolledPosition, setCurrentScrolledPosition] = useState(0);
 
   const prevPublicProfileNfts = usePrevious(publicProfileNfts);
+
+  useEffect(() => {
+    currentScrolledPosition !== 0 && window.scrollTo(0, currentScrolledPosition);
+  }, [currentScrolledPosition]);
 
   useEffect(() => {
     if (!loadingAllOwnerNfts) {
@@ -241,6 +246,7 @@ export function ProfileContextProvider(
     id: string,
     currentVisibility: boolean
   ) => {
+    setCurrentScrolledPosition(window.pageYOffset);
     if (currentVisibility) {
       setPubliclyVisibleNfts((publiclyVisibleNfts ?? []).slice().filter(nft => nft.id !== id));
     } else {

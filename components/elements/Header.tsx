@@ -16,6 +16,7 @@ import { WalletRainbowKitButton } from './WalletRainbowKitButton';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import { MoonIcon, SunIcon } from '@heroicons/react/solid';
+import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import dynamic from 'next/dynamic';
@@ -54,49 +55,61 @@ export const Header = ({ removeBg }: HeaderProps) => {
   const useDarkMode = user?.isDarkMode;
 
   useEffect(() => {
-    gsap.timeline({
-      scrollTrigger: {
-        trigger: '#anim-hero-trigger',
-        start: 'center center',
-        end: '+=10%',
-        toggleActions: 'play none reverse none',
-      }
-    })
-      .to('#header-right', {
-        opacity: 1,
-        scale: 1,
-        duration: 1,
-        ease: 'power2.out'
-      }, 0)
-      .to('#header-left', {
-        width: 'auto',
-        duration: 1.25,
-        ease: 'power2.out'
-      }, 0)
-      .to('#header-shadow', {
-        opacity: 1,
-        scaleY: 1,
-        duration: 1.5,
-        ease: 'power2.out'
-      }, 0)
-      .to('#header', {
-        scaleX: 1,
-        duration: 1.5,
-        ease: 'power2.out'
-      }, 0);
+    AOS.init({
+      disable: function() {
+        const maxWidth = 900;
+        return window.innerWidth >= maxWidth;
+      },
+      duration : 700
+    });
+
+    const matchMedia = gsap.matchMedia();
+
+    matchMedia.add('(min-width: 900px)', () => {
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '#anim-hero-trigger',
+          start: 'center center',
+          end: '+=10%',
+          toggleActions: 'play none reverse none',
+        }
+      })
+        .to('#header-right', {
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          ease: 'power2.out'
+        }, 0)
+        .to('#header-left', {
+          maxWidth: '25%',
+          duration: 1.25,
+          ease: 'power2.out'
+        }, 0)
+        .to('#header-shadow', {
+          opacity: 1,
+          scaleY: 1,
+          duration: 1,
+          ease: 'power2.out'
+        }, 0)
+        .to('#header', {
+          scaleX: 1,
+          duration: 1.5,
+          ease: 'power2.out'
+        }, 0);
+    });
   });
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     if (router.pathname === '/') {
       return (
         <header id='header' className={tw(
-          'scale-[1.05] font-noi-grotesk',
+          'minlg:scale-[1.05] font-noi-grotesk',
           'fixed inset-x-5 minlg:inset-x-8 minxl:inset-x-14 top-6 minlg:top-7',
           'h-[5rem] minlg:h-[5.5rem] z-[11]',
         )}>
           <div className="w-full h-full mx-auto px-5 min:px-11">
             <div className="flex items-center justify-between h-full">
-              <div id='header-left' className="flex items-center h-full minlg:w-[60%]">
+              <div data-aos="fade-right" data-aos-delay="100" id='header-left' className="flex items-center h-full minlg:max-w-[60%]">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-14">
                     <Link href='/' passHref>
@@ -142,8 +155,8 @@ export const Header = ({ removeBg }: HeaderProps) => {
                 </nav>
               </div>
 
-              <div id='header-right' className={tw(
-                'opacity-0 scale-50',
+              <div data-aos="fade-left" data-aos-delay="200" id='header-right' className={tw(
+                'minlg:opacity-0 minlg:scale-50',
                 'flex items-center ...'
               )}>
                 <div className="hidden minlg:block mr-2">
@@ -161,7 +174,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
                 </button>
                 <WalletRainbowKitButton header bgLight={!useDarkMode} showWhenConnected signInButton={true} headerButtonColor />
                 <div
-                  className='h-full flex items-center relative ml-3 -mr-5 cursor-pointer'
+                  className='h-full flex items-center relative ml-3 cursor-pointer'
                   onClick={() => {
                     toggleCartSidebar();
                   }}
@@ -183,8 +196,9 @@ export const Header = ({ removeBg }: HeaderProps) => {
               </div>
             </div>
           </div>
+
           <span id='header-shadow' className={tw(
-            'opacity-0 scale-y-[.3]',
+            'minlg:opacity-0 minlg:scale-y-[.3]',
             'rounded-full shadow-md absolute left-0 top-0 right-0 bottom-0 -z-10',
             removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
           )}></span>
