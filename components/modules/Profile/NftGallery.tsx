@@ -1,4 +1,4 @@
-import { Button, ButtonType } from 'components/elements/Button';
+import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -29,7 +29,6 @@ export function NftGallery(props: NftGalleryProps) {
     publiclyVisibleNfts,
     publiclyVisibleNftCount,
     loading,
-    loadingAllOwnerNfts,
     loadMoreNfts,
     loadMoreNftsEditMode,
     draftLayoutType
@@ -42,10 +41,6 @@ export function NftGallery(props: NftGalleryProps) {
       if (!editMode && publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
         loadMoreNfts();
       }
-    }
-
-    if (closeToBottom && editMode && allOwnerNftCount > nftsToShow?.length) {
-      loadMoreNftsEditMode();
     }
   });
 
@@ -61,7 +56,7 @@ export function NftGallery(props: NftGalleryProps) {
     );
   }
 
-  if (editMode && allOwnerNftCount === 0 && !loadingAllOwnerNfts) {
+  if (editMode && allOwnerNftCount === 0) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-primary-txt dark:text-primary-txt-dk">
@@ -112,11 +107,24 @@ export function NftGallery(props: NftGalleryProps) {
           </div>
         </div>
       }
-      {loading || loadingAllOwnerNfts &&
+      {!editMode && loading &&
       <div className= 'min-h-[25rem] minmd:min-h-[20rem] text-primary-txt flex flex-col items-center justify-center'>
         <div className="mb-2">Loading...</div>
         <Loader />
       </div>}
+      {
+        (editMode && allOwnerNftCount > nftsToShow?.length) &&
+          <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium">
+            <Button
+              color={'white'}
+              accent={AccentType.SCALE}
+              stretch={true}
+              label={'Load More'}
+              onClick={loadMoreNftsEditMode}
+              type={ButtonType.PRIMARY}
+            />
+          </div>
+      }
     </>
   );
 }
