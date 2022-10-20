@@ -1,10 +1,11 @@
-
+import NotificationsModal from 'components/modules/Notifications/NotificationsModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
 import { utils } from 'ethers';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import ETHIcon from 'public/eth_icon.svg';
@@ -25,6 +26,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
   const router = useRouter();
 
+  const [notificationsModalVisible, setNotificationModalVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -76,7 +78,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
           <div
             style={{ height: '10%' }}
             className={'flex flex-row w-full py-2 items-center justify-between hover:cursor-pointer text-primary-txt font-medium'}
-            onClick={() => null}
+            onClick={() => setNotificationModalVisible(true)}
           >
             <p>Notifications</p>
             <span className="flex items-center h-5 min-w-[20px] relative z-50 text-black font-semibold">
@@ -153,6 +155,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
           </div>
         </div>
       }
+      <NotificationsModal visible={notificationsModalVisible} setVisible={setNotificationModalVisible} />
     </div>
   );
 }

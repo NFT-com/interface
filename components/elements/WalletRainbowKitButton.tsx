@@ -9,7 +9,6 @@ import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useChainModal } from '@rainbow-me/rainbowkit';
-import { CaretDown } from 'phosphor-react';
 import { UserCircle, Wallet } from 'phosphor-react';
 import { useCallback, useContext } from 'react';
 import { Menu } from 'react-feather';
