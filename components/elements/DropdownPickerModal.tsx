@@ -4,6 +4,7 @@ import { tw } from 'utils/tw';
 import { Modal } from './Modal';
 
 import { XIcon } from '@heroicons/react/solid';
+import { CaretUp } from 'phosphor-react';
 import { PropsWithChildren, useCallback, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
@@ -19,6 +20,8 @@ export interface DropdownPickerModalProps {
   selectedIndex: number;
   constrain?: boolean;
   placeholder?: string;
+  centered?: boolean;
+  pointer?: boolean;
 }
 
 /**
@@ -94,15 +97,17 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
         {expanded && !isMobile &&
         <div
           style={{
-            marginTop: anchorRef.current.clientHeight + 8
+            marginTop: anchorRef.current.clientHeight + 8,
           }}
           className={tw(
             'rounded-xl',
             'bg-white dark:bg-secondary-dk',
             'absolute z-50',
             'min-w-[14rem] drop-shadow-md',
+            props. centered && 'left-1/2 -translate-x-1/2	'
           )}
         >
+          {props.pointer && <CaretUp size={32} color="white" weight="fill" className='absolute -top-[18px] left-[43%]'/>}
           {props.options?.map((item, index) => {
             return getOptionRow(item, index);
           })}
