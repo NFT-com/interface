@@ -51,7 +51,7 @@ export default function BlogListPage({ postData, preview, data, totalPosts }: Po
         }}
       />
       <div className='bg-white'>
-        <div className='px-2.5 pt-28 max-w-nftcom mx-auto'>
+        <div className='px-2.5 minlg:pt-28 max-w-nftcom mx-auto'>
           <h2 className='font-bold font-grotesk text-4xl md:text-lg mb-6 md:mb-4 '>{data?.heroTitle}</h2>
           {posts && <DynamicBlogSlider posts={data?.blogSlidesCollection.items} />}
       
