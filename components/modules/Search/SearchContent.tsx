@@ -12,17 +12,24 @@ import { useEffect, useRef, useState } from 'react';
 
 interface SearchContentProps {
   isHeader?: boolean;
+  mobileSearch?: boolean;
 }
 
-export const SearchContent = ({ isHeader }: SearchContentProps) => {
+export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) => {
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
+  const [inputFocus, setInputFocus] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const { setSearchModalOpen } = useSearchModal();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const router = useRouter();
   const resultsRef = useRef();
+  const wrapperRef = useRef(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useOutsideClickAlerter(wrapperRef, () => {
+    setInputFocus(false);
+  });
 
   useEffect(() => {
     if (!router.pathname.includes('discover/')) {
@@ -166,6 +173,66 @@ export const SearchContent = ({ isHeader }: SearchContentProps) => {
   };
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
+    if(mobileSearch){
+      return (
+        <>
+          <div id='mobile-search' className="flex flex-col font-noi-grotesk px-6 relative">
+            <div ref={wrapperRef} onClick={() => setInputFocus(true)} className={tw(
+              'flex space-x-2 p-5 py-3 minlg:space-x-0 minlg:p-0 rounded-full bg-[#F8F8F8]',
+              inputFocus && 'border-2 border-[#F9D54C]',
+              'h-[52px]'
+            )}>
+              <div className={tw(
+                'relative flex items-center w-full text-black')}>
+                <SearchIcon color='#000000' className='mr-2 shrink-0 aspect-square' />
+                <div className="w-full">
+                  <input
+                    ref={inputRef}
+                    type="search"
+                    placeholder="Search profiles and NFTs by name..."
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    maxLength={512}
+                    className={tw(
+                      'w-full text-black text-lg placeholder:text-black bg-inherit border-none p-0',
+                      'focus:border focus:border-[#F9D54C] focus:ring-0 focus:placeholder:text-[#B2B2B2] transition-[width]'
+                    )}
+                    onKeyUp={(event) => search(event)}
+                    onFocus={(event) => event.target.value !== '' && search(event)}
+                    onChange={(event) => !event.target.value && setShowHits(false)}
+                  />
+                </div>
+              </div>
+            </div>
+            {showHits && keyword !== ''
+              ? (
+                <div
+                  ref={resultsRef}
+                  className={tw(
+                    'absolute left-0 minmd:left-6 mt-16 w-full max-w-[27rem] shadow-lg',
+                    'bg-always-white flex flex-col w-full text-rubik')}>
+                  {searchResults.length > 0 && <>
+                    {searchResults[0].found === 0 && searchResults[1].found === 0 ?
+                      (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4">
+                      No results found. Please try another keyword.
+                      </div>) :
+                      <div className="py-4">
+                        <ResultsContent searchResults={searchResults} />
+                        {isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}
+                      </div>
+                    }
+                  </>}
+                </div>
+              )
+              :
+              ''
+            }
+          </div>
+        </>
+      );
+    }
     return (
       <>
         <div className="flex flex-col font-noi-grotesk">

@@ -1,14 +1,18 @@
 import { Footer as StaticFooter } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
+import { MobileSidebar } from 'components/elements/MobileSidebar';
 import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
+import { SearchContent } from 'components/modules/Search/SearchContent';
 import { SearchModal } from 'components/modules/Search/SearchModal';
-import { useSidebar } from 'hooks/state/useSidebar';
+import { useChangeWallet } from 'hooks/state/useChangeWallet';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 type DefaultLayoutProps = {
   children: React.ReactNode;
@@ -19,8 +23,10 @@ type DefaultLayoutProps = {
 const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => import('components/elements/Footer').then(mod => mod.Footer));
 
 export default function DefaultLayout({ children, hideFooter, hideHeader }: DefaultLayoutProps) {
+  const { openConnectModal } = useConnectModal();
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
-  const { toggleSidebar } = useSidebar();
+  const { changeWallet, setChangeWallet } = useChangeWallet();
+  const router = useRouter();
   return (
     <div className={tw('flex flex-col',
       'h-screen w-full min-w-screen min-h-screen',
@@ -33,16 +39,23 @@ export default function DefaultLayout({ children, hideFooter, hideHeader }: Defa
         <ClientOnly>
           <Header />
           <Sidebar />
+          <MobileSidebar/>
           <SearchModal />
         </ClientOnly>
         }
-        
+        {router.pathname !== '/' &&
+          <div className='mt-24  mb-8 block minlg:hidden'>
+            <SearchContent isHeader mobileSearch />
+          </div>
+        }
+
         {children}
         <SignOutModal
           visible={signOutDialogOpen}
           onClose={() => {
             setSignOutDialogOpen(false);
-            toggleSidebar();
+            changeWallet && openConnectModal();
+            setChangeWallet(false);
           }}
         />
         {!hideFooter && <DynamicFooter />}
