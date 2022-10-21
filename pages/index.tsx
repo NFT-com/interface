@@ -849,14 +849,14 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
                       '-mt-7 mr-9 ml-12',
                       'rotate-[40deg] rounded-xl'
-                    )} src={data_v2?.bynpCta?.link} alt="" />
+                    )} src="ico-discover.png" alt="" />
                     your <br />
                     <span data-aos="fade-up" data-aos-delay="200" className='inline-block -mr-10 minlg:pl-24 minlg:-mr-24'>
                       NFT<img className={tw(
                         'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
                         '-mt-7 mr-9 ml-12',
                         'rotate-[40deg] rounded-xl'
-                      )} src={data_v2?.bynpCta?.link} alt="" />
+                      )} src="ico-discover.png" alt="" />
                       profile
                     </span>
                   </h2>
