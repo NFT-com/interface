@@ -106,7 +106,7 @@ module.exports = {
         'hero-heading1': ['Stretch Pro'],
         'dm-mono': ['DM Mono'],
         'grotesk': ['Grotesk'],
-        'noi-grotesk': ['Noi Grotesk Trial'],
+        'noi-grotesk': ['Noi Grotesk Trial', 'Rubik', 'sans-serif'],
       },
       fontSize: {
         'copy-size': '0.825rem',

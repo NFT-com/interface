@@ -70,7 +70,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
         scrollTrigger: {
           trigger: '#anim-hero-trigger',
           start: '5px top',
-          end: '+=15%',
+          end: '+=5%',
           toggleActions: 'play none reverse none',
         }
       })
