@@ -5,11 +5,9 @@ import { NotificationBadge as StaticNotificationBadge } from 'components/modules
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
-import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -46,19 +44,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const Header = ({ removeBg }: HeaderProps) => {
   const router = useRouter();
-  const { setProfileSelectModalOpen } = useProfileSelectModal();
-  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-  const { address: currentAddress } = useAccount({
-    onConnect({ isReconnected }) {
-      if(myOwnedProfileTokens?.length && !isReconnected){
-        router.push(`/${myOwnedProfileTokens[0]?.title}`);
-        setProfileSelectModalOpen(true);
-      }
-      if(!isReconnected) {
-        router.push('/app/mint-profiles');
-      }
-    },
-  });
+  const { address: currentAddress } = useAccount();
   const { setSearchModalOpen, setModalType } = useSearchModal();
   const { primaryIcon } = useThemeColors();
   const { count } = useContext(NotificationContext);
