@@ -144,6 +144,67 @@ export const HOME_PAGE_FIELDS = `
   entryTitle
 `;
 
+export const HOME_PAGE_FIELDS_V2 = `
+  heroTitleNfTs
+  dynamicUrl
+  heroCta
+  wycdBlock1Title
+  wycdBlock1Description
+  wycdBlock1Cta
+  wycdBlock2Title
+  wycdBlock2Description
+  wycdNfTs
+  discoverDescription
+  discoverImage{
+    url
+    description
+  }
+  hiwTitle
+  hiwSubtitle
+  hiwBlock1Title
+  hiwBlock1Description
+  hiwBlock1Image{
+    url
+    description
+  }
+  hiwBlock2Title
+  hiwBlock2Description
+  hiwBlock2Image{
+    url
+    description
+  }
+  hiwBlock3Title
+  hiwBlock3Description
+  hiwBlock3Image{
+    url
+    description
+  }
+  newsTitle
+  newsSubtitle
+  newsSlidesCollection{
+    limit
+    skip
+    items{
+      tags
+      slug
+      title
+      description
+      publishDate
+      slug
+      body
+      author {
+        name
+      }
+      heroImage {
+        url
+      }
+    }
+  }
+  newsCta
+  tags
+  bynpCta
+`;
+
 export const CURATED_COLLECTIONS_FIELDS = `
   tabTitle
   contractAddresses
