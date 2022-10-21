@@ -17,10 +17,9 @@ export default function OnboardingModal() {
           expanded && 'bg-black bg-opacity-25 minmd:bg-opacity-0 inset-0'
         )}
       />
-
       <div className={tw(
-        'fixed minmd:absolute bottom-0 right-[12%] minmd:top-20 minmd:right-4 overflow-y-auto z-[105] minmd:z-[103]',
-        expanded && 'top-[10%] minmd:top-20 minmd:right-4'
+        'fixed minlg:absolute bottom-0 right-[12%] minlg:top-20 minlg:right-4 overflow-y-auto z-[105] minlg:z-[103]',
+        expanded && 'top-[10%] minlg:top-20 minlg:right-4'
       )}>
         <div className="flex min-h-full items-start justify-end p-4 text-center">
           <div
