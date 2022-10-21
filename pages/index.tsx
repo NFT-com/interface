@@ -456,9 +456,9 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
                         <span className='text-white/40'>NFT.COM</span>
                         <span className={tw(
-                            '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
-                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                          '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                          'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                          'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
                         )}>
                         </span>{word.toUpperCase()}
                       </a>
@@ -821,7 +821,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   <div className='flex flex-row minlg:mr-44'>
                     {data_v2?.tags?.tags1.map(tag =>
                       <div key={tag} className={tw(
-                        'pl-3 minlg:pl-12 minxxl:pl-36 flex items-baseline group'
+                        'pl-3 minlg:pl-12 minxxl:pl-14 flex items-baseline group'
                       )}
                       ><div className={tw(
                           'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
@@ -849,7 +849,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   <div className='flex flex-row minlg:mr-44 minlg:mr-44'>
                     {data_v2?.tags?.tags2.map(tag =>
                       <div key={tag} className={tw(
-                        'pl-3 minlg:pl-12 minxxl:pl-36 flex items-baseline group'
+                        'pl-3 minlg:pl-12 minxxl:pl-14 flex items-baseline group'
                       )}
                       ><div className={tw(
                           'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
@@ -858,7 +858,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         )}></div>
 
                         <i className={tw(
-                          'animate-text-gadient bg-[length:200%_200%]',
+                          'animate-text-gadient bg-[length:200%_200%] whitespace-nowrap',
                           'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
                           'transition-colors group-hover:text-transparent'
                         )}>{tag}</i>
