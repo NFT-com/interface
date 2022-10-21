@@ -104,7 +104,6 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
 
-  console.log(data_v2, 'data_v2 fdo');
   useEffect(() => {
     AOS.init({
       disable: function() {
@@ -1130,7 +1129,7 @@ Index.getLayout = function getLayout(page) {
 
 export async function getServerSideProps({ preview = false }) {
   const homeData = await getCollection(preview, 1, 'homePageCollection', HOME_PAGE_FIELDS);
-  const homeDataV2 = await getCollection(false, 10, 'homepageV2Collection', HOME_PAGE_FIELDS_V2);
+  const homeDataV2 = getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED) && await getCollection(false, 10, 'homepageV2Collection', HOME_PAGE_FIELDS_V2);
   return {
     props: {
       preview,
