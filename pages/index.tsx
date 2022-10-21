@@ -13,7 +13,7 @@ import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/Lea
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { TickerStat } from 'types';
+import { HomePageV2,TickerStat } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
@@ -21,18 +21,18 @@ import { NextPageWithLayout } from './_app';
 
 import { Player } from '@lottiefiles/react-lottie-player';
 import AOS from 'aos';
-import { transform } from 'cypress/types/lodash';
 import { BigNumber } from 'ethers';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import { getCollection } from 'lib/contentful/api';
 import { HOME_PAGE_FIELDS } from 'lib/contentful/schemas';
+import { HOME_PAGE_FIELDS_V2 } from 'lib/contentful/schemas';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Vector from 'public/Vector.svg';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Ticker from 'react-ticker';
 
 const DynamicLeaderBoard = dynamic<React.ComponentProps<typeof StaticLeaderboard>>(() => import('components/modules/Profile/LeaderBoard').then(mod => mod.LeaderBoard));
@@ -69,10 +69,11 @@ type HomePageProps = {
     communityCtaDescription: string;
     featuredProfile: any;
     entryTitle: string;
-  }
+  },
+  data_v2?: HomePageV2;
 };
 
-const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
+const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) => {
   const router = useRouter();
   const [tickerStats, setTickerStats] = useState<TickerStat[]>([]);
   const [learnCards, setLearnCards] = useState<any[]>([]);
@@ -103,6 +104,7 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
 
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
 
+  console.log(data_v2, 'data_v2 fdo');
   useEffect(() => {
     AOS.init({
       disable: function() {
@@ -351,11 +353,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   <span data-aos="fade-left" data-aos-delay="200"
                     className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>identity</span></h2>
 
-                <a data-aos="zoom-out" data-aos-delay="300" href="" className={tw(
+                <a data-aos="zoom-out" data-aos-delay="300" href={data_v2?.heroCta?.link} className={tw(
                   'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
                   'inline-flex items-center justify-center text-center h-[4.1875rem] minxxl:h-[6rem] px-6 minxxl:px-9',
                   'text-xl minxxl:text-3xl text-white font-medium uppercase'
-                )}>create a Profile</a>
+                )}>{data_v2?.heroCta?.title}</a>
               </div>
 
               {/* Hero */}
@@ -400,38 +402,17 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
                     'text-white flex'
                   )}>
-                    <a href='' className='anim-profile-link flex items-center justify-center text-center'>
-                      <span className='text-white/40'>NFT.COM</span>
-                      <span className={tw(
-                        'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
-                        'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                        'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                      )}></span>NEWS
-                    </a>
-                    <a href='' className='anim-profile-link flex items-center justify-center text-center'>
-                      <span className='text-white/40'>NFT.COM</span>
-                      <span className={tw(
-                        'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
-                        'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                        'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                      )}></span>IDEAS
-                    </a>
-                    <a href='' className='anim-profile-link flex items-center justify-center text-center'>
-                      <span className='text-white/40'>NFT.COM</span>
-                      <span className={tw(
-                        'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
-                        'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                        'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                      )}></span>VIDEOS
-                    </a>
-                    <a href='' className='anim-profile-link flex items-center justify-center text-center'>
-                      <span className='text-white/40'>NFT.COM</span>
-                      <span className={tw(
-                        'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
-                        'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                        'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                      )}></span>PLANTS
-                    </a>
+                    {data_v2?.dynamicUrl['url'].map(word =>
+                      <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
+                        <span className='text-white/40'>NFT.COM</span>
+                        <span className={tw(
+                          'mt-[14px] -mb-[7px] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                          'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                          'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                        )}>
+                        </span>{word.toUpperCase()}
+                      </a>
+                    )}
                   </div>
                 </div>
 
@@ -501,8 +482,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem]',
                       'leading-[1.125] minxl:leading-[1.125]'
-                    )}>Claim Your Profile</h3>
-                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>NFT Profiles are personalized NFT galleries which form the foundation for a decentralized web3 social network. NFT Profiles are transferable and customizable. </p>
+                    )}>{data_v2?.wycdBlock1Title}</h3>
+                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock1Description}</p>
                     <div data-aos="fade-up" data-aos-delay="200" className={tw(
                       'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9',
                       'bg-[#121212] drop-shadow-lg rounded-full',
@@ -521,45 +502,23 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                         'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
                         'text-white/40 flex'
                       )}>
-                        <a href='' className='anim-profile-link flex items-center justify-center text-center'>
-                        NFT.COM
-                          <span className={tw(
-                            'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
-                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                          )}></span>NEWS
-                        </a>
-                        <a href='' className='anim-profile-link flex items-center justify-center text-center'>
+                        {data_v2?.dynamicUrl['url'].map(word =>
+                          <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
                           NFT.COM
-                          <span className={tw(
-                            'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
-                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                          )}></span>IDEAS
-                        </a>
-                        <a href='' className='anim-profile-link flex items-center justify-center text-center'>
-                          NFT.COM
-                          <span className={tw(
-                            'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
-                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                          )}></span>VIDEOS
-                        </a>
-                        <a href='' className='anim-profile-link flex items-center justify-center text-center'>
-                          NFT.COM
-                          <span className={tw(
-                            'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
-                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                          )}></span>PLANTS
-                        </a>
+                            <span className={tw(
+                              'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
+                              'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                              'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                            )}></span>{word.toUpperCase()}
+                          </a>
+                        )}
                       </div>
                     </div>
                     <div className='text-center mb-10'>
-                      <a href="" className={tw(
+                      <a href={data_v2?.wycdBlock1Cta?.link} className={tw(
                         'text-base font-medium minlg:text-xl minxxl:text-3xl',
                         'link-underline flex items-center'
-                      )}>Create a Profile
+                      )}>{data_v2?.wycdBlock1Cta?.title}
                         <svg className='w-[.7em] ml-2' viewBox="0 0 13.932 14.472" xmlns="http://www.w3.org/2000/svg">
                           <path d="M 13.932,7.236 6.723,14.472 5.346,13.095 10.287,8.262 H 0 V 6.21 H 10.287 L 5.346,1.377 6.723,0 Z" fill="currentColor" />
                         </svg>
@@ -586,8 +545,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                     <h3 data-aos="fade-up" data-aos-delay="100" className={tw(
                       'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.125] minxl:leading-[1.125]'
-                    )}>Buy and Sell NFTs</h3>
-                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>NFT.com has a built in marketplace aggregator for buying and selling NFTs wherever they live. Promote your collection with a single NFT Profile wherever it is for sale.</p>
+                    )}>{data_v2?.wycdBlock2Title}</h3>
+                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock1Description}</p>
 
                     <div className='overflow-hidden -mx-9 mt-4 minxxl:mt-6'>
                       <div data-aos="fade-left" data-aos-delay="200" className="image-ticker mb-4 minxxl:mb-6 h-16 minxl:h-28 minxxl:h-36">
@@ -641,14 +600,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className={tw(
                   'minlg:translate-y-40',
                   'text-base minlg:text-xl minxxl:text-3xl'
-                )}>NFTs enable new forms of community engagement. Collect, Display, and Trade your NFTs through a social network that you own. Get started by building your NFT Profile.</p>
+                )}>{data_v2?.discoverDescription}</p>
               </div>
 
               <div id='anim-discover-img' data-aos="fade-up" data-aos-delay="400" className={tw(
                 'minlg:translate-y-1/2',
                 'minmd:-order-1 -mx-5'
               )}>
-                <img className='w-full' src="nft-illo.jpg" alt="" />
+                <img className='w-full' src={data_v2?.discoverImage?.url} alt="" />
               </div>
             </div>
           </div>
@@ -673,8 +632,8 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
               </svg>
 
               <div className='relative px-4 minlg:px-0'>
-                <h2 data-aos="fade-up" data-aos-delay="100" className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal mb-[1rem]'>How it works?</h2>
-                <p data-aos="fade-up" data-aos-delay="200" className='text-base minlg:text-[1.625rem] minxxl:text-4xl mb-8'>How nft.com works</p>
+                <h2 data-aos="fade-up" data-aos-delay="100" className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal mb-[1rem]'>{data_v2?.hiwTitle}</h2>
+                <p data-aos="fade-up" data-aos-delay="200" className='text-base minlg:text-[1.625rem] minxxl:text-4xl mb-8'>{data_v2?.hiwSubtitle}</p>
               </div>
 
               <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 minxxl:gap-7 mb-[-7.5rem]'>
@@ -682,27 +641,27 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                   'minlg:translate-y-full minlg:opacity-0',
                   'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
                 )}>
-                  <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Claim a <br className='hidden minlg:block' />Profile</h3>
-                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>Create an NFT Profile for your unique username that is itself an NFT. You own the profile that will go anywhere your NFTs do.</p>
+                  <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock1Image?.url} alt="" />
+                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock1Title}</h3>
+                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock1Description}</p>
                 </div>
 
                 <div className={tw(
                   'minlg:translate-y-full minlg:opacity-0',
                   'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
                 )}>
-                  <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Customize your Collection</h3>
-                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>Customize your NFT Profile to display your personal collection from any address or to promote your NFT collection.</p>
+                  <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock2Image?.url} alt="" />
+                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock2Title}</h3>
+                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock2Description}</p>
                 </div>
 
                 <div className={tw(
                   'minlg:translate-y-full minlg:opacity-0',
                   'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
                 )}>
-                  <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src="hiw-img.png" alt="" />
-                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>Grow your Community</h3>
-                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>Promote your NFT Profile with your unique NFT.com url to drive purchasing and growth wherever your NFTs are listed.</p>
+                  <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock3Image?.url} alt="" />
+                  <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock3Title}</h3>
+                  <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock3Description}</p>
                 </div>
               </div>
             </div>
@@ -760,45 +719,46 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                 </svg>
 
                 <div className='relative'>
-                  <h2 data-aos="fade-up" className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal mb-5 text-white'>News</h2>
-                  <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>Latest from the blog</p>
+                  <h2 data-aos="fade-up" className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal mb-5 text-white'>{data_v2.newsTitle}</h2>
+                  <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2.newsSubtitle}</p>
                 </div>
 
                 <div className='-mx-9 overflow-hidden mb-12'>
                   <Ticker speed={7} offset='-100%'>
                     {() => (
-                      <>
-                        <div className={tw(
-                          'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
-                          'mx-[10px] minlg:mx-4 minxxl:mx-5',
-                          'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
-                        )}>
-                          <div className='before:pb-[54.129%] before:block relative'>
-                            <img className='absolute top-0 w-full rounded-t-lg' src="news01.png" alt="" />
-                          </div>
-                          
-                          <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
-                            <h3 className={tw(
-                              'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
-                              'mb-11 minxxl:mb-16'
-                            )}>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
-                            <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
-                              <img className='rounded-full mr-[6px] minlg:mr-3 h-5 minlg:h-9 minxxl:h-12 block' src="ava.png" alt="" />
-                              Ryan Ancill
+                      <div className='flex flex-row'>
+                        {data_v2?.newsSlidesCollection?.items.map((preview) =>
+                          <div key={preview.slug} className={tw(
+                            'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
+                            'mx-[10px] minlg:mx-4 minxxl:mx-5',
+                            'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
+                          )}>
+                            <div className='before:pb-[54.129%] before:block relative'>
+                              <img className='absolute top-0 w-full rounded-t-lg' src={preview.heroImage?.url} alt="" />
                             </div>
-                          </div>
-                        </div>
-                      </>
+                          
+                            <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
+                              <h3 className={tw(
+                                'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
+                                'mb-11 minxxl:mb-16'
+                              )}>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
+                              <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
+                                <img className='rounded-full mr-[6px] minlg:mr-3 h-5 minlg:h-9 minxxl:h-12 block' src="ava.png" alt="" />
+                                {preview.author?.name}
+                              </div>
+                            </div>
+                          </div>)}
+                      </div>
                     )}
                   </Ticker>
                 </div>
 
                 <div data-aos="zoom-in" data-aos-delay="100" className='text-center'>
-                  <a href="" className={tw(
+                  <a href={data_v2?.newsCta?.link} className={tw(
                     'bg-[#F9D54C] hover:bg-[#dcaf07] drop-shadow-lg rounded-full transition-colors',
                     'inline-flex items-center justify-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
                     'text-xl minxxl:text-3xl text-black font-medium uppercase'
-                  )}>READ OUR BLOG</a>
+                  )}>{data_v2?.newsCta?.title.toUpperCase()}</a>
                 </div>
               </div>
             </div>
@@ -811,22 +771,24 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             )}>
               <Ticker speed={7} offset='100%' direction='toRight' move={false}>
                 {() => (
-                  <>
-                    <div className={tw(
-                      'pl-3 minlg:pl-12 minxxl:pl-36 flex items-baseline group'
-                    )}
-                    ><div className={tw(
-                        'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                        'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                        'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
-                      )}></div>
+                  <div className='flex flex-row minlg:mr-44'>
+                    {data_v2?.tags?.tags1.map(tag =>
+                      <div key={tag} className={tw(
+                        'pl-3 minlg:pl-12 minxxl:pl-36 flex items-baseline group'
+                      )}
+                      ><div className={tw(
+                          'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                          'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                          'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
+                        )}></div>
                       
-                      <i className={tw(
-                        'animate-text-gadient bg-[length:200%_200%]',
-                        'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
-                        'transition-colors group-hover:text-transparent'
-                      )}>defi</i></div>
-                  </>
+                        <i className={tw(
+                          'animate-text-gadient bg-[length:200%_200%]',
+                          'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
+                          'transition-colors group-hover:text-transparent'
+                        )}>{tag}</i>
+                      </div>)}
+                  </div>
                 )}
               </Ticker>
             </div>
@@ -836,22 +798,24 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
             )}>
               <Ticker speed={7} offset='-100%' move={false}>
                 {() => (
-                  <>
-                    <div className={tw(
-                      'pl-3 minlg:pl-12 minxxl:pl-36 flex items-baseline group'
-                    )}
-                    ><div className={tw(
-                        'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                        'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                        'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
-                      )}></div>
+                  <div className='flex flex-row minlg:mr-44 minlg:mr-44'>
+                    {data_v2?.tags?.tags2.map(tag =>
+                      <div key={tag} className={tw(
+                        'pl-3 minlg:pl-12 minxxl:pl-36 flex items-baseline group'
+                      )}
+                      ><div className={tw(
+                          'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                          'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                          'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
+                        )}></div>
                       
-                      <i className={tw(
-                        'animate-text-gadient bg-[length:200%_200%]',
-                        'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
-                        'transition-colors group-hover:text-transparent'
-                      )}>gaming</i></div>
-                  </>
+                        <i className={tw(
+                          'animate-text-gadient bg-[length:200%_200%]',
+                          'pb-4 pr-1 bg-clip-text text-[#B2B2B2] bg-gradient-to-r from-[#FF9E39] to-[#FECB02]',
+                          'transition-colors group-hover:text-transparent'
+                        )}>{tag}</i>
+                      </div>)}
+                  </div>
                 )}
               </Ticker>
             </div>
@@ -885,14 +849,14 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
                       '-mt-7 mr-9 ml-12',
                       'rotate-[40deg] rounded-xl'
-                    )} src="ico-discover.png" alt="" />
+                    )} src={data_v2?.bynpCta?.link} alt="" />
                     your <br />
                     <span data-aos="fade-up" data-aos-delay="200" className='inline-block -mr-10 minlg:pl-24 minlg:-mr-24'>
                       NFT<img className={tw(
                         'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
                         '-mt-7 mr-9 ml-12',
                         'rotate-[40deg] rounded-xl'
-                      )} src="ico-discover.png" alt="" />
+                      )} src={data_v2?.bynpCta?.link} alt="" />
                       profile
                     </span>
                   </h2>
@@ -911,11 +875,11 @@ const Index: NextPageWithLayout = ({ preview, data }: HomePageProps) => {
                       </svg>
                     </div>
 
-                    <a data-aos="zoom-out" data-aos-delay="300" href="" className={tw(
+                    <a data-aos="zoom-out" data-aos-delay="300" href={data_v2?.bynpCta?.link} className={tw(
                       'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
                       'inline-flex items-center justify-center text-center h-[4rem] minxxl:h-[6rem] px-6 minxxl:px-9',
                       'text-xl minxxl:text-3xl text-white font-medium uppercase'
-                    )}>create a Profile</a>
+                    )}>{data_v2?.bynpCta?.title}</a>
                   </div>
                 </div>
               </div>
@@ -1166,10 +1130,12 @@ Index.getLayout = function getLayout(page) {
 
 export async function getServerSideProps({ preview = false }) {
   const homeData = await getCollection(preview, 1, 'homePageCollection', HOME_PAGE_FIELDS);
+  const homeDataV2 = await getCollection(false, 10, 'homepageV2Collection', HOME_PAGE_FIELDS_V2);
   return {
     props: {
       preview,
       data: homeData[0] ?? null,
+      data_v2: homeDataV2[0] ?? null,
     }
   };
 }
