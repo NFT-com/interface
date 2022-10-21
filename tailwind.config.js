@@ -11,6 +11,7 @@ module.exports = {
       'minlg': '900px',
       'minxl': '1200px',
       'minxxl': '1600px',
+      'minhd': '1921px',
       // "small" is handled as the default
 
       // if all other sizes below are specified, then the "default" value wil apply to the XL range too.
@@ -105,7 +106,7 @@ module.exports = {
         'hero-heading1': ['Stretch Pro'],
         'dm-mono': ['DM Mono'],
         'grotesk': ['Grotesk'],
-        'noi-grotesk': ['Noi Grotesk Trial'],
+        'noi-grotesk': ['Noi Grotesk Trial', 'Rubik', 'sans-serif'],
       },
       fontSize: {
         'copy-size': '0.825rem',
@@ -133,11 +134,17 @@ module.exports = {
         pulseBorder: {
           '0%, 100%': { borderColor: 'rgba(0, 164, 255, 1)' },
           '50%': { borderColor: 'rgba(0, 164, 255, 0)' },
+        },
+        textGadient: {
+          '0%': { backgroundPosition: 'left' },
+          '50%': { backgroundPosition: 'right' },
+          '100%': { backgroundPosition: 'left' }
         }
       },
       animation: {
         'spin-slow': 'spin 2s linear infinite',
         'pulse-border': 'pulseBorder 2s linear infinite',
+        'text-gadient': 'textGadient 2s ease-in-out infinite',
       },
       padding: {
         '30px': '30px',
