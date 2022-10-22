@@ -533,7 +533,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem]',
                       'leading-[1.125] minxl:leading-[1.125]'
                     )}>{data_v2?.wycdBlock1Title}</h3>
-                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock2Description}</p>
+                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock1Description}</p>
                     <div data-aos="fade-up" data-aos-delay="200" className={tw(
                       'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9',
                       'bg-[#121212] drop-shadow-lg rounded-full',
@@ -596,7 +596,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.125] minxl:leading-[1.125]'
                     )}>{data_v2?.wycdBlock2Title}</h3>
-                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock1Description}</p>
+                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock2Description}</p>
 
                     <div className='overflow-hidden -mx-9 mt-4 minxxl:mt-6'>
                       <div data-aos="fade-left" data-aos-delay="200" className="image-ticker mb-4 minxxl:mb-6 h-16 minxl:h-28 minxxl:h-36">
