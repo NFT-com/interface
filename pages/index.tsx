@@ -661,7 +661,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 'minlg:translate-y-1/2',
                 'minmd:-order-1 -mx-5'
               )}>
-                <video className='w-full' src={data_v2?.discoverImage?.url} autoPlay loop muted playsInline></video>
+                <img className='w-full' src={data_v2?.discoverImage?.url} alt=''/>
               </div>
             </div>
           </div>
