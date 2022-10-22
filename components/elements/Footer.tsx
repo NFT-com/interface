@@ -176,7 +176,7 @@ export const Footer = () => {
                 <a data-aos="fade-left" data-aos-delay="200" className={tw(
                   'transition-colors text-white hover:text-[#F9D54C]'
                 )}
-                target="_blank" href="https://twitter.com" rel="noopener noreferrer">
+                target="_blank" href="https://twitter.com/NFTcomofficial" rel="noopener noreferrer">
                   <TwitterLogo className={tw(
                     'w-7 h-7 minxxl:w-9 minxxl:h-9'
                   )} viewBox="0 0 38 32" fill="currentColor" />
@@ -184,7 +184,7 @@ export const Footer = () => {
                 <a data-aos="fade-left" data-aos-delay="300" className={tw(
                   'transition-colors text-white hover:text-[#F9D54C]'
                 )}
-                target="_blank" href="https://discord.com/" rel="noopener noreferrer">
+                target="_blank" href="https://discord.com/invite/nftdotcom" rel="noopener noreferrer">
                   <DiscordLogo className={tw(
                     'w-7 h-7 minxxl:w-9 minxxl:h-9'
                   )} viewBox="0 0 39 38" fill="currentColor" />

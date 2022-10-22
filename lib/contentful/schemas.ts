@@ -194,6 +194,9 @@ export const HOME_PAGE_FIELDS_V2 = `
       body
       author {
         name
+        image {
+          url
+        }
       }
       heroImage {
         url
@@ -203,6 +206,32 @@ export const HOME_PAGE_FIELDS_V2 = `
   newsCta
   tags
   bynpCta
+  wycdBlock2Row1NftsCollection{
+    items {
+      url
+    }
+  }
+  wycdBlock2Row2NftsCollection{
+    items {
+      url
+    }
+  }
+  heroNfTsCollection{
+    items{
+      url
+    }
+  }
+  wycdTitleNfTs{
+    url
+  }
+  discoverTitleNfTs{
+    url
+  }
+  bynpTitleNfTsCollection{
+    items{
+      url
+    }
+  }
 `;
 
 export const CURATED_COLLECTIONS_FIELDS = `
