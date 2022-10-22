@@ -453,7 +453,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     'text-white flex'
                   )}>
                     {data_v2?.dynamicUrl['url'].map(word =>
-                      <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
+                      <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
                         <span className='text-white/40'>NFT.COM</span>
                         <span className={tw(
                           '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
@@ -553,7 +553,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         'text-white/40 flex'
                       )}>
                         {data_v2?.dynamicUrl['url'].map(word =>
-                          <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
+                          <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
                           NFT.COM
                             <span className={tw(
                               'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
@@ -600,7 +600,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
                     <div className='overflow-hidden -mx-9 mt-4 minxxl:mt-6'>
                       <div data-aos="fade-left" data-aos-delay="200" className="image-ticker mb-4 minxxl:mb-6 h-16 minxl:h-28 minxxl:h-36">
-                        <Ticker speed={7} offset='100%' direction='toRight' move={true}>
+                        <Ticker speed={7} offset='100%' direction='toRight'>
                           {() => (
                             <div className='flex flex-row'>
                               {data_v2?.wycdBlock2Row1NftsCollection?.items.map(image =>
@@ -612,7 +612,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       </div>
 
                       <div data-aos="fade-left" data-aos-delay="250" className="image-ticker h-16 minxl:h-28 minxxl:h-36">
-                        <Ticker speed={7} offset='-100%' move={true}>
+                        <Ticker speed={7} offset='-100%'>
                           {() => (
                             <div className='flex flex-row'>
                               {data_v2?.wycdBlock2Row2NftsCollection?.items.map(image =>
