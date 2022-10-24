@@ -67,8 +67,8 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   });
 
   const { data } = usePrepareContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: maxProfilesABI,
+    address: contractAddress,
+    abi: maxProfilesABI,
     functionName: type === 'GK' ? 'genesisKeyBatchClaimProfile' : 'publicClaim',
     args: type === 'GK' ? [gkMintProfiles] : [freeMintProfile?.profileURI, freeMintProfile?.hash, freeMintProfile?.signature],
     onError(err){
