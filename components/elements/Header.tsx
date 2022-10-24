@@ -88,6 +88,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
         .to('#header-shadow', {
           opacity: 1,
           scaleY: 1,
+          scaleX: 1,
           duration: 1,
           ease: 'power2.out'
         }, 0)
@@ -198,7 +199,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
           </div>
 
           <span id='header-shadow' className={tw(
-            'minlg:opacity-0 minlg:scale-y-[.3]',
+            'minlg:opacity-0 minlg:scale-y-[.75] minlg:scale-x-[.98]',
             'rounded-full shadow-md absolute left-0 top-0 right-0 bottom-0 -z-10',
             removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
           )}></span>

@@ -37,7 +37,7 @@ export const Footer = () => {
         scrollTrigger: {
           trigger: '#FooterContainer',
           start: 'top bottom',
-          end: '+=15%',
+          end: '+=50px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -142,7 +142,7 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className='overflow-hidden -mt-[75px]'>
+      <footer id="FooterContainer" className='overflow-hidden -mt-[28.8rem]'>
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
@@ -176,7 +176,7 @@ export const Footer = () => {
                 <a data-aos="fade-left" data-aos-delay="200" className={tw(
                   'transition-colors text-white hover:text-[#F9D54C]'
                 )}
-                   target="_blank" href="https://twitter.com/NFTcomofficial" rel="noopener noreferrer">
+                target="_blank" href="https://twitter.com/NFTcomofficial" rel="noopener noreferrer">
                   <TwitterLogo className={tw(
                     'w-7 h-7 minxxl:w-9 minxxl:h-9'
                   )} viewBox="0 0 38 32" fill="currentColor" />
@@ -184,7 +184,7 @@ export const Footer = () => {
                 <a data-aos="fade-left" data-aos-delay="300" className={tw(
                   'transition-colors text-white hover:text-[#F9D54C]'
                 )}
-                   target="_blank" href="https://discord.com/invite/nftdotcom" rel="noopener noreferrer">
+                target="_blank" href="https://discord.com/invite/nftdotcom" rel="noopener noreferrer">
                   <DiscordLogo className={tw(
                     'w-7 h-7 minxxl:w-9 minxxl:h-9'
                   )} viewBox="0 0 39 38" fill="currentColor" />
