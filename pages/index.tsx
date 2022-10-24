@@ -544,7 +544,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     </svg>
 
                     <h3 data-aos="fade-up" data-aos-delay="100" className={tw(
-                      'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
+                      'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44 minxxl:pr-48',
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem]',
                       'leading-[1.125] minxl:leading-[1.125]'
                     )}>{data_v2?.wycdBlock1Title}</h3>
@@ -608,7 +608,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     </svg>
 
                     <h3 data-aos="fade-up" data-aos-delay="100" className={tw(
-                      'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
+                      'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44 minxxl:pr-48',
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.125] minxl:leading-[1.125]'
                     )}>{data_v2?.wycdBlock2Title}</h3>
                     <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock2Description}</p>
