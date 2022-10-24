@@ -84,6 +84,16 @@ export type HomePageV2 = {
     link: string,
     title: string,
   }
+  wycdBlock2Row1NftsCollection: any,
+  wycdBlock2Row2NftsCollection: any,
+  heroNfTsCollection: any,
+  wycdTitleNfTs: {
+    url: string,
+  },
+  discoverTitleNfTs: {
+    url: string,
+  },
+  bynpTitleNfTsCollection: any
 }
 
 export type ResultsPageProps = {

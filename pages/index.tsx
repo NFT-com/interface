@@ -32,7 +32,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Vector from 'public/Vector.svg';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePageVisibility } from 'react-page-visibility';
 import Ticker from 'react-ticker';
 
@@ -392,13 +392,13 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
                     'mx-[1.8rem] -my-[.5rem]',
                     'rotate-[40deg] rounded-xl'
-                  )} src="ico-discover.png" alt="" />
+                  )} src={data_v2?.heroNfTsCollection?.items[0]?.url} alt="" />
                   <br />
                   NFT<img className={tw(
                     'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
                     'mx-[1.8rem] -my-[.5rem]',
                     'rotate-[40deg] rounded-xl'
-                  )} src="ico-discover.png" alt="" />
+                  )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="" />
                   <span data-aos="fade-left" data-aos-delay="200"
                     className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>identity</span></h2>
 
@@ -450,22 +450,21 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     PLANTS
                     </div>
 
-                    <div className={tw(
-                      'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
-                      'text-white flex'
-                    )}>
-                      {data_v2?.dynamicUrl['url'].map(word =>
-                        <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
-                          <span className='text-white/40'>NFT.COM</span>
-                          <span className={tw(
-                            '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
-                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                          )}>
-                          </span>{word.toUpperCase()}
-                        </a>
-                      )}
-                    </div>
+                  <div className={tw(
+                    'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
+                    'text-white flex'
+                  )}>
+                    {data_v2?.dynamicUrl['url'].map(word =>
+                      <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
+                        <span className='text-white/40'>NFT.COM</span>
+                        <span className={tw(
+                          '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                          'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                          'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                        )}>
+                        </span>{word.toUpperCase()}
+                      </a>
+                    )}
                   </div>
                 </div>
 
@@ -508,7 +507,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     'drop-shadow-md inline-block w-[4.525rem] minxxl:w-[5.5rem]',
                     'mx-[1.8rem] -mb-[1.3rem]',
                     'rotate-[40deg] rounded-xl'
-                  )} src="ico-discover.png" alt="" />
+                  )} src={data_v2?.wycdTitleNfTs?.url} alt="" />
                   <span className='bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Profile</span></h2>
 
                 <div id='anim-profile-content' className={tw(
@@ -556,7 +555,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         'text-white/40 flex'
                       )}>
                         {data_v2?.dynamicUrl['url'].map(word =>
-                          <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
+                          <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
                           NFT.COM
                             <span className={tw(
                               'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
@@ -599,15 +598,17 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.125] minxl:leading-[1.125]'
                     )}>{data_v2?.wycdBlock2Title}</h3>
-                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock1Description}</p>
+                    <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock2Description}</p>
 
                     <div className='overflow-hidden -mx-9 mt-4 minxxl:mt-6'>
                       <div data-aos="fade-left" data-aos-delay="200" className="image-ticker mb-4 minxxl:mb-6 h-16 minxl:h-28 minxxl:h-36">
                         <Ticker speed={7} offset='100%' direction='toRight' move={isVisible}>
                           {() => (
-                            <>
-                              <img src="medici.png" className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px] rounded-full' alt="" />
-                            </>
+                            <div className='flex flex-row'>
+                              {data_v2?.wycdBlock2Row1NftsCollection?.items.map(image =>
+                                <img key={image.url} src={image.url} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px] rounded-full' alt="" />
+                              )}
+                            </div>
                           )}
                         </Ticker>
                       </div>
@@ -615,9 +616,11 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       <div data-aos="fade-left" data-aos-delay="250" className="image-ticker h-16 minxl:h-28 minxxl:h-36">
                         <Ticker speed={7} offset='-100%' move={isVisible}>
                           {() => (
-                            <>
-                              <img src="medici.png" className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px] rounded-full' alt="" />
-                            </>
+                            <div className='flex flex-row'>
+                              {data_v2?.wycdBlock2Row2NftsCollection?.items.map(image =>
+                                <img key={image.url} src={image.url} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px] rounded-full' alt="" />
+                              )}
+                            </div>
                           )}
                         </Ticker>
                       </div>
@@ -646,7 +649,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
                       'mx-[1.8rem] -my-[.5rem]',
                       'rotate-[40deg] rounded-xl'
-                    )} src="ico-discover.png" alt="" />a
+                    )} src={data_v2?.discoverTitleNfTs.url} alt="" />a
                   </span>
                   <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40'>New World</span>
                 </h2>
@@ -660,7 +663,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 'minlg:translate-y-1/2',
                 'minmd:-order-1 -mx-5'
               )}>
-                <video className='w-full' src={data_v2?.discoverImage?.url} autoPlay loop muted playsInline></video>
+                <img className='w-full' src={data_v2?.discoverImage?.url} alt=''/>
               </div>
             </div>
           </div>
@@ -777,9 +780,9 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     {() => (
                       <div className='flex flex-row'>
                         {data_v2?.newsSlidesCollection?.items.map((preview) =>
-                          <div key={preview.slug} className={tw(
+                          <a key={preview.slug} href={`articles/${preview.slug}`} className={tw(
                             'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
-                            'mx-[10px] minlg:mx-4 minxxl:mx-5',
+                            'mx-[10px] minlg:mx-4 minxxl:mx-5 cursor-pointer',
                             'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
                           )}>
                             <div className='before:pb-[54.129%] before:block relative overflow-hidden'>
@@ -790,13 +793,13 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                               <h3 className={tw(
                                 'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
                                 'mb-11 minxxl:mb-16'
-                              )}>Majority of NFT Collections Reinvest Ethereum Back Into System - Nansen</h3>
+                              )}>{preview.title}</h3>
                               <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
-                                <img className='rounded-full mr-[6px] minlg:mr-3 h-5 minlg:h-9 minxxl:h-12 block' src="ava.png" alt="" />
+                                <img className='rounded-full mr-[6px] minlg:mr-3 h-5 minlg:h-9 minxxl:h-12 block' src={preview.author?.image?.url} alt="" />
                                 {preview.author?.name}
                               </div>
                             </div>
-                          </div>)}
+                          </a>)}
                       </div>
                     )}
                   </Ticker>
@@ -902,7 +905,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
                         '-mt-7 mr-9 ml-12',
                         'rotate-[40deg] rounded-xl',
-                      )} src="ico-discover.png" alt="" />
+                      )} src={data_v2?.bynpTitleNfTsCollection.items[0].url} alt="" />
                     your</span>
                     <span id='anim-build-profile-ttl-2' data-aos="fade-up" data-aos-delay="200" className={tw(
                       'block -mr-10 minlg:pl-24 minlg:-mr-24 ',
@@ -912,7 +915,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
                         '-mt-7 mr-9 ml-12',
                         'rotate-[40deg] rounded-xl',
-                      )} src="ico-discover.png" alt="" />
+                      )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="" />
                       profile
                     </span>
                   </h2>
