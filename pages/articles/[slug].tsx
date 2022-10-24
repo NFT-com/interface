@@ -54,7 +54,7 @@ export default function Post({ post, preview }: PostProps) {
         }}
       />
       <div className='bg-white'>
-        <div className="relative text-center px-4 w-full minmd:pt-28 pt-24 max-w-nftcom mx-auto">
+        <div className="relative text-center px-4 w-full minlg:pt-28 max-w-nftcom mx-auto">
           <Link href="/articles">
             <div className='flex content-center items-center hover:cursor-pointer mb-4 minmd:mb-0'>
               <CaretLeft className='mr-1 text-black' />

@@ -59,7 +59,7 @@ export default function ActivityPages() {
   }, [lastAddedPage, setTotalCount, activityData, loadedActivitiesNextPage, afterCursor, loadedActivitiesNextPage?.getActivities?.items, currentAddress]);
   
   return (
-    <div className='flex flex-col justify-between pt-28 px-4 font-grotesk'>
+    <div className='flex flex-col justify-between minlg:pt-28 px-4 font-grotesk'>
       <div className='w-full max-w-nftcom mx-auto relative'>
         <h2 className='font-bold text-black text-[40px] mb-6'>
           <span className='text-[#F9D963]'>/</span>
