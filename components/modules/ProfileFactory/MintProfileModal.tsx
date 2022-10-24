@@ -167,9 +167,11 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                   >
                     Mint a Profile
                   </Dialog.Title>
-                  <a onClick={() => setIsOpen(false)} className='text-[#0A8DD7] hover:cursor-pointer text-lg'>
-                    Clear
-                  </a>
+                  {!minting &&
+                    <a onClick={() => setIsOpen(false)} className='text-[#0A8DD7] hover:cursor-pointer text-lg'>
+                      Clear
+                    </a>
+                  }
                 </div>
                 <div className="mt-7 pb-6 border-b">
                   <p className="text-lg text-[#6F6F6F] w-4/5">
