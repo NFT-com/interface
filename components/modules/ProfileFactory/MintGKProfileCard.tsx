@@ -12,6 +12,7 @@ import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
 
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -29,10 +30,11 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
   const [profileStatus, setProfileStatus] = useState('');
   const [selectedGK, setSelectedGK] = useState(null);
   
+  const { openConnectModal } = useConnectModal();
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const { claimable } = useClaimableProfileCount(currentAddress);
-  const { data: mintedProfiles, loading: loadingMintedProfiles } = useProfilesMintedByGKQuery(selectedGK?.tokenId.toString(), defaultChainId);
+  const { data: mintedProfiles, loading: loadingMintedProfiles, mutate: mutateMintedProfiles } = useProfilesMintedByGKQuery(selectedGK?.tokenId.toString(), defaultChainId);
   const { profileClaimHash } = useGetProfileClaimHash(currentValue && currentValue[0]);
   const { profileTokenId } = useProfileTokenQuery(currentValue && currentValue[0]);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
@@ -159,8 +161,25 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
             </div>
           </div>
         }
+
+        {!currentAddress &&
+          <div className='flex justify-center mt-5'>
+            <button
+              onClick={openConnectModal}
+              type="button"
+              className={tw(
+                'inline-flex w-max justify-center ml-2',
+                'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
+                'px-4 py-2 text-lg font-medium text-black',
+                'focus:outline-none focus-visible:bg-[#E4BA18]'
+              )}
+            >
+              Connect Wallet
+            </button>
+          </div>
+        }
         <div className='mt-9'>
-          {mintedProfiles && !loadingMintedProfiles && mintedProfiles?.profilesMintedByGK.map((profile) =>
+          {currentAddress && mintedProfiles && !loadingMintedProfiles && mintedProfiles?.profilesMintedByGK.map((profile) =>
             <div className='h-14 flex justify-between items-center bg-[#FCE795] rounded-xl px-4 py-2 mb-4' key={profile.url}>
               <div className='flex flex-row items-center gap-[14px]'>
                 <RoundedCornerMedia
