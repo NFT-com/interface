@@ -1179,7 +1179,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
 Index.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout>
+    <DefaultLayout hideSearch>
       {page}
     </DefaultLayout>
   );
