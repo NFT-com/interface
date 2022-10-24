@@ -12,7 +12,6 @@ import { tw } from 'utils/tw';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
 
 type DefaultLayoutProps = {
   children: React.ReactNode;
@@ -23,11 +22,10 @@ type DefaultLayoutProps = {
 
 const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => import('components/elements/Footer').then(mod => mod.Footer));
 
-export default function DefaultLayout({ children, hideFooter, hideHeader, hideSearch }: DefaultLayoutProps) {
+export default function DefaultLayout({ children, hideFooter, hideHeader, hideSearch = false }: DefaultLayoutProps) {
   const { openConnectModal } = useConnectModal();
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   const { changeWallet, setChangeWallet } = useChangeWallet();
-  const router = useRouter();
   return (
     <div className={tw('flex flex-col',
       'h-screen w-full min-w-screen min-h-screen',
@@ -44,12 +42,11 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
           <SearchModal />
         </ClientOnly>
         }
-        {router.pathname !== '/' || !hideSearch &&
+        {!hideSearch &&
           <div className='mt-24  mb-8 block minlg:hidden'>
             <SearchContent isHeader mobileSearch />
           </div>
         }
-
         {children}
         <SignOutModal
           visible={signOutDialogOpen}
