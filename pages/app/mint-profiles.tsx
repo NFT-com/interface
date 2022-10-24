@@ -12,9 +12,9 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { ArrowCircleLeft } from 'phosphor-react';
 import NFTLogo from 'public/nft_logo.svg';
 import NFTLogoSmall from 'public/nft_logo_small.svg';
@@ -26,7 +26,7 @@ import { useAccount } from 'wagmi';
 
 const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 export default function MintProfilesPage() {
-  const router = useRouter();
+  const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
   const { freeMintAvailable, loading: loadingFreeMint } = useFreeMintAvailable(currentAddress);
   const { claimable, loading: loadingClaimable } = useClaimableProfileCount(currentAddress);
@@ -43,10 +43,10 @@ export default function MintProfilesPage() {
   useMaybeCreateUser();
 
   useEffect(() => {
-    if(!currentAddress) {
-      router.push('/');
+    if(!currentAddress && openConnectModal) {
+      openConnectModal();
     }
-  }, [currentAddress, router]);
+  }, [currentAddress, openConnectModal]);
 
   const setMintingModal = useCallback((isOpen) => {
     if(isOpen){
@@ -91,10 +91,10 @@ export default function MintProfilesPage() {
       >
         <div className='h-full w-full absolute top-0 opacity-60' style={{ backgroundImage: 'url(/temp-intro.png)' }}></div>
         <div className='justify-end mt-10 mr-5 hidden minmd:flex'>
-          <ConnectButton />
+          {currentAddress && <ConnectButton />}
         </div>
         
-        <div className='w-full max-w-nftcom mx-auto relative mt-10 minmd:mt-4'>
+        <div className='w-full max-w-nftcom mx-auto relative mt-10 minmd:mt-4 z-50'>
           <Link href='/'>
             <a>
               <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
@@ -111,13 +111,17 @@ export default function MintProfilesPage() {
             </a>
           </Link>
           <div className=' justify-end mt-10 mr-5 flex minmd:hidden'>
-            <ConnectButton />
+            {currentAddress && <ConnectButton />}
           </div>
           
         </div>
 
         {/* Mint Card Component */}
-        {getMintProfileCard()}
+        {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
+          getMintProfileCard()
+          :
+          <MintGKProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />
+        }
         
         <span className='absolute w-full h-[460px] left-0 bottom-0 bg-img-shadow'></span>
       </div>
@@ -148,7 +152,7 @@ export default function MintProfilesPage() {
 
 MintProfilesPage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideHeader={getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) ? true : false}>
+    <DefaultLayout hideSearch hideHeader={getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) ? true : false}>
       { page }
     </DefaultLayout>
   );

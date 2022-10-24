@@ -16,13 +16,14 @@ import { useRouter } from 'next/router';
 
 type DefaultLayoutProps = {
   children: React.ReactNode;
-  hideFooter?: boolean
-  hideHeader?: boolean
+  hideFooter?: boolean;
+  hideHeader?: boolean;
+  hideSearch?: boolean;
 };
 
 const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => import('components/elements/Footer').then(mod => mod.Footer));
 
-export default function DefaultLayout({ children, hideFooter, hideHeader }: DefaultLayoutProps) {
+export default function DefaultLayout({ children, hideFooter, hideHeader, hideSearch }: DefaultLayoutProps) {
   const { openConnectModal } = useConnectModal();
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   const { changeWallet, setChangeWallet } = useChangeWallet();
@@ -43,7 +44,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader }: Defa
           <SearchModal />
         </ClientOnly>
         }
-        {router.pathname !== '/' &&
+        {router.pathname !== '/' || !hideSearch &&
           <div className='mt-24  mb-8 block minlg:hidden'>
             <SearchContent isHeader mobileSearch />
           </div>
