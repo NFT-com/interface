@@ -13,7 +13,6 @@ import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/Lea
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useSidebar } from 'hooks/state/useSidebar';
 import { HomePageV2,TickerStat } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -33,7 +32,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import Vector from 'public/Vector.svg';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePageVisibility } from 'react-page-visibility';
 import Ticker from 'react-ticker';
 
@@ -105,9 +104,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
   const { profileData: profileFeed8 } = useProfileQuery(data?.feedCollections['profile8']['url']);
 
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
-
   const isVisible = usePageVisibility();
-  const { toggleSidebar } = useSidebar();
 
   useEffect(() => {
     AOS.init({
@@ -126,8 +123,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-hero-trigger',
           pin: '#anim-hero-trigger',
-          start: '5px top',
-          end: '+=5%',
+          start: '10px top',
+          end: '+=15%',
           //markers: true,
           toggleActions: 'play none reverse none',
         }
@@ -173,7 +170,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-profile-trigger',
           start: 'top 80%',
-          end: '+=15%',
+          end: '+=5%',
           //markers: true,
           toggleActions: 'play none reverse none',
         }
@@ -219,7 +216,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-discover-trigger',
-          start: 'top 70%',
+          start: 'top bottom',
           end: '+=15%',
           //toggleActions: 'play none none reset',
           toggleActions: 'play none reverse none',
@@ -250,7 +247,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-hiw-trigger',
-          start: 'top 75%',
+          start: 'top bottom',
           end: '+=15%',
           toggleActions: 'play none reverse none',
         }
@@ -284,7 +281,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-leaderboard-trigger',
-          start: 'top 80%',
+          start: 'top bottom',
           end: '+=20%',
           //pin: '#anim-leaderboard-trigger',
           toggleActions: 'play none reverse none',
@@ -305,8 +302,9 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-ticker-trigger',
-          start: 'top 30%',
-          end: '+=50%',
+          start: 'top bottom',
+          end: '+=15%',
+          markers: true,
           toggleActions: 'play none reverse none',
         }
       })
@@ -325,24 +323,25 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-build-profile-trigger',
-          start: 'top 70%',
-          end: '+=20%',
+          start: 'top bottom',
+          end: '+=15%',
+          markers: true,
           toggleActions: 'play none reverse none',
         }
       })
         .to('#anim-build-profile-trigger', {
           y: 0,
-          duration: 1.2,
+          duration: 1.8,
           ease: 'circ.out',
         }, 0)
         .to('#anim-build-profile-ttl-1', {
           y: 0,
-          duration: 1.2,
+          duration: 2,
           ease: 'circ.out',
         }, 0)
         .to('#anim-build-profile-ttl-2', {
           y: 0,
-          duration: 1.75,
+          duration: 2.3,
           ease: 'circ.out',
         }, 0);
     });
@@ -412,7 +411,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
               {/* Hero */}
               <div id='anim-hero' data-aos="fade-up" data-aos-delay="200" className={tw(
-                'minmd:max-w-[40%] minlg:h-[calc(100vh+5px)] overflow-hidden bg-[#F9D54C] z-[10]',
+                'minmd:max-w-[40%] minlg:h-[calc(100vh+10px)] overflow-hidden bg-[#F9D54C] z-[10]',
                 'relative minlg:absolute minmd:right-0 minmd:top-0',
                 'before:block before:pb-[127%] minmd:before:pb-[60%] minmd:before:hidden'
               )}>
@@ -432,37 +431,41 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   </div>
                 </div>
 
-                <div id='anim-hero-caption' className={tw(
-                  'absolute left-1/2 top-1/2 z-20',
-                  'minlg:scale-[.58] -translate-y-1/2 -translate-x-1/2',
-                  'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
-                  'px-7 minxxl:px-10',
-                  'text-[calc(42px+112*(100vw-375px)/1545)]',
-                  'leading-none tracking-tight rounded-full'
+                <div className={tw(
+                  'absolute inset-0 z-20',
+                  'flex justify-center items-center'
                 )}>
-                  <div className='text-transparent flex'>NFT.COM
-                    <div className={tw(
-                      'mx-2 minlg:mx-4 minxxl:mx-8',
-                      'h-[.68em] w-[.1081em] basis-[.1081em]'
-                    )}></div>
-                    PLANTS
-                  </div>
-
-                  <div className={tw(
-                    'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
-                    'text-white flex'
+                  <div id='anim-hero-caption' className={tw(
+                    'minlg:scale-[.58]',
+                    'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
+                    'px-7 minxxl:px-10',
+                    'text-[calc(42px+112*(100vw-375px)/1545)]',
+                    'leading-none tracking-tight rounded-full'
                   )}>
-                    {data_v2?.dynamicUrl['url'].map(word =>
-                      <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
-                        <span className='text-white/40'>NFT.COM</span>
-                        <span className={tw(
-                          '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
-                          'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                          'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                        )}>
-                        </span>{word.toUpperCase()}
-                      </a>
-                    )}
+                    <div className='text-transparent flex'>NFT.COM
+                      <div className={tw(
+                        'mx-2 minlg:mx-4 minxxl:mx-8',
+                        'h-[.68em] w-[.1081em] basis-[.1081em]'
+                      )}></div>
+                    PLANTS
+                    </div>
+
+                    <div className={tw(
+                      'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
+                      'text-white flex'
+                    )}>
+                      {data_v2?.dynamicUrl['url'].map(word =>
+                        <a key={word} href='' className='anim-profile-link flex items-center justify-center text-center'>
+                          <span className='text-white/40'>NFT.COM</span>
+                          <span className={tw(
+                            '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                          )}>
+                          </span>{word.toUpperCase()}
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -729,7 +732,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             </div>
 
             <div id='anim-leaderboard-content' className={tw(
-              'translate-y-[200px]',
+              'minlg:translate-y-1/4',
               'bg-white shadow-2xl rounded-3xl mb-[5rem] minlg:mb-[6.75rem] px-4 minmd:px-10 pt-12 ...'
             )}>
               <div className="minmd:flex justify-between items-center mb-4 minmd:mb-0">
@@ -779,7 +782,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                             'mx-[10px] minlg:mx-4 minxxl:mx-5',
                             'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
                           )}>
-                            <div className='before:pb-[54.129%] before:block relative'>
+                            <div className='before:pb-[54.129%] before:block relative overflow-hidden'>
                               <img className='absolute top-0 w-full rounded-t-lg' src={preview.heroImage?.url} alt="" />
                             </div>
 
@@ -811,17 +814,17 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           </div>
 
           {/* Block: Ticker */}
-          <div id='anim-ticker-trigger' className='overflow-x-hidden mb-[4.625rem] minlg:pb-[40rem] minlg:mb-[-33rem]'>
+          <div id='anim-ticker-trigger' className='overflow-x-hidden mb-[4.625rem] minlg:pb-[40rem] minlg:mb-[-34.3rem]'>
             <div id='anim-ticker-first' className={tw(
               'text-4xl minlg:text-7xl minxxl:text-9xl mb-2 -ml-7',
               'minlg:translate-y-96'
             )}>
               <Ticker speed={7} offset='100%' direction='toRight' move={isVisible}>
                 {() => (
-                  <div className='flex flex-row minlg:mr-44'>
+                  <div className='flex flex-row'>
                     {data_v2?.tags?.tags1.map(tag =>
                       <div key={tag} className={tw(
-                        'pl-3 minlg:pl-12 minxxl:pl-14 flex items-baseline group'
+                        'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group'
                       )}
                       ><div className={tw(
                           'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
@@ -846,10 +849,10 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             )}>
               <Ticker speed={7} offset='-100%' move={isVisible}>
                 {() => (
-                  <div className='flex flex-row minlg:mr-44 minlg:mr-44'>
+                  <div className='flex flex-row'>
                     {data_v2?.tags?.tags2.map(tag =>
                       <div key={tag} className={tw(
-                        'pl-3 minlg:pl-12 minxxl:pl-14 flex items-baseline group'
+                        'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group'
                       )}
                       ><div className={tw(
                           'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',

@@ -36,14 +36,14 @@ export const Footer = () => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '#FooterContainer',
-          start: 'top 70%',
-          end: '+=20%',
+          start: 'top bottom',
+          end: '+=15%',
           toggleActions: 'play none reverse none',
         }
       })
         .to('#footer-content', {
           y: 0,
-          duration: 1,
+          duration: 1.8,
           ease: 'power2.out'
         }, 0);
     });
@@ -142,9 +142,9 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer">
+      <footer id="FooterContainer" className='overflow-hidden -mt-[75px]'>
         <div id='footer-content' className={tw(
-          '-mt-[75px] font-noi-grotesk text-primary-txt-dk relative',
+          'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
           'minlg:translate-y-1/2'
         )}>
