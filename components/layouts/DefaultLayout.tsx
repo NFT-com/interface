@@ -22,7 +22,7 @@ type DefaultLayoutProps = {
 
 const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => import('components/elements/Footer').then(mod => mod.Footer));
 
-export default function DefaultLayout({ children, hideFooter, hideHeader, hideSearch = false }: DefaultLayoutProps) {
+export default function DefaultLayout({ children, hideFooter, hideHeader, hideSearch }: DefaultLayoutProps) {
   const { openConnectModal } = useConnectModal();
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   const { changeWallet, setChangeWallet } = useChangeWallet();
