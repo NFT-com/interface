@@ -290,7 +290,7 @@ export function MintedProfile(props: MintedProfileProps) {
               /> :
               loading
                 ?
-                <div className= 'min-h-[10rem] text-primary-txt flex flex-col items-center justify-center'>
+                <div className= 'min-h-[25rem] text-primary-txt flex flex-col items-center justify-center'>
                   <div className="mb-2">Loading...</div>
                   <Loader />
                 </div>

@@ -401,7 +401,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   'text-[3rem] minmd:text-header minxl:text-[6.25rem] minxxl:text-[7.5rem] leading-[1.15]',
                   'text-black font-normal tracking-tight mb-14'
                 )}>
-                  Own your<img className={tw(
+                  Build Your<img className={tw(
                     'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
                     'mx-[1.8rem] -my-[.5rem]',
                     'rotate-[40deg] rounded-xl'
@@ -413,7 +413,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     'rotate-[40deg] rounded-xl'
                   )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="" />
                   <span data-aos="fade-left" data-aos-delay="200"
-                    className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>identity</span></h2>
+                    className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>Identity</span></h2>
 
                 <a data-aos="zoom-out" data-aos-delay="300" href={data_v2?.heroCta?.link} className={tw(
                   'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
@@ -501,7 +501,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             <div id='anim-profile' className={tw(
               'will-change-transform minlg:px-14 minxxl:px-20 mb-[6.5rem] relative z-[10]',
             )}>
-              <span role='presentation' id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span> {/* scale-y-150 */}
+              <span role='presentation' id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span>
               <span role='presentation' id='anim-profile-shadow-dark' className={tw(
                 'opacity-0 translate-y-1/2 transform-gpu',
                 'absolute bottom-full left-0 -z-10 bg-img-shadow-dark',
@@ -516,13 +516,12 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
                   'leading-[1.0854] font-normal text-white mb-14 minxxl:mb-20'
                 )}>
-                  What you can do <br className='hidden minlg:block' />
-                  with an<img className={tw(
+                  The Social<img className={tw(
                     'drop-shadow-md inline-block w-[4.525rem] minxxl:w-[5.5rem]',
                     'mx-[0.4em] -my-[0.7rem]',
                     'rotate-[40deg] rounded-xl'
                   )} src={data_v2?.wycdTitleNfTs?.url} alt="" />
-                  <span className='bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Profile</span></h2>
+                  <span className='bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
 
                 <div id='anim-profile-content' className={tw(
                   'minlg:translate-y-[400px] transform-gpu',
@@ -936,7 +935,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         '-mt-7 mr-9 ml-12',
                         'rotate-[40deg] rounded-xl',
                       )} src={data_v2?.bynpTitleNfTsCollection.items[0].url} alt="" />
-                    your</span>
+                    Your</span>
                     <span id='anim-build-profile-ttl-2' data-aos="fade-up" data-aos-delay="200" className={tw(
                       'block -mr-10 minlg:pl-24 minlg:-mr-24 ',
                       'minlg:translate-y-[18rem] transform-gpu'
@@ -946,7 +945,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         '-mt-7 mr-9 ml-12',
                         'rotate-[40deg] rounded-xl',
                       )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="" />
-                      profile
+                      Profile
                     </span>
                   </h2>
 

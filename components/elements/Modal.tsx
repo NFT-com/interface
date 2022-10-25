@@ -81,7 +81,7 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
                         className={tw(
                           props.pure ? 'hidden' : '',
                           'text-center font-medium text-xl minmd:text-3xl',
-                          'font-grotesk text-primary-txt',
+                          'font-noi-grotesk text-primary-txt',
                           `${props.longModal ? 'minmd:top-[-38%]' : '' }`
                         )}
                       >

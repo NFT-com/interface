@@ -26,7 +26,7 @@ export function NftGrid(props: NftGridProps) {
     toggleHidden,
     editMode,
     draftNftsDescriptionsVisible,
-    draftLayoutType
+    draftLayoutType,
   } = useContext(ProfileContext);
   const { items, moveItem } = useContext(GridContext);
 
