@@ -137,8 +137,10 @@ export function NFTCard(props: NFTCardProps) {
         style={{
           backgroundColor: props.customBackground ?? tileBackground
         }}
-        onClick={() => {
+        onClick={(e) => {
         // TODO: move to helper / logger class at some point
+          e.stopPropagation();
+          e.preventDefault();
           analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
             ethereumAddress: currentAddress,
             title: props?.title,
@@ -181,6 +183,7 @@ export function NFTCard(props: NFTCardProps) {
                 onClick={(e: MouseEvent<HTMLDivElement>) => {
                   props.onVisibleToggle(!props.visible);
                   e.stopPropagation();
+                  e.preventDefault();
                 }}
               >
                 {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }

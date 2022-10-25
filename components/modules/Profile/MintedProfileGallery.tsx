@@ -104,7 +104,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
             {!isMobile && <DynamicGalleryToggleAllButtons
               publicNFTCount={publiclyVisibleNftCount}
               onShowAll={() => {
-                showNftIds(allOwnerNfts?.map(nft => nft.id));
+                showNftIds(allOwnerNfts?.map(nft => nft.id), true);
                 analytics.track('Show All NFTs', {
                   ethereumAddress: currentAddress,
                   profile: props.profileURI,
@@ -112,7 +112,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 });
               }}
               onHideAll={() => {
-                hideNftIds(allOwnerNfts?.map(nft => nft.id));
+                hideNftIds(allOwnerNfts?.map(nft => nft.id), true);
                 analytics.track('Hide All NFTs', {
                   ethereumAddress: currentAddress,
                   profile: props.profileURI,
@@ -137,7 +137,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 isMobile && {
                   label: 'Show All',
                   onSelect: () => {
-                    showNftIds(allOwnerNfts?.map(nft => nft.id));
+                    showNftIds(allOwnerNfts?.map(nft => nft.id), true);
                     analytics.track('Show All NFTs', {
                       ethereumAddress: currentAddress,
                       profile: props.profileURI,
@@ -149,7 +149,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
                 isMobile && {
                   label: 'Hide All',
                   onSelect:() => {
-                    hideNftIds(allOwnerNfts?.map(nft => nft.id));
+                    hideNftIds(allOwnerNfts?.map(nft => nft.id), true);
                     analytics.track('Hide All NFTs', {
                       ethereumAddress: currentAddress,
                       profile: props.profileURI,

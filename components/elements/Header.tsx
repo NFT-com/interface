@@ -66,42 +66,6 @@ export const Header = ({ removeBg }: HeaderProps) => {
       },
       duration : 700
     });
-
-    const matchMedia = gsap.matchMedia();
-
-    matchMedia.add('(min-width: 900px)', () => {
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '#anim-hero-trigger',
-          start: '10px top',
-          end: '+=15%',
-          toggleActions: 'play none reverse none',
-        }
-      })
-        .to('#header-right', {
-          opacity: 1,
-          scale: 1,
-          duration: 1,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header-left', {
-          maxWidth: '25%',
-          duration: 1.25,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header-shadow', {
-          opacity: 1,
-          scaleY: 1,
-          scaleX: 1,
-          duration: 1,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header', {
-          scaleX: 1,
-          duration: 1.5,
-          ease: 'power2.out'
-        }, 0);
-    });
   });
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {

@@ -29,6 +29,7 @@ export function NftGallery(props: NftGalleryProps) {
     publiclyVisibleNfts,
     publiclyVisibleNftCount,
     loading,
+    loadingAllOwnerNfts,
     loadMoreNfts,
     loadMoreNftsEditMode,
     draftLayoutType
@@ -37,10 +38,14 @@ export function NftGallery(props: NftGalleryProps) {
   const { closeToBottom, currentScrollPosition } = useScrollToBottom();
 
   useSWR(closeToBottom.toString() + currentScrollPosition, async () => {
-    if (closeToBottom && publiclyVisibleNfts?.length > 0 && !loading) {
-      if (!editMode && publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
+    if (!editMode && closeToBottom && publiclyVisibleNfts?.length > 0 && !loading) {
+      if (publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
         loadMoreNfts();
       }
+    }
+    
+    if (editMode && closeToBottom && allOwnerNftCount > nftsToShow?.length) {
+      loadMoreNftsEditMode();
     }
   });
 
@@ -56,7 +61,7 @@ export function NftGallery(props: NftGalleryProps) {
     );
   }
 
-  if (editMode && allOwnerNftCount === 0) {
+  if (editMode && allOwnerNftCount === 0 && !loadingAllOwnerNfts) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-primary-txt dark:text-primary-txt-dk">
@@ -107,24 +112,11 @@ export function NftGallery(props: NftGalleryProps) {
           </div>
         </div>
       }
-      {!editMode && loading &&
+      {(loading || loadingAllOwnerNfts) &&
       <div className= 'min-h-[25rem] minmd:min-h-[20rem] text-primary-txt flex flex-col items-center justify-center'>
         <div className="mb-2">Loading...</div>
         <Loader />
       </div>}
-      {
-        (editMode && allOwnerNftCount > nftsToShow?.length) &&
-          <div className="mx-auto w-full min3xl:w-3/5 flex justify-center pb-8 font-medium">
-            <Button
-              color={'white'}
-              accent={AccentType.SCALE}
-              stretch={true}
-              label={'Load More'}
-              onClick={loadMoreNftsEditMode}
-              type={ButtonType.PRIMARY}
-            />
-          </div>
-      }
     </>
   );
 }
