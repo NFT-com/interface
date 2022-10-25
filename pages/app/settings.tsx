@@ -122,7 +122,7 @@ export default function Settings() {
       <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
         <div className='flex'>
           <SettingsSidebar isOwner={ownsProfilesAndSelectedProfile} />
-          <div className='w-full bg-white mx-auto pt-28 minlg:pl-80 max-w-[900px]'>
+          <div className='w-full bg-white mx-auto minlg:pt-28 minlg:pl-80 max-w-[900px]'>
             <div className='pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-0 minlg:pl-0'>
               <h2 className='font-bold text-black text-[40px] font-grotesk block minlg:hidden'>
                 <span className='text-[#F9D963]'>/</span>

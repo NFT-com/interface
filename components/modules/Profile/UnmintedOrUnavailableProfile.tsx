@@ -17,7 +17,7 @@ export function UnmintedOrUnavailableProfile(props: UnmintedOrUnavailableProps) 
   const { blocked: currentURIBlocked } = useProfileBlocked(profileURI, true);
 
   return (
-    <div className="mt-20 pb-10 h-max bg-pagebg w-full flex flex-col">
+    <div className="minlg:mt-20 pb-10 h-max bg-pagebg w-full flex flex-col">
       <BannerWrapper />
       <div
         className={tw(

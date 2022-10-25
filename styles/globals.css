@@ -2212,3 +2212,23 @@ input[type="search"]::-webkit-search-cancel-button {
   transform: translate3d(0, 0, 0);
   transition: transform .27s ease .2s;
 }
+
+#anim-news-content .ticker {
+  overflow: visible !important;
+}
+
+#anim-leaderboard-decor svg {
+  animation: 6s animDecorLeaderboard linear infinite;
+}
+
+@keyframes animDecorLeaderboard {
+  0% {
+    transform: translateX(-50%);
+  }
+  50% {
+    transform: translateX(-50%) translateX(-1%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

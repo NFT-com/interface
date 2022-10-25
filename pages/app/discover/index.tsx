@@ -71,7 +71,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
 
   return(
     <>
-      <div className="mt-28 mb-10 minlg:mb-10 minlg:mt-20 max-w-lg minmd:max-w-full mx-[4%] minmd:mx-[2%] minlg:mr-[2%] minlg:ml-0 self-center minmd:self-stretch minxl:max-w-nftcom minxl:mx-auto min-h-screen minxl:overflow-x-hidden">
+      <div className="mb-10 minlg:mb-10 minlg:mt-20 max-w-lg minmd:max-w-full mx-[4%] minmd:mx-[2%] minlg:mr-[2%] minlg:ml-0 self-center minmd:self-stretch minxl:max-w-nftcom minxl:mx-auto min-h-screen minxl:overflow-x-hidden">
         <div className="flex">
           <div className="minlg:mt-8 minlg:ml-6 w-full min-h-disc overflow-hidden">
             <span className="font-grotesk text-black font-black text-4xl minmd:text-5xl">Discover</span>
