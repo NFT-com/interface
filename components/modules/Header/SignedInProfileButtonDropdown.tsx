@@ -83,7 +83,7 @@ export function SignedInProfileButtonDropdown() {
             >
               {myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
                 <div className='flex justify-between items-center'>
-                  <p className='mr-2 text-xl font-extrabold '>/</p>
+                  <p className='mr-2 text-xl font-bold'>/</p>
                   <p className='font-medium'>{user.currentProfileUrl}</p>
                   <CaretDown size={18} color="black" weight="bold" className='ml-2' />
                 </div>

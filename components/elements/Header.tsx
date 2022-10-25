@@ -66,42 +66,6 @@ export const Header = ({ removeBg }: HeaderProps) => {
       },
       duration : 700
     });
-
-    const matchMedia = gsap.matchMedia();
-
-    matchMedia.add('(min-width: 900px)', () => {
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '#anim-hero-trigger',
-          start: '10px top',
-          end: '+=15%',
-          toggleActions: 'play none reverse none',
-        }
-      })
-        .to('#header-right', {
-          opacity: 1,
-          scale: 1,
-          duration: 1,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header-left', {
-          maxWidth: '25%',
-          duration: 1.25,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header-shadow', {
-          opacity: 1,
-          scaleY: 1,
-          scaleX: 1,
-          duration: 1,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header', {
-          scaleX: 1,
-          duration: 1.5,
-          ease: 'power2.out'
-        }, 0);
-    });
   });
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
@@ -232,7 +196,7 @@ export const Header = ({ removeBg }: HeaderProps) => {
               </button>
               <div className="flex items-center">
                 <Link href='/' passHref>
-                  <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-14">
+                  <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-8">
                     {mobileSidebarOpen ?
                       <p className='font-medium'>MENU</p>
                       :
@@ -258,34 +222,40 @@ export const Header = ({ removeBg }: HeaderProps) => {
                   'pr-4 py-[2px]'
                 )}
               >
-                <DropdownPickerModal
-                  pointer
-                  centered
-                  constrain
-                  selectedIndex={0}
-                  options={filterNulls([
-                    {
-                      label: 'NFTs',
-                      onSelect: () => router.push('/discover'),
-                      icon: null,
-                    },
-                    {
-                      label: 'Collections',
-                      onSelect: () => router.push('/discover'),
-                      icon: null,
-                    },
-                    {
-                      label: 'Profiles',
-                      onSelect: () => router.push('/discover'),
-                      icon: null,
-                    }
-                  ])
-                  }>
-                  <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] flex items-center relative'>
-                    Discover
-                    <CaretDown size={20} color="black" weight="bold" className='ml-2' />
-                  </a>
-                </DropdownPickerModal>
+                {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
+                  <DropdownPickerModal
+                    pointer
+                    centered
+                    constrain
+                    selectedIndex={0}
+                    options={filterNulls([
+                      {
+                        label: 'NFTs',
+                        onSelect: () => router.push('/discover'),
+                        icon: null,
+                      },
+                      {
+                        label: 'Collections',
+                        onSelect: () => router.push('/discover'),
+                        icon: null,
+                      },
+                      {
+                        label: 'Profiles',
+                        onSelect: () => router.push('/discover'),
+                        icon: null,
+                      }
+                    ])
+                    }>
+                    <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] flex items-center relative'>
+                  Discover
+                      <CaretDown size={20} color="black" weight="bold" className='ml-2' />
+                    </a>
+                  </DropdownPickerModal>
+                  :
+                  <Link href='/app/discover'>
+                    <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Discover</p>
+                  </Link>
+                }
                 
                 <Link href='/app/gallery'>
                   <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
