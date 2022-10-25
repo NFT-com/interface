@@ -129,6 +129,7 @@ export function NftGrid(props: NftGridProps) {
             customBackground={tileBackgroundSecondary}
             nftsDescriptionsVisible={draftNftsDescriptionsVisible}
             layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}
+            preventDefault={editMode}
           />
         </div>
       </DraggableGridItem>
