@@ -98,10 +98,10 @@ export function CollectionGallery(props: CollectionGalleryProps) {
         {editMode && <div className='flex items-center text-primary-txt dark:text-primary-txt-dk'>
           <GalleryToggleAllButtons
             onShowAll={() => {
-              showNftIds(detailedCollectionNFTs.map(nft => nft.id), true);
+              showNftIds(detailedCollectionNFTs.map(nft => nft.id));
             }}
             onHideAll={() => {
-              hideNftIds(detailedCollectionNFTs.map(nft => nft.id), true);
+              hideNftIds(detailedCollectionNFTs.map(nft => nft.id));
             }}
             publicNFTCount={detailedCollectionNFTs.filter(nft => !nft.hidden).length}
           />

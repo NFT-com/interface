@@ -37,8 +37,8 @@ export interface ProfileContextType {
   setAllItemsOrder: (items: PartialDeep<Nft>[]) => void;
   // editor state
   toggleHidden: (id: string, currentVisibility: boolean) => void;
-  hideNftIds: (toHide: string[], hideAll: boolean) => void;
-  showNftIds: (toShow: string[], showAll: boolean) => void;
+  hideNftIds: (toHide: string[], hideAll?: boolean) => void;
+  showNftIds: (toShow: string[], showAll?: boolean) => void;
   draftHeaderImg: DraftImg,
   setDraftHeaderImg: (img: DraftImg) => void,
   draftProfileImg: DraftImg,
