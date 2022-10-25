@@ -2046,13 +2046,13 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @keyframes cornerAnimNews {
   0% {
-    transform: translate(0, 9%);
+    transform: translate(0, 8%);
   }
   50% {
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(0, 9%);
+    transform: translate(0, 8%);
   }
 }
 
@@ -2134,6 +2134,12 @@ input[type="search"]::-webkit-search-cancel-button {
 
 #anim-hero {
   will-change: max-width, background-color;
+}
+
+@media screen and (max-width: 899px) {
+  #anim-hero {
+    max-width: none !important;
+  }
 }
 
 .anim-profile-link {

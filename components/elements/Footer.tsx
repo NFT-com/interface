@@ -41,7 +41,7 @@ export const Footer = () => {
     matchMedia.add('(min-width: 900px)', () => {
       gsap.timeline({
         scrollTrigger: {
-          trigger: '#FooterContainer',
+          trigger: '.page-footer',
           start: '70% bottom',
           end: '+=50px',
           toggleActions: router.pathname === '/' ? 'play none reverse none' : 'none none none none',
@@ -148,13 +148,12 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className={`overflow-hidden ${router.pathname === '/' ? '-mt-[28.8rem]' : ''}`}>
+      <footer id="FooterContainer" className={`page-footer overflow-hidden ${router.pathname === '/' ? 'minlg:-mt-[28.8rem]' : ''}`}>
         <Toast />
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
-          'transform-gpu',
-          router.pathname === '/' && 'minlg:translate-y-1/2'
+          router.pathname === '/' && 'minlg:translate-y-1/2 minlg:transform-gpu'
         )}>
           <div className={tw(
             'minlg:flex minlg:flex-row relative justify-between',

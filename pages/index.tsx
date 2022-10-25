@@ -308,8 +308,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         }
       })
         .to('#anim-news-content', {
-          x: '50%',
-          duration: 2.75,
+          x: 0,
+          duration: 2,
           ease: 'power2.out'
         }, 0);
 
@@ -394,11 +394,11 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             <div className='bg-white relative'>
               {/* Intro Text */}
               <div id='anim-hero-text' className={tw(
-                'pt-[10rem] pb-[3.75rem] minmd:py-[4vh] pl-[5vw] flex flex-col justify-center items-start',
-                'minmd:w-[60%] minmd:h-screen'
+                'pt-[10rem] pb-[3.75rem] minlg:py-[4vh] pl-[5vw] flex flex-col justify-center items-start',
+                'minlg:w-[55%] minxl:w-[60%] minlg:h-screen'
               )}>
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                  'text-[3rem] minmd:text-header minxl:text-[6.25rem] minxxl:text-[7.5rem] leading-[1.15]',
+                  'text-[3rem] minmd:text-[6rem] minlg:text-[4rem] minxl:text-[6.25rem] minxxl:text-[7.5rem] leading-[1.15]',
                   'text-black font-normal tracking-tight mb-14'
                 )}>
                   Build Your<img className={tw(
@@ -424,14 +424,16 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
               {/* Hero */}
               <div id='anim-hero' data-aos="fade-up" data-aos-delay="200" className={tw(
-                'minmd:max-w-[40%] w-full minlg:h-[calc(100vh+5px)] bg-[#F9D54C]',
-                'relative minlg:absolute z-[10] minmd:right-0 minmd:top-0 overflow-hidden',
-                'before:block before:pb-[127%] minmd:before:pb-[60%] minmd:before:hidden'
+                'minlg:max-w-[45%] minxl:max-w-[40%] w-full minlg:h-[calc(100vh+5px)] bg-[#F9D54C]',
+                'relative minlg:absolute z-[10] minlg:right-0 minlg:top-0 overflow-hidden',
+                'before:block before:pb-[127%] minmd:before:pb-[80%] minlg:before:pb-[60%] minlg:before:hidden'
               )}>
                 <div className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2'>
                   <div id="anim-hero-player" className={tw(
                     'pointer-events-none',
-                    'scale-x-[.55] scale-y-[.3] minlg:scale-x-[.7] minlg:scale-y-[.5] minxxl:scale-x-100 minxxl:scale-y-[.65] minhd:scale-[1.25]',
+                    'scale-x-[.55] scale-y-[.3]',
+                    'minmd:scale-x-[.84] minmd:scale-y-[.6] minlg:scale-x-[.7] minlg:scale-y-[.5]',
+                    'minxxl:scale-x-100 minxxl:scale-y-[.65] minhd:scale-[1.25]',
                     '-skew-x-[41deg] skew-y-[19deg]'
                   )}>
                     <Player
@@ -449,7 +451,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   'flex justify-center items-center'
                 )}>
                   <div id='anim-hero-caption' className={tw(
-                    'minlg:scale-[.58] transform-gpu',
+                    'minlg:scale-[.57] minxxl:scale-[.58] transform-gpu',
                     'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
                     'px-7 minxxl:px-10 relative z-20',
                     'text-[calc(42px+112*(100vw-375px)/1545)]',
@@ -503,7 +505,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             )}>
               <span role='presentation' id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span>
               <span role='presentation' id='anim-profile-shadow-dark' className={tw(
-                'opacity-0 translate-y-1/2 transform-gpu',
+                'opacity-0 translate-y-1/2 minlg:transform-gpu',
                 'absolute bottom-full left-0 -z-10 bg-img-shadow-dark',
                 'w-full h-[28.75rem] pointer-events-none'
               )}></span>
@@ -512,7 +514,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 'minlg:rounded-3xl flow-root relative z-10',
               )}>
                 <h2 data-aos="fade-up" data-aos-delay="200" id='anim-profile-head' className={tw(
-                  'minlg:translate-y-[400px]',
+                  'minlg:translate-y-[400px] minlg:transform-gpu',
                   'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
                   'leading-[1.0854] font-normal text-white mb-14 minxxl:mb-20'
                 )}>
@@ -521,7 +523,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     'mx-[0.4em] -my-[0.7rem]',
                     'rotate-[40deg] rounded-xl'
                   )} src={data_v2?.wycdTitleNfTs?.url} alt="" />
-                  <span className='bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
+                  <span className='block bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
 
                 <div id='anim-profile-content' className={tw(
                   'minlg:translate-y-[400px] transform-gpu',
@@ -745,10 +747,10 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             'px-3 minmd:px-14 minxxl:px-20 pt-[10rem] minlg:pt-[11.725rem] minxxl:pt-64',
             'minhd:mb-28 overflow-hidden relative'
           )}>
-            <div id="anim-leaderboard-decor" className='absolute -z-10 top-0 left-0 right-0 translate-y-1/2 transform-gpu'>
+            <div id="anim-leaderboard-decor" className='absolute -z-10 top-0 left-0 right-0 minlg:translate-y-1/2 minlg:transform-gpu'>
               <svg role='presentation' className={tw(
                 'relative left-1/2 -translate-x-1/2 -translate-y-[2.2rem]',
-                'ml-[-12%] w-[160%]'
+                'ml-[20%] min-w-[1600px] minlg:ml-[-12%] minlg:w-[160%]'
               )} viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
             </div>
 
@@ -779,9 +781,20 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 'relative z-0 px-9 py-[2.5rem] minlg:py-[3.2rem] mb-20 minlg:mb-32',
                 'bg-black rounded-3xl'
               )}>
-                <svg role='presentation' className={tw(
+                <svg className={tw(
+                  'absolute -z-10 top-0 right-0',
+                  '-translate-y-[68px]',
+                  'minlg:hidden'
+                )} aria-hidden="true" width="196" height="134" viewBox="0 0 196 134" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path className='anim-corner anim-corner-news' d="M112.373 19H30.3571C29.6239 19 28.9671 19.4537 28.7076 20.1394L0.903622 93.6122C0.467002 94.7659 1.31947 96 2.5531 96H82.3258C83.042 96 83.6871 95.5669 83.9582 94.904L114.006 21.4312C114.48 20.271 113.627 19 112.373 19Z" fill="white"/>
+                  <path className='anim-corner anim-corner-news-2' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white"/>
+                  <path className='anim-corner anim-corner-news' d="M251.373 57H169.357C168.624 57 167.967 57.4537 167.708 58.1394L139.904 131.612C139.467 132.766 140.319 134 141.553 134H221.326C222.042 134 222.687 133.567 222.958 132.904L253.006 59.4312C253.48 58.271 252.627 57 251.373 57Z" fill="white"/>
+                </svg>
+
+                <svg className={tw(
                   'absolute -z-10 top-0 right-0 max-w-[250px] minlg:max-w-none',
-                  'translate-x-[20px] -translate-y-[67px]'
+                  'translate-x-[20px] -translate-y-[67px]',
+                  'hidden minlg:block'
                 )} aria-hidden="true" width='402' height='225' viewBox="0 0 402 225" xmlns="http://www.w3.org/2000/svg">
                   <path className='anim-corner anim-corner-news' fill='white' d="m 196.51769,0.23242 c -2.09052,0.0166 -1.6e-4,0.0288 -11.04687,0.043 -9.77623,0.0125 -24.441,0.0191 -46.4375,0.01 C 118.4882,0.27642 89.900015,0.24902 54.570425,0.20532 L 0.1192529,141.7168 c -0.44450556,1.15499 0.4086956,2.39648 1.6464844,2.39648 H 139.26183 c 0.727,0 1.37858,-0.44505 1.64258,-1.12305 z" />
                   <path className='anim-corner anim-corner-news-2' fill='white' d="M 337.16418,0 H 194.81652 l -85.69726,222.7168 c -0.444,1.15499 0.40948,2.39648 1.64648,2.39648 h 137.49609 c 0.727,0 1.37858,-0.44505 1.64258,-1.12305 z" />
@@ -794,7 +807,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 </div>
 
                 <div className='-mx-9 overflow-hidden mb-12'>
-                  <div id='anim-news-content' className='translate-x-[150%] transform-gpu'>
+                  <div id='anim-news-content' data-aos="fade-left" className='minlg:translate-x-full minlg:transform-gpu'>
                     <Ticker speed={7} move={isVisible}>
                       {() => (
                         <div className='flex'>
@@ -850,12 +863,13 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   <div className='flex flex-row'>
                     {data_v2?.tags?.tags1.map(tag =>
                       <div key={tag} className={tw(
-                        'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group'
+                        'px-2 minlg:px-10 minxxl:px-14 flex items-baseline group'
                       )}
                       ><div role='presentation' className={tw(
-                          'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                          'mr-2 minxxl:mr-3 skew-x-[-20deg]',
                           'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                          'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
+                          'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                          'bg-[#B2B2B2] rounded-[3px]'
                         )}></div>
 
                         <i className={tw(
@@ -881,9 +895,10 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group'
                       )}
                       ><div role='presentation' className={tw(
-                          'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                          'mr-2 minxxl:mr-3 skew-x-[-20deg]',
                           'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                          'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
+                          'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                          'bg-[#B2B2B2] rounded-[3px]'
                         )}></div>
 
                         <i className={tw(
