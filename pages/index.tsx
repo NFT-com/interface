@@ -123,9 +123,9 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-hero-trigger',
           pin: '#anim-hero-trigger',
-          start: '10px top',
-          end: '+=15%',
-          invalidateOnRefresh: true,
+          start: '5px top',
+          end: '+=100px',
+          //invalidateOnRefresh: true,
           toggleActions: 'play none reverse none',
         }
       })
@@ -170,7 +170,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-profile-trigger',
           start: 'top 90%',
-          end: '+=5%',
+          end: '+=10px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -215,8 +215,9 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-discover-trigger',
-          start: 'top 90%',
-          end: '+=15%',
+          //start: 'top 90%',
+          start: '10% bottom',
+          end: '+=50px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -245,8 +246,9 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-hiw-trigger',
-          start: 'top 80%',
-          end: '+=15%',
+          //start: 'top 80%',
+          start: 'top bottom',
+          end: '+=50px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -300,9 +302,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-news-trigger',
-          start: 'top 70%',
+          start: 'top 80%',
           end: '+=50px',
-          //markers: true,
           toggleActions: 'play none reverse none',
         }
       })
@@ -316,19 +317,19 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-ticker-trigger',
-          start: 'top 90%',
-          end: '+=15%',
+          start: '20% bottom',
+          end: '+=50px',
           toggleActions: 'play none reverse none',
         }
       })
         .to('#anim-ticker-first', {
           y: 0,
-          duration: 1.2,
+          duration: 0.8,
           ease: 'circ.out',
         }, 0)
         .to('#anim-ticker-second', {
           y: 0,
-          duration: 1.4,
+          duration: 1,
           ease: 'circ.out',
         }, '>-0.8');
 
@@ -336,8 +337,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-build-profile-trigger',
-          start: 'top bottom',
-          end: '+=15%',
+          start: '20% bottom',
+          end: '+=30px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -387,7 +388,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             cardType: 'summary_large_image',
           }}
         />
-        <main className='font-noi-grotesk not-italic HomePageContainer'>
+        <main id='anim-main-trigger' className='font-noi-grotesk not-italic HomePageContainer'>
           {/* Block: Intro */}
           <div id='anim-hero-trigger' className='minlg:h-screen'>
             <div className='bg-white relative'>
@@ -423,8 +424,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
               {/* Hero */}
               <div id='anim-hero' data-aos="fade-up" data-aos-delay="200" className={tw(
-                'minmd:max-w-[40%] minlg:h-[calc(100vh+10px)] overflow-hidden bg-[#F9D54C] z-[10]',
-                'relative minlg:absolute minmd:right-0 minmd:top-0',
+                'minmd:max-w-[40%] w-full minlg:h-[calc(100vh+5px)] bg-[#F9D54C]',
+                'relative minlg:absolute z-[10] minmd:right-0 minmd:top-0 overflow-hidden',
                 'before:block before:pb-[127%] minmd:before:pb-[60%] minmd:before:hidden'
               )}>
                 <div className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2'>
@@ -448,7 +449,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   'flex justify-center items-center'
                 )}>
                   <div id='anim-hero-caption' className={tw(
-                    'minlg:scale-[.58]',
+                    'minlg:scale-[.58] transform-gpu',
                     'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
                     'px-7 minxxl:px-10 relative z-20',
                     'text-[calc(42px+112*(100vw-375px)/1545)]',
@@ -498,11 +499,11 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           {/* Block: NFT profile */}
           <div id='anim-profile-trigger'>
             <div id='anim-profile' className={tw(
-              'minlg:px-14 minxxl:px-20 mb-[6.5rem] relative z-[10]',
+              'will-change-transform minlg:px-14 minxxl:px-20 mb-[6.5rem] relative z-[10]',
             )}>
               <span role='presentation' id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span> {/* scale-y-150 */}
               <span role='presentation' id='anim-profile-shadow-dark' className={tw(
-                'opacity-0 translate-y-1/2',
+                'opacity-0 translate-y-1/2 transform-gpu',
                 'absolute bottom-full left-0 -z-10 bg-img-shadow-dark',
                 'w-full h-[28.75rem] pointer-events-none'
               )}></span>
@@ -524,11 +525,11 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   <span className='bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Profile</span></h2>
 
                 <div id='anim-profile-content' className={tw(
-                  'minlg:translate-y-[400px]',
+                  'minlg:translate-y-[400px] transform-gpu',
                   'minlg:grid grid-cols-2 gap-2 minlg:gap-4 minxxl:gap-6 -mb-12 minlg:-mb-[6.5rem]'
                 )}>
                   <div id='anim-profile-first-item' data-aos="fade-up" data-aos-delay="100" className={tw(
-                    'minlg:translate-y-1/4',
+                    'minlg:translate-y-1/4 transform-gpu',
                     'mb-5 minlg:mb-0',
                     'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                     'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
@@ -592,7 +593,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   </div>
 
                   <div id='anim-profile-second-item' data-aos="fade-up" data-aos-delay="100" className={tw(
-                    'minlg:translate-y-1/2',
+                    'minlg:translate-y-1/2 transform-gpu',
                     'mb-5 minlg:mb-0',
                     'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                     'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
@@ -615,11 +616,13 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
                     <div className='overflow-hidden -mx-9 mt-4 minxxl:mt-6'>
                       <div data-aos="fade-left" data-aos-delay="200" className="image-ticker mb-4 minxxl:mb-6 h-16 minxl:h-28 minxxl:h-36">
-                        <Ticker speed={7} offset='100%' direction='toRight'>
+                        <Ticker speed={7} offset='100%' direction='toRight' move={isVisible}>
                           {() => (
-                            <div className='flex flex-row'>
-                              {data_v2?.wycdBlock2Row1NftsCollection?.items.map(image =>
-                                <img key={image.url} src={image.url} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px] rounded-full' alt="" />
+                            <div className='flex'>
+                              {data_v2?.wycdBlock2Row1NftsCollection?.items.map((image, index) =>
+                                <div key={index} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px]'>
+                                  <img src={image.url} className='rounded-full w-full' alt="" />
+                                </div>
                               )}
                             </div>
                           )}
@@ -627,11 +630,13 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       </div>
 
                       <div data-aos="fade-left" data-aos-delay="250" className="image-ticker h-16 minxl:h-28 minxxl:h-36">
-                        <Ticker speed={7} offset='-100%'>
+                        <Ticker speed={7} offset='-100%' move={isVisible}>
                           {() => (
-                            <div className='flex flex-row'>
-                              {data_v2?.wycdBlock2Row2NftsCollection?.items.map(image =>
-                                <img key={image.url} src={image.url} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px] rounded-full' alt="" />
+                            <div className='flex'>
+                              {data_v2?.wycdBlock2Row2NftsCollection?.items.map((image, index) =>
+                                <div key={index} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px]'>
+                                  <img src={image.url} className='rounded-full w-full' alt="" />
+                                </div>
                               )}
                             </div>
                           )}
@@ -654,7 +659,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 )}>
                   <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
                     className={tw(
-                      'minlg:translate-y-40',
+                      'minlg:translate-y-40 transform-gpu',
                       'block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
                     )}>
                     Discover <br />
@@ -664,19 +669,20 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'rotate-[40deg] rounded-xl'
                     )} src={data_v2?.discoverTitleNfTs.url} alt="" />a
                   </span>
-                  <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40'>New World</span>
+                  <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40 transform-gpu'>New World</span>
                 </h2>
                 <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className={tw(
-                  'minlg:translate-y-40',
+                  'minlg:translate-y-40 transform-gpu',
                   'text-[1rem] minlg:text-[1.375rem] minxxl:text-[2rem] leading-[1.455]'
                 )}>{data_v2?.discoverDescription}</p>
               </div>
 
               <div id='anim-discover-img' data-aos="fade-up" data-aos-delay="400" className={tw(
-                'minlg:translate-y-1/2',
+                'minlg:translate-y-1/2 transform-gpu',
                 'minmd:-order-1 -mx-5'
               )}>
-                <img className='w-full' src={data_v2?.discoverImage?.url} alt=''/>
+                <video className='w-full' autoPlay loop muted playsInline src="video-discover.mp4"></video>
+                {/* <img className='w-full' src={data_v2?.discoverImage?.url} alt=''/> */}
               </div>
             </div>
           </div>
@@ -686,7 +692,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             'px-3 minlg:px-14 minxxl:px-20 minxxl:mb-8',
           )}>
             <div id='anim-hiw-content' className={tw(
-              'minlg:translate-y-1/2',
+              'minlg:translate-y-1/2 transform-gpu',
               'flow-root relative z-0 bg-primary-yellow rounded-3xl',
               'mt-5 mb-[7.5rem] px-3 minlg:p-6 pt-[3.15rem]'
             )}>
@@ -706,7 +712,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
               <div className='grid minlg:grid-cols-3 minmd:grid-cols-3 minmd:gap-4 minxxl:gap-7 mb-[-7.5rem]'>
                 <div className={tw(
-                  'minlg:translate-y-full minlg:opacity-0',
+                  'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                   'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
                 )}>
                   <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock1Image?.url} alt="" />
@@ -715,7 +721,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 </div>
 
                 <div className={tw(
-                  'minlg:translate-y-full minlg:opacity-0',
+                  'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                   'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
                 )}>
                   <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock2Image?.url} alt="" />
@@ -724,7 +730,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 </div>
 
                 <div className={tw(
-                  'minlg:translate-y-full minlg:opacity-0',
+                  'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                   'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
                 )}>
                   <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock3Image?.url} alt="" />
@@ -740,7 +746,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             'px-3 minmd:px-14 minxxl:px-20 pt-[10rem] minlg:pt-[11.725rem] minxxl:pt-64',
             'minhd:mb-28 overflow-hidden relative'
           )}>
-            <div id="anim-leaderboard-decor" className='absolute -z-10 top-0 left-0 right-0 translate-y-1/2'>
+            <div id="anim-leaderboard-decor" className='absolute -z-10 top-0 left-0 right-0 translate-y-1/2 transform-gpu'>
               <svg role='presentation' className={tw(
                 'relative left-1/2 -translate-x-1/2 -translate-y-[2.2rem]',
                 'ml-[-12%] w-[160%]'
@@ -748,7 +754,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             </div>
 
             <div id='anim-leaderboard-content' className={tw(
-              'minlg:translate-y-1/4',
+              'minlg:translate-y-1/4 transform-gpu',
               'bg-white shadow-2xl rounded-3xl mb-[5rem] minlg:mb-[6.75rem] px-4 minmd:px-10 pt-12 ...'
             )}>
               <div className="minmd:flex justify-between items-center mb-4 minmd:mb-0">
@@ -789,7 +795,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 </div>
 
                 <div className='-mx-9 overflow-hidden mb-12'>
-                  <div id='anim-news-content' className='translate-x-[150%]'>
+                  <div id='anim-news-content' className='translate-x-[150%] transform-gpu'>
                     <Ticker speed={7} move={isVisible}>
                       {() => (
                         <div className='flex'>
@@ -838,7 +844,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           <div id='anim-ticker-trigger' className='overflow-x-hidden mb-[4.625rem] minlg:pb-[40rem] minlg:mb-[-34.3rem]'>
             <div id='anim-ticker-first' className={tw(
               'text-4xl minlg:text-7xl minxxl:text-9xl mb-2 -ml-7',
-              'minlg:translate-y-96'
+              'minlg:translate-y-96 transform-gpu'
             )}>
               <Ticker speed={7} offset='100%' direction='toRight' move={isVisible}>
                 {() => (
@@ -866,7 +872,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
             <div id='anim-ticker-second' className={tw(
               'text-4xl minlg:text-7xl minxxl:text-9xl mb-2',
-              'minlg:translate-y-96'
+              'minlg:translate-y-96 transform-gpu'
             )}>
               <Ticker speed={7} offset='-100%' move={isVisible}>
                 {() => (
@@ -906,7 +912,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 <svg role='presentation' className={tw(
                   'absolute -z-10',
                   '-top-10rem -right-6 w-[18.5625rem] h-[10.625rem]',
-                  'minlg:-top-1 minlg:-right-16 minlg:w-[37.125rem] minlg:h-[21.25rem]',
+                  'minlg:-top-1 minlg:-right-12 minlg:w-[37.125rem] minlg:h-[21.25rem]',
                   'minxxl:-top-4 minxxl:w-[52rem] minxxl:h-[29.75rem]'
                 )} viewBox="0 0 594 340" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path className='anim-corner anim-corner-profile-1' fill='white' d="M 155.03896,0.46679 34.318265,0.23242 0.11904389,89.21679 c -0.444,1.156 0.408985,2.39844 1.64648401,2.39844 H 118.36513 c 0.728,0 1.38053,-0.448 1.64453,-1.125 z" />
@@ -924,7 +930,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     'text-black font-normal leading-[1.1] relative',
                     'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
                   )}>
-                    <span id='anim-build-profile-ttl-1' className='minlg:translate-y-[18rem]'>
+                    <span id='anim-build-profile-ttl-1' className='minlg:translate-y-[18rem] transform-gpu'>
                     Build<img className={tw(
                         'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
                         '-mt-7 mr-9 ml-12',
@@ -933,7 +939,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     your</span>
                     <span id='anim-build-profile-ttl-2' data-aos="fade-up" data-aos-delay="200" className={tw(
                       'block -mr-10 minlg:pl-24 minlg:-mr-24 ',
-                      'minlg:translate-y-[18rem]'
+                      'minlg:translate-y-[18rem] transform-gpu'
                     )}>
                       NFT<img className={tw(
                         'drop-shadow-md inline-block w-[3.125rem] minlg:w-[4.375rem] minxxl:w-[5.5rem]',
