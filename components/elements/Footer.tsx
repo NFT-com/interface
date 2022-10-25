@@ -146,11 +146,12 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className={`overflow-hidden ${router.pathname === '/' ? '-mt-[28.8rem]' : '-mt-[17rem]'}`}>
+      <footer id="FooterContainer" className={`overflow-hidden ${router.pathname === '/' ? '-mt-[28.8rem]' : ''}`}>
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
-          'minlg:translate-y-1/2 transform-gpu'
+          'transform-gpu',
+          router.pathname === '/' && 'minlg:translate-y-1/2'
         )}>
           <div className={tw(
             'minlg:flex minlg:flex-row relative justify-between',
