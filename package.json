@@ -108,7 +108,6 @@
     "type-fest": "^2.12.2",
     "typesense": "1.4.0-3",
     "typesense-instantsearch-adapter": "^2.4.0",
-    "url-encode-decode": "^1.0.0",
     "uuid": "^8.3.2",
     "wagmi": "^0.6.6"
   },

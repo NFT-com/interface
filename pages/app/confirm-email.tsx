@@ -5,14 +5,14 @@ import { isNullOrEmpty } from 'utils/helpers';
 import fetch from 'isomorphic-unfetch';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import useSWRImmutable from 'swr/immutable';
-import { decode } from 'url-encode-decode';
 
 export default function ConfirmEmailPage() {
   const router = useRouter();
   const { email, token } = router.query;
-  console.log('email: ', email);
   const [loading, setLoading] = useState<boolean>(true);
+  const [message, setMessage] = useState<string>('');
 
   const { data } = useSWRImmutable(`${email}_${token}`, async () => {
     if (isNullOrEmpty(email) || isNullOrEmpty(token)) {
@@ -20,8 +20,18 @@ export default function ConfirmEmailPage() {
     }
     
     try {
-      const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/verify/${decode(email)}/${decode(token)}`);
-      if (Number(result.status) == 200) return true;
+      const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/verify/${email}/${token}`);
+      if (Number(result.status) == 200) {
+        toast.success('Success! You are now subscribed to NFT.com');
+        
+        setTimeout(function() {
+          // 2 second delay
+          router.push('/app/discover');
+        }, 2000);
+        return true;
+      }
+
+      setMessage((await result.json()).message);
       setLoading(false);
       return false;
     } catch (err) {
@@ -34,10 +44,10 @@ export default function ConfirmEmailPage() {
 
   return <div className="flex flex-col h-full w-full items-center md:justify-start justify-center">
     {success ?
-      <div>Success! You are now subscribed to NFT.com</div> :
+      <div>Success! You are now subscribed to NFT.com. Redirecting...</div> :
       loading ?
         <div>Loading...</div> :
-        <div>Error while verifying email</div>
+        <div>Error: {message}</div>
     }
   </div>;
 }
