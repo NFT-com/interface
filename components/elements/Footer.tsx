@@ -280,7 +280,7 @@ export const Footer = () => {
                 )} />
                 <button type="submit" onClick={async () => {
                   try {
-                    await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL)}/subscribe/${email?.toLowerCase()}`, {
+                    await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/subscribe/${email?.toLowerCase()}`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
