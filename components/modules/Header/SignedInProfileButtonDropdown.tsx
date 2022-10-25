@@ -4,41 +4,28 @@ import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretDown, CaretUp, Check } from 'phosphor-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
-import { Menu } from 'react-feather';
 import { useAccount } from 'wagmi';
 
 export function SignedInProfileButtonDropdown() {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const router = useRouter();
   const { user,getHiddenProfileWithExpiry, setCurrentProfileUrl } = useUser();
-  const { address: currentAddress } = useAccount({
-    onConnect({ isReconnected }) {
-      if (isReconnected && !!user?.currentProfileUrl) {
-        setCurrentProfileUrl(localStorage.getItem('selectedProfileUrl'));
-      } else {
-        setCurrentProfileUrl('');
-      }
-    },
-    onDisconnect() {
-      console.log('disconnected');
-      setCurrentProfileUrl('');
-    },
-  });
+  const { address: currentAddress } = useAccount();
 
-  const [profiles, setProfiles] = useState(myOwnedProfileTokens);
+  const [profiles, setProfiles] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   useOutsideClickAlerter(wrapperRef, () => {
-    !isMobile && setExpanded(false);
+    setExpanded(false);
   });
 
   useEffect(() => {
-    setProfiles(myOwnedProfileTokens);
+    myOwnedProfileTokens.length && setProfiles(myOwnedProfileTokens);
   }, [myOwnedProfileTokens]);
 
   const sortProfiles = useCallback(() => {
@@ -78,12 +65,9 @@ export function SignedInProfileButtonDropdown() {
       >
         <>
           <button
-            className='block minlg:hidden cursor-pointer z-[51] relative'
-            onClick={() => {
-              null;
-            }}
+            className='flex items-center justify-center minlg:hidden cursor-pointer rounded-full bg-yellow-300 h-10 w-10 font-bold'
           >
-            <Menu color='#6F6F6F' />
+            /
           </button>
           <div
             className="gap-3 hidden minlg:block cursor-pointer"
@@ -117,49 +101,50 @@ export function SignedInProfileButtonDropdown() {
 
       </div>
 
-      {expanded && !isMobile &&
+      {expanded &&
         <div
           style={{
             marginTop: anchorRef.current.clientHeight + 8,
-            left: '50%',
-            transform: 'translateX(-50%)'
           }}
           className={tw(
             'rounded-xl',
             'bg-white dark:bg-secondary-dk',
             'absolute z-50',
-            'min-w-[14rem] drop-shadow-md',
+            'min-w-[14rem] drop-shadow-md right-1 minlg:right-auto minlg:left-1/2 minlg:-translate-x-1/2',
           )}
         >
-          <CaretUp size={32} color="white" weight="fill" className='absolute -top-[18px] left-[43%]'/>
+          <CaretUp size={32} color="white" weight="fill" className='absolute right-3 -top-[18px] minlg:right-auto minlg:left-[43%]'/>
 
           <div className='max-h-[128px] overflow-y-auto pt-2 mt-2'>
             {myOwnedProfileTokens.map((profile) => (
               user.currentProfileUrl === profile.title ?
-                <div
-                  key={profile.title}
-                  className={'flex flex-row w-full px-4 py-2 items-center justify-between bg-[#FFF4CA] text-primary-txt font-medium h-10'}
-                  onClick={() => null}
-                >
-                  <div className='flex'>
+                <Link href={`/${profile.title}`}>
+                  <div
+                    key={profile.title}
+                    className={'flex flex-row w-full px-4 py-2 items-center justify-between bg-[#FFF4CA] text-primary-txt font-medium h-10'}
+                  >
+                    <div className='flex'>
+                      <div className='h-6 w-6 mr-4 rounded-full bg-[#F9D54C] border border-[#E4BA18]  flex justify-center items-center'>
+                        {profile.title.charAt(0).toUpperCase()}
+                      </div>
+                      <p>{profile.title}</p>
+                    </div>
+                    <Check size={18} color="black" weight="bold" />
+                  </div>
+                </Link>
+                :
+                <Link href={`/${profile.title}`}>
+                  <div
+                    key={profile.title}
+                    className={'flex flex-row w-full px-4 py-2 items-center text-primary-txt font-medium h-10'}
+                    onClick={() => setCurrentProfileUrl(profile.title)}
+                  >
                     <div className='h-6 w-6 mr-4 rounded-full bg-[#F9D54C] border border-[#E4BA18]  flex justify-center items-center'>
                       {profile.title.charAt(0).toUpperCase()}
                     </div>
                     <p>{profile.title}</p>
                   </div>
-                  <Check size={18} color="black" weight="bold" />
-                </div>
-                :
-                <div
-                  key={profile.title}
-                  className={'flex flex-row w-full px-4 py-2 items-center text-primary-txt font-medium h-10'}
-                  onClick={() => setCurrentProfileUrl(profile.title)}
-                >
-                  <div className='h-6 w-6 mr-4 rounded-full bg-[#F9D54C] border border-[#E4BA18]  flex justify-center items-center'>
-                    {profile.title.charAt(0).toUpperCase()}
-                  </div>
-                  <p>{profile.title}</p>
-                </div>
+                </Link>
             ))}
           </div>
 

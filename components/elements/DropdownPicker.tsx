@@ -113,7 +113,11 @@ export function DropdownPicker(props: DropdownPickerProps) {
           'justify-between rounded-xl shadow-lg border-0 w-full')}
         key={props?.options[selectedIndex]?.label}
       >
-        {props.showKeyIcon && <KeyIcon className='inline mr-1' stroke="black" />}
+        {props.showKeyIcon &&
+        <div className='w-6'>
+          <KeyIcon className='inline mr-1' stroke="black" />
+        </div>
+        }
         {props?.options[selectedIndex]?.icon &&
           <Image
             className="h-4 mr-2"

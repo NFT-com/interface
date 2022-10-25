@@ -13,7 +13,6 @@ import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/Lea
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useSidebar } from 'hooks/state/useSidebar';
 import { HomePageV2,TickerStat } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -105,9 +104,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
   const { profileData: profileFeed8 } = useProfileQuery(data?.feedCollections['profile8']['url']);
 
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
-
   const isVisible = usePageVisibility();
-  const { toggleSidebar } = useSidebar();
 
   useEffect(() => {
     AOS.init({
@@ -126,9 +123,9 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-hero-trigger',
           pin: '#anim-hero-trigger',
-          start: '5px top',
-          end: '+=5%',
-          //markers: true,
+          start: '10px top',
+          end: '+=15%',
+          invalidateOnRefresh: true,
           toggleActions: 'play none reverse none',
         }
       })
@@ -172,9 +169,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-profile-trigger',
-          start: 'top 80%',
-          end: '+=15%',
-          //markers: true,
+          start: 'top 90%',
+          end: '+=5%',
           toggleActions: 'play none reverse none',
         }
       })
@@ -219,9 +215,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-discover-trigger',
-          start: 'top 70%',
+          start: 'top 90%',
           end: '+=15%',
-          //toggleActions: 'play none none reset',
           toggleActions: 'play none reverse none',
         }
       })
@@ -250,7 +245,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-hiw-trigger',
-          start: 'top 75%',
+          start: 'top 80%',
           end: '+=15%',
           toggleActions: 'play none reverse none',
         }
@@ -272,20 +267,20 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           opacity: 1,
           duration: 1.2,
           ease: 'power2.out',
-        }, '>-0.8')
+        }, '>-0.75')
         .to('.anim-hiw-item:nth-child(3)', {
           y: 0,
           opacity: 1,
           duration: 1.2,
           ease: 'power2.out',
-        }, '>-0.9');
+        }, '>-0.8');
 
       // Leaderboard
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-leaderboard-trigger',
           start: 'top 80%',
-          end: '+=20%',
+          end: '+=50px',
           //pin: '#anim-leaderboard-trigger',
           toggleActions: 'play none reverse none',
         }
@@ -301,12 +296,28 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           ease: 'circ.out',
         }, 0);
 
+      // News
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: '#anim-news-trigger',
+          start: 'top 70%',
+          end: '+=50px',
+          //markers: true,
+          toggleActions: 'play none reverse none',
+        }
+      })
+        .to('#anim-news-content', {
+          x: '50%',
+          duration: 2.75,
+          ease: 'power2.out'
+        }, 0);
+
       // Tickers
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-ticker-trigger',
-          start: 'top 30%',
-          end: '+=50%',
+          start: 'top 90%',
+          end: '+=15%',
           toggleActions: 'play none reverse none',
         }
       })
@@ -317,32 +328,32 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         }, 0)
         .to('#anim-ticker-second', {
           y: 0,
-          duration: 1.75,
+          duration: 1.4,
           ease: 'circ.out',
-        }, 0);
+        }, '>-0.8');
 
       // Build Profile
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-build-profile-trigger',
-          start: 'top 70%',
-          end: '+=20%',
+          start: 'top bottom',
+          end: '+=15%',
           toggleActions: 'play none reverse none',
         }
       })
         .to('#anim-build-profile-trigger', {
           y: 0,
-          duration: 1.2,
+          duration: 1.8,
           ease: 'circ.out',
         }, 0)
         .to('#anim-build-profile-ttl-1', {
           y: 0,
-          duration: 1.2,
+          duration: 2,
           ease: 'circ.out',
         }, 0)
         .to('#anim-build-profile-ttl-2', {
           y: 0,
-          duration: 1.75,
+          duration: 2.3,
           ease: 'circ.out',
         }, 0);
     });
@@ -412,7 +423,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
               {/* Hero */}
               <div id='anim-hero' data-aos="fade-up" data-aos-delay="200" className={tw(
-                'minmd:max-w-[40%] minlg:h-[calc(100vh+5px)] overflow-hidden bg-[#F9D54C] z-[10]',
+                'minmd:max-w-[40%] minlg:h-[calc(100vh+10px)] overflow-hidden bg-[#F9D54C] z-[10]',
                 'relative minlg:absolute minmd:right-0 minmd:top-0',
                 'before:block before:pb-[127%] minmd:before:pb-[60%] minmd:before:hidden'
               )}>
@@ -432,50 +443,54 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   </div>
                 </div>
 
-                <div id='anim-hero-caption' className={tw(
-                  'absolute left-1/2 top-1/2 z-20',
-                  'minlg:scale-[.58] -translate-y-1/2 -translate-x-1/2',
-                  'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
-                  'px-7 minxxl:px-10',
-                  'text-[calc(42px+112*(100vw-375px)/1545)]',
-                  'leading-none tracking-tight rounded-full'
+                <div className={tw(
+                  'absolute inset-0',
+                  'flex justify-center items-center'
                 )}>
-                  <div className='text-transparent flex'>NFT.COM
-                    <div className={tw(
-                      'mx-2 minlg:mx-4 minxxl:mx-8',
-                      'h-[.68em] w-[.1081em] basis-[.1081em]'
-                    )}></div>
-                    PLANTS
-                  </div>
-
-                  <div className={tw(
-                    'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
-                    'text-white flex'
+                  <div id='anim-hero-caption' className={tw(
+                    'minlg:scale-[.58]',
+                    'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
+                    'px-7 minxxl:px-10 relative z-20',
+                    'text-[calc(42px+112*(100vw-375px)/1545)]',
+                    'leading-none tracking-tight rounded-full'
                   )}>
-                    {data_v2?.dynamicUrl['url'].map(word =>
-                      <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
-                        <span className='text-white/40'>NFT.COM</span>
-                        <span className={tw(
-                          '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
-                          'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                          'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
-                        )}>
-                        </span>{word.toUpperCase()}
-                      </a>
-                    )}
-                  </div>
-                </div>
+                    <div className='text-transparent flex'>NFT.COM
+                      <div role='presentation' className={tw(
+                        'mx-2 minlg:mx-4 minxxl:mx-8',
+                        'h-[.68em] w-[.1081em] basis-[.1081em]'
+                      )}></div>
+                    PLANTS
+                    </div>
 
-                <span id='anim-hero-shadow-light' className={tw(
-                  'opacity-1',
-                  'absolute bottom-0 left-0 z-10 bg-img-shadow-light',
-                  'w-full h-[41.25rem] pointer-events-none'
-                )}></span>
-                <span id='anim-hero-shadow-dark' className={tw(
-                  'opacity-0',
-                  'absolute bottom-0 left-0 z-10 bg-img-shadow-dark',
-                  'w-full h-[28.75rem] pointer-events-none'
-                )}></span>
+                    <div className={tw(
+                      'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
+                      'text-white flex'
+                    )}>
+                      {data_v2?.dynamicUrl['url'].map(word =>
+                        <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
+                          <span className='text-white/40'>NFT.COM</span>
+                          <span role='presentation' className={tw(
+                            '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
+                            'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                            'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
+                          )}>
+                          </span>{word.toUpperCase()}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  <span role='presentation' id='anim-hero-shadow-light' className={tw(
+                    'opacity-1',
+                    'absolute bottom-0 left-0 z-10 bg-img-shadow-light',
+                    'w-full h-[41.25rem] pointer-events-none'
+                  )}></span>
+                  <span role='presentation' id='anim-hero-shadow-dark' className={tw(
+                    'opacity-0',
+                    'absolute bottom-0 left-0 z-10 bg-img-shadow-dark',
+                    'w-full h-[28.75rem] pointer-events-none'
+                  )}></span>
+                </div>
               </div>
             </div>
           </div>
@@ -485,8 +500,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             <div id='anim-profile' className={tw(
               'minlg:px-14 minxxl:px-20 mb-[6.5rem] relative z-[10]',
             )}>
-              <span id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span> {/* scale-y-150 */}
-              <span id='anim-profile-shadow-dark' className={tw(
+              <span role='presentation' id='anim-profile-bg' className='bg-black origin-top-left h-[61.4%] absolute left-0 right-0 top-[-1px]'></span> {/* scale-y-150 */}
+              <span role='presentation' id='anim-profile-shadow-dark' className={tw(
                 'opacity-0 translate-y-1/2',
                 'absolute bottom-full left-0 -z-10 bg-img-shadow-dark',
                 'w-full h-[28.75rem] pointer-events-none'
@@ -497,20 +512,20 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
               )}>
                 <h2 data-aos="fade-up" data-aos-delay="200" id='anim-profile-head' className={tw(
                   'minlg:translate-y-[400px]',
-                  'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px]',
-                  'leading-[1.0854] font-normal text-white mb-16 minxxl:mb-20'
+                  'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
+                  'leading-[1.0854] font-normal text-white mb-14 minxxl:mb-20'
                 )}>
                   What you can do <br className='hidden minlg:block' />
                   with an<img className={tw(
                     'drop-shadow-md inline-block w-[4.525rem] minxxl:w-[5.5rem]',
-                    'mx-[1.8rem] -mb-[1.3rem]',
+                    'mx-[0.4em] -my-[0.7rem]',
                     'rotate-[40deg] rounded-xl'
                   )} src={data_v2?.wycdTitleNfTs?.url} alt="" />
                   <span className='bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Profile</span></h2>
 
                 <div id='anim-profile-content' className={tw(
                   'minlg:translate-y-[400px]',
-                  'minlg:grid grid-cols-2 gap-2 minlg:gap-4 -mb-12 minlg:-mb-[6.5rem]'
+                  'minlg:grid grid-cols-2 gap-2 minlg:gap-4 minxxl:gap-6 -mb-12 minlg:-mb-[6.5rem]'
                 )}>
                   <div id='anim-profile-first-item' data-aos="fade-up" data-aos-delay="100" className={tw(
                     'minlg:translate-y-1/4',
@@ -518,7 +533,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                     'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
                   )}>
-                    <svg className={tw(
+                    <svg role='presentation' className={tw(
                       'absolute -z-10 -top-[14.5rem] -right-10 w-[9rem]',
                       'minlg:-top-[17.5rem] minlg:-right-28 minlg:w-[18rem]'
                     )} width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -529,7 +544,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     </svg>
 
                     <h3 data-aos="fade-up" data-aos-delay="100" className={tw(
-                      'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
+                      'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44 minxxl:pr-48',
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem]',
                       'leading-[1.125] minxl:leading-[1.125]'
                     )}>{data_v2?.wycdBlock1Title}</h3>
@@ -541,7 +556,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'text-3xl minlg:text-[3.9rem] minxxl:text-[5rem] leading-none tracking-tight'
                     )}>
                       <div className='text-transparent flex'>NFT.COM
-                        <div className={tw(
+                        <div role='presentation' className={tw(
                           'mx-1 minlg:mx-2 minxxl:mx-4',
                           'h-[.68em] w-[.1081em] basis-[.1081em]'
                         )}></div>
@@ -569,7 +584,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                         'text-base font-medium minlg:text-xl minxxl:text-3xl',
                         'link-underline flex items-center'
                       )}>{data_v2?.wycdBlock1Cta?.title}
-                        <svg className='w-[.7em] ml-2' viewBox="0 0 13.932 14.472" xmlns="http://www.w3.org/2000/svg">
+                        <svg role='presentation' className='w-[.7em] ml-2' viewBox="0 0 13.932 14.472" xmlns="http://www.w3.org/2000/svg">
                           <path d="M 13.932,7.236 6.723,14.472 5.346,13.095 10.287,8.262 H 0 V 6.21 H 10.287 L 5.346,1.377 6.723,0 Z" fill="currentColor" />
                         </svg>
                       </a>
@@ -582,7 +597,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                     'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
                   )}>
-                    <svg className={tw(
+                    <svg role='presentation' className={tw(
                       'absolute -z-10 -top-[14.5rem] -right-10 w-[9rem]',
                       'minlg:-top-[229px] minlg:-right-20 minlg:w-[18rem]'
                     )} width="287" height="386" viewBox="0 0 287 386" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -593,7 +608,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     </svg>
 
                     <h3 data-aos="fade-up" data-aos-delay="100" className={tw(
-                      'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44',
+                      'text-black font-medium mb-6 minxxl:mb-9 minlg:pr-44 minxxl:pr-48',
                       'text-3xl minxl:text-6xl minxxl:text-[5.5rem] leading-[1.125] minxl:leading-[1.125]'
                     )}>{data_v2?.wycdBlock2Title}</h3>
                     <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock2Description}</p>
@@ -632,9 +647,9 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           {/* Block: Discover */}
           <div id='anim-discover-trigger' className="px-5 pt-8 minlg:mt-[-200px] minlg:pt-16 minxxl:pt-24 minmd:px-14 minxxl:px-20">
             <div className='grid minmd:grid-cols-2 items-center mb-16 minmd:mb-[5.5rem]'>
-              <div className='minmd:ml-7 minxl:pr-[25%]'>
+              <div className='minmd:ml-7 minxl:pr-[24%]'>
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                  'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal',
+                  'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal',
                   'mb-6 minxxl:mb-9'
                 )}>
                   <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
@@ -644,8 +659,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     )}>
                     Discover <br />
                     <img className={tw(
-                      'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                      'mx-[1.8rem] -my-[.5rem]',
+                      'inline-block w-[3.125rem] minxxl:w-[5.5rem]',
+                      'mx-[1.8rem] -mt-[.75rem] -mb-[.4rem]',
                       'rotate-[40deg] rounded-xl'
                     )} src={data_v2?.discoverTitleNfTs.url} alt="" />a
                   </span>
@@ -653,7 +668,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 </h2>
                 <p id='anim-discover-txt' data-aos="fade-up" data-aos-delay="300" className={tw(
                   'minlg:translate-y-40',
-                  'text-base minlg:text-xl minxxl:text-3xl'
+                  'text-[1rem] minlg:text-[1.375rem] minxxl:text-[2rem] leading-[1.455]'
                 )}>{data_v2?.discoverDescription}</p>
               </div>
 
@@ -675,7 +690,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
               'flow-root relative z-0 bg-primary-yellow rounded-3xl',
               'mt-5 mb-[7.5rem] px-3 minlg:p-6 pt-[3.15rem]'
             )}>
-              <svg className='absolute -z-10 top-0 right-0 translate-x-[2rem] -translate-y-[40%] max-w-full' aria-hidden="true" width="507" height="234" viewBox="0 0 506.52539 233.98633" xmlns="http://www.w3.org/2000/svg">
+              <svg role='presentation' className='absolute -z-10 top-0 right-0 translate-x-[2rem] -translate-y-[40%] max-w-full' aria-hidden="true" width="507" height="234" viewBox="0 0 506.52539 233.98633" xmlns="http://www.w3.org/2000/svg">
                 <path className='anim-corner anim-corner-4' fill='white' d="M 154.64664,1.03125 H 66.916171 L 0.11929558,174.58985 c -0.44460856,1.15499 0.4086356,2.39648 1.64648442,2.39648 h 83.115235 c 0.726899,0 1.378678,-0.44605 1.642578,-1.12305 z" />
                 <path className='anim-corner anim-corner-5' fill='white' d="m 240.83804,0 h -87.46093 l -45.25586,117.58985 c -0.445,1.15499 0.40753,2.39648 1.64453,2.39648 h 83.11523 c 0.727,0 1.37858,-0.44605 1.64258,-1.12305 z" />
                 <path className='anim-corner anim-corner-4' fill='white' d="m 326.97672,0.38867 -87.91797,0.0957 -78.9375,205.10547 c -0.445,1.15499 0.40753,2.39648 1.64453,2.39648 h 83.11523 c 0.727,0 1.37858,-0.44605 1.64258,-1.12305 z" />
@@ -685,7 +700,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
               </svg>
 
               <div className='relative px-4 minlg:px-0'>
-                <h2 data-aos="fade-up" data-aos-delay="100" className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal mb-[1rem]'>{data_v2?.hiwTitle}</h2>
+                <h2 data-aos="fade-up" data-aos-delay="100" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-[1rem]'>{data_v2?.hiwTitle}</h2>
                 <p data-aos="fade-up" data-aos-delay="200" className='text-base minlg:text-[1.625rem] minxxl:text-4xl mb-8'>{data_v2?.hiwSubtitle}</p>
               </div>
 
@@ -726,19 +741,19 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             'minhd:mb-28 overflow-hidden relative'
           )}>
             <div id="anim-leaderboard-decor" className='absolute -z-10 top-0 left-0 right-0 translate-y-1/2'>
-              <svg className={tw(
+              <svg role='presentation' className={tw(
                 'relative left-1/2 -translate-x-1/2 -translate-y-[2.2rem]',
                 'ml-[-12%] w-[160%]'
               )} viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
             </div>
 
             <div id='anim-leaderboard-content' className={tw(
-              'translate-y-[200px]',
+              'minlg:translate-y-1/4',
               'bg-white shadow-2xl rounded-3xl mb-[5rem] minlg:mb-[6.75rem] px-4 minmd:px-10 pt-12 ...'
             )}>
               <div className="minmd:flex justify-between items-center mb-4 minmd:mb-0">
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                  'text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px]',
+                  'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
                   'minxl:leading-[.842] font-normal max-w-2xl justify-center minmd:mb-16 ...'
                 )}>
                   {data?.leaderboardTitle}
@@ -746,20 +761,20 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 <span data-aos="fade-up" data-aos-delay="150" className='text-[1.25rem] minmd:text-[1.625rem] minxxl:text-[2.25rem] minmd:ml-4 text-[#B2B2B2]'><span className='text-[#FBC214]'>Top 10</span> collectors</span>
               </div>
 
-              <div data-aos="fade-up" data-aos-delay="300">
-                <DynamicLeaderBoard data={leaderboardData} />
+              <div data-aos="fade-up" data-aos-delay="300" className='min-h-[52.625rem]'>
+                <StaticLeaderboard data={leaderboardData} />
               </div>
             </div>
           </div>
 
           {/* Block: News */}
-          <div className="px-3 minmd:px-14 minxxl:px-20">
+          <div id='anim-news-trigger' className="px-3 minmd:px-14 minxxl:px-20">
             <div className='minmd:px-0 overflow-hidden'>
               <div className={tw(
                 'relative z-0 px-9 py-[2.5rem] minlg:py-[3.2rem] mb-20 minlg:mb-32',
                 'bg-black rounded-3xl'
               )}>
-                <svg className={tw(
+                <svg role='presentation' className={tw(
                   'absolute -z-10 top-0 right-0 max-w-[250px] minlg:max-w-none',
                   'translate-x-[20px] -translate-y-[67px]'
                 )} aria-hidden="true" width='402' height='225' viewBox="0 0 402 225" xmlns="http://www.w3.org/2000/svg">
@@ -769,38 +784,43 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 </svg>
 
                 <div className='relative'>
-                  <h2 data-aos="fade-up" className='text-5xl minmd:text-6xl minxl:text-[82px] minxxl:text-[120px] leading-[1.0854] font-normal mb-5 text-white'>{data_v2.newsTitle}</h2>
+                  <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-5 text-white'>{data_v2.newsTitle}</h2>
                   <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2.newsSubtitle}</p>
                 </div>
 
                 <div className='-mx-9 overflow-hidden mb-12'>
-                  <Ticker speed={7} offset='-100%' move={isVisible}>
-                    {() => (
-                      <div className='flex flex-row'>
-                        {data_v2?.newsSlidesCollection?.items.map((preview) =>
-                          <a key={preview.slug} href={`articles/${preview.slug}`} className={tw(
-                            'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
-                            'mx-[10px] minlg:mx-4 minxxl:mx-5 cursor-pointer',
-                            'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
-                          )}>
-                            <div className='before:pb-[54.129%] before:block relative'>
-                              <img className='absolute top-0 w-full rounded-t-lg' src={preview.heroImage?.url} alt="" />
-                            </div>
-
-                            <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
-                              <h3 className={tw(
-                                'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
-                                'mb-11 minxxl:mb-16'
-                              )}>{preview.title}</h3>
-                              <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[rgba(96,90,69,.6)]'>
-                                <img className='rounded-full mr-[6px] minlg:mr-3 h-5 minlg:h-9 minxxl:h-12 block' src={preview.author?.image?.url} alt="" />
-                                {preview.author?.name}
+                  <div id='anim-news-content' className='translate-x-[150%]'>
+                    <Ticker speed={7} move={isVisible}>
+                      {() => (
+                        <div className='flex'>
+                          {data_v2?.newsSlidesCollection?.items.map((preview) =>
+                            <a key={preview.slug} href={`articles/${preview.slug}`} className={tw(
+                              'bg-white flex flex-col flex-shrink-0 rounded-lg md:mb-5 text-black',
+                              'mx-[10px] minlg:mx-4 minxxl:mx-5 cursor-pointer',
+                              'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
+                            )}>
+                              <div className='before:pb-[54.129%] before:block relative overflow-hidden'>
+                                <img className='absolute top-0 w-full rounded-t-lg' src={preview.heroImage?.url} alt="" />
                               </div>
-                            </div>
-                          </a>)}
-                      </div>
-                    )}
-                  </Ticker>
+
+                              <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
+                                <h3 className={tw(
+                                  'text-[1.125rem] minlg:text-[2rem] minxxl:text-[2.75rem] leading-[1.09375] ',
+                                  'mb-11 minxxl:mb-16'
+                                )}>{preview.title}</h3>
+                                <div className='flex items-center mt-auto text-xs minlg:text-xl minxxl:text-3xl font-medium text-[#605A45]/60'>
+                                  <img className={tw(
+                                    'rounded-full mr-[6px] minlg:mr-3 block object-cover',
+                                    'h-5 minlg:h-9 minxxl:h-12 w-5 minlg:w-9 minxxl:w-12'
+                                  )} src={preview.author?.image?.url} alt="" />
+                                  {preview.author?.name}
+                                </div>
+                              </div>
+                            </a>)}
+                        </div>
+                      )}
+                    </Ticker>
+                  </div>
                 </div>
 
                 <div data-aos="zoom-in" data-aos-delay="100" className='text-center'>
@@ -815,19 +835,19 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           </div>
 
           {/* Block: Ticker */}
-          <div id='anim-ticker-trigger' className='overflow-x-hidden mb-[4.625rem] minlg:pb-[40rem] minlg:mb-[-33rem]'>
+          <div id='anim-ticker-trigger' className='overflow-x-hidden mb-[4.625rem] minlg:pb-[40rem] minlg:mb-[-34.3rem]'>
             <div id='anim-ticker-first' className={tw(
               'text-4xl minlg:text-7xl minxxl:text-9xl mb-2 -ml-7',
               'minlg:translate-y-96'
             )}>
               <Ticker speed={7} offset='100%' direction='toRight' move={isVisible}>
                 {() => (
-                  <div className='flex flex-row minlg:mr-44'>
+                  <div className='flex flex-row'>
                     {data_v2?.tags?.tags1.map(tag =>
                       <div key={tag} className={tw(
-                        'pl-3 minlg:pl-12 minxxl:pl-14 flex items-baseline group'
+                        'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group'
                       )}
-                      ><div className={tw(
+                      ><div role='presentation' className={tw(
                           'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
                           'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
                           'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
@@ -850,12 +870,12 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             )}>
               <Ticker speed={7} offset='-100%' move={isVisible}>
                 {() => (
-                  <div className='flex flex-row minlg:mr-44 minlg:mr-44'>
+                  <div className='flex flex-row'>
                     {data_v2?.tags?.tags2.map(tag =>
                       <div key={tag} className={tw(
-                        'pl-3 minlg:pl-12 minxxl:pl-14 flex items-baseline group'
+                        'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group'
                       )}
-                      ><div className={tw(
+                      ><div role='presentation' className={tw(
                           'mr-1 minlg:mr-2 minxxl:mr-3 skew-x-[-20deg]',
                           'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
                           'h-[.556em] w-[.0833em] basis-[.0833em] bg-[#B2B2B2] rounded-[3px]'
@@ -883,20 +903,26 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 'relative z-0',
                 'pt-[5.625rem] minlg:pt-28 minxxl:pt-32 pb-16 minxxl:pb-20 mb-[4.75rem] minlg:mb-24'
               )}>
-                <svg className={tw(
-                  'absolute -z-10 -top-1 right-4',
-                )} width="594" height="340" viewBox="0 0 594.44128 339.91602" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg role='presentation' className={tw(
+                  'absolute -z-10',
+                  '-top-10rem -right-6 w-[18.5625rem] h-[10.625rem]',
+                  'minlg:-top-1 minlg:-right-16 minlg:w-[37.125rem] minlg:h-[21.25rem]',
+                  'minxxl:-top-4 minxxl:w-[52rem] minxxl:h-[29.75rem]'
+                )} viewBox="0 0 594 340" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path className='anim-corner anim-corner-profile-1' fill='white' d="M 155.03896,0.46679 34.318265,0.23242 0.11904389,89.21679 c -0.444,1.156 0.408985,2.39844 1.64648401,2.39844 H 118.36513 c 0.728,0 1.38053,-0.448 1.64453,-1.125 z" />
                   <path className='anim-corner anim-corner-profile-2' fill='white' d="M 235.35927,0.2832 C 199.44407,0.2047 174.93655,0.16139 114.51552,0.00195 L 68.966705,118.51757 c -0.444,1.156 0.40753,2.39649 1.64453,2.39649 H 187.21279 c 0.728,0 1.38053,-0.448 1.64453,-1.125 z" />
                   <path className='anim-corner anim-corner-profile-3' fill='white' d="M 351.91591,0 H 230.5292 l -80.41016,209.21679 c -0.444,1.155 0.40848,2.39844 1.64648,2.39844 h 116.60157 c 0.72699,0 1.37857,-0.447 1.64257,-1.125 z" />
                   <path className='anim-corner anim-corner-profile-4' fill='white' d="M 594.4413,0.625 472.60537,0.21093 342.9667,337.51562 c -0.444,1.16 0.40753,2.4004 1.64453,2.4004 h 116.60156 c 0.728,0 1.38053,-0.4509 1.64453,-1.1309 z" />
                 </svg>
 
-                <div className='minlg:flex justify-between items-end pr-9'>
+                <div className={tw(
+                  'minlg:flex justify-between items-end pr-[3%]',
+                  'text-[calc(54px+112*(100vw-375px)/1545)]'
+                )}>
                   <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                    'text-[3.25rem] minlg:text-[7.625rem] minxxl:text-[10rem]',
+                    'text-[1em]',
                     'text-black font-normal leading-[1.1] relative',
-                    'mb-14 minlg:mb-0 minlg:pl-8 tracking-[-3px]'
+                    'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
                   )}>
                     <span id='anim-build-profile-ttl-1' className='minlg:translate-y-[18rem]'>
                     Build<img className={tw(
@@ -918,16 +944,16 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     </span>
                   </h2>
 
-                  <div className="text-center minlg:text-right pb-8">
-                    <svg className={tw(
-                      'hidden minlg:block mb-4 minxxl:w-[30rem] minxxl:h-28',
-                      '-translate-x-[24%]'
-                    )} width="397" height="93" viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <div className="text-center minlg:text-right pb-8 leading-[0]">
+                    <svg role='presentation' className={tw(
+                      'hidden minlg:block mb-[.1em] w-[3.246em] minxxl:h-[.754em]',
+                      '-translate-x-[16%] minxxl:-translate-x-[20%]'
+                    )} viewBox="0 0 397 93" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fillRule="evenodd" clipRule="evenodd" d="M1.04904e-05 0.61084L341.924 0.610877C352.896 0.610883 361.792 9.47563 361.792 20.4109V59.0953L384.119 36.7397L396.636 49.1557L352.961 92.8851L309.287 49.1557L321.804 36.7397L344.131 59.0953V20.4109C344.131 19.1958 343.143 18.2109 341.924 18.2109L0 18.2108L1.04904e-05 0.61084Z" fill="black" />
                     </svg>
 
                     <div data-aos="fade-down" data-aos-delay="200">
-                      <svg className='minlg:hidden block mb-[1.875rem] mx-auto' width="33" height="96" viewBox="0 0 33 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg role='presentation' className='minlg:hidden block mb-[1.875rem] mx-auto' width="33" height="96" viewBox="0 0 33 96" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fillRule="evenodd" clipRule="evenodd" d="M19.8361 0C19.8361 0 19.8361 62.9869 19.8361 67.315V82.6261L28.2712 73.7779L33 78.6921L16.5 96L0 78.6921L4.72878 73.7779L13.164 82.6261V67.315V0H19.8361Z" fill="black" />
                       </svg>
                     </div>
@@ -1179,7 +1205,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
 Index.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout>
+    <DefaultLayout hideSearch>
       {page}
     </DefaultLayout>
   );

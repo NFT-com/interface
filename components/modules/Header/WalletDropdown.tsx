@@ -1,4 +1,5 @@
 import NotificationsModal from 'components/modules/Notifications/NotificationsModal';
+import { useChangeWallet } from 'hooks/state/useChangeWallet';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
@@ -22,6 +23,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   const { disconnect } = useDisconnect();
   const { setCurrentProfileUrl } = useUser();
   const { setSignOutDialogOpen } = useSignOutDialog();
+  const { setChangeWallet } = useChangeWallet();
   const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
   const router = useRouter();
 
@@ -30,7 +32,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
   useOutsideClickAlerter(wrapperRef, () => {
-    !isMobile && setExpanded(false);
+    setExpanded(false);
   });
 
   return (
@@ -60,17 +62,16 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
         {props.children}
       </div>
 
-      {expanded && !isMobile &&
+      {expanded &&
         <div
           style={{
-            marginTop: anchorRef.current.clientHeight + 8,
-            left: '-100%'
+            marginTop: anchorRef.current.clientHeight + 8
           }}
           className={tw(
             'rounded-xl',
             'bg-white dark:bg-secondary-dk',
             'absolute z-50 px-4 pb-6',
-            'min-w-[14rem] drop-shadow-md',
+            'min-w-[14rem] drop-shadow-md left-[-150%] minlg:left-[-100%]',
           )}
         >
           <CaretUp size={32} color="white" weight="fill" className='absolute -top-[18px] left-[43%]'/>
@@ -123,6 +124,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
               setSignOutDialogOpen(true);
               setCurrentProfileUrl('');
               setExpanded(false);
+              setChangeWallet(true);
             }}
           >
             Change Wallet
