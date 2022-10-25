@@ -13,6 +13,7 @@ import DiscordLogo from 'public/discord.svg';
 import Logo from 'public/LogoFooterWhite.svg';
 import TwitterLogo from 'public/twitter.svg';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -286,7 +287,8 @@ export const Footer = () => {
                         'Content-Type': 'application/json',
                       },
                     });
-                    alert('success!');
+                    toast.success('Success! Please check your email to verify ownership.');
+                    setEmail('');
                   } catch (err) {
                     console.log('error while subscribing: ', err);
                   }
