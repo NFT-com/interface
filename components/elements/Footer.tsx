@@ -1,17 +1,18 @@
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
 import DiscordLogo from 'public/discord.svg';
 import Logo from 'public/LogoFooterWhite.svg';
 import TwitterLogo from 'public/twitter.svg';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,6 +21,7 @@ export const Footer = () => {
   const { address: currentAddress } = useAccount();
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
+  const [email, setEmail] = useState<string>('');
 
   useEffect(() => {
     AOS.init({
@@ -271,12 +273,24 @@ export const Footer = () => {
               <h4 className='minlg:text-[.9375rem] minxxl:text-[1.5rem] mb-4 text-[#8B8B8B]'>Subscribe to our notifications</h4>
 
               <div className='flex border-b border-b-[#2A2A2A] pb-4'>
-                <input type="email" placeholder='Enter your email' className={tw(
+                <input type="email" placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} className={tw(
                   'minxxl:text-xl',
                   'bg-transparent border-none px-0 w-full',
                   'shadow-none focus:border-transparent focus:ring-0'
                 )} />
-                <button type="submit" className={tw(
+                <button type="submit" onClick={async () => {
+                  try {
+                    await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/subscribe/${email?.toLowerCase()}`, {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    });
+                    alert('success!');
+                  } catch (err) {
+                    console.log('error while subscribing: ', err);
+                  }
+                }} className={tw(
                   'text-sm minxxl:text-lg',
                   'rounded-full border-2 border-white',
                   'px-4 h-9 minxxl:px-6 minxxl:h-11 ml-6',
