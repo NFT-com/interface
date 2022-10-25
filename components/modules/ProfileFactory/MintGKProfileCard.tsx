@@ -34,7 +34,7 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const { claimable } = useClaimableProfileCount(currentAddress);
-  const { data: mintedProfiles, loading: loadingMintedProfiles, mutate: mutateMintedProfiles } = useProfilesMintedByGKQuery(selectedGK?.tokenId.toString(), defaultChainId);
+  const { data: mintedProfiles, loading: loadingMintedProfiles } = useProfilesMintedByGKQuery(selectedGK?.tokenId.toString(), defaultChainId);
   const { profileClaimHash } = useGetProfileClaimHash(currentValue && currentValue[0]);
   const { profileTokenId } = useProfileTokenQuery(currentValue && currentValue[0]);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
@@ -161,9 +161,11 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
             </div>
           </div>
         }
+        
+        <div className='mt-9'>
 
-        {!currentAddress &&
-          <div className='flex justify-center mt-5'>
+          {!currentAddress &&
+          <div className='flex justify-center'>
             <button
               onClick={openConnectModal}
               type="button"
@@ -177,8 +179,8 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
               Connect Wallet
             </button>
           </div>
-        }
-        <div className='mt-9'>
+          }
+
           {currentAddress && mintedProfiles && !loadingMintedProfiles && mintedProfiles?.profilesMintedByGK.map((profile) =>
             <div className='h-14 flex justify-between items-center bg-[#FCE795] rounded-xl px-4 py-2 mb-4' key={profile.url}>
               <div className='flex flex-row items-center gap-[14px]'>
@@ -197,7 +199,7 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
             </div>
           )}
 
-          {loadingMintedProfiles &&
+          {loadingMintedProfiles && currentAddress &&
             <>
               <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
               <div className='h-14 flex justify-between items-center bg-gray-300 animate-pulse rounded-xl px-4 py-2 mb-4'></div>
@@ -206,7 +208,7 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
             </>
           }
           {
-            inputs.map((input, i) => {
+            currentAddress && inputs.map((input, i) => {
               if (input.isVisible && selectedGK && selectedGK?.claimable > 0){
                 return <MintProfileInputField
                   key={i}
