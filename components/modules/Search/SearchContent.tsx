@@ -212,7 +212,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
                   ref={resultsRef}
                   className={tw(
                     'absolute left-0 minmd:left-6 mt-16 w-full max-w-[27rem] shadow-lg',
-                    'bg-always-white flex flex-col w-full text-rubik')}>
+                    'bg-always-white flex flex-col w-full text-rubik z-[111]')}>
                   {searchResults.length > 0 && <>
                     {searchResults[0].found === 0 && searchResults[1].found === 0 ?
                       (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4">

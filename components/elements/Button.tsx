@@ -107,7 +107,7 @@ export function Button(props: ButtonProps) {
     <div
       className={tw(
         'buttonContainer',
-        'flex items-center font-grotesk font-bold',
+        'flex items-center font-noi-grotesk font-medium',
         'justify-center rounded-xl',
         'no-underline select-none',
         !props?.loading && !props?.disabled && 'cursor-pointer',
