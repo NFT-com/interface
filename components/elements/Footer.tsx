@@ -1,3 +1,4 @@
+import Toast from 'components/elements/Toast';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
@@ -9,10 +10,12 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import DiscordLogo from 'public/discord.svg';
 import Logo from 'public/LogoFooterWhite.svg';
 import TwitterLogo from 'public/twitter.svg';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAccount } from 'wagmi';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -22,6 +25,7 @@ export const Footer = () => {
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
   const [email, setEmail] = useState<string>('');
+  const router = useRouter();
 
   useEffect(() => {
     AOS.init({
@@ -40,7 +44,7 @@ export const Footer = () => {
           trigger: '#FooterContainer',
           start: '70% bottom',
           end: '+=50px',
-          toggleActions: 'play none reverse none',
+          toggleActions: router.pathname === '/' ? 'play none reverse none' : 'none none none none',
         }
       })
         .to('#footer-content', {
@@ -144,11 +148,13 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className='overflow-hidden -mt-[28.8rem]'>
+      <footer id="FooterContainer" className={`overflow-hidden ${router.pathname === '/' ? '-mt-[28.8rem]' : ''}`}>
+        <Toast />
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
-          'minlg:translate-y-1/2 transform-gpu'
+          'transform-gpu',
+          router.pathname === '/' && 'minlg:translate-y-1/2'
         )}>
           <div className={tw(
             'minlg:flex minlg:flex-row relative justify-between',
@@ -273,21 +279,28 @@ export const Footer = () => {
               <h4 className='minlg:text-[.9375rem] minxxl:text-[1.5rem] mb-4 text-[#8B8B8B]'>Subscribe to our notifications</h4>
 
               <div className='flex border-b border-b-[#2A2A2A] pb-4'>
-                <input type="email" placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} className={tw(
+                <input type="email" placeholder='Enter your email' value={email} onChange={(e) => setEmail(e.target.value)} className={tw(
                   'minxxl:text-xl',
                   'bg-transparent border-none px-0 w-full',
                   'shadow-none focus:border-transparent focus:ring-0'
                 )} />
                 <button type="submit" onClick={async () => {
                   try {
-                    await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/subscribe/${email?.toLowerCase()}`, {
+                    const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/subscribe/${email?.toLowerCase()}`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
                       },
                     });
-                    alert('success!');
+
+                    if (result.status == 200) {
+                      toast.success('Success! Please check your email to verify ownership.');
+                      setEmail('');
+                    } else {
+                      toast.error(`Error while submitting email: ${(await result.json()).message}`);
+                    }
                   } catch (err) {
+                    toast.error(`Error while submitting email: ${err.response}`);
                     console.log('error while subscribing: ', err);
                   }
                 }} className={tw(
