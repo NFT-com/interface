@@ -10,6 +10,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import DiscordLogo from 'public/discord.svg';
 import Logo from 'public/LogoFooterWhite.svg';
 import TwitterLogo from 'public/twitter.svg';
@@ -24,6 +25,7 @@ export const Footer = () => {
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { profileTokens } = useMyNftProfileTokens();
   const [email, setEmail] = useState<string>('');
+  const router = useRouter();
 
   useEffect(() => {
     AOS.init({
@@ -42,7 +44,7 @@ export const Footer = () => {
           trigger: '#FooterContainer',
           start: '70% bottom',
           end: '+=50px',
-          toggleActions: 'play none reverse none',
+          toggleActions: router.pathname === '/' ? 'play none reverse none' : 'none none none none',
         }
       })
         .to('#footer-content', {
@@ -146,12 +148,13 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className='overflow-hidden -mt-[28.8rem]'>
+      <footer id="FooterContainer" className={`overflow-hidden ${router.pathname === '/' ? '-mt-[28.8rem]' : ''}`}>
         <Toast />
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
-          'minlg:translate-y-1/2 transform-gpu'
+          'transform-gpu',
+          router.pathname === '/' && 'minlg:translate-y-1/2'
         )}>
           <div className={tw(
             'minlg:flex minlg:flex-row relative justify-between',
