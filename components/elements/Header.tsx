@@ -191,18 +191,6 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   <SearchBar />
                 </div>
 
-                {currentScrollPosition !== 0 ?
-                  <ScrollLink to='mobile-search' spy={true} smooth={true} duration={500} offset={-100} >
-                    <button
-                      className='block minlg:hidden cursor-pointer -mr-1 minlg:mr-0 h-full w-7'
-                    >
-                      <SearchIcon color='#0F0F0F' />
-                    </button>
-                  </ScrollLink>
-                  :
-                  null
-                }
-
                 {currentAddress &&
               <div className='block minlg:hidden'>
                 <WalletDropdown count={count} constrain>

@@ -176,10 +176,13 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     if(mobileSearch){
       return (
         <>
-          <div id='mobile-search' className="flex flex-col font-noi-grotesk px-6 relative">
+          <div id='mobile-search' className={tw(
+            'flex flex-col font-noi-grotesk  relative',
+            router.pathname !== '/' && 'px-6'
+          )}>
             <div ref={wrapperRef} onClick={() => setInputFocus(true)} className={tw(
               'flex space-x-2 p-5 py-3 minlg:space-x-0 minlg:p-0 rounded-full bg-[#F8F8F8]',
-              inputFocus && 'border-2 border-[#F9D54C]',
+              inputFocus && router.pathname !== '/' && 'border-2 border-[#F9D54C]',
               'h-[52px]'
             )}>
               <div className={tw(
