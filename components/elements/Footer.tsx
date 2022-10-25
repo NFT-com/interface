@@ -140,7 +140,7 @@ export const Footer = () => {
     },
   ];
 
-  if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
       <footer id="FooterContainer" className='overflow-hidden -mt-[28.8rem]'>
         <div id='footer-content' className={tw(
