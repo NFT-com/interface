@@ -183,6 +183,7 @@ export function NFTCard(props: NFTCardProps) {
                 onClick={(e: MouseEvent<HTMLDivElement>) => {
                   props.onVisibleToggle(!props.visible);
                   e.stopPropagation();
+                  e.preventDefault();
                 }}
               >
                 {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }

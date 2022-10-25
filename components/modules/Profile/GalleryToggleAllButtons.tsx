@@ -13,11 +13,12 @@ export interface GalleryToggleAllButtonsProps {
 }
 
 export function GalleryToggleAllButtons(props: GalleryToggleAllButtonsProps) {
-  const { publiclyVisibleNfts } = useContext(ProfileContext);
+  const { hideAllNFTsValue, showAllNFTsValue, publiclyVisibleNftCount, allOwnerNftCount } = useContext(ProfileContext);
   return <div className='flex text-black dark:text-white'>
     <div
       className={tw(
         'flex mr-4 items-center cursor-pointer',
+        (publiclyVisibleNftCount == allOwnerNftCount && !hideAllNFTsValue) || showAllNFTsValue ? 'text-link' : ''
       )}
       onClick={props.onShowAll}
     >
@@ -27,7 +28,7 @@ export function GalleryToggleAllButtons(props: GalleryToggleAllButtonsProps) {
     <div
       className={tw(
         'flex items-center cursor-pointer',
-        (props.publicNFTCount === 0 && publiclyVisibleNfts?.length === 0) ? 'text-link' : ''
+        hideAllNFTsValue ? 'text-link' : ''
       )}
       onClick={props.onHideAll}
     >
