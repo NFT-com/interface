@@ -110,7 +110,7 @@ export const MobileSidebar = () => {
             className={tw('overflow-hidden')}
           >
             <div className="flex flex-col">
-              <p onClick={() => window.open ('https://docs.nft.com/', '_ blank')} className='font-medium text-lg pb-3 w-full flex justify-between items-center hover:cursor-pointer'>Documents<CaretRight width={25} weight='bold' color='black' /></p>
+              <p onClick={() => window.open ('https://docs.nft.com/', '_ blank')} className='font-medium text-lg pb-3 w-full flex justify-between items-center hover:cursor-pointer'>Docs<CaretRight width={25} weight='bold' color='black' /></p>
               <Link href='/articles'>
                 <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
                   Blog
