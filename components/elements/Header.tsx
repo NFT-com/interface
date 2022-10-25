@@ -66,55 +66,22 @@ export const Header = ({ removeBg }: HeaderProps) => {
       },
       duration : 700
     });
-
-    const matchMedia = gsap.matchMedia();
-
-    matchMedia.add('(min-width: 900px)', () => {
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '#header',
-          start: '5px top',
-          end: '+=10%',
-          toggleActions: 'play none reverse none',
-        }
-      })
-        .to('#header-right', {
-          opacity: 1,
-          scale: 1,
-          duration: 1,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header-left', {
-          maxWidth: '25%',
-          duration: 1.25,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header-shadow', {
-          opacity: 1,
-          scaleY: 1,
-          scaleX: 1,
-          duration: 1,
-          ease: 'power2.out'
-        }, 0)
-        .to('#header', {
-          scaleX: 1,
-          duration: 1.5,
-          ease: 'power2.out'
-        }, 0);
-    });
   });
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     if (router.pathname === '/') {
       return (
         <header id='header' className={tw(
-          'minlg:scale-[1.05] transform-gpu font-noi-grotesk',
+          'font-noi-grotesk',
           'fixed inset-x-5 minlg:inset-x-8 minxl:inset-x-14 top-6 minlg:top-7',
           'h-[5rem] minlg:h-[5.5rem] z-[11]',
         )}>
           <div className="w-full h-full mx-auto pr-5 pl-[1.5rem] min:px-11">
             <div className="flex items-center justify-between h-full">
-              <div id='header-left' data-aos="fade-right" data-aos-delay="100" className="flex items-center h-full minlg:max-w-[60%] w-full">
+              <div id='header-left' data-aos="fade-right" data-aos-delay="100" className={tw(
+                'flex items-center h-full w-full',
+                'minlg:max-w-[50%]'
+              )}>
                 <div className="flex items-center">
                   <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-9 minxxl:mr-11">
                     <Link href='/' passHref>
@@ -141,11 +108,10 @@ export const Header = ({ removeBg }: HeaderProps) => {
 
                 <nav
                   className={tw(
-                    'hidden minlg:block',
+                    'hidden minlg:flex items-center',
                     'h-max flex-shrink-0',
                     'text-[#6F6F6F] font-medium tracking-wide',
-                    'flex items-center',
-                    'pr-4 py-[2px] mr-8 ml-auto'
+                    'pr-4 py-[2px] mr-8'
                   )}
                 >
                   <Link href='/app/discover'>
@@ -154,14 +120,34 @@ export const Header = ({ removeBg }: HeaderProps) => {
                   <Link href='/app/gallery'>
                     <a className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Gallery</a>
                   </Link>
-                  <a
-                    href=""
-                    className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl minlg:mr-8 hover:text-[#6A6A6A]'>Learn</a>
+
+                  <DropdownPickerModal
+                    pointer
+                    centered
+                    constrain
+                    selectedIndex={0}
+                    options={filterNulls([
+                      {
+                        label: 'Documents',
+                        onSelect: () => window.open ('https://docs.nft.com/', '_ blank'),
+                        icon: null,
+                      },
+                      {
+                        label: 'Blog',
+                        onSelect: () => router.push('/articles'),
+                        icon: null,
+                      }
+                    ])
+                    }>
+                    <a className='text-black text-[2.5rem] minlg:text-lg minxxl:text-2xl hover:text-[#6A6A6A] flex items-center relative'>
+                    Learn
+                      <CaretDown size={20} color="black" weight="bold" className='ml-2' />
+                    </a>
+                  </DropdownPickerModal>
                 </nav>
               </div>
 
               <div data-aos="fade-left" data-aos-delay="200" id='header-right' className={tw(
-                'minlg:opacity-0 minlg:scale-50 transform-gpu',
                 'flex items-center ...'
               )}>
                 <div className="hidden minlg:block mr-2">
@@ -203,7 +189,6 @@ export const Header = ({ removeBg }: HeaderProps) => {
           </div>
 
           <span id='header-shadow' className={tw(
-            'minlg:opacity-0 minlg:scale-y-[.75] minlg:scale-x-[.98] transform-gpu',
             'rounded-full shadow-md absolute left-0 top-0 right-0 bottom-0 -z-10',
             removeBg ? 'bg-transparent' : useDarkMode ? 'bg-black' : 'bg-always-white',
           )}></span>
