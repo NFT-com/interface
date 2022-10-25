@@ -38,7 +38,7 @@ export const Footer = () => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '#FooterContainer',
-          start: 'top bottom',
+          start: '70% bottom',
           end: '+=50px',
           toggleActions: 'play none reverse none',
         }
@@ -47,7 +47,7 @@ export const Footer = () => {
           y: 0,
           duration: 1.8,
           ease: 'power2.out'
-        }, 0);
+        });
     });
   });
 
@@ -148,7 +148,7 @@ export const Footer = () => {
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
-          'minlg:translate-y-1/2'
+          'minlg:translate-y-1/2 transform-gpu'
         )}>
           <div className={tw(
             'minlg:flex minlg:flex-row relative justify-between',
