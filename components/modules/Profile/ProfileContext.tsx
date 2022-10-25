@@ -203,8 +203,6 @@ export function ProfileContextProvider(
   const prevPublicProfileNfts = usePrevious(publicProfileNfts);
   const prevAllOwnerNfts = usePrevious(allOwnerNfts);
 
-  console.log('publicProfileNftsCount fdo', publicProfileNftsCount);
-  console.log('allOwnerNftCount fdo', allOwnerNftCount);
   const [showAllNFTsValue, setShowAllNFTsValue] = useState(publicProfileNftsCount === allOwnerNftCount);
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
 
