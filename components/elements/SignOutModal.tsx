@@ -15,9 +15,9 @@ export function SignOutModal(props: SignOutModalProps) {
       title={{ topLine:'DISCONNECT', bottomLine:'YOUR WALLET' }}
       onClose={props.onClose}
     >
-      <div className='w-full flex flex-col items-center pb-4'>
+      <div className='w-full flex flex-col items-center pb-4 font-noi-grotesk'>
         <div className={tw(
-          'text-center max-w-md text-primary-txt w-full text-base',
+          'text-center max-w-md text-primary-txt w-full text-base font-noi-grotesk',
           'my-6'
         )}>
           We{'\''}ve signed you out of NFT.com. However, to completely detach your wallet information from our site, you must disconnect your wallet.

@@ -11,6 +11,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { Player } from '@lottiefiles/react-lottie-player';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import dynamic from 'next/dynamic';
@@ -87,9 +88,16 @@ export default function MintProfilesPage() {
     >
       {/* Header */}
       <div
-        className='bg-black h-max w-full relative'
+        className='bg-black h-max w-full relative overflow-hidden'
       >
-        <div className='h-full w-full absolute top-0 opacity-60' style={{ backgroundImage: 'url(/temp-intro.png)' }}></div>
+        <Player
+          autoplay
+          loop
+          src="/anim/cycle.json"
+          style={{ width: '1600px' }}
+          className='opacity-60 absolute'
+        >
+        </Player>
         <div className='justify-end mt-10 mr-5 hidden minmd:flex'>
           {currentAddress && <ConnectButton />}
         </div>
