@@ -231,7 +231,7 @@ export function NFTListingsContextProvider(
           targets: stagedNft.targets?.find(target => target.protocol === targetMarketplace) != null ?
             stagedNft.targets :
             [
-              ...stagedNft.targets ?? [],
+              ...(stagedNft.targets ?? []),
               {
                 protocol: targetMarketplace,
                 duration: stagedNft.duration ,

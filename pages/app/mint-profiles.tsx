@@ -94,8 +94,8 @@ export default function MintProfilesPage() {
           autoplay
           loop
           src="/anim/cycle.json"
-          style={{ width: '1600px' }}
-          className='opacity-60 absolute'
+          style={{ width: '100%' }}
+          className='opacity-60 absolute mx-auto'
         >
         </Player>
         <div className='justify-end mt-10 mr-5 hidden minmd:flex'>
@@ -104,9 +104,9 @@ export default function MintProfilesPage() {
         
         <div className='w-full max-w-nftcom mx-auto relative mt-10 minmd:mt-4 z-50'>
           <Link href='/'>
-            <a>
-              <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
-            </a>
+
+            <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
+
           </Link>
           <div className='absolute top-2 left-6 minlg:right-1 hover:cursor-pointer w-7 h-7 bg-black rounded-full'></div>
           <Link href='/'>
@@ -114,9 +114,9 @@ export default function MintProfilesPage() {
           </Link>
 
           <Link href='/'>
-            <a>
-              <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
-            </a>
+
+            <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
+
           </Link>
           <div className=' justify-end mt-10 mr-5 flex minmd:hidden'>
             {currentAddress && <ConnectButton />}

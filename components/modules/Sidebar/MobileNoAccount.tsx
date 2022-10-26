@@ -40,20 +40,24 @@ export default function MobileNoAccount({ setSignIn }: MobileNoAccountProps) {
             Sign in
           </a>
 
-          <Link href='/app/discover' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#fff] hover:text-[#F9D54C] text-[2.5rem] font-grotesk font-medium leading-9 pr-12 pb-3 mb-7 minlg:hidden'
-            >
+          <Link
+            href='/app/discover'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#fff] hover:text-[#F9D54C] text-[2.5rem] font-grotesk font-medium leading-9 pr-12 pb-3 mb-7 minlg:hidden'>
+            
               Discover
-            </a>
+            
           </Link>
 
-          <Link href='/app/gallery' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#fff] hover:text-[#F9D54C] text-[2.5rem] font-grotesk font-medium leading-9 pr-12 pb-3 mb-7 minlg:hidden'
-            >
+          <Link
+            href='/app/gallery'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#fff] hover:text-[#F9D54C] text-[2.5rem] font-grotesk font-medium leading-9 pr-12 pb-3 mb-7 minlg:hidden'>
+            
               Gallery
-            </a>
+            
           </Link>
 
           <a
@@ -80,20 +84,24 @@ export default function MobileNoAccount({ setSignIn }: MobileNoAccountProps) {
             Sign in
           </a>
 
-          <Link href='/app/discover' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
-            >
+          <Link
+            href='/app/discover'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'>
+            
               Discover
-            </a>
+            
           </Link>
 
-          <Link href='/app/gallery' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
-            >
+          <Link
+            href='/app/gallery'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'>
+            
               Gallery
-            </a>
+            
           </Link>
 
           <a

@@ -47,21 +47,21 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   let addressesList = [];
   
   useSWR(collectionsSliderData, async () => {
-    searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
+    searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && (await fetchNFTsForCollections({
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
       setNftsForCollections([...collectionsData.nftsForCollections]);
-    }));
+    })));
   });
 
   useSWR(results, async () => {
-    searchType?.toString() === 'collections' && await fetchNFTsForCollections({
+    searchType?.toString() === 'collections' && (await fetchNFTsForCollections({
       collectionAddresses: addressesList,
       count: 5
     }).then((collectionsData => {
       setNftsForCollections([...collectionsData.nftsForCollections]);
-    }));
+    })));
   });
 
   useEffect(() => {
