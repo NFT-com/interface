@@ -23,7 +23,7 @@ export function GenesisKeyPostClaimView(props: GenesisKeyPostClaimViewProps) {
           </span>
         </div>
         <div className='mt-4 text-lg text-center'>
-          As a Genesis Key Holder you have the ability to mint two (2) NFT.com Profiles. {' '}
+          As a Genesis Key Holder you have the ability to mint two (4) NFT.com Profiles. {' '}
           You can mint them now or at your convenience.
         </div>
         <div className='mt-4 text-lg text-center'>
@@ -48,7 +48,7 @@ export function GenesisKeyPostClaimView(props: GenesisKeyPostClaimViewProps) {
                 stretch
                 color={alwaysBlack}
                 onClick={() => {
-                  router.push('/app/claim-profiles');
+                  router.push('/app/mint-profiles');
                 }}
                 label="Mint Profiles"
                 type={ButtonType.PRIMARY}
