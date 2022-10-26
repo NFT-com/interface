@@ -153,7 +153,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   }
 
                   <Link href='/app/gallery'>
-                    <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
+                    <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Gallery</p>
                   </Link>
 
                   <DropdownPickerModal
@@ -378,7 +378,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                 }
 
                 <Link href='/app/gallery'>
-                  <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
+                  <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Gallery</p>
                 </Link>
 
                 <DropdownPickerModal
@@ -568,11 +568,15 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'border-r pr-4 py-[2px]'
                 )}
               >
-                <Link href='/app/discover'>
-                  <a className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Discover</a>
+                <Link
+                  href='/app/discover'
+                  className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>
+                  Discover
                 </Link>
-                <Link href='/app/gallery'>
-                  <a className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>Gallery</a>
+                <Link
+                  href='/app/gallery'
+                  className='p-2 hover:text-black hover:bg-[#EFEFEF] hover:rounded-[10px] hover:font-semibold cursor-pointer'>
+                  Gallery
                 </Link>
                 <a
                   target="_blank"

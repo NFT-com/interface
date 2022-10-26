@@ -182,21 +182,23 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
           }
 
           {currentAddress && mintedProfiles && !loadingMintedProfiles && mintedProfiles?.profilesMintedByGK.map((profile) =>
-            <div className='h-14 flex justify-between items-center bg-[#FCE795] rounded-xl px-4 py-2 mb-4' key={profile.url}>
-              <div className='flex flex-row items-center gap-[14px]'>
-                <RoundedCornerMedia
-                  extraClasses='mr-[14px]'
-                  containerClasses='h-10 w-10'
-                  src={profile.photoURL}
-                  variant={RoundedCornerVariant.All}
-                  height={40}
-                  width={40}
-                  amount={RoundedCornerAmount.Medium}
-                />
-                <p>{profile.url}</p>
+            <Link key={profile.url} href={`/${profile.url}`}>
+              <div className='h-14 flex justify-between items-center bg-[#FCE795] rounded-xl px-4 py-2 mb-4 hover:cursor-pointer' key={profile.url}>
+                <div className='flex flex-row items-center gap-[14px]'>
+                  <RoundedCornerMedia
+                    extraClasses='mr-[14px]'
+                    containerClasses='h-10 w-10'
+                    src={profile.photoURL}
+                    variant={RoundedCornerVariant.All}
+                    height={40}
+                    width={40}
+                    amount={RoundedCornerAmount.Medium}
+                  />
+                  <p>{profile.url}</p>
+                </div>
+                <CheckCircle size={28} color="black" weight="fill" />
               </div>
-              <CheckCircle size={28} color="black" weight="fill" />
-            </div>
+            </Link>
           )}
 
           {loadingMintedProfiles && currentAddress &&
@@ -285,12 +287,16 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
           }
               
         </div>
-        <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
-          <a target="_blank" >
-            <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
-            Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
-            </p>
-          </a>
+        <Link
+          href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile'
+          passHref
+          className='mt-4'
+          target="_blank">
+
+          <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
+          Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
+          </p>
+
         </Link>
       </div>
     </div>

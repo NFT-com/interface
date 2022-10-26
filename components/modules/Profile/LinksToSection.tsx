@@ -85,9 +85,11 @@ export function LinksToSection(props: LinksToSectionParams) {
         (isAddressOwner ? ownerlinksContents : notOwnerlinksContents)
           .map((item) =>
             (
-              <Link href={item.linkTo}
+              (<Link
+                href={item.linkTo}
                 key={item.section}
-              >
+                target='_blank'
+                className="bg-footer-bg rounded-xl lg:w-full w-52 grow cursor-pointer">
                 <a
                   target='_blank'
                   key={item.section}
@@ -101,7 +103,7 @@ export function LinksToSection(props: LinksToSectionParams) {
                     <div className="text-xs minxl:text-base">{item.description}</div>
                   </div>
                 </a>
-              </Link>
+              </Link>)
             )
           )
       }
