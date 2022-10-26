@@ -68,7 +68,6 @@
     "graphql-tag": "^2.12.6",
     "gsap": "^3.11.3",
     "is-ipfs": "^6.0.2",
-    "isomorphic-unfetch": "^3.1.0",
     "jszip": "^3.10.0",
     "jszip-utils": "^0.1.0",
     "moment": "^2.29.3",
