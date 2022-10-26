@@ -31,7 +31,7 @@ export function LeaderBoard({ data }: LeaderBoardProps) {
     );
   }
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
-    return <div className="overflow-x-auto relative -mx-4 minmd:mx-0">
+    return <div className="overflow-x-auto relative">
       <table className="border-x-0 w-full min-w-[700px]">
         <thead>
           <tr className={tw(

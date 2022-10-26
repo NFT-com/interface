@@ -1940,7 +1940,8 @@ input[type="search"]::-webkit-search-cancel-button {
 .anim-corner-profile-0,
 .anim-corner-profile-1,
 .anim-corner-profile-2,
-.anim-corner-profile-4 {
+.anim-corner-profile-4,
+.anim-corner-profile-5 {
   animation-duration: 8s;
 }
 
@@ -1966,6 +1967,10 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .anim-corner.anim-corner-profile-4 {
   animation-name: cornerProfile-4;
+}
+
+.anim-corner.anim-corner-profile-5 {
+  animation-name: cornerProfile-5;
 }
 
 .anim-corner.reverse {
@@ -2125,6 +2130,18 @@ input[type="search"]::-webkit-search-cancel-button {
   }
   100% {
     transform: translate(5.2%, -30%);
+  }
+}
+
+@keyframes cornerProfile-5 {
+  0% {
+    transform: translate(-10%, -10%) scaleX(1.2);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-10%, -10%) scaleX(1.2);
   }
 }
 

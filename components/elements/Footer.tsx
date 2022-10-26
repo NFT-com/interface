@@ -148,7 +148,7 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className={`page-footer overflow-hidden ${router.pathname === '/' ? 'minlg:-mt-[28.8rem]' : ''}`}>
+      <footer id="FooterContainer" className={`page-footer overflow-hidden ${router.pathname === '/' ? '-mt-9 minlg:-mt-[28.8rem]' : ''}`}>
         <Toast />
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
