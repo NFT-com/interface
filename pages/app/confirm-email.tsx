@@ -2,7 +2,6 @@ import DefaultLayout from 'components/layouts/DefaultLayout';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
-import fetch from 'isomorphic-unfetch';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
