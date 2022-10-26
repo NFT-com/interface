@@ -66,6 +66,7 @@ export interface NFTCardProps {
   lightModeForced?: boolean;
   layoutType?: string;
   redirectTo?: string;
+  preventDefault?: boolean
 }
 
 const DynamicNFTCardDescription = dynamic<React.ComponentProps<typeof StaticNFTCardDescription>>(() => import('components/elements/NFTCardDescription').then(mod => mod.NFTCardDescription));
@@ -140,7 +141,7 @@ export function NFTCard(props: NFTCardProps) {
         onClick={(e) => {
         // TODO: move to helper / logger class at some point
           e.stopPropagation();
-          e.preventDefault();
+          props.preventDefault && e.preventDefault();
           analytics.track(`${props?.visible ? 'Hide' : 'Show'} Single NFT`, {
             ethereumAddress: currentAddress,
             title: props?.title,
@@ -183,7 +184,7 @@ export function NFTCard(props: NFTCardProps) {
                 onClick={(e: MouseEvent<HTMLDivElement>) => {
                   props.onVisibleToggle(!props.visible);
                   e.stopPropagation();
-                  e.preventDefault();
+                  props.preventDefault && e.preventDefault();
                 }}
               >
                 {props.visible ? <Eye id="eye" color={pink} /> : <EyeOff id="eyeOff" color={pink} /> }

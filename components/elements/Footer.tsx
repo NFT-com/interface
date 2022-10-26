@@ -26,6 +26,7 @@ export const Footer = () => {
   const { profileTokens } = useMyNftProfileTokens();
   const [email, setEmail] = useState<string>('');
   const router = useRouter();
+  const location = router && router?.pathname;
 
   useEffect(() => {
     AOS.init({
@@ -44,7 +45,7 @@ export const Footer = () => {
           trigger: '.page-footer',
           start: '70% bottom',
           end: '+=50px',
-          toggleActions: router.pathname === '/' ? 'play none reverse none' : 'none none none none',
+          toggleActions: location === '/' ? 'play none reverse none' : 'none none none none',
         }
       })
         .to('#footer-content', {
@@ -148,12 +149,13 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className={`page-footer overflow-hidden ${router.pathname === '/' ? 'minlg:-mt-[28.8rem]' : ''}`}>
+      <footer id="FooterContainer" className={`overflow-hidden ${location === '/' ? '-mt-[28.8rem]' : location?.includes('mint-profiles') ? '-mt-[4.5rem]' : ''}`}>
         <Toast />
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
-          router.pathname === '/' && 'minlg:translate-y-1/2 minlg:transform-gpu'
+          'transform-gpu',
+          location === '/' && 'minlg:translate-y-1/2'
         )}>
           <div className={tw(
             'minlg:flex minlg:flex-row relative justify-between',
