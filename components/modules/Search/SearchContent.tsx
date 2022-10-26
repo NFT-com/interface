@@ -52,6 +52,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
       router.push(`/app/nft/${document.contractAddr}/${document.tokenId}`);
     }
     setSearchModalOpen(false);
+    setShowHits(false);
   };
 
   const search = (event) => {
@@ -132,6 +133,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
           onClick={() => {
             router.push(`/app/discover/${collectionName}/${keyword}`);
             setSearchModalOpen(false);
+            setShowHits(true);
           }}
         >
           {found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}
