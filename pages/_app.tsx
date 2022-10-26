@@ -130,6 +130,15 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           title: 'NFT.com | The Social NFT Marketplace',
           description: 'Join NFT.com to display, trade, and engage with your NFTs.',
           site_name: 'NFT.com',
+          images: [
+            {
+              url: '/site-meta-image.png',
+              width: 1200,
+              height: 627,
+              alt: 'NFT.com | The Social NFT Marketplace',
+              type: 'image/png',
+            }
+          ],
         }}
         twitter={{
           cardType: 'summary_large_image',
