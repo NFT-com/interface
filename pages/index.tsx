@@ -338,7 +338,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-build-profile-trigger',
-          start: '20% bottom',
+          start: '10% bottom',
           end: '+=30px',
           toggleActions: 'play none reverse none',
         }
