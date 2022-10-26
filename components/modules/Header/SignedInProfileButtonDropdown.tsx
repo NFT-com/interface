@@ -1,7 +1,8 @@
+import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Link from 'next/link';
@@ -11,9 +12,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 export function SignedInProfileButtonDropdown() {
-  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const router = useRouter();
-  const { user,getHiddenProfileWithExpiry, setCurrentProfileUrl } = useUser();
+  const { setProfileSelectModalOpen } = useProfileSelectModal();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const { user, getHiddenProfileWithExpiry, setCurrentProfileUrl } = useUser();
   const { address: currentAddress } = useAccount();
 
   const [profiles, setProfiles] = useState(null);
@@ -30,14 +32,20 @@ export function SignedInProfileButtonDropdown() {
 
   const sortProfiles = useCallback(() => {
     const hiddenProfile = getHiddenProfileWithExpiry();
-    const hiddenIndex = profiles.findIndex((e) => e.title === hiddenProfile);
+    const hiddenIndex = profiles?.findIndex((e) => e.title === hiddenProfile);
     if(hiddenIndex !== -1){
-      profiles.splice(hiddenIndex, 1);
+      profiles?.splice(hiddenIndex, 1);
     }
 
-    const index = profiles.findIndex((e) => e.title === user.currentProfileUrl);
-    profiles.unshift(...profiles.splice(index, 1));
+    const index = profiles?.findIndex((e) => e.title === user.currentProfileUrl);
+    profiles?.unshift(...profiles.splice(index, 1));
   }, [getHiddenProfileWithExpiry, profiles, user.currentProfileUrl]);
+
+  useEffect(() => {
+    if(currentAddress && profiles?.length && (user.currentProfileUrl === '' || isNullOrEmpty(user.currentProfileUrl) || !profiles?.some((profile) => profile.title === user.currentProfileUrl) )){
+      setProfileSelectModalOpen(true);
+    }
+  }, [currentAddress, profiles, user.currentProfileUrl, setProfileSelectModalOpen, router]);
 
   return (
     <div
@@ -58,10 +66,6 @@ export function SignedInProfileButtonDropdown() {
           'py-2 h-full',
           'justify-between rounded-xl w-full',
         )}
-        onClick={() => {
-          setExpanded(!expanded);
-          sortProfiles();
-        }}
       >
         <>
           <button
@@ -84,14 +88,37 @@ export function SignedInProfileButtonDropdown() {
               {myOwnedProfileTokens?.some((token) => token.title === user.currentProfileUrl) ?
                 <div className='flex justify-between items-center'>
                   <p className='mr-2 text-xl font-bold'>/</p>
-                  <p className='font-medium'>{user.currentProfileUrl}</p>
-                  <CaretDown size={18} color="black" weight="bold" className='ml-2' />
+                  <Link href={`/${user.currentProfileUrl}`}>
+                    <p className='font-medium'>
+                      {user.currentProfileUrl}
+                    </p>
+                  </Link>
+                 
+                  <CaretDown
+                    onClick={() => {
+                      setExpanded(!expanded);
+                      sortProfiles();
+                    }}
+                    size={18}
+                    color="black"
+                    weight="bold"
+                    className='ml-2'
+                  />
                 </div>
                 :
                 <>
                   <div className='flex justify-between items-center'>
                     <p className='font-medium'>{shortenAddress(currentAddress, 3)}</p>
-                    <CaretDown size={18} color="black" weight="bold" className='ml-2' />
+                    <CaretDown
+                      onClick={() => {
+                        setExpanded(!expanded);
+                        sortProfiles();
+                      }}
+                      size={18}
+                      color="black"
+                      weight="bold"
+                      className='ml-2'
+                    />
                   </div>
                 </>
               }
