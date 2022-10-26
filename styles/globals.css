@@ -1934,13 +1934,16 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .anim-corner.anim-corner-news-2 {
   animation-name: cornerAnimNews-2;
+  stroke: white;
+  stroke-width: 3px;
 }
 
 
 .anim-corner-profile-0,
 .anim-corner-profile-1,
 .anim-corner-profile-2,
-.anim-corner-profile-4 {
+.anim-corner-profile-4,
+.anim-corner-profile-5 {
   animation-duration: 8s;
 }
 
@@ -1966,6 +1969,10 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .anim-corner.anim-corner-profile-4 {
   animation-name: cornerProfile-4;
+}
+
+.anim-corner.anim-corner-profile-5 {
+  animation-name: cornerProfile-5;
 }
 
 .anim-corner.reverse {
@@ -2058,13 +2065,13 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @keyframes cornerAnimNews-2 {
   0% {
-    transform: translate(3.35%, -6%);
+    transform: translate(3.1%, -6%);
   }
   50% {
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(3.35%, -6%);
+    transform: translate(3.1%, -6%);
   }
 }
 
@@ -2125,6 +2132,18 @@ input[type="search"]::-webkit-search-cancel-button {
   }
   100% {
     transform: translate(5.2%, -30%);
+  }
+}
+
+@keyframes cornerProfile-5 {
+  0% {
+    transform: translate(-10%, -10%) scaleX(1.2);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-10%, -10%) scaleX(1.2);
   }
 }
 
