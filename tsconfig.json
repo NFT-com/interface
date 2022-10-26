@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "baseUrl":".",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "baseUrl": ".",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -33,6 +37,6 @@
   ],
   "exclude": [
     "node_modules",
-    "cypress",
+    "cypress"
   ]
 }
