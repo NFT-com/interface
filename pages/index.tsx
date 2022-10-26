@@ -283,7 +283,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-leaderboard-trigger',
           start: 'top 80%',
-          end: '+=50px',
+          end: '+=30px',
           //pin: '#anim-leaderboard-trigger',
           toggleActions: 'play none reverse none',
         }
@@ -304,7 +304,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-news-trigger',
           start: 'top 80%',
-          end: '+=50px',
+          end: '+=30px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -319,7 +319,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-ticker-trigger',
           start: '20% bottom',
-          end: '+=50px',
+          end: '+=30px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -338,7 +338,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-build-profile-trigger',
-          start: '20% bottom',
+          start: '10% bottom',
           end: '+=30px',
           toggleActions: 'play none reverse none',
         }
@@ -432,8 +432,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 <div className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2'>
                   <div id="anim-hero-player" className={tw(
                     'pointer-events-none',
-                    'scale-x-[.55] scale-y-[.3]',
-                    'minmd:scale-x-[.84] minmd:scale-y-[.6] minlg:scale-x-[.7] minlg:scale-y-[.5]',
+                    'scale-x-[2.6] scale-y-[1.6]',
+                    'minmd:scale-x-[2] minmd:scale-y-[1.3] minlg:scale-x-[1.2] minlg:scale-y-[0.8]',
                     'minxxl:scale-x-100 minxxl:scale-y-[.65] minhd:scale-[1.25]',
                     '-skew-x-[41deg] skew-y-[19deg]'
                   )}>
@@ -441,23 +441,24 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       autoplay
                       loop
                       src="/anim/cycle.json"
-                      style={{ height: '1600px', width: '1600px' }}
+                      style={{ height: '85vw', width: '85vw' }}
                     >
                     </Player>
                   </div>
                 </div>
 
                 <div className={tw(
-                  'absolute inset-0',
+                  'absolute inset-0 px-4',
                   'flex justify-center items-center'
                 )}>
                   <div id='anim-hero-caption' className={tw(
                     'minlg:scale-[.57] minxxl:scale-[.58] transform-gpu',
                     'bg-[#121212] drop-shadow-lg h-[1.667em] px-[.5em]',
-                    'px-7 minxxl:px-10 relative z-20',
+                    'px-4 minlg:px-7 minxxl:px-10 relative z-20',
                     'text-[calc(42px+112*(100vw-375px)/1545)]',
                     'leading-none tracking-tight rounded-full'
                   )}>
+                    {/* Placeholder the broadest word */}
                     <div className='text-transparent flex'>NFT.COM
                       <div role='presentation' className={tw(
                         'mx-2 minlg:mx-4 minxxl:mx-8',
@@ -467,7 +468,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                     </div>
 
                     <div className={tw(
-                      'absolute inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
+                      'absolute inset-x-4 minlg:inset-x-7 minxxl:inset-x-10 top-0 bottom-0',
                       'text-white flex'
                     )}>
                       {data_v2?.dynamicUrl['url'].map(word =>
@@ -511,16 +512,16 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 'w-full h-[28.75rem] pointer-events-none'
               )}></span>
               <div className={tw(
-                'w-full mx-auto pt-10 px-5 minmd:px-9 bg-black', /* pb-[8.5rem] minlg:pb-40 */
+                'w-full mx-auto pt-10 px-5 minlg:px-9 bg-black', /* pb-[8.5rem] minlg:pb-40 */
                 'minlg:rounded-3xl flow-root relative z-10',
               )}>
                 <h2 data-aos="fade-up" data-aos-delay="200" id='anim-profile-head' className={tw(
                   'minlg:translate-y-[400px] minlg:transform-gpu',
                   'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
-                  'leading-[1.0854] font-normal text-white mb-14 minxxl:mb-20'
+                  'leading-[1.0854] -tracking-[0.03em] font-normal text-white mb-14 minxxl:mb-20'
                 )}>
                   The Social<img className={tw(
-                    'drop-shadow-md inline-block w-[4.525rem] minxxl:w-[5.5rem]',
+                    'drop-shadow-md inline-block w-[2.5rem] minxxl:w-[5.5rem]',
                     'mx-[0.4em] -my-[0.7rem]',
                     'rotate-[40deg] rounded-xl'
                   )} src={data_v2?.wycdTitleNfTs?.url} alt="" />
@@ -528,12 +529,12 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
                 <div id='anim-profile-content' className={tw(
                   'minlg:translate-y-[400px] transform-gpu',
-                  'minlg:grid grid-cols-2 gap-2 minlg:gap-4 minxxl:gap-6 -mb-12 minlg:-mb-[6.5rem]'
+                  'minmd:grid grid-cols-2 gap-2 minmd:gap-4 minxxl:gap-6 -mb-12 minmd:-mb-[6.5rem]'
                 )}>
                   <div id='anim-profile-first-item' data-aos="fade-up" data-aos-delay="100" className={tw(
                     'minlg:translate-y-1/4 transform-gpu',
                     'mb-5 minlg:mb-0',
-                    'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
+                    'px-8 pt-12 pb-4 minmd:px-5 minlg:px-8 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                     'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
                   )}>
                     <svg role='presentation' className={tw(
@@ -556,7 +557,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9',
                       'bg-[#121212] drop-shadow-lg rounded-full',
                       'flex items-center justify-center text-center',
-                      'text-3xl minlg:text-[3.9rem] minxxl:text-[5rem] leading-none tracking-tight'
+                      'text-[1.875rem] minmd:text-[1.625rem] leading-none tracking-tight',
+                      'minlg:text-[calc(34px+29*(100vw-375px)/1545)]',
                     )}>
                       <div className='text-transparent flex'>NFT.COM
                         <div role='presentation' className={tw(
@@ -567,14 +569,14 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       </div>
 
                       <div className={tw(
-                        'absolute inset-x-5 minxxl:inset-x-8 top-0 bottom-0',
-                        'text-white/40 flex'
+                        'absolute inset-x-3 minxxl:inset-x-8 top-0 bottom-0',
+                        'text-white flex'
                       )}>
                         {data_v2?.dynamicUrl['url'].map(word =>
                           <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
-                          NFT.COM
+                            <span className='text-white/40'>NFT.COM</span>
                             <span className={tw(
-                              'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
+                              'mt-[.075em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
                               'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
                               'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
                             )}></span>{word.toUpperCase()}
@@ -597,7 +599,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   <div id='anim-profile-second-item' data-aos="fade-up" data-aos-delay="100" className={tw(
                     'minlg:translate-y-1/2 transform-gpu',
                     'mb-5 minlg:mb-0',
-                    'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
+                    'px-8 pt-12 pb-4 minmd:px-5 minlg:px-8 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                     'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
                   )}>
                     <svg role='presentation' className={tw(
@@ -692,13 +694,20 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           {/* Block: How it works */}
           <div id='anim-hiw-trigger' className={tw(
             'px-3 minlg:px-14 minxxl:px-20 minxxl:mb-8',
+            'overflow-hidden minlg:overflow-visible',
           )}>
             <div id='anim-hiw-content' className={tw(
               'minlg:translate-y-1/2 transform-gpu',
               'flow-root relative z-0 bg-primary-yellow rounded-3xl',
               'mt-5 mb-[7.5rem] px-3 minlg:p-6 pt-[3.15rem]'
             )}>
-              <svg role='presentation' className='absolute -z-10 top-0 right-0 translate-x-[2rem] -translate-y-[40%] max-w-full' aria-hidden="true" width="507" height="234" viewBox="0 0 506.52539 233.98633" xmlns="http://www.w3.org/2000/svg">
+              <svg role='presentation' className='minlg:hidden absolute -z-10 top-0 right-0 -translate-y-[65px]' width="218" height="103" viewBox="0 0 218 103" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path className='anim-corner anim-corner-4' d="M112.373 19H30.3571C29.6239 19 28.9671 19.4537 28.7076 20.1394L0.903622 93.6122C0.467002 94.7659 1.31947 96 2.5531 96H82.3258C83.042 96 83.6871 95.5669 83.9582 94.904L114.006 21.4312C114.48 20.271 113.627 19 112.373 19Z" fill="white"/>
+                <path className='anim-corner anim-corner-5' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white"/>
+                <path className='anim-corner anim-corner-6' d="M251.373 26H169.357C168.624 26 167.967 26.4537 167.708 27.1394L139.904 100.612C139.467 101.766 140.319 103 141.553 103H221.326C222.042 103 222.687 102.567 222.958 101.904L253.006 28.4312C253.48 27.271 252.627 26 251.373 26Z" fill="white"/>
+              </svg>
+
+              <svg role='presentation' className='hidden minlg:block absolute -z-10 top-0 right-0 translate-x-[2rem] -translate-y-[40%] max-w-full' aria-hidden="true" width="507" height="234" viewBox="0 0 506.52539 233.98633" xmlns="http://www.w3.org/2000/svg">
                 <path className='anim-corner anim-corner-4' fill='white' d="M 154.64664,1.03125 H 66.916171 L 0.11929558,174.58985 c -0.44460856,1.15499 0.4086356,2.39648 1.64648442,2.39648 h 83.115235 c 0.726899,0 1.378678,-0.44605 1.642578,-1.12305 z" />
                 <path className='anim-corner anim-corner-5' fill='white' d="m 240.83804,0 h -87.46093 l -45.25586,117.58985 c -0.445,1.15499 0.40753,2.39648 1.64453,2.39648 h 83.11523 c 0.727,0 1.37858,-0.44605 1.64258,-1.12305 z" />
                 <path className='anim-corner anim-corner-4' fill='white' d="m 326.97672,0.38867 -87.91797,0.0957 -78.9375,205.10547 c -0.445,1.15499 0.40753,2.39648 1.64453,2.39648 h 83.11523 c 0.727,0 1.37858,-0.44605 1.64258,-1.12305 z" />
@@ -707,8 +716,11 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 <path className='anim-corner anim-corner-4' fill='white' d="M 506.52539,1.0859375 492.07422,1.0332031 419.12109,190.58984 c -0.445,1.15499 0.40754,2.39649 1.64453,2.39649 h 83.11524 c 0.727,0 1.37858,-0.44605 1.64258,-1.12305 l 0.0781,-0.20117 z" />
               </svg>
 
-              <div className='relative px-4 minlg:px-0'>
-                <h2 data-aos="fade-up" data-aos-delay="100" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-[1rem]'>{data_v2?.hiwTitle}</h2>
+              <div className='relative px-2 minlg:px-0'>
+                <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
+                  'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
+                  'leading-[1.0854] font-normal mb-[1rem]'
+                )}>{data_v2?.hiwTitle}</h2>
                 <p data-aos="fade-up" data-aos-delay="200" className='text-base minlg:text-[1.625rem] minxxl:text-4xl mb-8'>{data_v2?.hiwSubtitle}</p>
               </div>
 
@@ -745,7 +757,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
           {/* Block: Leaderboard */}
           <div id='anim-leaderboard-trigger' className={tw(
-            'px-3 minmd:px-14 minxxl:px-20 pt-[10rem] minlg:pt-[11.725rem] minxxl:pt-64',
+            'px-5 minlg:px-14 minxxl:px-20 pt-[10rem] minlg:pt-[11.725rem] minxxl:pt-64',
             'minhd:mb-28 overflow-hidden relative'
           )}>
             <div id="anim-leaderboard-decor" className='absolute -z-10 top-0 left-0 right-0 minlg:translate-y-1/2 minlg:transform-gpu'>
@@ -757,26 +769,28 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
             <div id='anim-leaderboard-content' className={tw(
               'minlg:translate-y-1/4 transform-gpu',
-              'bg-white shadow-2xl rounded-3xl mb-[5rem] minlg:mb-[6.75rem] px-4 minmd:px-10 pt-12 ...'
+              'bg-white shadow-2xl rounded-3xl mb-[5rem] minlg:mb-[6.75rem] px-4 minlg:px-10 pt-12 ...'
             )}>
-              <div className="minmd:flex justify-between items-center mb-4 minmd:mb-0">
+              <div className="minlg:flex minlg:justify-between minlg:items-center mb-4 minlg:mb-16">
                 <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
                   'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
-                  'minxl:leading-[.842] font-normal max-w-2xl justify-center minmd:mb-16 ...'
+                  'leading-none minxl:leading-[.842] font-normal max-w-2xl justify-center mb-6 minlg:mb-0 ...'
                 )}>
                   {data?.leaderboardTitle}
                 </h2>
-                <span data-aos="fade-up" data-aos-delay="150" className='text-[1.25rem] minmd:text-[1.625rem] minxxl:text-[2.25rem] minmd:ml-4 text-[#B2B2B2]'><span className='text-[#FBC214]'>Top 10</span> collectors</span>
+                <span data-aos="fade-up" data-aos-delay="150" className='leading-none text-[1.25rem] minmd:text-[1.625rem] minxxl:text-[2.25rem] minlg:ml-4 text-[#B2B2B2]'>
+                  <span className='text-[#FBC214]'>Top 10</span> collectors
+                </span>
               </div>
 
-              <div data-aos="fade-up" data-aos-delay="300" className='min-h-[52.625rem]'>
-                <StaticLeaderboard data={leaderboardData} />
+              <div data-aos="fade-up" data-aos-delay="300" className='min-h-[52.625rem] -mx-4 minlg:mx-0'>
+                <DynamicLeaderBoard data={leaderboardData} />
               </div>
             </div>
           </div>
 
           {/* Block: News */}
-          <div id='anim-news-trigger' className="px-3 minmd:px-14 minxxl:px-20">
+          <div id='anim-news-trigger' className="px-3 minlg:px-14 minxxl:px-20">
             <div className='minmd:px-0 overflow-hidden'>
               <div className={tw(
                 'relative z-0 px-9 py-[2.5rem] minlg:py-[3.2rem] mb-20 minlg:mb-32',
@@ -793,7 +807,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 </svg>
 
                 <svg className={tw(
-                  'absolute -z-10 top-0 right-0 max-w-[250px] minlg:max-w-none',
+                  'absolute -z-10 top-0 right-0 max-w-[250px] minxl:max-w-none',
                   'translate-x-[20px] -translate-y-[67px]',
                   'hidden minlg:block'
                 )} aria-hidden="true" width='402' height='225' viewBox="0 0 402 225" xmlns="http://www.w3.org/2000/svg">
@@ -919,13 +933,22 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
             'bg-[#F9D54C] overflow-hidden minlg:translate-y-[20rem]',
             'minlg:-mb-96 minlg:pb-96'
           )}>
-            <div className='px-3 minmd:px-14 minxxl:px-20'>
+            <div className='px-3 minmd:px-14 minxxl:px-20 relative z-0'>
               <div className={tw(
-                'relative z-0',
-                'pt-[5.625rem] minlg:pt-28 minxxl:pt-32 pb-16 minxxl:pb-20 mb-[4.75rem] minlg:mb-24'
+                'pt-[5.625rem] minlg:pt-28 minxxl:pt-32 pb-[5.25rem] minxxl:pb-20 minlg:mb-24'
               )}>
                 <svg role='presentation' className={tw(
-                  'absolute -z-10',
+                  'absolute -z-10 minlg:hidden',
+                  'top-0 left-0 -translate-y-14',
+                )} width="344" height="124" viewBox="0 0 344 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path className='anim-corner anim-corner-profile-1' d="M181.373 29H99.3571C98.6239 29 97.9671 29.4537 97.7076 30.1394L69.9036 103.612C69.467 104.766 70.3195 106 71.5531 106H151.326C152.042 106 152.687 105.567 152.958 104.904L183.006 31.4312C183.48 30.271 182.627 29 181.373 29Z" fill="white"/>
+                  <path className='anim-corner anim-corner-profile-2' d="M28.3733 47H-53.6429C-54.3761 47 -55.0329 47.4537 -55.2924 48.1394L-83.0964 121.612C-83.533 122.766 -82.6805 124 -81.4469 124H-1.67419C-0.957985 124 -0.312897 123.567 -0.0417862 122.904L30.0057 49.4312C30.4802 48.271 29.6268 47 28.3733 47Z" fill="white"/>
+                  <path className='anim-corner anim-corner-profile-5' d="M274.373 0H192.357C191.624 0 190.967 0.453661 190.708 1.13943L162.904 74.6122C162.467 75.7659 163.319 77 164.553 77H244.326C245.042 77 245.687 76.5669 245.958 75.904L276.006 2.43123C276.48 1.27098 275.627 0 274.373 0Z" fill="white"/>
+                  <path className='anim-corner anim-corner-profile-4' d="M341.373 39H259.357C258.624 39 257.967 39.4537 257.708 40.1394L229.904 113.612C229.467 114.766 230.319 116 231.553 116H311.326C312.042 116 312.687 115.567 312.958 114.904L343.006 41.4312C343.48 40.271 342.627 39 341.373 39Z" fill="white"/>
+                </svg>
+
+                <svg role='presentation' className={tw(
+                  'absolute -z-10 hidden minlg:block',
                   '-top-10rem -right-6 w-[18.5625rem] h-[10.625rem]',
                   'minlg:-top-1 minlg:-right-12 minlg:w-[37.125rem] minlg:h-[21.25rem]',
                   'minxxl:-top-4 minxxl:w-[52rem] minxxl:h-[29.75rem]'
@@ -941,7 +964,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   'text-[calc(54px+112*(100vw-375px)/1545)]'
                 )}>
                   <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                    'text-[1em]',
+                    'text-[1em] text-center minlg:text-left',
                     'text-black font-normal leading-[1.1] relative',
                     'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
                   )}>

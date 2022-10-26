@@ -43,8 +43,8 @@ export const Footer = () => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '.page-footer',
-          start: '70% bottom',
-          end: '+=50px',
+          start: '75% bottom',
+          end: '+=30px',
           toggleActions: location === '/' ? 'play none reverse none' : 'none none none none',
         }
       })
@@ -149,7 +149,7 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className={`overflow-hidden ${location === '/' ? '-mt-[28.8rem]' : location?.includes('mint-profiles') ? '-mt-[4.5rem]' : ''}`}>
+      <footer id="FooterContainer" className={`page-footer overflow-hidden ${location === '/' ? '-mt-9 minlg:-mt-[28.8rem]' : location?.includes('mint-profiles') ? '-mt-[4.5rem]' : ''}`}>
         <Toast />
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
