@@ -176,10 +176,13 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     if(mobileSearch){
       return (
         <>
-          <div id='mobile-search' className="flex flex-col font-noi-grotesk px-6 relative">
+          <div id='mobile-search' className={tw(
+            'flex flex-col font-noi-grotesk  relative',
+            router.pathname !== '/' && 'px-6'
+          )}>
             <div ref={wrapperRef} onClick={() => setInputFocus(true)} className={tw(
               'flex space-x-2 p-5 py-3 minlg:space-x-0 minlg:p-0 rounded-full bg-[#F8F8F8]',
-              inputFocus && 'border-2 border-[#F9D54C]',
+              inputFocus && router.pathname !== '/' && 'border-2 border-[#F9D54C]',
               'h-[52px]'
             )}>
               <div className={tw(
@@ -235,7 +238,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     }
     return (
       <>
-        <div className="flex flex-col font-noi-grotesk">
+        <div className="flex flex-col font-noi-grotesk relative">
           <div className="flex space-x-2 p-5 minlg:space-x-0 minlg:p-0">
             <div className={tw(
               'relative flex items-center w-full text-black')}>
@@ -271,7 +274,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
               <div
                 ref={resultsRef}
                 className={tw(
-                  isHeader ? 'absolute -translate-x-1/2 mt-16 max-w-[27rem]' : '',
+                  isHeader ? 'absolute left-0 mt-16 max-w-[27rem]' : '',
                   'bg-always-white flex flex-col w-full text-rubik')}>
                 {searchResults.length > 0 && <>
                   {searchResults[0].found === 0 && searchResults[1].found === 0 ?

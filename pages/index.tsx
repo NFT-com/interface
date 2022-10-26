@@ -9,6 +9,7 @@ import { ProfileFeed } from 'components/elements/ProfileFeed';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { WalletRainbowKitButton as StaticWalletRainbowKitButton } from 'components/elements/WalletRainbowKitButton';
 import DefaultLayout from 'components/layouts/DefaultLayout';
+import HomeLayout from 'components/layouts/HomeLayout';
 import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -1225,9 +1226,14 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
 Index.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideSearch>
-      {page}
-    </DefaultLayout>
+    getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)?
+      <HomeLayout >
+        {page}
+      </HomeLayout>
+      :
+      <DefaultLayout>
+        {page}
+      </DefaultLayout>
   );
 };
 
