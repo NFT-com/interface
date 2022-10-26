@@ -90,7 +90,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
 
                 </button>
                 <div className="flex items-center">
-                  <Link href='/' passHref legacyBehavior>
+                  <Link href='/' passHref>
                     <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-8">
                       {mobileSidebarOpen ?
                         <p className='font-medium'>MENU</p>
@@ -147,7 +147,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                       </a>
                     </DropdownPickerModal>
                     :
-                    <Link href='/app/discover' legacyBehavior>
+                    <Link href='/app/discover'>
                       <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Discover</p>
                     </Link>
                   }
@@ -317,7 +317,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
 
               </button>
               <div className="flex items-center">
-                <Link href='/' passHref legacyBehavior>
+                <Link href='/' passHref>
                   <div className="flex-shrink-0 flex items-center hover:cursor-pointer minlg:mr-8">
                     {mobileSidebarOpen ?
                       <p className='font-medium'>MENU</p>
@@ -374,7 +374,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     </a>
                   </DropdownPickerModal>
                   :
-                  <Link href='/app/discover' legacyBehavior>
+                  <Link href='/app/discover'>
                     <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Discover</p>
                   </Link>
                 }
@@ -540,7 +540,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
             <div className="flex w-full items-center h-20">
               <div className="flex items-center">
                 <div className="flex-shrink-0 hover:cursor-pointer">
-                  <Link href='/' passHref legacyBehavior>
+                  <Link href='/' passHref>
                     <div className='w-8 h-8'>
                       {useDarkMode ? <LightNavLogo className='justify-start' /> : <NavLogo className='justify-start' />}
                     </div>

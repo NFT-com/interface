@@ -27,7 +27,7 @@ export const LearnCards = (props: LearnCardsProps) => {
       'disableOnInteraction': false
     }} className='flex space-x-4 drop-shadow-md'>
       {props?.cards?.map((card, index) => (
-        <Link href={card['linkTo']} passHref key={card['title']} legacyBehavior>
+        <Link href={card['linkTo']} passHref key={card['title']}>
           <SwiperSlide
             key={card['title']}
             className={tw(

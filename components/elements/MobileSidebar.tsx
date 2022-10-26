@@ -68,7 +68,7 @@ export const MobileSidebar = () => {
             </div>
             :
             <div>
-              <Link href='/app/discover' legacyBehavior>
+              <Link href='/app/discover'>
                 <h2 className={tw(
                   'w-full py-6 text-2xl font-medium font-noi-grotesk'
                 )}
@@ -82,7 +82,7 @@ export const MobileSidebar = () => {
           
         </div>
         <div className='border-b border-[#ECECEC]'>
-          <Link href='/app/gallery' legacyBehavior>
+          <Link href='/app/gallery'>
             <h2 className={tw(
               'w-full py-6 text-2xl font-medium font-noi-grotesk'
             )}
@@ -113,7 +113,7 @@ export const MobileSidebar = () => {
           >
             <div className="flex flex-col">
               <p onClick={() => window.open ('https://docs.nft.com/', '_ blank')} className='font-medium text-lg pb-3 w-full flex justify-between items-center hover:cursor-pointer'>Docs<CaretRight width={25} weight='bold' color='black' /></p>
-              <Link href='/articles' legacyBehavior>
+              <Link href='/articles'>
                 <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
                   Blog
                   <CaretRight width={25} weight='bold' color='black' />

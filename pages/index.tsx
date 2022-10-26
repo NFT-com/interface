@@ -1101,7 +1101,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
               </div>
               <ProfileFeed profiles={[profileFeed1, profileFeed2, profileFeed3, profileFeed4, profileFeed5, profileFeed6, profileFeed7, profileFeed8]} />
               <div className='flex flex-row justify-center sm:w-full items-center pt-6 -mb-12 ...'>
-                <Link href={'/app/gallery?type=profile'} legacyBehavior>
+                <Link href={'/app/gallery?type=profile'}>
                   <button
                     className={tw(
                       'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',
@@ -1223,7 +1223,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   />
                 </div>
                 <div className='flex flex-row justify-center minmd:w-auto w-full items-center pt-6 ...'>
-                  <Link href={'/articles'} legacyBehavior>
+                  <Link href={'/articles'}>
                     <button
                       className={tw(
                         'font-grotesk font-bold text-base bg-[#F9D963] rounded-lg text-[#4D4412] block',

@@ -79,7 +79,7 @@ export default function MintFreeProfileCard({ type, minting, setModalOpen, setMi
           {hasListings ?
             <Link
               href={`/app/nft/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D/${profileTokenId?.toNumber()}`}
-              legacyBehavior>
+             >
               <button
                 type="button"
                 className={tw(

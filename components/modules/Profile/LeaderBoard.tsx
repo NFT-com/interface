@@ -55,7 +55,7 @@ export function LeaderBoard({ data }: LeaderBoardProps) {
                 }}
               >
                 <td className='group-hover:text-[#FF9B37] group-hover:bg-[#FFF0CB] transition-colors'>
-                  <Link href={item.url} legacyBehavior>
+                  <Link href={item.url}>
                     <div className={tw('h-full flex items-center',
                       'justify-start whitespace-nowrap pl-4',
                       'text-[1.125rem] minmd:text-[1.1875rem] minxxl:text-[1.5rem] leading-body')}>
@@ -127,7 +127,7 @@ export function LeaderBoard({ data }: LeaderBoardProps) {
                   </div>
                 </td>
                 <td>
-                  <Link href={item.url} legacyBehavior>
+                  <Link href={item.url}>
                     <div className={tw('h-full flex items-center',
                       'justify-start whitespace-nowrap',
                       'minmd:text-body text-sm leading-body font-bold')}>

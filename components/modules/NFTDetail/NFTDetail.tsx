@@ -81,7 +81,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         <div className='flex flex-col'>
           <Link
             href={`/app/collection/${collection?.collection?.contract}`}
-            legacyBehavior>
+           >
             <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline cursor-pointer">
               {isNullOrEmpty(collectionName) ?
                 (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
@@ -161,7 +161,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 </div> :
                 <Link
                   href={getEtherscanLink(Number(defaultChainId), collection?.collection?.contract, 'address')}
-                  legacyBehavior>
+                 >
                   <span className="text-[#B59007] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
                     {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
                   </span>

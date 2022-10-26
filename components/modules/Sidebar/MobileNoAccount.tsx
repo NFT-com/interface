@@ -17,7 +17,7 @@ export default function MobileNoAccount({ setSignIn }: MobileNoAccountProps) {
     return (
       <motion.div className='text-white font-noi-grotesk bg-black h-full px-5 py-10'>
         <div className="flex-shrink-0 flex items-center hover:cursor-pointer mr-7">
-          <Link href='/' passHref legacyBehavior>
+          <Link href='/' passHref>
             <div className='w-8 h-8'>
               <LightNavLogo className='justify-start' />
             </div>

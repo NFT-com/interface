@@ -50,7 +50,7 @@ export default function AssetTableRow({
       return <p className='text-[#B6B6B6]'>hidden</p>;
     }
     if (profiles?.length === 1){
-      return <Link href={`/${profiles[0].url}`} legacyBehavior><p className='text-[#B59007] font-bold hover:cursor-pointer'><span className='text-black'>/ </span>{profiles[0].url}</p></Link>;
+      return <Link href={`/${profiles[0].url}`}><p className='text-[#B59007] font-bold hover:cursor-pointer'><span className='text-black'>/ </span>{profiles[0].url}</p></Link>;
     }
     return (
       <div className='font-medium flex items-center relative underline text-[#1F2127] decoration-[#B59007] underline-offset-2'>
@@ -62,7 +62,7 @@ export default function AssetTableRow({
               className="rounded-xl p-3 bg-white text-black w-[200px] flex flex-col space-y-3"
             >
               {profiles.map((profile) => (
-                <Link key={profile.url} href={`/${profile.url}`} legacyBehavior>
+                <Link key={profile.url} href={`/${profile.url}`}>
                   <p className='text-[#B59007] font-bold hover:cursor-pointer'>
                     <span className='text-black'>/ </span>{profile.url}</p>
                 </Link>
@@ -93,14 +93,14 @@ export default function AssetTableRow({
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <Link
           href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`}
-          legacyBehavior>
+         >
           <div className='hover:cursor-pointer'>
             <p className='-mt-1 font-bold text-[#B59007]'>{item.metadata?.name}</p>
           </div>
         </Link>
       </td>
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
-        <Link href={`/app/collection/${item?.contract}`} legacyBehavior>
+        <Link href={`/app/collection/${item?.contract}`}>
           <div className='hover:cursor-pointer'>
             <p className='-mt-1 font-bold text-[#B59007]'>{collectionName}</p>
           </div>

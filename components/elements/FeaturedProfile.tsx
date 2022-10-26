@@ -28,7 +28,7 @@ export const FeaturedProfile = (props: FeaturedProfileProps) => {
           <div className="h-10 w-10 mr-2 mt-0.5">
             {
               props.profileOwner ?
-                <Link href={props.profileOwner.profile.url} legacyBehavior>
+                <Link href={props.profileOwner.profile.url}>
                   <Image
                     src={props.profileOwner?.profile?.photoURL ?? 'https://cdn.nft.com/profile-image-default.svg'}
                     alt='featured profile main image'

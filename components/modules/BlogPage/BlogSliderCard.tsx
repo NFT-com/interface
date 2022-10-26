@@ -81,7 +81,7 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
             </div>
           </div>
         </div>
-        <Link href={`/articles/${post.slug}`} legacyBehavior>
+        <Link href={`/articles/${post.slug}`}>
           <button
             className={tw(
               'font-grotesk font-bold bg-[#F9D963] rounded-lg text-[#4D4412] block',

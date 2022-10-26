@@ -109,7 +109,7 @@ export default function MintProfilesPage() {
 
           </Link>
           <div className='absolute top-2 left-6 minlg:right-1 hover:cursor-pointer w-7 h-7 bg-black rounded-full'></div>
-          <Link href='/' legacyBehavior>
+          <Link href='/'>
             <ArrowCircleLeft className='absolute bottom-0 minmd:top-0 left-5 hover:cursor-pointer' size={45} color="white" weight="fill" />
           </Link>
 

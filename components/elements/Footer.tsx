@@ -166,7 +166,7 @@ export const Footer = () => {
             )}>
               {/* Logo */}
               <div data-aos="fade-right" data-aos-delay="100" className='flex items-center mb-[2.625rem] minlg:mb-0'>
-                <Link href='/' passHref legacyBehavior>
+                <Link href='/' passHref>
                   <div className='w-[3.8rem] h-[3.8rem]'>
                     <Logo className='w-[3.8rem] h-[3.8rem] justify-start' />
                   </div>
@@ -214,7 +214,7 @@ export const Footer = () => {
                     <div className='flex flex-col'>
                       {item.links?.map((item, index) => {
                         return (
-                          <Link href={item.link} key={index} legacyBehavior>
+                          <Link href={item.link} key={index}>
                             {item.newTab ?
                               <a
                                 target="_blank"
@@ -324,11 +324,11 @@ export const Footer = () => {
             'minlg:w-max w-full flex-shrink-0 flex',
             'items-start justify-between flex-col text-base minlg:pl-5 pl-0 minlg:items-start'
           )}>
-            <Link href="/" legacyBehavior>
+            <Link href="/">
               <div className={tw(
                 'font-hero-heading1 flex items-center mb-0 minlg:mb-8',
               )}>
-                <Link href='/' passHref legacyBehavior>
+                <Link href='/' passHref>
                   <div className='w-10 h-10'>
                     <Logo className='w-10 h-10 justify-start' />
                   </div>
@@ -349,7 +349,7 @@ export const Footer = () => {
                   <div className='flex flex-col'>
                     {item.links?.map((item, index) => {
                       return (
-                        <Link href={item.link} key={index} legacyBehavior>
+                        <Link href={item.link} key={index}>
                           {item.newTab ?
                             <a
                               target="_blank"

@@ -178,7 +178,7 @@ export function Collection(props: CollectionProps) {
           )}>
             <p className='text-[10px] uppercase text-[#6F6F6F] font-bold'>Creator</p>
             {collectionPreferredOwnerData?.profile ?
-              <Link href={`/${collectionPreferredOwnerData?.profile?.url}`} legacyBehavior>
+              <Link href={`/${collectionPreferredOwnerData?.profile?.url}`}>
                 <p className='font-bold underline decoration-[#F9D963] underline-offset-4 cursor-pointer'>{collectionPreferredOwnerData?.profile?.url}</p>
               </Link>
               :
