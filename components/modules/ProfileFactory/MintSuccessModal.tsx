@@ -83,8 +83,11 @@ export default function MintProfileSuccessModal() {
                       </button>
                     </div>
 
-                    <Link href='/app/mint-profiles' passHref>
-                      <a className='block mt-8 minmd:mt-9 underline font-medium text-lg text-[#E4BA18]'>Mint another NFT Profile</a>
+                    <Link
+                      href='/app/mint-profiles'
+                      passHref
+                      className='block mt-8 minmd:mt-9 underline font-medium text-lg text-[#E4BA18]'>
+                      Mint another NFT Profile
                     </Link>
                   </div>
                 </div>

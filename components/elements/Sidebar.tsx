@@ -138,28 +138,31 @@ export const Sidebar = () => {
               Notifications
             </a>
 
-            <Link href='/app/activity' passHref>
-              <a onClick={() => setSidebarOpen(false)}
-                className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'
-              >
-                <ChartLine weight='fill' className='mr-2' /> My Activity
-              </a>
+            <Link
+              href='/app/activity'
+              passHref
+              onClick={() => setSidebarOpen(false)}
+              className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'>
+
+              <ChartLine weight='fill' className='mr-2' />My Activity
             </Link>
 
-            <Link href='/app/assets' passHref>
-              <a onClick={() => setSidebarOpen(false)}
-                className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'
-              >
-                <User weight='fill' className='mr-2' /> My Assets
-              </a>
+            <Link
+              href='/app/assets'
+              passHref
+              onClick={() => setSidebarOpen(false)}
+              className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'>
+
+              <User weight='fill' className='mr-2' />My Assets
             </Link>
 
-            <Link href='/app/settings' passHref>
-              <a onClick={() => setSidebarOpen(false)}
-                className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'
-              >
-                <GearSix weight='fill' className='mr-2' /> Settings
-              </a>
+            <Link
+              href='/app/settings'
+              passHref
+              onClick={() => setSidebarOpen(false)}
+              className='pl-4 py-2 font-bold text-[#B59007] border-b flex items-center'>
+
+              <GearSix weight='fill' className='mr-2' />Settings
             </Link>
 
             <a
@@ -174,20 +177,24 @@ export const Sidebar = () => {
             </a>
           </div>
 
-          <Link href='/app/discover' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
-            >
+          <Link
+            href='/app/discover'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'>
+            
               Discover
-            </a>
+            
           </Link>
 
-          <Link href='/app/gallery' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
-            >
+          <Link
+            href='/app/gallery'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'>
+            
               Gallery
-            </a>
+            
           </Link>
 
           <a

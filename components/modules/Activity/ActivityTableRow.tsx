@@ -158,7 +158,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
           :
           <>
             <p className='text-[#6F6F6F] uppercase text-[10px]'>{collectionName}</p>
-            <Link href={`/app/nft/${item?.nftContract}/${nftId}`}>
+            <Link href={`/app/nft/${item?.nftContract}/${nftId}`} legacyBehavior>
               <p className='text-[#B59007] hover:cursor-pointer -mt-1'>{nftName}</p>
             </Link>
           </>

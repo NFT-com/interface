@@ -104,19 +104,19 @@ export default function MintProfilesPage() {
         
         <div className='w-full max-w-nftcom mx-auto relative mt-10 minmd:mt-4 z-50'>
           <Link href='/'>
-            <a>
-              <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
-            </a>
+
+            <NFTLogoSmall className='mx-auto block minmd:hidden hover:cursor-pointer' />
+
           </Link>
           <div className='absolute top-2 left-6 minlg:right-1 hover:cursor-pointer w-7 h-7 bg-black rounded-full'></div>
-          <Link href='/'>
+          <Link href='/' legacyBehavior>
             <ArrowCircleLeft className='absolute bottom-0 minmd:top-0 left-5 hover:cursor-pointer' size={45} color="white" weight="fill" />
           </Link>
 
           <Link href='/'>
-            <a>
-              <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
-            </a>
+
+            <NFTLogo className='mx-auto hidden minmd:block hover:cursor-pointer' />
+
           </Link>
           <div className=' justify-end mt-10 mr-5 flex minmd:hidden'>
             {currentAddress && <ConnectButton />}

@@ -17,7 +17,7 @@ export default function MobileNoAccount({ setSignIn }: MobileNoAccountProps) {
     return (
       <motion.div className='text-white font-noi-grotesk bg-black h-full px-5 py-10'>
         <div className="flex-shrink-0 flex items-center hover:cursor-pointer mr-7">
-          <Link href='/' passHref>
+          <Link href='/' passHref legacyBehavior>
             <div className='w-8 h-8'>
               <LightNavLogo className='justify-start' />
             </div>
@@ -40,20 +40,24 @@ export default function MobileNoAccount({ setSignIn }: MobileNoAccountProps) {
             Sign in
           </a>
 
-          <Link href='/app/discover' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#fff] hover:text-[#F9D54C] text-[2.5rem] font-grotesk font-medium leading-9 pr-12 pb-3 mb-7 minlg:hidden'
-            >
+          <Link
+            href='/app/discover'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#fff] hover:text-[#F9D54C] text-[2.5rem] font-grotesk font-medium leading-9 pr-12 pb-3 mb-7 minlg:hidden'>
+            
               Discover
-            </a>
+            
           </Link>
 
-          <Link href='/app/gallery' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#fff] hover:text-[#F9D54C] text-[2.5rem] font-grotesk font-medium leading-9 pr-12 pb-3 mb-7 minlg:hidden'
-            >
+          <Link
+            href='/app/gallery'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#fff] hover:text-[#F9D54C] text-[2.5rem] font-grotesk font-medium leading-9 pr-12 pb-3 mb-7 minlg:hidden'>
+            
               Gallery
-            </a>
+            
           </Link>
 
           <a
@@ -80,20 +84,24 @@ export default function MobileNoAccount({ setSignIn }: MobileNoAccountProps) {
             Sign in
           </a>
 
-          <Link href='/app/discover' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
-            >
+          <Link
+            href='/app/discover'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'>
+            
               Discover
-            </a>
+            
           </Link>
 
-          <Link href='/app/gallery' passHref>
-            <a onClick={() => setSidebarOpen(false)}
-              className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'
-            >
+          <Link
+            href='/app/gallery'
+            passHref
+            onClick={() => setSidebarOpen(false)}
+            className='flex flex-row w-full items-start text-[#B59007] hover:bg-gradient-to-r from-[#F8F8F8] font-grotesk font-bold text-2xl leading-9 pr-12 pl-4 pb-3 minlg:hidden'>
+            
               Gallery
-            </a>
+            
           </Link>
 
           <a

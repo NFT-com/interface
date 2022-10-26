@@ -77,7 +77,9 @@ export default function MintFreeProfileCard({ type, minting, setModalOpen, setMi
               </p>
           }
           {hasListings ?
-            <Link href={`/app/nft/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D/${profileTokenId?.toNumber()}`}>
+            <Link
+              href={`/app/nft/0x98ca78e89Dd1aBE48A53dEe5799F24cC1A462F2D/${profileTokenId?.toNumber()}`}
+              legacyBehavior>
               <button
                 type="button"
                 className={tw(
@@ -121,12 +123,16 @@ export default function MintFreeProfileCard({ type, minting, setModalOpen, setMi
           }
               
         </div>
-        <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
-          <a target="_blank" >
-            <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
-            Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
-            </p>
-          </a>
+        <Link
+          href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile'
+          passHref
+          className='mt-4'
+          target="_blank">
+
+          <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
+          Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
+          </p>
+
         </Link>
       </div>
     </div>

@@ -119,56 +119,54 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
     return () => clearTimeout(delayDebounceFn);
   }, [inputValue, name, type, setFreeProfile, setGKProfile]);
 
-  return (
-    <>
-      <div className="relative w-full flex items-center mt-4 mb-3">
-        <div className={tw(
-          'left-0 pl-4 flex font-bold text-black',
-          'rounded-l-lg bg-white py-3 text-lg',
-          'bg-[#F8F8F8]'
-        )}>
-      NFT.com/
-        </div>
-        <input
-          name={name}
-          className={tw(
-            'text-lg min-w-0 ProfileNameInput',
-            'text-left px-3 py-3 w-full rounded-r-lg font-medium',
-            'bg-[#F8F8F8]'
-          )}
-          placeholder="Enter Profile Name"
-          autoFocus={true}
-          value={inputValue}
-          spellCheck={false}
-          onChange={async e => {
-            if (minting) {
-              e.preventDefault();
-              return;
-            }
-            const validReg = /^[a-z0-9_]*$/;
-            if (
-              validReg.test(e.target.value.toLowerCase()) &&
-                    e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
-            ) {
-              setInputValue(e.target.value);
-            } else {
-              e.preventDefault();
-            }
-          }}
-        />
-        <div className='absolute right-0 flex pointer-events-none pr-4'>
-          {loadingTokenId
-            ? <Loader />
-            : <BidStatusIcon
-              whiteBackgroundOverride
-              status={getProfileStatus()}
-              isOwner={profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(inputValue)}
-            />}
-        </div>
+  return <>
+    <div className="relative w-full flex items-center mt-4 mb-3">
+      <div className={tw(
+        'left-0 pl-4 flex font-bold text-black',
+        'rounded-l-lg bg-white py-3 text-lg',
+        'bg-[#F8F8F8]'
+      )}>
+    NFT.com/
       </div>
-        
-      {getProfileStatusText(getProfileStatus(), profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(inputValue))}
-    </>
-  );
+      <input
+        name={name}
+        className={tw(
+          'text-lg min-w-0 ProfileNameInput',
+          'text-left px-3 py-3 w-full rounded-r-lg font-medium',
+          'bg-[#F8F8F8]'
+        )}
+        placeholder="Enter Profile Name"
+        autoFocus={true}
+        value={inputValue}
+        spellCheck={false}
+        onChange={async e => {
+          if (minting) {
+            e.preventDefault();
+            return;
+          }
+          const validReg = /^[a-z0-9_]*$/;
+          if (
+            validReg.test(e.target.value.toLowerCase()) &&
+                  e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
+          ) {
+            setInputValue(e.target.value);
+          } else {
+            e.preventDefault();
+          }
+        }}
+      />
+      <div className='absolute right-0 flex pointer-events-none pr-4'>
+        {loadingTokenId
+          ? <Loader />
+          : <BidStatusIcon
+            whiteBackgroundOverride
+            status={getProfileStatus()}
+            isOwner={profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(inputValue)}
+          />}
+      </div>
+    </div>
+      
+    {getProfileStatusText(getProfileStatus(), profileTokens?.map(token => token?.tokenUri?.raw?.split('/').pop()).includes(inputValue))}
+  </>;
 }
     
