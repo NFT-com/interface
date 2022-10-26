@@ -1934,6 +1934,8 @@ input[type="search"]::-webkit-search-cancel-button {
 
 .anim-corner.anim-corner-news-2 {
   animation-name: cornerAnimNews-2;
+  stroke: white;
+  stroke-width: 3px;
 }
 
 
@@ -2063,13 +2065,13 @@ input[type="search"]::-webkit-search-cancel-button {
 
 @keyframes cornerAnimNews-2 {
   0% {
-    transform: translate(3.35%, -6%);
+    transform: translate(3.1%, -6%);
   }
   50% {
     transform: translate(0, 0);
   }
   100% {
-    transform: translate(3.35%, -6%);
+    transform: translate(3.1%, -6%);
   }
 }
 

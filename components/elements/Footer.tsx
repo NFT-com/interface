@@ -42,8 +42,8 @@ export const Footer = () => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '.page-footer',
-          start: '70% bottom',
-          end: '+=50px',
+          start: '75% bottom',
+          end: '+=30px',
           toggleActions: router.pathname === '/' ? 'play none reverse none' : 'none none none none',
         }
       })

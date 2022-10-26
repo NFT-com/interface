@@ -283,7 +283,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-leaderboard-trigger',
           start: 'top 80%',
-          end: '+=50px',
+          end: '+=30px',
           //pin: '#anim-leaderboard-trigger',
           toggleActions: 'play none reverse none',
         }
@@ -304,7 +304,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-news-trigger',
           start: 'top 80%',
-          end: '+=50px',
+          end: '+=30px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -319,7 +319,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
         scrollTrigger: {
           trigger: '#anim-ticker-trigger',
           start: '20% bottom',
-          end: '+=50px',
+          end: '+=30px',
           toggleActions: 'play none reverse none',
         }
       })
@@ -512,7 +512,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 'w-full h-[28.75rem] pointer-events-none'
               )}></span>
               <div className={tw(
-                'w-full mx-auto pt-10 px-5 minmd:px-9 bg-black', /* pb-[8.5rem] minlg:pb-40 */
+                'w-full mx-auto pt-10 px-5 minlg:px-9 bg-black', /* pb-[8.5rem] minlg:pb-40 */
                 'minlg:rounded-3xl flow-root relative z-10',
               )}>
                 <h2 data-aos="fade-up" data-aos-delay="200" id='anim-profile-head' className={tw(
@@ -534,7 +534,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   <div id='anim-profile-first-item' data-aos="fade-up" data-aos-delay="100" className={tw(
                     'minlg:translate-y-1/4 transform-gpu',
                     'mb-5 minlg:mb-0',
-                    'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
+                    'px-8 pt-12 pb-4 minmd:px-5 minlg:px-8 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                     'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
                   )}>
                     <svg role='presentation' className={tw(
@@ -557,7 +557,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9',
                       'bg-[#121212] drop-shadow-lg rounded-full',
                       'flex items-center justify-center text-center',
-                      'text-3xl minlg:text-[3.9rem] minxxl:text-[5rem] leading-none tracking-tight'
+                      'text-[1.875rem] minmd:text-[1.625rem] leading-none tracking-tight',
+                      'minlg:text-[calc(34px+29*(100vw-375px)/1545)]',
                     )}>
                       <div className='text-transparent flex'>NFT.COM
                         <div role='presentation' className={tw(
@@ -568,7 +569,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       </div>
 
                       <div className={tw(
-                        'absolute inset-x-5 minxxl:inset-x-8 top-0 bottom-0',
+                        'absolute inset-x-3 minxxl:inset-x-8 top-0 bottom-0',
                         'text-white/40 flex'
                       )}>
                         {data_v2?.dynamicUrl['url'].map(word =>
@@ -598,7 +599,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   <div id='anim-profile-second-item' data-aos="fade-up" data-aos-delay="100" className={tw(
                     'minlg:translate-y-1/2 transform-gpu',
                     'mb-5 minlg:mb-0',
-                    'px-8 pt-12 pb-4 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
+                    'px-8 pt-12 pb-4 minmd:px-5 minlg:px-8 minxxl:pt-16 minxxl:pb-6 relative z-0 overflow-hidden',
                     'bg-white border-black border-2 border-t-0 rounded-3xl rounded-tr-none'
                   )}>
                     <svg role='presentation' className={tw(
@@ -806,7 +807,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 </svg>
 
                 <svg className={tw(
-                  'absolute -z-10 top-0 right-0 max-w-[250px] minlg:max-w-none',
+                  'absolute -z-10 top-0 right-0 max-w-[250px] minxl:max-w-none',
                   'translate-x-[20px] -translate-y-[67px]',
                   'hidden minlg:block'
                 )} aria-hidden="true" width='402' height='225' viewBox="0 0 402 225" xmlns="http://www.w3.org/2000/svg">
@@ -934,7 +935,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           )}>
             <div className='px-3 minmd:px-14 minxxl:px-20 relative z-0'>
               <div className={tw(
-                'pt-[5.625rem] minlg:pt-28 minxxl:pt-32 pb-16 minxxl:pb-20 mb-[4.75rem] minlg:mb-24'
+                'pt-[5.625rem] minlg:pt-28 minxxl:pt-32 pb-[5.25rem] minxxl:pb-20 minlg:mb-24'
               )}>
                 <svg role='presentation' className={tw(
                   'absolute -z-10 minlg:hidden',
@@ -963,7 +964,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                   'text-[calc(54px+112*(100vw-375px)/1545)]'
                 )}>
                   <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                    'text-[1em]',
+                    'text-[1em] text-center minlg:text-left',
                     'text-black font-normal leading-[1.1] relative',
                     'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
                   )}>
