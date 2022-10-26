@@ -90,16 +90,19 @@ export function LinksToSection(props: LinksToSectionParams) {
                 key={item.section}
                 target='_blank'
                 className="bg-footer-bg rounded-xl lg:w-full w-52 grow cursor-pointer">
-
-                <div className="text-sm minxl:text-lg p-2 minlg:p-4">{item.section}</div>
-                <div className="w-full">
-                  <img src={item.image} className="object-center object-cover w-full" alt="link to section" />
-                </div>
-                <div className="p-3 minlg:p-4">
-                  <div className="mb-1 text-base minxl:text-xl">{item.title}</div>
-                  <div className="text-xs minxl:text-base">{item.description}</div>
-                </div>
-
+                <a
+                  target='_blank'
+                  key={item.section}
+                  className="bg-footer-bg rounded-xl lg:w-full w-52 grow cursor-pointer">
+                  <div className="text-sm minxl:text-lg p-2 minlg:p-4">{item.section}</div>
+                  <div className="w-full">
+                    <img src={item.image} className="object-center object-cover w-full" alt="link to section" />
+                  </div>
+                  <div className="p-3 minlg:p-4">
+                    <div className="mb-1 text-base minxl:text-xl">{item.title}</div>
+                    <div className="text-xs minxl:text-base">{item.description}</div>
+                  </div>
+                </a>
               </Link>)
             )
           )
