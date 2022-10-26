@@ -6,6 +6,7 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CheckCircle } from 'phosphor-react';
 import { X } from 'phosphor-react';
@@ -91,20 +92,22 @@ export default function ProfileSelectModal() {
                         </>
                     }
                   </p>
-                  <button
-                    type="button"
-                    className={tw(
-                      'inline-flex w-full justify-center',
-                      'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                      'px-4 py-4 text-xl font-medium text-black',
-                      'focus:outline-none focus-visible:bg-[#E4BA18]',
-                      'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C] mt-10'
-                    )}
-                    disabled={claimableSum === 0}
-                    onClick={() => router.push('/app/mint-profiles')}
-                  >
+                  <Link href='/app/mint-profiles'>
+                    <button
+                      type="button"
+                      className={tw(
+                        'inline-flex w-full justify-center',
+                        'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
+                        'px-4 py-4 text-xl font-medium text-black',
+                        'focus:outline-none focus-visible:bg-[#E4BA18]',
+                        'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C] mt-10'
+                      )}
+                      disabled={claimableSum === 0}
+                      
+                    >
                    Add NFT Profile
-                  </button>
+                    </button>
+                  </Link>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
