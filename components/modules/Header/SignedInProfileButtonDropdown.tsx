@@ -116,9 +116,9 @@ export function SignedInProfileButtonDropdown() {
           <CaretUp size={32} color="white" weight="fill" className='absolute right-3 -top-[18px] minlg:right-auto minlg:left-[43%]'/>
 
           <div className='max-h-[128px] overflow-y-auto pt-2 mt-2'>
-            {myOwnedProfileTokens.map((profile) => (
+            {myOwnedProfileTokens?.length > 0 && myOwnedProfileTokens.map((profile) => (
               user.currentProfileUrl === profile.title ?
-                <Link href={`/${profile.title}`}>
+                <Link key={profile.title} href={`/${profile.title}`}>
                   <div
                     key={profile.title}
                     className={'flex flex-row w-full px-4 py-2 items-center justify-between bg-[#FFF4CA] text-primary-txt font-medium h-10'}
