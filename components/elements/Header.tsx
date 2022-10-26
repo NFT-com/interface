@@ -152,10 +152,8 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     </Link>
                   }
 
-                  <Link
-                    href='/app/gallery'
-                    className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>
-                    Gallery
+                  <Link href='/app/gallery'>
+                    <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Gallery</p>
                   </Link>
 
                   <DropdownPickerModal
@@ -379,10 +377,8 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   </Link>
                 }
 
-                <Link
-                  href='/app/gallery'
-                  className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>
-                  Gallery
+                <Link href='/app/gallery'>
+                  <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Gallery</p>
                 </Link>
 
                 <DropdownPickerModal
