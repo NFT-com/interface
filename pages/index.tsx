@@ -432,8 +432,8 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                 <div className='absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2'>
                   <div id="anim-hero-player" className={tw(
                     'pointer-events-none',
-                    'scale-x-[.55] scale-y-[.3]',
-                    'minmd:scale-x-[.84] minmd:scale-y-[.6] minlg:scale-x-[.7] minlg:scale-y-[.5]',
+                    'scale-x-[2.6] scale-y-[1.6]',
+                    'minmd:scale-x-[2] minmd:scale-y-[1.3] minlg:scale-x-[1.2] minlg:scale-y-[0.8]',
                     'minxxl:scale-x-100 minxxl:scale-y-[.65] minhd:scale-[1.25]',
                     '-skew-x-[41deg] skew-y-[19deg]'
                   )}>
@@ -441,7 +441,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
                       autoplay
                       loop
                       src="/anim/cycle.json"
-                      style={{ height: '1600px', width: '1600px' }}
+                      style={{ height: '85vw', width: '85vw' }}
                     >
                     </Player>
                   </div>
@@ -570,13 +570,13 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
 
                       <div className={tw(
                         'absolute inset-x-3 minxxl:inset-x-8 top-0 bottom-0',
-                        'text-white/40 flex'
+                        'text-white flex'
                       )}>
                         {data_v2?.dynamicUrl['url'].map(word =>
                           <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
-                          NFT.COM
+                            <span className='text-white/40'>NFT.COM</span>
                             <span className={tw(
-                              'mt-[.125em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
+                              'mt-[.075em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',
                               'bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
                               'h-[.68em] w-[.1081em] basis-[.1081em] rounded-[3px]'
                             )}></span>{word.toUpperCase()}
