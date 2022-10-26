@@ -52,6 +52,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
       router.push(`/app/nft/${document.contractAddr}/${document.tokenId}`);
     }
     setSearchModalOpen(false);
+    setShowHits(false);
   };
 
   const search = (event) => {
