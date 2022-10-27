@@ -9,6 +9,7 @@ import { SearchModal } from 'components/modules/Search/SearchModal';
 import { useChangeWallet } from 'hooks/state/useChangeWallet';
 import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
+import { useUser } from 'hooks/state/useUser';
 import ClientOnly from 'utils/ClientOnly';
 import { tw } from 'utils/tw';
 
@@ -26,6 +27,7 @@ const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => i
 const DynamicProfileSelectModal = dynamic<React.ComponentProps<typeof ProfileSelectModal>>(() => import('components/modules/ProfileFactory/ProfileSelectModal').then(mod => mod.default));
 
 export default function DefaultLayout({ children, hideFooter, hideHeader, hideSearch }: DefaultLayoutProps) {
+  const { setCurrentProfileUrl } = useUser();
   const { openConnectModal } = useConnectModal();
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   const { changeWallet, setChangeWallet } = useChangeWallet();
@@ -62,6 +64,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
             changeWallet && openConnectModal();
             setChangeWallet(false);
             setProfileSelectModalOpen(false);
+            setCurrentProfileUrl('');
           }}
         />
         {!hideFooter && <DynamicFooter />}
