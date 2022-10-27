@@ -76,23 +76,26 @@ export function GenesisKeyGalleryProfileItems(props: GenesisKeyGalleryProfileIte
         {filterNulls(profileTokens)
           .map((profileToken, index) => {
             return (
-              (<Link
+              <Link
                 href={'/' + profileToken?.tokenUri?.raw?.split('/').pop()}
                 key={profileToken.id.tokenId ?? index}
                 passHref
-                className={tw(
-                  'flex items-center justify-center p-4',
-                  'minxl:w-1/5 minlg:w-1/4 minmd:w-1/3 w-2/5'
-                )}>
-
-                <OwnedProfileGalleryCard
-                  token={profileToken}
-                  onClick={() => {
-                    router.push('/' + profileToken?.tokenUri?.raw?.split('/').pop());
-                  }}
-                />
-
-              </Link>)
+              >
+                <a
+                  key={profileToken.id.tokenId ?? index}
+                  className={tw(
+                    'flex items-center justify-center p-4',
+                    'minxl:w-1/5 minlg:w-1/4 minmd:w-1/3 w-2/5'
+                  )}
+                >
+                  <OwnedProfileGalleryCard
+                    token={profileToken}
+                    onClick={() => {
+                      router.push('/' + profileToken?.tokenUri?.raw?.split('/').pop());
+                    }}
+                  />
+                </a>
+              </Link>
             );
           })}
       </div>

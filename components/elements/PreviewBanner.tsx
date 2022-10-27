@@ -11,10 +11,12 @@ function PreviewBanner() {
       <Link
         prefetch={false}
         href={`/api/cancel-preview?slug=${router?.asPath}`}
-        className="bg-white dark:bg-black text-black dark:text-white rounded decoraction p-2">
-        
+      >
+        <a
+          className="bg-white dark:bg-black text-black dark:text-white rounded decoraction p-2"
+        >
           EXIT PREVIEW MODE
-        
+        </a>
       </Link>
     </div>
   );

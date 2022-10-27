@@ -62,20 +62,20 @@ export function NullState(props: NullStateProps) {
         <div className={`${props.secondaryBtnLabel && props.secondaryOnClick ? 'flex justify-evenly w-full minmd:w-1/2 items-center': ''} `}>
           {props.buttonLabel &&
             <Link href={props.href}>
-
-              <div className='drop-shadow-md'>
-                <Button type={ButtonType.PRIMARY} onClick={() => null} label={props.buttonLabel} />
-              </div>
-
+              <a>
+                <div className='drop-shadow-md'>
+                  <Button type={ButtonType.PRIMARY} onClick={() => null} label={props.buttonLabel} />
+                </div>
+              </a>
             </Link>
           }
           {props.secondaryBtnLabel &&
             <Link href={props.secondaryHref}>
-
-              <div className='drop-shadow-md'>
-                <Button type={ButtonType.PRIMARY} onClick={() => null} label={props.secondaryBtnLabel} />
-              </div>
-
+              <a>
+                <div className='drop-shadow-md'>
+                  <Button type={ButtonType.PRIMARY} onClick={() => null} label={props.secondaryBtnLabel} />
+                </div>
+              </a>
             </Link>
           }
         </div>

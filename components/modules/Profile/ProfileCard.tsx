@@ -23,14 +23,11 @@ export function ProfileCard(props: ProfileCardProps) {
     1000
   );
 
-  return (
-    <Link
-      href={'/' + props.profile?.url}
-      passHref
-      className={tw(
-        'flex flex-col snap-always snap-center sn:no-scrollbar h-full w-72 shrink-0 p-4 border border-[#D5D5D5] rounded-md cursor-pointer mr-4 text-black text-base',
-      )}>
-
+  return <Link href={'/' + props.profile?.url} passHref>
+    <a className={tw(
+      'flex flex-col snap-always snap-center sn:no-scrollbar h-full w-72 shrink-0 p-4 border border-[#D5D5D5] rounded-md cursor-pointer mr-4 text-black text-base',
+    )}
+    >
       <RoundedCornerMedia
         priority={props?.priority}
         containerClasses='w-full aspect-square'
@@ -46,7 +43,6 @@ export function ProfileCard(props: ProfileCardProps) {
         <span className='text-secondary-txt'>NFTs Displayed:</span>
         <span className='font-bold ml-1'>{publicProfileNftsCount}</span>
       </div>
-
-    </Link>
-  );
+    </a>
+  </Link>;
 }

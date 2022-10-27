@@ -214,7 +214,10 @@ export const Footer = () => {
                     <div className='flex flex-col'>
                       {item.links?.map((item, index) => {
                         return (
-                          <Link href={item.link} key={index}>
+                          <Link
+                            href={item.link}
+                            key={index}
+                          >
                             {item.newTab ?
                               <a
                                 target="_blank"
@@ -252,8 +255,7 @@ export const Footer = () => {
                         );
                       })}
                     </div>
-                  </div>
-                );
+                  </div>);
               })}
             </div>
           </div>
@@ -349,7 +351,10 @@ export const Footer = () => {
                   <div className='flex flex-col'>
                     {item.links?.map((item, index) => {
                       return (
-                        <Link href={item.link} key={index}>
+                        <Link
+                          href={item.link}
+                          key={index}
+                        >
                           {item.newTab ?
                             <a
                               target="_blank"
@@ -387,8 +392,7 @@ export const Footer = () => {
                       );
                     })}
                   </div>
-                </div>
-              );
+                </div>);
             })}
           </div>
         </div>
