@@ -147,6 +147,18 @@ export function SignedInProfileButtonDropdown() {
           <CaretUp size={32} color="white" weight="fill" className='absolute right-3 -top-[18px] minlg:right-auto minlg:left-[43%]'/>
 
           <div className='max-h-[128px] overflow-y-auto pt-2 mt-2'>
+
+            <p className='text-black px-4'>No Profiles Found</p>
+            <div
+              onClick={() => {
+                router.push('/app/claim-profiles');
+                setExpanded(false);
+              }}
+              style={{ height: '10%' }}
+              className={'flex flex-row w-full px-4 items-center font-medium text-black hover:cursor-pointer'}
+            >
+              Create One Here
+            </div>
             {myOwnedProfileTokens?.length > 0 && myOwnedProfileTokens.map((profile) => (
               user.currentProfileUrl === profile.title ?
                 <Link key={profile.title} href={`/${profile.title}`}>
