@@ -1,5 +1,4 @@
 import { SearchContent } from 'components/modules/Search/SearchContent';
-import SignIn from 'components/modules/Sidebar/SignIn';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
@@ -16,7 +15,7 @@ import { isMobile } from 'react-device-detect';
 export const MobileSidebar = () => {
   const { mobileSidebarOpen, setMobileSidebarOpen, toggleMobileSidebar } = useMobileSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
-  const { getZIndex, promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
+  const { promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
   const [discoverExpanded, setDiscoverExpanded] = useState(false);
   const [learnExpanded, setLearnExpanded] = useState(false);
 

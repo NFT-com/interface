@@ -1,4 +1,4 @@
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
+import { Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';

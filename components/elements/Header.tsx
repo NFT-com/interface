@@ -5,7 +5,6 @@ import { NotificationBadge as StaticNotificationBadge } from 'components/modules
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
-import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { Doppler, getEnvBool } from 'utils/env';

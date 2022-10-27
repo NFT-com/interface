@@ -7,7 +7,6 @@ import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { CheckCircle } from 'phosphor-react';
 import { X } from 'phosphor-react';
 import KeyIcon from 'public/mint-key.svg';
@@ -16,7 +15,6 @@ import { useAccount } from 'wagmi';
 
 export default function ProfileSelectModal() {
   const { profileSelectModal, setProfileSelectModalOpen } = useProfileSelectModal();
-  const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { user, setCurrentProfileUrl } = useUser();
