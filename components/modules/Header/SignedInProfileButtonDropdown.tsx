@@ -150,7 +150,7 @@ export function SignedInProfileButtonDropdown() {
 
             {myOwnedProfileTokens?.length === 0 &&
             <>
-              <p className='text-black px-4'>No Profiles Found</p>
+              <p className='text-black px-4 hover:cursor-default'>No Profiles Found</p>
               <div
                 onClick={() => {
                   router.push('/app/claim-profiles');
