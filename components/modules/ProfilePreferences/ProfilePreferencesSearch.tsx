@@ -100,10 +100,28 @@ export function ProfilePreferencesSearch() {
       <>
         <div className='flex flex-col text-center text-primary-txt-dk text-xl my-4 max-w-xl'>
           <span>
-            {'You\'re all done with Profile minting!'}
+          Looking to get a NFT Profile?
           </span>
           <span>
-          Head to the <span className='font-bold'>#collab-land</span> channel on{' '}
+          Purchase a Genesis Key and mint four (4) NFT Profiles
+          </span>
+
+          {totalRemaining?.gt(0) &&
+            <div className={tw('deprecated_sm:w-screen flex justify-center pb-8 mt-4',
+              'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
+              <Button
+                type={ButtonType.PRIMARY}
+                color={alwaysBlack}
+                label="Purchase Genesis Key"
+                onClick={() => {
+                  router.push('/app/auctions');
+                }}
+              />
+            </div>
+          }
+
+          <span>
+          If you have a Genesis Key, head to the <span className='font-bold'>#collab-land</span> channel on{' '}
           our <span
               style={{ color: link }}
               className='cursor-pointer hover:underline'
@@ -134,18 +152,6 @@ export function ProfilePreferencesSearch() {
             }}
           />
         </div>
-        {totalRemaining?.gt(0) &&
-        <div className={tw('deprecated_sm:w-screen flex justify-center pb-8',
-          'uppercase font-hero-heading1 font-extrabold tracking-wide')}>
-          <Button
-            type={ButtonType.PRIMARY}
-            color={alwaysBlack}
-            label="GO TO PUBLIC SALE"
-            onClick={() => {
-              router.push('/app/sale');
-            }}
-          />
-        </div>}
       </>
     );
   }, [alwaysBlack, link, router, totalRemaining]);
@@ -195,8 +201,8 @@ export function ProfilePreferencesSearch() {
     }
     if (totalClaimable === 0) {
       return <>
-        <HeroTitle items={['ALL PROFILES']} />
-        <HeroTitle items={['MINTED']} />
+        <HeroTitle color='white' items={['ALL PROFILES']} />
+        <HeroTitle color='white' items={['MINTED']} />
         {allDoneText()}
       </>;
     }
