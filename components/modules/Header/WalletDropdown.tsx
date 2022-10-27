@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import ETHIcon from 'public/eth_icon.svg';
 import { PropsWithChildren, useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
 
 export interface WalletDropdownProps {
