@@ -37,7 +37,7 @@ export function ProfileCard(props: ProfileCardProps) {
       />
       <div className="flex w-full font-grotesk my-4">
         <span className='text-xl font-medium font-dm-mono text-primary-yellow'>/</span>
-        <span className='text-xl font-bold ml-1'>{props.profile?.url}</span>
+        <span className='text-xl font-bold ml-1 whitespace-nowrap text-ellipsis overflow-hidden'>{props.profile?.url}</span>
       </div>
       <div className='flex w-full font-grotesk'>
         <span className='text-secondary-txt'>NFTs Displayed:</span>
