@@ -69,6 +69,10 @@ export function SignedInProfileButtonDropdown() {
       >
         <>
           <button
+            onClick={() => {
+              setExpanded(!expanded);
+              sortProfiles();
+            }}
             className='flex items-center justify-center minlg:hidden cursor-pointer rounded-full bg-yellow-300 h-10 w-10 font-bold'
           >
             /
@@ -147,7 +151,6 @@ export function SignedInProfileButtonDropdown() {
               user.currentProfileUrl === profile.title ?
                 <Link key={profile.title} href={`/${profile.title}`}>
                   <div
-                    key={profile.title}
                     className={'flex flex-row w-full px-4 py-2 items-center justify-between bg-[#FFF4CA] text-primary-txt font-medium h-10'}
                   >
                     <div className='flex'>
