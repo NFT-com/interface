@@ -167,7 +167,7 @@ describe('ProfileContextProvider', () => {
 
   it('sets draftNftsDescriptionsVisible correctly', () => {
     cy.findByText('setDraftNftsDescriptionsVisible').click();
-    cy.get('#draftNftsDescriptionsVisible').should('have.text', 'true');
+    cy.get('#draftNftsDescriptionsVisible').should('have.text', '***');
   });
 
   it('clears drafts correctly', () => {
