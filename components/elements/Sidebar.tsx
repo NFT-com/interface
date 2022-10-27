@@ -11,7 +11,6 @@ import { useUser } from 'hooks/state/useUser';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty, prettify, shortenAddress } from 'utils/helpers';
 import { randomLabelGenerator } from 'utils/randomLabelGenerator';
 import { tw } from 'utils/tw';
@@ -302,131 +301,72 @@ export const Sidebar = () => {
     }
   }, [currentAddress, getSidebarContent, signIn]);
 
-  if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
-    return (
-      <AnimatePresence>
-        {sidebarOpen && (
-          <Dialog
+  return (
+    <AnimatePresence>
+      {sidebarOpen && (
+        <Dialog
+          layout
+          key='sidebarDialog'
+          static
+          as={motion.div}
+          open={sidebarOpen}
+          className="fixed inset-0 overflow-hidden"
+          onClose={() => {
+            !addFundsDialogOpen && setSidebarOpen(false);
+          }}
+          style={{ zIndex: getZIndex('sidebar') }}
+        >
+          <Dialog.Overlay
             layout
-            key='sidebarDialog'
-            static
+            key='sidebarDialogOverlay'
             as={motion.div}
-            open={sidebarOpen}
-            className="fixed inset-0 overflow-hidden"
-            onClose={() => {
-              !addFundsDialogOpen && setSidebarOpen(false);
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+              ease: 'backInOut',
+              duration: 0.4
             }}
-            style={{ zIndex: getZIndex('sidebar') }}
-          >
-            <Dialog.Overlay
-              layout
-              key='sidebarDialogOverlay'
-              as={motion.div}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                ease: 'backInOut',
-                duration: 0.4
-              }}
-              className={tw(
-                'absolute inset-0',
-                'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
-              )}
-            />
-            <motion.div
-              key='sidebarWrapperPanel'
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{
-                type: 'spring',
-                bounce: 0,
-                duration: 0.4
-              }}
-              className={
-                tw(
-                  'flex flex-col fixed inset-y-0 right-0',
-                  'w-screen max-w-md h-full',
-                  'shadow-xl overflow-y-auto overflow-x-hidden',
-                  'bg-white font-noi-grotesk'
-                )
-              }
-            >
-              {getSidebarPanel()}
-              <div className='bg-black flex gap-6 items-center justify-end px-5 py-10 minlg:hidden'>
-                <a
-                  target="_blank" href="https://twitter.com" rel="noopener noreferrer"
-                >
-                  <TwitterLogo fill="#8B8B8B" />
-                </a>
-                <a
-                  target="_blank" href="https://discord.com/" rel="noopener noreferrer"
-                >
-                  <DiscordLogo fill="#8B8B8B" />
-                </a>
-              </div>
-            </motion.div>
-          </Dialog>
-        )}
-      </AnimatePresence>
-    );
-  } else {
-    return (
-      <AnimatePresence>
-        {sidebarOpen && (
-          <Dialog
-            layout
-            key='sidebarDialog'
-            static
-            as={motion.div}
-            open={sidebarOpen}
-            className="fixed inset-0 overflow-hidden"
-            onClose={() => {
-              !addFundsDialogOpen && setSidebarOpen(false);
+            className={tw(
+              'absolute inset-0',
+              'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
+            )}
+          />
+          <motion.div
+            key='sidebarWrapperPanel'
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{
+              type: 'spring',
+              bounce: 0,
+              duration: 0.4
             }}
-            style={{ zIndex: getZIndex('sidebar') }}
+            className={
+              tw(
+                'flex flex-col fixed inset-y-0 right-0',
+                'w-screen max-w-md h-full',
+                'shadow-xl overflow-y-auto overflow-x-hidden',
+                'bg-white font-noi-grotesk'
+              )
+            }
           >
-            <Dialog.Overlay
-              layout
-              key='sidebarDialogOverlay'
-              as={motion.div}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                ease: 'backInOut',
-                duration: 0.4
-              }}
-              className={tw(
-                'absolute inset-0',
-                'backdrop-filter backdrop-blur-sm backdrop-saturate-150 bg-pagebg-dk bg-opacity-40'
-              )}
-            />
-            <motion.div
-              key='sidebarWrapperPanel'
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{
-                type: 'spring',
-                bounce: 0,
-                duration: 0.4
-              }}
-              className={
-                tw(
-                  'flex flex-col fixed inset-y-0 right-0',
-                  'w-screen max-w-md h-full',
-                  'shadow-xl overflow-y-auto overflow-x-hidden',
-                  'bg-white',
-                  'font-grotesk')
-              }
-            >
-              {getSidebarPanel()}
-            </motion.div>
-          </Dialog>
-        )}
-      </AnimatePresence>
-    );
-  }
+            {getSidebarPanel()}
+            <div className='bg-black flex gap-6 items-center justify-end px-5 py-10 minlg:hidden'>
+              <a
+                target="_blank" href="https://twitter.com" rel="noopener noreferrer"
+              >
+                <TwitterLogo fill="#8B8B8B" />
+              </a>
+              <a
+                target="_blank" href="https://discord.com/" rel="noopener noreferrer"
+              >
+                <DiscordLogo fill="#8B8B8B" />
+              </a>
+            </div>
+          </motion.div>
+        </Dialog>
+      )}
+    </AnimatePresence>
+  );
 };
