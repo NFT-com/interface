@@ -149,7 +149,8 @@ export const Footer = () => {
 
   const fixFooter = [
     '/app/claim-profiles',
-    '/app/auctions'
+    '/app/auctions',
+    '/app/sale'
   ];
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
