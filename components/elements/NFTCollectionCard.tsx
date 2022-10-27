@@ -30,7 +30,7 @@ export function NFTCollectionCard(props: NFTCollectionCardProps) {
   } = useContext(ProfileContext);
 
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract);
-  const processedImages = props.images.filter(i => i != null);
+  const processedImages = props.images?.filter(i => i != null);
 
   return (
     <NFTCard
