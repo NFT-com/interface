@@ -36,13 +36,14 @@ export const Footer = () => {
       duration : 700
     });
 
+    ScrollTrigger.saveStyles('#footer-content');
     const matchMedia = gsap.matchMedia();
 
     matchMedia.add('(min-width: 900px)', () => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '.page-footer',
-          start: '75% bottom',
+          start: '35% bottom',
           end: '+=30px',
           toggleActions: location === '/' ? 'play none reverse none' : 'none none none none',
         }
@@ -148,13 +149,13 @@ export const Footer = () => {
 
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className={`page-footer overflow-hidden ${location === '/' ? '-mt-9 minlg:-mt-[28.8rem]' : location?.includes('mint-profiles') ? '-mt-[4.5rem]' : ''}`}>
+      <footer id="FooterContainer" className={`page-footer overflow-hidden ${location === '/' ? '-mt-9 minlg:-mt-[20.8rem]' : location?.includes('mint-profiles') ? '-mt-[4.5rem]' : ''}`}>
         <Toast />
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
           'transform-gpu',
-          location === '/' && 'minlg:translate-y-1/2'
+          location === '/' && 'minlg:translate-y-1/3 minxl:translate-y-1/2'
         )}>
           <div className={tw(
             'minlg:flex minlg:flex-row relative justify-between',
@@ -281,6 +282,8 @@ export const Footer = () => {
               <div className='flex border-b border-b-[#2A2A2A] pb-4'>
                 <input type="email" placeholder='Enter your email' value={email} onChange={(e) => setEmail(e.target.value)} className={tw(
                   'minxxl:text-xl',
+                  'text-key-gray placeholder:text-key-gray/80',
+                  'focus:border-transparent focus:ring-0 focus:placeholder:text-key-gray/80',
                   'bg-transparent border-none px-0 w-full',
                   'shadow-none focus:border-transparent focus:ring-0'
                 )} />
