@@ -8,7 +8,6 @@ import { tw } from 'utils/tw';
 import AOS from 'aos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import fetch from 'isomorphic-unfetch';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import DiscordLogo from 'public/discord.svg';

@@ -4,7 +4,6 @@ import { MintedProfile } from 'components/modules/Profile/MintedProfile';
 import { ProfileContextProvider } from 'components/modules/Profile/ProfileContext';
 import { UnmintedOrUnavailableProfile } from 'components/modules/Profile/UnmintedOrUnavailableProfile';
 import MintSuccessModal from 'components/modules/ProfileFactory/MintSuccessModal';
-import ProfileSelectModal from 'components/modules/ProfileFactory/ProfileSelectModal';
 import { PROFILE_URI_LENGTH_LIMIT } from 'constants/misc';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
@@ -19,7 +18,6 @@ export interface ProfilePageProps {
   uri: string | string[];
 }
 
-const DynamicProfileSelectModal = dynamic<React.ComponentProps<typeof ProfileSelectModal>>(() => import('components/modules/ProfileFactory/ProfileSelectModal').then(mod => mod.default));
 const DynamicMintSuccessModal = dynamic<React.ComponentProps<typeof MintSuccessModal>>(() => import('components/modules/ProfileFactory/MintSuccessModal').then(mod => mod.default));
 
 /**
@@ -88,10 +86,7 @@ export function ProfilePage(props: ProfilePageProps) {
             addressOwner={profileOwner}
           />
           {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) &&
-            <>
-              <DynamicProfileSelectModal />
-              <DynamicMintSuccessModal />
-            </>
+            <DynamicMintSuccessModal />
           }
         </ProfileContextProvider>
       );
