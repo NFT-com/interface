@@ -8,7 +8,7 @@ import { tw } from 'utils/tw';
 import { Dialog } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
-import { CaretDown, CaretRight, CaretUp, X } from 'phosphor-react';
+import { CaretDown, CaretRight, CaretUp } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 
