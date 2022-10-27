@@ -232,6 +232,7 @@ export const HOME_PAGE_FIELDS_V2 = `
       url
     }
   }
+  leaderboardTitle
 `;
 
 export const CURATED_COLLECTIONS_FIELDS = `

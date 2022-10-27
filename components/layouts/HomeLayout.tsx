@@ -1,7 +1,6 @@
 import { Footer as StaticFooter } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
-import { Sidebar } from 'components/elements/Sidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
 import ProfileSelectModal from 'components/modules/ProfileFactory/ProfileSelectModal';
 import { SearchModal } from 'components/modules/Search/SearchModal';
@@ -41,7 +40,6 @@ export default function HomeLayout({ children, hideFooter, hideHeader }: HomeLay
         {!hideHeader &&
         <ClientOnly>
           <Header homepageHeader />
-          <Sidebar />
           <MobileSidebar/>
           <SearchModal />
         </ClientOnly>

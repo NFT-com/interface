@@ -94,6 +94,7 @@ export type HomePageV2 = {
     url: string,
   },
   bynpTitleNfTsCollection: any
+  leaderboardTitle: string
 }
 
 export type ResultsPageProps = {

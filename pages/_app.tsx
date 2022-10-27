@@ -132,7 +132,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           site_name: 'NFT.com',
           images: [
             {
-              url: '/site-meta-image.png',
+              url: 'https://www.nft.com/site-meta-image.png',
               width: 1200,
               height: 627,
               alt: 'NFT.com | The Social NFT Marketplace',
