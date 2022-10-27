@@ -4,7 +4,6 @@ import { ALCHEMY_KEYS, ALCHEMY_PREFIXES } from './alchemynft';
 
 import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import fetch from 'node-fetch';
 
 const ethRpcHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   let chainId = req.query['chainId'];
