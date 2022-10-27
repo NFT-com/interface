@@ -50,7 +50,7 @@ export const Footer = () => {
       })
         .to('#footer-content', {
           y: 0,
-          duration: 1.8,
+          duration: 2,
           ease: 'power2.out'
         });
     });

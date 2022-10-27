@@ -339,24 +339,24 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
       gsap.timeline({
         scrollTrigger: {
           trigger: '#anim-build-profile-trigger',
-          start: 'top bottom',
+          start: '100px bottom',
           end: '+=30px',
           toggleActions: 'play none reverse none',
         }
       })
         .to('#anim-build-profile-trigger', {
           y: 0,
-          duration: 1.8,
+          duration: 1.5,
           ease: 'circ.out',
         }, 0)
         .to('#anim-build-profile-ttl-1', {
           y: 0,
-          duration: 2,
+          duration: 1.8,
           ease: 'circ.out',
         }, 0)
         .to('#anim-build-profile-ttl-2', {
           y: 0,
-          duration: 2.3,
+          duration: 2.1,
           ease: 'circ.out',
         }, 0);
     });
@@ -936,7 +936,7 @@ const Index: NextPageWithLayout = ({ preview, data, data_v2 }: HomePageProps) =>
           )}>
             <div className='px-3 minmd:px-14 minxxl:px-20 relative z-0'>
               <div className={tw(
-                'pt-[5.625rem] minlg:pt-28 minxxl:pt-32 pb-[5.25rem] minxxl:pb-20 minlg:mb-24'
+                'pt-[5.625rem] minlg:pt-28 minxxl:pt-32 pb-[5.25rem] minxxl:pb-24 minlg:mb-24'
               )}>
                 <svg role='presentation' className={tw(
                   'absolute -z-10 minlg:hidden',
