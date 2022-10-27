@@ -112,7 +112,14 @@ export function SignedInProfileButtonDropdown() {
                 :
                 <>
                   <div className='flex justify-between items-center'>
-                    <p className='font-medium'>{shortenAddress(currentAddress, 3)}</p>
+
+                    {myOwnedProfileTokens?.length > 0 ?
+                      <p onClick={() => setProfileSelectModalOpen(true)} className='font-medium'>{shortenAddress(currentAddress, 3)}</p>
+                      :
+                      <Link href='/app/claim-profiles'>
+                        <p className='font-medium'>{shortenAddress(currentAddress, 3)}</p>
+                      </Link>
+                    }
                     <CaretDown
                       onClick={() => {
                         setExpanded(!expanded);
