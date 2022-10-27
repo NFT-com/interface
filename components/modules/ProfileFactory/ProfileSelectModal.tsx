@@ -95,7 +95,7 @@ export default function ProfileSelectModal() {
                         </>
                     }
                   </p>
-                  <Link href='/app/mint-profiles'>
+                  <Link href='/app/claim-profiles'>
                     <button
                       type="button"
                       className={tw(

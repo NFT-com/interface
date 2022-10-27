@@ -98,7 +98,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);
-          router.push('/app/mint-profiles');
+          router.push('/app/claim-profiles');
         },
         date: '09/15/2022'
       }

@@ -148,7 +148,6 @@ export const Footer = () => {
   ];
 
   const fixFooter = [
-    '/app/mint-profiles',
     '/app/claim-profiles',
     '/app/auctions'
   ];

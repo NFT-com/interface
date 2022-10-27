@@ -33,7 +33,7 @@ export function ProfilePreferencesSearch() {
   const router = useRouter();
   const { isSupported } = useSupportedNetwork();
   const { address: currentAddress } = useAccount();
-  const { primaryText, secondaryText, inputBorder, alwaysBlack, link } = useThemeColors();
+  const { inputBorder, alwaysBlack, link } = useThemeColors();
   const {
     profileTokenId,
     mutate: mutateTokenId,
@@ -159,20 +159,20 @@ export function ProfilePreferencesSearch() {
     if (!isNullOrEmpty(currentURI)) {
       return <>
         <div className="mb-4">
-          <HeroTitle items={['WELCOME']} />
+          <HeroTitle color='white' items={['WELCOME']} />
         </div>
         <span className="text-4xl mb-16 text-center text-primary-txt-dk">
           {currentURI}
         </span>
-        <span className="text-xl mb-2 text-center" style={{ color: secondaryText }}>
+        <span className="text-xl mb-2 text-center" style={{ color: 'white' }}>
           You officially own:
         </span>
-        <span className="text-2xl deprecated_md:text-lg mb-16" style={{ color: primaryText }}>
+        <span className="text-2xl deprecated_md:text-lg mb-16" style={{ color: 'white' }}>
           NFT.com/{currentURI}
         </span>
         {totalClaimable > 0 ?
           <>
-            <span className='text-secondary-txt mb-4 text-lg text-center max-w-2xl'>
+            <span className='text-white mb-4 text-lg text-center max-w-2xl'>
             It looks like you{'\''}ve got another profile to mint. Feel free to mint now or
             anytime you connect your wallet to NFT.com
             </span>
@@ -206,8 +206,6 @@ export function ProfilePreferencesSearch() {
     isSupported,
     alwaysBlack,
     currentURI,
-    primaryText,
-    secondaryText,
     totalClaimable
   ]);
 
@@ -225,8 +223,8 @@ export function ProfilePreferencesSearch() {
           :
           <>
             <div className='mt-16 mb-8'>
-              <HeroTitle items={['CHOOSE YOUR']} />
-              <HeroTitle items={['NFT.COM PROFILE']} />
+              <HeroTitle color='white' items={['CHOOSE YOUR']} />
+              <HeroTitle color='white' items={['NFT.COM PROFILE']} />
             </div>
             <div className={tw(
               'w-full mb-4 flex items-center justify-center',
