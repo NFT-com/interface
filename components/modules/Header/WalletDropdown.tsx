@@ -1,7 +1,6 @@
 import NotificationsModal from 'components/modules/Notifications/NotificationsModal';
 import { useChangeWallet } from 'hooks/state/useChangeWallet';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
-import { useUser } from 'hooks/state/useUser';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 
@@ -10,7 +9,6 @@ import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import ETHIcon from 'public/eth_icon.svg';
 import { PropsWithChildren, useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
 
 export interface WalletDropdownProps {
@@ -21,7 +19,6 @@ export interface WalletDropdownProps {
 export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   const { address: currentAddress } = useAccount();
   const { disconnect } = useDisconnect();
-  const { setCurrentProfileUrl } = useUser();
   const { setSignOutDialogOpen } = useSignOutDialog();
   const { setChangeWallet } = useChangeWallet();
   const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
@@ -122,19 +119,16 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
             onClick={() => {
               disconnect();
               setSignOutDialogOpen(true);
-              setCurrentProfileUrl('');
               setExpanded(false);
               setChangeWallet(true);
             }}
           >
             Change Wallet
           </div>
-
           <div
             onClick={() => {
               disconnect();
               setSignOutDialogOpen(true);
-              setCurrentProfileUrl('');
               setExpanded(false);
             }}
             style={{ height: '10%' }}

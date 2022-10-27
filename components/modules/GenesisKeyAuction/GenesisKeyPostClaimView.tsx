@@ -48,7 +48,7 @@ export function GenesisKeyPostClaimView(props: GenesisKeyPostClaimViewProps) {
                 stretch
                 color={alwaysBlack}
                 onClick={() => {
-                  router.push('/app/mint-profiles');
+                  router.push('/app/claim-profiles');
                 }}
                 label="Mint Profiles"
                 type={ButtonType.PRIMARY}
