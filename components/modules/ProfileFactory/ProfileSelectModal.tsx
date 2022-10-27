@@ -66,7 +66,10 @@ export default function ProfileSelectModal() {
                     {myOwnedProfileTokens && myOwnedProfileTokens .map((profile) =>
                       <div className='h-14 flex justify-between items-center bg-[#F8F8F8] rounded-xl px-4 py-2 mb-4 hover:cursor-pointer'
                         key={profile?.metadata.name}
-                        onClick={() => setCurrentProfileUrl(profile?.metadata.name)}
+                        onClick={() => {
+                          setCurrentProfileUrl(profile?.metadata.name);
+                          setProfileSelectModalOpen(false);
+                        }}
                       >
                         <div className='flex flex-row items-center gap-[14px]'>
                           <RoundedCornerMedia
