@@ -94,8 +94,8 @@ export default function MintProfilesPage() {
           autoplay
           loop
           src="/anim/cycle.json"
-          style={{ width: '1600px' }}
-          className='opacity-60 absolute'
+          style={{ width: '100%' }}
+          className='opacity-60 absolute mx-auto'
         >
         </Player>
         <div className='justify-end mt-10 mr-5 hidden minmd:flex'>
