@@ -3,7 +3,7 @@ import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseCont
 import { WalletDropdown } from 'components/modules/Header/WalletDropdown';
 import { NotificationBadge as StaticNotificationBadge } from 'components/modules/Notifications/NotificationBadge';
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
-import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
+import { useScrollPosition } from 'graphql/hooks/useScrollPosition';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
@@ -49,7 +49,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   const { toggleCartSidebar, toList } = useContext(NFTListingsContext);
   const { toBuy } = useContext(NFTPurchasesContext);
   const { toggleMobileSidebar, mobileSidebarOpen } = useMobileSidebar();
-  const { currentScrollPosition } = useScrollToBottom();
+  const { currentScrollPosition } = useScrollPosition();
   const { user } = useUser();
 
   useMaybeCreateUser();
