@@ -43,7 +43,7 @@ export const Footer = () => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '.page-footer',
-          start: '35% bottom',
+          start: '45% bottom',
           end: '+=30px',
           toggleActions: location === '/' ? 'play none reverse none' : 'none none none none',
         }
