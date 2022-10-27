@@ -201,8 +201,6 @@ export function ProfilePreferencesSearch() {
     }
     if (totalClaimable === 0) {
       return <>
-        <HeroTitle color='white' items={['ALL PROFILES']} />
-        <HeroTitle color='white' items={['MINTED']} />
         {allDoneText()}
       </>;
     }
