@@ -18,37 +18,37 @@ export default function BlogSliderCard({ post }: BlogSliderPostProps) {
     >
       <div className="relative overflow-hidden cursor-pointer minlg:w-2/5 w-full minlg:aspect-square minmd:aspect-video aspect-square object-cover object-center bg-white rounded-lg">
         <Link href={`/articles/${post.slug}`}>
-
-          <Image
-            src={post?.heroImage.url}
-            className="rounded-lg"
-            alt="cover image"
-            placeholder="blur"
-            layout='fill'
-            objectFit="cover"
-            blurDataURL={post?.heroImage.url}
-          />
-
+          <a>
+            <Image
+              src={post?.heroImage.url}
+              className="rounded-lg"
+              alt="cover image"
+              placeholder="blur"
+              layout='fill'
+              objectFit="cover"
+              blurDataURL={post?.heroImage.url}
+            />
+          </a>
         </Link>
       </div>
       <div className="flex flex-col minlg:w-3/5 w-full minlg:ml-8 ml-0 minxl:pt-12 minlg:pt-2 pt-4 px-1">
-        <Link href={`/articles/${post.slug}`} className="cursor-pointer">
-
-          <h2 className="font-grotesk font-bold text-white minxl:text-4xl minlg:text-3xl text-lg minmd:w-4/5 w-full">
-            {post.title}
-          </h2>
-
+        <Link href={`/articles/${post.slug}`}>
+          <a className="cursor-pointer">
+            <h2 className="font-grotesk font-bold text-white minxl:text-4xl minlg:text-3xl text-lg minmd:w-4/5 w-full">
+              {post.title}
+            </h2>
+          </a>
         </Link>
         {post?.description && (
-          (<Link href={`/articles/${post.slug}`} className="cursor-pointer">
-
-            <p className="font-grotesk text-[#E1E1E1] text-justify minxl:text-xl minlg:text-lg text-sm minlg:w-11/12 minmd:w-10/12 w-full leading-8 minlg:mt-3 mt-2">
-              {post?.description.length > 230
-                ? post.description.substring(0, 230) + '...'
-                : post.description}
-            </p>
-
-          </Link>)
+          <Link href={`/articles/${post.slug}`}>
+            <a className="cursor-pointer">
+              <p className="font-grotesk text-[#E1E1E1] text-justify minxl:text-xl minlg:text-lg text-sm minlg:w-11/12 minmd:w-10/12 w-full leading-8 minlg:mt-3 mt-2">
+                {post?.description.length > 230
+                  ? post.description.substring(0, 230) + '...'
+                  : post.description}
+              </p>
+            </a>
+          </Link>
         )}
         <div className="flex minlg:mt-4 mt-2">
           {post?.author?.image?.url && (

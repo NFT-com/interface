@@ -20,6 +20,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
   const [keyword, setKeyword] = useState('0');
   const [inputFocus, setInputFocus] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [transitionWidth, setTransitionWidth] = useState('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
   const { setSearchModalOpen } = useSearchModal();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const router = useRouter();
@@ -43,6 +44,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
     setSearchModalOpen(false);
+    setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
   });
 
   const goTo = (document) => {
@@ -53,6 +55,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     }
     setSearchModalOpen(false);
     setShowHits(false);
+    setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
   };
 
   const search = (event) => {
@@ -109,6 +112,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
         });
 
       setShowHits(true);
+      setTransitionWidth('w-[18.4rem]');
     }
   };
 
@@ -131,9 +135,10 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
         <span
           className="cursor-pointer hover:font-semibold"
           onClick={() => {
-            router.push(`/app/discover/${collectionName}/${keyword}`);
             setSearchModalOpen(false);
-            setShowHits(true);
+            setShowHits(false);
+            router.push(`/app/discover/${collectionName}/${keyword}`);
+            setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
           }}
         >
           {found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}
@@ -256,8 +261,9 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
                   spellCheck="false"
                   maxLength={512}
                   className={tw(
-                    'minlg:w-[4.65rem] text-black text-lg placeholder:text-black bg-inherit border-none p-0',
-                    'focus:w-[18.4rem] focus:border-transparent focus:ring-0 focus:placeholder:text-[#B2B2B2] transition-[width]'
+                    'text-black text-lg placeholder:text-black bg-inherit border-none p-0',
+                    'focus:border-transparent focus:ring-0 focus:placeholder:text-[#B2B2B2]',
+                    transitionWidth
                   )}
                   onKeyUp={(event) => search(event)}
                   onFocus={(event) => event.target.value !== '' && search(event)}
