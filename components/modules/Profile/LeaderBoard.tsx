@@ -35,19 +35,19 @@ export function LeaderBoard({ data }: LeaderBoardProps) {
       <table className="border-x-0 w-full min-w-[700px]">
         <thead>
           <tr className={tw(
-            'text-body leading-body font-body text-[#FDB720] uppercase',
+            'text-sm minmd:text-body minxxl:text-[1.5rem] leading-[1.429] text-[#FDB720] uppercase',
             'border-x-0 border-b-[1px] border-row-border'
           )}>
-            <th scope="col" className='text-left pb-4 pl-4 minmd:text-body text-sm leading-body font-body'>Profile</th>
-            <th scope="col" className='text-left pb-4 min-w-[8.75rem] minmd:text-body text-sm leading-body font-body'>Number of <br className='minmd:hidden' /> Genesis Keys</th>
-            <th scope="col" className='text-left pb-4 pr-3 minmd:text-body text-sm leading-body font-body'>Number of NFT Collections</th>
-            <th scope="col" className='text-left pb-4 pr-3 minmd:text-body text-sm leading-body font-body'>Items Collected</th>
+            <th scope="col" className='text-left pb-1 minlg:pb-4 pl-4 font-medium'>Profile</th>
+            <th scope="col" className='text-left pb-1 minlg:pb-4 min-w-[8.75rem] font-medium'>Number of <br className='minmd:hidden' /> Genesis Keys</th>
+            <th scope="col" className='text-left pb-1 minlg:pb-4 pr-3 font-medium'>Number of NFT Collections</th>
+            <th scope="col" className='text-left pb-1 minlg:pb-4 pr-3 font-medium'>Items Collected</th>
           </tr>
         </thead>
         <tbody>
           {data?.leaderboard?.items.map((item, i) => (
             <tr key={i}
-              className={tw('cursor-pointer min-w-[5.5rem] h-20 group',
+              className={tw('cursor-pointer min-w-[5.5rem] h-[3.75rem] minlg:h-20 group',
                 i > 0 && 'border-x-0 border-y border-row-border last:border-b-0')}
               style={{
                 backgroundColor: i === hoverIndex ? rowBackgroundActive : 'transparent',

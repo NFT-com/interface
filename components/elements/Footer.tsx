@@ -36,20 +36,21 @@ export const Footer = () => {
       duration : 700
     });
 
+    ScrollTrigger.saveStyles('#footer-content');
     const matchMedia = gsap.matchMedia();
 
     matchMedia.add('(min-width: 900px)', () => {
       gsap.timeline({
         scrollTrigger: {
           trigger: '.page-footer',
-          start: '75% bottom',
+          start: '45% bottom',
           end: '+=30px',
           toggleActions: location === '/' ? 'play none reverse none' : 'none none none none',
         }
       })
         .to('#footer-content', {
           y: 0,
-          duration: 1.8,
+          duration: 2,
           ease: 'power2.out'
         });
     });
@@ -160,7 +161,7 @@ export const Footer = () => {
           'font-noi-grotesk text-primary-txt-dk relative',
           'bg-black rounded-t-[40px] minlg:rounded-t-[75px]',
           'transform-gpu',
-          location === '/' && 'minlg:translate-y-1/2'
+          location === '/' && 'minlg:translate-y-1/3 minxl:translate-y-1/2'
         )}>
           <div className={tw(
             'minlg:flex minlg:flex-row relative justify-between',
@@ -287,6 +288,8 @@ export const Footer = () => {
               <div className='flex border-b border-b-[#2A2A2A] pb-4'>
                 <input type="email" placeholder='Enter your email' value={email} onChange={(e) => setEmail(e.target.value)} className={tw(
                   'minxxl:text-xl',
+                  'text-key-gray placeholder:text-key-gray/80',
+                  'focus:border-transparent focus:ring-0 focus:placeholder:text-key-gray/80',
                   'bg-transparent border-none px-0 w-full',
                   'shadow-none focus:border-transparent focus:ring-0'
                 )} />
