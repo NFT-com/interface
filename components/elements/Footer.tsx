@@ -147,9 +147,15 @@ export const Footer = () => {
     },
   ];
 
+  const fixFooter = [
+    '/app/mint-profiles',
+    '/app/claim-profiles',
+    '/app/auctions'
+  ];
+  console.log('location fdo', location);
   if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
     return (
-      <footer id="FooterContainer" className={`page-footer overflow-hidden ${location === '/' ? '-mt-9 minlg:-mt-[28.8rem]' : location?.includes('mint-profiles') ? '-mt-[4.5rem]' : ''}`}>
+      <footer id="FooterContainer" className={`page-footer overflow-hidden ${location === '/' ? '-mt-9 minlg:-mt-[28.8rem]' : fixFooter?.includes(location) ? '-mt-[4.3rem] z-50' : ''}`}>
         <Toast />
         <div id='footer-content' className={tw(
           'font-noi-grotesk text-primary-txt-dk relative',
