@@ -70,7 +70,6 @@ export const Footer = () => {
             name: 'Vault',
             link: '/app/vault',
             newTab: false,
-            stylize: true,
           }
           : null,
         {
