@@ -167,10 +167,11 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
                     <div
                       className={tw(
                         'px-5',
-                        'flex flex-col items-start my-1 py-3 w-full',
-                        'text-sm font-semibold text-black')}
+                        'items-start my-1 py-3 w-full',
+                        'text-sm font-semibold text-black',
+                        'whitespace-nowrap text-ellipsis overflow-hidden')}
                       onClick={() => goTo(hit.document)}>
-                      <span>{hit.document.nftName ?? hit.document.contractName}</span>
+                      {hit.document.nftName ?? hit.document.contractName}
                     </div>
                   </div>
                 );
