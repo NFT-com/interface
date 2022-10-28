@@ -55,6 +55,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     setSearchModalOpen(false);
     setShowHits(false);
     setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
+    inputRef.current.value = '';
   };
 
   const search = (event) => {
@@ -98,6 +99,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
         router.push('/app/discover');
       }
 
+      inputRef.current.value = '';
       setSearchModalOpen(false);
       setShowHits(false);
     } else {
@@ -138,6 +140,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
             setShowHits(false);
             router.push(`/app/discover/${collectionName}/${keyword}`);
             setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
+            inputRef.current.value = '';
           }}
         >
           {found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}
@@ -220,10 +223,10 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
                 ref={resultsRef}
                 className={tw(
                   'absolute left-0 minmd:left-6 mt-16 w-full max-w-[27rem] shadow-lg',
-                  'bg-always-white flex flex-col w-full text-rubik z-[111]')}>
+                  'bg-always-white flex flex-col w-full text-rubik z-[111] justify-center')}>
                 {searchResults.length > 0 && <>
                   {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                    (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4">
+                    (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
                       No results found. Please try another keyword.
                     </div>) :
                     <div className="py-4">
@@ -284,7 +287,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
                 'bg-always-white flex flex-col w-full text-rubik')}>
               {searchResults.length > 0 && <>
                 {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                  (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4">
+                  (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
                       No results found. Please try another keyword.
                   </div>) :
                   <div className="py-4">

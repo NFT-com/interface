@@ -70,7 +70,6 @@ export const Footer = () => {
             name: 'Vault',
             link: '/app/vault',
             newTab: false,
-            stylize: true,
           }
           : null,
         {
@@ -229,30 +228,12 @@ export const Footer = () => {
                               target="_blank"
                               rel="noreferrer noopener"
                               className="mt-4 cursor-pointer text-[#8B8B8B] hover:text-white"
-                              style={item?.stylize
-                                ? {
-                                  background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
-                                  backgroundSize: '200% 200%',
-                                  animation: 'gradient 20s ease infinite',
-                                  WebkitBackgroundClip: 'text',
-                                  WebkitTextFillColor: 'transparent'
-                                }
-                                : null}
                             >
                               {item.name}
                             </a>
                             :
                             <a
                               className="mt-4 cursor-pointer text-[#8B8B8B] hover:text-white"
-                              style={item?.stylize
-                                ? {
-                                  background: 'linear-gradient(-45deg, #F03290, #03C1FD, #B755AB, #8076C4)',
-                                  backgroundSize: '200% 200%',
-                                  animation: 'gradient 20s ease infinite',
-                                  WebkitBackgroundClip: 'text',
-                                  WebkitTextFillColor: 'transparent'
-                                }
-                                : null}
                             >
                               {item.name}
                             </a>
