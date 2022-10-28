@@ -10,6 +10,7 @@ export interface LoadedContainerProps {
   // todo: make this the default
   fitToParent?: boolean;
   // todo: support different animation variants
+  newLoader?: boolean
 }
 
 const DynamicLoader = dynamic(() => import('./Loader'));
@@ -17,7 +18,15 @@ const DynamicLoader = dynamic(() => import('./Loader'));
 export function LoadedContainer(props: PropsWithChildren<LoadedContainerProps>) {
   return (
     <AnimatePresence>
-      {!props.loaded && props.showLoader !== false && <DynamicLoader />}
+      {props.newLoader ?
+        !props.loaded && props.showLoader !== false &&
+          <div className='flex justify-center py-10'>
+            <DynamicLoader stroke='stroke-[#707070]' size='h-8' />
+          </div>
+        :
+        !props.loaded && props.showLoader !== false && <DynamicLoader />
+      }
+
       {props.loaded && <motion.div
         className={props.fitToParent === true ? 'h-full w-full' : ''}
         initial={{ opacity: 0 }}

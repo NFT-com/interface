@@ -1,7 +1,6 @@
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
@@ -56,6 +55,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     setSearchModalOpen(false);
     setShowHits(false);
     setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
+    inputRef.current.value = '';
   };
 
   const search = (event) => {
@@ -99,6 +99,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
         router.push('/app/discover');
       }
 
+      inputRef.current.value = '';
       setSearchModalOpen(false);
       setShowHits(false);
     } else {
@@ -139,6 +140,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
             setShowHits(false);
             router.push(`/app/discover/${collectionName}/${keyword}`);
             setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
+            inputRef.current.value = '';
           }}
         >
           {found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}
@@ -179,74 +181,18 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     });
   };
 
-  if (getEnvBool(Doppler.NEXT_PUBLIC_HOMEPAGE_V3_ENABLED)) {
-    if(mobileSearch){
-      return (
-        <>
-          <div id='mobile-search' className={tw(
-            'flex flex-col font-noi-grotesk  relative',
-            router.pathname !== '/' && 'px-6'
-          )}>
-            <div ref={wrapperRef} onClick={() => setInputFocus(true)} className={tw(
-              'flex space-x-2 p-5 py-3 minlg:space-x-0 minlg:p-0 rounded-full bg-[#F8F8F8]',
-              inputFocus && router.pathname !== '/' && 'border-2 border-[#F9D54C]',
-              'h-[52px]'
-            )}>
-              <div className={tw(
-                'relative flex items-center w-full text-black')}>
-                <SearchIcon color='#000000' className='mr-2 shrink-0 aspect-square' />
-                <div className="w-full">
-                  <input
-                    ref={inputRef}
-                    type="search"
-                    placeholder="Search profiles and NFTs by name..."
-                    autoComplete="off"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
-                    maxLength={512}
-                    className={tw(
-                      'w-full text-black text-lg placeholder:text-black bg-inherit border-none p-0',
-                      'focus:border focus:border-[#F9D54C] focus:ring-0 focus:placeholder:text-[#B2B2B2] transition-[width]'
-                    )}
-                    onKeyUp={(event) => search(event)}
-                    onFocus={(event) => event.target.value !== '' && search(event)}
-                    onChange={(event) => !event.target.value && setShowHits(false)}
-                  />
-                </div>
-              </div>
-            </div>
-            {showHits && keyword !== ''
-              ? (
-                <div
-                  ref={resultsRef}
-                  className={tw(
-                    'absolute left-0 minmd:left-6 mt-16 w-full max-w-[27rem] shadow-lg',
-                    'bg-always-white flex flex-col w-full text-rubik z-[111]')}>
-                  {searchResults.length > 0 && <>
-                    {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                      (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4">
-                      No results found. Please try another keyword.
-                      </div>) :
-                      <div className="py-4">
-                        <ResultsContent searchResults={searchResults} />
-                        {isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}
-                      </div>
-                    }
-                  </>}
-                </div>
-              )
-              :
-              ''
-            }
-          </div>
-        </>
-      );
-    }
+  if(mobileSearch){
     return (
       <>
-        <div className="flex flex-col font-noi-grotesk relative">
-          <div className="flex space-x-2 p-5 minlg:space-x-0 minlg:p-0">
+        <div id='mobile-search' className={tw(
+          'flex flex-col font-noi-grotesk  relative',
+          router.pathname !== '/' && 'px-6'
+        )}>
+          <div ref={wrapperRef} onClick={() => setInputFocus(true)} className={tw(
+            'flex space-x-2 p-5 py-3 minlg:space-x-0 minlg:p-0 rounded-full bg-[#F8F8F8]',
+            inputFocus && router.pathname !== '/' && 'border-2 border-[#F9D54C]',
+            'h-[52px]'
+          )}>
             <div className={tw(
               'relative flex items-center w-full text-black')}>
               <SearchIcon color='#000000' className='mr-2 shrink-0 aspect-square' />
@@ -261,9 +207,8 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
                   spellCheck="false"
                   maxLength={512}
                   className={tw(
-                    'text-black text-lg placeholder:text-black bg-inherit border-none p-0',
-                    'focus:border-transparent focus:ring-0 focus:placeholder:text-[#B2B2B2]',
-                    transitionWidth
+                    'w-full text-black text-lg placeholder:text-black bg-inherit border-none p-0',
+                    'focus:border focus:border-[#F9D54C] focus:ring-0 focus:placeholder:text-[#B2B2B2] transition-[width]'
                   )}
                   onKeyUp={(event) => search(event)}
                   onFocus={(event) => event.target.value !== '' && search(event)}
@@ -271,22 +216,17 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
                 />
               </div>
             </div>
-            <div className='items-center cursor-pointer block minlg:hidden' onClick={() => {
-              setSearchModalOpen(false);
-            }}>
-              <EllipseX />
-            </div>
           </div>
           {showHits && keyword !== ''
             ? (
               <div
                 ref={resultsRef}
                 className={tw(
-                  isHeader ? 'absolute left-0 mt-16 max-w-[27rem]' : '',
-                  'bg-always-white flex flex-col w-full text-rubik')}>
+                  'absolute left-0 minmd:left-6 mt-16 w-full max-w-[27rem] shadow-lg',
+                  'bg-always-white flex flex-col w-full text-rubik z-[111] justify-center')}>
                 {searchResults.length > 0 && <>
                   {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                    (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4">
+                    (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
                       No results found. Please try another keyword.
                     </div>) :
                     <div className="py-4">
@@ -295,73 +235,74 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
                     </div>
                   }
                 </>}
-              </div>)
-            :
-            isHeader
-              ? '' :
-              (<div className="mt-14 minlg:mt-5 self-center text-base font-medium text-gray-500 pb-4">
-                Enter a keyword to begin searching.
-              </div>)}
-        </div>
-      </>);
-  } else {
-    return (
-      <>
-        <div className="flex flex-col w-full">
-          <div className="flex space-x-2 p-5">
-            <div className={tw(
-              'relative flex items-center border border-gray-300 rounded-xl p-2 w-full text-black')}>
-              <SearchIcon className='mr-2 shrink-0 aspect-square' />
-              <div className="w-full">
-                <input
-                  ref={inputRef}
-                  type="search"
-                  placeholder="Search for NFTs..."
-                  autoComplete="off"
-                  autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck="false"
-                  autoFocus
-                  maxLength={512}
-                  className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-                  onKeyUp={(event) => search(event)}
-                  onFocus={(event) => event.target.value !== '' && search(event)}
-                  onChange={(event) => !event.target.value && setShowHits(false)}
-                />
               </div>
-            </div>
-            <div className='flex items-center cursor-pointer block minlg:hidden' onClick={() => {
-              setSearchModalOpen(false);
-            }}>
-              <EllipseX />
+            )
+            :
+            ''
+          }
+        </div>
+      </>
+    );
+  }
+  return (
+    <>
+      <div className="flex flex-col font-noi-grotesk relative">
+        <div className="flex space-x-2 p-5 minlg:space-x-0 minlg:p-0">
+          <div className={tw(
+            'relative flex items-center w-full text-black')}>
+            <SearchIcon color='#000000' className='mr-2 shrink-0 aspect-square' />
+            <div className="w-full">
+              <input
+                ref={inputRef}
+                type="search"
+                placeholder="Search profiles and NFTs by name..."
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                maxLength={512}
+                className={tw(
+                  'text-black text-lg placeholder:text-black bg-inherit border-none p-0',
+                  'focus:border-transparent focus:ring-0 focus:placeholder:text-[#B2B2B2]',
+                  transitionWidth
+                )}
+                onKeyUp={(event) => search(event)}
+                onFocus={(event) => event.target.value !== '' && search(event)}
+                onChange={(event) => !event.target.value && setShowHits(false)}
+              />
             </div>
           </div>
-          {showHits && keyword !== ''
-            ? (
-              <div
-                ref={resultsRef}
-                className={tw(
-                  isHeader ? 'absolute mt-16 max-w-[27rem]' : '',
-                  'bg-always-white flex flex-col w-full text-rubik')}>
-                {searchResults.length > 0 && <>
-                  {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                    (<div className="mt-10 self-center text-base font-grotesk font-medium text-gray-500 pb-4">
-                      No results found. Please try another keyword.
-                    </div>) :
-                    <div className="py-4">
-                      <ResultsContent searchResults={searchResults} />
-                      {isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}
-                    </div>
-                  }
-                </>}
-              </div>)
-            :
-            isHeader
-              ? '' :
-              (<div className="mt-14 minlg:mt-5 self-center text-base font-grotesk font-medium text-gray-500 pb-4">
-                Enter a keyword to begin searching.
-              </div>)}
+          <div className='items-center cursor-pointer block minlg:hidden' onClick={() => {
+            setSearchModalOpen(false);
+          }}>
+            <EllipseX />
+          </div>
         </div>
-      </>);
-  }
+        {showHits && keyword !== ''
+          ? (
+            <div
+              ref={resultsRef}
+              className={tw(
+                isHeader ? 'absolute left-0 mt-16 max-w-[27rem]' : '',
+                'bg-always-white flex flex-col w-full text-rubik')}>
+              {searchResults.length > 0 && <>
+                {searchResults[0].found === 0 && searchResults[1].found === 0 ?
+                  (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
+                      No results found. Please try another keyword.
+                  </div>) :
+                  <div className="py-4">
+                    <ResultsContent searchResults={searchResults} />
+                    {isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}
+                  </div>
+                }
+              </>}
+            </div>)
+          :
+          isHeader
+            ? '' :
+            (<div className="mt-14 minlg:mt-5 self-center text-base font-medium text-gray-500 pb-4">
+                Enter a keyword to begin searching.
+            </div>)}
+      </div>
+    </>);
 };

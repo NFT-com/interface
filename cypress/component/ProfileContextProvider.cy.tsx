@@ -164,12 +164,7 @@ describe('ProfileContextProvider', () => {
     cy.findByText('setSelectedCollection').click();
     cy.get('#selectedCollection').should('have.text', 'test_collection');
   });
-
-  it('sets draftNftsDescriptionsVisible correctly', () => {
-    cy.findByText('setDraftNftsDescriptionsVisible').click();
-    cy.get('#draftNftsDescriptionsVisible').should('have.text', '***');
-  });
-
+  
   it('clears drafts correctly', () => {
     cy.findByText('setDraftNftsDescriptionsVisible').click();
     cy.findByText('setSelectedCollection').click();
