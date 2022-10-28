@@ -2,7 +2,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { PropsWithChildren } from 'react';
-import ReactLoading from 'react-loading';
 
 export interface LoadedContainerProps {
   loaded: boolean;
