@@ -169,7 +169,6 @@ describe('Unit test our helper functions', () => {
       expect(getEtherscanLink(1, '0x1234567890123456789012345678901234567890', 'transaction')).to.equal('https://etherscan.io/tx/0x1234567890123456789012345678901234567890');
       expect(getEtherscanLink(1, '0x1234567890123456789012345678901234567890', 'token')).to.equal('https://etherscan.io/token/0x1234567890123456789012345678901234567890');
       expect(getEtherscanLink(3, '0x1234567890123456789012345678901234567890', 'address')).to.equal('https://ropsten.etherscan.io/address/0x1234567890123456789012345678901234567890');
-      expect(getEtherscanLink(4, '0x1234567890123456789012345678901234567890', 'address')).to.equal('https://rinkeby.etherscan.io/address/0x1234567890123456789012345678901234567890');
       expect(getEtherscanLink(5, '0x1234567890123456789012345678901234567890', 'address')).to.equal('https://goerli.etherscan.io/address/0x1234567890123456789012345678901234567890');
       expect(getEtherscanLink(42, '0x1234567890123456789012345678901234567890', 'address')).to.equal('https://kovan.etherscan.io/address/0x1234567890123456789012345678901234567890');
     });
