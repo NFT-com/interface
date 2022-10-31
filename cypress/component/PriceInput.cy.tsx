@@ -14,7 +14,7 @@ import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 const { chains } = configureChains(
   getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
-    [chain.mainnet, chain.goerli, chain.rinkeby] :
+    [chain.mainnet, chain.goerli] :
     [chain.mainnet],
   [
     jsonRpcProvider({
