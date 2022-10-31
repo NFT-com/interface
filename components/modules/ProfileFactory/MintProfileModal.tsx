@@ -121,6 +121,9 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   };
 
   const getGasCost = useCallback(() => {
+    if(!isOpen){
+      return 0;
+    }
     if(feeData?.gasPrice){
       if(data?.request.gasLimit) {
         return utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
@@ -131,7 +134,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     } else {
       return 0;
     }
-  }, [feeData, data]);
+  }, [feeData, data, isOpen]);
   
   return (
     <Transition appear show={isOpen} as={Fragment}>
