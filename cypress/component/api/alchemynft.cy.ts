@@ -76,7 +76,6 @@ describe('alchemy nft API', () => {
     it('should respond to valid request', () => {
       const addresses = {
         mainnet: '0x86C8203Fe8F7d60Afaa0bddA4d92cc5abd901578',
-        rinkeby: '0x0f33d6F1d69f87E5494cBfCAC9B9A3619f38Ca09',
         goerli: '0x0f33d6F1d69f87E5494cBfCAC9B9A3619f38Ca09',
       };
       const chainId = getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID);
