@@ -18,7 +18,7 @@ export default function OnboardingModal() {
         )}
       />
       <div className={tw(
-        'fixed minlg:absolute bottom-0 right-[12%] minlg:top-20 minlg:right-4 overflow-y-auto z-[105] minlg:z-[103]',
+        'fixed minlg:absolute bottom-0 right-[50%] min-w-[375px] translate-x-1/2 minlg:translate-x-0 minlg:top-20 minlg:right-4 overflow-y-auto z-[105] minlg:z-[103]',
         expanded && 'top-[10%] minlg:top-20 minlg:right-4'
       )}>
         <div className="flex min-h-full items-start justify-end p-4 text-center">
@@ -26,7 +26,7 @@ export default function OnboardingModal() {
 
           >
             <div className={tw(
-              'w-full max-w-[330px] rounded-lg',
+              'w-[342px] minlg:w-[330px] rounded-lg',
               'transform overflow-hidden text-left align-middle shadow-xl transition-all',
               'bg-white py-7'
             )}>

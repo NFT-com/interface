@@ -41,7 +41,10 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
             :
             <div
               className='group flex justify-between p-3 hover:bg-[#FFF4CA] rounded-lg hover:cursor-pointer'
-              onClick={() => {setModalOpen(true); setSelectedItem(item);}}
+              onClick={() => {
+                setModalOpen(true);
+                setSelectedItem(item);
+              }}
             >
               <div className='flex items-center'>
                 <div className='w-5 h-5 border rounded-full mr-3 ml-[2px] border-[#969696] group-hover:border-[#F9D54C]'></div>

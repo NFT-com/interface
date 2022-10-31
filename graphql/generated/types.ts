@@ -241,6 +241,16 @@ export type CollectionNfTsInput = {
   pageInput?: InputMaybe<PageInput>;
 };
 
+export type CollectionTraitsInput = {
+  contract: Scalars['Address'];
+};
+
+export type CollectionTraitsSummary = {
+  __typename?: 'CollectionTraitsSummary';
+  stats?: Maybe<TraitsSummaryStats>;
+  traits?: Maybe<Array<Maybe<TraitsSummaryData>>>;
+};
+
 export type ContractSalesStatistics = {
   __typename?: 'ContractSalesStatistics';
   response?: Maybe<Scalars['String']>;
@@ -512,10 +522,12 @@ export type LeaderboardProfile = {
 export type ListNftLooksrareInput = {
   chainId?: InputMaybe<Scalars['String']>;
   looksrareOrder?: InputMaybe<Scalars['String']>;
+  profileUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type ListNftSeaportInput = {
   chainId?: InputMaybe<Scalars['String']>;
+  profileUrl?: InputMaybe<Scalars['String']>;
   seaportParams?: InputMaybe<Scalars['String']>;
   seaportSignature?: InputMaybe<Scalars['String']>;
 };
@@ -692,6 +704,10 @@ export type Mutation = {
   saveNFTVisibilityForProfiles: SaveNftVisibilityForProfilesOutput;
   /** AUTHENTICATED */
   saveScoreForProfiles: SaveScoreForProfilesOutput;
+  /** AUTHENTICATED */
+  saveUserActionForBuyNFTs: SaveUserActionForBuyNfTsOutput;
+  /** AUTHENTICATED */
+  sendReferEmail: SendReferEmailOutput;
   /** AUTHETICATED - set by curation + profile owner */
   setCuration: Profile;
   /** AUTHENTICATED */
@@ -902,6 +918,16 @@ export type MutationSaveNftVisibilityForProfilesArgs = {
 
 export type MutationSaveScoreForProfilesArgs = {
   input: SaveScoreForProfilesInput;
+};
+
+
+export type MutationSaveUserActionForBuyNfTsArgs = {
+  profileUrl: Scalars['String'];
+};
+
+
+export type MutationSendReferEmailArgs = {
+  input: SendReferEmailInput;
 };
 
 
@@ -1490,9 +1516,26 @@ export type Profile = {
   status?: Maybe<ProfileStatus>;
   tokenId?: Maybe<Scalars['String']>;
   url: Scalars['String'];
+  usersActionsWithPoints?: Maybe<Array<Maybe<UsersActionOutput>>>;
   visibleNFTs?: Maybe<Scalars['Int']>;
   winningBid?: Maybe<Bid>;
 };
+
+export type ProfileActionOutput = {
+  __typename?: 'ProfileActionOutput';
+  action: ProfileActionType;
+  point: Scalars['Int'];
+  profileUrl: Scalars['String'];
+};
+
+export enum ProfileActionType {
+  BuyNfTs = 'BuyNFTs',
+  CreateNftProfile = 'CreateNFTProfile',
+  CustomizeProfile = 'CustomizeProfile',
+  IssueNfTs = 'IssueNFTs',
+  ListNfTs = 'ListNFTs',
+  ReferNetwork = 'ReferNetwork'
+}
 
 export type ProfileClaimedInput = {
   profileId: Scalars['ID'];
@@ -1533,6 +1576,13 @@ export enum ProfileViewType {
   Gallery = 'Gallery'
 }
 
+export type ProfilesActionsOutput = {
+  __typename?: 'ProfilesActionsOutput';
+  action?: Maybe<Array<Maybe<ProfileActionType>>>;
+  totalPoints?: Maybe<Scalars['Int']>;
+  url?: Maybe<Scalars['String']>;
+};
+
 export type ProfilesByDisplayNftInput = {
   chainId?: InputMaybe<Scalars['String']>;
   collectionAddress?: InputMaybe<Scalars['String']>;
@@ -1561,6 +1611,7 @@ export type Query = {
   blockedProfileURI: Scalars['Boolean'];
   collection?: Maybe<CollectionInfo>;
   collectionNFTs: NfTsOutput;
+  collectionTraits?: Maybe<CollectionTraitsSummary>;
   collectionsByDeployer?: Maybe<Array<Maybe<Collection>>>;
   convertEnsToEthAddress: ConvertEnsToEthAddress;
   curationNFTs: CurationNfTsOutput;
@@ -1584,6 +1635,8 @@ export type Query = {
   getNFTAsks: Array<MarketAsk>;
   getNFTDetails?: Maybe<NftDetail>;
   getNFTOffers: Array<MarketAsk>;
+  /** AUTHENTICATED */
+  getProfileActions: Array<Maybe<ProfileActionOutput>>;
   /** AUTHENTICATED */
   getRejectedAssociations: Array<Maybe<RejectedAssociationOutput>>;
   /** AUTHENTICATED */
@@ -1654,6 +1707,11 @@ export type QueryCollectionArgs = {
 
 export type QueryCollectionNfTsArgs = {
   input: CollectionNfTsInput;
+};
+
+
+export type QueryCollectionTraitsArgs = {
+  input: CollectionTraitsInput;
 };
 
 
@@ -1953,6 +2011,11 @@ export type SaveScoreForProfilesOutput = {
   message?: Maybe<Scalars['String']>;
 };
 
+export type SaveUserActionForBuyNfTsOutput = {
+  __typename?: 'SaveUserActionForBuyNFTsOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type SeaportConsideration = {
   __typename?: 'SeaportConsideration';
   endAmount?: Maybe<Scalars['String']>;
@@ -1994,6 +2057,16 @@ export type SeaportProtocolDataParams = {
   zoneHash?: Maybe<Scalars['String']>;
 };
 
+export type SendReferEmailInput = {
+  emails: Array<Scalars['String']>;
+  profileUrl: Scalars['String'];
+};
+
+export type SendReferEmailOutput = {
+  __typename?: 'SendReferEmailOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type SetCurationInput = {
   curationId: Scalars['ID'];
   profileId: Scalars['ID'];
@@ -2013,6 +2086,7 @@ export type SignUpInput = {
   avatarURL?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
   referredBy?: InputMaybe<Scalars['String']>;
+  referredUrl?: InputMaybe<Scalars['String']>;
   username?: InputMaybe<Scalars['String']>;
   wallet: WalletInput;
 };
@@ -2064,6 +2138,23 @@ export type TopBidsInput = {
   pageInput?: InputMaybe<PageInput>;
   profileId?: InputMaybe<Scalars['ID']>;
   status?: InputMaybe<BidStatus>;
+};
+
+export type TraitCounts = {
+  __typename?: 'TraitCounts';
+  count?: Maybe<Scalars['Int']>;
+  value?: Maybe<Scalars['String']>;
+};
+
+export type TraitsSummaryData = {
+  __typename?: 'TraitsSummaryData';
+  counts?: Maybe<Array<Maybe<TraitCounts>>>;
+  type?: Maybe<Scalars['String']>;
+};
+
+export type TraitsSummaryStats = {
+  __typename?: 'TraitsSummaryStats';
+  totalCount?: Maybe<Scalars['Int']>;
 };
 
 export type TransactionSales = {
@@ -2391,6 +2482,7 @@ export type User = {
   myAddresses?: Maybe<Array<Wallet>>;
   myApprovals?: Maybe<Array<Approval>>;
   preferences: UserPreferences;
+  profilesActionsWithPoints?: Maybe<Array<Maybe<ProfilesActionsOutput>>>;
   referralId: Scalars['String'];
   referredBy?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
@@ -2416,6 +2508,13 @@ export type UserPreferencesInput = {
 export type UserSwapsInput = {
   pageInput?: InputMaybe<PageInput>;
   participant: Scalars['Address'];
+};
+
+export type UsersActionOutput = {
+  __typename?: 'UsersActionOutput';
+  action?: Maybe<Array<Maybe<ProfileActionType>>>;
+  totalPoints?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['String']>;
 };
 
 export type Wallet = {
@@ -2608,6 +2707,13 @@ export type ResendEmailMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ResendEmailMutation = { __typename?: 'Mutation', resendEmailConfirm: { __typename?: 'User', id: string } };
+
+export type SendReferEmailMutationVariables = Exact<{
+  input: SendReferEmailInput;
+}>;
+
+
+export type SendReferEmailMutation = { __typename?: 'Mutation', sendReferEmail: { __typename?: 'SendReferEmailOutput', message?: string | null } };
 
 export type SignHashMutationVariables = Exact<{
   input: SignHashInput;
@@ -3251,6 +3357,13 @@ export const ResendEmailDocument = gql`
     mutation ResendEmail {
   resendEmailConfirm {
     id
+  }
+}
+    `;
+export const SendReferEmailDocument = gql`
+    mutation SendReferEmail($input: SendReferEmailInput!) {
+  sendReferEmail(input: $input) {
+    message
   }
 }
     `;
@@ -5022,6 +5135,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     ResendEmail(variables?: ResendEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ResendEmailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ResendEmailMutation>(ResendEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ResendEmail', 'mutation');
+    },
+    SendReferEmail(variables: SendReferEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendReferEmailMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SendReferEmailMutation>(SendReferEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SendReferEmail', 'mutation');
     },
     SignHash(variables: SignHashMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SignHashMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SignHashMutation>(SignHashDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SignHash', 'mutation');
