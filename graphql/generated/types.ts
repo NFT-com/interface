@@ -1644,6 +1644,8 @@ export type Query = {
   /** AUTHENTICATED */
   getRemovedAssociationsForSender: Array<Maybe<RemovedAssociationsForSenderOutput>>;
   getSales?: Maybe<Array<Maybe<TransactionSales>>>;
+  /** AUTHENTICATED */
+  getSentReferralEmails: Array<Maybe<SentReferralEmailsOutput>>;
   getSwaps: GetMarketSwap;
   getTxByContract?: Maybe<NftPortTxByContract>;
   getTxByNFT?: Maybe<NftPortTxByNft>;
@@ -2065,6 +2067,13 @@ export type SendReferEmailInput = {
 export type SendReferEmailOutput = {
   __typename?: 'SendReferEmailOutput';
   message?: Maybe<Scalars['String']>;
+};
+
+export type SentReferralEmailsOutput = {
+  __typename?: 'SentReferralEmailsOutput';
+  accepted: Scalars['Boolean'];
+  email: Scalars['String'];
+  timestamp: Scalars['String'];
 };
 
 export type SetCurationInput = {
@@ -2960,6 +2969,11 @@ export type GetSalesQueryVariables = Exact<{
 
 
 export type GetSalesQuery = { __typename?: 'Query', getSales?: Array<{ __typename?: 'TransactionSales', contractAddress?: string | null, tokenId?: string | null, priceUSD?: number | null, price?: number | null, symbol?: string | null, date?: any | null } | null> | null };
+
+export type GetSentReferralEmailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetSentReferralEmailsQuery = { __typename?: 'Query', getSentReferralEmails: Array<{ __typename?: 'SentReferralEmailsOutput', email: string, accepted: boolean } | null> };
 
 export type GetTxByContractQueryVariables = Exact<{
   input?: InputMaybe<TransactionsByContractInput>;
@@ -4171,6 +4185,14 @@ export const GetSalesDocument = gql`
   }
 }
     `;
+export const GetSentReferralEmailsDocument = gql`
+    query GetSentReferralEmails {
+  getSentReferralEmails {
+    email
+    accepted
+  }
+}
+    `;
 export const GetTxByContractDocument = gql`
     query GetTxByContract($input: TransactionsByContractInput) {
   getTxByContract(input: $input) {
@@ -5243,6 +5265,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetSales(variables?: GetSalesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSalesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetSalesQuery>(GetSalesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetSales', 'query');
+    },
+    GetSentReferralEmails(variables?: GetSentReferralEmailsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSentReferralEmailsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetSentReferralEmailsQuery>(GetSentReferralEmailsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetSentReferralEmails', 'query');
     },
     GetTxByContract(variables?: GetTxByContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTxByContractQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTxByContractQuery>(GetTxByContractDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetTxByContract', 'query');

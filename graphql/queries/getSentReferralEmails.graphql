@@ -1,0 +1,6 @@
+query GetSentReferralEmails {
+  getSentReferralEmails {
+    email
+    accepted
+  }
+}
