@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 type MintGKProfileCardProps = {
   minting: boolean;
@@ -34,6 +34,7 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
   const { openConnectModal } = useConnectModal();
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
+  const { chain } = useNetwork();
   const { loading: loadingGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const { claimable, loading: loadingClaimable } = useClaimableProfileCount(currentAddress);
   const { data: mintedProfiles, loading: loadingMintedProfiles } = useProfilesMintedByGKQuery(selectedGK?.tokenId.toString(), defaultChainId);
@@ -138,7 +139,7 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
 
   useEffect(() => {
     setInputs(resetInputs());
-  }, [selectedGK, resetInputs]);
+  }, [selectedGK, resetInputs, chain?.id]);
 
   const setActiveGK = useCallback((tokenId) => {
     const id = tokenId?.split('#')[1];
