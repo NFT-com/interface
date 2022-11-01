@@ -79,36 +79,33 @@ export default function OnboardingModal() {
                       {
                         name: 'Customize Profile',
                         isCompleted: false,
-                        coins: 1
+                        coins: 1,
+                        buttonText: 'Continue',
                       },
                       {
                         name: 'Refer Network',
                         isCompleted: false,
                         coins: 2,
                         description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 Reward points!',
-                        onClick: () => console.log('refer network'),
-                        buttonText: 'Continue'
+                        buttonText: 'Continue',
                       },
                       {
                         name: 'Buy NFTs',
                         isCompleted: false,
                         coins: 1,
                         description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase.',
-                        onClick: () => console.log('buy nfts')
                       },
                       {
                         name: 'List NFTs',
                         isCompleted: false,
                         coins: 2,
                         description: 'Get 2 reward points for each of the first 5 NFTs you list for at least one day.',
-                        onClick: () => console.log('list nfts')
                       },
                       {
                         name: 'Issue NFTs',
                         isCompleted: false,
                         coins: 5,
                         description: 'Get 5 reward points for configuring your NFT Profile as a unique NFT collection.',
-                        onClick: () => console.log('issue nfts')
                       }
                     ]
                   } />

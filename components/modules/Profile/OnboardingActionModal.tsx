@@ -1,7 +1,10 @@
-
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import OnboardingReferralForm from './OnboardingReferralForm';
+
 import { Dialog, Transition } from '@headlessui/react';
+import { useRouter } from 'next/router';
 import { X } from 'phosphor-react';
 import NftGoldLogo from 'public/nft_gold_logo.svg';
 import { Fragment } from 'react';
@@ -12,7 +15,7 @@ type OnboardingItemProps = {
   coins: number;
   description?: string;
   buttonText?: string;
-  onClick?: () => void
+  href?: string;
 };
 
 interface OnboardingActionModalProps {
@@ -22,6 +25,7 @@ interface OnboardingActionModalProps {
 }
 
 export default function OnboardingActionModal({ selectedItem, modalOpen, setModalOpen }: OnboardingActionModalProps) {
+  const router = useRouter();
   return (
     <Transition appear show={modalOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[105] w-full" onClose={() => setModalOpen(false)}>
@@ -70,142 +74,11 @@ export default function OnboardingActionModal({ selectedItem, modalOpen, setModa
                     </div>
 
                     {selectedItem?.name === 'Refer Network' &&
-                  <div className='flex flex-col px-7 mb-10 space-y-4'>
-                    <div className='flex justify-center items-center'>
-                      <p className='mr-2 text-[#B2B2B2]'>#1</p>
-                      <input
-                        className={tw(
-                          'text-lg min-w-0 w-3/4',
-                          'text-left w-full rounded-xl font-medium',
-                          'bg-[#F8F8F8] mr-5 border-0'
-                        )}
-                        type='email'
-                        placeholder="Enter email"
-                        autoFocus={true}
-                        spellCheck={false}
-                      />
-                      <button
-                        type="button"
-                        className={tw(
-                          'inline-flex w-max mx-auto justify-center items-center',
-                          'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                          'font-medium text-black py-2 px-4',
-                          'focus:outline-none focus-visible:bg-[#E4BA18]',
-                          'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                        )}
-                      >
-                        Sent
-                      </button>
-                    </div>
-                    <div className='flex justify-center items-center'>
-                      <p className='mr-2 text-[#B2B2B2]'>#2</p>
-                      <input
-                        className={tw(
-                          'text-lg min-w-0 w-3/4',
-                          'text-left w-full rounded-xl  font-medium',
-                          'bg-[#F8F8F8] mr-5 border-0'
-                        )}
-                        type='email'
-                        placeholder="Enter email"
-                        autoFocus={true}
-                        spellCheck={false}
-                      />
-                      <button
-                        type="button"
-                        className={tw(
-                          'inline-flex w-max mx-auto justify-center items-center',
-                          'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                          'font-medium text-black py-2 px-4',
-                          'focus:outline-none focus-visible:bg-[#E4BA18]',
-                          'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                        )}
-                      >
-                        Sent
-                      </button>
-                    </div>
-                    <div className='flex justify-center items-center'>
-                      <p className='mr-2 text-[#B2B2B2]'>#3</p>
-                      <input
-                        className={tw(
-                          'text-lg min-w-0 w-3/4',
-                          'text-left w-full rounded-xl  font-medium',
-                          'bg-[#F8F8F8] mr-5 border-0'
-                        )}
-                        type='email'
-                        placeholder="Enter email"
-                        autoFocus={true}
-                        spellCheck={false}
-                      />
-                      <button
-                        type="button"
-                        className={tw(
-                          'inline-flex w-max mx-auto justify-center items-center',
-                          'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                          'font-medium text-black py-2 px-4',
-                          'focus:outline-none focus-visible:bg-[#E4BA18]',
-                          'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                        )}
-                      >
-                        Sent
-                      </button>
-                    </div>
-                    <div className='flex justify-center items-center'>
-                      <p className='mr-2 text-[#B2B2B2]'>#4</p>
-                      <input
-                        className={tw(
-                          'text-lg min-w-0 w-3/4',
-                          'text-left w-full rounded-xl font-medium',
-                          'bg-[#F8F8F8] mr-5 border-0'
-                        )}
-                        type='email'
-                        placeholder="Enter email"
-                        autoFocus={true}
-                        spellCheck={false}
-                      />
-                      <button
-                        type="button"
-                        className={tw(
-                          'inline-flex w-max mx-auto justify-center items-center',
-                          'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                          'font-medium text-black py-2 px-4',
-                          'focus:outline-none focus-visible:bg-[#E4BA18]',
-                          'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                        )}
-                      >
-                        Sent
-                      </button>
-                    </div>
-                    <div className='flex justify-center items-center'>
-                      <p className='mr-2 text-[#B2B2B2]'>#5</p>
-                      <input
-                        className={tw(
-                          'text-lg min-w-0 w-3/4',
-                          'text-left w-full rounded-xl font-medium',
-                          'bg-[#F8F8F8] mr-5 border-0'
-                        )}
-                        type='email'
-                        placeholder="Enter email"
-                        autoFocus={true}
-                        spellCheck={false}
-                      />
-                      <button
-                        type="button"
-                        className={tw(
-                          'inline-flex w-max mx-auto justify-center items-center',
-                          'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                          'font-medium text-black py-2 px-4',
-                          'focus:outline-none focus-visible:bg-[#E4BA18]',
-                          'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-                        )}
-                      >
-                        Sent
-                      </button>
-                    </div>
-                  </div>
+                      <OnboardingReferralForm />
                     }
 
                     <button
-                      onClick={() => selectedItem?.onClick()}
+                      onClick={() => !isNullOrEmpty(selectedItem?.href) ? router.push(selectedItem?.href) : setModalOpen(false) }
                       type="button"
                       className={tw(
                         'inline-flex w-1/3 mx-auto justify-center items-center',
