@@ -5,6 +5,7 @@ import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
@@ -77,7 +78,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   });
 
   const submitHandler = async () => {
-    if(freeMintAvailable){
+    if(freeMintAvailable && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
       try {
         const tx = await (await (maxProfilesSigner)).publicClaim(
           freeMintProfile?.profileURI,
