@@ -8,6 +8,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import { useSupportedNetwork } from './useSupportedNetwork';
 
 import { ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
@@ -17,7 +18,7 @@ export function useMaybeCreateUser(): boolean {
   const { chain } = useNetwork();
   const { signed } = useContext(GraphQLContext);
   const { isSupported } = useSupportedNetwork();
-
+  const router = useRouter();
   const { mutate: mutateMeInfo } = useMeQuery();
   const { fetchMe } = useFetchMe();
 
@@ -55,10 +56,13 @@ export function useMaybeCreateUser(): boolean {
     ) {
       (async () => {
         const meResult = await fetchMe();
+        const referredBy = router?.query?.referralCode?.toString() || null;
+        const referredUrl = router?.query?.referralUrl?.toString() || null;
         if (meResult == null) {
           const result = await createUser({
             avatarURL: null,
-            referredBy: null,
+            referredBy: referredBy,
+            referredUrl: referredUrl,
             username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
             wallet: {
               address: currentAddress,
@@ -81,7 +85,8 @@ export function useMaybeCreateUser(): boolean {
     creating,
     createdUser,
     fetchMe,
-    signed
+    signed,
+    router?.query
   ]);
 
   return createdUser;

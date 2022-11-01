@@ -22,9 +22,7 @@ export default function OnboardingModal() {
         expanded && 'top-[10%] minlg:top-20 minlg:right-4'
       )}>
         <div className="flex min-h-full items-start justify-end p-4 text-center">
-          <div
-
-          >
+          <div>
             <div className={tw(
               'w-[342px] minlg:w-[330px] rounded-lg',
               'transform overflow-hidden text-left align-middle shadow-xl transition-all',
