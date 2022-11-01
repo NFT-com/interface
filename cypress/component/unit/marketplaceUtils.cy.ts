@@ -15,7 +15,7 @@ describe('Unit test our marketplace helper functions', () => {
       expect(convertDurationToSec('30 Days')).to.equal(60 * 60 * 24 * 30);
       expect(convertDurationToSec('60 Days')).to.equal(60 * 60 * 24 * 60);
       expect(convertDurationToSec('90 Days')).to.equal(60 * 60 * 24 * 7 * 4 * 3);
-      expect(convertDurationToSec('6 Months')).to.equal(60 * 60 * 24 * 7 * 4 * 6);
+      expect(convertDurationToSec('180 Days')).to.equal(60 * 60 * 24 * 7 * 4 * 6);
     });
   });
 
