@@ -388,7 +388,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     'text-white flex'
                   )}>
                     {data_v2?.dynamicUrl['url'].map(word =>
-                      <a key={word} href={'/app/claim-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
+                      <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
                         <span className='text-white/40'>NFT.COM</span>
                         <span role='presentation' className={tw(
                           '-mb-[.1em] mx-2 minlg:mx-4 minxxl:mx-8 skew-x-[-20deg]',
@@ -489,7 +489,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                       'text-white flex'
                     )}>
                       {data_v2?.dynamicUrl['url'].map(word =>
-                        <a key={word} href={'/app/claim-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
+                        <a key={word} href={'/app/mint-profiles'} className='anim-profile-link flex items-center justify-center text-center'>
                           <span className='text-white/40'>NFT.COM</span>
                           <span className={tw(
                             'mt-[.075em] -mb-[.0625] mx-1 minlg:mx-2 minxxl:mx-4 skew-x-[-20deg]',

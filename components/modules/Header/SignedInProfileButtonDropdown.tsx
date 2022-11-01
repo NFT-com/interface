@@ -116,7 +116,7 @@ export function SignedInProfileButtonDropdown() {
                     {myOwnedProfileTokens?.length > 0 ?
                       <p onClick={() => setProfileSelectModalOpen(true)} className='font-medium'>{shortenAddress(currentAddress, 3)}</p>
                       :
-                      <Link href='/app/claim-profiles'>
+                      <Link href='/app/mint-profiles'>
                         <p className='font-medium'>{shortenAddress(currentAddress, 3)}</p>
                       </Link>
                     }
@@ -160,7 +160,7 @@ export function SignedInProfileButtonDropdown() {
               <p className='text-black px-4 hover:cursor-default'>No Profiles Found</p>
               <div
                 onClick={() => {
-                  router.push('/app/claim-profiles');
+                  router.push('/app/mint-profiles');
                   setExpanded(false);
                 }}
                 style={{ height: '10%' }}
