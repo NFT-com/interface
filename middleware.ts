@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-server-import-in-page */
+/* istanbul ignore file */
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
