@@ -56,9 +56,9 @@ export function useMaybeCreateUser(): boolean {
     ) {
       (async () => {
         const meResult = await fetchMe();
-        const referredBy = router?.query?.referralCode?.toString() || null;
-        const referredUrl = router?.query?.referralUrl?.toString() || null;
         if (meResult == null) {
+          const referredBy = router?.query?.referralCode?.toString() || null;
+          const referredUrl = router?.query?.referralUrl?.toString() || null;
           const result = await createUser({
             avatarURL: null,
             referredBy: referredBy,

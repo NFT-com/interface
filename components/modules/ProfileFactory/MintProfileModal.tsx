@@ -8,7 +8,7 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { useRouter } from 'next/router';
 import ETHIcon from 'public/eth_icon.svg';
 import { Fragment, useCallback, useState } from 'react';
@@ -123,7 +123,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   const getGasCost = useCallback(() => {
     if(feeData?.gasPrice){
       if(data?.request.gasLimit) {
-        return utils.formatEther(data?.request?.gasLimit.toNumber() * feeData?.gasPrice.toNumber());
+        return utils.formatEther(BigNumber.from(data?.request?.gasLimit).mul(BigNumber.from(feeData?.gasPrice)));
       }
       else {
         return 0;

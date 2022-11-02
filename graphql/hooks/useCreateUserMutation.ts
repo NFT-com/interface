@@ -41,7 +41,7 @@ export function useCreateUserMutation({
           referredBy:
             input.referredBy?.length === 0
               ? undefined
-              : (input.referredBy as string)?.toLowerCase(),
+              : (input.referredBy as string),
           referredUrl:
               input.referredUrl?.length === 0
                 ? undefined

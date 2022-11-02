@@ -1,6 +1,7 @@
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { CheckCircle } from 'phosphor-react';
 import { useState } from 'react';
 
 interface OnboardingInputProps {
@@ -18,7 +19,7 @@ export default function OnboardingInput({ onSubmit, item, index } : OnboardingIn
   return (
     <div className='flex justify-center items-center'>
       <p className='mr-2 text-[#B2B2B2]'>#{index + 1}</p>
-      <form className='flex w-full' onSubmit={(e) => onSubmit(e, inputValue)}>
+      <form className='flex w-full items-center' onSubmit={(e) => onSubmit(e, inputValue)}>
         <input
           className={tw(
             'text-lg min-w-0 w-3/4',
@@ -33,18 +34,23 @@ export default function OnboardingInput({ onSubmit, item, index } : OnboardingIn
           disabled={!isNullOrEmpty(item?.email)}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <input
-          type="submit"
-          value={isNullOrEmpty(item?.email) ? 'Refer' : item?.accepted ? 'Accepted' :'Sent'}
-          disabled={item && !isNullOrEmpty(item?.email) || isNullOrEmpty(item?.email) && inputValue === ''}
-          className={tw(
-            'inline-flex w-max mx-auto justify-center items-center',
-            'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-            'font-medium text-black py-2 px-4',
-            'focus:outline-none focus-visible:bg-[#E4BA18]',
-            'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]',
-            isNullOrEmpty(item?.email) && 'hover:cursor-pointer disabled:hover:cursor-auto'
-          )} />
+        
+        {item?.accepted ?
+          <CheckCircle size={32} color="green" />
+          :
+          <input
+            type="submit"
+            value={isNullOrEmpty(item?.email) ? 'Refer' : item?.accepted ? 'Accepted' :'Sent'}
+            disabled={item && !isNullOrEmpty(item?.email) || isNullOrEmpty(item?.email) && inputValue === ''}
+            className={tw(
+              'inline-flex w-max justify-center items-center',
+              'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
+              'font-medium text-black py-2 px-4',
+              'focus:outline-none focus-visible:bg-[#E4BA18]',
+              'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]',
+              isNullOrEmpty(item?.email) && 'hover:cursor-pointer disabled:hover:cursor-auto'
+            )} />
+        }
       </form>
     </div>
   );
