@@ -2,5 +2,6 @@ query GetSentReferralEmails {
   getSentReferralEmails {
     email
     accepted
+    timestamp
   }
 }

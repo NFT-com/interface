@@ -2973,7 +2973,7 @@ export type GetSalesQuery = { __typename?: 'Query', getSales?: Array<{ __typenam
 export type GetSentReferralEmailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSentReferralEmailsQuery = { __typename?: 'Query', getSentReferralEmails: Array<{ __typename?: 'SentReferralEmailsOutput', email: string, accepted: boolean } | null> };
+export type GetSentReferralEmailsQuery = { __typename?: 'Query', getSentReferralEmails: Array<{ __typename?: 'SentReferralEmailsOutput', email: string, accepted: boolean, timestamp: string } | null> };
 
 export type GetTxByContractQueryVariables = Exact<{
   input?: InputMaybe<TransactionsByContractInput>;
@@ -4190,6 +4190,7 @@ export const GetSentReferralEmailsDocument = gql`
   getSentReferralEmails {
     email
     accepted
+    timestamp
   }
 }
     `;

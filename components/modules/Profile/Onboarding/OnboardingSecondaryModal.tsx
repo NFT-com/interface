@@ -1,7 +1,10 @@
+import { useGetSentReferralEmailsQuery } from 'graphql/hooks/useGetSentReferralEmailsQuery';
+import { useSendReferEmailMutation } from 'graphql/hooks/useSendReferEmailMutation';
+import { useUser } from 'hooks/state/useUser';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import OnboardingReferralForm from './OnboardingReferralForm';
+import OnboardingInput from './OnboardingInput';
 
 import { Dialog, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
@@ -24,8 +27,17 @@ interface OnboardingActionModalProps {
   setModalOpen: (isOpen: boolean) => void;
 }
 
-export default function OnboardingActionModal({ selectedItem, modalOpen, setModalOpen }: OnboardingActionModalProps) {
+export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setModalOpen }: OnboardingActionModalProps) {
   const router = useRouter();
+  const { user } = useUser();
+  const { sendReferEmail } = useSendReferEmailMutation();
+  const { data, mutate: mutateSentReferrals } = useGetSentReferralEmailsQuery();
+
+  const handleSubmit = (e, value) => {
+    e.preventDefault();
+    sendReferEmail(user.currentProfileUrl, [value]);
+    mutateSentReferrals();
+  };
   return (
     <Transition appear show={modalOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[105] w-full" onClose={() => setModalOpen(false)}>
@@ -74,7 +86,11 @@ export default function OnboardingActionModal({ selectedItem, modalOpen, setModa
                     </div>
 
                     {selectedItem?.name === 'Refer Network' &&
-                      <OnboardingReferralForm />
+                      <div className='flex flex-col px-7 mb-10 space-y-4'>
+                        {Array.from(Array(5).keys()).map((_, index) => (
+                          <OnboardingInput key={index} index={index} item={data && data[index]} onSubmit={handleSubmit} />
+                        ))}
+                      </div>
                     }
 
                     <button

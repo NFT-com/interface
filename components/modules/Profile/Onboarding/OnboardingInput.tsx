@@ -1,0 +1,52 @@
+import { isNullOrEmpty } from 'utils/helpers';
+import { tw } from 'utils/tw';
+
+import { useState } from 'react';
+
+interface OnboardingInputProps {
+  item: {
+    email: string;
+    accepted: boolean;
+  };
+  index: number;
+  onSubmit: (e, inputValue: string) => void;
+}
+
+export default function OnboardingInput({ onSubmit, item, index } : OnboardingInputProps) {
+  const [inputValue, setInputValue] = useState('');
+
+  return (
+    <div className='flex justify-center items-center'>
+      <p className='mr-2 text-[#B2B2B2]'>#{index + 1}</p>
+      <form className='flex w-full' onSubmit={(e) => onSubmit(e, inputValue)}>
+        <input
+          className={tw(
+            'text-lg min-w-0 w-3/4',
+            'text-left w-full rounded-xl font-medium',
+            'bg-[#F8F8F8] mr-5 border-0'
+          )}
+          type='email'
+          placeholder="Enter email"
+          autoFocus={true}
+          spellCheck={false}
+          value={item?.email || inputValue}
+          disabled={!isNullOrEmpty(item?.email)}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <input
+          type="submit"
+          value={isNullOrEmpty(item?.email) ? 'Refer' : item?.accepted ? 'Accepted' :'Sent'}
+          disabled={item && !isNullOrEmpty(item?.email) || isNullOrEmpty(item?.email) && inputValue === ''}
+          className={tw(
+            'inline-flex w-max mx-auto justify-center items-center',
+            'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
+            'font-medium text-black py-2 px-4',
+            'focus:outline-none focus-visible:bg-[#E4BA18]',
+            'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]',
+            isNullOrEmpty(item?.email) && 'hover:cursor-pointer disabled:hover:cursor-auto'
+          )} />
+      </form>
+    </div>
+  );
+}
+    

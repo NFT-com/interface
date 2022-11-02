@@ -21,11 +21,11 @@ export function useGetSentReferralEmailsQuery(): GetSentReferralEmailsData {
     }
 
     const result = await sdk.GetSentReferralEmails();
-    return result;
+    return result.getSentReferralEmails.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   });
   
   return {
-    data: data?.getSentReferralEmails ?? null,
+    data: data ?? null,
     loading: data == null,
     mutate: () => {
       mutate(keyString);
