@@ -1,5 +1,4 @@
 import { ProfileStatus } from 'graphql/generated/types';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/solid';
 import { rgba } from 'polished';
