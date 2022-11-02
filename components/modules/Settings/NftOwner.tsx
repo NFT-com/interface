@@ -8,9 +8,9 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateWalletProfileIdMutation } from 'graphql/hooks/useUpdateWalletProfileIdMutation';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
+import Link from 'next/link';
 import { XCircle } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -154,11 +154,11 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
 
                 {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
 
-                {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
+                <Link href='/app/mint-profiles'>
                   <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
-                Get a New Profile
+                    Get a New Profile
                   </button>
-                )}
+                </Link>
 
                 {allProfiles.length > profilesToShow.length
                   ?
@@ -212,11 +212,11 @@ export default function NftOwner({ selectedProfile, isSidebar, showToastOnSucces
 
                 {!allProfiles.length && <p className='text-[#6F6F6F] mb-4'>No profiles found. Please try again.</p>}
 
-                {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) && (
+                <Link href='/app/mint-profiles'>
                   <button className="bg-black text-base font-bold tracking-normal mb-4 text-[#F9D963] py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full" type="button">
                     Get a New Profile
                   </button>
-                )}
+                </Link>
 
                 {allProfiles.length > profilesToShow.length
                   ?

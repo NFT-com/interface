@@ -6,7 +6,6 @@ import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import NotFoundPage from 'pages/404';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -74,10 +73,6 @@ export default function MintProfilesPage() {
     }
     return <MintProfileCardSkeleton />;
   }, [claimable, freeMintAvailable, loadingClaimable, loadingFreeMint, minting, setMintingModal]);
-
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
-    return <NotFoundPage />;
-  }
   
   return (
     <div
@@ -160,7 +155,7 @@ export default function MintProfilesPage() {
 
 MintProfilesPage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout hideSearch hideHeader={getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) ? true : false}>
+    <DefaultLayout hideSearch hideHeader={true}>
       { page }
     </DefaultLayout>
   );
