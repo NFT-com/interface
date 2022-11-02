@@ -7,7 +7,6 @@ import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { UserNotifications } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
@@ -152,7 +151,7 @@ export function NotificationContextProvider(
     if(pendingAssociationCount && pendingAssociationCount > 0 && !notifications.hasPendingAssociatedProfiles ) {
       setUserNotificationActive('hasPendingAssociatedProfiles', true);
     }
-    if(profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized && !notifications.profileNeedsCustomization && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED)) {
+    if(profileCustomizationStatus && !profileCustomizationStatus.isProfileCustomized && !notifications.profileNeedsCustomization) {
       setUserNotificationActive('profileNeedsCustomization', true);
     }
     if(profileCustomizationStatus && profileCustomizationStatus.isProfileCustomized && notifications.profileNeedsCustomization) {
