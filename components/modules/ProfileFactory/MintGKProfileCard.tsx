@@ -160,7 +160,7 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
           <div className='flex flex-col justify-center items-center'>
             <p className='text-red-500 mt-10 mb-2'>No Genesis Key detected for mint.</p>
             <div className='flex flex-col items-center'>
-              <Link href='/app/auctions'>
+              <Link href={`/app/collection/${getAddress('genesisKey', defaultChainId)}`}>
                 <button
                   type="button"
                   className={tw(

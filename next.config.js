@@ -105,6 +105,25 @@ const moduleExports = withTM({
       }
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/app/auctions',
+        destination: '/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414',
+        permanent: true,
+      },
+      {
+        source: '/app/sale',
+        destination: '/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414',
+        permanent: true,
+      },
+      {
+        source: '/app/claim-genesis-key',
+        destination: '/app/collection/0x8fB5a7894AB461a59ACdfab8918335768e411414',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     domains: [
       'cdn.nft.com',
