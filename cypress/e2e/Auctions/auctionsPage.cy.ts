@@ -5,8 +5,8 @@ describe('auctions  page tests', () => {
     cy.visit('/app/auctions');
   });
   
-  it('should show logged out view with no wallet connected', () => {
-    cy.findByText('Unlock the NFT Platform Beta').should('exist');
+  it('should redirect to the GK collections page', () => {
+    cy.get('.NftCollectionItem').should('exist');
   });
   
   // todo: sign in and test the actual auction page

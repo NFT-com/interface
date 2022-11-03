@@ -9,21 +9,25 @@ import { ProfileStatus } from 'graphql/generated/types';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useProfileAuctionSigner } from 'hooks/contracts/useProfileAuctionSigner';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { useTotalGKPublicRemaining } from 'hooks/useTotalGKPublicRemaining';
 import { isNullOrEmpty } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { SwitchHorizontalIcon } from '@heroicons/react/solid';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 import { useAccount } from 'wagmi';
 
 export function ProfilePreferencesSearch() {
+  const defaultChainId = useDefaultChainId();
   const [currentURI, setCurrentURI] = useState('');
   const [minting, setMinting] = useState(false);
   const [mintSuccess, setMintSuccess] = useState(false);
@@ -114,7 +118,7 @@ export function ProfilePreferencesSearch() {
                 color={alwaysBlack}
                 label="Purchase Genesis Key"
                 onClick={() => {
-                  router.push('/app/auctions');
+                  router.push(`/app/collection/${getAddress('genesisKey', defaultChainId)}`);
                 }}
               />
             </div>
