@@ -55,7 +55,7 @@ export function LinksToSection(props: LinksToSectionParams) {
     {
       image: '/link-to-key.png',
       section: 'EVENTS',
-      title: 'NFT.COM Public Release',
+      title: 'NFT.COM Beta',
       description: 'Get a Genesis Key to access the NFT.com Beta.',
       linkTo: `/app/collection/${getAddress('genesisKey', defaultChainId)}`
     },
