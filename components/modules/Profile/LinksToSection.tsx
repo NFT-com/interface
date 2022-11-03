@@ -1,4 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { getAddress } from 'utils/httpHooks';
+
 import Link from 'next/link';
 
 export interface LinksToSectionParams {
@@ -7,7 +10,7 @@ export interface LinksToSectionParams {
 
 export function LinksToSection(props: LinksToSectionParams) {
   const { isAddressOwner } = props;
-
+  const defaultChainId = useDefaultChainId();
   const ownerlinksContents = [
     {
       image: '/link-to-nftcom.png',
@@ -54,7 +57,7 @@ export function LinksToSection(props: LinksToSectionParams) {
       section: 'EVENTS',
       title: 'NFT.COM Public Release',
       description: 'Buy a Genesis Keys and receive four Profiles to make your own.',
-      linkTo: '/app/sale'
+      linkTo: `/app/collection/${getAddress('genesisKey', defaultChainId)}`
     },
     {
       image: '/link-to-you.png',

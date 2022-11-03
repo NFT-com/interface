@@ -20,7 +20,6 @@ import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { SwitchHorizontalIcon } from '@heroicons/react/solid';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -158,7 +157,7 @@ export function ProfilePreferencesSearch() {
         </div>
       </>
     );
-  }, [alwaysBlack, link, router, totalRemaining]);
+  }, [alwaysBlack, link, router, totalRemaining, defaultChainId]);
 
   const getNonSearchView = useCallback(() => {
     if (currentAddress && !isSupported ) {
