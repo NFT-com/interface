@@ -9,18 +9,20 @@ export interface GetSentReferralEmailsData {
   mutate: () => void;
 }
 
-export function useGetSentReferralEmailsQuery(): GetSentReferralEmailsData {
+export function useGetSentReferralEmailsQuery(profileUrl: string): GetSentReferralEmailsData {
   const sdk = useGraphQLSDK();
   const { address: currentAddress } = useAccount();
 
-  const keyString = 'GetSentReferralEmailsQuery' + currentAddress;
+  const keyString = 'GetSentReferralEmailsQuery' + currentAddress + profileUrl;
 
   const { data } = useSWR(keyString, async () => {
     if(!currentAddress) {
       return null;
     }
 
-    const result = await sdk.GetSentReferralEmails();
+    const result = await sdk.GetSentReferralEmails({
+      profileUrl
+    });
     return result.getSentReferralEmails.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
   });
   

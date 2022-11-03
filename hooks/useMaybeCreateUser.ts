@@ -57,12 +57,14 @@ export function useMaybeCreateUser(): boolean {
       (async () => {
         const meResult = await fetchMe();
         if (meResult == null) {
-          const referredBy = router?.query?.referralCode?.toString() || null;
-          const referredUrl = router?.query?.referralUrl?.toString() || null;
+          const referredBy = router?.query?.makerReferralCode?.toString() || null;
+          const referralUrl = router?.query?.referralUrl?.toString() || null;
+          const referralId = router?.query?.receiverReferralCode?.toString() || null;
           const result = await createUser({
             avatarURL: null,
             referredBy: referredBy,
-            referredUrl: referredUrl,
+            referredUrl: referralUrl,
+            referralId: referralId,
             username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
             wallet: {
               address: currentAddress,

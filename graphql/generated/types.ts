@@ -1814,6 +1814,11 @@ export type QueryGetSalesArgs = {
 };
 
 
+export type QueryGetSentReferralEmailsArgs = {
+  profileUrl: Scalars['String'];
+};
+
+
 export type QueryGetSwapsArgs = {
   input: SwapsInput;
 };
@@ -2073,7 +2078,7 @@ export type SentReferralEmailsOutput = {
   __typename?: 'SentReferralEmailsOutput';
   accepted: Scalars['Boolean'];
   email: Scalars['String'];
-  timestamp: Scalars['String'];
+  timestamp: Scalars['DateTime'];
 };
 
 export type SetCurationInput = {
@@ -2094,6 +2099,7 @@ export type SignHashOutput = {
 export type SignUpInput = {
   avatarURL?: InputMaybe<Scalars['String']>;
   email?: InputMaybe<Scalars['String']>;
+  referralId?: InputMaybe<Scalars['String']>;
   referredBy?: InputMaybe<Scalars['String']>;
   referredUrl?: InputMaybe<Scalars['String']>;
   username?: InputMaybe<Scalars['String']>;
@@ -2970,10 +2976,12 @@ export type GetSalesQueryVariables = Exact<{
 
 export type GetSalesQuery = { __typename?: 'Query', getSales?: Array<{ __typename?: 'TransactionSales', contractAddress?: string | null, tokenId?: string | null, priceUSD?: number | null, price?: number | null, symbol?: string | null, date?: any | null } | null> | null };
 
-export type GetSentReferralEmailsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetSentReferralEmailsQueryVariables = Exact<{
+  profileUrl: Scalars['String'];
+}>;
 
 
-export type GetSentReferralEmailsQuery = { __typename?: 'Query', getSentReferralEmails: Array<{ __typename?: 'SentReferralEmailsOutput', email: string, accepted: boolean, timestamp: string } | null> };
+export type GetSentReferralEmailsQuery = { __typename?: 'Query', getSentReferralEmails: Array<{ __typename?: 'SentReferralEmailsOutput', accepted: boolean, email: string, timestamp: any } | null> };
 
 export type GetTxByContractQueryVariables = Exact<{
   input?: InputMaybe<TransactionsByContractInput>;
@@ -4186,10 +4194,10 @@ export const GetSalesDocument = gql`
 }
     `;
 export const GetSentReferralEmailsDocument = gql`
-    query GetSentReferralEmails {
-  getSentReferralEmails {
-    email
+    query GetSentReferralEmails($profileUrl: String!) {
+  getSentReferralEmails(profileUrl: $profileUrl) {
     accepted
+    email
     timestamp
   }
 }
@@ -5267,7 +5275,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     GetSales(variables?: GetSalesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSalesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetSalesQuery>(GetSalesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetSales', 'query');
     },
-    GetSentReferralEmails(variables?: GetSentReferralEmailsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSentReferralEmailsQuery> {
+    GetSentReferralEmails(variables: GetSentReferralEmailsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetSentReferralEmailsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetSentReferralEmailsQuery>(GetSentReferralEmailsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetSentReferralEmails', 'query');
     },
     GetTxByContract(variables?: GetTxByContractQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetTxByContractQuery> {

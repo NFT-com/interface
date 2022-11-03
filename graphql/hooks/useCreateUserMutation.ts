@@ -46,6 +46,10 @@ export function useCreateUserMutation({
               input.referredUrl?.length === 0
                 ? undefined
                 : (input.referredUrl as string)?.toLowerCase(),
+          referralId:
+              input.referralId?.length === 0
+                ? undefined
+                : (input.referralId as string),
           wallet: {
             address: ethers.utils.getAddress(input.wallet.address),
             chainId: input.wallet.chainId,
