@@ -5,6 +5,7 @@ import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getAddress } from 'utils/httpHooks';
 
 import { Dialog, Transition } from '@headlessui/react';
@@ -77,7 +78,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   });
 
   const submitHandler = async () => {
-    if(freeMintAvailable){
+    if(freeMintAvailable && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
       try {
         const tx = await (await (maxProfilesSigner)).publicClaim(
           freeMintProfile?.profileURI,
@@ -121,6 +122,9 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   };
 
   const getGasCost = useCallback(() => {
+    if(!isOpen){
+      return 0;
+    }
     if(feeData?.gasPrice){
       if(data?.request.gasLimit) {
         return utils.formatEther(BigNumber.from(data?.request?.gasLimit).mul(BigNumber.from(feeData?.gasPrice)));
@@ -131,7 +135,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     } else {
       return 0;
     }
-  }, [feeData, data]);
+  }, [feeData, data, isOpen]);
   
   return (
     <Transition appear show={isOpen} as={Fragment}>

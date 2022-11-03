@@ -24,6 +24,6 @@ describe('useSupportedNetwork', () => {
       </WagmiConfig>
     );
     cy.get('#isSupported').should('have.text', 'false');
-    cy.get('#networks').should('have.text', '["ethereum:5:goerli","ethereum:4:rinkeby"]');
+    cy.get('#networks').should('have.text', '["ethereum:5:goerli"]');
   });
 });

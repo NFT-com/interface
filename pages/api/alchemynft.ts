@@ -5,13 +5,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const ALCHEMY_KEYS = {
   '1': process.env.ALCHEMY_MAINNET_KEY,
-  '4': process.env.ALCHEMY_RINKEBY_KEY,
   '5': process.env.ALCHEMY_GOERLI_KEY,
 };
 
 export const ALCHEMY_PREFIXES = {
   '1': 'mainnet',
-  '4': 'rinkeby',
   '5': 'goerli',
 };
 

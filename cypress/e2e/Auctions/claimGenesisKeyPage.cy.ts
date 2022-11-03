@@ -5,8 +5,8 @@ describe('claim GK page tests', () => {
     cy.visit('/app/claim-genesis-key');
   });
   
-  it('should show logged out view with no wallet connected', () => {
-    cy.findByText('CONNECT YOUR WALLET').should('exist');
+  it('should redirect to the GK collections page', () => {
+    cy.get('.NftCollectionItem').should('exist');
   });
   
   // todo: sign in and test the actual claim page

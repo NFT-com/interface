@@ -1,6 +1,5 @@
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useSidebar } from 'hooks/state/useSidebar';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 
 import { NotificationButton } from './NotificationButton';
@@ -82,7 +81,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
         date: null
       }
       : null,
-    activeNotifications.profileNeedsCustomization && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_FACTORY_ENABLED) ?
+    activeNotifications.profileNeedsCustomization ?
       {
         text: 'Your NFT Profile needs attention',
         onClick: () => {
@@ -98,7 +97,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);
-          router.push('/app/claim-profiles');
+          router.push('/app/mint-profiles');
         },
         date: '09/15/2022'
       }

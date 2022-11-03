@@ -4,6 +4,7 @@ import { ProfilePage } from 'components/modules/Profile/ProfilePage';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 /**
  * Shows a public profile e.g. nft.com/satoshi
@@ -11,6 +12,13 @@ import { useRouter } from 'next/router';
 export default function ProfileURI() {
   const router = useRouter();
   const { profileURI } = router.query;
+
+  useEffect(() => {
+    const URI = profileURI?.toString();
+    if (profileURI !== URI?.toLowerCase()) {
+      router.push(URI?.toLowerCase());
+    }
+  },[router, profileURI]);
 
   if (profileURI === null || profileURI === undefined) {
     return <div className={tw(

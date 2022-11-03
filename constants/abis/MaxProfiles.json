@@ -143,9 +143,9 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint96",
+        "internalType": "uint88",
         "name": "_max",
-        "type": "uint96"
+        "type": "uint88"
       }
     ],
     "name": "NewMaxProfile",
@@ -351,7 +351,7 @@
   {
     "inputs": [],
     "name": "maxProfilePerAddress",
-    "outputs": [{ "internalType": "uint96", "name": "", "type": "uint96" }],
+    "outputs": [{ "internalType": "uint88", "name": "", "type": "uint88" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -408,6 +408,13 @@
     "name": "publicClaim",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "publicClaimBool",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -508,7 +515,7 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint96", "name": "_max", "type": "uint96" }],
+    "inputs": [{ "internalType": "uint88", "name": "_max", "type": "uint88" }],
     "name": "setMaxProfilePerAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -519,6 +526,13 @@
       { "internalType": "address", "name": "_new", "type": "address" }
     ],
     "name": "setOwner",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bool", "name": "_val", "type": "bool" }],
+    "name": "setPublicClaim",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

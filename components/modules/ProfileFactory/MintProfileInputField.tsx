@@ -150,7 +150,7 @@ export default function MintProfileInputField({ minting, setGKProfile, name, set
               validReg.test(e.target.value.toLowerCase()) &&
                     e.target.value?.length <= PROFILE_URI_LENGTH_LIMIT
             ) {
-              setInputValue(e.target.value);
+              setInputValue(e.target.value.toLowerCase());
             } else {
               e.preventDefault();
             }
