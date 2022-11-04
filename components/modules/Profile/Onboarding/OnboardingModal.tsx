@@ -18,15 +18,13 @@ export default function OnboardingModal() {
         )}
       />
       <div className={tw(
-        'fixed minlg:absolute bottom-0 right-[12%] minlg:top-20 minlg:right-4 overflow-y-auto z-[105] minlg:z-[103]',
+        'fixed minlg:absolute bottom-0 right-[50%] min-w-[375px] translate-x-1/2 minlg:translate-x-0 minlg:top-20 minlg:right-4 overflow-y-auto z-[105] minlg:z-[103]',
         expanded && 'top-[10%] minlg:top-20 minlg:right-4'
       )}>
         <div className="flex min-h-full items-start justify-end p-4 text-center">
-          <div
-
-          >
+          <div>
             <div className={tw(
-              'w-full max-w-[330px] rounded-lg',
+              'w-[342px] minlg:w-[330px] rounded-lg',
               'transform overflow-hidden text-left align-middle shadow-xl transition-all',
               'bg-white py-7'
             )}>
@@ -81,36 +79,33 @@ export default function OnboardingModal() {
                       {
                         name: 'Customize Profile',
                         isCompleted: false,
-                        coins: 1
+                        coins: 1,
+                        buttonText: 'Continue',
                       },
                       {
                         name: 'Refer Network',
                         isCompleted: false,
                         coins: 2,
                         description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 Reward points!',
-                        onClick: () => console.log('refer network'),
-                        buttonText: 'Continue'
+                        buttonText: 'Continue',
                       },
                       {
                         name: 'Buy NFTs',
                         isCompleted: false,
                         coins: 1,
                         description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase.',
-                        onClick: () => console.log('buy nfts')
                       },
                       {
                         name: 'List NFTs',
                         isCompleted: false,
                         coins: 2,
                         description: 'Get 2 reward points for each of the first 5 NFTs you list for at least one day.',
-                        onClick: () => console.log('list nfts')
                       },
                       {
                         name: 'Issue NFTs',
                         isCompleted: false,
                         coins: 5,
                         description: 'Get 5 reward points for configuring your NFT Profile as a unique NFT collection.',
-                        onClick: () => console.log('issue nfts')
                       }
                     ]
                   } />

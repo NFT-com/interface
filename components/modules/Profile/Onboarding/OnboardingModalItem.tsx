@@ -1,8 +1,8 @@
-import OnboardingActionModal from './OnboardingActionModal';
+import OnboardingSecondaryModal from './OnboardingSecondaryModal';
 
 import { CheckCircle } from 'phosphor-react';
 import NftGoldLogo from 'public/nft_gold_logo.svg';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 
 type OnboardingItemProps = {
   isCompleted: boolean;
@@ -32,7 +32,7 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
                 <p className='text-[#26AA73] line-through font-medium'>{item.name}</p>
               </div>
               <div className='flex items-center'>
-                {item.coins}
+                <p className='w-2'>{item.coins}</p>
                 <div className='h-[25px] w-[25px] ml-2'>
                   <NftGoldLogo />
                 </div>
@@ -41,14 +41,17 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
             :
             <div
               className='group flex justify-between p-3 hover:bg-[#FFF4CA] rounded-lg hover:cursor-pointer'
-              onClick={() => {setModalOpen(true); setSelectedItem(item);}}
+              onClick={() => {
+                setModalOpen(true);
+                setSelectedItem(item);
+              }}
             >
               <div className='flex items-center'>
                 <div className='w-5 h-5 border rounded-full mr-3 ml-[2px] border-[#969696] group-hover:border-[#F9D54C]'></div>
                 <p className='text-[#B2B2B2] group-hover:text-black font-medium'>{item.name}</p>
               </div>
               <div className='flex items-center bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>
-                {item.coins}
+                <p className='w-2'>{item.coins}</p>
                 <div className='h-[25px] w-[25px] ml-2'>
                   <NftGoldLogo />
                 </div>
@@ -57,7 +60,7 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
           }
         </>
       ))}
-      <OnboardingActionModal modalOpen={modalOpen} setModalOpen={setModalOpen} selectedItem={selectedItem} />
+      <OnboardingSecondaryModal modalOpen={modalOpen} setModalOpen={setModalOpen} selectedItem={selectedItem} />
     </>
   );
 }
