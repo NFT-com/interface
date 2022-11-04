@@ -1,16 +1,21 @@
+import { ResultsDropDown as StaticResultsDropDown } from 'components/modules/Search/ResultsDropDown';
 import { SearchContent } from 'components/modules/Search/SearchContent';
 import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Dialog } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { CaretDown, CaretRight, CaretUp } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
+
+const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof StaticResultsDropDown>>(() => import('components/modules/Search/ResultsDropDown').then(mod => mod.ResultsDropDown));
 
 export const MobileSidebar = () => {
   const { mobileSidebarOpen, setMobileSidebarOpen, toggleMobileSidebar } = useMobileSidebar();
@@ -18,6 +23,13 @@ export const MobileSidebar = () => {
   const { promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
   const [discoverExpanded, setDiscoverExpanded] = useState(false);
   const [learnExpanded, setLearnExpanded] = useState(false);
+  const { dropDownSearchResults } = useSearchModal();
+
+  const closeSideBarFn = useCallback(() => {
+    setTimeout(() => {
+      !addFundsDialogOpen && setMobileSidebarOpen(false);
+    }, 500);
+  }, [addFundsDialogOpen, setMobileSidebarOpen]);
 
   useEffect(() => {
     mobileSidebarOpen && promoteZIndex('sidebar');
@@ -50,6 +62,13 @@ export const MobileSidebar = () => {
       >
         <div className='mt-10 block minlg:hidden'>
           <SearchContent isHeader mobileSearch />
+          {dropDownSearchResults && dropDownSearchResults.length > 0 && <DynamicResultsDropDown
+            extraClasses='z-[111] justify-center shadow-lg minmd:left-6'
+            isHeader
+            searchResults={dropDownSearchResults}
+            resultTitleOnClick={closeSideBarFn}
+            itemListOnClick={closeSideBarFn}
+          />}
         </div>
         <div className='border-b border-[#ECECEC]'>
           {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
@@ -123,7 +142,7 @@ export const MobileSidebar = () => {
         </div>
       </motion.div>
     );
-  }, [discoverExpanded, learnExpanded, toggleMobileSidebar]);
+  }, [closeSideBarFn, discoverExpanded, dropDownSearchResults, learnExpanded, toggleMobileSidebar]);
 
   return (
     <AnimatePresence>

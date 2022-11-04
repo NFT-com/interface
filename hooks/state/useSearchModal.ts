@@ -25,6 +25,8 @@ export function useSearchModal() {
       collectionsResultsFilterBy: '',
       nftsPageSortyBy: '',
       checkedArray: [],
+      dropDownSearchResults: null,
+      keyword: ''
     } });
 
   const loading = !data;
@@ -103,6 +105,14 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setDropDownSearchResults = useCallback((dropDownSearchResults: any, keyword?: string) => {
+    mutate({
+      ...data,
+      dropDownSearchResults,
+      keyword
+    });
+  },[data, mutate]);
+
   const setCollectionPageAppliedFilters = useCallback((collectionPageSortyBy: string, id_nftName: string, searchModalOpen = true) => {
     mutate({
       ...data,
@@ -150,6 +160,8 @@ export function useSearchModal() {
     nftsResultsFilterBy: data.nftsResultsFilterBy,
     collectionsResultsFilterBy: data.collectionsResultsFilterBy,
     checkedArray: data.checkedArray,
+    dropDownSearchResults: data.dropDownSearchResults,
+    keyword: data.keyword,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     setModalType,
@@ -160,7 +172,8 @@ export function useSearchModal() {
     setSelectedCuratedCollection,
     setCollectionPageAppliedFilters,
     setResultsPageAppliedFilters,
-    setClearedFilters
+    setClearedFilters,
+    setDropDownSearchResults
   };
 }
 
