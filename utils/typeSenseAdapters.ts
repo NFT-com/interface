@@ -11,6 +11,19 @@ export enum SearchableFields {
   FACET_COLLECTIONS_INDEX_FIELDS = 'nftType,contractName'
 }
 
+export interface TypesenseSearchResponse {
+  face_counts: any
+  found: number
+  hits: any
+  request_params: {
+    collection_name: string,
+    per_page: number,
+    q: string,
+  }
+  search_cutoff: boolean
+  search_time_ms: number
+}
+
 const typeSenseServerData = {
   apiKey: getEnv(Doppler.NEXT_PUBLIC_TYPESENSE_APIKEY),
   nodes: [
