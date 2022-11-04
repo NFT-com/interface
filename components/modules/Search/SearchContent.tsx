@@ -162,7 +162,6 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
                   isHeader={isHeader}
                   extraClasses={'mt-8 minmd:left-6 shadow-lg z-[111]'}
                   searchResults={searchResults}
-                  keyword={keyword}
                   resultTitleOnClick={() => {
                     setSearchModalOpen(false);
                     setShowHits(false);
