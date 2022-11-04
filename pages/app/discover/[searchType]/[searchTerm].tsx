@@ -227,7 +227,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           ? <CollectionItem
                             contractAddr={item.document.contractAddr}
                             contractName={item.document.contractName}
-                            images={collectionImages.length > 0 && collectionCardImages(collectionImages[0])}
+                            images={collectionImages.length > 0 ? collectionCardImages(collectionImages[0]) : []}
                             count={collectionImages[0]?.actualNumberOfNFTs}
                           />
                           :
