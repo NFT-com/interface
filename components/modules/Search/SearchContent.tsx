@@ -1,26 +1,31 @@
+import { ResultsDropDown as StaticResultsDropDown } from 'components/modules/Search/ResultsDropDown';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useEffect, useRef, useState } from 'react';
 
+const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof StaticResultsDropDown>>(() => import('components/modules/Search/ResultsDropDown').then(mod => mod.ResultsDropDown));
+
 interface SearchContentProps {
   isHeader?: boolean;
   mobileSearch?: boolean;
+  mobileSidebar?: boolean;
 }
 
-export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) => {
+export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchContentProps) => {
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [inputFocus, setInputFocus] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [transitionWidth, setTransitionWidth] = useState('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
-  const { setSearchModalOpen } = useSearchModal();
+  const { setSearchModalOpen, setDropDownSearchResults } = useSearchModal();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const router = useRouter();
   const resultsRef = useRef();
@@ -35,7 +40,6 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     if (!router.pathname.includes('discover/')) {
       inputRef.current.value = '';
       setShowHits(false);
-      setSearchResults([]);
     }
     setSearchResults([]);
   }, [router.pathname]);
@@ -46,16 +50,12 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
     setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
   });
 
-  const goTo = (document) => {
-    if (!document.nftName) {
-      router.push(`/app/collection/${document.contractAddr}/`);
-    } else {
-      router.push(`/app/nft/${document.contractAddr}/${document.tokenId}`);
-    }
+  const goTo = () => {
     setSearchModalOpen(false);
     setShowHits(false);
     setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
     inputRef.current.value = '';
+    setDropDownSearchResults([]);
   };
 
   const search = (event) => {
@@ -106,6 +106,7 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
       fetchTypesenseMultiSearch(searchRequests)
         .then((data) => {
           setSearchResults([...data.results]);
+          setDropDownSearchResults([...data.results], target.value);
         })
         .catch((error) => {
           console.log(error);
@@ -115,71 +116,6 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
       setShowHits(true);
       setTransitionWidth('w-[18.4rem]');
     }
-  };
-
-  const resultTitle = (found, collectionName) => {
-    let title = '';
-
-    if (found < 1 && collectionName !== '')
-      title = 'O ' + collectionName?.toUpperCase();
-    else if (found > 3) {
-      title = 'TOP 3 ' + collectionName?.toUpperCase();
-    } else {
-      title = found + ' ' + collectionName?.toUpperCase();
-    }
-
-    return (
-      <div className={tw(
-        `flex justify-${found > 0 ? 'between' : 'start'}`,
-        'text-xs text-blog-text-reskin font-medium bg-gray-200 py-3 px-5')}>
-        <span>{title}</span>
-        <span
-          className="cursor-pointer hover:font-semibold"
-          onClick={() => {
-            setSearchModalOpen(false);
-            setShowHits(false);
-            router.push(`/app/discover/${collectionName}/${keyword}`);
-            setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
-            inputRef.current.value = '';
-          }}
-        >
-          {found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}
-        </span>
-      </div>
-    );
-  };
-
-  const ResultsContent = (data) => {
-    return data.searchResults && data.searchResults.length > 0 && data.searchResults.map((item, index) => {
-      return (
-        <div key={index}>
-          {resultTitle(item.found, item?.request_params?.collection_name)}
-          <div className="flex flex-col items-start" key={index}>
-            {item.found === 0 ?
-              <div className={tw('text-sm py-3 text-gray-500 px-5')}>
-                No {item?.request_params?.collection_name?.toLowerCase()} results
-              </div>
-              : (item?.hits?.map((hit, index) => {
-                return (
-                  <div
-                    className="hover:cursor-pointer hover:bg-gray-100 w-full"
-                    key={index}>
-                    <div
-                      className={tw(
-                        'px-5',
-                        'items-start my-1 py-3 w-full',
-                        'text-sm font-semibold text-black',
-                        'whitespace-nowrap text-ellipsis overflow-hidden')}
-                      onClick={() => goTo(hit.document)}>
-                      {hit.document.nftName ?? hit.document.contractName}
-                    </div>
-                  </div>
-                );
-              }))}
-          </div>
-        </div>
-      );
-    });
   };
 
   if(mobileSearch){
@@ -218,24 +154,24 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
               </div>
             </div>
           </div>
-          {showHits && keyword !== ''
+          {showHits && keyword !== '' && mobileSidebar === false
             ? (
               <div
-                ref={resultsRef}
-                className={tw(
-                  'absolute left-0 minmd:left-6 mt-16 w-full max-w-[27rem] shadow-lg',
-                  'bg-always-white flex flex-col w-full text-rubik z-[111] justify-center')}>
-                {searchResults.length > 0 && <>
-                  {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                    (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
-                      No results found. Please try another keyword.
-                    </div>) :
-                    <div className="py-4">
-                      <ResultsContent searchResults={searchResults} />
-                      {isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}
-                    </div>
-                  }
-                </>}
+                ref={resultsRef}>
+                <DynamicResultsDropDown
+                  isHeader={isHeader}
+                  extraClasses={'mt-8 minmd:left-6 shadow-lg z-[111]'}
+                  searchResults={searchResults}
+                  keyword={keyword}
+                  resultTitleOnClick={() => {
+                    setSearchModalOpen(false);
+                    setShowHits(false);
+                    setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
+                    inputRef.current.value = '';
+                    setDropDownSearchResults([]);
+                  }}
+                  itemListOnClick={goTo}
+                />
               </div>
             )
             :
@@ -281,22 +217,20 @@ export const SearchContent = ({ isHeader, mobileSearch }: SearchContentProps) =>
         </div>
         {showHits && keyword !== ''
           ? (
-            <div
-              ref={resultsRef}
-              className={tw(
-                isHeader ? 'absolute left-0 mt-16 max-w-[27rem]' : '',
-                'bg-always-white flex flex-col w-full text-rubik')}>
-              {searchResults.length > 0 && <>
-                {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-                  (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
-                      No results found. Please try another keyword.
-                  </div>) :
-                  <div className="py-4">
-                    <ResultsContent searchResults={searchResults} />
-                    {isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}
-                  </div>
-                }
-              </>}
+            <div ref={resultsRef}>
+              <DynamicResultsDropDown
+                isHeader={isHeader}
+                extraClasses={'mt-8'}
+                searchResults={searchResults}
+                resultTitleOnClick={() => {
+                  setSearchModalOpen(false);
+                  setShowHits(false);
+                  setTransitionWidth('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
+                  inputRef.current.value = '';
+                  setDropDownSearchResults([]);
+                }}
+                itemListOnClick={goTo}
+              />
             </div>)
           :
           isHeader

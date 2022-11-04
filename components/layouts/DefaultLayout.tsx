@@ -48,7 +48,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
         }
         {!hideSearch &&
           <div className='mt-24  mb-8 block minlg:hidden'>
-            <SearchContent isHeader mobileSearch />
+            <SearchContent isHeader mobileSearch mobileSidebar={false} />
           </div>
         }
 
