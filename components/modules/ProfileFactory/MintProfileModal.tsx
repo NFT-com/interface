@@ -127,7 +127,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     }
     if(feeData?.gasPrice){
       if(data?.request.gasLimit) {
-        return utils.formatEther(BigNumber.from(data?.request?.gasLimit).mul(BigNumber.from(feeData?.gasPrice)));
+        return utils.formatEther(BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString())));
       }
       else {
         return 0;

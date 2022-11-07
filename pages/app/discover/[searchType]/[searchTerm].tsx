@@ -44,20 +44,20 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const [nftsForCollections, setNftsForCollections] = useState(null);
   const prevVal = usePrevious(page);
   const prevSearchTerm = usePrevious(searchTerm);
-  let addressesList = [];
+  const addressesList = useRef([]);
   
   useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
-      collectionAddresses: addressesList,
+      collectionAddresses: addressesList.current,
       count: 5
     }).then((collectionsData => {
       setNftsForCollections([...collectionsData.nftsForCollections]);
     }));
   });
 
-  useSWR(results, async () => {
+  useSWR(results.current, async () => {
     searchType?.toString() === 'collections' && await fetchNFTsForCollections({
-      collectionAddresses: addressesList,
+      collectionAddresses: addressesList.current,
       count: 5
     }).then((collectionsData => {
       setNftsForCollections([...collectionsData.nftsForCollections]);
@@ -81,11 +81,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }, [fetchTypesenseMultiSearch, searchTerm, searchType, nftsResultsFilterBy]);
 
   if (searchType?.toString() === 'allResults' && collectionsSliderData) {
-    addressesList = collectionsSliderData.hits?.map((nft) => {
+    addressesList.current = collectionsSliderData.current?.map((nft) => {
       return nft.document?.contractAddr;
     });
   } else {
-    addressesList = results.current?.map((nft) => {
+    addressesList.current = results.current?.map((nft) => {
       return nft.document?.contractAddr;
     });
   }
@@ -141,9 +141,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           results.current = [...results.current,...resp.results[0].hits];
           found.current = resp.results[0].found;
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          addressesList.current = results.current?.map((nft) => {
+            return nft.document?.contractAddr;
+          });
         });
     }
-  }, [fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
+  }, [addressesList, fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   return (
     <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen overflow-hidden">
@@ -227,7 +230,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           ? <CollectionItem
                             contractAddr={item.document.contractAddr}
                             contractName={item.document.contractName}
-                            images={collectionImages.length > 0 && collectionCardImages(collectionImages[0])}
+                            images={collectionImages.length > 0 ? collectionCardImages(collectionImages[0]) : []}
                             count={collectionImages[0]?.actualNumberOfNFTs}
                           />
                           :
