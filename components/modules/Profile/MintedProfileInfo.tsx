@@ -1,28 +1,17 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import Toast from 'components/elements/Toast';
-import { ProfileLayoutType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
-import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
+import { ProfileMenu } from './ProfileMenu';
 
-import { SearchIcon } from '@heroicons/react/outline';
-import { useRouter } from 'next/router';
-import { ShareNetwork, TwitterLogo } from 'phosphor-react';
 import GKHolderIcon from 'public/gk-holder.svg';
-import LinkIcon from 'public/icon_link.svg';
-import FeaturedIcon from 'public/layout_icon_featured.svg';
-import GridIcon from 'public/layout_icon_grid.svg';
-import MosaicIcon from 'public/layout_icon_mosaic.svg';
-import SpotlightIcon from 'public/layout_icon_spotlight.svg';
-import GearIcon from 'public/settings_icon.svg';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
 import { useAccount } from 'wagmi';
 
@@ -32,8 +21,6 @@ export interface MintedProfileInfoProps {
 }
 
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
-  const router = useRouter();
-  const [, staticCopy] = useCopyClipboard();
   const { profileURI, userIsAdmin } = props;
   const { address: currentAddress } = useAccount();
   const { user, setCurrentProfileUrl } = useUser();
@@ -51,62 +38,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     saveProfile,
     setEditMode,
     clearDrafts,
-    setLayoutType,
-    setDescriptionsVisible
   } = useContext(ProfileContext);
-
-  const [selectedLayout, setSelectedLayout] = useState(null);
-  const [showDescriptions, setShowDescriptions] = useState(null);
-
-  const setLayout = useCallback((type: ProfileLayoutType) => {
-    setSelectedLayout(type);
-    setLayoutType(type);
-  }, [setLayoutType]);
-
-  const setDescriptions = useCallback((isVisible: boolean) => {
-    setShowDescriptions(isVisible);
-    setDescriptionsVisible(isVisible);
-  }, [setDescriptionsVisible]);
-
-  useEffect(() => {
-    setSelectedLayout(profileData?.profile?.layoutType);
-    setShowDescriptions(profileData?.profile?.nftsDescriptionsVisible || profileData?.profile?.nftsDescriptionsVisible === null ? true : false);
-  }, [profileData]);
-
-  const layoutOptions = [
-    {
-      name: 'Default',
-      label: '',
-      onSelect: () => setLayout(ProfileLayoutType.Default),
-      icon: <GridIcon className={tw(
-        'w-[18px] h-[18px]'
-      )} />
-    },
-    {
-      name:'Featured',
-      label: '',
-      onSelect: () => setLayout(ProfileLayoutType.Featured),
-      icon: <FeaturedIcon className={tw(
-        'w-[18px] h-[18px]'
-      )} />
-    },
-    {
-      name:'Mosaic',
-      label: '',
-      onSelect: () => setLayout(ProfileLayoutType.Mosaic),
-      icon:  <MosaicIcon className={tw(
-        'w-[18px] h-[18px]'
-      )} />
-    },
-    {
-      name: 'Spotlight',
-      label: '',
-      onSelect: () => setLayout(ProfileLayoutType.Spotlight),
-      icon:  <SpotlightIcon className={tw(
-        'w-[18px] h-[18px]'
-      )} />
-    }
-  ];
 
   const getProfileButton = useCallback(() => {
     if (!userIsAdmin || !hasGks || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)) {
@@ -185,27 +117,38 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     <div className={tw(
       'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
       getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-        'mt-[-25px] px-4 font-noi-grotesk' :
+        'mt-[-25px] minlg:mt-[-50px] px-4 minlg:px-20 font-noi-grotesk' :
         'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 px-4 w-4/5 minxl:w-3/5 minmd:min-h-52 min-h-32'
     )}
     >
       <Toast />
-      <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
+      <div className={tw('flex w-full items-center',
+        `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`,
+        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'justify-start minlg:justify-between minlg:mt-3' : 'justify-start'
+      )}>
         <div
           id="MintedProfileNameContainer"
           className={tw(
-            getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'font-bold text-lg' :'font-bold text-2xl minxl:text-4xl',
+            getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'font-bold text-lg minlg:text-[44px] minlg:font-medium' :'font-bold text-2xl minxl:text-4xl',
             'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4'
           )}>
-          {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl'>/</span> } {profileURI}
+          {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+            <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] minlg:mr-1'>/</span>
+          }
+          {profileURI}
         </div>
+        {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+          <div className='hidden minlg:block'>
+            <ProfileMenu profileURI={profileURI} />
+          </div>
+        }
         {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
       </div>
       {getProfileButton()}
       {profileData?.profile?.description &&
           <div className={tw(
             getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-              'mt-4 text-[#6A6A6A] break-words' :
+              'mt-4 text-[#6A6A6A] break-words minlg:w-1/2' :
               'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
           )}>
             {!editMode && profileData?.profile?.description}

@@ -3,11 +3,13 @@ import DraggableGridItem from 'components/modules/Draggable/DraggableGridItem';
 import { GridContext } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useUser } from 'hooks/state/useUser';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { ClaimProfileCard } from './ClaimProfileCard';
 import { ProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
@@ -30,7 +32,7 @@ export function NftGrid(props: NftGridProps) {
     draftLayoutType,
   } = useContext(ProfileContext);
   const { items, moveItem } = useContext(GridContext);
-
+  const { user } = useUser();
   const { profileData } = useProfileQuery(props.profileURI);
 
   const { tileBackgroundSecondary } = useThemeColors();
@@ -75,13 +77,18 @@ export function NftGrid(props: NftGridProps) {
     className={tw(
       'grid w-full',
       getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'gap-4' : 'gap-8 mt-2' ,
-      (draftLayoutType ?? savedLayoutType) === 'Default' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'grid-cols-2 minmd:grid-cols-2 minlg:grid-cols-4' : 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
+      (draftLayoutType ?? savedLayoutType) === 'Default' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'grid-cols-2 minmd:grid-cols-2 minlg:grid-cols-4 minxl:grid-cols-5' : 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
       (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : 'grid-cols-1 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-4 minlg:grid-cols-8' : '',
     )}
     data-testid={savedLayoutType+'-layout-option'}
   >
+    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && user?.currentProfileUrl === props.profileURI &&
+      <div className='hidden minlg:block'>
+        <ClaimProfileCard />
+      </div>
+    }
     {items?.map((nft: PartialDeep<DetailedNft>, index) => (
       <DraggableGridItem
         key={nft?.id}
