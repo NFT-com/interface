@@ -4,6 +4,7 @@ import { GridContext } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -72,9 +73,10 @@ export function NftGrid(props: NftGridProps) {
 
   return <div
     className={tw(
-      'grid w-full gap-8 mt-2',
-      (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
-      (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-1 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
+      'grid w-full',
+      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'gap-4' : 'gap-8 mt-2' ,
+      (draftLayoutType ?? savedLayoutType) === 'Default' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'grid-cols-2 minmd:grid-cols-2 minlg:grid-cols-4' : 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
+      (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : 'grid-cols-1 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-4 minlg:grid-cols-8' : '',
     )}
