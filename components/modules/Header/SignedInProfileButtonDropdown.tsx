@@ -42,10 +42,12 @@ export function SignedInProfileButtonDropdown() {
   }, [getHiddenProfileWithExpiry, profiles, user.currentProfileUrl]);
 
   useEffect(() => {
-    if(currentAddress && profiles?.length && (user.currentProfileUrl === '' || isNullOrEmpty(user.currentProfileUrl) || !profiles?.some((profile) => profile.title === user.currentProfileUrl) )){
+    if(currentAddress && profiles?.length && myOwnedProfileTokens?.length && (user.currentProfileUrl === '' || isNullOrEmpty(user.currentProfileUrl) || !profiles?.some((profile) => profile.title === user.currentProfileUrl) )){
       setProfileSelectModalOpen(true);
+    } else {
+      setProfileSelectModalOpen(false);
     }
-  }, [currentAddress, profiles, user.currentProfileUrl, setProfileSelectModalOpen, router]);
+  }, [currentAddress, profiles, user.currentProfileUrl, setProfileSelectModalOpen, router, myOwnedProfileTokens]);
 
   return (
     <div
