@@ -10,8 +10,6 @@ import { useProfileBlocked } from 'hooks/useProfileBlocked';
 import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
 import { tw } from 'utils/tw';
 
-import OnboardingModal from './Onboarding/OnboardingModal';
-
 import dynamic from 'next/dynamic';
 import { useCallback } from 'react';
 
