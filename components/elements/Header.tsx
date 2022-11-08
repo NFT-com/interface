@@ -116,7 +116,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                 {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
                   <DropdownPickerModal
                     pointer
-                    centered
+                    align='center'
                     constrain
                     selectedIndex={0}
                     options={filterNulls([
@@ -154,7 +154,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
 
                 <DropdownPickerModal
                   pointer
-                  centered
+                  align='center'
                   constrain
                   selectedIndex={0}
                   options={filterNulls([
@@ -341,7 +341,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
                 <DropdownPickerModal
                   pointer
-                  centered
+                  align='center'
                   constrain
                   selectedIndex={0}
                   options={filterNulls([
@@ -379,7 +379,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
 
               <DropdownPickerModal
                 pointer
-                centered
+                align='center'
                 constrain
                 selectedIndex={0}
                 options={filterNulls([
