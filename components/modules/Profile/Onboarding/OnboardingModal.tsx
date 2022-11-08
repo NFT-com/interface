@@ -1,3 +1,5 @@
+import { ProfileActionType } from 'graphql/generated/types';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { tw } from 'utils/tw';
 
 import OnboardingModalItem from './OnboardingModalItem';
@@ -6,7 +8,15 @@ import { CaretDown, CaretUp } from 'phosphor-react';
 import NftGoldLogo from 'public/nft_gold_logo.svg';
 import { useState } from 'react';
 
-export default function OnboardingModal() {
+export interface OnboardingModalProps {
+  profileURI: string;
+}
+
+export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
+  const { profileData } = useProfileQuery(
+    profileURI
+  );
+  
   const [expanded, setExpanded] = useState(false);
   return (
     <>
@@ -52,7 +62,7 @@ export default function OnboardingModal() {
                   )}>
                     <div className='w-[85%] h-3 bg-[#E6E6E6] rounded-full'>
                       <div
-                        style={{ width: `${Math.floor((5 / 16) * 100)}%` }}
+                        style={{ width: `${Math.floor((profileData?.profile?.usersActionsWithPoints[0]?.totalPoints / 16) * 100)}%` }}
                         className={tw(
                           'h-3 bg-[#26AA73] rounded-full',
                         )}></div>
@@ -69,46 +79,48 @@ export default function OnboardingModal() {
               </div>
               {expanded && <><div className='border-t pt-3 px-4'>
                 <div className='flex flex-col space-y-2'>
-                  <OnboardingModalItem items={
-                    [
-                      {
-                        name: 'Create NFT Profile',
-                        isCompleted: true,
-                        coins: 5,
-                      },
-                      {
-                        name: 'Customize Profile',
-                        isCompleted: false,
-                        coins: 1,
-                        buttonText: 'Continue',
-                      },
-                      {
-                        name: 'Refer Network',
-                        isCompleted: false,
-                        coins: 2,
-                        description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 Reward points!',
-                        buttonText: 'Continue',
-                      },
-                      {
-                        name: 'Buy NFTs',
-                        isCompleted: false,
-                        coins: 1,
-                        description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase.',
-                      },
-                      {
-                        name: 'List NFTs',
-                        isCompleted: false,
-                        coins: 2,
-                        description: 'Get 2 reward points for each of the first 5 NFTs you list for at least one day.',
-                      },
-                      {
-                        name: 'Issue NFTs',
-                        isCompleted: false,
-                        coins: 5,
-                        description: 'Get 5 reward points for configuring your NFT Profile as a unique NFT collection.',
-                      }
-                    ]
-                  } />
+                  <OnboardingModalItem
+                    items={
+                      [
+                        {
+                          name: 'Create NFT Profile',
+                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.CreateNftProfile),
+                          coins: 5,
+                        },
+                        {
+                          name: 'Customize Profile',
+                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.CustomizeProfile),
+                          coins: 1,
+                          buttonText: 'Continue',
+                        },
+                        {
+                          name: 'Refer Network',
+                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ReferNetwork),
+                          coins: 2,
+                          description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 Reward points!',
+                          buttonText: 'Continue',
+                        },
+                        {
+                          name: 'Buy NFTs',
+                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.BuyNfTs),
+                          coins: 1,
+                          description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase.',
+                        },
+                        {
+                          name: 'List NFTs',
+                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ListNfTs),
+                          coins: 2,
+                          description: 'Get 2 reward points for each of the first 5 NFTs you list for at least one day.',
+                        },
+                        {
+                          name: 'Issue NFTs',
+                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.IssueNfTs),
+                          coins: 5,
+                          description: 'Get 5 reward points for configuring your NFT Profile as a unique NFT collection.',
+                        }
+                      ]
+                    }
+                  />
                 </div>
               </div>
 

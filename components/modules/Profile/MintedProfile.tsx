@@ -388,7 +388,7 @@ export function MintedProfile(props: MintedProfileProps) {
       </ProfileScrollContextProvider>
 
       {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && addressOwner === currentAddress && user.currentProfileUrl === profileURI &&
-        <OnboardingModal />
+        <OnboardingModal profileURI={profileURI} />
       }
     </>
   );
