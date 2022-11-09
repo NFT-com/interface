@@ -68,6 +68,8 @@ export interface ProfileContextType {
   loadingAllOwnerNfts: boolean;
   hideAllNFTsValue: boolean;
   showAllNFTsValue: boolean;
+  currentNftsDescriptionsVisible: boolean;
+  currentLayoutType: ProfileLayoutType;
 }
 
 // initialize with default values
@@ -113,6 +115,8 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   loadingAllOwnerNfts: false,
   hideAllNFTsValue: false,
   showAllNFTsValue: false,
+  currentNftsDescriptionsVisible: true,
+  currentLayoutType: ProfileLayoutType.Default
 });
 
 export interface ProfileContextProviderProps {
@@ -160,6 +164,12 @@ export function ProfileContextProvider(
   } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode);
 
   /**
+   * Profile v2 instant update state
+   */
+  const [currentLayoutType, setCurrentLayoutType] = useState<ProfileLayoutType>(profileData?.profile?.layoutType);
+  const [currentNftsDescriptionsVisible, setCurrentNftsDescriptionsVisible] = useState<boolean>(profileData?.profile?.nftsDescriptionsVisible);
+
+  /**
    * Edit mode state
    */
   const [editMode, setEditMode] = useState(false);
@@ -188,15 +198,24 @@ export function ProfileContextProvider(
     if (draftDeployedContractsVisible == null) {
       setDraftDeployedContractsVisible(profileData?.profile?.deployedContractsVisible);
     }
+    if(currentLayoutType == null){
+      setCurrentLayoutType(profileData?.profile?.layoutType);
+    }
+    if(currentNftsDescriptionsVisible == null){
+      setCurrentNftsDescriptionsVisible(profileData?.profile?.nftsDescriptionsVisible);
+    }
   }, [
     draftBio,
     draftDeployedContractsVisible,
     draftGkIconVisible,
     draftNftsDescriptionsVisible,
+    currentLayoutType,
+    currentNftsDescriptionsVisible,
     profileData?.profile?.deployedContractsVisible,
     profileData?.profile?.description,
     profileData?.profile?.gkIconVisible,
-    profileData?.profile?.nftsDescriptionsVisible
+    profileData?.profile?.nftsDescriptionsVisible,
+    profileData?.profile?.layoutType
   ]);
 
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
@@ -405,6 +424,7 @@ export function ProfileContextProvider(
 
   const setLayoutType = useCallback(async (type: ProfileLayoutType) => {
     try {
+      setCurrentLayoutType(type);
       await updateProfile({
         id: profileData?.profile?.id,
         layoutType: type
@@ -417,6 +437,7 @@ export function ProfileContextProvider(
 
   const setDescriptionsVisible = useCallback(async (isVisible: boolean) => {
     try {
+      setCurrentNftsDescriptionsVisible(isVisible);
       await updateProfile({
         id: profileData?.profile?.id,
         nftsDescriptionsVisible: isVisible
@@ -523,7 +544,9 @@ export function ProfileContextProvider(
     loading,
     loadingAllOwnerNfts,
     hideAllNFTsValue,
-    showAllNFTsValue
+    showAllNFTsValue,
+    currentNftsDescriptionsVisible,
+    currentLayoutType
   }}>
     {props.children}
   </ProfileContext.Provider>;

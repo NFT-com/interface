@@ -30,6 +30,8 @@ export function NftGrid(props: NftGridProps) {
     editMode,
     draftNftsDescriptionsVisible,
     draftLayoutType,
+    currentNftsDescriptionsVisible,
+    currentLayoutType
   } = useContext(ProfileContext);
   const { items, moveItem } = useContext(GridContext);
   const { user } = useUser();
@@ -52,7 +54,7 @@ export function NftGrid(props: NftGridProps) {
     mosaicArray2.push(seq2);
   }
 
-  const savedLayoutType = profileData?.profile?.layoutType;
+  const savedLayoutType = getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? currentLayoutType : profileData?.profile?.layoutType;
 
   const mosaicCardType = (layoutType, index) => {
     if (layoutType === 'Mosaic') {
@@ -136,7 +138,10 @@ export function NftGrid(props: NftGridProps) {
             }}
             redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
             customBackground={tileBackgroundSecondary}
-            nftsDescriptionsVisible={draftNftsDescriptionsVisible}
+            nftsDescriptionsVisible={getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
+              currentNftsDescriptionsVisible :
+              draftNftsDescriptionsVisible
+            }
             layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}
             preventDefault={editMode}
           />
