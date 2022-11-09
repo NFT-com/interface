@@ -35,7 +35,7 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
 
   const handleSubmit = (e, value) => {
     e.preventDefault();
-    sendReferEmail(user.currentProfileUrl, [value]);
+    sendReferEmail(user.currentProfileUrl, [value]).then(res => console.log(res));
     mutateSentReferrals();
   };
   return (

@@ -50,7 +50,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                       <NftGoldLogo />
                     </div>
                     
-                    5/<span className='text-[#6A6A6A]'>16</span>
+                    {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 0}/<span className='text-[#6A6A6A]'>11</span>
                   </div>
                 </div>
                 <p className='mt-3 font-medium w-11/12'>Complete 5 steps to redeem all your <span className='bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>Reward points</span>!</p>
@@ -98,25 +98,21 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                           isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ReferNetwork),
                           coins: 2,
                           description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 Reward points!',
-                          buttonText: 'Continue',
+                          buttonText: 'Continue'
                         },
                         {
                           name: 'Buy NFTs',
                           isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.BuyNfTs),
                           coins: 1,
                           description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase.',
+                          href: '/app/discover'
                         },
                         {
                           name: 'List NFTs',
                           isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ListNfTs),
                           coins: 2,
                           description: 'Get 2 reward points for each of the first 5 NFTs you list for at least one day.',
-                        },
-                        {
-                          name: 'Issue NFTs',
-                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.IssueNfTs),
-                          coins: 5,
-                          description: 'Get 5 reward points for configuring your NFT Profile as a unique NFT collection.',
+                          href: '/app/assets'
                         }
                       ]
                     }
