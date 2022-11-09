@@ -90,6 +90,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                         {
                           name: 'Customize Profile',
                           isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.CustomizeProfile),
+                          description: 'Get 1 reward point by adding a Profile picture, bio, and showcasing your favorite NFTs to your NFT Profile.',
                           coins: 1,
                           buttonText: 'Continue',
                         },
