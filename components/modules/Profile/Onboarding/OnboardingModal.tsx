@@ -50,7 +50,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                       <NftGoldLogo />
                     </div>
                     
-                    {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 0}/<span className='text-[#6A6A6A]'>11</span>
+                    {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>11</span>
                   </div>
                 </div>
                 <p className='mt-3 font-medium w-11/12'>Complete 5 steps to redeem all your <span className='bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>Reward points</span>!</p>
@@ -62,7 +62,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                   )}>
                     <div className='w-[85%] h-3 bg-[#E6E6E6] rounded-full'>
                       <div
-                        style={{ width: `${Math.floor((profileData?.profile?.usersActionsWithPoints[0]?.totalPoints / 16) * 100)}%` }}
+                        style={{ width: `${Math.floor(((profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5) / 16) * 100)}%` }}
                         className={tw(
                           'h-3 bg-[#26AA73] rounded-full',
                         )}></div>
@@ -84,7 +84,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                       [
                         {
                           name: 'Create NFT Profile',
-                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.CreateNftProfile),
+                          isCompleted: true,
                           coins: 5,
                         },
                         {
