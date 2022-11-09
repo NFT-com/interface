@@ -148,7 +148,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       {profileData?.profile?.description &&
           <div className={tw(
             getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-              'mt-4 text-[#6A6A6A] break-words minlg:w-1/2' :
+              'mt-3 text-[#6A6A6A] break-words minlg:w-1/2' :
               'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
           )}>
             {!editMode && profileData?.profile?.description}
