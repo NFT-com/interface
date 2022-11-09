@@ -6,7 +6,7 @@ import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListi
 import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
-import { Doppler,getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { getChainIdString } from 'utils/helpers';
 
 import {
@@ -15,6 +15,7 @@ import {
   RainbowKitProvider,
   wallet
 } from '@rainbow-me/rainbowkit';
+import * as snippet from '@segment/snippet';
 import { AnimatePresence } from 'framer-motion';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
@@ -62,6 +63,15 @@ type AppPropsWithLayout = AppProps & {
 export default function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  const loadSegment = () => {
+    const options = { apiKey: getEnv(Doppler.NEXT_PUBLIC_SEGMENT_API_KEY) };
+    if (getEnv(Doppler.NEXT_PUBLIC_SEGMENT_API_KEY)) {
+      return snippet.max(options);
+    } else {
+      return snippet.min(options);
+    }
+  };
 
   const { chains, provider } = useMemo(() => {
     return configureChains(
@@ -121,6 +131,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
       <Head>
         <title>NFT.com</title>
       </Head>
+      <Script dangerouslySetInnerHTML={{ __html: loadSegment() }} id="segmentScript" />
       <Script strategy="afterInteractive" src="/js/pageScripts.js" />
       <DefaultSeo
         title='NFT.com | The Social NFT Marketplace'
