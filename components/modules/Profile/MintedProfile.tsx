@@ -159,6 +159,7 @@ export function MintedProfile(props: MintedProfileProps) {
 
                     {editMode && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
                       onClick={open}
+                      className='hover:cursor-pointer'
                     >
                       <div className='absolute top-0 right-0 left-0 bottom-0 bg-black opacity-50'></div>
                       <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>

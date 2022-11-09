@@ -123,7 +123,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     >
       <Toast />
       <div className={tw('flex w-full items-center',
-        `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`,
+        `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'pr-12'}`,
         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'justify-start minlg:justify-between minlg:mt-3' : 'justify-start'
       )}>
         <div
