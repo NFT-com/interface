@@ -231,7 +231,7 @@ export function MintedProfile(props: MintedProfileProps) {
                         'h-full w-full',
                         'shrink-0 aspect-square',
                         userIsAdmin && editMode ? 'cursor-pointer' : '',
-                        userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
+                        !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'box-border border-[5px] border-white rounded-full',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                       )}

@@ -145,16 +145,16 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
         {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
       </div>
       {getProfileButton()}
-      {profileData?.profile?.description &&
+      {profileData?.profile?.description && !editMode &&
           <div className={tw(
             getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
               'mt-3 text-[#6A6A6A] break-words minlg:w-1/2' :
               'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
           )}>
-            {!editMode && profileData?.profile?.description}
+            {profileData?.profile?.description}
           </div>
       }
-      {editMode && userIsAdmin &&
+      {editMode && userIsAdmin && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
           <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
             <textarea
               className={tw(
@@ -176,6 +176,30 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             </div>
           </div>
       }
+
+      {editMode && userIsAdmin && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+          <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">
+            <textarea
+              className={tw(
+                'w-full resize-none',
+                'text-left px-[10px] py-2 w-full rounded-xl h-32 border-0',
+                'hover:bg-[#ECECEC] hover:cursor-pointer hover:text-black',
+                'mt-3 text-[#6A6A6A]',
+                'hover:outline-3 hover:outline-[#FFF0CB] focus:ring-0'
+              )}
+              maxLength={300}
+              placeholder="Enter bio (optional)"
+              value={draftBio ?? profileData?.profile?.description ?? ''}
+              onChange={e => {
+                handleBioChange(e);
+              }}
+            />
+            <div className="text-sm font-medium text-gray-900 dark:text-white">
+              {draftBio ? 300 - draftBio.length : '0' } / 300
+            </div>
+          </div>
+      }
+
       {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
         <div className='block minlg:hidden'>
           <ProfileMenu profileURI={profileURI} />
