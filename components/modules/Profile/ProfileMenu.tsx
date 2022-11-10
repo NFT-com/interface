@@ -65,7 +65,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       label: '',
       onSelect: () => setLayout(ProfileLayoutType.Featured),
       icon: <FeaturedIcon className={tw(
-        'w-[18px] h-[18px] minlg:w-5 minlg:h-5'
+        'w-[15px] h-[15px]'
       )} />
     },
     {
