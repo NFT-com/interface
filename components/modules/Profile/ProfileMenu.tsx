@@ -10,7 +10,7 @@ import { ProfileContext } from './ProfileContext';
 
 import { SearchIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
-import { ShareNetwork, TwitterLogo } from 'phosphor-react';
+import { ShareNetwork, TwitterLogo, X } from 'phosphor-react';
 import LinkIcon from 'public/icon_link.svg';
 import FeaturedIcon from 'public/layout_icon_featured.svg';
 import GridIcon from 'public/layout_icon_grid.svg';
@@ -30,6 +30,10 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const { profileData } = useProfileQuery(profileURI);
   const [selectedLayout, setSelectedLayout] = useState(null);
   const [showDescriptions, setShowDescriptions] = useState(null);
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [mobileSearchVisible, setMobileSearchVisible] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+
   const {
     setEditMode,
     setLayoutType,
@@ -88,8 +92,39 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
 
   return (
     <div className='w-full flex justify-end mt-8 minlg:mt-0 font-noi-grotesk'>
-      <div className='flex flex-row space-x-1 minlg:space-x-3'>
-        <div className='w-10 h-10 minlg:w-12 minlg:h-12 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
+     
+      <div className={tw(
+        'w-full flex flex-row border-[1.3px] border-[#ECECEC] rounded-full justify-center items-center',
+        'focus-within:border focus-within:border-[#F9D54C] focus-within:ring-1 focus-within:ring-[#F9D54C] transition-[width] p-[10px]',
+        searchVisible ? 'w-full minlg:max-w-[320px] minlg:w-[320px]' : 'w-0',
+        !searchVisible && 'hidden'
+      )}>
+        <input
+          type="text"
+          placeholder="Search your NFTs.."
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
+          maxLength={512}
+          className={tw(
+            'w-full text-black placeholder:text-black bg-inherit border-0 rounded-full py-0 pr-0 pl-2',
+            'focus:border-0 focus:ring-0 focus:placeholder:text-[#B2B2B2]'
+          )}
+          onChange={e => setSearchValue(e.target.value)}
+        />
+        <X color='black' className='hover:cursor-pointer' onClick={() => setSearchVisible(false)} />
+      </div>
+        
+      <div className={tw(
+        'flex flex-row space-x-1 minlg:space-x-3',
+        searchVisible && 'hidden minlg:flex'
+      )}>
+        <div onClick={() => setSearchVisible(true)} className={tw(
+          'w-10 h-10 minlg:w-12 minlg:h-12 rounded-full',
+          'flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer',
+          searchVisible && 'minlg:hidden'
+        )}>
           <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
         </div>
         {user?.currentProfileUrl === profileURI &&
@@ -141,11 +176,8 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                   )} />
                 </div>
               </DropdownPickerModal>
-            
             </>
-            
         }
-
         <DropdownPickerModal
           pointer
           constrain
