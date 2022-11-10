@@ -215,10 +215,10 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                     <Button
                       type={ButtonType.PRIMARY}
                       color={alwaysBlack}
-                      label="Mint your key"
+                      label="Claim your key"
                       disabled={mintSucceeded || submitting}
                       loading={submitting}
-                      loadingText={'Minting...'}
+                      loadingText={'Claiming...'}
                       onClick={async () => {
                         try {
                           const result = await genesisKeyTeamDistributor
@@ -255,7 +255,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                   'text-primary-txt'
                 )}>
                   There are gas fees associated with claiming your Genesis Key. {' '}
-                  By clicking the {'"'}Mint Your Key{'"'} button,{' '}
+                  By clicking the {'"'}Claim Your Key{'"'} button,{' '}
                   you agree to our{' '}
                   <span
                     onClick={() => {
