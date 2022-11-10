@@ -6,7 +6,7 @@ describe('claim GK page tests', () => {
   });
   
   it('should redirect to the GK collections page', () => {
-    cy.get('.NftCollectionItem').should('exist');
+    cy.findByText('CONNECT YOUR WALLET').should('exist');
   });
   
   // todo: sign in and test the actual claim page
