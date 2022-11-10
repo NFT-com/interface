@@ -10,7 +10,7 @@ type OnboardingItemProps = {
   coins: number;
   description?: string;
   buttonText?: string;
-  onClick?: () => void
+  href?: string
 };
 
 interface OnboardingModalItemProps {

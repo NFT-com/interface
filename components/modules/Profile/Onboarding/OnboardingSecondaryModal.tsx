@@ -10,7 +10,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { X } from 'phosphor-react';
 import NftGoldLogo from 'public/nft_gold_logo.svg';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 type OnboardingItemProps = {
   isCompleted: boolean;
@@ -32,12 +32,27 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
   const { user } = useUser();
   const { sendReferEmail } = useSendReferEmailMutation();
   const { data, mutate: mutateSentReferrals } = useGetSentReferralEmailsQuery(user.currentProfileUrl);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  const handleSubmit = (e, value) => {
+  const handleSubmit = (e, value, index) => {
+    setErrorMessage(null);
     e.preventDefault();
-    sendReferEmail(user.currentProfileUrl, [value]);
+    sendReferEmail(user.currentProfileUrl, [value])
+      .then(res => res.message === 'Referral emails are sent to 0 addresses.' ?
+        setErrorMessage([index, 'This user was previously referred. Please try a different email.']) :
+        setSuccess(index)
+      )
+      .catch(e => setErrorMessage([index, e.message]));
     mutateSentReferrals();
   };
+
+  useEffect(() => {
+    modalOpen === true;
+    setErrorMessage(null);
+    setSuccess(null);
+  }, [modalOpen]);
+
   return (
     <Transition appear show={modalOpen} as={Fragment}>
       <Dialog as="div" className="relative z-[105] w-full" onClose={() => setModalOpen(false)}>
@@ -88,7 +103,14 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
                     {selectedItem?.name === 'Refer Network' &&
                       <div className='flex flex-col px-7 mb-10 space-y-4'>
                         {Array.from(Array(5).keys()).map((_, index) => (
-                          <OnboardingInput key={index} index={index} item={data && data[index]} onSubmit={handleSubmit} />
+                          <OnboardingInput
+                            key={index}
+                            index={index}
+                            item={data && data[index]}
+                            onSubmit={handleSubmit}
+                            errorMessage={errorMessage && errorMessage[0] === index && errorMessage[1]}
+                            success={success === index ? true : false}
+                          />
                         ))}
                       </div>
                     }
