@@ -101,10 +101,9 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
     <div className='w-full flex justify-end mt-8 minlg:mt-0 font-noi-grotesk'>
      
       <div className={tw(
-        'w-full flex flex-row border-[1.3px] border-[#ECECEC] rounded-full justify-center items-center',
-        'focus-within:border focus-within:border-[#F9D54C] focus-within:ring-1 focus-within:ring-[#F9D54C] transition-[width] p-[10px]',
-        searchVisible ? 'w-full minlg:max-w-[320px] minlg:w-[320px]' : 'w-0',
-        !searchVisible && 'hidden'
+        'w-full flex flex-row border-[#ECECEC] rounded-full justify-center items-center',
+        'focus-within:border focus-within:border-[#F9D54C] focus-within:ring-1 focus-within:ring-[#F9D54C] ',
+        searchVisible ? 'w-full minlg:w-[320px] minlg:max-w-[320px]  p-[10px] border-[1.3px] transition-[width]' : 'w-0 p-0 border-0'
       )}>
         <input
           ref={inputRef}
