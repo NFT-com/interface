@@ -210,7 +210,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                       'text-lg mb-10 normal-case font-rubik',
                       'text-primary-txt text-center'
                     )}>
-                      Click the button below to mint your Genesis Key.
+                      Click the button below to claim your Genesis Key.
                     </span>
                     <Button
                       type={ButtonType.PRIMARY}
@@ -254,7 +254,7 @@ export function GenesisKeyWinnerView(props: GenesisKeyWinnerViewProps) {
                   'items-center my-5 w-full',
                   'text-primary-txt'
                 )}>
-                  There are gas fees associated with minting your Genesis Key. {' '}
+                  There are gas fees associated with claiming your Genesis Key. {' '}
                   By clicking the {'"'}Mint Your Key{'"'} button,{' '}
                   you agree to our{' '}
                   <span
