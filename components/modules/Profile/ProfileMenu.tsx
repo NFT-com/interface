@@ -3,6 +3,8 @@ import { ProfileLayoutType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
+import useDebounce from 'hooks/useDebounce';
+import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
@@ -17,7 +19,7 @@ import GridIcon from 'public/layout_icon_grid.svg';
 import MosaicIcon from 'public/layout_icon_mosaic.svg';
 import SpotlightIcon from 'public/layout_icon_spotlight.svg';
 import GearIcon from 'public/settings_icon.svg';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 export interface ProfileMenuProps {
   profileURI: string;
@@ -31,8 +33,13 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const [selectedLayout, setSelectedLayout] = useState(null);
   const [showDescriptions, setShowDescriptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
-  const [mobileSearchVisible, setMobileSearchVisible] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const debouncedSearch = useDebounce(searchValue, 1000);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useOutsideClickAlerter(inputRef, () => {
+    setSearchVisible(false);
+  });
 
   const {
     setEditMode,
@@ -100,6 +107,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         !searchVisible && 'hidden'
       )}>
         <input
+          ref={inputRef}
           type="text"
           placeholder="Search your NFTs.."
           autoComplete="off"
@@ -111,9 +119,15 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             'w-full text-black placeholder:text-black bg-inherit border-0 rounded-full py-0 pr-0 pl-2',
             'focus:border-0 focus:ring-0 focus:placeholder:text-[#B2B2B2]'
           )}
+          value={searchValue}
           onChange={e => setSearchValue(e.target.value)}
         />
-        <X color='black' className='hover:cursor-pointer' onClick={() => setSearchVisible(false)} />
+        <X color='black'
+          className='hover:cursor-pointer'
+          onClick={() => {
+            setSearchVisible(false);
+            setSearchValue('');
+          }} />
       </div>
         
       <div className={tw(
