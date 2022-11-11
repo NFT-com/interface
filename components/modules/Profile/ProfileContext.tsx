@@ -27,6 +27,7 @@ export interface DraftImg {
 export interface ProfileContextType {
   // display state
   publiclyVisibleNfts: PartialDeep<Nft>[];
+  publiclyVisibleNftsNoEdit: PartialDeep<Nft>[];
   editModeNfts: PartialDeep<DetailedNft>[];
   publiclyVisibleNftCount: number;
   allOwnerNfts: PartialDeep<Nft>[];
@@ -73,6 +74,7 @@ export interface ProfileContextType {
 // initialize with default values
 export const ProfileContext = React.createContext<ProfileContextType>({
   publiclyVisibleNfts: [],
+  publiclyVisibleNftsNoEdit: [],
   editModeNfts: [],
   publiclyVisibleNftCount: 0,
   allOwnerNfts: [],
@@ -201,6 +203,7 @@ export function ProfileContextProvider(
 
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
   const [publiclyVisibleNfts, setPubliclyVisibleNfts] = useState<PartialDeep<Nft>[]>(null);
+  const [publiclyVisibleNftsNoEdit, setPubliclyVisibleNftsNoEdit] = useState<PartialDeep<Nft>[]>(null);
   const [editModeNfts, setEditModeNfts] = useState<PartialDeep<DetailedNft>[]>(null);
   const [currentScrolledPosition, setCurrentScrolledPosition] = useState(0);
 
@@ -209,9 +212,24 @@ export function ProfileContextProvider(
 
   const [showAllNFTsValue, setShowAllNFTsValue] = useState(publicProfileNftsCount === allOwnerNftCount);
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
+  
+  // Profile page NO Edit Mode ONLY
+  useEffect(() => {
+    console.log('third publicProfileNfts fdo', publicProfileNfts);
+    if(!editMode) {
+      if (publiclyVisibleNftsNoEdit == null || publiclyVisibleNftsNoEdit.length == 0) {
+        setPubliclyVisibleNftsNoEdit(publicProfileNfts);
+      }
+
+      if (publicProfileNfts && publiclyVisibleNftsNoEdit && prevPublicProfileNfts !== publicProfileNfts) {
+        setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit, ...publicProfileNfts]);
+      }
+    }
+  }, [editMode, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNftsNoEdit]);
 
   useEffect(() => {
-    if (!loadingAllOwnerNfts) {
+    if (!loadingAllOwnerNfts && editMode) {
+      console.log('allOwnerNfts allOwnerNfts fdo', allOwnerNfts);
       if (!paginatedAllOwnerNfts || paginatedAllOwnerNfts.length == 0 || afterCursorEditMode === '') {
         setPaginatedAllOwnerNfts(allOwnerNfts);
       }
@@ -219,17 +237,26 @@ export function ProfileContextProvider(
       if (allOwnerNfts && prevAllOwnerNfts !== allOwnerNfts && afterCursorEditMode !== '') {
         setPaginatedAllOwnerNfts([...paginatedAllOwnerNfts, ...allOwnerNfts]);
       }
-    }
-  }, [afterCursorEditMode, allOwnerNfts, loadingAllOwnerNfts, paginatedAllOwnerNfts, prevAllOwnerNfts]);
 
+      // TODO this will persist and erase UI visible/not visible icons created by user in edit mode
+      paginatedAllOwnerNfts.length > 0 && paginatedAllOwnerNfts.forEach(nft => nft.hidden = nft.isHide);
+
+      if (!editModeNfts || (editModeNfts && editModeNfts.length === 0)) {
+        
+      }
+    }
+  }, [afterCursorEditMode, allOwnerNfts, loadingAllOwnerNfts, paginatedAllOwnerNfts, prevAllOwnerNfts, editMode, editModeNfts]);
+  
   useEffect(() => {
-    if (!loadingAllOwnerNfts) {
+    if (!loadingAllOwnerNfts && editMode) {
       const paginatedNotPubliclyVisibleNfts = paginatedAllOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [];
+      
       if (!showAllNFTsValue && !hideAllNFTsValue) {
-        setEditModeNfts([
+        setEditModeNfts([...paginatedAllOwnerNfts]);
+/*         setEditModeNfts([
           ...setHidden(publiclyVisibleNfts ?? [], false),
           ...setHidden(paginatedNotPubliclyVisibleNfts, true)
-        ]);
+        ]); */
         return;
       } else if (showAllNFTsValue && !hideAllNFTsValue) {
         setEditModeNfts([
@@ -245,19 +272,11 @@ export function ProfileContextProvider(
 
       currentScrolledPosition !== 0 && window.scrollTo(0, currentScrolledPosition);
     }
-  }, [currentScrolledPosition, hideAllNFTsValue, loadingAllOwnerNfts, paginatedAllOwnerNfts, publiclyVisibleNfts, showAllNFTsValue]);
+  }, [currentScrolledPosition, editMode, hideAllNFTsValue, loadingAllOwnerNfts, paginatedAllOwnerNfts, publiclyVisibleNfts, showAllNFTsValue]);
 
   useEffect(() => {
     setDraftDisplayType(null);
   }, [editMode]);
-
-  useEffect(() => {
-    if (saving) {
-      setAfterCursor('');
-      setAfterCursorEditMode('');
-    }
-    saving && setAfterCursor('');
-  }, [saving]);
 
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
     setEditModeNfts([
@@ -265,18 +284,6 @@ export function ProfileContextProvider(
       ...orderedItems.filter((nft: DetailedNft) => nft.hidden),
     ]);
   }, []);
-
-  useEffect(() => {
-    if(!editMode) {
-      if (publiclyVisibleNfts == null || publiclyVisibleNfts.length == 0|| afterCursor === '') {
-        setPubliclyVisibleNfts(publicProfileNfts);
-      }
-
-      if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
-        setPubliclyVisibleNfts([...publiclyVisibleNfts, ...publicProfileNfts]);
-      }
-    }
-  }, [afterCursor, editMode, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNfts]);
 
   /**
    * Mutations
@@ -385,13 +392,15 @@ export function ProfileContextProvider(
 
         if (result) {
           window.scrollTo(0, 0);
-          setAfterCursor('');
           setAfterCursorEditMode('');
+          setPubliclyVisibleNfts(null);
+          setAfterCursor('');
           mutateProfileData();
           mutatePublicProfileNfts();
           mutateAllOwnerNfts();
           clearDrafts();
           toast.success('Profile changes saved');
+          console.log('setAfterCursor fdo');
         }
         setSaving(false);
       }
@@ -442,6 +451,7 @@ export function ProfileContextProvider(
     allOwnerNftCount: allOwnerNftCount ?? 0,
     publiclyVisibleNfts: publiclyVisibleNfts ?? [],
     publiclyVisibleNftCount: publicProfileNftsCount ?? 0,
+    publiclyVisibleNftsNoEdit: publiclyVisibleNftsNoEdit ?? [],
     loadMoreNfts: () => {
       pageInfo.lastCursor && setAfterCursor(pageInfo.lastCursor);
     },

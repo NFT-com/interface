@@ -26,8 +26,7 @@ export function NftGallery(props: NftGalleryProps) {
     saving,
     allOwnerNfts,
     allOwnerNftCount,
-    publiclyVisibleNfts,
-    publiclyVisibleNftCount,
+    publiclyVisibleNftsNoEdit,
     loading,
     loadingAllOwnerNfts,
     loadMoreNfts,
@@ -38,10 +37,8 @@ export function NftGallery(props: NftGalleryProps) {
   const { closeToBottom, currentScrollPosition } = useScrollToBottom();
 
   useSWR(closeToBottom.toString() + currentScrollPosition, async () => {
-    if (!editMode && closeToBottom && publiclyVisibleNfts?.length > 0 && !loading) {
-      if (publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
-        loadMoreNfts();
-      }
+    if (!editMode && closeToBottom && publiclyVisibleNftsNoEdit?.length > 0 && !loading) {
+      loadMoreNfts();
     }
     
     if (editMode && closeToBottom && allOwnerNftCount > nftsToShow?.length) {
@@ -51,7 +48,7 @@ export function NftGallery(props: NftGalleryProps) {
 
   const savedLayoutType = profileData?.profile?.layoutType;
 
-  if (allOwnerNfts == null || publiclyVisibleNfts == null || profileData == null || saving) {
+  if (allOwnerNfts == null || publiclyVisibleNftsNoEdit == null || profileData == null || saving) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-white">
@@ -73,7 +70,7 @@ export function NftGallery(props: NftGalleryProps) {
 
   const nftsToShow = editMode ?
     editModeNfts :
-    (publiclyVisibleNfts ?? []);
+    (publiclyVisibleNftsNoEdit ?? []);
 
   const displayNFTs = (draftLayoutType ?? savedLayoutType) !== 'Spotlight' ?
     nftsToShow :
