@@ -1,4 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import Toast from 'components/elements/Toast';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
@@ -155,30 +156,41 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           </div>
       }
       {editMode && userIsAdmin && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-          <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
-            <textarea
-              className={tw(
-                'text-base w-full resize-none mt-4',
-                'text-left px-3 py-2 w-full rounded-xl font-medium h-32',
-              )}
-              maxLength={300}
-              placeholder="Enter bio (optional)"
-              value={draftBio ?? profileData?.profile?.description ?? ''}
-              onChange={e => {
-                handleBioChange(e);
-              }}
-              style={{
-                color: alwaysBlack,
-              }}
-            />
-            <div className="text-sm font-medium text-gray-900 dark:text-white">
-              {draftBio ? 300 - draftBio.length : '0' } / 300
-            </div>
+        <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
+          <textarea
+            className={tw(
+              'text-base w-full resize-none mt-4',
+              'text-left px-3 py-2 w-full rounded-xl font-medium h-32',
+            )}
+            maxLength={300}
+            placeholder="Enter bio (optional)"
+            value={draftBio ?? profileData?.profile?.description ?? ''}
+            onChange={e => {
+              handleBioChange(e);
+            }}
+            style={{
+              color: alwaysBlack,
+            }}
+          />
+          <div className="text-sm font-medium text-gray-900 dark:text-white">
+            {draftBio ? 300 - draftBio.length : '0' } / 300
           </div>
+        </div>
       }
 
       {editMode && userIsAdmin && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-          <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">
+      
+        <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">
+          <CustomTooltip2
+            orientation='top'
+            tooltipComponent={
+              <div
+                className="w-max"
+              >
+                <p>Update your bio</p>
+              </div>
+            }
+          >
             <textarea
               className={tw(
                 'w-full resize-none',
@@ -197,7 +209,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             <div className="text-sm font-medium text-gray-900 dark:text-white">
               {draftBio ? 300 - draftBio.length : '0' } / 300
             </div>
-          </div>
+          </CustomTooltip2>
+        </div>
+      
       }
 
       {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&

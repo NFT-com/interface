@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import Loader from 'components/elements/Loader';
 import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -163,7 +164,18 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <div className='absolute top-0 right-0 left-0 bottom-0 bg-black opacity-50'></div>
                       <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                        <CameraIconEdit />
+                        <CustomTooltip2
+                          orientation='top'
+                          tooltipComponent={
+                            <div
+                              className="w-max"
+                            >
+                              <p>Upload a new banner image</p>
+                            </div>
+                          }
+                        >
+                          <CameraIconEdit />
+                        </CustomTooltip2>
                       </div>
                     </div>}
                   </section>
@@ -245,7 +257,18 @@ export function MintedProfile(props: MintedProfileProps) {
                       >
                         <div className='bg-black opacity-50 absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
                         <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                          <CameraIconEdit />
+                          <CustomTooltip2
+                            orientation='top'
+                            tooltipComponent={
+                              <div
+                                className="rounded-xl w-max"
+                              >
+                                <p>Update your profile image</p>
+                              </div>
+                            }
+                          >
+                            <CameraIconEdit />
+                          </CustomTooltip2>
                         </div>
                       </div>}
                       
