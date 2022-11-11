@@ -39,12 +39,11 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
     setErrorMessage(null);
     e.preventDefault();
     sendReferEmail(user.currentProfileUrl, [value])
-      .then(res => res.message === 'Referral emails are sent to 0 addresses.' ?
-        setErrorMessage([index, 'This user was previously referred. Please try a different email.']) :
-        setSuccess(index)
-      )
+      .then(res => res.sentEmails.includes(value) ?
+        setSuccess(index) :
+        setErrorMessage([index, 'This user was previously referred. Please try a different email.'])
+      ).then(() => mutateSentReferrals())
       .catch(e => setErrorMessage([index, e.message]));
-    mutateSentReferrals();
   };
 
   useEffect(() => {
