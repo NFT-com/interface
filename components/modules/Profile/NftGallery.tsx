@@ -27,7 +27,6 @@ export function NftGallery(props: NftGalleryProps) {
     allOwnerNfts,
     allOwnerNftCount,
     publiclyVisibleNfts,
-    publiclyVisibleNftCount,
     loading,
     loadingAllOwnerNfts,
     loadMoreNfts,
@@ -39,9 +38,7 @@ export function NftGallery(props: NftGalleryProps) {
 
   useSWR(closeToBottom.toString() + currentScrollPosition, async () => {
     if (!editMode && closeToBottom && publiclyVisibleNfts?.length > 0 && !loading) {
-      if (publiclyVisibleNftCount > publiclyVisibleNfts?.length) {
-        loadMoreNfts();
-      }
+      loadMoreNfts();
     }
     
     if (editMode && closeToBottom && allOwnerNftCount > nftsToShow?.length) {
