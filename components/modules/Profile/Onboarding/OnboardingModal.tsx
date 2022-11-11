@@ -24,7 +24,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
         onClick={() => setExpanded(false)}
         className={tw(
           'fixed',
-          expanded && 'bg-black bg-opacity-25 minmd:bg-opacity-0 inset-0'
+          expanded && 'bg-black bg-opacity-25 minlg:bg-opacity-0 inset-0'
         )}
       />
       <div className={tw(
