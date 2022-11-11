@@ -216,6 +216,7 @@ export type Collection = {
   isSpam?: Maybe<Scalars['Boolean']>;
   logoUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  stats?: Maybe<NftPortStatistics>;
   totalVolume?: Maybe<Scalars['Float']>;
 };
 
@@ -239,6 +240,7 @@ export type CollectionLeaderboard = {
 };
 
 export type CollectionLeaderboardInput = {
+  dateRange?: InputMaybe<Scalars['String']>;
   pageInput?: InputMaybe<PageInput>;
 };
 
@@ -1117,6 +1119,7 @@ export type Nft = {
   contract?: Maybe<Scalars['Address']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
+  isHide?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
   listings?: Maybe<TxActivitiesOutput>;
   memo?: Maybe<Scalars['String']>;
@@ -2103,7 +2106,10 @@ export type SendReferEmailInput = {
 
 export type SendReferEmailOutput = {
   __typename?: 'SendReferEmailOutput';
+  confirmedEmails: Array<Maybe<Scalars['String']>>;
   message?: Maybe<Scalars['String']>;
+  sentEmails: Array<Maybe<Scalars['String']>>;
+  unconfirmedEmails: Array<Maybe<Scalars['String']>>;
 };
 
 export type SentReferralEmailsOutput = {
@@ -2760,7 +2766,7 @@ export type SendReferEmailMutationVariables = Exact<{
 }>;
 
 
-export type SendReferEmailMutation = { __typename?: 'Mutation', sendReferEmail: { __typename?: 'SendReferEmailOutput', message?: string | null } };
+export type SendReferEmailMutation = { __typename?: 'Mutation', sendReferEmail: { __typename?: 'SendReferEmailOutput', confirmedEmails: Array<string | null>, message?: string | null, sentEmails: Array<string | null>, unconfirmedEmails: Array<string | null> } };
 
 export type SignHashMutationVariables = Exact<{
   input: SignHashInput;
@@ -3417,7 +3423,10 @@ export const ResendEmailDocument = gql`
 export const SendReferEmailDocument = gql`
     mutation SendReferEmail($input: SendReferEmailInput!) {
   sendReferEmail(input: $input) {
+    confirmedEmails
     message
+    sentEmails
+    unconfirmedEmails
   }
 }
     `;
