@@ -3,6 +3,7 @@ import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import Toast from 'components/elements/Toast';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
+import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -12,7 +13,7 @@ import { ProfileContext } from './ProfileContext';
 import { ProfileMenu } from './ProfileMenu';
 
 import GKHolderIcon from 'public/gk-holder.svg';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useRef, useState } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
 import { useAccount } from 'wagmi';
 
@@ -40,6 +41,15 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     setEditMode,
     clearDrafts,
   } = useContext(ProfileContext);
+  const [editingBio, setEditingBio] = useState(false);
+
+  const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
+  const bioRef = useRef();
+
+  useOutsideClickAlerter(bioRef, () => {
+    saveProfile();
+    setEditingBio(false);
+  });
 
   const getProfileButton = useCallback(() => {
     if (!userIsAdmin || !hasGks || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)) {
@@ -146,15 +156,38 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
         {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
       </div>
       {getProfileButton()}
-      {profileData?.profile?.description && !editMode &&
+      {profileData?.profile?.description && !editMode && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
           <div className={tw(
-            getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-              'mt-3 text-[#6A6A6A] break-words minlg:w-1/2' :
-              'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
+            'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
           )}>
             {profileData?.profile?.description}
           </div>
       }
+
+      {profileData?.profile?.description && !editingBio && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+        <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">
+          <CustomTooltip2
+            orientation='top'
+            tooltipComponent={
+              <div
+                className="w-max"
+              >
+                <p>Update your bio</p>
+              </div>
+            }
+          >
+            <div className={tw(
+              'py-1 px-2 -ml-1 m-2 text-[#6A6A6A] break-words',
+              isOwnerAndSignedIn && 'hover:bg-[#ECECEC] hover:cursor-pointer hover:transition-colors hover:ease-in-out hover:text-black rounded-xl'
+            )}
+            onClick={() => isOwnerAndSignedIn && setEditingBio(true)}
+            >
+              {profileData?.profile?.description}
+            </div>
+          </CustomTooltip2>
+        </div>
+      }
+
       {editMode && userIsAdmin && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
         <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
           <textarea
@@ -178,40 +211,29 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
         </div>
       }
 
-      {editMode && userIsAdmin && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-      
+      {editingBio && userIsAdmin && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
         <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">
-          <CustomTooltip2
-            orientation='top'
-            tooltipComponent={
-              <div
-                className="w-max"
-              >
-                <p>Update your bio</p>
-              </div>
-            }
-          >
-            <textarea
-              className={tw(
-                'w-full resize-none',
-                'text-left px-[10px] py-2 w-full rounded-xl h-32 border-0',
-                'hover:bg-[#ECECEC] hover:cursor-pointer hover:text-black',
-                'mt-3 text-[#6A6A6A]',
-                'hover:outline-3 hover:outline-[#FFF0CB] focus:ring-0'
-              )}
-              maxLength={300}
-              placeholder="Enter bio (optional)"
-              value={draftBio ?? profileData?.profile?.description ?? ''}
-              onChange={e => {
-                handleBioChange(e);
-              }}
-            />
-            <div className="text-sm font-medium text-gray-900 dark:text-white">
-              {draftBio ? 300 - draftBio.length : '0' } / 300
-            </div>
-          </CustomTooltip2>
+          <textarea
+            ref={bioRef}
+            className={tw(
+              'w-full resize-none',
+              'text-left py-1 px-2 -ml-1 m-2 w-full rounded-xl h-32 border-0',
+              'mt-3 text-[#6A6A6A]',
+              'hover:outline-3 hover:outline-[#FFF0CB] focus:ring-0'
+            )}
+            maxLength={300}
+            placeholder="Enter bio (optional)"
+            value={draftBio ?? profileData?.profile?.description ?? ''}
+            onChange={e => {
+              handleBioChange(e);
+            }}
+          />
+          <div className="text-sm font-medium text-gray-900 dark:text-white w-full flex justify-between">
+            <p className='text-sm text-[#6A6A6A]'>Brief description for your profile. This will auto save to your profile.
+            </p>
+            <p>{draftBio ? 300 - draftBio.length : '0' } / 300</p>
+          </div>
         </div>
-      
       }
 
       {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
