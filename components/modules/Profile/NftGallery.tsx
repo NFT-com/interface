@@ -41,7 +41,7 @@ export function NftGallery(props: NftGalleryProps) {
       loadMoreNfts();
     }
     
-    if (editMode && closeToBottom && allOwnerNftCount > nftsToShow?.length) {
+    if (editMode && closeToBottom) {
       loadMoreNftsEditMode();
     }
   });
