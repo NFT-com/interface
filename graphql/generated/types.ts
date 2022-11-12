@@ -204,16 +204,20 @@ export type ClearQueueOutput = {
 
 export type Collection = {
   __typename?: 'Collection';
+  averagePrice?: Maybe<Scalars['Float']>;
   bannerUrl?: Maybe<Scalars['String']>;
   chainId?: Maybe<Scalars['String']>;
   contract?: Maybe<Scalars['Address']>;
   deployer?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
+  floorPrice?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['ID']>;
   isCurated?: Maybe<Scalars['Boolean']>;
   isSpam?: Maybe<Scalars['Boolean']>;
   logoUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  stats?: Maybe<NftPortStatistics>;
+  totalVolume?: Maybe<Scalars['Float']>;
 };
 
 export type CollectionInfo = {
@@ -226,6 +230,18 @@ export type CollectionInput = {
   chainId?: InputMaybe<Scalars['String']>;
   contract: Scalars['Address'];
   network: Scalars['String'];
+};
+
+export type CollectionLeaderboard = {
+  __typename?: 'CollectionLeaderboard';
+  items: Array<Maybe<Collection>>;
+  pageInfo?: Maybe<PageInfo>;
+  totalItems?: Maybe<Scalars['Int']>;
+};
+
+export type CollectionLeaderboardInput = {
+  dateRange?: InputMaybe<Scalars['String']>;
+  pageInput?: InputMaybe<PageInput>;
 };
 
 export type CollectionNft = {
@@ -532,6 +548,12 @@ export type ListNftSeaportInput = {
   seaportSignature?: InputMaybe<Scalars['String']>;
 };
 
+export type ListNftx2Y2Input = {
+  chainId?: InputMaybe<Scalars['String']>;
+  profileUrl?: InputMaybe<Scalars['String']>;
+  x2y2Order?: InputMaybe<Scalars['String']>;
+};
+
 export type LooksrareProtocolData = {
   __typename?: 'LooksrareProtocolData';
   amount?: Maybe<Scalars['String']>;
@@ -684,6 +706,7 @@ export type Mutation = {
   ignoreAssociations: Array<Maybe<Event>>;
   listNFTLooksrare: Scalars['Boolean'];
   listNFTSeaport: Scalars['Boolean'];
+  listNFTX2Y2: Scalars['Boolean'];
   mintGKProfile: Scalars['String'];
   /** AUTHENTICATED */
   orderingUpdates: Profile;
@@ -865,6 +888,11 @@ export type MutationListNftLooksrareArgs = {
 
 export type MutationListNftSeaportArgs = {
   input: ListNftSeaportInput;
+};
+
+
+export type MutationListNftx2Y2Args = {
+  input: ListNftx2Y2Input;
 };
 
 
@@ -1091,6 +1119,7 @@ export type Nft = {
   contract?: Maybe<Scalars['Address']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['ID'];
+  isHide?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
   listings?: Maybe<TxActivitiesOutput>;
   memo?: Maybe<Scalars['String']>;
@@ -1610,6 +1639,7 @@ export type Query = {
   associatedCollectionForProfile: CollectionInfo;
   blockedProfileURI: Scalars['Boolean'];
   collection?: Maybe<CollectionInfo>;
+  collectionLeaderboard?: Maybe<CollectionLeaderboard>;
   collectionNFTs: NfTsOutput;
   collectionTraits?: Maybe<CollectionTraitsSummary>;
   collectionsByDeployer?: Maybe<Array<Maybe<Collection>>>;
@@ -1704,6 +1734,11 @@ export type QueryBlockedProfileUriArgs = {
 
 export type QueryCollectionArgs = {
   input: CollectionInput;
+};
+
+
+export type QueryCollectionLeaderboardArgs = {
+  input?: InputMaybe<CollectionLeaderboardInput>;
 };
 
 
@@ -2071,7 +2106,10 @@ export type SendReferEmailInput = {
 
 export type SendReferEmailOutput = {
   __typename?: 'SendReferEmailOutput';
+  confirmedEmails: Array<Maybe<Scalars['String']>>;
   message?: Maybe<Scalars['String']>;
+  sentEmails: Array<Maybe<Scalars['String']>>;
+  unconfirmedEmails: Array<Maybe<Scalars['String']>>;
 };
 
 export type SentReferralEmailsOutput = {
@@ -2728,7 +2766,7 @@ export type SendReferEmailMutationVariables = Exact<{
 }>;
 
 
-export type SendReferEmailMutation = { __typename?: 'Mutation', sendReferEmail: { __typename?: 'SendReferEmailOutput', message?: string | null } };
+export type SendReferEmailMutation = { __typename?: 'Mutation', sendReferEmail: { __typename?: 'SendReferEmailOutput', confirmedEmails: Array<string | null>, message?: string | null, sentEmails: Array<string | null>, unconfirmedEmails: Array<string | null> } };
 
 export type SignHashMutationVariables = Exact<{
   input: SignHashInput;
@@ -3122,7 +3160,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -3385,7 +3423,10 @@ export const ResendEmailDocument = gql`
 export const SendReferEmailDocument = gql`
     mutation SendReferEmail($input: SendReferEmailInput!) {
   sendReferEmail(input: $input) {
+    confirmedEmails
     message
+    sentEmails
+    unconfirmedEmails
   }
 }
     `;
@@ -4827,6 +4868,11 @@ export const ProfileDocument = gql`
       }
     }
     profileView
+    usersActionsWithPoints {
+      totalPoints
+      userId
+      action
+    }
   }
 }
     `;

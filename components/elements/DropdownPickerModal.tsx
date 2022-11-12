@@ -20,8 +20,12 @@ export interface DropdownPickerModalProps {
   selectedIndex: number;
   constrain?: boolean;
   placeholder?: string;
-  centered?: boolean;
   pointer?: boolean;
+  stopMobileModal?: boolean; //stops modal popup on mobile
+  disableMinWidth?: boolean;
+  disablePadding?: boolean;
+  blackBorder?: boolean;
+  align?: 'right' | 'left' | 'center'
 }
 
 /**
@@ -42,17 +46,20 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
+
+  const mobile = props.stopMobileModal ? false : isMobile;
+
   useOutsideClickAlerter(wrapperRef, () => {
-    !isMobile && setExpanded(false);
+    !mobile && setExpanded(false);
   });
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
     return (item &&
       <div
-        key={item.label}
+        key={item.label || index}
         style={{ height: '10%' }}
         className={`flex flex-row w-full px-3 py-3 items-center justiry-evenly 
-        ${index === optionHoverIndex ? 'dark:text-always-white text-primary-txt font-medium' : 'dark:text-always-white text-secondary-txt' }`}
+        ${index === optionHoverIndex ? ' text-primary-txt font-medium' : 'text-secondary-txt' }`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
@@ -81,9 +88,10 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
         <div
           ref={anchorRef}
           className={tw(
-            'flex flex-row items-end px-2.5',
+            'flex flex-row items-end',
+            !props.disablePadding && 'px-2.5 py-2',
             'bg-transparent dark:bg-secondary-dk',
-            'py-2 h-full',
+            'h-full',
             'justify-between rounded-xl w-full',
           )}
           key={props.options[props.selectedIndex].label}
@@ -94,7 +102,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
           {props.children}
         </div>
 
-        {expanded && !isMobile &&
+        {expanded && !mobile &&
         <div
           style={{
             marginTop: anchorRef.current.clientHeight + 8,
@@ -102,12 +110,26 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
           className={tw(
             'rounded-xl',
             'bg-white dark:bg-secondary-dk',
-            'absolute z-50',
-            'min-w-[14rem] drop-shadow-md',
-            props. centered && 'left-1/2 -translate-x-1/2	'
+            'absolute z-50 drop-shadow-md',
+            props.disableMinWidth ? 'min-w-max' :'min-w-[14rem]',
+            props.align === 'center' && 'left-1/2 -translate-x-1/2',
+            props.align === 'right' && 'right-0',
+            props.align === 'left' && 'left-0'
           )}
         >
-          {props.pointer && <CaretUp size={32} color="white" weight="fill" className='absolute -top-[18px] left-[43%]'/>}
+          {props.pointer &&
+            <CaretUp
+              size={32}
+              color="white"
+              weight="fill"
+              className={tw(
+                'absolute -top-[18px]',
+                props.align === 'center' && ' left-1/2 -translate-x-1/2',
+                props.align === 'right' && 'right-8',
+                props.align === 'left' && 'left-8'
+              )}
+            />
+          }
           {props.options?.map((item, index) => {
             return getOptionRow(item, index);
           })}
@@ -116,7 +138,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
       </div>
       <Modal
         fullModal
-        visible={expanded && isMobile}
+        visible={expanded && mobile}
         loading={false}
         title={'Display Settings'}
         onClose={() => {

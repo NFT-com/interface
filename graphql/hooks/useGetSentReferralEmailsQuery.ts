@@ -23,7 +23,7 @@ export function useGetSentReferralEmailsQuery(profileUrl: string): GetSentReferr
     const result = await sdk.GetSentReferralEmails({
       profileUrl
     });
-    return result.getSentReferralEmails.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+    return result.getSentReferralEmails.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   });
   
   return {

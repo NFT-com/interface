@@ -20,5 +20,10 @@ query Profile($url: String!, $chainId: String!) {
       }
     }
     profileView
+    usersActionsWithPoints {
+      totalPoints
+      userId
+      action
+    }
   }
 }

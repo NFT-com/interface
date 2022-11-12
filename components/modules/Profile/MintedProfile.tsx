@@ -13,6 +13,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { ClaimProfileCard } from './ClaimProfileCard';
 import { DeployedCollectionsGallery } from './DeployedCollectionsGallery';
 import { LinksToSection } from './LinksToSection';
 import { MintedProfileGallery } from './MintedProfileGallery';
@@ -24,6 +25,7 @@ import { ProfileScrollContextProvider } from './ProfileScrollContext';
 import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
+import CameraIconEdit from 'public/camera_icon.svg';
 import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -146,13 +148,22 @@ export function MintedProfile(props: MintedProfileProps) {
                     <div {...getRootProps()} style={{ outline: 'none' }}>
                       <input {...getInputProps()} />
                     </div>
-                    {editMode && <div
+                    {editMode && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
                       className={tw(
                         'absolute bottom-5 right-5 minmd:right-4'
                       )}
                       onClick={open}
                     >
                       <PencilIconRounded alt="Edit banner" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
+                    </div>}
+
+                    {editMode && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
+                      onClick={open}
+                    >
+                      <div className='absolute top-0 right-0 left-0 bottom-0 bg-black opacity-50'></div>
+                      <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
+                        <CameraIconEdit />
+                      </div>
                     </div>}
                   </section>
                 )}
@@ -188,7 +199,7 @@ export function MintedProfile(props: MintedProfileProps) {
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',
                     userIsAdmin ? '' : 'cursor-default',
-                    'h-32 minlg:h-52 w-32 minlg:w-52 ',
+                    getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'w-[88px] h-[88px]' :'h-32 minlg:h-52 w-32 minlg:w-52 '
                   )}>
                     <input {...getInputProps()} />
                     {saving && <div
@@ -201,7 +212,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <Loader/>
                     </div>}
-                    {editMode && <div
+                    {editMode && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
                       style={{ zIndex: 102, }}
                       className={tw(
                         isPicturedHovered ? 'opacity-100' : 'opacity-30',
@@ -211,6 +222,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     >
                       <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-6 minlg:h-10 w-6 minlg:w-10  cursor-pointer'/>
                     </div>}
+
                     <div
                       className={tw(
                         'object-center',
@@ -218,9 +230,23 @@ export function MintedProfile(props: MintedProfileProps) {
                         'shrink-0 aspect-square',
                         userIsAdmin && editMode ? 'cursor-pointer' : '',
                         userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
-                        'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
+                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && ' box-border border-[5px] border-white rounded-full',
+                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] ml-6 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                       )}
                     >
+
+                      {editMode && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
+                        style={{ zIndex: 102, }}
+                        className={tw(
+                          'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
+                        )}
+                      >
+                        <div className='bg-black opacity-50 absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
+                        <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
+                          <CameraIconEdit />
+                        </div>
+                      </div>}
+                      
                       <Image
                         src={
                           !isNullOrEmpty(draftProfileImg?.preview)
@@ -234,7 +260,9 @@ export function MintedProfile(props: MintedProfileProps) {
                         layout='fill'
                         alt="profilePicture"
                         draggable={false}
-                        className={tw('rounded-full')}
+                        className={tw(
+                          'rounded-full',
+                        )}
                         style={{ zIndex: 101, overflow: 'hidden' }}
                       />
                     </div>
@@ -248,7 +276,7 @@ export function MintedProfile(props: MintedProfileProps) {
             />
           </div>
           {
-            draftDeployedContractsVisible &&
+            draftDeployedContractsVisible && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
           <div className={tw(
             'flex w-full px-12',
             editMode ? 'mt-8' : 'mt-8'
@@ -258,7 +286,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 setSelectedTab('nfts');
               }}
               className={tw(
-                'cursor-pointer text-white text-lg tracking-wide mr-4',
+                'cursor-pointer text-lg tracking-wide mr-4',
                 selectedTab === 'nfts' ? 'text-black' : 'text-secondary-txt'
               )}
             >
@@ -280,11 +308,17 @@ export function MintedProfile(props: MintedProfileProps) {
           <div
             className={tw(
               'h-full',
-              editMode && !draftDeployedContractsVisible ? 'mt-28 minmd:mt-16' : 'mt-5 minmd:mt-0',
+              editMode && !draftDeployedContractsVisible ? 'mt-28 minmd:mt-16' : getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-6' : 'mt-5 minmd:mt-0' ,
               'w-full justify-start space-y-4 flex flex-col',
               selectedTab === 'nfts' ? 'flex' : 'hidden'
             )}
           >
+            {user?.currentProfileUrl === props.profileURI && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+              <div className='block minmd:hidden mt-2 px-2'>
+                <ClaimProfileCard />
+              </div>
+            }
+           
             {
               (userIsAdmin && editMode) || (publiclyVisibleNfts?.length > 0) ?
                 <MintedProfileGallery
@@ -354,7 +388,7 @@ export function MintedProfile(props: MintedProfileProps) {
       </ProfileScrollContextProvider>
 
       {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && addressOwner === currentAddress && user.currentProfileUrl === profileURI &&
-        <OnboardingModal />
+        <OnboardingModal profileURI={profileURI} />
       }
     </>
   );

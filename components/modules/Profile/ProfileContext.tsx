@@ -52,6 +52,8 @@ export interface ProfileContextType {
   draftDisplayType: ProfileDisplayType,
   setDraftDisplayType: (displayType: ProfileDisplayType) => void,
   draftLayoutType: ProfileLayoutType,
+  setLayoutType: (layoutType: ProfileLayoutType) => void,
+  setDescriptionsVisible: (isVisible: boolean) => void,
   setDraftLayoutType: (layoutType: ProfileLayoutType) => void,
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
@@ -96,6 +98,8 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   setDraftDisplayType: () => null,
   draftLayoutType: ProfileLayoutType.Default,
   setDraftLayoutType: () => null,
+  setLayoutType: () => null,
+  setDescriptionsVisible: () => null,
   editMode: false,
   setEditMode: () => null,
   clearDrafts: () => null,
@@ -399,6 +403,30 @@ export function ProfileContextProvider(
     }
   }, [clearDrafts, draftBio, draftDeployedContractsVisible, draftGkIconVisible, draftHeaderImg, draftLayoutType, draftNftsDescriptionsVisible, draftProfileImg, editModeNfts, fileUpload, hideAllNFTsValue, mutateAllOwnerNfts, mutateProfileData, mutatePublicProfileNfts, paginatedAllOwnerNfts, profileData?.profile?.description, profileData?.profile?.id, props.profileURI, publiclyVisibleNfts, showAllNFTsValue, updateOrder, updateProfile, uploadProfileImages]);
 
+  const setLayoutType = useCallback(async (type: ProfileLayoutType) => {
+    try {
+      await updateProfile({
+        id: profileData?.profile?.id,
+        layoutType: type
+      });
+    } catch (err) {
+      console.log('error while saving profile: ', err);
+      toast.error('Error while saving profile.');
+    }
+  }, [updateProfile, profileData]);
+
+  const setDescriptionsVisible = useCallback(async (isVisible: boolean) => {
+    try {
+      await updateProfile({
+        id: profileData?.profile?.id,
+        nftsDescriptionsVisible: isVisible
+      });
+    } catch (err) {
+      console.log('error while saving profile: ', err);
+      toast.error('Error while saving profile.');
+    }
+  }, [updateProfile, profileData]);
+
   const setHidden: (
     nfts: PartialDeep<Nft>[], hidden: boolean
   ) => PartialDeep<DetailedNft>[] = (
@@ -458,6 +486,8 @@ export function ProfileContextProvider(
     },
     draftDisplayType,
     setDraftDisplayType,
+    setLayoutType,
+    setDescriptionsVisible,
     draftLayoutType,
     setDraftLayoutType,
     toggleHidden,

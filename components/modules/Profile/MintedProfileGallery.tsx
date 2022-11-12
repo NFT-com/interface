@@ -4,6 +4,7 @@ import { Switch } from 'components/elements/Switch';
 import { ProfileDisplayType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { createNftOwnerMap } from 'utils/createNftOwnerMap';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -84,7 +85,7 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           }}
         />
       </Modal>
-      {selectedCollection == null &&
+      {selectedCollection == null && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
         <div className={tw(
           'flex items-center w-full justify-between text-white',
           editMode ? '' : 'mb-3')}>
