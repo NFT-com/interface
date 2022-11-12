@@ -219,7 +219,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
             <div ref={resultsRef}>
               <DynamicResultsDropDown
                 isHeader={isHeader}
-                extraClasses={'mt-8'}
+                extraClasses={'mt-4'}
                 searchResults={searchResults}
                 resultTitleOnClick={() => {
                   setSearchModalOpen(false);

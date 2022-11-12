@@ -2,6 +2,7 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
+import { Image } from 'phosphor-react';
 
 interface ResultsDropDownProps {
   isHeader?: any;
@@ -17,34 +18,34 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
 
   const resultTitle = (found, collectionName) => {
     let title = '';
-    
+
     if (found < 1 && collectionName !== '')
       title = 'O ' + collectionName?.toUpperCase();
     else if (found > 3) {
-      title = 'TOP 3 ' + collectionName?.toUpperCase();
+      title = collectionName?.toUpperCase();
     } else {
       title = found + ' ' + collectionName?.toUpperCase();
     }
-    
+
     return (
       <div className={tw(
         `flex justify-${found > 0 ? 'between' : 'start'}`,
-        'text-xs text-blog-text-reskin font-medium bg-gray-200 py-3 px-5')}>
-        <span>{title}</span>
+        'text-lg text-blog-text-reskin font-medium py-3 px-8')}>
+        <span className="text-[#B2B2B2]">{title}</span>
         <span
-          className="cursor-pointer hover:font-semibold"
+          className="cursor-pointer hover:font-semibold underline text-black"
           onClick={() => {
             router.push(`/app/discover/${collectionName}/${keyword}`);
             setDropDownSearchResults([], '');
             resultTitleOnClick && resultTitleOnClick(collectionName);
           }}
         >
-          {found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}
+          See All
+          {/*{found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}*/}
         </span>
       </div>
     );
   };
-      
   const ResultsContent = (searchResults) => {
     return searchResults && searchResults.length > 0 && searchResults.map((item, index) => {
       return (
@@ -62,10 +63,10 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                     key={index}>
                     <div
                       className={tw(
-                        'px-5',
-                        'items-start my-1 py-3 w-full',
+                        'px-8',
+                        'items-start py-1 w-full',
                         'text-sm font-semibold text-black',
-                        'whitespace-nowrap text-ellipsis overflow-hidden')}
+                        'flex justify-start items-center whitespace-nowrap text-ellipsis overflow-hidden')}
                       onClick={() => {
                         if (!hit.document.nftName) {
                           router.push(`/app/collection/${hit.document.contractAddr}/`);
@@ -75,7 +76,9 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                         setDropDownSearchResults([], '');
                         itemListOnClick && itemListOnClick(hit.document);
                       }}>
-                      {hit.document.nftName ?? hit.document.contractName}
+
+                      {hit.document.imageURL ? <img className="w-[48px] h-[48px] rounded-[16px] mr-2" src={hit.document.imageURL} alt=""/> : <div className="w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image color={'#B2B2B2'} size={32} /></div>}
+                      <span className="text-base overflow-hidden text-ellipsis whitespace-nowrap font-[500]">{hit.document.nftName ?? hit.document.contractName}</span>
                     </div>
                   </div>
                 );
@@ -85,7 +88,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
       );
     });
   };
-      
+
   return (
     <div
       className={tw(
@@ -97,9 +100,9 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
           (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
             No results found. Please try another keyword.
           </div>) :
-          <div className="py-4">
+          <div className="py-4 rounded-b-2xl shadow-lg">
             {ResultsContent(searchResults)}
-            {isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}
+            {/*{isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}*/}
           </div>
         }
       </>}

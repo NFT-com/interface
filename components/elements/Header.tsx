@@ -183,7 +183,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               'minlg:px-0 minlg:mr-0',
               currentAddress && 'mr-3'
             )}>
-              <div className="hidden minlg:block mr-1">
+              <div className="hidden minlg:block mr-1 w-[351px]">
                 <SearchBar />
               </div>
 
