@@ -252,6 +252,8 @@ export function ProfileContextProvider(
       if ((!editModeNfts || (editModeNfts && editModeNfts.length === 0)) && paginatedAllOwnerNfts.length > 0 ) {
         setEditModeNfts([...allOwnerNftsWithHiddenValue]);
         setPubliclyVisibleNfts([...allOwnerNftsWithHiddenValue.filter(nft => !nft.isHide)]);
+      } else if (afterCursorEditMode !== '' && editModeNfts.length <= paginatedAllOwnerNfts.length ){
+        setEditModeNfts([...paginatedAllOwnerNfts]);
       }
     }
   }, [afterCursorEditMode, allOwnerNfts, editMode, editModeNfts, loadingAllOwnerNfts, paginatedAllOwnerNfts, prevAllOwnerNfts]);
@@ -265,7 +267,7 @@ export function ProfileContextProvider(
          
         if (!showAllNFTsValue && !hideAllNFTsValue) {
           setEditModeNfts([
-            ...(publiclyVisibleNfts || []),// ...setHidden(publiclyVisibleNfts ?? [], false),
+            ...(publiclyVisibleNfts || []),
             ...setHidden(paginatedNotPubliclyVisibleNfts, true)
           ]);
         } else if (showAllNFTsValue && !hideAllNFTsValue) {
