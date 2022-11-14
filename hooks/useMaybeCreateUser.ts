@@ -60,18 +60,27 @@ export function useMaybeCreateUser(): boolean {
           const referredBy = router?.query?.makerReferralCode?.toString() || null;
           const referralUrl = router?.query?.referralUrl?.toString() || null;
           const referralId = router?.query?.receiverReferralCode?.toString() || null;
-          const result = await createUser({
-            avatarURL: null,
-            referredBy: referredBy,
-            referredUrl: referralUrl,
-            referralId: referralId,
-            username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
-            wallet: {
-              address: currentAddress,
-              chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
-              network: 'ethereum',
-            },
-          });
+          const userData = isNullOrEmpty(referredBy) && isNullOrEmpty(referralUrl) && isNullOrEmpty(referralId) ?
+            {
+              username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
+              wallet: {
+                address: currentAddress,
+                chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+                network: 'ethereum',
+              }
+            }
+            : {
+              referredBy: referredBy,
+              referredUrl: referralUrl,
+              referralId: referralId,
+              username: `ethereum-${ethers.utils.getAddress(currentAddress || '')}`,
+              wallet: {
+                address: currentAddress,
+                chainId: String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
+                network: 'ethereum',
+              }
+            };
+          const result = await createUser(userData);
           localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
         } else {
           localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);

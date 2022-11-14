@@ -287,7 +287,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 setSelectedTab('nfts');
               }}
               className={tw(
-                'cursor-pointer text-white text-lg tracking-wide mr-4',
+                'cursor-pointer text-lg tracking-wide mr-4',
                 selectedTab === 'nfts' ? 'text-black' : 'text-secondary-txt'
               )}
             >
