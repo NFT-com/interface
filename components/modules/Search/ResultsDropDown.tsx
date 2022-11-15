@@ -99,8 +99,8 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                           setDropDownSearchResults([], '');
                           itemListOnClick && itemListOnClick(hit.document);
                         }}>
-
-                        {hit.document.imageURL ? <img className="w-[48px] h-[48px] rounded-[16px] mr-2" src={hit.document.imageURL} alt=""/> : <div className="w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image color={'#B2B2B2'} size={32} /></div>}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        {hit.document.imageURL ? <img className="w-[48px] h-[48px] rounded-[16px] mr-2" src={hit.document.imageURL} alt="search image"/> : <div className="w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image alt="preloader" color={'#B2B2B2'} size={32} /></div>}
                         <span className="text-base overflow-hidden text-ellipsis whitespace-nowrap font-[500]">{hit.document.nftName ?? hit.document.contractName}</span>
                       </div>
                     </div>
