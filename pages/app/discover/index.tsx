@@ -1,6 +1,7 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
+import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { SideNav } from 'components/modules/Search/SideNav';
@@ -9,18 +10,12 @@ import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { DiscoverPageProps } from 'types';
+import { Doppler, getEnv } from 'utils/env';
 import { collectionCardImages, getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
-import { FunnelSimple } from 'phosphor-react';
-
-import { CollectionCard } from '../../../components/modules/DiscoveryCards/CollectionCard';
-import { NftCard } from '../../../components/modules/DiscoveryCards/NftCard';
-import { ProfileCard } from '../../../components/modules/DiscoveryCards/ProfileCard';
-import { DiscoveryTabNav } from '../../../components/modules/DiscoveryTabNavigation/DiscoveryTabsNavigation';
-import { Doppler, getEnv } from '../../../utils/env';
 
 import { getCollection } from 'lib/contentful/api';
-import { SlidersHorizontal, X } from 'phosphor-react';
+import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
@@ -30,7 +25,6 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
   const { width: screenWidth } = useWindowDimensions();
   const { usePrevious } = usePreviousValue();
   const [page, setPage] = useState(1);
-  const [tabName, setTabName] = useState('nft');
   const { sideNavOpen, setCuratedCollections, selectedCuratedCollection, curatedCollections, setSelectedCuratedCollection, setSideNavOpen } = useSearchModal();
   const [paginatedAddresses, setPaginatedAddresses] = useState([]);
   const prevSelectedCuratedCollection = usePrevious(selectedCuratedCollection);
@@ -209,7 +203,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
           </div>
         </div>
       </>
-    )
+    );
   }
 }
 

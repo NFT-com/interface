@@ -1,8 +1,8 @@
+import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Check } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
-import {Doppler, getEnv} from "../../utils/env";
 
 export interface CheckBoxProps {
   checked: boolean;
@@ -55,5 +55,4 @@ export function CheckBox(props: CheckBoxProps) {
       </div>
     );
   }
-
 }

@@ -1,6 +1,7 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import DefaultLayout from 'components/layouts/DefaultLayout';
+import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
@@ -14,8 +15,6 @@ import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { collectionCardImages, getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
-
-import { NftCard } from '../../../../components/modules/DiscoveryCards/NftCard';
 
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
@@ -326,13 +325,13 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     onClick={() => { router.push(`/app/discover/nfts/${searchTerm.toString()}`); }}
                   >
                   SEE ALL
-                </span>}
+                  </span>}
                   {searchType?.toString() !== 'allResults' && <span
                     className="cursor-pointer hover:font-semibold font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black "
                     onClick={() => { router.push(`/app/discover/allResults/${searchTerm.toString()}`); }}
                   >
                   SEE ALL COLLECTIONS AND NFTS RESULTS
-                </span>}
+                  </span>}
                 </div>
                 {<div className={tw(
                   'cursor-pointer my-6 mb-4 flex minlg:hidden',
@@ -356,9 +355,9 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     const collectionImages = nftsForCollections?.filter(i => i.collectionAddress === item.document.contractAddr);
                     return (
                       <div key={index}
-                           className={tw(
-                             'DiscoverCollectionItem',
-                             searchType?.toString() === 'collections' ? 'min-h-[10.5rem]' : '')}
+                        className={tw(
+                          'DiscoverCollectionItem',
+                          searchType?.toString() === 'collections' ? 'min-h-[10.5rem]' : '')}
                       >
                         {searchType?.toString() === 'collections' ?
                           nftsForCollections

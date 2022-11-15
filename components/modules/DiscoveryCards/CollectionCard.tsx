@@ -1,6 +1,6 @@
-import { useCollectionQuery } from '../../../graphql/hooks/useCollectionQuery';
-import { Doppler, getEnv } from '../../../utils/env';
-import {checkImg, processIPFSURL, sliceString} from '../../../utils/helpers';
+import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { Doppler, getEnv } from 'utils/env';
+import { checkImg, sliceString } from 'utils/helpers';
 
 import { useState } from 'react';
 import { useNetwork } from 'wagmi';
@@ -29,6 +29,7 @@ export function CollectionCard(props: CollectionCardProps) {
   return (
     <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="block hover:scale-105 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p">
       <div className="h-44 relative ">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="w-[100%] object-cover h-[100%]" src={checkImg(props.imgUrl)} alt="Image"/>
         {/*<div className="absolute w-[48px] h-[48px] bg-[rgba(0,0,0,0.70)] rounded-[50%] top-3 right-2"></div>*/}
       </div>
