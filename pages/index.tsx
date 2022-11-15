@@ -322,13 +322,13 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
                   'mx-[1.8rem] -my-[.5rem]',
                   'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.heroNfTsCollection?.items[0]?.url} alt="" />
+                )} src={data_v2?.heroNfTsCollection?.items[0]?.url} alt="NFT image" />
                 <br />
                   NFT<img className={tw(
                   'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
                   'mx-[1.8rem] -my-[.5rem]',
                   'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="" />
+                )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="NFT image" />
                 <span data-aos="fade-left" data-aos-delay="200"
                   className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>Identity</span></h2>
 
@@ -440,7 +440,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   'drop-shadow-md inline-block w-[2.5rem] minxxl:w-[5.5rem]',
                   'mx-[0.4em] -my-[0.7rem]',
                   'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.wycdTitleNfTs?.url} alt="" />
+                )} src={data_v2?.wycdTitleNfTs?.url} alt="NFT image" />
                 <span className='block transform-gpu bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
 
               <div id='anim-profile-content' className={tw(
@@ -541,7 +541,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                           <div className='flex'>
                             {data_v2?.wycdBlock2Row1NftsCollection?.items.map((image, index) =>
                               <div key={index} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px]'>
-                                <img src={image.url} className='rounded-full w-full' alt="" />
+                                <img src={image.url} className='rounded-full w-full' alt="NFT image" />
                               </div>
                             )}
                           </div>
@@ -555,7 +555,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                           <div className='flex'>
                             {data_v2?.wycdBlock2Row2NftsCollection?.items.map((image, index) =>
                               <div key={index} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px]'>
-                                <img src={image.url} className='rounded-full w-full' alt="" />
+                                <img src={image.url} className='rounded-full w-full' alt="NFT image" />
                               </div>
                             )}
                           </div>
@@ -587,7 +587,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     'inline-block w-[0.833em] minxxl:w-[5.5rem]',
                     'mx-[0.45em] -mt-[.75rem] -mb-[.4rem]',
                     'rotate-[40deg] rounded-xl'
-                  )} src={data_v2?.discoverTitleNfTs.url} alt="" />a
+                  )} src={data_v2?.discoverTitleNfTs.url} alt="NFT image" />a
                 </span>
                 <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40 transform-gpu'>New World</span>
               </h2>
@@ -645,7 +645,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                 'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
               )}>
-                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock1Image?.url} alt="" />
+                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock1Image?.url} alt="Claim your profile" />
                 <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock1Title}</h3>
                 <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock1Description}</p>
               </div>
@@ -654,7 +654,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                 'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
               )}>
-                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock2Image?.url} alt="" />
+                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock2Image?.url} alt="Display your collection" />
                 <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock2Title}</h3>
                 <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock2Description}</p>
               </div>
@@ -663,7 +663,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                 'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
               )}>
-                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock3Image?.url} alt="" />
+                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock3Image?.url} alt="Discover your community" />
                 <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock3Title}</h3>
                 <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock3Description}</p>
               </div>
@@ -749,7 +749,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                             'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
                           )}>
                             <div className='before:pb-[54.129%] before:block relative overflow-hidden'>
-                              <img className='absolute top-0 w-full rounded-t-lg' src={preview.heroImage?.url} alt="" />
+                              <img className='absolute top-0 w-full rounded-t-lg' src={preview.heroImage?.url} alt={preview.title} />
                             </div>
 
                             <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
@@ -761,7 +761,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                                 <img className={tw(
                                   'rounded-full mr-[6px] minlg:mr-3 block object-cover',
                                   'h-5 minlg:h-9 minxxl:h-12 w-5 minlg:w-9 minxxl:w-12'
-                                )} src={preview.author?.image?.url} alt="" />
+                                )} src={preview.author?.image?.url} alt={`Image for author, ${preview.author?.name}`} />
                                 {preview.author?.name}
                               </div>
                             </div>
@@ -889,7 +889,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                       'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
                       '-mt-9 minlg:-mt-7 mx-[.4em]',
                       'rotate-[40deg] rounded-xl',
-                    )} src={data_v2?.bynpTitleNfTsCollection.items[0].url} alt="" />
+                    )} src={data_v2?.bynpTitleNfTsCollection.items[0].url} alt="NFT image" />
                     Your</span>
                   <span id='anim-build-profile-ttl-2' data-aos="fade-up" data-aos-delay="200" className={tw(
                     'block minlg:pl-12 minxl:pl-24 minlg:-mr-24 ',
@@ -899,7 +899,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                       'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
                       'minlg:-mt-7 mx-[.4em]',
                       'rotate-[40deg] rounded-xl',
-                    )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="" />
+                    )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="NFT image" />
                       Profile
                   </span>
                 </h2>
