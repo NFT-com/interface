@@ -1,6 +1,13 @@
+import {processIPFSURL} from "../../../utils/helpers";
+
 export interface NftCardProps {
   name: string,
+  images: any,
   collectionName: string,
+  redirectTo: string,
+  description: string,
+  customBackground: string,
+  lightModeForced: boolean,
   price: string,
   secondPrice: string,
   ednDay: string,
@@ -9,11 +16,12 @@ export interface NftCardProps {
 
 export function NftCard(props: NftCardProps) {
   return (
-    <div className="group/ntfCard transition-all cursor-pointer m-2 rounded-[16px] shadow-lg overflow-hidden cursor-p w-[264px] h-[442px]">
+    <div className="group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p h-[442px]">
+      <a  href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} >
       <div className="relative h-[252px] object-cover">
         <img
           className="w-[100%] h-[100%]"
-          src="https://www.cnet.com/a/img/resize/c5b48e90abe8b7fe339fc0139f3834dbe434fee5/hub/2021/11/29/f566750f-79b6-4be9-9c32-8402f58ba0ef/richerd.png?auto=webp&width=1200"
+          src={processIPFSURL(props.images)}
           alt=""/>
         <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
           <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
@@ -27,7 +35,7 @@ export function NftCard(props: NftCardProps) {
           className="h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
           <li className="list-none p-0 m-[0]">{props.name}</li>
           <li
-            className="text-[16px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0]">{props.collectionName}</li>
+            className="text-[16px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
         </ul>
         {
           props.isOnSale
@@ -49,6 +57,7 @@ export function NftCard(props: NftCardProps) {
             )
         }
       </div>
+      </a>
     </div>
   );
 }

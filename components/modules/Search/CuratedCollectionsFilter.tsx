@@ -12,15 +12,15 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
   const router = useRouter();
 
   return (
-    <div className="pb-4 border-b-[1px] border-[#F2F2F2]">
+    <div className="pb-[10px] border-b-[1px] border-[#F2F2F2]">
       <div className="flex justify-between items-center">
-        <span className="text-black text-[1.4rem] minlg:text-lg font-medium">Curated Collections</span>
+        <span className="text-[#4D4D4D] minlg:text-md font-medium">Curated Collections</span>
         <div
           onClick={() => { setIsFilterCollapsed(!isFilterCollapsed); }}
           className="cursor-pointer font-grotesk font-bold text-link-yellow ">
           {/*{isFilterCollapsed ? 'Expand' : 'Collapse'}*/}
           <CaretUp
-            color='#000'
+            color='#4D4D4D'
             className={tw('cursor-pointer transition-transform font-bold', isFilterCollapsed ? 'rotate-180' : '')}
           />
         </div>

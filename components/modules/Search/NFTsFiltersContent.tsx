@@ -8,6 +8,7 @@ import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useCallback, useEffect, useState } from 'react';
 import { Minus,Plus } from 'react-feather';
+import {CaretUp} from "phosphor-react";
 
 interface FilterOptionProps {
   fieldName?: string,
@@ -30,7 +31,11 @@ const FilterOption = (props: FilterOptionProps) => {
   },[clearedFilters]);
 
   return (
-    <div className="flex items-startfont-grotesk">
+    <div className="flex items-center justify-between">
+      <div className="flex flex-col">
+        <div className="text-base text-black">{item.value}</div>
+        <div className="text-blog-text-reskin text-[0.65rem] self-start">{item.count}</div>
+      </div>
       <CheckBox
         checked={!clearedFilters && selected}
         onToggle={(selected: boolean) => {
@@ -39,10 +44,6 @@ const FilterOption = (props: FilterOptionProps) => {
           setClearedFilters(false);
         }}
       />
-      <div className="flex flex-col ml-2">
-        <div className="text-[0.85rem]">{item.value}</div>
-        <div className="text-blog-text-reskin text-[0.65rem] self-start">{item.count}</div>
-      </div>
     </div>
   );
 };
@@ -63,24 +64,26 @@ const ContractNameFilter = (props: any) => {
   return (
     <div className="mt-3">
       {filterOptions.length > 1 && <div className={tw(
-        'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black bg-gray-200')}>
-        <SearchIcon className='mr-2 shrink-0 aspect-square' />
-        <div className="w-full">
-          <input
-            type="search"
-            placeholder="Search"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck="false"
-            autoFocus
-            value={searchVal}
-            required maxLength={512}
-            className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
-            onChange={(event) => setSearchVal(event.target.value)}/>
+        'relative flex items-center border-2 border-[#fff2b8] rounded-[48px] w-full text-black bg-white mb-3')}>
+        <div className="border-2 border-[#F9D54C] w-full h-full rounded-[46px] flex items-center justify-start px-3">
+          <SearchIcon className='mr-2 shrink-0 aspect-square' />
+          <div className="w-full">
+            <input
+              type="search"
+              placeholder="Search"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+              autoFocus
+              value={searchVal}
+              required maxLength={512}
+              className="h-[48px] bg-inherit w-full border-none focus:outline-0  focus:outline-amber-500 focus:ring-0 p-0"
+              onChange={(event) => setSearchVal(event.target.value)}/>
+          </div>
         </div>
       </div>}
-      <div className="overflow-y-scroll max-h-[12.5rem] filter-scrollbar">
+      <div className="overflow-y-scroll pr-2 max-h-[12.5rem] filter-scrollbar">
         {filteredContracts.map((item, index) => {
           return (
             item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
@@ -104,9 +107,9 @@ const Filter = (props: any) => {
   const { filter, setCheckedFilters, clearedFilters, setClearedFilters } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const [isCollapsing, setIsCollapsing] = useState(false);
-  
+
   const { checkedArray } = useSearchModal();
-  
+
   const formatTitle = (title) => {
     switch(title){
     case 'listedPx':
@@ -123,22 +126,26 @@ const Filter = (props: any) => {
   };
 
   const checkedInfo = checkedArray.filter(i => i.fieldName === filter.field_name);
-  
+
   useEffect(() => {
     checkedInfo.length > 0 && checkedInfo[0]?.selectedCheck !== '' && !isCollapsing && setIsFilterCollapsed(false);
   }, [checkedInfo, isCollapsing]);
 
   return (
-    <div className="my-6 px-4">
+    <div className="pb-4 border-b-[1px] border-[#F2F2F2] py-4 text-[#4D4D4D]">
       <div
         onClick={() => {
           setIsFilterCollapsed(!isFilterCollapsed);
           setIsCollapsing(true);
         }}
-        className="flex justify-between cursor-pointer">
-        <div className="font-black text-base font-grotesk">{formatTitle(filter.field_name)}</div>
-        {!isFilterCollapsed && <Minus className="h-4 w-4"/>}
-        {isFilterCollapsed && <Plus className="h-4 w-4"/>}
+        className="flex justify-between items-center cursor-pointer">
+        <div className="font-black text-base font-grotesk font-[600]">{formatTitle(filter.field_name)}</div>
+        <CaretUp
+          color='#4D4D4D'
+          className={tw('cursor-pointer transition-transform font-bold', isFilterCollapsed ? 'rotate-180' : '')}
+        />
+        {/*{!isFilterCollapsed && <Minus className="h-4 w-4"/>}*/}
+        {/*{isFilterCollapsed && <Plus className="h-4 w-4"/>}*/}
       </div>
       <motion.div
         animate={{
@@ -232,14 +239,14 @@ export const NFTsFiltersContent = () => {
             }
           })}
         </div>
-        <div
-          onClick={ () => {
-            setClearedFilters(true);
-            setResultsPageAppliedFilters('', '','', []);
-          }}
-          className="px-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">
-          Clear filters
-        </div>
+        {/*<div*/}
+        {/*  onClick={ () => {*/}
+        {/*    setClearedFilters(true);*/}
+        {/*    setResultsPageAppliedFilters('', '','', []);*/}
+        {/*  }}*/}
+        {/*  className="border-b-[1px] border-[#F2F2F2] py-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">*/}
+        {/*  Clear filters*/}
+        {/*</div>*/}
         <div className="px-4 minlg:px-0 minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
           <Button
             color={'black'}

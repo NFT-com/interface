@@ -46,12 +46,12 @@ export function CollectionCard(props: CollectionCardProps) {
     return convertedImages[0];
   };
   return (
-    <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="hover:scale-105 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p">
-      <div className="h-[182px] relative ">
+    <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="block hover:scale-105 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p">
+      <div className="h-44 relative ">
         <img className="w-[100%] object-cover h-[100%]" src={checkImg(props.imgUrl)} alt="Image"/>
         {/*<div className="absolute w-[48px] h-[48px] bg-[rgba(0,0,0,0.70)] rounded-[50%] top-3 right-2"></div>*/}
       </div>
-      <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-[205px]">
+      <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem">
         <div className="border-b-[1px] border-[#F2F2F2] pb-[11px] mb-[16px]">
           <div className="flex justify-between items-start">
             <span className="pr-[10px] text-xl leading-7 text-[#000000] font-[600]">{collectionName}</span>

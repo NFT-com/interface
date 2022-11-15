@@ -17,9 +17,10 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
-import { FunnelSimple } from 'phosphor-react';
+import { FunnelSimple, SlidersHorizontal, X } from 'phosphor-react';
 import { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
+import {NftCard} from '../../../../components/modules/DiscoveryCards/NftCard';
 
 function usePrevious(value) {
   const ref = useRef(value);
@@ -149,26 +150,26 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }, [addressesList, fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
 
   return (
-    <div className="mt-20 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
+    <div className="mt-7 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
       <div className="w-full min-h-disc px-2 minlg:px-0">
-        <div className="flex flex-col mt-6 minmd:px-4 minxl:px-0">
-          <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>
-          <div>
-            <div className="text-3xl minlg:text-4xl font-semibold pt-1">
-              <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>
-            </div>
-          </div>
-        </div>
+        {/*<div className="flex flex-col mt-6 minmd:px-4 minxl:px-0">*/}
+        {/*  <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>*/}
+        {/*  <div>*/}
+        {/*    <div className="text-3xl minlg:text-4xl font-semibold pt-1">*/}
+        {/*      <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
         <div
-          className={tw(
-            'hidden minlg:block cursor-pointer max-w-[18rem] text-base mt-9 mb-6',
-            'bg-white text-[#1F2127] font-grotesk font-bold p-1 rounded-xl',
-            'flex items-center justify-center border border-[#D5D5D5] minmd:mx-4 minxl:mx-0')}
+          className='block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
           onClick={() => setSideNavOpen(!sideNavOpen)}>
           {sideNavOpen ?
-            <div className="flex items-center justify-center">Close Filters</div> :
-            <div className="flex items-center justify-center">
-              <FunnelSimple color='#1F2127' className='h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7'/>
+            <div className="flex items-center justify-center bg-[#F2F2F2] text-[#6A6A6A] py-3 px-5 text-lg rounded-[48px]">
+              Filters
+              <X size={22} className="text-[#6A6A6A] ml-2" />
+            </div> :
+            <div className="flex items-center justify-center bg-black text-white py-3 px-5 text-lg rounded-[48px]">
+              <SlidersHorizontal size={22} className="mr-2"/>
               <p>Filter</p>
             </div>
           }
@@ -180,25 +181,25 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           <div className="flex-auto minmd:px-4 minxl:px-0">
             <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>
             <div className="mt-5 minlg:mt-0">
-              {/*{searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) &&*/}
-              {/*  <CollectionsResults searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}*/}
-              {/*<div className="flex justify-between items-center mt-7 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">*/}
-              {/*  <div>*/}
-              {/*    {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'COLLECTION') + `${found.current === 1 ? '' : 'S'}`}*/}
-              {/*  </div>*/}
-              {/*  {searchType?.toString() === 'allResults' && <span*/}
-              {/*    className="cursor-pointer hover:font-semibold"*/}
-              {/*    onClick={() => { router.push(`/app/discover/nfts/${searchTerm.toString()}`); }}*/}
-              {/*  >*/}
-              {/*    SEE ALL*/}
-              {/*  </span>}*/}
-              {/*  {searchType?.toString() !== 'allResults' && <span*/}
-              {/*    className="cursor-pointer hover:font-semibold font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black "*/}
-              {/*    onClick={() => { router.push(`/app/discover/allResults/${searchTerm.toString()}`); }}*/}
-              {/*  >*/}
-              {/*    SEE ALL COLLECTIONS AND NFTS RESULTS*/}
-              {/*  </span>}*/}
-              {/*</div>*/}
+              {searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) &&
+                <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
+              <div className="flex justify-between items-center mt-12 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
+                <div className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium">
+                  {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'Nft' : 'Collection') + `${found.current === 1 ? '' : 's'}`}
+                </div>
+                {searchType?.toString() === 'allResults' && <span
+                  className="cursor-pointer hover:font-semibold underline text-black text-lg"
+                  onClick={() => { router.push(`/app/discover/nfts/${searchTerm.toString()}`); }}
+                >
+                  See All
+                </span>}
+                {searchType?.toString() !== 'allResults' && <span
+                  className="cursor-pointer hover:font-semibold underline text-black text-lg"
+                  onClick={() => { router.push(`/app/discover/allResults/${searchTerm.toString()}`); }}
+                >
+                  SEE ALL COLLECTIONS AND NFTS RESULTS
+                </span>}
+              </div>
               {<div className={tw(
                 'cursor-pointer my-6 mb-4 flex minlg:hidden',
                 'justify-center bg-white text-[#1F2127]',
@@ -215,7 +216,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               </div>}
               <div className={tw(
                 'mt-4',
-                searchType?.toString() === 'collections' ? `minmd:grid minmd:grid-cols-2 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : 'minlg:grid-cols-3 minxl:grid-cols-4'}` : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-3 minxl:grid-cols-3' : 'minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-4'} `,
+                searchType?.toString() === 'collections' ? `minmd:grid minmd:grid-cols-2 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : 'minlg:grid-cols-3 minxl:grid-cols-4'}` : `grid grid-cols-2 ${sideNavOpen ? 'minmd:grid-cols-4 minxl:grid-cols-4' : 'minmd:grid-cols-5 minlg:grid-cols-5 minxl:grid-cols-5'} `,
                 searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5')}>
                 {results && results.current.map((item, index) => {
                   const collectionImages = nftsForCollections?.filter(i => i.collectionAddress === item.document.contractAddr);
@@ -240,15 +241,24 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             </div>
                             <span className="sr-only">Loading...</span>
                           </div>:
-                        <NFTCard
-                          title={item.document.nftName}
-                          images={[item.document.imageURL]}
-                          collectionName={item.document.contractName}
-                          redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                          description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-                          customBackground={'white'}
-                          lightModeForced
-                        />}
+                          <NftCard
+                            name={item.document.nftName}
+                            images={[item.document.imageURL]}
+                            collectionName={item.document.contractName}
+                            redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+                            description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
+                            customBackground={'white'}
+                            lightModeForced/>
+                        // <NFTCard
+                        //   title={item.document.nftName}
+                        //   images={[item.document.imageURL]}
+                        //   collectionName={item.document.contractName}
+                        //   redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
+                        //   description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
+                        //   customBackground={'white'}
+                        //   lightModeForced
+                        // />
+                      }
                     </div>);
                 })}
               </div>
