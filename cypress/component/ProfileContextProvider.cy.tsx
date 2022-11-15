@@ -180,7 +180,7 @@ describe('ProfileContextProvider', () => {
     cy.findByText('clearDrafts').click();
     cy.get('#draftHeaderImg').should('have.text', JSON.stringify({ preview: '', raw: null }));
     cy.get('#draftProfileImg').should('have.text', JSON.stringify({ preview: '', raw: null }));
-    cy.get('#draftBio').should('have.text', '');
+    cy.get('#draftBio').should('have.text', 'NFT.com profile for test');
     cy.get('#draftDisplayType').should('have.text', 'NFT');
     cy.get('#draftLayoutType').should('have.text', 'null');
   });
