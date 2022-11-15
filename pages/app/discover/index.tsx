@@ -124,7 +124,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
 
   return(
     <>
-      <div className="minmd:p-16 minmd:m-0 p-16 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
+      <div className="sm:p-2  md:p-4  lg:p-8  xl:p-16  minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
         <div className="flex">
           {/*minlg:ml-6*/}
           <div className=" w-full min-h-disc">
@@ -135,7 +135,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                 {/*</div>*/}
                 <div className={tw(
                   'gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-                  !sideNavOpen ? 'minxl:grid-cols-2': 'minlg:grid-cols-2 minmd:grid-cols-1 minxl:grid-cols-3')}>
+                  !sideNavOpen ? 'minxl:grid-cols-2': 'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4')}>
                   {paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.map((collection, index) => {
                     return (
                       <CollectionCard

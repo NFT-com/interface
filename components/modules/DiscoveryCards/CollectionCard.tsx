@@ -22,6 +22,8 @@ export interface CollectionCardProps {
 
 export function CollectionCard(props: CollectionCardProps) {
   const { chain } = useNetwork();
+  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+
   const [isStringCut, toggleStringLength] = useState(false);
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract);
   const collectionName = collection?.collection?.name ?? props.contractName;
@@ -54,7 +56,7 @@ export function CollectionCard(props: CollectionCardProps) {
       <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem">
         <div className="border-b-[1px] border-[#F2F2F2] pb-[11px] mb-[16px]">
           <div className="flex justify-between items-start">
-            <span className="pr-[10px] text-xl leading-7 text-[#000000] font-[600]">{collectionName}</span>
+            <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600] max-w-[60%]">{collectionName}</span>
             <button className="bg-white pl-2 pr-[12px] py-[6px] flex items-center shadow-lg rounded-[16px] text-base leading-6 text-[#000000] font-[400] ">
               <div className="w-6 h-6 bg-black rounded-[50%] mr-[6px]"></div>
               <span className="text-ellipsis overflow-hidden block max-w-[100px] min-w-[100px] whitespace-nowrap">{props.userName}</span>
