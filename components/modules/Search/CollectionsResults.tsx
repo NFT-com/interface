@@ -34,7 +34,7 @@ const data = [
     imgUrl: ['https://nft-llc.mypinata.cloud/ipfs/QmQPwqyQcCkxMnjYCBodvCmr1yKj3jbdz7GePvNFN2Saj1']
   },
 ];
-export const CollectionsResults = (props: {searchTerm: string, found: number, nftsForCollections: any, sideNavOpen: boolean}) => {
+export const CollectionsResults = (props: {searchTerm?: string, found?: number, nftsForCollections?: any, sideNavOpen?: boolean}) => {
   const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const { searchTerm, found, nftsForCollections } = props;
