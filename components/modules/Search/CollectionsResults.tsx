@@ -44,7 +44,6 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
     return data.slice(0, props.sideNavOpen ? 2 : 3).map(collection => {
       return (
         <CollectionCard
-          // key={1}
           redirectTo={collection.redirectTo}
           contractAddress={collection.contractAddress}
           contract={collection.contract}
@@ -52,6 +51,7 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
           description={collection.description}
           countOfElements={collection.countOfElements}
           imgUrl={collection.imgUrl}
+          maxSymbolsInString={180}
           />
       )
     })

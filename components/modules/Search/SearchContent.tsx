@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useEffect, useRef, useState } from 'react';
+import {Doppler, getEnv} from "../../../utils/env";
 
 const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof StaticResultsDropDown>>(() => import('components/modules/Search/ResultsDropDown').then(mod => mod.ResultsDropDown));
 
@@ -21,6 +22,8 @@ interface SearchContentProps {
 }
 
 export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchContentProps) => {
+  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [inputFocus, setInputFocus] = useState(false);
@@ -168,7 +171,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
                 ref={resultsRef}>
                 <DynamicResultsDropDown
                   isHeader={isHeader}
-                  extraClasses={'mt- minmd:left-6 shadow-lg z-[111]'}
+                  extraClasses={'mt-8 minmd:left-6 shadow-lg z-[111]'}
                   searchResults={searchResults}
                   resultTitleOnClick={() => {
                     setSearchModalOpen(false);
@@ -227,7 +230,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
             <div ref={resultsRef}>
               <DynamicResultsDropDown
                 isHeader={isHeader}
-                extraClasses={'mt-4'}
+                extraClasses={discoverPageEnv ? 'mt-4' : 'mt-8'}
                 searchResults={searchResults}
                 resultTitleOnClick={() => {
                   setSearchModalOpen(false);

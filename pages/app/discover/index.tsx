@@ -103,6 +103,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                           userName={collection.nfts[0].metadata.name}
                           description={collection.nfts[0].metadata.description}
                           countOfElements={collection.actualNumberOfNFTs}
+                          maxSymbolsInString={180}
                           imgUrl={collectionCardImages(collection)}/>
                         // <div key={index} className="DiscoverCollectionItem mb-2 min-h-[10.5rem]">
                         //   <CollectionItem

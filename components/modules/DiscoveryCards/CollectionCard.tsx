@@ -1,15 +1,14 @@
 import { useCollectionQuery } from '../../../graphql/hooks/useCollectionQuery';
 import { Doppler, getEnv } from '../../../utils/env';
-import { processIPFSURL } from '../../../utils/helpers';
+import {checkImg, processIPFSURL, sliceString} from '../../../utils/helpers';
 
 import { useState } from 'react';
 import { useNetwork } from 'wagmi';
 
-const MAX_COUNT = 180;
 export interface CollectionCardProps {
   contract: string
   title: string;
-  countOfElements: number;
+  countOfElements: any;
   contractAddress: any;
   contractName: string;
   description: string;
@@ -18,35 +17,15 @@ export interface CollectionCardProps {
   isVerified: boolean;
   redirectTo: string;
   imgUrl: any;
+  maxSymbolsInString: number;
 }
 
 export function CollectionCard(props: CollectionCardProps) {
   const { chain } = useNetwork();
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const [isStringCut, toggleStringLength] = useState(false);
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract);
   const collectionName = collection?.collection?.name ?? props.contractName;
-  const sliceString = (description: string) => {
-    if(!description) return;
-    let newDescription;
-    if(description?.length > MAX_COUNT){
-      const newString = description?.slice(0, !isStringCut ? MAX_COUNT : description?.length);
-      newDescription = !isStringCut ? `${newString}...` : newString;
-    }else {
-      newDescription = description;
-    }
-    return newDescription;
-  };
-  const checkImg = (images) => {
-    if(!images) return;
-    const convertedImages = images.map(image => {
-      if(image){
-        return processIPFSURL(image);
-      }
-    }).filter(Boolean);
-    return convertedImages[0];
-  };
+
   return (
     <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="block hover:scale-105 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p">
       <div className="h-44 relative ">
@@ -70,9 +49,9 @@ export function CollectionCard(props: CollectionCardProps) {
           props.description && (
             <div onClick={(event) => event.preventDefault()} className="leading-[23.2px] text-[#959595] font-[400]">
               <p className="text-base">
-                {sliceString(props.description)}
+                {sliceString(props.description, props.maxSymbolsInString, isStringCut)}
                 {
-                  props.description.length > MAX_COUNT && (
+                  props.description.length > props.maxSymbolsInString && (
                     <button onClick={() => toggleStringLength(!isStringCut)} className="text-[#000000] font-[600] ml-[5px]">{isStringCut ? 'less' : 'more'}</button>
                   )
                 }
