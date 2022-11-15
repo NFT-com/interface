@@ -252,7 +252,7 @@ export function ProfileContextProvider(
       if ((!editModeNfts || (editModeNfts && editModeNfts.length === 0)) && paginatedAllOwnerNfts.length > 0 ) {
         setEditModeNfts([...allOwnerNftsWithHiddenValue]);
         setPubliclyVisibleNfts([...allOwnerNftsWithHiddenValue.filter(nft => !nft.isHide)]);
-      } else if (afterCursorEditMode !== '' && editModeNfts.length < paginatedAllOwnerNfts.length ){;
+      } else if (afterCursorEditMode !== '' && editModeNfts.length < paginatedAllOwnerNfts.length ){
         const paginatedNotPubliclyVisibleNfts = paginatedAllOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [];
         setEditModeNfts([...(publiclyVisibleNfts || []),...paginatedNotPubliclyVisibleNfts]);
       }
