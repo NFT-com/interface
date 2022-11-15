@@ -54,7 +54,7 @@ export function getEnv(name: Doppler): any {
   case Doppler.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED: return process.env.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED;
   case Doppler.NEXT_PUBLIC_ENV: return process.env.NEXT_PUBLIC_ENV;
   case Doppler.NEXT_PUBLIC_FORCE_DARK_MODE: return process.env.NEXT_PUBLIC_FORCE_DARK_MODE;
-  case Doppler.NEXT_PUBLIC_GA_ENABLED: return true;
+  case Doppler.NEXT_PUBLIC_GA_ENABLED: return process.env.NEXT_PUBLIC_GA_ENABLED;
   case Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: return process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
   case Doppler.NEXT_PUBLIC_GRAPHQL_URL: return process.env.NEXT_PUBLIC_GRAPHQL_URL;
   case Doppler.NEXT_PUBLIC_INDEXER_ENABLED: return process.env.NEXT_PUBLIC_INDEXER_ENABLED;
