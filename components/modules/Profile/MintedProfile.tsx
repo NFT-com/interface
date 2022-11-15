@@ -55,7 +55,7 @@ export function MintedProfile(props: MintedProfileProps) {
     publiclyVisibleNfts,
     loading,
     draftDeployedContractsVisible,
-    saveProfile
+    saveProfileImage
   } = useContext(ProfileContext);
 
   const { address: currentAddress } = useAccount();
@@ -90,6 +90,17 @@ export function MintedProfile(props: MintedProfileProps) {
   const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
+
+  const onDropImage = (files: Array<any>, type: string) => {
+    if (files.length > 1) {
+      alert('only 1 picture is allowed at a time');
+    } else {
+      saveProfileImage({
+        preview: URL.createObjectURL(files[0]),
+        raw: files[0]
+      }, type);
+    }
+  };
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -99,7 +110,6 @@ export function MintedProfile(props: MintedProfileProps) {
         preview: URL.createObjectURL(files[0]),
         raw: files[0],
       });
-      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && saveProfile();
     }
   };
 
@@ -111,7 +121,6 @@ export function MintedProfile(props: MintedProfileProps) {
         preview: URL.createObjectURL(files[0]),
         raw: files[0],
       });
-      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && saveProfile();
     }
   };
   if (
@@ -143,7 +152,9 @@ export function MintedProfile(props: MintedProfileProps) {
                 disabled={!userIsAdmin}
                 accept={'image/*' ['.*']}
                 onDrop={files => {
-                  if (userIsAdmin) {
+                  if(getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin) {
+                    onDropImage(files, 'banner');
+                  } else if (userIsAdmin) {
                     onDropHeader(files);
                   }
                 }}
@@ -210,7 +221,9 @@ export function MintedProfile(props: MintedProfileProps) {
                 accept={'image/*' ['.*']}
                 disabled={!userIsAdmin || !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !editMode || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !isOwnerAndSignedIn}
                 onDrop={files => {
-                  if (userIsAdmin) onDropProfile(files);
+                  if(getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin) {
+                    onDropImage(files, 'profile');
+                  } else if (userIsAdmin) onDropProfile(files);
                 }}
               >
                 {({ getRootProps, getInputProps }) => (
