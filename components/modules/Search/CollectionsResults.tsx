@@ -5,6 +5,7 @@ import router from 'next/router';
 import {collectionCardImages} from "../../../utils/helpers";
 import {CollectionCard} from "../DiscoveryCards/CollectionCard";
 import {tw} from "../../../utils/tw";
+import {Doppler, getEnv} from "../../../utils/env";
 const data = [
   {
     redirectTo: '',
@@ -35,6 +36,8 @@ const data = [
   },
 ]
 export const CollectionsResults = (props: {searchTerm: string, found: number, nftsForCollections: any, sideNavOpen: boolean}) => {
+  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+
   const { searchTerm, found, nftsForCollections } = props;
   const showCollectionsItems = (collection) => {
     // nftsForCollections
@@ -54,46 +57,49 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
     })
 
   }
-  return(
-    <>
-      <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin mb-7">
-        <span className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium"> {found + ' ' + 'Collection' + `${found === 1 ? '' : 's'}`} </span>
-        <span
-          className="cursor-pointer hover:font-semibold underline text-black text-lg"
-          onClick={() => { router.push(`/app/discover/collections/${searchTerm}`); }}
-        >
+  if(discoverPageEnv){
+    return(
+      <>
+        <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin mb-7">
+          <span className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium"> {found + ' ' + 'Collection' + `${found === 1 ? '' : 's'}`} </span>
+          <span
+            className="cursor-pointer hover:font-semibold underline text-black text-lg"
+            onClick={() => { router.push(`/app/discover/collections/${searchTerm}`); }}
+          >
           See All
         </span>
-      </div>
-      <div className={tw(
-        'gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-        !props.sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-3 minmd:grid-cols-1 minxl:grid-cols-2')}>
-      {showCollectionsItems()}
-      </div>
-      {/*{nftsForCollections && nftsForCollections.length > 0 ?*/}
-      {/*  showCollectionsItems() :*/}
-      {/*  (<div className="flex items-center justify-center min-h-[16rem]">*/}
-      {/*    {found === 0 ? <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>:<Loader />}*/}
-      {/*  </div>)}*/}
-    </>
-  );
+        </div>
+        <div className={tw(
+          'gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+          !props.sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-3 minmd:grid-cols-1 minxl:grid-cols-2')}>
+          {showCollectionsItems()}
+        </div>
+        {/*{nftsForCollections && nftsForCollections.length > 0 ?*/}
+        {/*  showCollectionsItems() :*/}
+        {/*  (<div className="flex items-center justify-center min-h-[16rem]">*/}
+        {/*    {found === 0 ? <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>:<Loader />}*/}
+        {/*  </div>)}*/}
+      </>
+    );
+  }else {
+    return(
+      <>
+        <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin">
+          <span> {found + ' ' + 'COLLECTION' + `${found === 1 ? '' : 'S'}`} </span>
+          <span
+            className="cursor-pointer hover:font-semibold"
+            onClick={() => { router.push(`/app/discover/collections/${searchTerm}`); }}
+          >
+          SEE ALL
+        </span>
+        </div>
+        {nftsForCollections && nftsForCollections.length > 0 ?
+          <CollectionsSlider full slides={nftsForCollections} /> :
+          (<div className="flex items-center justify-center min-h-[16rem]">
+            {found === 0 ? <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>:<Loader />}
+          </div>)}
+      </>
+    );
+  }
 };
 
-// return(
-//   <>
-//     <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin">
-//       <span> {found + ' ' + 'COLLECTION' + `${found === 1 ? '' : 'S'}`} </span>
-//       <span
-//         className="cursor-pointer hover:font-semibold"
-//         onClick={() => { router.push(`/app/discover/collections/${searchTerm}`); }}
-//       >
-//         SEE ALL
-//       </span>
-//     </div>
-//     {nftsForCollections && nftsForCollections.length > 0 ?
-//       <CollectionsSlider full slides={nftsForCollections} /> :
-//       (<div className="flex items-center justify-center min-h-[16rem]">
-//         {found === 0 ? <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>:<Loader />}
-//       </div>)}
-//   </>
-// );
