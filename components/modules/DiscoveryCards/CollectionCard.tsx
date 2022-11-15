@@ -6,18 +6,18 @@ import { useState } from 'react';
 import { useNetwork } from 'wagmi';
 
 export interface CollectionCardProps {
-  contract: string
-  title: string;
-  countOfElements: any;
-  contractAddress: any;
-  contractName: string;
-  description: string;
-  userName: string;
-  userAvatar: string;
-  isVerified: boolean;
-  redirectTo: string;
-  imgUrl: any;
-  maxSymbolsInString: number;
+  contract?: string
+  title?: string;
+  countOfElements?: any;
+  contractAddress?: any;
+  contractName?: string;
+  description?: string;
+  userName?: string;
+  userAvatar?: string;
+  isVerified?: boolean;
+  redirectTo?: string;
+  imgUrl?: any;
+  maxSymbolsInString?: number;
 }
 
 export function CollectionCard(props: CollectionCardProps) {

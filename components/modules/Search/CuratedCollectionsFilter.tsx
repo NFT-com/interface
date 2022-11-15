@@ -1,11 +1,11 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import { useState } from 'react';
-import {Doppler, getEnv} from "../../../utils/env";
 
 export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void, collapsed?: boolean}) => {
   const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
@@ -52,8 +52,8 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
                         router.push('/app/discover');
                       }
                     }}>
-                  {tab.tabTitle}
-                </span>
+                    {tab.tabTitle}
+                  </span>
                 );
               })}
               <span
@@ -62,7 +62,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
                   setSearchModalOpen(true);
                 }}>
                   Discover by keyword
-            </span>
+              </span>
             </div>
           </motion.div>
         </div>
@@ -96,8 +96,8 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
                         router.push('/app/discover');
                       }
                     }}>
-                  {tab.tabTitle}
-                </span>
+                    {tab.tabTitle}
+                  </span>
                 );
               })}
               <span
@@ -106,7 +106,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
                   setSearchModalOpen(true);
                 }}>
                   Discover by keyword
-            </span>
+              </span>
             </div>
           </motion.div>
           <div

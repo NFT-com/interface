@@ -1,4 +1,4 @@
-import {DiscoveryTabs} from '../../../cypress/util/constants';
+import { DiscoveryTabs } from 'cypress/util/constants';
 
 export interface NavProps {
   active: string;
@@ -13,8 +13,8 @@ export function DiscoveryTabNav(props: NavProps) {
           DiscoveryTabs.map(tab => {
             return (
               <li key={tab.id}
-                  onClick={() => props.callBack(tab.key)}
-                  className={`${props.active === tab.key ? 'border-[#F9D54C] text-[#000000]' : 'border-[transparent]'} hover:border-[#F9D54C] border-b-[2px] transition-all list-none m-0 py-[24px] mx-[16px]`}>
+                onClick={() => props.callBack(tab.key)}
+                className={`${props.active === tab.key ? 'border-[#F9D54C] text-[#000000]' : 'border-[transparent]'} hover:border-[#F9D54C] border-b-[2px] transition-all list-none m-0 py-[24px] mx-[16px]`}>
                 <button>{tab.name}</button>
               </li>
             );

@@ -1,9 +1,9 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { Image } from 'phosphor-react';
-import {Doppler, getEnv} from "../../../utils/env";
 
 interface ResultsDropDownProps {
   isHeader?: any;
@@ -45,7 +45,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
           >
           See All
             {/*{found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}*/}
-        </span>
+          </span>
         </div>
       );
     }else {
@@ -62,12 +62,11 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
               resultTitleOnClick && resultTitleOnClick(collectionName);
             }}
           >
-          {found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}
-        </span>
+            {found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}
+          </span>
         </div>
       );
     }
-
   };
   const ResultsContent = (searchResults) => {
     if(discoverPageEnv) {
@@ -151,7 +150,6 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
         );
       });
     }
-
   };
   if(discoverPageEnv) {
     return (
@@ -194,5 +192,4 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
       </div>
     );
   }
-
 };

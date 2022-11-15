@@ -1,7 +1,7 @@
 
 // export interface FiltersProps {}
 // props: FiltersProps
-import { useState } from "react";
+import { useState } from 'react';
 
 export function DiscoveryFilters() {
   const [isOpen, toggleView] = useState(false);

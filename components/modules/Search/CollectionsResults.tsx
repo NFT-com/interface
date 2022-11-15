@@ -1,11 +1,10 @@
 import CollectionsSlider from 'components/elements/CollectionsSlider';
 import Loader from 'components/elements/Loader';
+import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import { Doppler, getEnv } from 'utils/env';
+import { tw } from 'utils/tw';
 
 import router from 'next/router';
-import {collectionCardImages} from "../../../utils/helpers";
-import {CollectionCard} from "../DiscoveryCards/CollectionCard";
-import {tw} from "../../../utils/tw";
-import {Doppler, getEnv} from "../../../utils/env";
 const data = [
   {
     redirectTo: '',
@@ -34,16 +33,16 @@ const data = [
     countOfElements: '12333',
     imgUrl: ['https://nft-llc.mypinata.cloud/ipfs/QmQPwqyQcCkxMnjYCBodvCmr1yKj3jbdz7GePvNFN2Saj1']
   },
-]
+];
 export const CollectionsResults = (props: {searchTerm: string, found: number, nftsForCollections: any, sideNavOpen: boolean}) => {
   const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const { searchTerm, found, nftsForCollections } = props;
-  const showCollectionsItems = (collection) => {
-    // nftsForCollections
-    return data.slice(0, props.sideNavOpen ? 2 : 3).map(collection => {
+  const showCollectionsItems = () => {
+    return data.slice(0, props.sideNavOpen ? 2 : 3).map((collection, i) => {
       return (
         <CollectionCard
+          key={i}
           redirectTo={collection.redirectTo}
           contractAddress={collection.contractAddress}
           contract={collection.contract}
@@ -52,11 +51,10 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
           countOfElements={collection.countOfElements}
           imgUrl={collection.imgUrl}
           maxSymbolsInString={180}
-          />
-      )
-    })
-
-  }
+        />
+      );
+    });
+  };
   if(discoverPageEnv){
     return(
       <>
@@ -67,7 +65,7 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
             onClick={() => { router.push(`/app/discover/collections/${searchTerm}`); }}
           >
           See All
-        </span>
+          </span>
         </div>
         <div className={tw(
           'gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
@@ -91,7 +89,7 @@ export const CollectionsResults = (props: {searchTerm: string, found: number, nf
             onClick={() => { router.push(`/app/discover/collections/${searchTerm}`); }}
           >
           SEE ALL
-        </span>
+          </span>
         </div>
         {nftsForCollections && nftsForCollections.length > 0 ?
           <CollectionsSlider full slides={nftsForCollections} /> :

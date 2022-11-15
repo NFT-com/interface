@@ -2,14 +2,14 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { CheckBox } from 'components/elements/CheckBox';
+import { Doppler, getEnv } from 'utils/env';
 
 import { motion } from 'framer-motion';
+import { CaretUp } from 'phosphor-react';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useCallback, useEffect, useState } from 'react';
 import { Minus,Plus } from 'react-feather';
-import {CaretUp} from "phosphor-react";
-import {Doppler, getEnv} from "../../../utils/env";
 
 interface FilterOptionProps {
   fieldName?: string,
@@ -67,7 +67,6 @@ const FilterOption = (props: FilterOptionProps) => {
       </div>
     );
   }
-
 };
 
 const ContractNameFilter = (props: any) => {

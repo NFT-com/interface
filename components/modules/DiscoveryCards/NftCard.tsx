@@ -1,17 +1,17 @@
 import {processIPFSURL} from "../../../utils/helpers";
 
 export interface NftCardProps {
-  name: string,
-  images: any,
-  collectionName: string,
-  redirectTo: string,
-  description: string,
-  customBackground: string,
-  lightModeForced: boolean,
-  price: string,
-  secondPrice: string,
-  ednDay: string,
-  isOnSale: boolean
+  name?: string,
+  images?: any,
+  collectionName?: string,
+  redirectTo?: string,
+  description?: string,
+  customBackground?: string,
+  lightModeForced?: boolean,
+  price?: string,
+  secondPrice?: string,
+  ednDay?: string,
+  isOnSale?: boolean
 }
 
 export function NftCard(props: NftCardProps) {

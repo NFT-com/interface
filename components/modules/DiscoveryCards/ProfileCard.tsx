@@ -1,9 +1,9 @@
 export interface NftCardProps {
-  name: string,
-  nftCounter: string,
-  followLink: string,
-  btnName: string
-  bgImg: string,
+  name?: string,
+  nftCounter?: string,
+  followLink?: string,
+  btnName?: string
+  bgImg?: string,
 
 }
 
