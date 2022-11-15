@@ -261,24 +261,20 @@ export function ProfileContextProvider(
  
   useEffect(() => {
     if (!loadingAllOwnerNfts && editMode && isToggling) {
-      setIsToggling(false);
       setPubliclyVisibleNftsNoEdit(null);
-      const paginatedNotPubliclyVisibleNfts = paginatedAllOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [];
-      if (!showAllNFTsValue && !hideAllNFTsValue) {
-        setEditModeNfts([
-          ...(publiclyVisibleNfts || []),
-          ...setHidden(paginatedNotPubliclyVisibleNfts, true)
-        ]);
-      } else if (showAllNFTsValue && !hideAllNFTsValue) {
+      if (showAllNFTsValue && !hideAllNFTsValue) {
         paginatedAllOwnerNfts.forEach(nft => nft.hidden= false);
         setEditModeNfts([
           ...paginatedAllOwnerNfts
         ]);
-      } else if (!showAllNFTsValue && hideAllNFTsValue) {
+        setIsToggling(false);
+      }
+      if (!showAllNFTsValue && hideAllNFTsValue) {
         paginatedAllOwnerNfts.forEach(nft => nft.hidden= true);
         setEditModeNfts([
           ...paginatedAllOwnerNfts
         ]);
+        setIsToggling(false);
       }
 
       currentScrolledPosition !== 0 && window.scrollTo(0, currentScrolledPosition);
@@ -310,14 +306,20 @@ export function ProfileContextProvider(
   ) => {
     setShowAllNFTsValue(false);
     setHideAllNFTsValue(false);
+    setIsToggling(true);
     await setCurrentScrolledPosition(window.pageYOffset);
     if (currentVisibility) {
-      await setPubliclyVisibleNfts((publiclyVisibleNfts ?? []).slice().filter(nft => nft.id !== id));
+      setPubliclyVisibleNfts((publiclyVisibleNfts ?? []).slice().filter(nft => nft.id !== id));
     } else {
       // NFT is currently hidden.
       const nft = paginatedAllOwnerNfts.find(nft => nft.id === id);
-      await setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
+      setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
     }
+    const paginatedNotPubliclyVisibleNfts = paginatedAllOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [];
+    await setEditModeNfts([
+      ...(publiclyVisibleNfts || []),
+      ...setHidden(paginatedNotPubliclyVisibleNfts, true)
+    ]);
   }, [paginatedAllOwnerNfts, publiclyVisibleNfts]);
 
   const clearDrafts = useCallback(() => {
