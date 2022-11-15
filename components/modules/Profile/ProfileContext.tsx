@@ -292,10 +292,7 @@ export function ProfileContextProvider(
   }, [editMode]);
 
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
-    setEditModeNfts([
-      ...orderedItems.filter((nft: DetailedNft) => !nft.hidden),
-      ...orderedItems.filter((nft: DetailedNft) => nft.hidden),
-    ]);
+    setPubliclyVisibleNfts([...orderedItems.filter((nft: DetailedNft) => !nft.hidden),]);
   }, []);
 
   /**
