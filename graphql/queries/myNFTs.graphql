@@ -33,6 +33,7 @@ query MyNFTs($input: NFTsInput) {
           }
         }
       }
+      isHide
       metadata {
         imageURL
         description

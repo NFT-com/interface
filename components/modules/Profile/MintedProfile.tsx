@@ -52,6 +52,7 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftProfileImg,
     userIsAdmin,
     publiclyVisibleNfts,
+    publiclyVisibleNftsNoEdit,
     loading,
     draftDeployedContractsVisible
   } = useContext(ProfileContext);
@@ -320,7 +321,7 @@ export function MintedProfile(props: MintedProfileProps) {
             }
            
             {
-              (userIsAdmin && editMode) || (publiclyVisibleNfts?.length > 0) ?
+              (userIsAdmin && editMode) || (publiclyVisibleNftsNoEdit?.length > 0) ?
                 <MintedProfileGallery
                   profileURI={profileURI}
                   ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
