@@ -17,7 +17,6 @@ describe('discover page tests', () => {
   
   it('renders curated tabs', () => {
     cy.fixture('curated_collections_results').then((json) => {
-      cy.contains('/Discover').should('exist');
       cy.contains('/PFPs').should('exist');
       cy.contains('/Famous').should('exist');
       cy.contains('/Utility').should('exist');
