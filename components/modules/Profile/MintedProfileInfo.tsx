@@ -144,7 +144,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4'
           )}>
           {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-            <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] minlg:mr-1'>/</span>
+            <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] mr-1'>/</span>
           }
           {profileURI}
         </div>
