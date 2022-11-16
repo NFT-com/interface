@@ -100,3 +100,25 @@ export const currentAddress = [
     balance: '10000000000000000000000',
   },
 ];
+export const TabsName = {
+  NFT: 'nft',
+  COLLECTIONS: 'collections',
+  PROFILES: 'profiles'
+};
+export const DiscoveryTabs = [
+  {
+    name: 'NFTs',
+    id: 0,
+    key: 'nft'
+  },
+  {
+    name: 'Collections',
+    id: 1,
+    key: 'collections'
+  },
+  {
+    name: 'Profiles',
+    id: 2,
+    key: 'profiles'
+  }
+]

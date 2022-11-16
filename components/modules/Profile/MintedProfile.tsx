@@ -51,7 +51,6 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftHeaderImg,
     setDraftProfileImg,
     userIsAdmin,
-    publiclyVisibleNfts,
     publiclyVisibleNftsNoEdit,
     loading,
     draftDeployedContractsVisible
@@ -88,7 +87,7 @@ export function MintedProfile(props: MintedProfileProps) {
   const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
-      
+
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
       alert('only 1 picture is allowed at a time');
@@ -247,7 +246,7 @@ export function MintedProfile(props: MintedProfileProps) {
                           <CameraIconEdit />
                         </div>
                       </div>}
-                      
+
                       <Image
                         src={
                           !isNullOrEmpty(draftProfileImg?.preview)
@@ -319,7 +318,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 <ClaimProfileCard />
               </div>
             }
-           
+
             {
               (userIsAdmin && editMode) || (publiclyVisibleNftsNoEdit?.length > 0) ?
                 <MintedProfileGallery
