@@ -51,7 +51,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
     }
   });
 
-  const createSignedClient = useCallback((signature: string) => {
+  const createSignedClient = useCallback((signature: string, timestamp: string) => {
     const gqlClient = new GraphQLClient(getAPIURL() + '/api', {
       cache: 'default',
       headers: {
@@ -59,11 +59,11 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         'chain-id': chain?.id == null ? null : String(chain?.id),
         chainId: chain?.id == null ? null : String(chain?.id),
         network: 'ethereum', // TODO: support new networks
-        timestamp: String(unixTimestamp)
+        timestamp: timestamp
       },
     });
     setClient(gqlClient);
-  }, [chain?.id, unixTimestamp]);
+  }, [chain?.id]);
 
   const trySignature = useCallback(async () => {
     setSigned(false);
@@ -77,8 +77,8 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         const cachedAddress = parsedSigData['address'];
         const cachedSignature = parsedSigData['signature'];
         const cachedTimestamp = parsedSigData['timestamp'];
-        if (currentAddress === cachedAddress && moment().unix() < cachedTimestamp) {
-          createSignedClient(cachedSignature);
+        if (currentAddress === cachedAddress && moment().unix() < cachedTimestamp || !isNullOrEmpty(cachedTimestamp)) {
+          createSignedClient(cachedSignature, cachedTimestamp);
           setSigned(true);
           setLoading(false);
           return true;
@@ -91,14 +91,14 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
     try {
       setLoading(false);
       const signature = await signMessageAsync();
-      createSignedClient(signature);
+      createSignedClient(signature, String(unixTimestamp));
       return true;
     } catch (error) {
       setSigned(false);
       console.log('Failed to get login signature. Only public endpoints will succeed.');
       return false;
     }
-  }, [currentAddress, createSignedClient, signMessageAsync]);
+  }, [currentAddress, createSignedClient, signMessageAsync, unixTimestamp]);
 
   useEffect(() => {
     if (!currentAddress) {
