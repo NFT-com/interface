@@ -1,4 +1,4 @@
-import { RoundedCornerMedia } from 'components/elements/RoundedCornerMedia';
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -44,6 +44,7 @@ export function CollectionCard(props: CollectionCardProps) {
     <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="sm:mb-4 min-h-[100%] block hover:scale-105 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p">
       <div className="h-44 relative ">
         <RoundedCornerMedia
+          variant={RoundedCornerVariant.None}
           width={600}
           height={600}
           containerClasses='w-[100%] object-cover h-[100%]'

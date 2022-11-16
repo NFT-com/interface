@@ -1,4 +1,4 @@
-import { RoundedCornerMedia } from 'components/elements/RoundedCornerMedia';
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
@@ -33,6 +33,7 @@ export function NftCard(props: NftCardProps) {
         <div className="relative h-[252px] object-cover">
           <div className="sm:h-[171px] relative h-[252px] object-cover">
             <RoundedCornerMedia
+              variant={RoundedCornerVariant.None}
               width={600}
               height={600}
               containerClasses='w-full h-full overflow-hidden'
