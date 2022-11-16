@@ -178,7 +178,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           >
             <div className={tw(
               'py-1 px-2 -ml-1 m-2 text-[#6A6A6A] break-words',
-              isOwnerAndSignedIn && 'hover:bg-[#ECECEC] hover:cursor-pointer hover:transition-colors hover:ease-in-out hover:text-black rounded-xl'
+              isOwnerAndSignedIn && 'hover:bg-[#ECECEC] hover:cursor-pointer hover:transition-colors hover:ease-in-out hover:text-black rounded-xl w-full'
             )}
             onClick={() => isOwnerAndSignedIn && setEditingBio(true)}
             >
