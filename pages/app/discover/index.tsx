@@ -98,7 +98,14 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
                           description={collection.nfts[0].metadata.description}
                           countOfElements={collection.actualNumberOfNFTs}
                           maxSymbolsInString={180}
-                          images={collectionCardImages(collection)}/>
+                          imgUrl={collectionCardImages(collection)}/>
+                        // <div key={index} className="DiscoverCollectionItem mb-2 min-h-[10.5rem]">
+                        //   <CollectionItem
+                        //     contractAddr={collection?.collectionAddress}
+                        //     images={collectionCardImages(collection)}
+                        //     count={collection.actualNumberOfNFTs}
+                        //   />
+                        // </div>
                       );
                     })}
                   </div>
