@@ -1,6 +1,5 @@
 import { ResultsDropDown as StaticResultsDropDown } from 'components/modules/Search/ResultsDropDown';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
-import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv } from 'utils/env';
@@ -31,7 +30,6 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
   const [transitionWidth, setTransitionWidth] = useState('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
   const { setSearchModalOpen, setDropDownSearchResults } = useSearchModal();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
-  const { mobileSidebarOpen } = useMobileSidebar();
   const router = useRouter();
   const resultsRef = useRef();
   const wrapperRef = useRef(null);
@@ -48,12 +46,6 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
     }
     setSearchResults([]);
   }, [router.pathname]);
-
-  useEffect(() => {
-    if (mobileSearch && !mobileSidebarOpen) {
-      setDropDownSearchResults([]);
-    }
-  }, [mobileSearch, mobileSidebarOpen, setDropDownSearchResults]);
 
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
