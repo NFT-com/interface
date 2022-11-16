@@ -47,12 +47,6 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
     setSearchResults([]);
   }, [router.pathname]);
 
-  // useEffect(() => {
-  //   if (mobileSearch && !mobileSidebarOpen) {
-  //     setDropDownSearchResults([]);
-  //   }
-  // }, [mobileSearch, mobileSidebarOpen, setDropDownSearchResults]);
-
   useOutsideClickAlerter(resultsRef, () => {
     setShowHits(false);
     setSearchModalOpen(false);

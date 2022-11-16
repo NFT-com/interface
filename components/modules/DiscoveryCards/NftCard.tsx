@@ -1,19 +1,24 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+
+import { DetailedNft } from './CollectionCard';
+
+import { PartialDeep } from 'type-fest';
 export interface NftCardProps {
   name?: string,
-  images?: any,
+  images?: Array<string | null>,
   collectionName?: string,
   redirectTo?: string,
   description?: string,
   customBackground?: string,
   contractAddr?: string,
   lightModeForced?: boolean,
-  listings?: any,
-  nft?: any,
+  listings?: PartialDeep<TxActivity>[],
+  nft?: PartialDeep<DetailedNft>;
   price?: string,
   secondPrice?: string,
   ednDay?: string,
