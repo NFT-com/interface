@@ -342,7 +342,7 @@ export function ProfileContextProvider(
     setShowAllNFTsValue(false);
     setHideAllNFTsValue(false);
     setIsToggling(true);
-    const nft = paginatedAllOwnerNfts.find(nft => nft.id === id);
+    const nft = searchQuery && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? searchNfts.find(nft => nft.id === id) : paginatedAllOwnerNfts.find(nft => nft.id === id);
     await setCurrentScrolledPosition(window.pageYOffset);
     if (currentVisibility) {
       nft.hidden = true;
@@ -352,7 +352,7 @@ export function ProfileContextProvider(
       nft.hidden = false;
       setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
     }
-  }, [paginatedAllOwnerNfts, publiclyVisibleNfts]);
+  }, [paginatedAllOwnerNfts, publiclyVisibleNfts, searchNfts, searchQuery]);
 
   const clearDrafts = useCallback(() => {
     // reset
