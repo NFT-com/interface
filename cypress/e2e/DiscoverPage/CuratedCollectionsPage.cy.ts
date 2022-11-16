@@ -15,13 +15,13 @@ describe('discover page tests', () => {
     });
   });
   
-  it('renders curated tabs', () => {
-    cy.fixture('curated_collections_results').then((json) => {
-      cy.contains('/PFPs').should('exist');
-      cy.contains('/Famous').should('exist');
-      cy.contains('/Utility').should('exist');
-      cy.contains('NFT.com').should('exist');
-    });
-  });
+  // it('renders curated tabs', () => {
+  //   cy.fixture('curated_collections_results').then((json) => {
+  //     cy.contains('/PFPs').should('exist');
+  //     cy.contains('/Famous').should('exist');
+  //     cy.contains('/Utility').should('exist');
+  //     cy.contains('NFT.com').should('exist');
+  //   });
+  // });
 });
   
