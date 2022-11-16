@@ -64,8 +64,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
 
   return (
     <div className={tw(
-      'flex flex-col mt-0 minlg:mt-16 align-items',
-      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'minlg:px-16' : isMobile ? 'px-2' : 'px-2 minmd:px-8 mb-10'
+      'flex flex-col align-items',
+      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'minlg:px-16' : isMobile ? 'px-2 mt-0 minlg:mt-16' : 'px-2 minmd:px-8 mb-10 mt-0 minlg:mt-16'
     )}>
       <Modal
         fullModal

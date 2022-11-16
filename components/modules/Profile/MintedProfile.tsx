@@ -256,10 +256,11 @@ export function MintedProfile(props: MintedProfileProps) {
 
                     <div
                       className={tw(
-                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'object-center' :'object-center',
-                        'h-full w-full group hover:cursor-pointer',
+                        'object-center',
+                        'h-full w-full group',
                         'shrink-0 aspect-square',
-                        userIsAdmin && editMode ? 'cursor-pointer' : '',
+                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && 'hover:cursor-pointer',
+                        userIsAdmin && editMode ? 'hover:cursor-pointer' : '',
                         !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'box-border border-[5px] border-white rounded-full',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'

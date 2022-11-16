@@ -164,7 +164,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           </div>
       }
 
-      {profileData?.profile?.description && !editingBio && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+      {profileData?.profile?.description && !editingBio && isOwnerAndSignedIn && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
         <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">
           <CustomTooltip2
             orientation='top'
@@ -185,6 +185,19 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               {profileData?.profile?.description}
             </div>
           </CustomTooltip2>
+        </div>
+      }
+
+      {profileData?.profile?.description && !editingBio && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+        <div className="w-full minlg:w-1/2 flex items-start flex-col text-[#6A6A6A]">
+          <div className={tw(
+            'py-1 px-2 -ml-1 m-2 text-[#6A6A6A] break-words',
+            isOwnerAndSignedIn && 'hover:bg-[#ECECEC] hover:cursor-pointer hover:transition-colors hover:ease-in-out hover:text-black rounded-xl w-full'
+          )}
+          onClick={() => isOwnerAndSignedIn && setEditingBio(true)}
+          >
+            {profileData?.profile?.description}
+          </div>
         </div>
       }
 
