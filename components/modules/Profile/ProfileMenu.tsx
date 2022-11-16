@@ -3,7 +3,6 @@ import { ProfileLayoutType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
-import useDebounce from 'hooks/useDebounce';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -33,9 +32,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const [selectedLayout, setSelectedLayout] = useState(null);
   const [showDescriptions, setShowDescriptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
-  const debouncedSearch = useDebounce(searchValue, 1000);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef();
 
   useOutsideClickAlerter(inputRef, () => {
     setSearchVisible(false);
@@ -44,7 +41,9 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const {
     setEditMode,
     setLayoutType,
-    setDescriptionsVisible
+    setDescriptionsVisible,
+    searchQuery,
+    setSearchQuery
   } = useContext(ProfileContext);
 
   const setLayout = useCallback((type: ProfileLayoutType) => {
@@ -99,14 +98,12 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
 
   return (
     <div className='w-full flex justify-end mt-8 minlg:mt-0 font-noi-grotesk'>
-     
-      <div className={tw(
+      <div ref={inputRef} className={tw(
         'w-full flex flex-row border-[#ECECEC] rounded-full justify-center items-center',
         'focus-within:border focus-within:border-[#F9D54C] focus-within:ring-1 focus-within:ring-[#F9D54C] ',
         searchVisible ? 'w-full minlg:w-[320px] minlg:max-w-[320px]  p-[10px] border-[1.3px] transition-[width]' : 'w-0 p-0 border-0'
       )}>
         <input
-          ref={inputRef}
           type="text"
           placeholder="Search your NFTs.."
           autoComplete="off"
@@ -118,14 +115,14 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             'w-full text-black placeholder:text-black bg-inherit border-0 rounded-full py-0 pr-0 pl-2',
             'focus:border-0 focus:ring-0 focus:placeholder:text-[#B2B2B2]'
           )}
-          value={searchValue}
-          onChange={e => setSearchValue(e.target.value)}
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
         />
         <X color='black'
           className='hover:cursor-pointer'
           onClick={() => {
             setSearchVisible(false);
-            setSearchValue('');
+            setSearchQuery('');
           }} />
       </div>
         

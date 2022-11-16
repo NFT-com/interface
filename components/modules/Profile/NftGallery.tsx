@@ -3,6 +3,7 @@ import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
+import useDebounce from 'hooks/useDebounce';
 import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
@@ -32,9 +33,12 @@ export function NftGallery(props: NftGalleryProps) {
     loadingAllOwnerNfts,
     loadMoreNfts,
     loadMoreNftsEditMode,
-    draftLayoutType
+    draftLayoutType,
+    searchQuery,
+    searchVisibleNfts,
+    searchNfts
   } = useContext(ProfileContext);
-  
+  const debouncedSearch = useDebounce(searchQuery, 1000);
   const { closeToBottom, currentScrollPosition } = useScrollToBottom();
 
   useSWR(closeToBottom.toString() + currentScrollPosition, async () => {
@@ -72,8 +76,8 @@ export function NftGallery(props: NftGalleryProps) {
   }
 
   const nftsToShow = editMode ?
-    editModeNfts :
-    (publiclyVisibleNfts ?? []);
+    !debouncedSearch ? editModeNfts : (searchNfts ?? []) :
+    !debouncedSearch ? (publiclyVisibleNfts ?? []) : (searchVisibleNfts ?? []);
 
   const displayNFTs = (draftLayoutType ?? savedLayoutType) !== 'Spotlight' ?
     nftsToShow :
