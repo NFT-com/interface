@@ -7,7 +7,7 @@ import { useScrollPosition } from 'graphql/hooks/useScrollPosition';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import { Doppler, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -42,6 +42,7 @@ type HeaderProps = {
 gsap.registerPlugin(ScrollTrigger);
 
 export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
+  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { primaryIcon } = useThemeColors();
@@ -183,9 +184,19 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               'minlg:px-0 minlg:mr-0',
               currentAddress && 'mr-3'
             )}>
-              <div className="hidden minlg:block mr-1">
-                <SearchBar />
-              </div>
+              {
+                discoverPageEnv
+                  ? (
+                    <div className="hidden minlg:block mr-1 w-[351px]">
+                      <SearchBar />
+                    </div>
+                  )
+                  : (
+                    <div className="hidden minlg:block mr-1">
+                      <SearchBar />
+                    </div>
+                  )
+              }
 
               {currentAddress &&
               <div className='block minlg:hidden'>

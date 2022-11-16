@@ -144,7 +144,7 @@ export default function MintProfilesPage() {
         <div>
           <ProfileKeyIcon />
           <h3 className='text-[28px] mt-3'>Trade NFTs</h3>
-          <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the build in marketplace aggregator.</p>
+          <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the built in marketplace aggregator.</p>
         </div>
       </div>
 

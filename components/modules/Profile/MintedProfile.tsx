@@ -52,7 +52,7 @@ export function MintedProfile(props: MintedProfileProps) {
     setDraftHeaderImg,
     setDraftProfileImg,
     userIsAdmin,
-    publiclyVisibleNfts,
+    publiclyVisibleNftsNoEdit,
     loading,
     draftDeployedContractsVisible,
     saveProfileImage
@@ -287,7 +287,7 @@ export function MintedProfile(props: MintedProfileProps) {
                           </CustomTooltip2>
                         </div>
                       </div>}
-                      
+
                       <Image
                         src={
                           !isNullOrEmpty(draftProfileImg?.preview)
@@ -327,7 +327,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 setSelectedTab('nfts');
               }}
               className={tw(
-                'cursor-pointer text-white text-lg tracking-wide mr-4',
+                'cursor-pointer text-lg tracking-wide mr-4',
                 selectedTab === 'nfts' ? 'text-black' : 'text-secondary-txt'
               )}
             >
@@ -359,9 +359,9 @@ export function MintedProfile(props: MintedProfileProps) {
                 <ClaimProfileCard />
               </div>
             }
-           
+
             {
-              (userIsAdmin && editMode) || (publiclyVisibleNfts?.length > 0) ?
+              (userIsAdmin && editMode) || (publiclyVisibleNftsNoEdit?.length > 0) ?
                 <MintedProfileGallery
                   profileURI={profileURI}
                   ownedGKTokens={ownedGKTokens?.map(token => BigNumber.from(token?.id?.tokenId ?? 0).toNumber())}
