@@ -1,4 +1,7 @@
+import { useMeQuery } from 'graphql/hooks/useMeQuery';
+import { useEmailCaptureModal } from 'hooks/state/useEmailCaptureModal';
 import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Dialog, Transition } from '@headlessui/react';
@@ -10,7 +13,9 @@ import { Fragment } from 'react';
 
 export default function MintProfileSuccessModal() {
   const router = useRouter();
+  const { me } = useMeQuery();
   const { mintSuccessModal, setMintSuccessModalOpen }= useMintSuccessModal();
+  const { setEmailCaptureModalOpen } = useEmailCaptureModal();
   return (
     <Transition appear show={mintSuccessModal} as={Fragment}>
       <Dialog as="div" className="relative z-[105]" onClose={() => setMintSuccessModalOpen(false)}>
@@ -40,7 +45,10 @@ export default function MintProfileSuccessModal() {
               <Dialog.Panel className="w-full relative max-w-[873px] min-h-[560px] minmd:h-[700px] transform overflow-hidden rounded-[20px] bg-white text-left align-middle shadow-xl transition-all">
 
                 <X
-                  onClick={() => setMintSuccessModalOpen(false)}
+                  onClick={() => {
+                    setMintSuccessModalOpen(false);
+                    isNullOrEmpty(me?.email) && setEmailCaptureModalOpen(true);
+                  }}
                   className='z-10 absolute top-5 right-5 hover:cursor-pointer'
                   size={30}
                   color="black"
@@ -77,14 +85,17 @@ export default function MintProfileSuccessModal() {
                           'px-4 py-4 mt-9 minmd:mt-8 text-lg font-medium text-black',
                           'focus:outline-none focus-visible:bg-[#E4BA18]'
                         )}
-                        onClick={() => setMintSuccessModalOpen(false)}
+                        onClick={() => {
+                          setMintSuccessModalOpen(false);
+                          isNullOrEmpty(me?.email) && setEmailCaptureModalOpen(true);
+                        }}
                       >
                       Customize your profile
                       </button>
                     </div>
 
                     <Link href='/app/mint-profiles' passHref>
-                      <a className='block mt-8 minmd:mt-9 underline font-medium text-lg text-[#E4BA18]'>Mint another NFT Profile</a>
+                      <a onClick={() => isNullOrEmpty(me?.email) && setEmailCaptureModalOpen(true)} className='block mt-8 minmd:mt-9 underline font-medium text-lg text-[#E4BA18]'>Mint another NFT Profile</a>
                     </Link>
                   </div>
                 </div>
