@@ -11,7 +11,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ResultsPageProps } from 'types';
-import { Doppler, getEnv,getEnvBool } from 'utils/env';
+import { Doppler, getEnv } from 'utils/env';
 import { collectionCardImages, getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
@@ -84,7 +84,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }, [fetchTypesenseMultiSearch, searchTerm, searchType, nftsResultsFilterBy]);
 
   if (searchType?.toString() === 'allResults' && collectionsSliderData) {
-    addressesList.current = collectionsSliderData.current?.map((nft) => {
+    addressesList.current = collectionsSliderData.hits?.map((nft) => {
       return nft.document?.contractAddr;
     });
   } else {

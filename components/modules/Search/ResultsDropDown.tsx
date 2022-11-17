@@ -1,5 +1,5 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
@@ -14,7 +14,7 @@ interface ResultsDropDownProps {
 }
 
 export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, itemListOnClick, extraClasses }: ResultsDropDownProps) => {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const router = useRouter();
   const { keyword, setDropDownSearchResults } = useSearchModal();

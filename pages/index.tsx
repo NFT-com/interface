@@ -214,7 +214,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           trigger: '#anim-leaderboard-trigger',
           start: 'top 80%',
           end: '+=30px',
-          //pin: '#anim-leaderboard-trigger',
+          pin: '#anim-leaderboard-trigger',
           toggleActions: 'play none reverse none',
         }
       })
@@ -470,7 +470,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   )}>{data_v2?.wycdBlock1Title}</h3>
                   <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock1Description}</p>
                   <div data-aos="fade-up" data-aos-delay="200" className={tw(
-                    'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9',
+                    'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9 relative',
                     'bg-[#121212] drop-shadow-lg rounded-full',
                     'flex items-center justify-center text-center',
                     'text-[1.875rem] minmd:text-[1.625rem] minlg:text-[2rem] leading-none tracking-tight',
