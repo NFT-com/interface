@@ -35,8 +35,6 @@ const data = [
   },
 ];
 export const CollectionsResults = (props: {searchTerm?: string, found?: number, nftsForCollections?: any, sideNavOpen?: boolean}) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const { searchTerm, found, nftsForCollections } = props;
   const showCollectionsItems = () => {
     return data?.slice(0, props.sideNavOpen ? 2 : 3).map((collection, i) => {
@@ -55,7 +53,7 @@ export const CollectionsResults = (props: {searchTerm?: string, found?: number, 
       );
     });
   };
-  if(discoverPageEnv){
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
     return(
       <>
         <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin mb-7">

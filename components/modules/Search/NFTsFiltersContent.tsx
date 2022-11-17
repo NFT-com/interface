@@ -24,15 +24,13 @@ interface FilterOptionProps {
 }
 
 const FilterOption = (props: FilterOptionProps) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const { item, fieldName, onSelectFilter, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [selected, setSelected] = useState(checkedInfo[0]?.selectedCheck?.includes(item.value));
 
   useEffect(() => {
     clearedFilters && setSelected(false);
   },[clearedFilters]);
-  if(discoverPageEnv){
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
     return (
       <div className="flex items-center justify-between">
         <div className="flex flex-col">
@@ -70,8 +68,6 @@ const FilterOption = (props: FilterOptionProps) => {
 };
 
 const ContractNameFilter = (props: any) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const { filterOptions, setCheckedFilters, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [searchVal, setSearchVal] = useState('');
   const [filteredContracts, setFilteredContracts] = useState([]);
@@ -84,7 +80,7 @@ const ContractNameFilter = (props: any) => {
     setFilteredContracts([...filteredContracts]);
   },[filterOptions, searchVal]);
 
-  if(discoverPageEnv){
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
     return (
       <div className="mt-3">
         {filterOptions.length > 1 && <div className={tw(
@@ -168,8 +164,6 @@ const ContractNameFilter = (props: any) => {
 };
 
 const Filter = (props: any) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const { filter, setCheckedFilters, clearedFilters, setClearedFilters } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const [isCollapsing, setIsCollapsing] = useState(false);
@@ -196,7 +190,7 @@ const Filter = (props: any) => {
   useEffect(() => {
     checkedInfo.length > 0 && checkedInfo[0]?.selectedCheck !== '' && !isCollapsing && setIsFilterCollapsed(false);
   }, [checkedInfo, isCollapsing]);
-  if(discoverPageEnv){
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
     return (
       <div className="pb-4 border-b-[1px] border-[#F2F2F2] py-4 text-[#4D4D4D]">
         <div
@@ -294,8 +288,6 @@ const Filter = (props: any) => {
 };
 
 export const NFTsFiltersContent = () => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray } = useSearchModal();
   const [sortBy,] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
@@ -327,7 +319,7 @@ export const NFTsFiltersContent = () => {
     }
     updateCheckedString();
   }, [checkedArray, updateCheckedString]);
-  if(discoverPageEnv){
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
     return (
       <>
         <div className="flex flex-col w-full">

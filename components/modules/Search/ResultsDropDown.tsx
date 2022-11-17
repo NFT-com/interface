@@ -14,8 +14,6 @@ interface ResultsDropDownProps {
 }
 
 export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, itemListOnClick, extraClasses }: ResultsDropDownProps) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const router = useRouter();
   const { keyword, setDropDownSearchResults } = useSearchModal();
 
@@ -29,7 +27,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
     } else {
       title = found + ' ' + collectionName?.toUpperCase();
     }
-    if(discoverPageEnv){
+    if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
       return (
         <div className={tw(
           `flex justify-${found > 0 ? 'between' : 'start'}`,
@@ -69,7 +67,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
     }
   };
   const ResultsContent = (searchResults) => {
-    if(discoverPageEnv) {
+    if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)) {
       return searchResults && searchResults.length > 0 && searchResults.map((item, index) => {
         return (
           <div key={index}>
@@ -151,7 +149,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
       });
     }
   };
-  if(discoverPageEnv) {
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)) {
     return (
       <div
         className={tw(

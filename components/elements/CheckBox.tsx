@@ -13,10 +13,8 @@ export interface CheckBoxProps {
  * Custom UI for a checkbox - parent is responsible for state management.
  */
 export function CheckBox(props: CheckBoxProps) {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const { primaryButtonBackground_rebrand } = useThemeColors();
-  if(discoverPageEnv){
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
     return (
       <div
         className={tw(

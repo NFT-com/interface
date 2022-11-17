@@ -20,7 +20,6 @@ import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
 export default function DiscoverPage({ data }: DiscoverPageProps) {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
   const { width: screenWidth } = useWindowDimensions();
   const { usePrevious } = usePreviousValue();
@@ -72,7 +71,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
     setPage(1);
   };
 
-  if(discoverPageEnv){
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
     return(
       <>
         <div className="sm:p-2  md:p-4  lg:p-8  xl:p-16  minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">

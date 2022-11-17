@@ -8,11 +8,10 @@ import { CaretUp } from 'phosphor-react';
 import { useState } from 'react';
 
 export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void, collapsed?: boolean}) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(props.collapsed ?? true);
   const { setSearchModalOpen, curatedCollections, setSelectedCuratedCollection, selectedCuratedCollection } = useSearchModal();
   const router = useRouter();
-  if(discoverPageEnv){
+  if(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)){
     return (
       <div className="pb-[10px] border-b-[1px] border-[#F2F2F2]">
         <div className="flex justify-between items-center">
