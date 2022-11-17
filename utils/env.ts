@@ -89,6 +89,6 @@ export function getEnvBool(name: Doppler): boolean {
   } else if (value === 'false') {
     return false;
   } else {
-    throw new Error('Not a boolean environment variable');
+    throw new Error(`Not a boolean environment variable: ${name} = ${value}`);
   }
 }
