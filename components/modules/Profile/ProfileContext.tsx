@@ -5,6 +5,8 @@ import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileOrderingUpdateMutation } from 'graphql/hooks/useProfileOrderingUpdateMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useSearchNFTsForProfile } from 'graphql/hooks/useSearchNFTsForProfile';
+import { useSearchVisibleNFTsForProfile } from 'graphql/hooks/useSearchVisibleNFTsForProfile';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -60,6 +62,7 @@ export interface ProfileContextType {
   setEditMode: (editMode: boolean) => void;
   clearDrafts: () => void;
   saveProfile: () => void;
+  saveProfileImage: (file: {raw: any, preview: string}, type: string) => void
   saving: boolean;
   selectedCollection: Maybe<string>;
   setSelectedCollection: (collectionAddress: string) => void;
@@ -69,6 +72,12 @@ export interface ProfileContextType {
   loadingAllOwnerNfts: boolean;
   hideAllNFTsValue: boolean;
   showAllNFTsValue: boolean;
+  currentNftsDescriptionsVisible: boolean;
+  currentLayoutType: ProfileLayoutType;
+  searchQuery: string;
+  setSearchQuery: (val: string) => void;
+  searchVisibleNfts: PartialDeep<Nft>[];
+  searchNfts: PartialDeep<Nft>[];
 }
 
 // initialize with default values
@@ -106,6 +115,7 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   setEditMode: () => null,
   clearDrafts: () => null,
   saveProfile: () => null,
+  saveProfileImage: () => null,
   saving: false,
   selectedCollection: null,
   setSelectedCollection: () => null,
@@ -115,6 +125,12 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   loadingAllOwnerNfts: false,
   hideAllNFTsValue: false,
   showAllNFTsValue: false,
+  currentNftsDescriptionsVisible: true,
+  currentLayoutType: ProfileLayoutType.Default,
+  searchQuery: null,
+  setSearchQuery: () => null,
+  searchVisibleNfts: [],
+  searchNfts: [],
 });
 
 export interface ProfileContextProviderProps {
@@ -135,7 +151,7 @@ export function ProfileContextProvider(
   /**
    * Queries
    */
-
+  const [searchQuery, setSearchQuery] = useState(null);
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const [paginatedAllOwnerNfts, setPaginatedAllOwnerNfts] = useState([]);
@@ -160,6 +176,13 @@ export function ProfileContextProvider(
     mutate: mutateAllOwnerNfts,
     pageInfo: allOwnerNftsPageInfo,
   } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode);
+  const { nfts: searchVisibleNfts } = useSearchVisibleNFTsForProfile(props.profileURI, searchQuery);
+  const { nfts: searchNfts } = useSearchNFTsForProfile(props.profileURI, searchQuery);
+  /**
+   * Profile v2 instant update state
+   */
+  const [currentLayoutType, setCurrentLayoutType] = useState<ProfileLayoutType>(profileData?.profile?.layoutType);
+  const [currentNftsDescriptionsVisible, setCurrentNftsDescriptionsVisible] = useState<boolean>(profileData?.profile?.nftsDescriptionsVisible);
 
   /**
    * Edit mode state
@@ -190,15 +213,24 @@ export function ProfileContextProvider(
     if (draftDeployedContractsVisible == null) {
       setDraftDeployedContractsVisible(profileData?.profile?.deployedContractsVisible);
     }
+    if(currentLayoutType == null){
+      setCurrentLayoutType(profileData?.profile?.layoutType);
+    }
+    if(currentNftsDescriptionsVisible == null){
+      setCurrentNftsDescriptionsVisible(profileData?.profile?.nftsDescriptionsVisible);
+    }
   }, [
     draftBio,
     draftDeployedContractsVisible,
     draftGkIconVisible,
     draftNftsDescriptionsVisible,
+    currentLayoutType,
+    currentNftsDescriptionsVisible,
     profileData?.profile?.deployedContractsVisible,
     profileData?.profile?.description,
     profileData?.profile?.gkIconVisible,
-    profileData?.profile?.nftsDescriptionsVisible
+    profileData?.profile?.nftsDescriptionsVisible,
+    profileData?.profile?.layoutType
   ]);
 
   // make sure this doesn't overwrite local changes, use server-provided value for initial state only.
@@ -310,7 +342,7 @@ export function ProfileContextProvider(
     setShowAllNFTsValue(false);
     setHideAllNFTsValue(false);
     setIsToggling(true);
-    const nft = paginatedAllOwnerNfts.find(nft => nft.id === id);
+    const nft = searchQuery && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? searchNfts.find(nft => nft.id === id) : paginatedAllOwnerNfts.find(nft => nft.id === id);
     await setCurrentScrolledPosition(window.pageYOffset);
     if (currentVisibility) {
       nft.hidden = true;
@@ -320,7 +352,7 @@ export function ProfileContextProvider(
       nft.hidden = false;
       setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
     }
-  }, [paginatedAllOwnerNfts, publiclyVisibleNfts]);
+  }, [paginatedAllOwnerNfts, publiclyVisibleNfts, searchNfts, searchQuery]);
 
   const clearDrafts = useCallback(() => {
     // reset
@@ -343,6 +375,61 @@ export function ProfileContextProvider(
   useEffect(() => {
     setSelectedCollection(null);
   }, [editMode]);
+
+  const saveProfileImage = useCallback(async (file: {raw: any, preview: string}, type: 'profile' | 'banner') => {
+    try {
+      if (file?.raw?.size > 2000000) { // 2MB
+        alert('Image is too large (> 2MB). Please upload a smaller image.');
+      } else {
+        setSaving(true);
+        const imageUploadResult = await uploadProfileImages({
+          profileId: profileData?.profile?.id,
+          compositeProfileURL: false,
+          avatar: type === 'profile' ? file.raw : null,
+          banner: type === 'banner' ? file.raw : null
+        });
+
+        let headerUploadImage: string;
+        let profileUploadImage: string;
+        if (!imageUploadResult) {
+          if (!isNullOrEmpty(file.raw) && type === 'banner') {
+            headerUploadImage = await fileUpload(
+              draftHeaderImg,
+              props.profileURI + '-header-img-' + moment.now()
+            );
+          }
+          if (!isNullOrEmpty(file.raw) && type === 'profile') {
+            profileUploadImage = await fileUpload(
+              draftProfileImg,
+              props.profileURI + '-profile-img-' + moment.now()
+            );
+          }
+        }
+
+        const result = await updateProfile({
+          id: profileData?.profile?.id,
+          ...(imageUploadResult
+            ? {}
+            : {
+              bannerURL: headerUploadImage,
+              photoURL: profileUploadImage,
+            })
+        });
+
+        if (result) {
+          window.scrollTo(0, 0);
+          mutateProfileData();
+          toast.success('Profile changes saved');
+        }
+        setSaving(false);
+      }
+    } catch (err) {
+      console.log('error while saving profile: ', err);
+      toast.error('Error while saving profile.');
+      clearDrafts();
+      setSaving(false);
+    }
+  }, [clearDrafts, draftHeaderImg, draftProfileImg, fileUpload, mutateProfileData, profileData?.profile?.id, props.profileURI, updateProfile, uploadProfileImages]);
 
   const saveProfile = useCallback(async () => {
     try {
@@ -427,6 +514,7 @@ export function ProfileContextProvider(
 
   const setLayoutType = useCallback(async (type: ProfileLayoutType) => {
     try {
+      setCurrentLayoutType(type);
       await updateProfile({
         id: profileData?.profile?.id,
         layoutType: type
@@ -439,6 +527,7 @@ export function ProfileContextProvider(
 
   const setDescriptionsVisible = useCallback(async (isVisible: boolean) => {
     try {
+      setCurrentNftsDescriptionsVisible(isVisible);
       await updateProfile({
         id: profileData?.profile?.id,
         nftsDescriptionsVisible: isVisible
@@ -540,6 +629,7 @@ export function ProfileContextProvider(
       }
     },
     saveProfile,
+    saveProfileImage,
     saving,
     clearDrafts,
     selectedCollection,
@@ -547,7 +637,13 @@ export function ProfileContextProvider(
     loading,
     loadingAllOwnerNfts,
     hideAllNFTsValue,
-    showAllNFTsValue
+    showAllNFTsValue,
+    currentNftsDescriptionsVisible,
+    currentLayoutType,
+    searchQuery,
+    setSearchQuery,
+    searchVisibleNfts,
+    searchNfts
   }}>
     {props.children}
   </ProfileContext.Provider>;
