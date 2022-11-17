@@ -180,7 +180,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
         </div>
       </>
     );
-  }
+  }//
   return (
     <>
       <div className="flex flex-col font-noi-grotesk relative">
