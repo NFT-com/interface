@@ -21,8 +21,6 @@ interface SearchContentProps {
 }
 
 export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchContentProps) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [inputFocus, setInputFocus] = useState(false);
@@ -222,7 +220,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
             <div ref={resultsRef}>
               <DynamicResultsDropDown
                 isHeader={isHeader}
-                extraClasses={discoverPageEnv ? 'mt-4' : 'mt-8'}
+                extraClasses={getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) ? 'mt-4' : 'mt-8'}
                 searchResults={searchResults}
                 resultTitleOnClick={() => {
                   setSearchModalOpen(false);
