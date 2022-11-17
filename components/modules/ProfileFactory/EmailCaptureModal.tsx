@@ -95,7 +95,7 @@ export default function EmailCaptureModal() {
                         className='mr-2 mt-1 max-w-[328px] text-black rounded-[4px] focus:ring-1 focus:ring-[#F9D54C]'
                       />
                       <p className='text-left mb-8 text-[#8F8F8F]'>
-                        I have read and accept the <span className='text-[#4B4B4B] font-semibold'>Terms & Conditions</span>
+                        I have read and accept the <a target="_blank" href="https://cdn.nft.com/nft_com_terms_of_service.pdf" rel="noopener noreferrer" className='text-[#4B4B4B] font-semibold'>Terms & Conditions</a>
                       </p>
                     </div>
 
