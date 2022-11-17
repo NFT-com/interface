@@ -11,7 +11,7 @@ import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { ResultsPageProps } from 'types';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { collectionCardImages, getPerPage,isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
@@ -31,7 +31,7 @@ function usePrevious(value) {
 }
 
 export default function ResultsPage({ data }: ResultsPageProps) {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const router = useRouter();

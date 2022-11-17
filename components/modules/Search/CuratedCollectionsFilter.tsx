@@ -1,5 +1,5 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { motion } from 'framer-motion';
@@ -8,7 +8,7 @@ import { CaretUp } from 'phosphor-react';
 import { useState } from 'react';
 
 export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void, collapsed?: boolean}) => {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(props.collapsed ?? true);
   const { setSearchModalOpen, curatedCollections, setSelectedCuratedCollection, selectedCuratedCollection } = useSearchModal();
   const router = useRouter();

@@ -10,7 +10,7 @@ import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { DiscoverPageProps } from 'types';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { collectionCardImages, getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -20,7 +20,7 @@ import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
 export default function DiscoverPage({ data }: DiscoverPageProps) {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
   const { width: screenWidth } = useWindowDimensions();
   const { usePrevious } = usePreviousValue();
