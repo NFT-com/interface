@@ -1,9 +1,8 @@
 import { ResultsDropDown as StaticResultsDropDown } from 'components/modules/Search/ResultsDropDown';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
-import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
@@ -22,8 +21,6 @@ interface SearchContentProps {
 }
 
 export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchContentProps) => {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [inputFocus, setInputFocus] = useState(false);
@@ -31,7 +28,6 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
   const [transitionWidth, setTransitionWidth] = useState('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
   const { setSearchModalOpen, setDropDownSearchResults } = useSearchModal();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
-  const { mobileSidebarOpen } = useMobileSidebar();
   const router = useRouter();
   const resultsRef = useRef();
   const wrapperRef = useRef(null);
@@ -224,7 +220,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
             <div ref={resultsRef}>
               <DynamicResultsDropDown
                 isHeader={isHeader}
-                extraClasses={discoverPageEnv ? 'mt-4' : 'mt-8'}
+                extraClasses={getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) ? 'mt-4' : 'mt-8'}
                 searchResults={searchResults}
                 resultTitleOnClick={() => {
                   setSearchModalOpen(false);
