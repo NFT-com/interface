@@ -31,7 +31,7 @@ export default function EmailCaptureModal() {
   };
 
   return (
-    <Transition appear show={true} as={Fragment}>
+    <Transition appear show={emailCaptureModal} as={Fragment}>
       <Dialog as="div" className="relative z-[105]" onClose={() => closeModal()}>
         <Transition.Child
           as={Fragment}
