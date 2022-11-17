@@ -21,8 +21,6 @@ interface SearchContentProps {
 }
 
 export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchContentProps) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [inputFocus, setInputFocus] = useState(false);
