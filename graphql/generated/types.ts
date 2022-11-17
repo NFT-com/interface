@@ -1710,6 +1710,9 @@ export type Query = {
   /** AUTHENTICATED */
   profilesFollowedByMe: ProfilesOutput;
   profilesMintedByGK: Array<Profile>;
+  /** AUTHENTICATED */
+  searchNFTsForProfile: NfTsOutput;
+  searchVisibleNFTsForProfile: NfTsOutput;
   topBids: BidsOutput;
   watchlist: Watchlist;
 };
@@ -1992,6 +1995,16 @@ export type QueryProfilesMintedByGkArgs = {
 };
 
 
+export type QuerySearchNfTsForProfileArgs = {
+  input: SearchNfTsForProfileInput;
+};
+
+
+export type QuerySearchVisibleNfTsForProfileArgs = {
+  input: SearchVisibleNfTsForProfileInput;
+};
+
+
 export type QueryTopBidsArgs = {
   input?: InputMaybe<TopBidsInput>;
 };
@@ -2097,6 +2110,20 @@ export type SeaportProtocolDataParams = {
   totalOriginalConsiderationItems?: Maybe<Scalars['Int']>;
   zone?: Maybe<Scalars['String']>;
   zoneHash?: Maybe<Scalars['String']>;
+};
+
+export type SearchNfTsForProfileInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  pageInput?: InputMaybe<PageInput>;
+  query: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type SearchVisibleNfTsForProfileInput = {
+  chainId?: InputMaybe<Scalars['String']>;
+  pageInput?: InputMaybe<PageInput>;
+  query: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type SendReferEmailInput = {
@@ -3205,6 +3232,20 @@ export type RecentProfilesQueryVariables = Exact<{
 
 
 export type RecentProfilesQuery = { __typename?: 'Query', latestProfiles: { __typename?: 'ProfilesOutput', totalItems?: number | null, items: Array<{ __typename?: 'Profile', id: string, bannerURL?: string | null, photoURL?: string | null, url: string, owner?: { __typename?: 'Wallet', address: any } | null }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
+
+export type SearchNfTsForProfileQueryVariables = Exact<{
+  input: SearchNfTsForProfileInput;
+}>;
+
+
+export type SearchNfTsForProfileQuery = { __typename?: 'Query', searchNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, listings?: { __typename?: 'TxActivitiesOutput', items?: Array<{ __typename?: 'TxActivity', status: ActivityStatus, order?: { __typename?: 'TxOrder', protocolData?: { __typename?: 'LooksrareProtocolData', price?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', orderType?: number | null } | null } | null } | null } | null> | null } | null, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
+
+export type SearchVisibleNfTsForProfileQueryVariables = Exact<{
+  input: SearchVisibleNfTsForProfileInput;
+}>;
+
+
+export type SearchVisibleNfTsForProfileQuery = { __typename?: 'Query', searchVisibleNFTsForProfile: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, tokenId: any, id: string, type: NftType, wallet?: { __typename?: 'Wallet', address: any } | null, listings?: { __typename?: 'TxActivitiesOutput', items?: Array<{ __typename?: 'TxActivity', status: ActivityStatus, order?: { __typename?: 'TxOrder', protocolData?: { __typename?: 'LooksrareProtocolData', price?: string | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', orderType?: number | null } | null } | null } | null } | null> | null } | null, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
 
 export type TopBidsQueryVariables = Exact<{
   input?: InputMaybe<TopBidsInput>;
@@ -5103,6 +5144,96 @@ export const RecentProfilesDocument = gql`
   }
 }
     `;
+export const SearchNfTsForProfileDocument = gql`
+    query SearchNFTsForProfile($input: SearchNFTsForProfileInput!) {
+  searchNFTsForProfile(input: $input) {
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+    items {
+      isOwnedByMe
+      previewLink
+      wallet {
+        address
+      }
+      contract
+      tokenId
+      id
+      type
+      listings {
+        items {
+          status
+          order {
+            protocolData {
+              ... on LooksrareProtocolData {
+                price
+              }
+              ... on SeaportProtocolData {
+                parameters {
+                  orderType
+                }
+                signature
+              }
+            }
+          }
+        }
+      }
+      metadata {
+        imageURL
+        description
+        name
+      }
+    }
+  }
+}
+    `;
+export const SearchVisibleNfTsForProfileDocument = gql`
+    query SearchVisibleNFTsForProfile($input: SearchVisibleNFTsForProfileInput!) {
+  searchVisibleNFTsForProfile(input: $input) {
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+    items {
+      isOwnedByMe
+      previewLink
+      wallet {
+        address
+      }
+      contract
+      tokenId
+      id
+      type
+      listings {
+        items {
+          status
+          order {
+            protocolData {
+              ... on LooksrareProtocolData {
+                price
+              }
+              ... on SeaportProtocolData {
+                parameters {
+                  orderType
+                }
+                signature
+              }
+            }
+          }
+        }
+      }
+      metadata {
+        imageURL
+        description
+        name
+      }
+    }
+  }
+}
+    `;
 export const TopBidsDocument = gql`
     query TopBids($input: TopBidsInput) {
   topBids(input: $input) {
@@ -5402,6 +5533,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     RecentProfiles(variables?: RecentProfilesQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RecentProfilesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<RecentProfilesQuery>(RecentProfilesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'RecentProfiles', 'query');
+    },
+    SearchNFTsForProfile(variables: SearchNfTsForProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchNfTsForProfileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SearchNfTsForProfileQuery>(SearchNfTsForProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SearchNFTsForProfile', 'query');
+    },
+    SearchVisibleNFTsForProfile(variables: SearchVisibleNfTsForProfileQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchVisibleNfTsForProfileQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SearchVisibleNfTsForProfileQuery>(SearchVisibleNfTsForProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SearchVisibleNFTsForProfile', 'query');
     },
     TopBids(variables?: TopBidsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<TopBidsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<TopBidsQuery>(TopBidsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'TopBids', 'query');

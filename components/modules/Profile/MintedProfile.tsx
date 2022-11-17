@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import Loader from 'components/elements/Loader';
 import { Collection } from 'components/modules/Collection/Collection';
 import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
@@ -53,7 +54,8 @@ export function MintedProfile(props: MintedProfileProps) {
     userIsAdmin,
     publiclyVisibleNftsNoEdit,
     loading,
-    draftDeployedContractsVisible
+    draftDeployedContractsVisible,
+    saveProfileImage
   } = useContext(ProfileContext);
 
   const { address: currentAddress } = useAccount();
@@ -61,6 +63,7 @@ export function MintedProfile(props: MintedProfileProps) {
   const { profileData } = useProfileQuery(profileURI);
   const { user } = useUser();
   const { nftResolver } = useAllContracts();
+  const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
 
   const fetchAssociatedContract = useCallback(async () => {
     if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
@@ -88,6 +91,17 @@ export function MintedProfile(props: MintedProfileProps) {
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
 
+  const onDropImage = (files: Array<any>, type: string) => {
+    if (files.length > 1) {
+      alert('only 1 picture is allowed at a time');
+    } else {
+      saveProfileImage({
+        preview: URL.createObjectURL(files[0]),
+        raw: files[0]
+      }, type);
+    }
+  };
+      
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
       alert('only 1 picture is allowed at a time');
@@ -121,7 +135,7 @@ export function MintedProfile(props: MintedProfileProps) {
   return (
     <>
       <ProfileScrollContextProvider>
-        <div className='w-full'>
+        <div className='w-full group'>
           <BannerWrapper
             draft={!isNullOrEmpty(draftHeaderImg?.preview)}
             imageOverride={
@@ -138,7 +152,9 @@ export function MintedProfile(props: MintedProfileProps) {
                 disabled={!userIsAdmin}
                 accept={'image/*' ['.*']}
                 onDrop={files => {
-                  if (userIsAdmin) {
+                  if(getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin) {
+                    onDropImage(files, 'banner');
+                  } else if (userIsAdmin) {
                     onDropHeader(files);
                   }
                 }}
@@ -157,12 +173,24 @@ export function MintedProfile(props: MintedProfileProps) {
                       <PencilIconRounded alt="Edit banner" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
                     </div>}
 
-                    {editMode && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
+                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && <div
                       onClick={open}
+                      className='group-hover:cursor-pointer'
                     >
-                      <div className='absolute top-0 right-0 left-0 bottom-0 bg-black opacity-50'></div>
-                      <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                        <CameraIconEdit />
+                      <div className='absolute inset-0 bg-black opacity-0 group-hover:opacity-50 group-hover:transition-opacity group-hover:ease-in-out'></div>
+                      <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto opacity-0 group-hover:opacity-100 group-hover:transition-opacity group-hover:ease-in-out'>
+                        <CustomTooltip2
+                          orientation='top'
+                          tooltipComponent={
+                            <div
+                              className="w-max"
+                            >
+                              <p>Upload a new banner image</p>
+                            </div>
+                          }
+                        >
+                          <CameraIconEdit />
+                        </CustomTooltip2>
                       </div>
                     </div>}
                   </section>
@@ -173,12 +201,13 @@ export function MintedProfile(props: MintedProfileProps) {
         </div>
         <div className={tw(
           'flex-col',
-          'max-w-nftcom min-w-[60%] minxl:w-full',
+          'max-w-[1400px] min-w-[60%] minxl:w-full',
           isMobile ? 'mx-2' : 'mx-2 minmd:mx-8 minxl:mx-auto',
         )}>
           <div
             className={tw(
-              'flex flex-col minmd:flex-row justify-start items-start minmd:items-center',
+              'flex justify-start items-start',
+              getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'flex-col' : 'flex-col minmd:flex-row minmd:items-center'
             )}
             style={{
               zIndex: 103,
@@ -190,16 +219,18 @@ export function MintedProfile(props: MintedProfileProps) {
               onMouseLeave={() => setIsPicturedHovered(false)}>
               <Dropzone
                 accept={'image/*' ['.*']}
-                disabled={!userIsAdmin || !editMode}
+                disabled={!userIsAdmin || !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !editMode || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !isOwnerAndSignedIn}
                 onDrop={files => {
-                  if (userIsAdmin) onDropProfile(files);
+                  if(getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin) {
+                    onDropImage(files, 'profile');
+                  } else if (userIsAdmin) onDropProfile(files);
                 }}
               >
                 {({ getRootProps, getInputProps }) => (
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',
                     userIsAdmin ? '' : 'cursor-default',
-                    getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'w-[88px] h-[88px]' :'h-32 minlg:h-52 w-32 minlg:w-52 '
+                    getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'w-[88px] h-[88px] minlg:w-[120px] minlg:h-[120px] minlg:ml-20' :'h-32 minlg:h-52 w-32 minlg:w-52 '
                   )}>
                     <input {...getInputProps()} />
                     {saving && <div
@@ -226,24 +257,35 @@ export function MintedProfile(props: MintedProfileProps) {
                     <div
                       className={tw(
                         'object-center',
-                        'h-full w-full',
+                        'h-full w-full group',
                         'shrink-0 aspect-square',
-                        userIsAdmin && editMode ? 'cursor-pointer' : '',
-                        userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
-                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && ' box-border border-[5px] border-white rounded-full',
-                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] ml-6 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
+                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && 'hover:cursor-pointer',
+                        userIsAdmin && editMode ? 'hover:cursor-pointer' : '',
+                        !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
+                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'box-border border-[5px] border-white rounded-full',
+                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                       )}
                     >
-
-                      {editMode && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
+                      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && <div
                         style={{ zIndex: 102, }}
                         className={tw(
                           'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
                         )}
                       >
-                        <div className='bg-black opacity-50 absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
-                        <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
-                          <CameraIconEdit />
+                        <div className='bg-black opacity-0 group-hover:opacity-50 group-hover:transition-opacity group-hover:ease-in-out absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
+                        <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto opacity-0 group-hover:opacity-100 group-hover:transition-opacity group-hover:ease-in-out'>
+                          <CustomTooltip2
+                            orientation='top'
+                            tooltipComponent={
+                              <div
+                                className="rounded-xl w-max"
+                              >
+                                <p>Update your profile image</p>
+                              </div>
+                            }
+                          >
+                            <CameraIconEdit />
+                          </CustomTooltip2>
                         </div>
                       </div>}
 
@@ -314,7 +356,7 @@ export function MintedProfile(props: MintedProfileProps) {
             )}
           >
             {user?.currentProfileUrl === props.profileURI && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-              <div className='block minmd:hidden mt-2 px-2'>
+              <div className='block minlg:hidden mt-2 px-2'>
                 <ClaimProfileCard />
               </div>
             }
