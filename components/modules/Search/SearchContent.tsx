@@ -222,7 +222,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
             <div ref={resultsRef}>
               <DynamicResultsDropDown
                 isHeader={isHeader}
-                extraClasses={discoverPageEnv ? 'mt-4' : 'mt-8'}
+                extraClasses={getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) ? 'mt-4' : 'mt-8'}
                 searchResults={searchResults}
                 resultTitleOnClick={() => {
                   setSearchModalOpen(false);

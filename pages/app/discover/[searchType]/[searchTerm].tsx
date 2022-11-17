@@ -85,7 +85,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }, [fetchTypesenseMultiSearch, searchTerm, searchType, nftsResultsFilterBy]);
 
   if (searchType?.toString() === 'allResults' && collectionsSliderData) {
-    addressesList.current = collectionsSliderData.current?.map((nft) => {
+    addressesList.current = collectionsSliderData.hits?.map((nft) => {
       return nft.document?.contractAddr;
     });
   } else {
