@@ -2,7 +2,7 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { CheckBox } from 'components/elements/CheckBox';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 
 import { motion } from 'framer-motion';
 import { CaretUp } from 'phosphor-react';
@@ -24,7 +24,7 @@ interface FilterOptionProps {
 }
 
 const FilterOption = (props: FilterOptionProps) => {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const { item, fieldName, onSelectFilter, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [selected, setSelected] = useState(checkedInfo[0]?.selectedCheck?.includes(item.value));
@@ -70,7 +70,7 @@ const FilterOption = (props: FilterOptionProps) => {
 };
 
 const ContractNameFilter = (props: any) => {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const { filterOptions, setCheckedFilters, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [searchVal, setSearchVal] = useState('');
@@ -168,7 +168,7 @@ const ContractNameFilter = (props: any) => {
 };
 
 const Filter = (props: any) => {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const { filter, setCheckedFilters, clearedFilters, setClearedFilters } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
@@ -294,7 +294,7 @@ const Filter = (props: any) => {
 };
 
 export const NFTsFiltersContent = () => {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray } = useSearchModal();
   const [sortBy,] = useState(nftsPageSortyBy);

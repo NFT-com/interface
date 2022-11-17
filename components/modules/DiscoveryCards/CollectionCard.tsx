@@ -1,23 +1,35 @@
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { Nft, TxActivity } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { Doppler, getEnv } from 'utils/env';
-import { checkImg, sliceString } from 'utils/helpers';
+import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress, sliceString } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
 
 import { useState } from 'react';
+import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
+
+export type DetailedNft = Nft & { hidden?: boolean };
 
 export interface CollectionCardProps {
   contract?: string
   title?: string;
-  countOfElements?: any;
-  contractAddress?: any;
+  countOfElements?: number | string;
+  contractAddress?: string;
   contractName?: string;
   description?: string;
   userName?: string;
   userAvatar?: string;
   isVerified?: boolean;
   redirectTo?: string;
-  imgUrl?: any;
   maxSymbolsInString?: number;
+  contractAddr?: string;
+  listings?: PartialDeep<TxActivity>[]
+  nft?: PartialDeep<DetailedNft>;
+  tokenId?: string;
+  images?: Array<string | null>,
 }
 
 export function CollectionCard(props: CollectionCardProps) {
@@ -25,12 +37,23 @@ export function CollectionCard(props: CollectionCardProps) {
   const [isStringCut, toggleStringLength] = useState(false);
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract);
   const collectionName = collection?.collection?.name ?? props.contractName;
+  const defaultChainId = useDefaultChainId();
+  const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId);
+  const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
+    [getGenesisKeyThumbnail(props.tokenId)]
+    : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
 
   return (
-    <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="block hover:scale-105 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p">
+    <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="sm:mb-4 min-h-[100%] block hover:scale-105 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p">
       <div className="h-44 relative ">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="w-[100%] object-cover h-[100%]" src={checkImg(props.imgUrl)} alt="Image"/>
+        <RoundedCornerMedia
+          variant={RoundedCornerVariant.None}
+          width={600}
+          height={600}
+          containerClasses='w-[100%] object-cover h-[100%]'
+          src={processedImageURLs[0]}
+          extraClasses="hover:scale-105 transition"
+        />
         {/*<div className="absolute w-[48px] h-[48px] bg-[rgba(0,0,0,0.70)] rounded-[50%] top-3 right-2"></div>*/}
       </div>
       <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem">

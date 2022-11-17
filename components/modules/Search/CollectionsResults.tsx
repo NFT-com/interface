@@ -1,7 +1,7 @@
 import CollectionsSlider from 'components/elements/CollectionsSlider';
 import Loader from 'components/elements/Loader';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import router from 'next/router';
@@ -35,11 +35,11 @@ const data = [
   },
 ];
 export const CollectionsResults = (props: {searchTerm?: string, found?: number, nftsForCollections?: any, sideNavOpen?: boolean}) => {
-  const discoverPageEnv = getEnv(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   const { searchTerm, found, nftsForCollections } = props;
   const showCollectionsItems = () => {
-    return data.slice(0, props.sideNavOpen ? 2 : 3).map((collection, i) => {
+    return data?.slice(0, props.sideNavOpen ? 2 : 3).map((collection, i) => {
       return (
         <CollectionCard
           key={i}
@@ -49,7 +49,7 @@ export const CollectionsResults = (props: {searchTerm?: string, found?: number, 
           userName={collection.userName}
           description={collection.description}
           countOfElements={collection.countOfElements}
-          imgUrl={collection.imgUrl}
+          images={collection.imgUrl}
           maxSymbolsInString={180}
         />
       );
@@ -69,7 +69,7 @@ export const CollectionsResults = (props: {searchTerm?: string, found?: number, 
         </div>
         <div className={tw(
           'gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-          !props.sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-3 minmd:grid-cols-1 minxl:grid-cols-2')}>
+          !props.sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-1 minxl:grid-cols-2')}>
           {showCollectionsItems()}
         </div>
         {/*{nftsForCollections && nftsForCollections.length > 0 ?*/}
