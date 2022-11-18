@@ -99,7 +99,8 @@ export function NftGrid(props: NftGridProps) {
       >
         <div
           className={tw(
-            'NFTCardContainer max-w-[264px]',
+            'NFTCardContainer',
+            getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&'max-w-[264px]',
             'flex justify-center mb-2 minmd:mb-0',
             (draftLayoutType ?? savedLayoutType) === 'Default' ? 'mb-10' : '',
             (draftLayoutType ?? savedLayoutType) === 'Featured' ? `${[0,1,2].includes(index) ? 'col-span-2 row-span-2':'col-span-1'} mb-10` : '',
