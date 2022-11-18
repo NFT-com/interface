@@ -171,6 +171,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           y: 0,
           duration: 1.5,
           ease: 'power2.out',
+        }, 0)
+        .to('#anim-discover-ttl-icon', {
+          y: 0,
+          duration: 2.2,
+          ease: 'power2.out',
         }, 0);
 
       /* Hiw it works */
@@ -226,7 +231,6 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
       gsap.to('#anim-leaderboard-decor', {
         scrollTrigger: {
           trigger: '#anim-leaderboard-trigger',
-          markers: true,
           start: 'top top',
           end: '+=400',
           pin: '#anim-leaderboard-trigger'
@@ -583,15 +587,15 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               )}>
                 <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
                   className={tw(
-                    'minlg:translate-y-40 transform-gpu',
+                    'minlg:translate-y-40 transform-gpu relative z-50',
                     'block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
                   )}>
                   Discover <br />
-                  <img className={tw(
+                  <span className='inline-block rotate-[40deg]'><img id='anim-discover-ttl-icon' className={tw(
                     'inline-block w-[0.833em] minxxl:w-[5.5rem]',
-                    'mx-[0.45em] -mt-[.75rem] -mb-[.4rem]',
-                    'rotate-[40deg] rounded-xl'
-                  )} src={data_v2?.discoverTitleNfTs.url} alt="NFT image" />a
+                    'mx-[0.45em] -mt-[.75rem] -mb-[.4rem] rounded-xl',
+                    '-translate-y-[100rem]'
+                  )} src={data_v2?.discoverTitleNfTs.url} alt="NFT image" /></span>a
                 </span>
                 <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40 transform-gpu'>New World</span>
               </h2>
@@ -812,11 +816,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                       'px-2 minlg:px-10 minxxl:px-14 flex items-baseline group'
                     )}
                     ><div role='presentation' className={tw(
-                      'mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                      'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                      'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
-                      'bg-[#B2B2B2] rounded-[3px]'
-                    )}></div>
+                        'mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                        'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                        'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                        'bg-[#B2B2B2] rounded-[3px]'
+                      )}></div>
 
                       <i className={tw(
                         'animate-text-gadient bg-[length:200%_200%]',
@@ -841,11 +845,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                       'px-3 minlg:px-10 minxxl:px-14 flex items-baseline group'
                     )}
                     ><div role='presentation' className={tw(
-                      'mr-2 minxxl:mr-3 skew-x-[-20deg]',
-                      'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
-                      'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
-                      'bg-[#B2B2B2] rounded-[3px]'
-                    )}></div>
+                        'mr-2 minxxl:mr-3 skew-x-[-20deg]',
+                        'group-hover:bg-gradient-to-b from-[#FECB02] to-[#FF9E39]',
+                        'h-[2.5rem] w-[.3125rem] basis-[.3125rem] minxl:h-[.556em] minxl:w-[.0833em] minxl:basis-[.0833em]',
+                        'bg-[#B2B2B2] rounded-[3px]'
+                      )}></div>
 
                       <i className={tw(
                         'animate-text-gadient bg-[length:200%_200%] whitespace-nowrap',
