@@ -110,7 +110,7 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
 
                   }
                   <div className={tw('mt-2', props.pure ? 'hidden' : '',)}>
-                    {!props.noCancelBtn && <div className={`${discoverPageEnv ? 'hidden' : ''} sm:block pt-4 pr-4 absolute right-0 top-0`}>
+                    {!props.noCancelBtn && <div className={`${discoverPageEnv ? 'hidden' : 'minmd:block'} hidden pt-4 pr-4 absolute right-0 top-0`}>
                       <button
                         type="button"
                         className="rounded-md focus:outline-none

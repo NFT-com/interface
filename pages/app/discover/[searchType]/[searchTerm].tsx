@@ -155,18 +155,18 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   if(discoverPageEnv){
     return (
-      <div className="md:p-1 mt-7 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
+      <div className="p-1 mt-7 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
-          <div className="sm:px-0 px-4 flex mt-0 mb-4 justify-between minlg:hidden">
+          <div className="px-0 flex mt-0 mb-4 justify-between minlg:hidden">
             <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
               <SlidersHorizontal size={22}/>
             </div>
-            <div className={'relative flex items-center justify-center bg-white border-[#ECECEC] border-[1px] text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer z-5'}>
+            <div className={'hidden relative flex items-center justify-center bg-white border-[#ECECEC] border-[1px] text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer z-5'}>
 
             </div>
           </div>
           <div
-            className='md:hidden block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
+            className='hidden minlg:block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
             onClick={() => setSideNavOpen(!sideNavOpen)}>
             {sideNavOpen ?
               <div className="flex items-center justify-center bg-[#F2F2F2] text-[#6A6A6A] py-3 px-5 text-lg rounded-[48px]">
@@ -232,8 +232,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                               description={item?.document.description}
                               maxSymbolsInString={180}/>
                             :
-                            <div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-                              <div className="flex justify-center items-center bg-gray-300 rounded-[6px] overflow-hidden sm:w-96 dark:bg-gray-700">
+                            <div key={item} role="status" className="space-y-8 animate-pulse p-1 last:ml-0 minmd:p-0">
+                              <div className="flex justify-center items-center bg-gray-300 rounded-[6px] overflow-hidden full-width dark:bg-gray-700">
                                 <PreloaderImage/>
                               </div>
                               <span className="sr-only">Loading...</span>

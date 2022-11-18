@@ -2,6 +2,7 @@ import CollectionsSlider from 'components/elements/CollectionsSlider';
 import Loader from 'components/elements/Loader';
 import PreloaderImage from 'components/elements/PreloaderImage';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
@@ -9,17 +10,18 @@ import router from 'next/router';
 
 export const CollectionsResults = (props: {searchTerm?: string, found?: number, nftsForCollections?: any, sideNavOpen?: boolean}) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const { width: screenWidth } = useWindowDimensions();
 
   const { searchTerm, found, nftsForCollections, sideNavOpen } = props;
 
   const showCollectionsItems = () => {
-    const preloadersArray = sideNavOpen ? [1,2] : [1,2,3];
+    const preloadersArray = screenWidth < 1200 ? [1,2] : sideNavOpen ? [1,2] : [1,2,3];
     if(!nftsForCollections){
       return (
         preloadersArray.map(item => {
           return (
-            <div key={item} role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-              <div className="flex justify-center items-center bg-gray-300 rounded-[6px] overflow-hidden sm:w-96 dark:bg-gray-700">
+            <div key={item} role="status" className="space-y-8 animate-pulse p-1 last:ml-0 minmd:p-0">
+              <div className="flex justify-center items-center bg-gray-300 rounded-[6px] overflow-hidden full-width dark:bg-gray-700">
                 <PreloaderImage/>
               </div>
             </div>
@@ -27,7 +29,7 @@ export const CollectionsResults = (props: {searchTerm?: string, found?: number, 
         })
       );
     }else {
-      return nftsForCollections?.filter(item => item.nfts.length).slice(0, sideNavOpen ? 2 : 3).map((collection, i) => {
+      return nftsForCollections?.filter(item => item.nfts.length).slice(0, screenWidth < 1200 ? 2 : sideNavOpen ? 2 : 3).map((collection, i) => {
         if(collection?.nfts.length){
           return (
             <CollectionCard
