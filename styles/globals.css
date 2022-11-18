@@ -1979,6 +1979,23 @@ input[type="search"]::-webkit-search-cancel-button {
   animation-direction: reverse;
 }
 
+.anim-leaderboard-path {
+  animation: leaderboardPathAnim 10s ease-out infinite;
+}
+
+
+@keyframes leaderboardPathAnim {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translateX(100px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
 @keyframes cornersAnim {
   0% {
     transform: translateY(2%);
