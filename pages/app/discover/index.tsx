@@ -48,7 +48,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
 
   useEffect(() => {
     if(isNullOrEmpty(curatedCollections)) {
-      setCuratedCollections(discoverPageEnv ? dataDev : data);
+      setCuratedCollections(getEnvBool(Doppler.NEXT_PUBLIC_DEV_CONTENT_MODEL_ENABLED) ? dataDev : data);
     }
   },[curatedCollections, data, dataDev, discoverPageEnv, setCuratedCollections]);
 

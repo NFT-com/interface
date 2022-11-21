@@ -78,6 +78,7 @@ jobs:
         NEXT_PUBLIC_GA_ENABLED: ${{ secrets.NEXT_PUBLIC_GA_ENABLED }}
         NEXT_PUBLIC_PROFILE_V2_ENABLED: ${{ secrets.NEXT_PUBLIC_PROFILE_V2_ENABLED}}
         NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED: ${{ secrets.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED}}
+        NEXT_PUBLIC_DEV_CONTENT_MODEL_ENABLED: ${{ secrets.NEXT_PUBLIC_DEV_CONTENT_MODEL_ENABLED}}
 
     - name: ✅ Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.0
