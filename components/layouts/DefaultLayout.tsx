@@ -2,6 +2,7 @@ import { Footer as StaticFooter } from 'components/elements/Footer';
 import { Header } from 'components/elements/Header';
 import { MobileSidebar } from 'components/elements/MobileSidebar';
 import { SignOutModal } from 'components/elements/SignOutModal';
+import EmailCaptureModal from 'components/modules/ProfileFactory/EmailCaptureModal';
 import ProfileSelectModal from 'components/modules/ProfileFactory/ProfileSelectModal';
 import { SearchContent } from 'components/modules/Search/SearchContent';
 import { SearchModal } from 'components/modules/Search/SearchModal';
@@ -24,6 +25,7 @@ type DefaultLayoutProps = {
 
 const DynamicFooter = dynamic<React.ComponentProps<typeof StaticFooter>>(() => import('components/elements/Footer').then(mod => mod.Footer));
 const DynamicProfileSelectModal = dynamic<React.ComponentProps<typeof ProfileSelectModal>>(() => import('components/modules/ProfileFactory/ProfileSelectModal').then(mod => mod.default));
+const DynamicEmailCaptureModal = dynamic<React.ComponentProps<typeof EmailCaptureModal>>(() => import('components/modules/ProfileFactory/EmailCaptureModal').then(mod => mod.default));
 
 export default function DefaultLayout({ children, hideFooter, hideHeader, hideSearch }: DefaultLayoutProps) {
   const { setCurrentProfileUrl } = useUser();
@@ -55,6 +57,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
         {children}
 
         <DynamicProfileSelectModal />
+        <DynamicEmailCaptureModal />
         <SignOutModal
           visible={signOutDialogOpen}
           onClose={() => {

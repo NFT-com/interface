@@ -3,11 +3,13 @@ import DraggableGridItem from 'components/modules/Draggable/DraggableGridItem';
 import { GridContext } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useUser } from 'hooks/state/useUser';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { ClaimProfileCard } from './ClaimProfileCard';
 import { ProfileContext } from './ProfileContext';
 
 import { BigNumber } from 'ethers';
@@ -28,9 +30,11 @@ export function NftGrid(props: NftGridProps) {
     editMode,
     draftNftsDescriptionsVisible,
     draftLayoutType,
+    currentNftsDescriptionsVisible,
+    currentLayoutType
   } = useContext(ProfileContext);
   const { items, moveItem } = useContext(GridContext);
-
+  const { user } = useUser();
   const { profileData } = useProfileQuery(props.profileURI);
 
   const { tileBackgroundSecondary } = useThemeColors();
@@ -50,7 +54,7 @@ export function NftGrid(props: NftGridProps) {
     mosaicArray2.push(seq2);
   }
 
-  const savedLayoutType = profileData?.profile?.layoutType;
+  const savedLayoutType = getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? currentLayoutType : profileData?.profile?.layoutType;
 
   const mosaicCardType = (layoutType, index) => {
     if (layoutType === 'Mosaic') {
@@ -75,13 +79,18 @@ export function NftGrid(props: NftGridProps) {
     className={tw(
       'grid w-full',
       getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'gap-4' : 'gap-8 mt-2' ,
-      (draftLayoutType ?? savedLayoutType) === 'Default' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'grid-cols-2 minmd:grid-cols-2 minlg:grid-cols-4' : 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
+      (draftLayoutType ?? savedLayoutType) === 'Default' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-5 minxxl:grid-cols-6' : 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
       (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : 'grid-cols-1 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-4 minlg:grid-cols-8' : '',
     )}
     data-testid={savedLayoutType+'-layout-option'}
   >
+    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && user?.currentProfileUrl === props.profileURI &&
+      <div className='hidden minlg:block'>
+        <ClaimProfileCard />
+      </div>
+    }
     {items?.map((nft: PartialDeep<DetailedNft>, index) => (
       <DraggableGridItem
         key={nft?.id}
@@ -91,6 +100,7 @@ export function NftGrid(props: NftGridProps) {
         <div
           className={tw(
             'NFTCardContainer',
+            getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&'max-w-[264px]',
             'flex justify-center mb-2 minmd:mb-0',
             (draftLayoutType ?? savedLayoutType) === 'Default' ? 'mb-10' : '',
             (draftLayoutType ?? savedLayoutType) === 'Featured' ? `${[0,1,2].includes(index) ? 'col-span-2 row-span-2':'col-span-1'} mb-10` : '',
@@ -129,7 +139,10 @@ export function NftGrid(props: NftGridProps) {
             }}
             redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
             customBackground={tileBackgroundSecondary}
-            nftsDescriptionsVisible={draftNftsDescriptionsVisible}
+            nftsDescriptionsVisible={getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
+              currentNftsDescriptionsVisible :
+              draftNftsDescriptionsVisible
+            }
             layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}
             preventDefault={editMode}
           />

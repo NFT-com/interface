@@ -3336,10 +3336,10 @@
     "@json-rpc-tools/types" "^1.7.6"
     "@pedrouid/environment" "^1.0.1"
 
-"@looksrare/sdk@^0.8.0":
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/@looksrare/sdk/-/sdk-0.8.3.tgz#fc04eec1a0aa3a97dcb3e3b8ae425b9b6df76366"
-  integrity sha512-eSdEzPVbk6MjmAzcxBo4WbKk2Nh17QE8uxNGILWZV/URssEKXvgxvL4wD1T2Ounbt375NulaokenGjr/OXcuyQ==
+"@looksrare/sdk@^0.10.0":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@looksrare/sdk/-/sdk-0.10.2.tgz#08b14cb6d3a5499ad0417c817dbb2da924477f4f"
+  integrity sha512-K3VVq7rpS0hD5IwfhAcAPJZO5IjL0VbL89Zl04x8WnLsFOwXHzsUkxUpRrL8ko2/bgZdgTqWgUWCvbSoVr8hzw==
 
 "@lottiefiles/react-lottie-player@^3.4.7":
   version "3.4.7"
@@ -8129,11 +8129,6 @@ d3-array@2, d3-array@^2.3.0:
   integrity sha512-B0ErZK/66mHtEsR1TkPEEkwdy+WDesimkM5gpZr5Dsg54BiTA5RXtYW5qTLIAcekaS9xfZrzBLF/OAkB3Qn1YQ==
   dependencies:
     internmap "^1.0.0"
-
-"d3-color@1 - 2":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-2.0.0.tgz#8d625cab42ed9b8f601a1760a389f7ea9189d62e"
-  integrity sha512-SPXi0TSKPD4g9tw0NMZFnR95XVgUZiBH+uUTqQuDu1OsE2zomHU7ho0FISciaPvosimixwHFl3WHLGabv6dDgQ==
 
 d3-color@3.1.0:
   version "3.1.0"

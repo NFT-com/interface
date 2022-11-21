@@ -2,6 +2,7 @@ import { ResultsDropDown as StaticResultsDropDown } from 'components/modules/Sea
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 import { SearchableFields } from 'utils/typeSenseAdapters';
 
@@ -219,7 +220,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
             <div ref={resultsRef}>
               <DynamicResultsDropDown
                 isHeader={isHeader}
-                extraClasses={'mt-8'}
+                extraClasses={getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) ? 'mt-4' : 'mt-8'}
                 searchResults={searchResults}
                 resultTitleOnClick={() => {
                   setSearchModalOpen(false);

@@ -1,5 +1,5 @@
-query MyNFTs($input: NFTsInput) {
-  myNFTs(input: $input) {
+query SearchNFTsForProfile($input: SearchNFTsForProfileInput!) {
+  searchNFTsForProfile(input: $input) {
     pageInfo {
       firstCursor
       lastCursor
@@ -33,7 +33,6 @@ query MyNFTs($input: NFTsInput) {
           }
         }
       }
-      isHide
       metadata {
         imageURL
         description
