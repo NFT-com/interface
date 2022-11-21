@@ -14,6 +14,7 @@ export interface PickerOption {
   onSelect: () => void;
   color?: string;
   icon?: string | any;
+  closeModalOnClick?: boolean
 }
 
 export interface DropdownPickerModalProps {
@@ -67,6 +68,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
           item.onSelect();
+          item?.closeModalOnClick && setExpanded(false);
         }}
       >
         {item.icon}&nbsp;

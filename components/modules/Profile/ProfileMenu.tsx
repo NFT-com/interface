@@ -181,7 +181,8 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                   {
                     label: 'Edit Profile',
                     onSelect: () => setEditMode(true),
-                    icon: null
+                    icon: null,
+                    closeModalOnClick: true
                   },
                   {
                     label: `${showDescriptions ? 'Hide' : 'Show'} Descriptions`,
