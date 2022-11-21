@@ -50,7 +50,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
     if(isNullOrEmpty(curatedCollections)) {
       setCuratedCollections(getEnvBool(Doppler.NEXT_PUBLIC_DEV_CONTENT_MODEL_ENABLED) ? dataDev : data);
     }
-  },[curatedCollections, data, dataDev, discoverPageEnv, setCuratedCollections]);
+  },[curatedCollections, data, dataDev, setCuratedCollections]);
 
   useEffect(() => {
     setPage(1);
