@@ -54,8 +54,7 @@ export function MintedProfile(props: MintedProfileProps) {
     userIsAdmin,
     publiclyVisibleNftsNoEdit,
     loading,
-    draftDeployedContractsVisible,
-    saveProfileImage
+    draftDeployedContractsVisible
   } = useContext(ProfileContext);
 
   const { address: currentAddress } = useAccount();
@@ -63,7 +62,6 @@ export function MintedProfile(props: MintedProfileProps) {
   const { profileData } = useProfileQuery(profileURI);
   const { user } = useUser();
   const { nftResolver } = useAllContracts();
-  const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
 
   const fetchAssociatedContract = useCallback(async () => {
     if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
@@ -90,17 +88,6 @@ export function MintedProfile(props: MintedProfileProps) {
   const { data: associatedCollectionWithDeployer } = useAssociatedCollectionForProfile(profileURI);
 
   const { data: ownedGKTokens } = useOwnedGenesisKeyTokens(currentAddress);
-
-  const onDropImage = (files: Array<any>, type: string) => {
-    if (files.length > 1) {
-      alert('only 1 picture is allowed at a time');
-    } else {
-      saveProfileImage({
-        preview: URL.createObjectURL(files[0]),
-        raw: files[0]
-      }, type);
-    }
-  };
       
   const onDropProfile = (files: Array<any>) => {
     if (files.length > 1) {
@@ -152,9 +139,7 @@ export function MintedProfile(props: MintedProfileProps) {
                 disabled={!userIsAdmin}
                 accept={'image/*' ['.*']}
                 onDrop={files => {
-                  if(getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin) {
-                    onDropImage(files, 'banner');
-                  } else if (userIsAdmin) {
+                  if (userIsAdmin) {
                     onDropHeader(files);
                   }
                 }}
@@ -173,12 +158,12 @@ export function MintedProfile(props: MintedProfileProps) {
                       <PencilIconRounded alt="Edit banner" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
                     </div>}
 
-                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && <div
+                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && <div
                       onClick={open}
                       className='group-hover:cursor-pointer'
                     >
-                      <div className='absolute inset-0 bg-black opacity-0 group-hover:opacity-50 group-hover:transition-opacity group-hover:ease-in-out'></div>
-                      <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto opacity-0 group-hover:opacity-100 group-hover:transition-opacity group-hover:ease-in-out'>
+                      <div className='absolute inset-0 bg-black opacity-50'></div>
+                      <div className='w-10 h-10 absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
                         <CustomTooltip2
                           orientation='top'
                           tooltipComponent={
@@ -219,11 +204,9 @@ export function MintedProfile(props: MintedProfileProps) {
               onMouseLeave={() => setIsPicturedHovered(false)}>
               <Dropzone
                 accept={'image/*' ['.*']}
-                disabled={!userIsAdmin || !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !editMode || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !isOwnerAndSignedIn}
+                disabled={!userIsAdmin || !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !editMode || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !editMode}
                 onDrop={files => {
-                  if(getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin) {
-                    onDropImage(files, 'profile');
-                  } else if (userIsAdmin) onDropProfile(files);
+                  if (userIsAdmin) onDropProfile(files);
                 }}
               >
                 {({ getRootProps, getInputProps }) => (
@@ -259,21 +242,21 @@ export function MintedProfile(props: MintedProfileProps) {
                         'object-center',
                         'h-full w-full group',
                         'shrink-0 aspect-square',
-                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && 'hover:cursor-pointer',
+                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && 'hover:cursor-pointer',
                         userIsAdmin && editMode ? 'hover:cursor-pointer' : '',
                         !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'box-border border-[5px] border-white rounded-full',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                       )}
                     >
-                      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && <div
+                      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && <div
                         style={{ zIndex: 102, }}
                         className={tw(
                           'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
                         )}
                       >
-                        <div className='bg-black opacity-0 group-hover:opacity-50 group-hover:transition-opacity group-hover:ease-in-out absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
-                        <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto opacity-0 group-hover:opacity-100 group-hover:transition-opacity group-hover:ease-in-out'>
+                        <div className='bg-black opacity-50 absolute top-0 bottom-0 right-0 left-0 rounded-full'></div>
+                        <div className='w-[28px] h-[28px] absolute left-0 right-0 mx-auto top-0 bottom-0 my-auto'>
                           <CustomTooltip2
                             orientation='top'
                             tooltipComponent={

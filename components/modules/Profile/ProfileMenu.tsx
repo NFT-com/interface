@@ -5,6 +5,7 @@ import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv } from 'utils/env';
+import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -19,12 +20,14 @@ import MosaicIcon from 'public/layout_icon_mosaic.svg';
 import SpotlightIcon from 'public/layout_icon_spotlight.svg';
 import GearIcon from 'public/settings_icon.svg';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 export interface ProfileMenuProps {
   profileURI: string;
 }
 
 export function ProfileMenu({ profileURI } : ProfileMenuProps) {
+  const { address: currentAddress } = useAccount();
   const router = useRouter();
   const [, staticCopy] = useCopyClipboard();
   const { user } = useUser();
@@ -43,7 +46,13 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
     setLayoutType,
     setDescriptionsVisible,
     searchQuery,
-    setSearchQuery
+    setSearchQuery,
+    editMode,
+    saveProfile,
+    draftProfileImg,
+    draftHeaderImg,
+    draftBio,
+    clearDrafts
   } = useContext(ProfileContext);
 
   const setLayout = useCallback((type: ProfileLayoutType) => {
@@ -131,7 +140,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         searchVisible && 'hidden minlg:flex'
       )}>
         <div onClick={() => setSearchVisible(true)} className={tw(
-          'w-10 h-10 minlg:w-12 minlg:h-12 rounded-full',
+          'w-10 h-10 minlg:w-12 minlg:h-12 rounded-full px-2.5 minlg:px-3.5',
           'flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer',
           searchVisible && 'minlg:hidden'
         )}>
@@ -162,12 +171,13 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                 disablePadding
                 align='center'
                 selectedIndex={0}
-                options={[
+                options={filterNulls([
                   {
                     label: 'Settings',
                     onSelect: () => router.push('/app/settings'),
                     icon: null
                   },
+                  !editMode &&
                   {
                     label: 'Edit Profile',
                     onSelect: () => setEditMode(true),
@@ -178,7 +188,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                     onSelect: () => setDescriptions(!showDescriptions),
                     icon: null,
                   }
-                ]
+                ])
                 }>
                 <div className='w-10 h-10 minlg:w-12 minlg:h-12 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
                   <GearIcon className={tw(
@@ -186,8 +196,53 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                   )} />
                 </div>
               </DropdownPickerModal>
+
+              {editMode &&
+              <>
+                <button
+                  type="button"
+                  className={tw(
+                    'flex w-full justify-center items-center',
+                    'rounded-[10px] border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
+                    'px-4 py-2 font-medium text-black whitespace-nowrap',
+                    'focus:outline-none focus-visible:bg-[#E4BA18]',
+                    'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
+                  )}
+                  onClick={() => {
+                    analytics.track('Update Profile', {
+                      ethereumAddress: currentAddress,
+                      profile: profileURI,
+                      newProfile: draftProfileImg?.preview ? true : false,
+                      newHeader: draftHeaderImg?.preview ? true : false,
+                      newDescription: draftBio,
+                    });
+      
+                    saveProfile();
+                    setTimeout(() => {
+                      setEditMode(false);
+                    }, 3000);
+                  }}
+                >
+                Save changes
+                </button>
+                <button
+                  type="button"
+                  className={tw(
+                    'flex w-full justify-center items-center',
+                    'rounded-[10px] border border-transparent bg-black hover:bg-[#282828]',
+                    'px-4 py-2 font-medium text-white',
+                    'focus:outline-none focus-visible:bg-[#E4BA18]',
+                    'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
+                  )}
+                  onClick={clearDrafts}
+                >
+                Cancel
+                </button>
+              </>
+              }
             </>
         }
+        {!editMode &&
         <DropdownPickerModal
           pointer
           constrain
@@ -215,6 +270,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             <ShareNetwork size={15} className='mr-1' weight='bold' /> SHARE
           </div>
         </DropdownPickerModal>
+        }
       </div>
     </div>
   );
