@@ -35,7 +35,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const inputRef = useRef();
 
   useOutsideClickAlerter(inputRef, () => {
-    setSearchVisible(false);
+    searchQuery === '' && setSearchVisible(false);
   });
 
   const {
