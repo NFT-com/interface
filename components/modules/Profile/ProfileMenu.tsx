@@ -136,7 +136,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       </div>
         
       <div className={tw(
-        'flex flex-row space-x-1 minlg:space-x-3',
+        'flex flex-row items-center space-x-1 minlg:space-x-3',
         searchVisible && 'hidden minlg:flex'
       )}>
         <div onClick={() => setSearchVisible(true)} className={tw(
@@ -198,7 +198,8 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
               </DropdownPickerModal>
 
               {editMode &&
-              <>
+              <div className='fixed minlg:relative bottom-0 left-0 z-[10000] bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none'
+              >
                 <button
                   type="button"
                   className={tw(
@@ -238,7 +239,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                 >
                 Cancel
                 </button>
-              </>
+              </div>
               }
             </>
         }

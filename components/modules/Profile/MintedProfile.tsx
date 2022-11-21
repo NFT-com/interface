@@ -158,7 +158,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       <PencilIconRounded alt="Edit banner" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
                     </div>}
 
-                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && <div
+                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && !saving && <div
                       onClick={open}
                       className='group-hover:cursor-pointer'
                     >
@@ -219,9 +219,11 @@ export function MintedProfile(props: MintedProfileProps) {
                     {saving && <div
                       style={{ zIndex: 102 }}
                       className={tw(
-                        'rounded-full absolute flex border bg-white/10',
+                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
+                          'bg-white/10 mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :
+                          'border bg-white/10 mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px]',
+                        'rounded-full absolute flex ',
                         'items-center justify-center h-full w-full',
-                        'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                       )}
                     >
                       <Loader/>
@@ -249,7 +251,7 @@ export function MintedProfile(props: MintedProfileProps) {
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                       )}
                     >
-                      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && <div
+                      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && !saving && <div
                         style={{ zIndex: 102, }}
                         className={tw(
                           'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
@@ -333,7 +335,8 @@ export function MintedProfile(props: MintedProfileProps) {
           <div
             className={tw(
               'h-full',
-              editMode && !draftDeployedContractsVisible ? 'mt-28 minmd:mt-16' : getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-6' : 'mt-5 minmd:mt-0' ,
+              editMode && !draftDeployedContractsVisible && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-28 minmd:mt-16' :'mt-5 minmd:mt-0' ,
+              getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'mt-6',
               'w-full justify-start space-y-4 flex flex-col',
               selectedTab === 'nfts' ? 'flex' : 'hidden'
             )}
@@ -412,7 +415,7 @@ export function MintedProfile(props: MintedProfileProps) {
         </div>
       </ProfileScrollContextProvider>
 
-      {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && addressOwner === currentAddress && user.currentProfileUrl === profileURI &&
+      {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && addressOwner === currentAddress && user.currentProfileUrl === profileURI && !editMode &&
         <OnboardingModal profileURI={profileURI} />
       }
     </>
