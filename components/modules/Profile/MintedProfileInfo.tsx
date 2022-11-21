@@ -123,7 +123,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     <div className={tw(
       'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
       getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-        'mt-[-25px] minlg:mt-[-50px] px-4 minlg:px-20 font-noi-grotesk' :
+        'mt-[-25px] minlg:mt-[-50px] px-4 minlg:px-20 font-noi-grotesk minlg:mb-12' :
         'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 px-4 w-4/5 minxl:w-3/5 minmd:min-h-52 min-h-32'
     )}
     >
@@ -132,16 +132,36 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
         `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'pr-12'}`,
         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'justify-start minlg:justify-between minlg:mt-3' : 'justify-start'
       )}>
-        <div
-          id="MintedProfileNameContainer"
-          className={tw(
-            getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'font-bold text-lg minlg:text-[44px] minlg:font-medium' :'font-bold text-2xl minxl:text-4xl',
-            'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4'
-          )}>
-          {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+        <div className='flex items-end'>
+          <div
+            id="MintedProfileNameContainer"
+            className={tw(
+              getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'font-bold text-lg minlg:text-[44px] minlg:font-medium' :'font-bold text-2xl minxl:text-4xl',
+              'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4'
+            )}>
+            {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
             <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] mr-1'>/</span>
+            }
+            {profileURI}
+          </div>
+
+          {user?.currentProfileUrl !== props.profileURI &&
+            <button
+              type="button"
+              className={tw(
+                'flex w-max justify-center items-center',
+                'rounded-full border border-[#ECECEC] hover:border-[#4D4D4D]',
+                'px-3 minlg:px-4 py-2 minlg:pb-2 minlg:pt-3 minlg:-mb-1 text-xs minlg:text-sm font-medium text-black hover:border-[#4D4D4D] whitespace-nowrap',
+                'focus:outline-none focus-visible:bg-[#E4BA18]',
+                'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
+              )}
+              onClick={() => {
+                setCurrentProfileUrl(props.profileURI);
+              }}
+            >
+              SWITCH PROFILE
+            </button>
           }
-          {profileURI}
         </div>
         {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
           <div className='hidden minlg:block'>
