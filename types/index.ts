@@ -103,6 +103,7 @@ export type ResultsPageProps = {
 
 export type DiscoverPageProps = {
   data: CuratedCollection[]
+  dataDev: CuratedCollection[]
 };
 
 export type HomePageProps = {
