@@ -3,7 +3,6 @@ import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import Toast from 'components/elements/Toast';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
-import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -13,7 +12,7 @@ import { ProfileContext } from './ProfileContext';
 import { ProfileMenu } from './ProfileMenu';
 
 import GKHolderIcon from 'public/gk-holder.svg';
-import { useCallback, useContext, useRef, useState } from 'react';
+import { useCallback, useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
 import { useAccount } from 'wagmi';
 
@@ -202,7 +201,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       }
 
       {editMode && userIsAdmin && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-        <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
+        <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col group">
           <textarea
             className={tw(
               'text-base w-full resize-none mt-4',
@@ -225,7 +224,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
       }
 
       {editMode && userIsAdmin && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-        <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">
+        <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A] group">
           <CustomTooltip2
             orientation='top'
             tooltipComponent={
@@ -251,8 +250,8 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               }}
             />
           </CustomTooltip2>
-          <div className="text-sm font-medium text-gray-900 dark:text-white w-full flex justify-between">
-            <p>{draftBio ? 300 - draftBio.length : '0' } / 300</p>
+          <div className="text-sm font-medium text-gray-900 dark:text-white w-full flex space-x-2">
+            <span className='hidden group-focus-within:block text-[#E4BA18]'>Brief description for your profile.</span><p>{draftBio ? 300 - draftBio.length : '0' } / 300</p>
           </div>
         </div>
       }
