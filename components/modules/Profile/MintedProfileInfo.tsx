@@ -91,7 +91,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               });
 
               saveProfile();
-              setEditMode(false);
+              setTimeout(() => {
+                setEditMode(false);
+              }, 3000);
             }}
           />
         </div>
