@@ -19,7 +19,7 @@ import { FunnelSimple } from 'phosphor-react';
 import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
-export default function DiscoverPage({ data }: DiscoverPageProps) {
+export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
   const { width: screenWidth } = useWindowDimensions();
@@ -48,9 +48,9 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
 
   useEffect(() => {
     if(isNullOrEmpty(curatedCollections)) {
-      setCuratedCollections(data);
+      setCuratedCollections(discoverPageEnv ? dataDev : data);
     }
-  },[curatedCollections, data, setCuratedCollections]);
+  },[curatedCollections, data, dataDev, discoverPageEnv, setCuratedCollections]);
 
   useEffect(() => {
     setPage(1);
@@ -72,7 +72,7 @@ export default function DiscoverPage({ data }: DiscoverPageProps) {
     setPage(1);
   };
 
-  if(discoverPageEnv){
+  if(!discoverPageEnv){
     return(
       <>
         <div className="sm:p-2  md:p-4  lg:p-8  xl:p-16  minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
@@ -210,10 +210,13 @@ DiscoverPage.getLayout = function getLayout(page) {
 
 export async function getServerSideProps({ preview = false }) {
   const curData = await getCollection(false, 10, 'curatedCollectionsCollection', 'tabTitle contractAddresses');
+  const curDataDev = await getCollection(false, 10, 'discoverCuratedDevCollection', 'tabTitle contractAddresses');
+  
   return {
     props: {
       preview,
       data: curData ?? null,
+      dataDev: curDataDev ?? null,
     }
   };
 }
