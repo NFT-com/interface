@@ -19,13 +19,15 @@ export function useProfileNFTsQuery(
   chainId: Maybe<string>,
   first: number,
   beforeCursor?: string,
+  query?: string
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
   
   const keyString = 'ProfileNFTsQuery' +
     profileId +
     first +
-    beforeCursor;
+    beforeCursor +
+    query;
   
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(profileId)) {
@@ -35,7 +37,8 @@ export function useProfileNFTsQuery(
       input: {
         profileId,
         chainId: chainId ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
-        pageInput: { first: first, beforeCursor: beforeCursor }
+        pageInput: { first: first, beforeCursor: beforeCursor },
+        query
       }
     });
     return result;

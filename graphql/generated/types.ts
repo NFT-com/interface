@@ -213,6 +213,7 @@ export type Collection = {
   floorPrice?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['ID']>;
   isCurated?: Maybe<Scalars['Boolean']>;
+  isOfficial?: Maybe<Scalars['Boolean']>;
   isSpam?: Maybe<Scalars['Boolean']>;
   logoUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
@@ -537,12 +538,14 @@ export type LeaderboardProfile = {
 
 export type ListNftLooksrareInput = {
   chainId?: InputMaybe<Scalars['String']>;
+  createdInternally?: InputMaybe<Scalars['Boolean']>;
   looksrareOrder?: InputMaybe<Scalars['String']>;
   profileUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type ListNftSeaportInput = {
   chainId?: InputMaybe<Scalars['String']>;
+  createdInternally?: InputMaybe<Scalars['Boolean']>;
   profileUrl?: InputMaybe<Scalars['String']>;
   seaportParams?: InputMaybe<Scalars['String']>;
   seaportSignature?: InputMaybe<Scalars['String']>;
@@ -1386,6 +1389,7 @@ export type NfTsInput = {
   ownedByWallet?: InputMaybe<Scalars['Boolean']>;
   pageInput?: InputMaybe<PageInput>;
   profileId?: InputMaybe<Scalars['ID']>;
+  query?: InputMaybe<Scalars['String']>;
   types?: InputMaybe<Array<NftType>>;
 };
 
@@ -1700,7 +1704,6 @@ export type Query = {
   myProfiles: ProfilesOutput;
   nft: Nft;
   nftById: Nft;
-  nfts: CurationNfTsOutput;
   nftsForCollections: Array<CollectionNft>;
   numberOfNFTs?: Maybe<Scalars['Int']>;
   profile: Profile;
@@ -1943,11 +1946,6 @@ export type QueryNftArgs = {
 
 export type QueryNftByIdArgs = {
   id: Scalars['ID'];
-};
-
-
-export type QueryNftsArgs = {
-  input: NfTsInput;
 };
 
 
@@ -2494,6 +2492,7 @@ export type UpdateNfTsForProfileInput = {
   chainId?: InputMaybe<Scalars['String']>;
   pageInput?: InputMaybe<PageInput>;
   profileId: Scalars['ID'];
+  query?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateOfficialCollectionsOutput = {
