@@ -95,7 +95,11 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar }: SearchC
       }
 
       if (target.value !== '') {
-        router.push(`/app/discover/allResults/${target.value}`);
+        if (getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)) {
+          router.push(`/app/search/${target.value}`);
+        } else {
+          router.push(`/app/discover/allResults/${target.value}`);
+        }
       } else {
         router.push('/app/discover');
       }
