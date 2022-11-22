@@ -349,6 +349,10 @@ export function ProfileContextProvider(
     setDraftDisplayType(null);
   }, [editMode]);
 
+  useEffect(() => {
+    setAfterCursor('');
+  }, [debouncedSearch]);
+
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
     setIsDragging(true);
     setPubliclyVisibleNfts([...orderedItems.filter((nft: DetailedNft) => !nft.hidden),]);
