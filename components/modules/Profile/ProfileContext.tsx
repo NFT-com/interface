@@ -62,7 +62,6 @@ export interface ProfileContextType {
   setEditMode: (editMode: boolean) => void;
   clearDrafts: () => void;
   saveProfile: () => void;
-  saveProfileImage: (file: {raw: any, preview: string}, type: string) => void
   saving: boolean;
   selectedCollection: Maybe<string>;
   setSelectedCollection: (collectionAddress: string) => void;
@@ -115,7 +114,6 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   setEditMode: () => null,
   clearDrafts: () => null,
   saveProfile: () => null,
-  saveProfileImage: () => null,
   saving: false,
   selectedCollection: null,
   setSelectedCollection: () => null,
@@ -409,61 +407,6 @@ export function ProfileContextProvider(
     setSelectedCollection(null);
   }, [editMode]);
 
-  const saveProfileImage = useCallback(async (file: {raw: any, preview: string}, type: 'profile' | 'banner') => {
-    try {
-      if (file?.raw?.size > 2000000) { // 2MB
-        alert('Image is too large (> 2MB). Please upload a smaller image.');
-      } else {
-        setSaving(true);
-        const imageUploadResult = await uploadProfileImages({
-          profileId: profileData?.profile?.id,
-          compositeProfileURL: false,
-          avatar: type === 'profile' ? file.raw : null,
-          banner: type === 'banner' ? file.raw : null
-        });
-
-        let headerUploadImage: string;
-        let profileUploadImage: string;
-        if (!imageUploadResult) {
-          if (!isNullOrEmpty(file.raw) && type === 'banner') {
-            headerUploadImage = await fileUpload(
-              draftHeaderImg,
-              props.profileURI + '-header-img-' + moment.now()
-            );
-          }
-          if (!isNullOrEmpty(file.raw) && type === 'profile') {
-            profileUploadImage = await fileUpload(
-              draftProfileImg,
-              props.profileURI + '-profile-img-' + moment.now()
-            );
-          }
-        }
-
-        const result = await updateProfile({
-          id: profileData?.profile?.id,
-          ...(imageUploadResult
-            ? {}
-            : {
-              bannerURL: headerUploadImage,
-              photoURL: profileUploadImage,
-            })
-        });
-
-        if (result) {
-          window.scrollTo(0, 0);
-          mutateProfileData();
-          toast.success('Profile changes saved');
-        }
-        setSaving(false);
-      }
-    } catch (err) {
-      console.log('error while saving profile: ', err);
-      toast.error('Error while saving profile.');
-      clearDrafts();
-      setSaving(false);
-    }
-  }, [clearDrafts, draftHeaderImg, draftProfileImg, fileUpload, mutateProfileData, profileData?.profile?.id, props.profileURI, updateProfile, uploadProfileImages]);
-
   const saveProfile = useCallback(async () => {
     try {
       if (draftProfileImg?.raw?.size > 2000000) { // 2MB
@@ -678,7 +621,6 @@ export function ProfileContextProvider(
       }
     },
     saveProfile,
-    saveProfileImage,
     saving,
     clearDrafts,
     selectedCollection,
