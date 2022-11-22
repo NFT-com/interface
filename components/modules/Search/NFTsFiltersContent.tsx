@@ -327,7 +327,7 @@ export const NFTsFiltersContent = () => {
   if(discoverPageEnv){
     return (
       <>
-        <div className="md:rounded-[10.5px] md:px-6 md:py-4 xs:max-w-[310px] md:max-w-[358px] md:bg-white flex flex-col w-full">
+        <div className="rounded-[10.5px] minlg:rounded-[0] px-6 minlg:px-0 py-4 minlg:py-0 max-w-[310px] bg-white minlg:bg-transparent flex flex-col w-full">
           <div className="minlg:hidden flex justify-between items-center text-[28px] mb-1">Filters <X onClick={() => setSearchModalOpen(false)} size={22} className="text-[#6a6a6a] relative right-[-5px] cursor-pointer"/></div>
           <div>
             {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
@@ -343,7 +343,7 @@ export const NFTsFiltersContent = () => {
               }
             })}
           </div>
-          <div className="md:hidden px-4 minlg:px-0 minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
+          <div className="px-4 minlg:px-0 hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
             <Button
               color={'black'}
               accent={AccentType.SCALE}
@@ -370,18 +370,7 @@ export const NFTsFiltersContent = () => {
           </div>
           <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
           <div>
-            {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
-              if (['contractName', 'nftType'].includes(item.field_name)) {
-                return (<div key={index}>
-                  <Filter
-                    filter={item}
-                    setCheckedFilters={setCheckedFilters}
-                    clearedFilters={clearedFilters}
-                    setClearedFilters={setClearedFilters}
-                  />
-                </div>);
-              }
-            })}
+
           </div>
           <div
             onClick={ () => {
