@@ -5,10 +5,9 @@ import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileOrderingUpdateMutation } from 'graphql/hooks/useProfileOrderingUpdateMutation';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useSearchNFTsForProfile } from 'graphql/hooks/useSearchNFTsForProfile';
-import { useSearchVisibleNFTsForProfile } from 'graphql/hooks/useSearchVisibleNFTsForProfile';
 import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation';
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
+import useDebounce from 'hooks/useDebounce';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -76,8 +75,6 @@ export interface ProfileContextType {
   currentLayoutType: ProfileLayoutType;
   searchQuery: string;
   setSearchQuery: (val: string) => void;
-  searchVisibleNfts: PartialDeep<Nft>[];
-  searchNfts: PartialDeep<Nft>[];
 }
 
 // initialize with default values
@@ -128,9 +125,7 @@ export const ProfileContext = React.createContext<ProfileContextType>({
   currentNftsDescriptionsVisible: true,
   currentLayoutType: ProfileLayoutType.Default,
   searchQuery: null,
-  setSearchQuery: () => null,
-  searchVisibleNfts: [],
-  searchNfts: [],
+  setSearchQuery: () => null
 });
 
 export interface ProfileContextProviderProps {
@@ -152,6 +147,7 @@ export function ProfileContextProvider(
    * Queries
    */
   const [searchQuery, setSearchQuery] = useState(null);
+  const debouncedSearch = useDebounce(searchQuery, 1000);
   const { profileData, mutate: mutateProfileData } = useProfileQuery(props.profileURI);
   const { profileTokens: ownedProfileTokens } = useMyNftProfileTokens();
   const [paginatedAllOwnerNfts, setPaginatedAllOwnerNfts] = useState([]);
@@ -167,7 +163,8 @@ export function ProfileContextProvider(
     profileData?.profile?.id,
     String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),
     PUBLIC_PROFILE_LOAD_COUNT,
-    afterCursor
+    afterCursor,
+    debouncedSearch
   );
   const {
     data: allOwnerNfts,
@@ -175,9 +172,7 @@ export function ProfileContextProvider(
     totalItems: allOwnerNftCount,
     mutate: mutateAllOwnerNfts,
     pageInfo: allOwnerNftsPageInfo,
-  } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode);
-  const { nfts: searchVisibleNfts } = useSearchVisibleNFTsForProfile(props.profileURI, searchQuery);
-  const { nfts: searchNfts } = useSearchNFTsForProfile(props.profileURI, searchQuery);
+  } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode, debouncedSearch);
   /**
    * Profile v2 instant update state
    */
@@ -249,7 +244,6 @@ export function ProfileContextProvider(
 
   const [showAllNFTsValue, setShowAllNFTsValue] = useState(publicProfileNftsCount === allOwnerNftCount);
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
-  
   // Profile page NO Edit Mode ONLY
   useEffect(() => {
     if(!loading && !editMode) {
@@ -268,6 +262,10 @@ export function ProfileContextProvider(
       }
     }
   }, [afterCursor, editMode, loading, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNftsNoEdit]);
+
+  useEffect(() => {
+    !isNullOrEmpty(publicProfileNfts) && setPubliclyVisibleNftsNoEdit([...publicProfileNfts]);
+  }, [publicProfileNfts]);
 
   // Rendering of Edit mode NFTS only - for pagination, toggling and drop/dragging visibility
   useEffect(() => {
@@ -372,7 +370,7 @@ export function ProfileContextProvider(
   ) => {
     setShowAllNFTsValue(false);
     setHideAllNFTsValue(false);
-    const nft = searchQuery && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? searchNfts.find(nft => nft.id === id) : paginatedAllOwnerNfts.find(nft => nft.id === id);
+    const nft = paginatedAllOwnerNfts.find(nft => nft.id === id);
     await setCurrentScrolledPosition(window.pageYOffset);
     if (currentVisibility) {
       setIsToggling(true);
@@ -384,7 +382,7 @@ export function ProfileContextProvider(
       nft.hidden = false;
       setPubliclyVisibleNfts([...publiclyVisibleNfts, nft]);
     }
-  }, [paginatedAllOwnerNfts, publiclyVisibleNfts, searchNfts, searchQuery]);
+  }, [paginatedAllOwnerNfts, publiclyVisibleNfts]);
 
   const clearDrafts = useCallback(() => {
     // reset
@@ -690,9 +688,7 @@ export function ProfileContextProvider(
     currentNftsDescriptionsVisible,
     currentLayoutType,
     searchQuery,
-    setSearchQuery,
-    searchVisibleNfts,
-    searchNfts
+    setSearchQuery
   }}>
     {props.children}
   </ProfileContext.Provider>;
