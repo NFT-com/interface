@@ -1,59 +1,51 @@
 import CollectionsSlider from 'components/elements/CollectionsSlider';
 import Loader from 'components/elements/Loader';
+import PreloaderImage from 'components/elements/PreloaderImage';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import router from 'next/router';
-const data = [
-  {
-    redirectTo: '',
-    contractAddress: 'test',
-    contract: 'test',
-    userName: 'userName',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-    countOfElements: '12333',
-    imgUrl: ['https://nft-llc.mypinata.cloud/ipfs/QmUPnrxhPuBunudK5dubckhEocPpbfXvVcEiVvzMHPjiqP']
-  },
-  {
-    redirectTo: '',
-    contractAddress: 'test',
-    contract: 'test',
-    userName: 'userName',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-    countOfElements: '12333',
-    imgUrl: ['https://img.cryptokitties.co/0x06012c8cf97bead5deae237070f9587f8e7a266d/1161732.svg']
-  },
-  {
-    redirectTo: '',
-    contractAddress: 'test',
-    contract: 'test',
-    userName: 'userName',
-    description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
-    countOfElements: '12333',
-    imgUrl: ['https://nft-llc.mypinata.cloud/ipfs/QmQPwqyQcCkxMnjYCBodvCmr1yKj3jbdz7GePvNFN2Saj1']
-  },
-];
+
 export const CollectionsResults = (props: {searchTerm?: string, found?: number, nftsForCollections?: any, sideNavOpen?: boolean}) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const { width: screenWidth } = useWindowDimensions();
 
-  const { searchTerm, found, nftsForCollections } = props;
+  const { searchTerm, found, nftsForCollections, sideNavOpen } = props;
+
   const showCollectionsItems = () => {
-    return data?.slice(0, props.sideNavOpen ? 2 : 3).map((collection, i) => {
+    const preloadersArray = screenWidth < 1200 ? [1,2] : sideNavOpen ? [1,2] : [1,2,3];
+    if(!nftsForCollections){
       return (
-        <CollectionCard
-          key={i}
-          redirectTo={collection.redirectTo}
-          contractAddress={collection.contractAddress}
-          contract={collection.contract}
-          userName={collection.userName}
-          description={collection.description}
-          countOfElements={collection.countOfElements}
-          images={collection.imgUrl}
-          maxSymbolsInString={180}
-        />
+        preloadersArray.map(item => {
+          return (
+            <div key={item} role="status" className="space-y-8 animate-pulse p-1 last:ml-0 minmd:p-0">
+              <div className="flex justify-center items-center bg-gray-300 rounded-[6px] overflow-hidden full-width dark:bg-gray-700">
+                <PreloaderImage/>
+              </div>
+            </div>
+          );
+        })
       );
-    });
+    }else {
+      return nftsForCollections?.filter(item => item.nfts.length).slice(0, screenWidth < 1200 ? 2 : sideNavOpen ? 2 : 3).map((collection, i) => {
+        if(collection?.nfts.length){
+          return (
+            <CollectionCard
+              key={i}
+              redirectTo={collection?.collectionAddress}
+              contractAddress={collection?.contractAddress}
+              contract={collection?.contract}
+              description={collection?.nfts && collection?.nfts[0].metadata?.description}
+              images={[collection?.nfts[0].metadata?.imageUrl]}
+              contractName={collection?.nfts[0].metadata?.name}
+              maxSymbolsInString={180}
+            />
+          );
+        }
+      });
+    }
   };
   if(discoverPageEnv){
     return(
@@ -72,11 +64,6 @@ export const CollectionsResults = (props: {searchTerm?: string, found?: number, 
           !props.sideNavOpen ? 'minxl:grid-cols-3': 'minlg:grid-cols-1 minxl:grid-cols-2')}>
           {showCollectionsItems()}
         </div>
-        {/*{nftsForCollections && nftsForCollections.length > 0 ?*/}
-        {/*  showCollectionsItems() :*/}
-        {/*  (<div className="flex items-center justify-center min-h-[16rem]">*/}
-        {/*    {found === 0 ? <div className="font-grotesk font-black text-xl text-[#7F7F7F]">No results found</div>:<Loader />}*/}
-        {/*  </div>)}*/}
       </>
     );
   }else {

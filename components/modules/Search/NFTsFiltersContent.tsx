@@ -9,7 +9,7 @@ import { CaretUp } from 'phosphor-react';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useCallback, useEffect, useState } from 'react';
-import { Minus,Plus } from 'react-feather';
+import { Minus,Plus, X } from 'react-feather';
 
 interface FilterOptionProps {
   fieldName?: string,
@@ -205,13 +205,11 @@ const Filter = (props: any) => {
             setIsCollapsing(true);
           }}
           className="flex justify-between items-center cursor-pointer">
-          <div className="font-black text-base font-grotesk font-[600]">{formatTitle(filter.field_name)}</div>
+          <div className="text-xl font-black minmd:text-base font-grotesk font-[600]">{formatTitle(filter.field_name)}</div>
           <CaretUp
             color='#4D4D4D'
             className={tw('cursor-pointer transition-transform font-bold', isFilterCollapsed ? 'rotate-180' : '')}
           />
-          {/*{!isFilterCollapsed && <Minus className="h-4 w-4"/>}*/}
-          {/*{isFilterCollapsed && <Plus className="h-4 w-4"/>}*/}
         </div>
         <motion.div
           animate={{
@@ -219,8 +217,7 @@ const Filter = (props: any) => {
           transition={{ duration: 0.2 }}
           className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-hidden max-h-[16.5rem]')}
         >
-          { /* filter.field_name === 'listedPx' ?
-          ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) : */
+          {
             filter.field_name === 'contractName' ?
               (<ContractNameFilter
                 filterOptions={filter.counts}
@@ -330,15 +327,8 @@ export const NFTsFiltersContent = () => {
   if(discoverPageEnv){
     return (
       <>
-        <div className="flex flex-col w-full">
-          <div
-            className="minlg:hidden flex p-5 justify-end cursor-pointer"
-            onClick={() => {
-              setSearchModalOpen(false);
-            }}>
-            <EllipseX />
-          </div>
-          <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
+        <div className="rounded-[10.5px] minlg:rounded-[0] px-6 minlg:px-0 py-4 minlg:py-0 max-w-[310px] bg-white minlg:bg-transparent flex flex-col w-full">
+          <div className="minlg:hidden flex justify-between items-center text-[28px] mb-1">Filters <X onClick={() => setSearchModalOpen(false)} size={22} className="text-[#6a6a6a] relative right-[-5px] cursor-pointer"/></div>
           <div>
             {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
               if (['contractName', 'nftType'].includes(item.field_name)) {
@@ -353,15 +343,7 @@ export const NFTsFiltersContent = () => {
               }
             })}
           </div>
-          {/*<div*/}
-          {/*  onClick={ () => {*/}
-          {/*    setClearedFilters(true);*/}
-          {/*    setResultsPageAppliedFilters('', '','', []);*/}
-          {/*  }}*/}
-          {/*  className="border-b-[1px] border-[#F2F2F2] py-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">*/}
-          {/*  Clear filters*/}
-          {/*</div>*/}
-          <div className="px-4 minlg:px-0 minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
+          <div className="px-4 minlg:px-0 hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
             <Button
               color={'black'}
               accent={AccentType.SCALE}
@@ -388,18 +370,7 @@ export const NFTsFiltersContent = () => {
           </div>
           <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
           <div>
-            {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
-              if (['contractName', 'nftType'].includes(item.field_name)) {
-                return (<div key={index}>
-                  <Filter
-                    filter={item}
-                    setCheckedFilters={setCheckedFilters}
-                    clearedFilters={clearedFilters}
-                    setClearedFilters={setClearedFilters}
-                  />
-                </div>);
-              }
-            })}
+
           </div>
           <div
             onClick={ () => {
