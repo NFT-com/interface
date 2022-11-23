@@ -1,5 +1,4 @@
 import { ProfileContext } from 'components/modules/Profile/ProfileContext';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import React, { PropsWithChildren, ReactElement, useContext, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
@@ -24,7 +23,7 @@ const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => 
   const [{ isDragging }, connectDrag] = useDrag<GridDragObject, unknown, {isDragging : boolean}>(() => ({
     type: 'gridItem',
     item: props.item,
-    canDrag: editMode && getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED) && !isMobile && !props.item.hidden && props.item.draggable,
+    canDrag: editMode && !isMobile && !props.item.hidden && props.item.draggable,
     collect: monitor => {
       return {
         isDragging: monitor.isDragging()
