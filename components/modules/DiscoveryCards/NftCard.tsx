@@ -8,9 +8,9 @@ import { tw } from 'utils/tw';
 
 import { DetailedNft } from './CollectionCard';
 
-import Hidden from 'public/hidden.svg';
-import Reorder from 'public/reorder.svg';
-import Visible from 'public/visible.svg';
+import Hidden from 'public/Hidden.svg';
+import Reorder from 'public/Reorder.svg';
+import Visible from 'public/Visible.svg';
 import { MouseEvent } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
