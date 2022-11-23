@@ -63,10 +63,10 @@ export function NftCard(props: NftCardProps) {
           >
             {props.visible
               ? <Visible className={tw(
-                'w-7 h-6'
+                'w-7 h-6 fill-white'
               )} />
               : <Hidden className={tw(
-                'w-7 h-6'
+                'w-7 h-6 fill-white'
               )} />
             }
           </div>
