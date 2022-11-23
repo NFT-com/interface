@@ -314,7 +314,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
     });
 
     window.requestAnimationFrame(function() {
-      const HeroTtlIcons = document.querySelectorAll('.anim-profile-icon');
+      const HeroTtlIcons = document.querySelectorAll<HTMLElement>('.anim-profile-icon');
       [...HeroTtlIcons].forEach(item => {
         item.style.transform = 'translateY(0)';
       });
