@@ -1,5 +1,4 @@
 import { ProfileContext } from 'components/modules/Profile/ProfileContext';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import React, { PropsWithChildren, ReactElement, useContext, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
