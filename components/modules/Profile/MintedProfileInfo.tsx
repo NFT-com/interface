@@ -143,24 +143,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             }
             {profileURI}
           </div>
-
-          {user?.currentProfileUrl !== props.profileURI &&
-            <button
-              type="button"
-              className={tw(
-                'flex w-max justify-center items-center',
-                'rounded-full border border-[#ECECEC] hover:border-[#4D4D4D]',
-                'px-3 minlg:px-4 py-2 minlg:pb-2 minlg:pt-3 minlg:-mb-1 text-xs minlg:text-sm font-medium text-black hover:border-[#4D4D4D] whitespace-nowrap',
-                'focus:outline-none focus-visible:bg-[#E4BA18]',
-                'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-              )}
-              onClick={() => {
-                setCurrentProfileUrl(props.profileURI);
-              }}
-            >
-              SWITCH PROFILE
-            </button>
-          }
         </div>
         {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
           <div className='hidden minlg:block'>
