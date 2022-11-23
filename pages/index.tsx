@@ -140,6 +140,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           y: 0,
           duration: 1,
           ease: 'power1.out',
+        }, 0)
+        .to('#anim-profile-ttl-icon', {
+          y: 0,
+          duration: 2.2,
+          ease: 'power2.out',
         }, 0);
 
       // Discover
@@ -295,6 +300,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           y: 0,
           duration: 2.1,
           ease: 'circ.out',
+        }, 0)
+        .to('.anim-build-profile-ttl-icon', {
+          y: 0,
+          duration: 2.2,
+          ease: 'circ.out',
         }, 0);
     });
   }, []);
@@ -444,11 +454,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
                 'leading-[1.0854] -tracking-[0.03em] font-normal text-white mb-14 minxxl:mb-20'
               )}>
-                The Social<img className={tw(
+                The Social<span className='inline-block rotate-[40deg]'><img id='anim-profile-ttl-icon' className={tw(
                   'drop-shadow-md inline-block w-[2.5rem] minxxl:w-[5.5rem]',
-                  'mx-[0.4em] -my-[0.7rem]',
-                  'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.wycdTitleNfTs?.url} alt="NFT image" />
+                  'mx-[0.4em] -my-[0.7rem] rounded-xl',
+                  '-translate-y-[120vw]'
+                )} src={data_v2?.wycdTitleNfTs?.url} alt="NFT image" /></span>
                 <span className='block transform-gpu bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
 
               <div id='anim-profile-content' className={tw(
@@ -594,7 +604,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   <span className='inline-block rotate-[40deg]'><img id='anim-discover-ttl-icon' className={tw(
                     'inline-block w-[0.833em] minxxl:w-[5.5rem]',
                     'mx-[0.45em] -mt-[.75rem] -mb-[.4rem] rounded-xl',
-                    '-translate-y-[100rem]'
+                    '-translate-y-[120vw]'
                   )} src={data_v2?.discoverTitleNfTs.url} alt="NFT image" /></span>a
                 </span>
                 <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40 transform-gpu'>New World</span>
@@ -904,21 +914,21 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
                 )}>
                   <span id='anim-build-profile-ttl-1' className='minlg:translate-y-[18rem] transform-gpu'>
-                    Build<img className={tw(
+                    Build<span className='inline-block rotate-[40deg]'><img className={tw(
+                      'anim-build-profile-ttl-icon -translate-y-[120vw]',
                       'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
-                      '-mt-9 minlg:-mt-7 mx-[.4em]',
-                      'rotate-[40deg] rounded-xl',
-                    )} src={data_v2?.bynpTitleNfTsCollection.items[0].url} alt="NFT image" />
+                      '-mt-9 minlg:-mt-7 mx-[.4em] rounded-xl',
+                    )} src={data_v2?.bynpTitleNfTsCollection.items[0].url} alt="NFT image" /></span>
                     Your</span>
                   <span id='anim-build-profile-ttl-2' data-aos="fade-up" data-aos-delay="200" className={tw(
                     'block minlg:pl-12 minxl:pl-24 minlg:-mr-24 ',
                     'minlg:translate-y-[18rem] transform-gpu'
                   )}>
-                    NFT<img className={tw(
+                    NFT<span className='inline-block rotate-[40deg]'><img className={tw(
+                      'anim-build-profile-ttl-icon -translate-y-[120vw]',
                       'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
-                      'minlg:-mt-7 mx-[.4em]',
-                      'rotate-[40deg] rounded-xl',
-                    )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="NFT image" />
+                      'minlg:-mt-7 mx-[.4em] rounded-xl',
+                    )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="NFT image" /></span>
                     Profile
                   </span>
                 </h2>

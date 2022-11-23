@@ -31,7 +31,7 @@ export default function HomeLayout({ children, hideFooter, hideHeader }: HomeLay
   const { setProfileSelectModalOpen } = useProfileSelectModal();
   return (
     <div className={tw('flex flex-col',
-      'h-screen w-full min-w-screen min-h-screen',
+      'w-full min-w-screen min-h-screen overflow-hidden',
     )}>
       <div
         className='flex-1 w-full'
