@@ -77,7 +77,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         const cachedAddress = parsedSigData['address'];
         const cachedSignature = parsedSigData['signature'];
         const cachedTimestamp = parsedSigData['timestamp'];
-        if (currentAddress === cachedAddress && moment().unix() < cachedTimestamp || !isNullOrEmpty(cachedTimestamp)) {
+        if (currentAddress === cachedAddress && moment().unix() < cachedTimestamp && !isNullOrEmpty(cachedTimestamp)) {
           createSignedClient(cachedSignature, cachedTimestamp);
           setSigned(true);
           setLoading(false);
