@@ -274,3 +274,8 @@ export const checkImg = (images) => {
   }).filter(Boolean);
   return convertedImages[0];
 };
+
+export const genereteRandomPreloader = () => {
+  const index = Math.floor(Math.random() * (4));
+  return index;
+};
