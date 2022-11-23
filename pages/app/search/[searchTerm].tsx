@@ -1,9 +1,7 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
-import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CollectionsResults } from 'components/modules/Search/CollectionsResults';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { SideNav } from 'components/modules/Search/SideNav';
@@ -11,6 +9,7 @@ import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollect
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import NotFoundPage from 'pages/404';
 import { ResultsPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
@@ -139,7 +138,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     }
   }, [addressesList, fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, sideNavOpen]);
 
-  if(discoverPageEnv){
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_DEV_CONTENT_MODEL_ENABLED)) {
+    return <NotFoundPage />;
+  }
+
+  if (discoverPageEnv) {
     return (
       <div className="md:p-1 mt-7 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
@@ -241,7 +244,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         </div>
       </div>
     );
-  }else {
+  } else {
     return (
       <div className="mt-20 mb-10 minxl:max-w-nftcom minxl:mx-auto minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">

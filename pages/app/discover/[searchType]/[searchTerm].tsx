@@ -112,14 +112,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   useEffect(() => {
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : '') : '',
+      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,isProfile' : '') : '',
       max_facet_values: 200,
       collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : '') : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
-      filter_by: nftsResultsFilterBy,
+      filter_by: getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) && searchType?.toString() === 'profiles' ? 'isProfile: [true] && ' + nftsResultsFilterBy : nftsResultsFilterBy,
       sort_by: nftsPageSortyBy,
     }] })
       .then((resp) => {
@@ -132,14 +132,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
-        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : '') : '',
+        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,isProfile' : '') : '',
         max_facet_values: 200,
         collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
         q: searchTerm?.toString(),
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,
-        filter_by: nftsResultsFilterBy,
+        filter_by: getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) && searchType?.toString() === 'profiles' ? 'isProfile: [true] && ' + nftsResultsFilterBy : nftsResultsFilterBy,
         sort_by: nftsPageSortyBy,
       }] })
         .then((resp) => {
