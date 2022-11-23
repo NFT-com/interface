@@ -52,7 +52,9 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
     draftProfileImg,
     draftHeaderImg,
     draftBio,
-    clearDrafts
+    clearDrafts,
+    draftNftsDescriptionsVisible,
+    setDraftNftsDescriptionsVisible
   } = useContext(ProfileContext);
 
   const setLayout = useCallback((type: ProfileLayoutType) => {
@@ -63,7 +65,8 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const setDescriptions = useCallback((isVisible: boolean) => {
     setShowDescriptions(isVisible);
     setDescriptionsVisible(isVisible);
-  }, [setDescriptionsVisible]);
+    setDraftNftsDescriptionsVisible(isVisible);
+  }, [setDescriptionsVisible, setDraftNftsDescriptionsVisible]);
 
   useEffect(() => {
     setSelectedLayout(profileData?.profile?.layoutType);
@@ -186,7 +189,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                   },
                   {
                     label: `${showDescriptions ? 'Hide' : 'Show'} Descriptions`,
-                    onSelect: () => setDescriptions(!showDescriptions),
+                    onSelect: editMode ? () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible) : () => setDescriptions(!showDescriptions),
                     icon: null,
                   }
                 ])
