@@ -1,10 +1,13 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
+import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import { DiscoveryTabNav } from 'components/modules/DiscoveryTabNavigation/DiscoveryTabsNavigation';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { SideNav } from 'components/modules/Search/SideNav';
+import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useSearchModal } from 'hooks/state/useSearchModal';
@@ -16,6 +19,8 @@ import { tw } from 'utils/tw';
 
 import { getCollection } from 'lib/contentful/api';
 import { FunnelSimple } from 'phosphor-react';
+import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
+import SearchIcon from 'public/search.svg';
 import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 
@@ -25,9 +30,11 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const { width: screenWidth } = useWindowDimensions();
   const { usePrevious } = usePreviousValue();
   const [page, setPage] = useState(1);
-  const { sideNavOpen, setCuratedCollections, selectedCuratedCollection, curatedCollections, setSelectedCuratedCollection, setSideNavOpen } = useSearchModal();
+  const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
+  const { sideNavOpen, activePeriod, changeTimePeriod, setCuratedCollections, selectedCuratedCollection, curatedCollections, setSelectedCuratedCollection, setSideNavOpen } = useSearchModal();
   const [paginatedAddresses, setPaginatedAddresses] = useState([]);
   const prevSelectedCuratedCollection = usePrevious(selectedCuratedCollection);
+  const { data: collectionData } = useCollectionQueryLeaderBoard(activePeriod);
 
   const { data: nftsForCollections } = useSWR(selectedCuratedCollection, async () => {
     let nftsForCollections;
@@ -71,7 +78,55 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const changeCurated = () => {
     setPage(1);
   };
-
+  const leaderBoardOrCollectionView = () => {
+    if(isLeaderBoard){
+      return (
+        <div className={tw(
+          'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+          'grid-cols-1')}>
+          {
+            collectionData && collectionData?.items?.length > 0
+              ? collectionData?.items.map((collectionLeader, index) => {
+                return (
+                  <CollectionCard
+                    timePeriod={activePeriod}
+                    isLeaderBoard={true}
+                    contract={collectionLeader.contract}
+                    stats={collectionLeader.stats}
+                    key={index}/>
+                );
+              })
+              : (<div className="flex items-center justify-center min-h-[16rem] w-full">
+                <Loader />
+              </div>)
+          }
+        </div>
+      );
+    }else{
+      return (
+        <div className={tw(
+          'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+          'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4')}>
+          {paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.map((collection, index) => {
+            return (
+              // <ProfileCard isLeaderBoard={isLeaderBoard}/>
+              <CollectionCard
+                isLeaderBoard={false}
+                key={index}
+                redirectTo={`/app/collection/${collection?.collectionAddress}/`}
+                contractAddress={collection?.collectionAddress}
+                contract={collection?.collectionAddress}
+                userName={collection.nfts[0].metadata.name}
+                description={collection.nfts[0].metadata.description}
+                countOfElements={collection.actualNumberOfNFTs}
+                maxSymbolsInString={180}
+                images={collectionCardImages(collection)}/>
+            );
+          })}
+        </div>
+      );
+    }
+  };
   if(discoverPageEnv){
     return(
       <>
@@ -79,29 +134,50 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
           <div className="flex">
             {/*minlg:ml-6*/}
             <div className=" w-full min-h-disc">
+              <DiscoveryTabNav
+                callBack={() => console.log('1')}
+                active={'collections'}/>
+              <div className='flex justify-between mt-6 mb-10'>
+                <div className='flex justify-between items-center'>
+                  <div className="flex items-center">
+                    {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
+
+                    <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
+                      {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
+                      {!isLeaderBoard ? 'Show leaderboard' : 'Back to default view'}
+                    </button>
+                  </div>
+                </div>
+                {
+                  isLeaderBoard && (
+                    <div className="flex items-center ">
+                      <TimePeriodToggle
+                        onChange={(val) => changeTimePeriod(val)}
+                        activePeriod={activePeriod}/>
+                      <button className="w-12 h-12 border-2 border-[#ECECEC] rounded-[50%] flex items-center justify-center hover:bg-[#ECECEC] transition-all">
+                        <SearchIcon/>
+                      </button>
+                    </div>
+                  )
+                }
+              </div>
               <div className="flex">
                 <div className="flex-auto">
-                  {/*<div className="font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black mt-6 minlg:mt-0">*/}
-                  {/*  {`${nftsForCollections?.length || 0} ${selectedCuratedCollection?.tabTitle.toUpperCase() ?? 'CURATED'} COLLECTIONS`}*/}
-                  {/*</div>*/}
-                  <div className={tw(
-                    'gap-2 minmd:grid minmd:grid-cols-2 minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-                    !sideNavOpen ? 'minxl:grid-cols-2': 'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4')}>
-                    {paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.map((collection, index) => {
-                      return (
-                        <CollectionCard
-                          key={index}
-                          redirectTo={`/app/collection/${collection?.collectionAddress}/`}
-                          contractAddress={collection?.collectionAddress}
-                          contract={collection?.collectionAddress}
-                          userName={collection.nfts[0].metadata.name}
-                          description={collection.nfts[0].metadata.description}
-                          countOfElements={collection.actualNumberOfNFTs}
-                          maxSymbolsInString={180}
-                          images={collectionCardImages(collection)}/>
-                      );
-                    })}
-                  </div>
+                  {
+                    isLeaderBoard
+                      ? (
+                        <div className="px-6 flex text-sm text-[#B2B2B2] leading-6 font-[600] font-noi-grotesk">
+                          <div className="w-[37.5%] pl-[32px]">COLLECTION</div>
+                          <div className="w-[15.3%]">VOLUME</div>
+                          <div className="w-[12%]">% CHANGE</div>
+                          <div className="w-[14.9%]">FLOOR PRICE</div>
+                          <div className="w-[13.3%]">ITEMS LISTED</div>
+                          <div className="w-[7%]">SALES</div>
+                        </div>
+                      )
+                      : null
+                  }
+                  {leaderBoardOrCollectionView()}
                   {(paginatedAddresses && paginatedAddresses.length === 0) &&
                     (<div className="flex items-center justify-center min-h-[16rem] w-full">
                       <Loader />
@@ -211,7 +287,7 @@ DiscoverPage.getLayout = function getLayout(page) {
 export async function getServerSideProps({ preview = false }) {
   const curData = await getCollection(false, 10, 'curatedCollectionsCollection', 'tabTitle contractAddresses');
   const curDataDev = await getCollection(false, 10, 'discoverCuratedDevCollection', 'tabTitle contractAddresses');
-  
+
   return {
     props: {
       preview,

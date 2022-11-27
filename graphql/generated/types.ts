@@ -231,6 +231,9 @@ export type CollectionInput = {
   contract: Scalars['Address'];
   network: Scalars['String'];
 };
+export type CollectionInputLeaderBoard = {
+  dateRange?: Scalars['String'];
+};
 
 export type CollectionLeaderboard = {
   __typename?: 'CollectionLeaderboard';
@@ -2935,10 +2938,13 @@ export type AssociatedCollectionForProfileQuery = { __typename?: 'Query', associ
 export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
 }>;
+export type CollectionLeaderBoardNewQueryVariables = Exact<{
+  input: CollectionInputLeaderBoard;
+}>;
 
 
 export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, chainId?: string | null, deployer?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null, isCurated?: boolean | null, isSpam?: boolean | null } | null, nftPortResults?: { __typename?: 'NFTPortResults', name?: string | null, symbol?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null } | null } | null };
-
+export type CollectionLeaderBoardQuery = {};
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
 }>;
@@ -3867,6 +3873,42 @@ export const AssociatedCollectionForProfileDocument = gql`
   }
 }
     `;
+export const CollectionDocumentLeaderBoard = gql`
+    query CollectionLeaderboard($input: CollectionLeaderboardInput){
+      collectionLeaderboard(input: $input) {
+        items {
+        contract
+        name
+          stats {
+            one_day_volume
+            one_day_change
+            one_day_sales
+            one_day_average_price
+            seven_day_volume
+            seven_day_change
+            seven_day_sales
+            seven_day_average_price
+            thirty_day_volume
+            thirty_day_change
+            thirty_day_sales
+            thirty_day_average_price
+            total_volume
+            total_sales
+            total_supply
+            total_minted
+            num_owners
+            average_price
+            market_cap
+            floor_price
+            floor_price_historic_one_day
+            floor_price_historic_seven_day
+            floor_price_historic_thirty_day
+            updated_date
+           }
+        }
+      }
+    }
+`
 export const CollectionDocument = gql`
     query Collection($input: CollectionInput!) {
   collection(input: $input) {
@@ -5407,6 +5449,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');
+    },
+    CollectionLeaderBoard(variables: CollectionLeaderBoardNewQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionLeaderBoardNewQueryVariables> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CollectionLeaderBoardNewQueryVariables>(CollectionDocumentLeaderBoard, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionLeaderboard', 'query');
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');

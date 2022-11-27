@@ -1,5 +1,20 @@
-import { DiscoveryTabs } from 'cypress/util/constants';
-
+const DiscoveryTabs = [
+  // {
+  //   name: 'NFTs',
+  //   id: 0,
+  //   key: 'nft'
+  // },
+  {
+    name: 'Collections',
+    id: 1,
+    key: 'collections'
+  },
+  {
+    name: 'Profiles',
+    id: 2,
+    key: 'profiles'
+  }
+];
 export interface NavProps {
   active: string;
   callBack: any

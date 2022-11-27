@@ -11,6 +11,7 @@ export function useSearchModal() {
     {
       modalType: '',
       searchModalOpen: false,
+      activePeriod: 'all',
       sideNavOpen: !router.pathname.includes('discover/') && !router.pathname.includes('collection/'),
       searchFilters: [],
       filtersList: null,
@@ -30,11 +31,18 @@ export function useSearchModal() {
     } });
 
   const loading = !data;
-  
+
   const useToggleSearchModal = () => {
     mutate({
       ...data,
       searchModalOpen: !data.searchModalOpen
+    });
+  };
+
+  const useChangeTimePeriod = (period: string) => {
+    mutate({
+      ...data,
+      activePeriod: period
     });
   };
 
@@ -146,6 +154,7 @@ export function useSearchModal() {
     loading,
     modalType: data.modalType,
     searchModalOpen: data.searchModalOpen,
+    activePeriod: data.activePeriod,
     sideNavOpen: data.sideNavOpen,
     searchFilters: data.searchFilters,
     filtersList: data.filtersList,
@@ -164,6 +173,7 @@ export function useSearchModal() {
     keyword: data.keyword,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
+    changeTimePeriod: useChangeTimePeriod,
     setModalType,
     setSideNavOpen,
     setSortBy,
