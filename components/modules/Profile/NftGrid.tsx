@@ -3,8 +3,10 @@ import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import DraggableGridItem from 'components/modules/Draggable/DraggableGridItem';
 import { GridContext } from 'components/modules/Draggable/GridContext';
 import { Nft } from 'graphql/generated/types';
+import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
 import { shortenAddress } from 'utils/helpers';
@@ -37,7 +39,8 @@ export function NftGrid(props: NftGridProps) {
   const { items, moveItem } = useContext(GridContext);
   const { user } = useUser();
   const { profileData } = useProfileQuery(props.profileURI);
-
+  const defaultChainId = useDefaultChainId();
+  const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
   const { tileBackgroundSecondary } = useThemeColors();
   const { width: screenWidth } = useWindowDimensions();
 
@@ -87,7 +90,7 @@ export function NftGrid(props: NftGridProps) {
     )}
     data-testid={savedLayoutType+'-layout-option'}
   >
-    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && user?.currentProfileUrl === props.profileURI &&
+    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
       <div className='hidden minlg:block'>
         <ClaimProfileCard />
       </div>

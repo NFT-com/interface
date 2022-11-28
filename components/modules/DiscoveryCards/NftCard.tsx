@@ -54,7 +54,7 @@ export function NftCard(props: NftCardProps) {
       {
         props.visible != null &&
           <div
-            className='absolute left-3 top-4 z-50'
+            className='absolute left-3 top-4 z-30'
             onClick={(e: MouseEvent<HTMLDivElement>) => {
               props.onVisibleToggle(!props.visible);
               e.stopPropagation();
@@ -63,10 +63,10 @@ export function NftCard(props: NftCardProps) {
           >
             {props.visible
               ? <Visible className={tw(
-                'w-7 h-6'
+                'w-7 h-6 fill-white'
               )} />
               : <Hidden className={tw(
-                'w-7 h-6'
+                'w-7 h-6 fill-white'
               )} />
             }
           </div>
@@ -75,7 +75,7 @@ export function NftCard(props: NftCardProps) {
       {
         props.visible != null &&
           <div
-            className='absolute right-3 top-4 z-50'
+            className='absolute right-3 top-4 z-30'
           >
             <Reorder
               className={tw(

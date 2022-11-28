@@ -182,6 +182,30 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
           </div>}
         </div>
       }
+
+      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode &&
+        <div className='flex w-full justify-end mb-3 pr-1'>
+          <DynamicGalleryToggleAllButtons
+            publicNFTCount={publiclyVisibleNftCount}
+            onShowAll={() => {
+              showNftIds(allOwnerNfts?.map(nft => nft.id), true);
+              analytics.track('Show All NFTs', {
+                ethereumAddress: currentAddress,
+                profile: props.profileURI,
+                nftsByOwner: createNftOwnerMap(allOwnerNfts)
+              });
+            }}
+            onHideAll={() => {
+              hideNftIds(allOwnerNfts?.map(nft => nft.id), true);
+              analytics.track('Hide All NFTs', {
+                ethereumAddress: currentAddress,
+                profile: props.profileURI,
+                nftsByOwner: createNftOwnerMap(allOwnerNfts)
+              });
+            }}
+          />
+        </div>
+      }
       {
         (editMode ? isGroupedByCollection : groupByCollectionNotOwner) ?
           <CollectionGallery profileURI={props.profileURI} /> :
