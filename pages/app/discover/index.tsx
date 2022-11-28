@@ -3,26 +3,31 @@ import Loader from 'components/elements/Loader';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
 import { DiscoveryTabNav } from 'components/modules/DiscoveryTabNavigation/DiscoveryTabsNavigation';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
 import { CuratedCollectionsFilter } from 'components/modules/Search/CuratedCollectionsFilter';
 import { SideNav } from 'components/modules/Search/SideNav';
+import { Profile } from 'graphql/generated/types';
 import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
+import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { useSearchModal } from 'hooks/state/useSearchModal';
+import { usePaginator } from 'hooks/usePaginator';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { DiscoverPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
-import { collectionCardImages, getPerPage, isNullOrEmpty } from 'utils/helpers';
+import { collectionCardImages, filterNulls, getPerPage, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { getCollection } from 'lib/contentful/api';
 import { FunnelSimple } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import SearchIcon from 'public/search.svg';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
+import { PartialDeep } from 'type-fest';
 
 export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
@@ -30,6 +35,8 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const { width: screenWidth } = useWindowDimensions();
   const { usePrevious } = usePreviousValue();
   const [page, setPage] = useState(1);
+  const [isLoading, toggleLoadState] = useState(false);
+  const [tabView, toggleTabView] = useState('collections');
   const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
   const { sideNavOpen, activePeriod, changeTimePeriod, setCuratedCollections, selectedCuratedCollection, curatedCollections, setSelectedCuratedCollection, setSideNavOpen } = useSearchModal();
   const [paginatedAddresses, setPaginatedAddresses] = useState([]);
@@ -78,6 +85,40 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const changeCurated = () => {
     setPage(1);
   };
+  const PROFILE_LOAD_COUNT = 20;
+
+  const {
+    nextPage,
+    afterCursor,
+    setTotalCount
+  } = usePaginator(PROFILE_LOAD_COUNT);
+
+  const [lastAddedPage, setLastAddedPage] = useState('');
+
+  const [allLoadedProfiles, setAllLoadedProfiles] = useState<PartialDeep<Profile>[]>([]);
+  const { data: loadedProfilesNextPage } = useRecentProfilesQuery({
+    first: PROFILE_LOAD_COUNT,
+    afterCursor
+  });
+
+  const loadMoreProfiles = useCallback(() => {
+    nextPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor);
+  }, [loadedProfilesNextPage?.latestProfiles?.pageInfo?.lastCursor, nextPage]);
+
+  useEffect(() => {
+    if (
+      loadedProfilesNextPage?.latestProfiles?.items?.length > 0 &&
+      lastAddedPage !== loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor
+    ) {
+      setAllLoadedProfiles([
+        ...allLoadedProfiles,
+        ...filterNulls(loadedProfilesNextPage?.latestProfiles?.items)
+      ]);
+      toggleLoadState(false);
+      setLastAddedPage(loadedProfilesNextPage?.latestProfiles?.pageInfo?.firstCursor);
+      setTotalCount(loadedProfilesNextPage?.latestProfiles?.totalItems);
+    }
+  }, [allLoadedProfiles, lastAddedPage, loadedProfilesNextPage, setTotalCount]);
   const leaderBoardOrCollectionView = () => {
     if(isLeaderBoard){
       return (
@@ -127,6 +168,107 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
       );
     }
   };
+  const loadMoreProfilesFunc = () => {
+    toggleLoadState(true);
+    loadMoreProfiles();
+  };
+  const returnProfileBlock = () => {
+    if(allLoadedProfiles && allLoadedProfiles.length){
+      return (
+        <div>
+          <div className={tw(
+            'minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
+            isLeaderBoard ? 'minxl:grid-cols-1' : 'minxl:grid-cols-5 minlg:grid-cols-2 minhd:grid-cols-4')}>
+            {
+              allLoadedProfiles.map((profile, index) => {
+                return (
+                  <ProfileCard
+                    key={index}
+                    isLeaderBoard={isLeaderBoard}
+                    profile={profile}
+                  />
+                );
+              })
+            }
+          </div>
+          <div className="w-full flex justify-center pb-32 mt-12">
+            {
+              isLoading
+                ? (
+                  <Loader />
+                )
+                : (
+                  <Button
+                    label={'Load More'}
+                    onClick={() => loadMoreProfilesFunc()}
+                    type={ButtonType.PRIMARY}
+                  />
+                )
+            }
+          </div>
+        </div>
+      );
+    }else {
+      return (
+        <div className="flex items-center justify-center min-h-[16rem] w-full">
+          <Loader />
+        </div>
+      );
+    }
+  };
+  const returnCollectionBlock = () => {
+    return (
+      <>
+        <div className="flex">
+          <div className="flex-auto">
+            {
+              isLeaderBoard
+                ? (
+                  <div className="px-6 flex text-sm text-[#B2B2B2] leading-6 font-[600] font-noi-grotesk">
+                    <div className="w-[37.5%] pl-[32px]">COLLECTION</div>
+                    <div className="w-[15.3%]">VOLUME</div>
+                    <div className="w-[12%]">% CHANGE</div>
+                    <div className="w-[14.9%]">FLOOR PRICE</div>
+                    <div className="w-[13.3%]">ITEMS LISTED</div>
+                    <div className="w-[7%]">SALES</div>
+                  </div>
+                )
+                : null
+            }
+            {leaderBoardOrCollectionView()}
+            {(paginatedAddresses && paginatedAddresses.length === 0) &&
+              (<div className="flex items-center justify-center min-h-[16rem] w-full">
+                <Loader />
+              </div>)}
+            { paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < nftsForCollections?.length &&
+              <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
+                <Button
+                  color={'black'}
+                  accent={AccentType.SCALE}
+                  stretch={true}
+                  label={'Load More'}
+                  onClick={() => setPage(page + 1)}
+                  type={ButtonType.PRIMARY}
+                />
+              </div>}
+          </div>
+        </div>
+      </>
+    );
+  };
+  const checkActiveTab = () => {
+    switch (tabView) {
+    case 'collections':
+      return returnCollectionBlock();
+    case 'profiles':
+      return returnProfileBlock();
+    default:
+      return returnCollectionBlock();
+    }
+  };
+  useEffect(() => {
+    toggleLeaderBoardState(false);
+  }, [tabView]);
   if(discoverPageEnv){
     return(
       <>
@@ -135,65 +277,34 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
             {/*minlg:ml-6*/}
             <div className=" w-full min-h-disc">
               <DiscoveryTabNav
-                callBack={() => console.log('1')}
-                active={'collections'}/>
-              <div className='flex justify-between mt-6 mb-10'>
-                <div className='flex justify-between items-center'>
-                  <div className="flex items-center">
-                    {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
+                callBack={(tab) => toggleTabView(tab)}
+                active={tabView}/>
+              <div>
+                <div className='flex justify-between mt-6 mb-10'>
+                  <div className='flex justify-between items-center'>
+                    <div className="flex items-center">
+                      {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
 
-                    <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
-                      {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
-                      {!isLeaderBoard ? 'Show leaderboard' : 'Back to default view'}
-                    </button>
-                  </div>
-                </div>
-                {
-                  isLeaderBoard && (
-                    <div className="flex items-center ">
-                      <TimePeriodToggle
-                        onChange={(val) => changeTimePeriod(val)}
-                        activePeriod={activePeriod}/>
-                      <button className="w-12 h-12 border-2 border-[#ECECEC] rounded-[50%] flex items-center justify-center hover:bg-[#ECECEC] transition-all">
-                        <SearchIcon/>
+                      <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
+                        {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
+                        {!isLeaderBoard ? 'Show leaderboard' : 'Back to default view'}
                       </button>
                     </div>
-                  )
-                }
-              </div>
-              <div className="flex">
-                <div className="flex-auto">
+                  </div>
                   {
-                    isLeaderBoard
-                      ? (
-                        <div className="px-6 flex text-sm text-[#B2B2B2] leading-6 font-[600] font-noi-grotesk">
-                          <div className="w-[37.5%] pl-[32px]">COLLECTION</div>
-                          <div className="w-[15.3%]">VOLUME</div>
-                          <div className="w-[12%]">% CHANGE</div>
-                          <div className="w-[14.9%]">FLOOR PRICE</div>
-                          <div className="w-[13.3%]">ITEMS LISTED</div>
-                          <div className="w-[7%]">SALES</div>
-                        </div>
-                      )
-                      : null
+                    isLeaderBoard && tabView !== 'profiles' && (
+                      <div className="flex items-center ">
+                        <TimePeriodToggle
+                          onChange={(val) => changeTimePeriod(val)}
+                          activePeriod={activePeriod}/>
+                        <button className="w-12 h-12 border-2 border-[#ECECEC] rounded-[50%] flex items-center justify-center hover:bg-[#ECECEC] transition-all">
+                          <SearchIcon/>
+                        </button>
+                      </div>
+                    )
                   }
-                  {leaderBoardOrCollectionView()}
-                  {(paginatedAddresses && paginatedAddresses.length === 0) &&
-                    (<div className="flex items-center justify-center min-h-[16rem] w-full">
-                      <Loader />
-                    </div>)}
-                  { paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < nftsForCollections?.length &&
-                    <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
-                      <Button
-                        color={'black'}
-                        accent={AccentType.SCALE}
-                        stretch={true}
-                        label={'Load More'}
-                        onClick={() => setPage(page + 1)}
-                        type={ButtonType.PRIMARY}
-                      />
-                    </div>}
                 </div>
+                {checkActiveTab()}
               </div>
             </div>
           </div>

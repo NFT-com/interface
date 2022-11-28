@@ -7,7 +7,6 @@ import { Doppler, getEnv } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress, sliceString } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
-import VerifiedIcon from 'public/verifiedIcon.svg';
 import VolumeIcon from 'public/volumeIcon.svg';
 import { useState } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -114,7 +113,7 @@ export function CollectionCard(props: CollectionCardProps) {
           </div>
           <div className="pl-6 flex flex-row items-start justify-start">
             <span className="pr-5 text-lg text-[#000000] font-[500]">{collection?.collection?.name}</span>
-            <VerifiedIcon/>
+            {/*<VerifiedIcon/>*/}
             {/*<span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600] max-w-[60%]">{collectionName}</span>*/}
           </div>
         </div>
@@ -127,7 +126,7 @@ export function CollectionCard(props: CollectionCardProps) {
             <div className="text-base leading-[18px] text-[#747474] font-[400]">$93333.33</div>
           </div>
         </div>
-        <div className="text-[#26AA73] text-lg font-[500] w-[12%]  pl-1">
+        <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500] w-[12%]  pl-1`}>
           {statsData?.change ? statsData?.change?.toFixed(2) : null}
         </div>
         <div className="flex flex-row items-center  w-[14.9%]  pl-1">
@@ -145,7 +144,7 @@ export function CollectionCard(props: CollectionCardProps) {
     );
   }else {
     return (
-      <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="sm:mb-4 min-h-[100%] block hover:scale-105 transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
+      <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
         <div className="h-44 relative ">
           <RoundedCornerMedia
             variant={RoundedCornerVariant.None}
