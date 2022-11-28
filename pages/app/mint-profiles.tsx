@@ -1,6 +1,7 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintFreeProfileCard from 'components/modules/ProfileFactory/MintFreeProfileCard';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
+import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
 import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
 import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
@@ -28,8 +29,8 @@ const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileM
 export default function MintProfilesPage() {
   const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
-  const { freeMintAvailable, loading: loadingFreeMint } = useFreeMintAvailable(currentAddress);
-  const { claimable, loading: loadingClaimable } = useClaimableProfileCount(currentAddress);
+  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
+  const { claimable } = useClaimableProfileCount(currentAddress);
   const [minting, setMinting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [mintingState, setMintingState] = useState(
@@ -60,19 +61,19 @@ export default function MintProfilesPage() {
 
   const getMintProfileCard = useCallback(() => {
     if(freeMintAvailable) {
-      return <MintFreeProfileCard type='Free' minting={minting} setModalOpen={setModalOpen} setMintingState={setMintingState}/>;
+      return <MintFreeProfileCard minting={minting} setModalOpen={setModalOpen} setMintingState={setMintingState}/>;
     }
-    if(!loadingClaimable && !isNullOrEmpty(claimable) && !freeMintAvailable && !loadingFreeMint) {
+    if(!isNullOrEmpty(claimable) && !freeMintAvailable) {
       return <MintGKProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
     }
-    if(!loadingFreeMint && freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
-      return <MintFreeProfileCard type='Free' minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState}/>;
+    if(freeMintAvailable && isNullOrEmpty(claimable)) {
+      return <MintFreeProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState}/>;
     }
-    if(!loadingFreeMint && !freeMintAvailable && !loadingClaimable && isNullOrEmpty(claimable)) {
-      return <MintFreeProfileCard type='Paid' minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
+    if(!freeMintAvailable && isNullOrEmpty(claimable)) {
+      return <MintPaidProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
     }
     return <MintProfileCardSkeleton />;
-  }, [claimable, freeMintAvailable, loadingClaimable, loadingFreeMint, minting, setMintingModal]);
+  }, [claimable, freeMintAvailable, minting, setMintingModal]);
   
   return (
     <div
