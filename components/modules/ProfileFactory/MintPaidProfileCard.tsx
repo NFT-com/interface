@@ -22,7 +22,7 @@ import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 type MintFreeProfileCardProps = {
   minting: boolean;
   setModalOpen: (open: boolean) => void;
-  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string}) => void;
+  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string, registrationFee: string, duration: number}) => void;
 };
 
 type PaidInput = {
@@ -73,7 +73,6 @@ export default function MintPaidProfileCard({ minting, setModalOpen, setMintingS
   const getMintCost = useCallback(() => {
     if(feeData?.gasPrice){
       if(data?.request.gasLimit && registrationFee) {
-        console.log(utils.formatEther(BigNumber.from(registrationFee)));
         const gasFee = BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString()));
         return utils.formatEther(BigNumber.from(registrationFee).add(gasFee));
       }
@@ -207,7 +206,9 @@ export default function MintPaidProfileCard({ minting, setModalOpen, setMintingS
                 setMintingState({
                   inputs: input,
                   type: 'Paid',
-                  tokenId: null
+                  tokenId: null,
+                  registrationFee,
+                  duration: yearValue
                 });
               }}
             >

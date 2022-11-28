@@ -15,7 +15,7 @@ import ReactLoading from 'react-loading';
 type MintFreeProfileCardProps = {
   minting: boolean;
   setModalOpen: (open: boolean) => void;
-  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string}) => void;
+  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string, registrationFee: string, duration: number}) => void;
 };
 
 export default function MintFreeProfileCard({ minting, setModalOpen, setMintingState }: MintFreeProfileCardProps ) {
@@ -103,7 +103,9 @@ export default function MintFreeProfileCard({ minting, setModalOpen, setMintingS
                 setMintingState({
                   inputs: input,
                   type: 'Free',
-                  tokenId: null
+                  tokenId: null,
+                  registrationFee: null,
+                  duration: null
                 });
               }}
             >

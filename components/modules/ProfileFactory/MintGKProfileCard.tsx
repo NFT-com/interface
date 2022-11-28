@@ -24,7 +24,7 @@ import { useAccount, useNetwork } from 'wagmi';
 type MintGKProfileCardProps = {
   minting: boolean;
   setModalOpen: (open: boolean) => void;
-  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string}) => void;
+  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string, registrationFee: string, duration: number}) => void;
 };
 
 export default function MintGKProfileCard({ setModalOpen, setMintingState, minting }: MintGKProfileCardProps) {
@@ -295,7 +295,9 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
                   setMintingState({
                     inputs: filteredInputs,
                     type: 'GK',
-                    tokenId: selectedGK?.tokenId
+                    tokenId: selectedGK?.tokenId,
+                    registrationFee: null,
+                    duration: null
                   });
                 }}
               >
