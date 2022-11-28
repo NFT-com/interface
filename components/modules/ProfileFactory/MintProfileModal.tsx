@@ -37,7 +37,6 @@ type MintProfileModalProps = {
 
 export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, profilesToMint, gkTokenId, type, duration }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
-  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
   const router = useRouter();
   const defaultChainId = useDefaultChainId();
   const [minting, setMinting] = useState(false);
@@ -114,6 +113,10 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
           '0x0000000000000000000000000000000000000000000000000000000000000000',
           profileToMint?.hash,
           profileToMint?.signature,
+          {
+            from: currentAddress,
+            value: transactionCost,
+          },
         );
         setMinting(true);
         if (tx) {
