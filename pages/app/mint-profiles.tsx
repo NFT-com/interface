@@ -37,7 +37,9 @@ export default function MintProfilesPage() {
     {
       inputs: null,
       tokenId: null,
-      type: null
+      type: null,
+      registrationFee: null,
+      duration: null
     }
   );
   
@@ -149,7 +151,7 @@ export default function MintProfilesPage() {
         </div>
       </div>
 
-      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} />
+      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} transactionCost={mintingState.registrationFee || null} duration={mintingState.duration || null} />
     </div>
   );
 }
