@@ -1,6 +1,7 @@
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { LoadedContainer } from 'components/elements/LoadedContainer';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfilesMintedByGKQuery } from 'graphql/hooks/useProfilesMintedByGK';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
@@ -15,22 +16,21 @@ import { tw } from 'utils/tw';
 import MintProfileInputField from './MintProfileInputField';
 
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { CheckCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
 import { useAccount, useNetwork } from 'wagmi';
 
-type MintGKProfileCardProps = {
-  minting: boolean;
-  setModalOpen: (open: boolean) => void;
-  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string, registrationFee: string, duration: number}) => void;
-};
+const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 
-export default function MintGKProfileCard({ setModalOpen, setMintingState, minting }: MintGKProfileCardProps) {
+export default function MintGKProfileCard() {
   const [currentValue, setCurrentValue] = useState(null);
   const [profileStatus, setProfileStatus] = useState('');
   const [selectedGK, setSelectedGK] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [minting, setMinting] = useState(false);
   const { openConnectModal } = useConnectModal();
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
@@ -148,6 +148,16 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
     });
     setSelectedGK(gk);
   }, [claimable, setSelectedGK]);
+
+  const setMintingModal = useCallback((isOpen) => {
+    if(isOpen){
+      setMinting(true);
+      setModalOpen(true);
+    } else {
+      setMinting(false);
+      setModalOpen(false);
+    }
+  }, [setModalOpen]);
   
   return (
     <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
@@ -292,13 +302,7 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
                     return;
                   }
                   setModalOpen(true);
-                  setMintingState({
-                    inputs: filteredInputs,
-                    type: 'GK',
-                    tokenId: selectedGK?.tokenId,
-                    registrationFee: null,
-                    duration: null
-                  });
+                  setInputs(filteredInputs);
                 }}
               >
                 {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
@@ -310,12 +314,13 @@ export default function MintGKProfileCard({ setModalOpen, setMintingState, minti
           <Link href='https://docs.nft.com/nft-profiles/what-is-a-nft-profile' passHref className='mt-4'>
             <a target="_blank" >
               <p className='text-[#727272] text-left minlg:text-center mt-4 text-xl minlg:text-base font-normal'>
-            Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
+                Learn more about <span className='text-black inline font-medium'>NFT Profiles</span>
               </p>
             </a>
           </Link>
         </LoadedContainer>
       </div>
+      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={filteredInputs} gkTokenId={selectedGK?.tokenId} type='GK' />
     </div>
   );
 }

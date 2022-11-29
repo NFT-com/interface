@@ -238,10 +238,10 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                     <div className='flex justify-between mb-5' key={profile.profileURI + index}>
                       <div>
                         <p className="text-lg font-medium">
-                              nft.com/{profile.profileURI}
+                          nft.com/{profile.profileURI}
                         </p>
                         <p className="text-md text-[#686868] font-normal">
-                              Profile
+                          Profile
                         </p>
                       </div>
                       {type === 'Paid' ?
@@ -278,9 +278,9 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="text-xl font-medium">
-                        {type === 'Free' ? parseFloat(Number(getGasCost()).toFixed(7)) : parseFloat(Number(getTotalCost()).toFixed(7))} ETH
+                        {type !== 'Paid' ? parseFloat(Number(getGasCost()).toFixed(7)) : parseFloat(Number(getTotalCost()).toFixed(7))} ETH
                       </p>
-                      {type === 'Free' ?
+                      {type !== 'Paid' ?
                         <p className="text-lg text-[#686868]">
                           (${(ethPriceUSD * Number(getGasCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
                         </p>

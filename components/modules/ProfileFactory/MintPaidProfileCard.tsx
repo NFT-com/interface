@@ -1,3 +1,4 @@
+import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import maxProfilesABI from 'constants/abis/MaxProfiles.json';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
@@ -12,6 +13,7 @@ import { tw } from 'utils/tw';
 import MintProfileInputField from './MintProfileInputField';
 
 import { BigNumber, utils } from 'ethers';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Info, MinusCircle, PlusCircle } from 'phosphor-react';
 import { useCallback, useEffect, useState } from 'react';
@@ -19,26 +21,17 @@ import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 
-type MintFreeProfileCardProps = {
-  minting: boolean;
-  setModalOpen: (open: boolean) => void;
-  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string, registrationFee: string, duration: number}) => void;
-};
+const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 
-type PaidInput = {
-  profileURI: string;
-  profileStatus: string;
-  type: string;
-  hash: string;
-  signature: string
-}
-
-export default function MintPaidProfileCard({ minting, setModalOpen, setMintingState }: MintFreeProfileCardProps ) {
+export default function MintPaidProfileCard() {
   const [profileURI, setProfileURI] = useState(null);
-  const [input, setInput] = useState<PaidInput[]>([]);
+  const [input, setInput] = useState([]);
   const [profileStatus, setProfileStatus] = useState('');
   const [hasListings, setHasListings] = useState(false);
   const [registrationFee, setRegistrationFee] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [minting, setMinting] = useState(false);
+
   const { address: currentAddress } = useAccount();
   const { profileTokenId } = useProfileTokenQuery(profileURI || '');
   const defaultChainId = useDefaultChainId();
@@ -49,6 +42,16 @@ export default function MintPaidProfileCard({ minting, setModalOpen, setMintingS
   const provider = useProvider();
   const ethPriceUSD = useEthPriceUSD();
   const { profileAuction } = useAllContracts();
+
+  const setMintingModal = useCallback((isOpen) => {
+    if(isOpen){
+      setMinting(true);
+      setModalOpen(true);
+    } else {
+      setMinting(false);
+      setModalOpen(false);
+    }
+  }, [setModalOpen]);
 
   const { data: feeData } = useSWR(
     `eth_est_${profileURI}`,
@@ -203,13 +206,6 @@ export default function MintPaidProfileCard({ minting, setModalOpen, setMintingS
                   return;
                 }
                 setModalOpen(true);
-                setMintingState({
-                  inputs: input,
-                  type: 'Paid',
-                  tokenId: null,
-                  registrationFee,
-                  duration: yearValue
-                });
               }}
             >
               {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Purchase</span>}
@@ -225,6 +221,7 @@ export default function MintPaidProfileCard({ minting, setModalOpen, setMintingS
           </a>
         </Link>
       </div>
+      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={input} type='Paid' duration={yearValue} transactionCost={registrationFee} />
     </div>
   );
 }

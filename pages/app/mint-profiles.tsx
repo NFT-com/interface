@@ -3,7 +3,6 @@ import MintFreeProfileCard from 'components/modules/ProfileFactory/MintFreeProfi
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
 import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
-import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
@@ -14,7 +13,6 @@ import { tw } from 'utils/tw';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ArrowCircleLeft } from 'phosphor-react';
 import NFTLogo from 'public/nft_logo.svg';
@@ -22,26 +20,13 @@ import NFTLogoSmall from 'public/nft_logo_small.svg';
 import ProfileClickIcon from 'public/profile-click-icon.svg';
 import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAccount } from 'wagmi';
-
-const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 export default function MintProfilesPage() {
   const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
   const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
   const { claimable } = useClaimableProfileCount(currentAddress);
-  const [minting, setMinting] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [mintingState, setMintingState] = useState(
-    {
-      inputs: null,
-      tokenId: null,
-      type: null,
-      registrationFee: null,
-      duration: null
-    }
-  );
   
   useMaybeCreateUser();
 
@@ -51,31 +36,21 @@ export default function MintProfilesPage() {
     }
   }, [currentAddress, openConnectModal]);
 
-  const setMintingModal = useCallback((isOpen) => {
-    if(isOpen){
-      setMinting(true);
-      setModalOpen(true);
-    } else {
-      setMinting(false);
-      setModalOpen(false);
-    }
-  }, [setModalOpen]);
-
   const getMintProfileCard = useCallback(() => {
     if(freeMintAvailable) {
-      return <MintFreeProfileCard minting={minting} setModalOpen={setModalOpen} setMintingState={setMintingState}/>;
+      return <MintFreeProfileCard/>;
     }
     if(!isNullOrEmpty(claimable) && !freeMintAvailable) {
-      return <MintGKProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
+      return <MintGKProfileCard />;
     }
     if(freeMintAvailable && isNullOrEmpty(claimable)) {
-      return <MintFreeProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState}/>;
+      return <MintFreeProfileCard />;
     }
     if(!freeMintAvailable && isNullOrEmpty(claimable)) {
-      return <MintPaidProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />;
+      return <MintPaidProfileCard />;
     }
     return <MintProfileCardSkeleton />;
-  }, [claimable, freeMintAvailable, minting, setMintingModal]);
+  }, [claimable, freeMintAvailable]);
   
   return (
     <div
@@ -126,7 +101,7 @@ export default function MintProfilesPage() {
         {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
           getMintProfileCard()
           :
-          <MintGKProfileCard minting={minting} setModalOpen={setMintingModal} setMintingState={setMintingState} />
+          <MintGKProfileCard />
         }
         
         <span className='absolute w-full h-[460px] left-0 bottom-0 bg-img-shadow'></span>
@@ -150,8 +125,6 @@ export default function MintProfilesPage() {
           <p className='mt-3 text-lg text-[#9C9C9C]'>Buy and sell NFTs across marketplaces with the built in marketplace aggregator.</p>
         </div>
       </div>
-
-      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={mintingState.inputs} gkTokenId={mintingState.tokenId} type={mintingState.type} transactionCost={mintingState.registrationFee || null} duration={mintingState.duration || null} />
     </div>
   );
 }

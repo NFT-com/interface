@@ -1,3 +1,4 @@
+import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -8,25 +9,35 @@ import { tw } from 'utils/tw';
 
 import MintProfileInputField from './MintProfileInputField';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useCallback,useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
 
-type MintFreeProfileCardProps = {
-  minting: boolean;
-  setModalOpen: (open: boolean) => void;
-  setMintingState: (mintingInput: {inputs: any[], type: string, tokenId: string, registrationFee: string, duration: number}) => void;
-};
+const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 
-export default function MintFreeProfileCard({ minting, setModalOpen, setMintingState }: MintFreeProfileCardProps ) {
+export default function MintFreeProfileCard() {
   const [profileURI, setProfileURI] = useState(null);
   const [input, setInput] = useState([]);
   const [profileStatus, setProfileStatus] = useState('');
   const [hasListings, setHasListings] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [minting, setMinting] = useState(false);
+
   const { profileTokenId } = useProfileTokenQuery(profileURI || '');
   const defaultChainId = useDefaultChainId();
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
   const { profileClaimHash } = useGetProfileClaimHash(profileURI);
+
+  const setMintingModal = useCallback((isOpen) => {
+    if(isOpen){
+      setMinting(true);
+      setModalOpen(true);
+    } else {
+      setMinting(false);
+      setModalOpen(false);
+    }
+  }, [setModalOpen]);
 
   useEffect(() => {
     if(profileStatus === 'Listed') {
@@ -100,13 +111,6 @@ export default function MintFreeProfileCard({ minting, setModalOpen, setMintingS
                   return;
                 }
                 setModalOpen(true);
-                setMintingState({
-                  inputs: input,
-                  type: 'Free',
-                  tokenId: null,
-                  registrationFee: null,
-                  duration: null
-                });
               }}
             >
               {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span> }
@@ -122,6 +126,7 @@ export default function MintFreeProfileCard({ minting, setModalOpen, setMintingS
           </a>
         </Link>
       </div>
+      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={input} type='Free' />
     </div>
   );
 }
