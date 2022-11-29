@@ -30,7 +30,7 @@ type MintProfileModalProps = {
   isOpen: boolean;
   setIsOpen: (input:boolean) => void;
   profilesToMint: Inputs[];
-  transactionCost?: number;
+  transactionCost?: number | BigNumber;
   duration?: number;
   gkTokenId?: number;
 };
