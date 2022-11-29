@@ -213,6 +213,7 @@ export type Collection = {
   floorPrice?: Maybe<Scalars['Float']>;
   id?: Maybe<Scalars['ID']>;
   isCurated?: Maybe<Scalars['Boolean']>;
+  isOfficial?: Maybe<Scalars['Boolean']>;
   isSpam?: Maybe<Scalars['Boolean']>;
   logoUrl?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
@@ -540,12 +541,14 @@ export type LeaderboardProfile = {
 
 export type ListNftLooksrareInput = {
   chainId?: InputMaybe<Scalars['String']>;
+  createdInternally?: InputMaybe<Scalars['Boolean']>;
   looksrareOrder?: InputMaybe<Scalars['String']>;
   profileUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type ListNftSeaportInput = {
   chainId?: InputMaybe<Scalars['String']>;
+  createdInternally?: InputMaybe<Scalars['Boolean']>;
   profileUrl?: InputMaybe<Scalars['String']>;
   seaportParams?: InputMaybe<Scalars['String']>;
   seaportSignature?: InputMaybe<Scalars['String']>;
@@ -715,6 +718,8 @@ export type Mutation = {
   orderingUpdates: Profile;
   /** AUTHENTICATED */
   profileClaimed: Profile;
+  /** AUTHETICATED */
+  refreshCollectionRarity: Scalars['String'];
   /** AUTHETICATED */
   refreshMyNFTs: RefreshMyNfTsOutput;
   /** AUTHETICATED */
@@ -911,6 +916,13 @@ export type MutationOrderingUpdatesArgs = {
 
 export type MutationProfileClaimedArgs = {
   input: ProfileClaimedInput;
+};
+
+
+export type MutationRefreshCollectionRarityArgs = {
+  force?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  ttl?: InputMaybe<Scalars['DateTime']>;
 };
 
 
@@ -1131,6 +1143,8 @@ export type Nft = {
   previewLink?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Uint256']>;
   profileId?: Maybe<Scalars['String']>;
+  rarity?: Maybe<Scalars['String']>;
+  sortIndex?: Maybe<Scalars['Int']>;
   tokenId: Scalars['Uint256'];
   type: NftType;
   wallet?: Maybe<Wallet>;
@@ -1371,6 +1385,7 @@ export enum NftSize {
 
 export type NftTrait = {
   __typename?: 'NFTTrait';
+  rarity?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
 };
@@ -1703,7 +1718,6 @@ export type Query = {
   myProfiles: ProfilesOutput;
   nft: Nft;
   nftById: Nft;
-  nfts: CurationNfTsOutput;
   nftsForCollections: Array<CollectionNft>;
   numberOfNFTs?: Maybe<Scalars['Int']>;
   profile: Profile;
@@ -1946,11 +1960,6 @@ export type QueryNftArgs = {
 
 export type QueryNftByIdArgs = {
   id: Scalars['ID'];
-};
-
-
-export type QueryNftsArgs = {
-  input: NfTsInput;
 };
 
 
