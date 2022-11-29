@@ -38,11 +38,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
 
   useEffect(() => {
     AOS.init({
-      disable: function() {
+      disable: function () {
         const maxWidth = 900;
         return window.innerWidth >= maxWidth;
       },
-      duration : 700
+      duration: 700
     });
 
     ScrollTrigger.saveStyles('#anim-hero-player, #anim-hero-caption');
@@ -140,6 +140,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           y: 0,
           duration: 1,
           ease: 'power1.out',
+        }, 0)
+        .to('#anim-profile-ttl-icon', {
+          y: 0,
+          duration: 2.2,
+          ease: 'power2.out',
         }, 0);
 
       // Discover
@@ -170,6 +175,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
         .to('#anim-discover-txt', {
           y: 0,
           duration: 1.5,
+          ease: 'power2.out',
+        }, 0)
+        .to('#anim-discover-ttl-icon', {
+          y: 0,
+          duration: 2.2,
           ease: 'power2.out',
         }, 0);
 
@@ -211,23 +221,26 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
       // Leaderboard
       gsap.timeline({
         scrollTrigger: {
-          trigger: '#anim-leaderboard-trigger',
-          start: 'top 80%',
+          trigger: '#anim-leaderboard',
+          start: 'top 50%',
           end: '+=30px',
-          //pin: '#anim-leaderboard-trigger',
           toggleActions: 'play none reverse none',
         }
       })
-        .to('#anim-leaderboard-content', {
+        .to('.anim-leaderboard-row', {
           y: 0,
           duration: 1.2,
           ease: 'circ.out',
-        }, 0)
-        .to('#anim-leaderboard-decor', {
-          y: 0,
-          duration: 1.5,
-          ease: 'circ.out',
         }, 0);
+
+      gsap.to('#anim-leaderboard-decor', {
+        scrollTrigger: {
+          trigger: '#anim-leaderboard-trigger',
+          start: 'top top',
+          end: '+=400',
+          pin: '#anim-leaderboard-trigger'
+        }
+      });
 
       // News
       gsap.timeline({
@@ -287,7 +300,24 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           y: 0,
           duration: 2.1,
           ease: 'circ.out',
-        }, 0);
+        }, 0)
+        .to('.anim-build-profile-ttl-icon', {
+          y: 0,
+          duration: 2.2,
+          ease: 'circ.out',
+        }, 0)
+        .to('.anim-build-profile-ttl-icon-2', {
+          y: 0,
+          duration: 2.2,
+          ease: 'circ.out',
+        }, '<0.5');
+    });
+
+    window.requestAnimationFrame(function() {
+      const HeroTtlIcons = document.querySelectorAll<HTMLElement>('.anim-profile-icon');
+      [...HeroTtlIcons].forEach(item => {
+        item.style.transform = 'translateY(0)';
+      });
     });
   }, []);
   return (
@@ -318,17 +348,17 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'text-[3rem] minmd:text-[6rem] minlg:text-[4rem] minxl:text-[6.25rem] minxxl:text-[7.5rem] leading-[1.15]',
                 'text-black font-normal tracking-tight mb-14'
               )}>
-                  Build Your<img className={tw(
+                Build Your<span className='inline-block rotate-[40deg]'><img className={tw(
+                  'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
                   'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                  'mx-[1.8rem] -my-[.5rem]',
-                  'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.heroNfTsCollection?.items[0]?.url} alt="" />
+                  'mx-[1.8rem] -my-[.5rem] rounded-xl'
+                )} src={data_v2?.heroNfTsCollection?.items[0]?.url} alt="NFT image" /></span>
                 <br />
-                  NFT<img className={tw(
+                NFT<span className='inline-block rotate-[40deg]'><img className={tw(
+                  'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
                   'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                  'mx-[1.8rem] -my-[.5rem]',
-                  'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="" />
+                  'mx-[1.8rem] -my-[.5rem] rounded-xl',
+                )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="NFT image" /></span>
                 <span data-aos="fade-left" data-aos-delay="200"
                   className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>Identity</span></h2>
 
@@ -436,11 +466,11 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem]',
                 'leading-[1.0854] -tracking-[0.03em] font-normal text-white mb-14 minxxl:mb-20'
               )}>
-                  The Social<img className={tw(
+                The Social<span className='inline-block rotate-[40deg]'><img id='anim-profile-ttl-icon' className={tw(
                   'drop-shadow-md inline-block w-[2.5rem] minxxl:w-[5.5rem]',
-                  'mx-[0.4em] -my-[0.7rem]',
-                  'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.wycdTitleNfTs?.url} alt="" />
+                  'mx-[0.4em] -my-[0.7rem] rounded-xl',
+                  '-translate-y-[120vw]'
+                )} src={data_v2?.wycdTitleNfTs?.url} alt="NFT image" /></span>
                 <span className='block transform-gpu bg-clip-text text-transparent bg-gradient-to-r from-[#FDCC00] to-[#FF9D39]'>NFT Marketplace</span></h2>
 
               <div id='anim-profile-content' className={tw(
@@ -470,7 +500,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   )}>{data_v2?.wycdBlock1Title}</h3>
                   <p data-aos="fade-up" data-aos-delay="150" className='text-base minlg:text-[22px] minxxl:text-[2rem] leading-normal pr-[9%]'>{data_v2?.wycdBlock1Description}</p>
                   <div data-aos="fade-up" data-aos-delay="200" className={tw(
-                    'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9',
+                    'w-full h-[1.7em] mx-auto mt-10 mb-6 minxxl:mb-9 relative',
                     'bg-[#121212] drop-shadow-lg rounded-full',
                     'flex items-center justify-center text-center',
                     'text-[1.875rem] minmd:text-[1.625rem] minlg:text-[2rem] leading-none tracking-tight',
@@ -481,7 +511,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                         'mx-1 minlg:mx-2 minxxl:mx-4',
                         'h-[.68em] w-[.1081em] basis-[.1081em]'
                       )}></div>
-                        PLANTS
+                      PLANTS
                     </div>
 
                     <div className={tw(
@@ -541,7 +571,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                           <div className='flex'>
                             {data_v2?.wycdBlock2Row1NftsCollection?.items.map((image, index) =>
                               <div key={index} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px]'>
-                                <img src={image.url} className='rounded-full w-full' alt="" />
+                                <img src={image.url} className='rounded-full w-full' alt="NFT image" />
                               </div>
                             )}
                           </div>
@@ -555,7 +585,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                           <div className='flex'>
                             {data_v2?.wycdBlock2Row2NftsCollection?.items.map((image, index) =>
                               <div key={index} className='block w-16 minxl:w-28 minxxl:w-36 mx-[10px]'>
-                                <img src={image.url} className='rounded-full w-full' alt="" />
+                                <img src={image.url} className='rounded-full w-full' alt="NFT image" />
                               </div>
                             )}
                           </div>
@@ -579,15 +609,15 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               )}>
                 <span id='anim-discover-ttl-line-1' data-aos="fade-up" data-aos-delay="200"
                   className={tw(
-                    'minlg:translate-y-40 transform-gpu',
+                    'minlg:translate-y-40 transform-gpu relative z-50',
                     'block bg-clip-text text-transparent bg-gradient-to-r from-[#FCC315] to-[#FF9C38]'
                   )}>
-                    Discover <br />
-                  <img className={tw(
+                  Discover <br />
+                  <span className='inline-block rotate-[40deg]'><img id='anim-discover-ttl-icon' className={tw(
                     'inline-block w-[0.833em] minxxl:w-[5.5rem]',
-                    'mx-[0.45em] -mt-[.75rem] -mb-[.4rem]',
-                    'rotate-[40deg] rounded-xl'
-                  )} src={data_v2?.discoverTitleNfTs.url} alt="" />a
+                    'mx-[0.45em] -mt-[.75rem] -mb-[.4rem] rounded-xl',
+                    '-translate-y-[120vw]'
+                  )} src={data_v2?.discoverTitleNfTs.url} alt="NFT image" /></span>a
                 </span>
                 <span id='anim-discover-ttl-line-2' className='block minlg:translate-y-40 transform-gpu'>New World</span>
               </h2>
@@ -618,9 +648,9 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
             'mt-5 mb-[7.5rem] px-3 minlg:p-6 pt-[3.15rem]'
           )}>
             <svg role='presentation' className='minxl:hidden absolute -z-10 top-0 right-0 -translate-y-[65px]' width="218" height="103" viewBox="0 0 218 103" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path className='anim-corner anim-corner-4' d="M112.373 19H30.3571C29.6239 19 28.9671 19.4537 28.7076 20.1394L0.903622 93.6122C0.467002 94.7659 1.31947 96 2.5531 96H82.3258C83.042 96 83.6871 95.5669 83.9582 94.904L114.006 21.4312C114.48 20.271 113.627 19 112.373 19Z" fill="white"/>
-              <path className='anim-corner anim-corner-5' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white"/>
-              <path className='anim-corner anim-corner-6' d="M251.373 26H169.357C168.624 26 167.967 26.4537 167.708 27.1394L139.904 100.612C139.467 101.766 140.319 103 141.553 103H221.326C222.042 103 222.687 102.567 222.958 101.904L253.006 28.4312C253.48 27.271 252.627 26 251.373 26Z" fill="white"/>
+              <path className='anim-corner anim-corner-4' d="M112.373 19H30.3571C29.6239 19 28.9671 19.4537 28.7076 20.1394L0.903622 93.6122C0.467002 94.7659 1.31947 96 2.5531 96H82.3258C83.042 96 83.6871 95.5669 83.9582 94.904L114.006 21.4312C114.48 20.271 113.627 19 112.373 19Z" fill="white" />
+              <path className='anim-corner anim-corner-5' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white" />
+              <path className='anim-corner anim-corner-6' d="M251.373 26H169.357C168.624 26 167.967 26.4537 167.708 27.1394L139.904 100.612C139.467 101.766 140.319 103 141.553 103H221.326C222.042 103 222.687 102.567 222.958 101.904L253.006 28.4312C253.48 27.271 252.627 26 251.373 26Z" fill="white" />
             </svg>
 
             <svg role='presentation' className='hidden minxl:block absolute -z-10 top-0 right-0 translate-x-[2rem] -translate-y-[40%] max-w-full' aria-hidden="true" width="507" height="234" viewBox="0 0 506.52539 233.98633" xmlns="http://www.w3.org/2000/svg">
@@ -645,7 +675,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                 'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
               )}>
-                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock1Image?.url} alt="" />
+                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock1Image?.url} alt="Claim your profile" />
                 <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock1Title}</h3>
                 <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock1Description}</p>
               </div>
@@ -654,7 +684,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                 'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
               )}>
-                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock2Image?.url} alt="" />
+                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock2Image?.url} alt="Display your collection" />
                 <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock2Title}</h3>
                 <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock2Description}</p>
               </div>
@@ -663,7 +693,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'minlg:translate-y-full minlg:opacity-0 transform-gpu',
                 'anim-hiw-item bg-black rounded-2xl p-4 minxxl:p-7 pb-12 minxxl:pb-20 md:mb-5 text-white'
               )}>
-                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock3Image?.url} alt="" />
+                <img data-aos="zoom-in" data-aos-delay="100" className='w-full bg-white rounded-2xl mb-6' src={data_v2?.hiwBlock3Image?.url} alt="Discover your community" />
                 <h3 data-aos="fade-up" data-aos-delay="200" className='text-2xl minlg:text-[2.5rem] minxxl:text-6xl font-medium leading-tight mb-4'>{data_v2?.hiwBlock3Title}</h3>
                 <p data-aos="fade-up" data-aos-delay="300" className='text-base minlg:text-xl minxxl:text-3xl'>{data_v2?.hiwBlock3Description}</p>
               </div>
@@ -672,20 +702,15 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
         </div>
 
         {/* Block: Leaderboard */}
-        <div id='anim-leaderboard-trigger' className={tw(
-          'px-5 minlg:px-14 minxxl:px-20 pt-[10rem] minlg:pt-[11.725rem] minxxl:pt-64',
-          'minhd:mb-28 overflow-hidden relative'
+        <div id='anim-leaderboard' className={tw(
+          'px-5 minlg:px-14 minxxl:px-20 mb-8',
+          'minhd:mb-28 overflow-hidden relative',
+          'pt-[10rem] minlg:pt-[11.725rem] minxxl:pt-64'
         )}>
-          <div id="anim-leaderboard-decor" className='absolute -z-10 top-0 left-0 right-0 minlg:translate-y-1/2 minlg:transform-gpu'>
-            <svg role='presentation' className={tw(
-              'relative left-1/2 -translate-x-1/2 -translate-y-[2.2rem]',
-              'ml-[20%] min-w-[1600px] minlg:ml-[-12%] minlg:w-[160%]'
-            )} viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" /> <path d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
-          </div>
-
           <div id='anim-leaderboard-content' className={tw(
-            'minlg:translate-y-1/4 transform-gpu',
-            'bg-white shadow-2xl rounded-3xl mb-[5rem] minlg:mb-[6.75rem] px-4 minlg:px-10 pt-12 ...'
+            'anim-leaderboard-row',
+            'bg-white shadow-2xl rounded-3xl mb-[3rem] minlg:mb-[4.75rem] px-4 minlg:px-10 pt-12',
+            'minlg:translate-y-1/2 transform-gpu',
           )}>
             <div className="minlg:flex minlg:justify-between minlg:items-center mb-4 minlg:mb-16">
               <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
@@ -703,6 +728,22 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               <DynamicLeaderBoard data={leaderboardData} />
             </div>
           </div>
+
+          <div id='anim-leaderboard-trigger' className={tw(
+            'absolute left-0 top-0 w-full -z-10',
+          )}>
+            <div className={tw(
+              'absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[2.2rem]',
+              'min-w-[1600px] minlg:w-[160%]',
+              'ml-[20%] minlg:ml-[-12%]'
+            )}>
+              <svg id="anim-leaderboard-decor" role='presentation' className={tw(
+                'block w-full',
+                'anim-leaderboard-row minlg:translate-y-1/4 transform-gpu',
+              )} viewBox="0 0 2102 940" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M2101.5 109H1411.75L1092.92 937.603C1092.48 938.758 1093.33 940 1094.57 940H1776.57C1777.29 940 1777.94 939.554 1778.21 938.876L2101.5 109Z" fill="#F9D54C" /> <path d="M1813.92 0H1672.51C1671.78 0 1671.12 0.454143 1670.86 1.14044L1622.9 128.113C1622.47 129.267 1623.32 130.5 1624.55 130.5H1762.09C1762.8 130.5 1763.45 130.066 1763.72 129.403L1815.55 2.43016C1816.02 1.27007 1815.17 0 1813.92 0Z" fill="white" /> <path d="M992.298 109H320.963C320.233 109 319.579 109.449 319.317 110.13L0.922309 937.603C0.477803 938.758 1.33052 940 2.56831 940H684.565C685.292 940 685.944 939.554 686.208 938.876L1003.26 125.029C1006.26 117.319 1000.57 109 992.298 109Z" fill="#F9D54C" />
+                <path className='anim-leaderboard-path' d="M668.42 110H582.875C582.146 110 581.492 110.449 581.23 111.13L385.923 618.603C385.478 619.758 386.331 621 387.568 621H470.683C471.41 621 472.063 620.554 472.327 619.877L670.063 112.404C670.514 111.248 669.661 110 668.42 110Z" fill="url(#paint0_linear_217_4)" /> <path d="M1655.5 109H965.752L646.922 937.603C646.478 938.758 647.331 940 648.568 940H1330.57C1331.29 940 1331.94 939.554 1332.21 938.876L1655.5 109Z" fill="url(#paint1_linear_217_4)" /> <path d="M1861.42 113H1775.88C1775.15 113 1774.49 113.449 1774.23 114.13L1578.92 621.603C1578.48 622.758 1579.33 624 1580.57 624H1663.68C1664.41 624 1665.06 623.554 1665.33 622.877L1863.06 115.404C1863.51 114.248 1862.66 113 1861.42 113Z" fill="url(#paint2_linear_217_4)" /> <path d="M1938.92 44H1797.51C1796.78 44 1796.12 44.4541 1795.86 45.1404L1747.9 172.113C1747.47 173.267 1748.32 174.5 1749.55 174.5H1887.09C1887.8 174.5 1888.45 174.066 1888.72 173.403L1940.55 46.4302C1941.02 45.2701 1940.17 44 1938.92 44Z" fill="white" /> <path d="M1285.92 34H1144.51C1143.78 34 1143.12 34.4541 1142.86 35.1404L1094.9 162.113C1094.47 163.267 1095.32 164.5 1096.55 164.5H1234.09C1234.8 164.5 1235.45 164.066 1235.72 163.403L1287.55 36.4302C1288.02 35.2701 1287.17 34 1285.92 34Z" fill="white" /> <path d="M698.916 56H557.512C556.779 56 556.122 56.4541 555.862 57.1404L507.902 184.113C507.466 185.267 508.318 186.5 509.551 186.5H647.086C647.802 186.5 648.448 186.066 648.719 185.403L700.549 58.4302C701.023 57.2701 700.169 56 698.916 56Z" fill="white" /> <path d="M845.916 25H704.512C703.779 25 703.122 25.4541 702.862 26.1404L654.902 153.113C654.466 154.267 655.318 155.5 656.551 155.5H794.086C794.802 155.5 795.448 155.066 795.719 154.403L847.549 27.4302C848.023 26.2701 847.169 25 845.916 25Z" fill="white" /> <defs> <linearGradient id="paint0_linear_217_4" x1="605.131" y1="110" x2="435.468" y2="210.923" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint1_linear_217_4" x1="1423" y1="109" x2="1119" y2="501.5" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> <linearGradient id="paint2_linear_217_4" x1="1798.13" y1="113" x2="1690.25" y2="188.205" gradientUnits="userSpaceOnUse"> <stop stopColor="#FDC416" /> <stop offset="0.583333" stopColor="#FFA233" /> </linearGradient> </defs> </svg>
+            </div>
+          </div>
         </div>
 
         {/* Block: News */}
@@ -717,9 +758,9 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 '-translate-y-[68px]',
                 'minlg:hidden'
               )} aria-hidden="true" width="196" height="134" viewBox="0 0 196 134" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path className='anim-corner anim-corner-news' d="M112.373 19H30.3571C29.6239 19 28.9671 19.4537 28.7076 20.1394L0.903622 93.6122C0.467002 94.7659 1.31947 96 2.5531 96H82.3258C83.042 96 83.6871 95.5669 83.9582 94.904L114.006 21.4312C114.48 20.271 113.627 19 112.373 19Z" fill="white"/>
-                <path className='anim-corner anim-corner-news-2' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white"/>
-                <path className='anim-corner anim-corner-news' d="M251.373 57H169.357C168.624 57 167.967 57.4537 167.708 58.1394L139.904 131.612C139.467 132.766 140.319 134 141.553 134H221.326C222.042 134 222.687 133.567 222.958 132.904L253.006 59.4312C253.48 58.271 252.627 57 251.373 57Z" fill="white"/>
+                <path className='anim-corner anim-corner-news' d="M112.373 19H30.3571C29.6239 19 28.9671 19.4537 28.7076 20.1394L0.903622 93.6122C0.467002 94.7659 1.31947 96 2.5531 96H82.3258C83.042 96 83.6871 95.5669 83.9582 94.904L114.006 21.4312C114.48 20.271 113.627 19 112.373 19Z" fill="white" />
+                <path className='anim-corner anim-corner-news-2' d="M193.373 0H111.357C110.624 0 109.967 0.453661 109.708 1.13943L81.9036 74.6122C81.467 75.7659 82.3195 77 83.5531 77H163.326C164.042 77 164.687 76.5669 164.958 75.904L195.006 2.43123C195.48 1.27098 194.627 0 193.373 0Z" fill="white" />
+                <path className='anim-corner anim-corner-news' d="M251.373 57H169.357C168.624 57 167.967 57.4537 167.708 58.1394L139.904 131.612C139.467 132.766 140.319 134 141.553 134H221.326C222.042 134 222.687 133.567 222.958 132.904L253.006 59.4312C253.48 58.271 252.627 57 251.373 57Z" fill="white" />
               </svg>
 
               <svg className={tw(
@@ -749,7 +790,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                             'w-48 minlg:w-80 minxxl:w-[28rem] basis-48 minlg:basis-80 minxxl:basis-[28rem]'
                           )}>
                             <div className='before:pb-[54.129%] before:block relative overflow-hidden'>
-                              <img className='absolute top-0 w-full rounded-t-lg' src={preview.heroImage?.url} alt="" />
+                              <img className='absolute top-0 w-full rounded-t-lg' src={preview.heroImage?.url} alt={preview.title} />
                             </div>
 
                             <div className='py-5 px-4 minxxl:py-8 minxxl:px-7  flex-grow flex flex-col items-start'>
@@ -761,7 +802,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                                 <img className={tw(
                                   'rounded-full mr-[6px] minlg:mr-3 block object-cover',
                                   'h-5 minlg:h-9 minxxl:h-12 w-5 minlg:w-9 minxxl:w-12'
-                                )} src={preview.author?.image?.url} alt="" />
+                                )} src={preview.author?.image?.url} alt={`Image for author, ${preview.author?.name}`} />
                                 {preview.author?.name}
                               </div>
                             </div>
@@ -857,10 +898,10 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'absolute -z-10 minlg:hidden',
                 'top-0 left-0 -translate-y-14',
               )} width="344" height="124" viewBox="0 0 344 124" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path className='anim-corner anim-corner-profile-1' d="M181.373 29H99.3571C98.6239 29 97.9671 29.4537 97.7076 30.1394L69.9036 103.612C69.467 104.766 70.3195 106 71.5531 106H151.326C152.042 106 152.687 105.567 152.958 104.904L183.006 31.4312C183.48 30.271 182.627 29 181.373 29Z" fill="white"/>
-                <path className='anim-corner anim-corner-profile-2' d="M28.3733 47H-53.6429C-54.3761 47 -55.0329 47.4537 -55.2924 48.1394L-83.0964 121.612C-83.533 122.766 -82.6805 124 -81.4469 124H-1.67419C-0.957985 124 -0.312897 123.567 -0.0417862 122.904L30.0057 49.4312C30.4802 48.271 29.6268 47 28.3733 47Z" fill="white"/>
-                <path className='anim-corner anim-corner-profile-5' d="M274.373 0H192.357C191.624 0 190.967 0.453661 190.708 1.13943L162.904 74.6122C162.467 75.7659 163.319 77 164.553 77H244.326C245.042 77 245.687 76.5669 245.958 75.904L276.006 2.43123C276.48 1.27098 275.627 0 274.373 0Z" fill="white"/>
-                <path className='anim-corner anim-corner-profile-4' d="M341.373 39H259.357C258.624 39 257.967 39.4537 257.708 40.1394L229.904 113.612C229.467 114.766 230.319 116 231.553 116H311.326C312.042 116 312.687 115.567 312.958 114.904L343.006 41.4312C343.48 40.271 342.627 39 341.373 39Z" fill="white"/>
+                <path className='anim-corner anim-corner-profile-1' d="M181.373 29H99.3571C98.6239 29 97.9671 29.4537 97.7076 30.1394L69.9036 103.612C69.467 104.766 70.3195 106 71.5531 106H151.326C152.042 106 152.687 105.567 152.958 104.904L183.006 31.4312C183.48 30.271 182.627 29 181.373 29Z" fill="white" />
+                <path className='anim-corner anim-corner-profile-2' d="M28.3733 47H-53.6429C-54.3761 47 -55.0329 47.4537 -55.2924 48.1394L-83.0964 121.612C-83.533 122.766 -82.6805 124 -81.4469 124H-1.67419C-0.957985 124 -0.312897 123.567 -0.0417862 122.904L30.0057 49.4312C30.4802 48.271 29.6268 47 28.3733 47Z" fill="white" />
+                <path className='anim-corner anim-corner-profile-5' d="M274.373 0H192.357C191.624 0 190.967 0.453661 190.708 1.13943L162.904 74.6122C162.467 75.7659 163.319 77 164.553 77H244.326C245.042 77 245.687 76.5669 245.958 75.904L276.006 2.43123C276.48 1.27098 275.627 0 274.373 0Z" fill="white" />
+                <path className='anim-corner anim-corner-profile-4' d="M341.373 39H259.357C258.624 39 257.967 39.4537 257.708 40.1394L229.904 113.612C229.467 114.766 230.319 116 231.553 116H311.326C312.042 116 312.687 115.567 312.958 114.904L343.006 41.4312C343.48 40.271 342.627 39 341.373 39Z" fill="white" />
               </svg>
 
               <svg role='presentation' className={tw(
@@ -885,22 +926,22 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                   'mb-14 minlg:mb-0 minlg:pl-8 minxxl:pl-16 tracking-[-3px]'
                 )}>
                   <span id='anim-build-profile-ttl-1' className='minlg:translate-y-[18rem] transform-gpu'>
-                    Build<img className={tw(
+                    Build<span className='inline-block rotate-[40deg]'><img className={tw(
+                      'anim-build-profile-ttl-icon -translate-y-[120vw]',
                       'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
-                      '-mt-9 minlg:-mt-7 mx-[.4em]',
-                      'rotate-[40deg] rounded-xl',
-                    )} src={data_v2?.bynpTitleNfTsCollection.items[0].url} alt="" />
+                      '-mt-9 minlg:-mt-7 mx-[.4em] rounded-xl',
+                    )} src={data_v2?.bynpTitleNfTsCollection.items[0].url} alt="NFT image" /></span>
                     Your</span>
                   <span id='anim-build-profile-ttl-2' data-aos="fade-up" data-aos-delay="200" className={tw(
                     'block minlg:pl-12 minxl:pl-24 minlg:-mr-24 ',
                     'minlg:translate-y-[18rem] transform-gpu'
                   )}>
-                      NFT<img className={tw(
+                    NFT<span className='inline-block rotate-[40deg]'><img className={tw(
+                      'anim-build-profile-ttl-icon-2 -translate-y-[120vw]',
                       'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
-                      'minlg:-mt-7 mx-[.4em]',
-                      'rotate-[40deg] rounded-xl',
-                    )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="" />
-                      Profile
+                      'minlg:-mt-7 mx-[.4em] rounded-xl',
+                    )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="NFT image" /></span>
+                    Profile
                   </span>
                 </h2>
 

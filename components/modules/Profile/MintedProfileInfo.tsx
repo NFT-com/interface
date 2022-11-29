@@ -1,28 +1,18 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import Toast from 'components/elements/Toast';
-import { ProfileLayoutType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
-import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
+import { ProfileMenu } from './ProfileMenu';
 
-import { SearchIcon } from '@heroicons/react/outline';
-import { useRouter } from 'next/router';
-import { ShareNetwork, TwitterLogo } from 'phosphor-react';
 import GKHolderIcon from 'public/gk-holder.svg';
-import LinkIcon from 'public/icon_link.svg';
-import FeaturedIcon from 'public/layout_icon_featured.svg';
-import GridIcon from 'public/layout_icon_grid.svg';
-import MosaicIcon from 'public/layout_icon_mosaic.svg';
-import SpotlightIcon from 'public/layout_icon_spotlight.svg';
-import GearIcon from 'public/settings_icon.svg';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
 import { useAccount } from 'wagmi';
 
@@ -32,8 +22,6 @@ export interface MintedProfileInfoProps {
 }
 
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
-  const router = useRouter();
-  const [, staticCopy] = useCopyClipboard();
   const { profileURI, userIsAdmin } = props;
   const { address: currentAddress } = useAccount();
   const { user, setCurrentProfileUrl } = useUser();
@@ -51,62 +39,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     saveProfile,
     setEditMode,
     clearDrafts,
-    setLayoutType,
-    setDescriptionsVisible
   } = useContext(ProfileContext);
 
-  const [selectedLayout, setSelectedLayout] = useState(null);
-  const [showDescriptions, setShowDescriptions] = useState(null);
-
-  const setLayout = useCallback((type: ProfileLayoutType) => {
-    setSelectedLayout(type);
-    setLayoutType(type);
-  }, [setLayoutType]);
-
-  const setDescriptions = useCallback((isVisible: boolean) => {
-    setShowDescriptions(isVisible);
-    setDescriptionsVisible(isVisible);
-  }, [setDescriptionsVisible]);
-
-  useEffect(() => {
-    setSelectedLayout(profileData?.profile?.layoutType);
-    setShowDescriptions(profileData?.profile?.nftsDescriptionsVisible || profileData?.profile?.nftsDescriptionsVisible === null ? true : false);
-  }, [profileData]);
-
-  const layoutOptions = [
-    {
-      name: 'Default',
-      label: '',
-      onSelect: () => setLayout(ProfileLayoutType.Default),
-      icon: <GridIcon className={tw(
-        'w-[18px] h-[18px]'
-      )} />
-    },
-    {
-      name:'Featured',
-      label: '',
-      onSelect: () => setLayout(ProfileLayoutType.Featured),
-      icon: <FeaturedIcon className={tw(
-        'w-[18px] h-[18px]'
-      )} />
-    },
-    {
-      name:'Mosaic',
-      label: '',
-      onSelect: () => setLayout(ProfileLayoutType.Mosaic),
-      icon:  <MosaicIcon className={tw(
-        'w-[18px] h-[18px]'
-      )} />
-    },
-    {
-      name: 'Spotlight',
-      label: '',
-      onSelect: () => setLayout(ProfileLayoutType.Spotlight),
-      icon:  <SpotlightIcon className={tw(
-        'w-[18px] h-[18px]'
-      )} />
-    }
-  ];
+  const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
 
   const getProfileButton = useCallback(() => {
     if (!userIsAdmin || !hasGks || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)) {
@@ -148,7 +83,9 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               });
 
               saveProfile();
-              setEditMode(false);
+              setTimeout(() => {
+                setEditMode(false);
+              }, 3000);
             }}
           />
         </div>
@@ -185,38 +122,107 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
     <div className={tw(
       'flex flex-col w-full text-primary-txt dark:text-primary-txt-dk',
       getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-        'mt-[-25px] px-4 font-noi-grotesk' :
+        'mt-[-25px] minlg:mt-[-50px] px-4 minlg:px-20 font-noi-grotesk minlg:mb-12' :
         'my-0 minmd:my-4 mx-0 minxl:mx-8 mb-16 minmd:mb-0 px-4 w-4/5 minxl:w-3/5 minmd:min-h-52 min-h-32'
     )}
     >
       <Toast />
-      <div className={tw('flex w-full justify-start items-center', `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : 'pr-12'}`)}>
-        <div
-          id="MintedProfileNameContainer"
-          className={tw(
-            getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'font-bold text-lg' :'font-bold text-2xl minxl:text-4xl',
-            'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4'
-          )}>
-          {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl'>/</span> } {profileURI}
+      <div className={tw('flex w-full items-center',
+        `${editMode && (draftGkIconVisible ?? profileData?.profile?.gkIconVisible) ? '' : !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'pr-12'}`,
+        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'justify-start minlg:justify-between minlg:mt-3' : 'justify-start'
+      )}>
+        <div className='flex items-end'>
+          <div
+            id="MintedProfileNameContainer"
+            className={tw(
+              getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'font-bold text-lg minlg:text-[44px] minlg:font-medium' :'font-bold text-2xl minxl:text-4xl',
+              'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4'
+            )}>
+            {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+            <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] mr-1'>/</span>
+            }
+            {profileURI}
+          </div>
         </div>
+        {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+          <div className='hidden minlg:block'>
+            <ProfileMenu profileURI={profileURI} />
+          </div>
+        }
         {(draftGkIconVisible ?? profileData?.profile?.gkIconVisible) && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <GKHolderIcon className="ml-2 w-8 h-8 mr-2 shrink-0 aspect-square" />}
       </div>
       {getProfileButton()}
-      {profileData?.profile?.description &&
+      {profileData?.profile?.description && !editMode && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
           <div className={tw(
-            getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-              'mt-4 text-[#6A6A6A] break-words' :
-              'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
+            'mt-3 minlg:mt-6 text-sm text-primary-txt dark:text-primary-txt-dk max-w-[45rem] break-words'
           )}>
-            {!editMode && profileData?.profile?.description}
+            {profileData?.profile?.description}
           </div>
       }
-      {editMode && userIsAdmin &&
-          <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col">
+
+      {profileData?.profile?.description && !editMode && isOwnerAndSignedIn && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+        <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">
+          <div className={tw(
+            'py-1 px-2 -ml-1 m-2 text-[#6A6A6A] break-words w-full'
+          )}
+          >
+            {profileData?.profile?.description}
+          </div>
+        </div>
+      }
+
+      {profileData?.profile?.description && !isOwnerAndSignedIn && !editMode && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+        <div className="w-full minlg:w-1/2 flex items-start flex-col text-[#6A6A6A]">
+          <div className={tw(
+            'py-1 px-2 -ml-1 m-2 text-[#6A6A6A] break-words',
+          )}
+          >
+            {profileData?.profile?.description}
+          </div>
+        </div>
+      }
+
+      {editMode && userIsAdmin && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+        <div className="max-w-full minmd:max-w-xl minxl:max-w-2xl flex items-end flex-col group">
+          <textarea
+            className={tw(
+              'text-base w-full resize-none mt-4',
+              'text-left px-3 py-2 w-full rounded-xl font-medium h-32',
+            )}
+            maxLength={300}
+            placeholder="Enter bio (optional)"
+            value={draftBio ?? profileData?.profile?.description ?? ''}
+            onChange={e => {
+              handleBioChange(e);
+            }}
+            style={{
+              color: alwaysBlack,
+            }}
+          />
+          <div className="text-sm font-medium text-gray-900 dark:text-white">
+            {draftBio ? 300 - draftBio.length : '0' } / 300
+          </div>
+        </div>
+      }
+
+      {editMode && userIsAdmin && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+        <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A] group">
+          <CustomTooltip2
+            orientation='top'
+            tooltipComponent={
+              <div
+                className="w-max"
+              >
+                <p>Update your bio</p>
+              </div>
+            }
+          >
             <textarea
               className={tw(
-                'text-base w-full resize-none mt-4',
-                'text-left px-3 py-2 w-full rounded-xl font-medium h-32',
+                'w-full resize-none',
+                'text-left py-1 px-2 -ml-1 m-2 w-full rounded-xl h-32',
+                'mt-3 text-[#6A6A6A] border-2 border-[#ECECEC]',
+                'hover:outline-3 focus:border-[#F9D54C] focus:ring-0 hover:cursor-pointer focus:cursor-auto'
               )}
               maxLength={300}
               placeholder="Enter bio (optional)"
@@ -224,103 +230,17 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
               onChange={e => {
                 handleBioChange(e);
               }}
-              style={{
-                color: alwaysBlack,
-              }}
             />
-            <div className="text-sm font-medium text-gray-900 dark:text-white">
-              {draftBio ? 300 - draftBio.length : '0' } / 300
-            </div>
+          </CustomTooltip2>
+          <div className="text-sm font-medium text-gray-900 dark:text-white w-full flex space-x-2">
+            <span className='hidden group-focus-within:block text-[#E4BA18]'>Brief description for your profile.</span><p>{draftBio ? 300 - draftBio.length : '0' } / 300</p>
           </div>
+        </div>
       }
+
       {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-        <div className='w-full flex justify-end mt-8 font-noi-grotesk'>
-          <div className='flex flex-row space-x-1 '>
-            <div className='w-10 h-10 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
-              <SearchIcon className='font-medium' height={'18px'} color='#0F0F0F' />
-            </div>
-            {user?.currentProfileUrl === props.profileURI &&
-            <>
-              <DropdownPickerModal
-                pointer
-                align='center'
-                constrain
-                stopMobileModal
-                disableMinWidth
-                disablePadding
-                selectedIndex={selectedLayout ? layoutOptions.findIndex(item => item.name === selectedLayout) : 0}
-                options={layoutOptions}
-              >
-                <div className='w-10 h-10 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
-                  {selectedLayout ? layoutOptions.filter(item => item?.name === selectedLayout)[0]?.icon : layoutOptions[0]?.icon}
-                </div>
-              </DropdownPickerModal>
-
-              <DropdownPickerModal
-                pointer
-                constrain
-                stopMobileModal
-                disableMinWidth
-                disablePadding
-                align='center'
-                selectedIndex={0}
-                options={[
-                  {
-                    label: 'Settings',
-                    onSelect: () => router.push('/app/settings'),
-                    icon: null
-                  },
-                  {
-                    label: 'Edit Profile',
-                    onSelect: () => setEditMode(true),
-                    icon: null
-                  },
-                  {
-                    label: `${showDescriptions ? 'Hide' : 'Show'} Descriptions`,
-                    onSelect: () => setDescriptions(!showDescriptions),
-                    icon: null,
-                  }
-                ]
-                }>
-                <div className='w-10 h-10 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
-                  <GearIcon className={tw(
-                    'w-[18px] h-[18px] minxxl:w-9 minxxl:h-9'
-                  )} />
-                </div>
-              </DropdownPickerModal>
-            
-            </>
-            
-            }
-
-            <DropdownPickerModal
-              pointer
-              constrain
-              stopMobileModal
-              disableMinWidth
-              disablePadding
-              align='right'
-              selectedIndex={0}
-              options={[
-                {
-                  label: 'Copy link to clipboard',
-                  onSelect: () => staticCopy(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}${router.query?.profileURI}`),
-                  icon: <LinkIcon className={tw(
-                    'w-[18px] h-[18px] mr-3'
-                  )} />
-                },
-                {
-                  label: 'Share via Twitter',
-                  onSelect: () => window.open('https://twitter.com/share?url='+ encodeURIComponent(`https://www.nft.com${router.asPath}`)+'&text='+ document.title, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600'),
-                  icon: <TwitterLogo size={18} className='mr-3' color='#1DA1F2' weight="fill" />
-                },
-              ]
-              }>
-              <div className='w-[102px] h-10 rounded-full flex items-center px-4 text-sm font-medium border border-[#ECECEC] hover:cursor-pointer'>
-                <ShareNetwork size={15} className='mr-1' weight='bold' /> SHARE
-              </div>
-            </DropdownPickerModal>
-          </div>
+        <div className='block minlg:hidden'>
+          <ProfileMenu profileURI={profileURI} />
         </div>
       }
     </div>

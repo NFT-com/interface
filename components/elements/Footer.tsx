@@ -99,7 +99,7 @@ export const Footer = () => {
         },
         {
           name: 'Careers',
-          link: 'https://jobs.lever.co/Nft.com',
+          link: 'https://www.linkedin.com/jobs/search/?currentJobId=3361499885&f_C=71294367%2C79896685',
           newTab: true,
         },
         {

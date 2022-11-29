@@ -69,7 +69,7 @@ export function prettify(num: number | string, dec?: number) {
 
   let extra = 0;
   let formatted;
-  
+
   while (formatted === '0' || formatted == null) {
     formatted = numberWithCommas(parseFloat(Number(num).toFixed(dec + extra)));
     extra++;
@@ -252,4 +252,30 @@ export const collectionCardImages = (collection: any) => {
 
 export const getImageFetcherBaseURL = () => {
   return 'https://www.nft.com/';
+};
+
+export const sliceString = (description: string, maxCount: number, isStringCut: boolean) => {
+  if(!description) return;
+  let newDescription;
+  if(description?.length > maxCount){
+    const newString = description?.slice(0, !isStringCut ? maxCount : description?.length);
+    newDescription = !isStringCut ? `${newString}...` : newString;
+  }else {
+    newDescription = description;
+  }
+  return newDescription;
+};
+export const checkImg = (images) => {
+  if(!images) return;
+  const convertedImages = images.map(image => {
+    if(image){
+      return processIPFSURL(image);
+    }
+  }).filter(Boolean);
+  return convertedImages[0];
+};
+
+export const genereteRandomPreloader = () => {
+  const index = Math.floor(Math.random() * (4));
+  return index;
 };

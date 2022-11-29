@@ -64,8 +64,8 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
 
   return (
     <div className={tw(
-      'flex flex-col mt-0 minlg:mt-16 align-items',
-      isMobile ? 'px-2' : 'px-2 minmd:px-8 mb-10'
+      'flex flex-col align-items',
+      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'minlg:px-16' : isMobile ? 'px-2 mt-0 minlg:mt-16' : 'px-2 minmd:px-8 mb-10 mt-0 minlg:mt-16'
     )}>
       <Modal
         fullModal
@@ -180,6 +180,30 @@ export function MintedProfileGallery(props: MintedProfileGalleryProps) {
               <Gear className="w-8 h-8 shrink-0 aspect-square" alt='Edit Menu'/>
             </DropdownPickerModal>
           </div>}
+        </div>
+      }
+
+      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode &&
+        <div className='flex w-full justify-end mb-3 pr-1'>
+          <DynamicGalleryToggleAllButtons
+            publicNFTCount={publiclyVisibleNftCount}
+            onShowAll={() => {
+              showNftIds(allOwnerNfts?.map(nft => nft.id), true);
+              analytics.track('Show All NFTs', {
+                ethereumAddress: currentAddress,
+                profile: props.profileURI,
+                nftsByOwner: createNftOwnerMap(allOwnerNfts)
+              });
+            }}
+            onHideAll={() => {
+              hideNftIds(allOwnerNfts?.map(nft => nft.id), true);
+              analytics.track('Hide All NFTs', {
+                ethereumAddress: currentAddress,
+                profile: props.profileURI,
+                nftsByOwner: createNftOwnerMap(allOwnerNfts)
+              });
+            }}
+          />
         </div>
       }
       {

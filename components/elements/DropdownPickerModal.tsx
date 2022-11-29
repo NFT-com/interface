@@ -1,4 +1,5 @@
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
+import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Modal } from './Modal';
@@ -13,6 +14,7 @@ export interface PickerOption {
   onSelect: () => void;
   color?: string;
   icon?: string | any;
+  closeModalOnClick?: boolean
 }
 
 export interface DropdownPickerModalProps {
@@ -58,12 +60,15 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
       <div
         key={item.label || index}
         style={{ height: '10%' }}
-        className={`flex flex-row w-full px-3 py-3 items-center justiry-evenly 
-        ${index === optionHoverIndex ? ' text-primary-txt font-medium' : 'text-secondary-txt' }`}
+        className={`flex flex-row w-full px-3 py-3 items-center
+          ${index === optionHoverIndex ? ' text-primary-txt font-medium' : 'text-secondary-txt' }
+          ${isNullOrEmpty(item.label) && 'justify-evenly'}
+        `}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
           item.onSelect();
+          item?.closeModalOnClick && setExpanded(false);
         }}
       >
         {item.icon}&nbsp;
