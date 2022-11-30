@@ -132,6 +132,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                     title={collectionLeader.name}
                     timePeriod={activePeriod}
                     isLeaderBoard={true}
+                    logoUrl={collectionLeader.logoUrl}
                     contract={collectionLeader.contract}
                     stats={collectionLeader.stats}
                     key={index}/>

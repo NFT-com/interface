@@ -23,6 +23,7 @@ export interface CollectionCardProps {
   contractName?: string;
   description?: string;
   stats?: any;
+  logoUrl?: any;
   timePeriod?: string;
   userName?: string;
   userAvatar?: string;
@@ -108,7 +109,7 @@ export function CollectionCard(props: CollectionCardProps) {
                 width={600}
                 height={600}
                 containerClasses='w-[100%] object-cover h-[100%]'
-                src={collection?.collection?.logoUrl}
+                src={props?.logoUrl}
                 extraClasses="hover:scale-105 transition"
               />
             </div>

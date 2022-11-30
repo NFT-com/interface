@@ -2628,6 +2628,7 @@ export type LeaderBoardItem = {
   __typename?: 'LeaderBoardItem';
   contract: string,
   name: string,
+  logoUrl: string,
   stats: {
     average_price: number | null,
     floor_price: number | null,
@@ -3926,6 +3927,7 @@ export const CollectionDocumentLeaderBoard = gql`
       collectionLeaderboard(input: $input) {
         items {
         contract
+        logoUrl
         name
           stats {
             one_day_volume
