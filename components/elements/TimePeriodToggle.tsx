@@ -23,7 +23,7 @@ export interface TimePeriodProps {
 export default function TimePeriodToggle(props: TimePeriodProps) {
   return (
     <>
-      <ul className="flex flex-row p-[2px] border border-[#ECECEC] rounded-[16px] font-noi-grotesk mr-4">
+      <ul className="flex flex-row p-[2px] border border-[#ECECEC] rounded-[16px] font-noi-grotesk">
         {
           TimePeriods.map((item, i) => {
             return (

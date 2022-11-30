@@ -1,5 +1,6 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
+import { SearchBar } from 'components/elements/SearchBar';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
@@ -11,6 +12,7 @@ import { SideNav } from 'components/modules/Search/SideNav';
 import { Profile } from 'graphql/generated/types';
 import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollections';
+import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { useSearchModal } from 'hooks/state/useSearchModal';
@@ -24,8 +26,7 @@ import { tw } from 'utils/tw';
 import { getCollection } from 'lib/contentful/api';
 import { FunnelSimple } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
-import SearchIcon from 'public/search.svg';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 
@@ -37,11 +38,12 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const [page, setPage] = useState(1);
   const [isLoading, toggleLoadState] = useState(false);
   const [tabView, toggleTabView] = useState('collections');
-  const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
+  const [isLeaderBoard, toggleLeaderBoardState] = useState(true);
   const { sideNavOpen, activePeriod, changeTimePeriod, setCuratedCollections, selectedCuratedCollection, curatedCollections, setSelectedCuratedCollection, setSideNavOpen } = useSearchModal();
   const [paginatedAddresses, setPaginatedAddresses] = useState([]);
   const prevSelectedCuratedCollection = usePrevious(selectedCuratedCollection);
   const { data: collectionData } = useCollectionQueryLeaderBoard(activePeriod);
+  const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
   const { data: nftsForCollections } = useSWR(selectedCuratedCollection, async () => {
     let nftsForCollections;
     prevSelectedCuratedCollection !== selectedCuratedCollection && setPaginatedAddresses([]);
@@ -129,6 +131,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               ? collectionData?.items.map((collectionLeader, index) => {
                 return (
                   <CollectionCard
+                    index={index}
                     title={collectionLeader.name}
                     timePeriod={activePeriod}
                     isLeaderBoard={true}
@@ -174,21 +177,41 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   };
   const returnProfileBlock = () => {
     if(allLoadedProfiles && allLoadedProfiles.length){
+      console.log('leaderboardData',leaderboardData);
       return (
         <div>
           <div className={tw(
             'minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
             isLeaderBoard ? 'minxl:grid-cols-1' : 'minxl:grid-cols-5 minlg:grid-cols-2 minhd:grid-cols-4')}>
             {
-              allLoadedProfiles.map((profile, index) => {
-                return (
-                  <ProfileCard
-                    key={index}
-                    isLeaderBoard={isLeaderBoard}
-                    profile={profile}
-                  />
-                );
-              })
+              !isLeaderBoard
+                ? (
+                  allLoadedProfiles.map((profile, index) => {
+                    return (
+                      <ProfileCard
+                        key={index}
+                        profile={profile}
+                      />
+                    );
+                  })
+                )
+                : (
+                  leaderboardData && leaderboardData?.leaderboard?.items.map((item, i) => {
+                    return (
+                      <ProfileCard
+                        key={i}
+                        isLeaderBoard
+                        id={item.id}
+                        index={item.index}
+                        itemsVisible={item.index}
+                        numberOfCollections={item.numberOfCollections}
+                        numberOfGenesisKeys={item.numberOfGenesisKeys}
+                        photoURL={item.photoURL}
+                        url={item.url}
+                      />
+                    );
+                  })
+                )
             }
           </div>
           <div className="w-full flex justify-center pb-32 mt-12">
@@ -198,11 +221,13 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                   <Loader />
                 )
                 : (
-                  <Button
-                    label={'Load More'}
-                    onClick={() => loadMoreProfilesFunc()}
-                    type={ButtonType.PRIMARY}
-                  />
+                  !leaderboardData
+                    ? <Button
+                      label={'Load More'}
+                      onClick={() => loadMoreProfilesFunc()}
+                      type={ButtonType.PRIMARY}
+                    />
+                    : null
                 )
             }
           </div>
@@ -229,7 +254,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                     <div className="w-[15.3%]">VOLUME</div>
                     <div className="w-[12%]">% CHANGE</div>
                     <div className="w-[14.9%]">FLOOR PRICE</div>
-                    <div className="w-[13.3%]">ITEMS LISTED</div>
+                    <div className="w-[13.3%]">ITEMS</div>
                     <div className="w-[7%]">SALES</div>
                   </div>
                 )
@@ -267,7 +292,11 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
     }
   };
   useEffect(() => {
-    toggleLeaderBoardState(false);
+    if(tabView === 'collections'){
+      toggleLeaderBoardState(true);
+    }else {
+      toggleLeaderBoardState(false);
+    }
   }, [tabView]);
   if(discoverPageEnv){
     return(
@@ -276,7 +305,20 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
           <div className="flex">
             {/*minlg:ml-6*/}
             <div className=" w-full min-h-disc">
+              {
+                isLeaderBoard && tabView === 'collections' && (
+                  <div className='mb-10 mt-8'>
+                    <div className="text-[54px] font-semibold text-[#000000] text-center leading-[63px] mb-10">
+                      Find your next collectible<br/> <span className="text-[#000000] textColorGradient">wherever it lives</span>
+                    </div>
+                    <div>
+                      <SearchBar leaderBoardSearch/>
+                    </div>
+                  </div>
+                )
+              }
               <DiscoveryTabNav
+                isLeaderBoard={isLeaderBoard && tabView === 'collections'}
                 callBack={(tab) => toggleTabView(tab)}
                 active={tabView}/>
               <div>
@@ -297,9 +339,6 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                         <TimePeriodToggle
                           onChange={(val) => changeTimePeriod(val)}
                           activePeriod={activePeriod}/>
-                        <button className="w-12 h-12 border-2 border-[#ECECEC] rounded-[50%] flex items-center justify-center hover:bg-[#ECECEC] transition-all">
-                          <SearchIcon/>
-                        </button>
                       </div>
                     )
                   }

@@ -5,7 +5,14 @@ import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { Doppler, getEnv } from 'utils/env';
-import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress, sliceString } from 'utils/helpers';
+import {
+  convertValue,
+  getGenesisKeyThumbnail,
+  isNullOrEmpty,
+  processIPFSURL,
+  sameAddress,
+  sliceString
+} from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
 import VolumeIcon from 'public/volumeIcon.svg';
@@ -25,6 +32,7 @@ export interface CollectionCardProps {
   stats?: any;
   logoUrl?: any;
   timePeriod?: string;
+  index?: number;
   userName?: string;
   userAvatar?: string;
   isVerified?: boolean;
@@ -71,7 +79,7 @@ export function CollectionCard(props: CollectionCardProps) {
         sales: props.stats.one_day_sales,
         average_price: props.stats.one_day_average_price,
         minted: props.stats.total_minted,
-        floor_price: props.stats.floor_price_historic_one_day
+        floor_price: props.stats.floor_price
       };
     case '7d':
       return {
@@ -80,7 +88,7 @@ export function CollectionCard(props: CollectionCardProps) {
         sales: props.stats.seven_day_sales,
         average_price: props.stats.seven_day_average_price,
         minted: props.stats.total_minted,
-        floor_price: props.stats.floor_price_historic_seven_day
+        floor_price: props.stats.floor_price
 
       };
     case '30d':
@@ -90,9 +98,52 @@ export function CollectionCard(props: CollectionCardProps) {
         sales: props.stats.thirty_day_sales,
         average_price: props.stats.thirty_day_average_price,
         minted: props.stats.total_minted,
-        floor_price: props.stats.floor_price_historic_thirty_day
+        floor_price: props.stats.floor_price
       };
     }
+  };
+  const checkMinPrice = (price) => {
+    if(!price){
+      return '';
+    }
+    if(price < 0.01){
+      return '< 0.1 ETH';
+    }else {
+      return `${price.toFixed(3)} ETH`;
+    }
+  };
+
+  const checkSalesValue = (value) => {
+    if(!value) return;
+    const stringValue = value.toString().split('');
+    const valueLength = stringValue.length;
+    if(value > 1e9){
+      return '> 1B';
+    }
+    if(valueLength >= 5 && valueLength < 6) {
+      const string = convertValue(value,2,5);
+      return `${string.start}.${string.end}`;
+    }
+    if(valueLength >= 6) {
+      if(valueLength >= 6 && valueLength < 7){
+        const string = convertValue(value,3,5);
+        return `${string.start}.${string.end}k`;
+      }
+      if(valueLength >= 7 && valueLength < 8){
+        const string = convertValue(value,1,3);
+        return `${string.start}.${string.end}M`;
+      }
+
+      if(valueLength >= 8 && valueLength < 9){
+        const string = convertValue(value,2,4);
+        return `${string.start}.${string.end}M`;
+      }
+      if(valueLength >= 9 && valueLength < 10){
+        const string = convertValue(value,3,5);
+        return `${string.start}.${string.end}M`;
+      }
+    }
+    return value;
   };
   if(isLeaderBoard){
     const statsData = checkDataByPeriod();
@@ -101,7 +152,7 @@ export function CollectionCard(props: CollectionCardProps) {
         <div className="flex justify-start items-center w-[37.5%]">
           <div className="flex justify-start items-center">
             <div className="mr-4">
-              #1
+              #{props.index + 1}
             </div>
             <div className="w-20  rounded-[16px] overflow-hidden">
               <RoundedCornerMedia
@@ -134,15 +185,20 @@ export function CollectionCard(props: CollectionCardProps) {
         </div>
         <div className="flex flex-row items-center  w-[14.9%]  pl-1">
           <div className="pr-3">
-            <VolumeIcon/>
+            {statsData.floor_price && <VolumeIcon/>}
           </div>
           <div>
-            <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.floor_price}</div>
-            <div className="text-base leading-[18px] text-[#747474] font-[400]">${(statsData.floor_price / ethPriceUSD).toFixed(2)}</div>
+            <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData.floor_price)}</div>
+            <div className="text-base leading-[18px] text-[#747474] font-[400]">
+              {
+                statsData.floor_price ? `$${((statsData.floor_price / ethPriceUSD).toFixed(2))}` : ''
+              }
+
+            </div>
           </div>
         </div>
         <div className="text-[#B2B2B2] text-lg font-[500]  w-[13.3%] pl-1">{statsData.minted}</div>
-        <div className="text-[#000000] text-lg font-[500]  w-[7%] pl-1">{statsData.sales}</div>
+        <div className="text-[#000000] text-lg font-[500]  w-[7%] pl-1">{checkSalesValue(statsData.sales)}</div>
       </a>
     );
   }else {
