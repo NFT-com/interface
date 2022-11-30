@@ -47,7 +47,7 @@ export default function MintProfilesPage() {
       return <MintFreeProfileCard />;
     }
     if(!freeMintAvailable && isNullOrEmpty(claimable)) {
-      return <MintPaidProfileCard />;
+      return <MintPaidProfileCard type='mint' />;
     }
     return <MintProfileCardSkeleton />;
   }, [claimable, freeMintAvailable]);

@@ -21,9 +21,14 @@ import ReactLoading from 'react-loading';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 
+type MintPaidProfileCardProps = {
+  type: 'renew' | 'mint';
+  profile?: string;
+}
+
 const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 
-export default function MintPaidProfileCard() {
+export default function MintPaidProfileCard({ type, profile } : MintPaidProfileCardProps) {
   const [profileURI, setProfileURI] = useState(null);
   const [input, setInput] = useState([]);
   const [profileStatus, setProfileStatus] = useState('');
@@ -62,8 +67,8 @@ export default function MintPaidProfileCard() {
   const { data } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: maxProfilesABI,
-    functionName: 'publicMint',
-    args: [input[0]?.profileURI, yearValue * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000', input[0]?.hash, input[0]?.signature],
+    functionName: type === 'mint' ? 'publicMint' : 'extendLicense',
+    args: [type === 'mint' ? input[0]?.profileURI : profile, yearValue * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000'],
     onError(err){
       console.log('err:', err);
     },
@@ -115,35 +120,40 @@ export default function MintPaidProfileCard() {
       const [
         regFee
       ] = await Promise.all([
-        profileAuction.getFee(profileURI, yearValue * 60 * 60 * 24 * 365).catch(() => null)
+        profileAuction.getFee(type === 'mint' ? profileURI : profile, yearValue * 60 * 60 * 24 * 365).catch(() => null)
       ]);
 
       if(!isNullOrEmpty(regFee)){
         setRegistrationFee(regFee);
       }
     })();
-  }, [profileAuction, profileURI, yearValue]);
+  }, [profileAuction, profileURI, yearValue, profile, type]);
   
   return (
-    <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
-      <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
-        <h2 className='text-[32px] font-medium'>Claim your free NFT Profile</h2>
-       
-        <p className='mt-9 mb-4 text-xl '>You have already received one free mint</p>
-        <p className='text-[#707070] font-normal mb-2'>Create your NFT Profile to build your social identity</p>
-
-        <MintProfileInputField
-          minting={minting}
-          setFreeProfile={setProfileURI}
-          name={'input-Paid'}
-          type="Free"
-        />
+    <div className={tw(
+      type === 'mint' && 'relative mt-16 minlg:mt-12 z-50 px-5'
+    )}>
+      <div className={tw(
+        type === 'mint' && 'max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'
+      )}>
+        {type === 'mint' &&
+          <>
+            <h2 className='text-[32px] font-medium'>Claim your free NFT Profile</h2>
+            <p className='mt-9 mb-4 text-xl '>You have already received one free mint</p>
+            <p className='text-[#707070] font-normal mb-2'>Create your NFT Profile to build your social identity</p>
+            <MintProfileInputField
+              minting={minting}
+              setFreeProfile={setProfileURI}
+              name={'input-Paid'}
+              type="Free"
+            />
+          </>
+        }
             
-        <div className= 'mt-8'>
-          
+        <div className='mt-8'>
           <div className='mb-10 font-noi-grotesk'>
             <div className='flex items-center space-x-1 mb-3'>
-              <h3 className='text-[22px] font-medium'>Register</h3>
+              <h3 className='text-[22px] font-medium'>{type === 'mint' ? 'Register ': 'Renew'}</h3>
               <Info size={25} color="#969696" weight="fill" />
             </div>
             <p className='text-[#707070] font-normal'>Increase registration period to avoid paying gas every year</p>
@@ -198,7 +208,7 @@ export default function MintPaidProfileCard() {
                 'focus:outline-none focus-visible:bg-[#E4BA18]',
                 'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
               )}
-              disabled={input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') }
+              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') : false }
               onClick={async () => {
                 if (
                   minting
@@ -208,7 +218,7 @@ export default function MintPaidProfileCard() {
                 setModalOpen(true);
               }}
             >
-              {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Purchase</span>}
+              {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : type === 'mint' ? <span>Purchase</span> : <span>Renew Licensing</span>}
             </button>
           }
               
@@ -221,7 +231,7 @@ export default function MintPaidProfileCard() {
           </a>
         </Link>
       </div>
-      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={input} type='Paid' duration={yearValue} transactionCost={registrationFee} />
+      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={type === 'mint' ? input : [{ profileURI: profile }]} type={type === 'mint' ? 'Paid' : 'Renew'} duration={yearValue} transactionCost={registrationFee} />
     </div>
   );
 }
