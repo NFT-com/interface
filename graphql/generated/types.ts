@@ -2622,7 +2622,10 @@ export type Wallet = {
   user?: Maybe<User>;
 };
 export type LeaderBoard = {
-  __typename?: 'LeaderBoard';
+  items: Array<LeaderBoardItem>;
+}
+export type LeaderBoardItem = {
+  __typename?: 'LeaderBoardItem';
   contract: string,
   name: string,
   stats: {
