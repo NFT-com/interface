@@ -3,6 +3,7 @@ import { Nft, TxActivity } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { Doppler, getEnv } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress, sliceString } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -38,6 +39,7 @@ export interface CollectionCardProps {
 
 export function CollectionCard(props: CollectionCardProps) {
   const { chain } = useNetwork();
+  const ethPriceUSD = useEthPriceUSD();
   const [isStringCut, toggleStringLength] = useState(false);
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract);
   const collectionName = collection?.collection?.name ?? props.contractName;
@@ -122,12 +124,12 @@ export function CollectionCard(props: CollectionCardProps) {
             <VolumeIcon/>
           </div>
           <div>
-            <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.volume}</div>
-            <div className="text-base leading-[18px] text-[#747474] font-[400]">$93333.33</div>
+            <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.volume.toFixed(2)}</div>
+            <div className="text-base leading-[18px] text-[#747474] font-[400]">${(statsData.volume / ethPriceUSD).toFixed(2)}</div>
           </div>
         </div>
         <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500] w-[12%]  pl-1`}>
-          {statsData?.change ? statsData?.change?.toFixed(2) : null}
+          {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2)}%` : null}
         </div>
         <div className="flex flex-row items-center  w-[14.9%]  pl-1">
           <div className="pr-3">
@@ -135,7 +137,7 @@ export function CollectionCard(props: CollectionCardProps) {
           </div>
           <div>
             <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.floor_price}</div>
-            <div className="text-base leading-[18px] text-[#747474] font-[400]">$73.33</div>
+            <div className="text-base leading-[18px] text-[#747474] font-[400]">${(statsData.floor_price / ethPriceUSD).toFixed(2)}</div>
           </div>
         </div>
         <div className="text-[#B2B2B2] text-lg font-[500]  w-[13.3%] pl-1">{statsData.minted}</div>
