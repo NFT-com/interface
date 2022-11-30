@@ -1,11 +1,13 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { CollectionInfo } from 'graphql/generated/types';
+import {CollectionInfo, LeaderBoard} from 'graphql/generated/types';
 
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
 
 export interface CollectionDataLeaderBoard {
-  data: any;
+  data: PartialDeep<LeaderBoard>;
+  loading: boolean;
+  mutate: () => void;
 }
 export function useCollectionQueryLeaderBoard(dateRange: string): CollectionDataLeaderBoard {
   const sdk = useGraphQLSDK();

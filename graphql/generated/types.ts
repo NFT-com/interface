@@ -2612,6 +2612,37 @@ export type Wallet = {
   profileId?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
 };
+export type LeaderBoard = {
+  __typename?: 'LeaderBoard';
+  contract: string,
+  name: string,
+  stats: {
+    average_price: number | null,
+    floor_price: number | null,
+    floor_price_historic_one_day: number | null,
+    floor_price_historic_seven_day: number | null,
+    floor_price_historic_thirty_day: number | null,
+    market_cap: number | null,
+    num_owners: number | null,
+    one_day_average_price: number | null,
+    one_day_change: number | null,
+    one_day_sales: number | null,
+    one_day_volume: number | null,
+    seven_day_average_price: number | null,
+    seven_day_change: number | null,
+    seven_day_sales: number | null,
+    seven_day_volume: number | null,
+    thirty_day_average_price: number | null,
+    thirty_day_change: number | null,
+    thirty_day_sales: number | null,
+    thirty_day_volume: number | null,
+    total_minted: number | null
+    total_sales: number | null,
+    total_supply: number | null,
+    total_volume: number | null,
+    updated_date: string
+  }
+};
 
 export type WalletInput = {
   address: Scalars['Address'];
@@ -2941,6 +2972,11 @@ export type CollectionQueryVariables = Exact<{
 export type CollectionLeaderBoardNewQueryVariables = Exact<{
   input: CollectionInputLeaderBoard;
 }>;
+
+export type LeaderBoardCollectionsQuery = {
+  __typename?: 'Query',
+  collectionLeaderboard: Maybe<Array<LeaderBoard>>
+}
 
 
 export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, chainId?: string | null, deployer?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null, isCurated?: boolean | null, isSpam?: boolean | null } | null, nftPortResults?: { __typename?: 'NFTPortResults', name?: string | null, symbol?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null } | null } | null };
@@ -5450,8 +5486,8 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');
     },
-    CollectionLeaderBoard(variables: CollectionLeaderBoardNewQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionLeaderBoardNewQueryVariables> {
-      return withWrapper((wrappedRequestHeaders) => client.request<CollectionLeaderBoardNewQueryVariables>(CollectionDocumentLeaderBoard, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionLeaderboard', 'query');
+    CollectionLeaderBoard(variables: CollectionLeaderBoardNewQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LeaderBoardCollectionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<LeaderBoardCollectionsQuery>(CollectionDocumentLeaderBoard, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionLeaderboard', 'query');
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');

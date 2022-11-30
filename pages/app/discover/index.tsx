@@ -42,7 +42,6 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const [paginatedAddresses, setPaginatedAddresses] = useState([]);
   const prevSelectedCuratedCollection = usePrevious(selectedCuratedCollection);
   const { data: collectionData } = useCollectionQueryLeaderBoard(activePeriod);
-
   const { data: nftsForCollections } = useSWR(selectedCuratedCollection, async () => {
     let nftsForCollections;
     prevSelectedCuratedCollection !== selectedCuratedCollection && setPaginatedAddresses([]);
@@ -130,6 +129,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               ? collectionData?.items.map((collectionLeader, index) => {
                 return (
                   <CollectionCard
+                    title={collectionLeader.name}
                     timePeriod={activePeriod}
                     isLeaderBoard={true}
                     contract={collectionLeader.contract}
@@ -150,7 +150,6 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
           'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4')}>
           {paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.map((collection, index) => {
             return (
-              // <ProfileCard isLeaderBoard={isLeaderBoard}/>
               <CollectionCard
                 isLeaderBoard={false}
                 key={index}
@@ -240,7 +239,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               (<div className="flex items-center justify-center min-h-[16rem] w-full">
                 <Loader />
               </div>)}
-            { paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < nftsForCollections?.length &&
+            { !isLeaderBoard && paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.length < nftsForCollections?.length &&
               <div className="mx-auto w-full minxl:w-1/4 flex justify-center mt-7 font-medium">
                 <Button
                   color={'black'}

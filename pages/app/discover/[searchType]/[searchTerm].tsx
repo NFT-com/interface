@@ -85,6 +85,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS
     }] })
       .then((resp) => {
+        // console.log('resp.results[0]',resp.results[0])
         setNftsForCollections(null);
         setCollectionsSliderData(resp.results[0]);
       });
@@ -157,7 +158,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         });
     }
   }, [addressesList, fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
-
   if(discoverPageEnv){
     return (
       <div className="p-1 mt-7 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
@@ -280,15 +280,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
                             customBackground={'white'}
                             lightModeForced/>
-                          // <NFTCard
-                          //   title={item.document.nftName}
-                          //   images={[item.document.imageURL]}
-                          //   collectionName={item.document.contractName}
-                          //   redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                          //   description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-                          //   customBackground={'white'}
-                          //   lightModeForced
-                          // />
                         }
                       </div>);
                   })}

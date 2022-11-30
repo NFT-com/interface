@@ -112,7 +112,7 @@ export function CollectionCard(props: CollectionCardProps) {
             </div>
           </div>
           <div className="pl-6 flex flex-row items-start justify-start">
-            <span className="pr-5 text-lg text-[#000000] font-[500]">{collection?.collection?.name}</span>
+            <span className="pr-5 text-lg text-[#000000] font-[500]">{collection?.collection?.name ? collection?.collection?.name : props.title}</span>
             {/*<VerifiedIcon/>*/}
             {/*<span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600] max-w-[60%]">{collectionName}</span>*/}
           </div>
