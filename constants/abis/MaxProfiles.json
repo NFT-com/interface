@@ -64,6 +64,12 @@
         "internalType": "bool",
         "name": "_expired",
         "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_paymentToken",
+        "type": "address"
       }
     ],
     "name": "ExtendLicense",
@@ -114,6 +120,12 @@
         "internalType": "uint256",
         "name": "_fee",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_paymentToken",
+        "type": "address"
       }
     ],
     "name": "MintedProfile",
@@ -168,25 +180,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "string",
-        "name": "_profileUrl",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_stake",
-        "type": "uint256"
-      }
-    ],
-    "name": "UpdatedProfileStake",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "implementation",
@@ -194,19 +187,6 @@
       }
     ],
     "name": "Upgraded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint96",
-        "name": "_years",
-        "type": "uint96"
-      }
-    ],
-    "name": "YearsToOwn",
     "type": "event"
   },
   {
@@ -247,7 +227,7 @@
     ],
     "name": "extendLicense",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -282,19 +262,6 @@
     "name": "genesisKeyClaimNumber",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "string", "name": "profileUrl", "type": "string" },
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "address", "name": "recipient", "type": "address" },
-      { "internalType": "bytes32", "name": "hash", "type": "bytes32" },
-      { "internalType": "bytes", "name": "signature", "type": "bytes" }
-    ],
-    "name": "genesisKeyClaimProfile",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -370,15 +337,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      { "internalType": "string", "name": "profileUrl", "type": "string" }
-    ],
-    "name": "ownProfile",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [{ "internalType": "string", "name": "", "type": "string" }],
     "name": "ownedProfileStake",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -429,7 +387,7 @@
     ],
     "name": "publicMint",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -456,16 +414,7 @@
     ],
     "name": "purchaseExpiredProfile",
     "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "string", "name": "profileUrl", "type": "string" }
-    ],
-    "name": "redeemProfile",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -565,15 +514,6 @@
   {
     "inputs": [{ "internalType": "uint96", "name": "_fee", "type": "uint96" }],
     "name": "setYearlyFee",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint96", "name": "_years", "type": "uint96" }
-    ],
-    "name": "setYearsToOwn",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

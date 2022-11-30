@@ -3,6 +3,7 @@ import '../../plugins/tailwind';
 import MintProfileModal from '../../../components/modules/ProfileFactory/MintProfileModal';
 import { setupWagmiClient } from '../../util/utils';
 
+import { BigNumber } from 'ethers';
 import { WagmiConfig } from 'wagmi';
 
 describe('MintProfileModal', () => {
@@ -73,7 +74,7 @@ describe('MintProfileModal', () => {
           type='Paid'
           isOpen={true}
           setIsOpen={onChange}
-          transactionCost={.001}
+          transactionCost={BigNumber.from('1000000000000000')}
           profilesToMint={[
             {
               profileURI: 'lucasTestPaid',
