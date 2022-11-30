@@ -150,7 +150,9 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
           </>
         }
             
-        <div className='mt-8'>
+        <div className={tw(
+          type === 'mint' ? 'mt-8' : 'mt-4'
+        )}>
           <div className='mb-10 font-noi-grotesk'>
             <div className='flex items-center space-x-1 mb-3'>
               <h3 className='text-[22px] font-medium'>{type === 'mint' ? 'Register ': 'Renew'}</h3>

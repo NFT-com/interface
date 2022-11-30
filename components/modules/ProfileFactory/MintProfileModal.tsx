@@ -332,7 +332,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                 <div className="mt-7 pb-6">
                   <div className='flex justify-between'>
                     <p className="text-lg text-[#686868] font-medium">
-                    Total
+                      Total
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="text-xl font-medium">
