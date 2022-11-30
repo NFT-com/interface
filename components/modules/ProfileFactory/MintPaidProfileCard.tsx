@@ -1,3 +1,4 @@
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import MintProfileModal from 'components/modules/ProfileFactory/MintProfileModal';
 import maxProfilesABI from 'constants/abis/MaxProfiles.json';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
@@ -156,7 +157,21 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
           <div className='mb-10 font-noi-grotesk'>
             <div className='flex items-center space-x-1 mb-3'>
               <h3 className='text-[22px] font-medium'>{type === 'mint' ? 'Register ': 'Renew'}</h3>
-              <Info size={25} color="#969696" weight="fill" />
+              <div className='w-max'>
+                <CustomTooltip2
+                  orientation='top'
+                  tooltipComponent={
+                    <div
+                      className="rounded-xl w-max"
+                    >
+                      <p className='max-w-[150px]'>An annual fee is required to register a NFT Profile. The fee is based on the length of the domain. You can pre-pay this fee at creation of the NFT Profile and extend it at anytime.</p>
+                    </div>
+                  }
+                >
+                  <Info size={25} color="#969696" weight="fill" />
+                </CustomTooltip2>
+              </div>
+              
             </div>
             <p className='text-[#707070] font-normal'>Increase registration period to avoid paying gas every year</p>
             <div className='mt-10 flex justify-between items-center pr-0 pl-0 minmd:pr-14 minmd:pl-8'>
