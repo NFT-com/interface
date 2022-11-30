@@ -52,7 +52,9 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
     draftProfileImg,
     draftHeaderImg,
     draftBio,
-    clearDrafts
+    clearDrafts,
+    draftNftsDescriptionsVisible,
+    setDraftNftsDescriptionsVisible
   } = useContext(ProfileContext);
 
   const setLayout = useCallback((type: ProfileLayoutType) => {
@@ -63,7 +65,8 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const setDescriptions = useCallback((isVisible: boolean) => {
     setShowDescriptions(isVisible);
     setDescriptionsVisible(isVisible);
-  }, [setDescriptionsVisible]);
+    setDraftNftsDescriptionsVisible(isVisible);
+  }, [setDescriptionsVisible, setDraftNftsDescriptionsVisible]);
 
   useEffect(() => {
     setSelectedLayout(profileData?.profile?.layoutType);
@@ -186,7 +189,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                   },
                   {
                     label: `${showDescriptions ? 'Hide' : 'Show'} Descriptions`,
-                    onSelect: () => setDescriptions(!showDescriptions),
+                    onSelect: editMode ? () => setDraftNftsDescriptionsVisible(!draftNftsDescriptionsVisible) : () => setDescriptions(!showDescriptions),
                     icon: null,
                   }
                 ])
@@ -199,7 +202,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
               </DropdownPickerModal>
 
               {editMode &&
-              <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none'
+              <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none z-50'
               >
                 <button
                   type="button"

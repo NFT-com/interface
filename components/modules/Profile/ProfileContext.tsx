@@ -237,7 +237,6 @@ export function ProfileContextProvider(
 
   const prevPublicProfileNfts = usePrevious(publicProfileNfts);
   const prevAllOwnerNfts = usePrevious(allOwnerNfts);
-  const prevEditMode = usePrevious(editMode);
   const prevPubliclyVisibleNfts = usePrevious(publiclyVisibleNfts);
 
   const [showAllNFTsValue, setShowAllNFTsValue] = useState(publicProfileNftsCount === allOwnerNftCount);
@@ -293,11 +292,12 @@ export function ProfileContextProvider(
       }
       
       // Edit mode NFTS rendering as user scroll down - pagination
-      if (!isToggling && allOwnerNfts && prevAllOwnerNfts !== allOwnerNfts && afterCursorEditMode !== '') {
+      if (!isToggling && allOwnerNfts && prevAllOwnerNfts !== allOwnerNfts && afterCursorEditMode !== '' && allOwnerNfts.length !== 0) {
         const publicVisiblePaginatedNFTs = allOwnerNftsWithHiddenValue.filter(nft => !nft.isHide);
-        setPaginatedAllOwnerNfts([...paginatedAllOwnerNfts || [], ...allOwnerNftsWithHiddenValue]);
+        const loadMorePaginatedNFTs = [...paginatedAllOwnerNfts || [], ...allOwnerNftsWithHiddenValue];
+        setPaginatedAllOwnerNfts([...loadMorePaginatedNFTs]);
         setPubliclyVisibleNfts([...publiclyVisibleNfts || [],...publicVisiblePaginatedNFTs]);
-        const paginatedNotPubliclyVisibleNftsLast = paginatedAllOwnerNfts?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [];
+        const paginatedNotPubliclyVisibleNftsLast = loadMorePaginatedNFTs?.filter(nft => publiclyVisibleNfts?.find(nft2 => nft2.id === nft.id) == null) ?? [];
         setEditModeNfts([
           ...(publiclyVisibleNfts || []),
           ...paginatedNotPubliclyVisibleNftsLast || []

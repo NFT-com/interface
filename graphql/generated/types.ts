@@ -716,6 +716,8 @@ export type Mutation = {
   /** AUTHENTICATED */
   profileClaimed: Profile;
   /** AUTHETICATED */
+  refreshCollectionRarity: Scalars['String'];
+  /** AUTHETICATED */
   refreshMyNFTs: RefreshMyNfTsOutput;
   /** AUTHETICATED */
   refreshNFTOrder: Scalars['String'];
@@ -911,6 +913,13 @@ export type MutationOrderingUpdatesArgs = {
 
 export type MutationProfileClaimedArgs = {
   input: ProfileClaimedInput;
+};
+
+
+export type MutationRefreshCollectionRarityArgs = {
+  force?: InputMaybe<Scalars['Boolean']>;
+  id: Scalars['ID'];
+  ttl?: InputMaybe<Scalars['DateTime']>;
 };
 
 
@@ -1131,6 +1140,8 @@ export type Nft = {
   previewLink?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Uint256']>;
   profileId?: Maybe<Scalars['String']>;
+  rarity?: Maybe<Scalars['String']>;
+  sortIndex?: Maybe<Scalars['Int']>;
   tokenId: Scalars['Uint256'];
   type: NftType;
   wallet?: Maybe<Wallet>;
@@ -1371,6 +1382,7 @@ export enum NftSize {
 
 export type NftTrait = {
   __typename?: 'NFTTrait';
+  rarity?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
   value?: Maybe<Scalars['String']>;
 };
