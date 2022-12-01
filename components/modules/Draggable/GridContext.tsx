@@ -41,8 +41,16 @@ export function GridContextProvider(
   const { setAllItemsOrder } = useContext(ProfileContext);
 
   const moveItem = useCallback((sourceId: string, destinationId: string) => {
+    console.log('moveItem--- sourceId: ', sourceId);
+    console.log('moveItem--- destinationId: ', destinationId);
+    console.log('moveItem--- props.items: ', props.items);
+
     const sourceIndex = props.items.findIndex(item => item.id === sourceId);
     const destinationIndex = props.items.findIndex(item => item.id === destinationId);
+
+    console.log('moveItem--- sourceIndex: ', sourceIndex);
+    console.log('moveItem--- destinationIndex: ', destinationIndex);
+
     if (sourceIndex === -1 || destinationIndex === -1) {
       return;
     }

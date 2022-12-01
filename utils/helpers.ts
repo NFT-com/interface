@@ -6,6 +6,7 @@ import { getAddress } from '@ethersproject/address';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import { base32cid, cid, multihash } from 'is-ipfs';
+import { atom } from 'jotai';
 import moment, { Moment } from 'moment';
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -16,6 +17,8 @@ export function isAddress(value: any): string | false {
     return false;
   }
 }
+
+export const profileSaveCounter = atom(0);
 
 export function sameAddress(first: Maybe<string>, second: Maybe<string>) {
   if (first == null || second == null) {

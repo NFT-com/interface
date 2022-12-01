@@ -11,10 +11,11 @@ import { useUpdateProfileMutation } from 'graphql/hooks/useUpdateProfileMutation
 import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileImagesMutation';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
 
+// import { useAtom } from 'jotai';
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -246,6 +247,12 @@ export function ProfileContextProvider(
 
   const [showAllNFTsValue, setShowAllNFTsValue] = useState(publicProfileNftsCount === allOwnerNftCount);
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
+
+  // const [savedCount, setSavedCount] = useAtom(profileSaveCounter);
+
+  console.log('************ publiclyVisibleNfts: ', publiclyVisibleNfts);
+  console.log('************ publiclyVisibleNftsNoEdit: ', publiclyVisibleNftsNoEdit);
+  console.log('************ editModeNfts: ', editModeNfts);
   
   // Profile page NO Edit Mode ONLY
   useEffect(() => {
@@ -352,6 +359,7 @@ export function ProfileContextProvider(
   }, [editMode]);
 
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
+    console.log('setAllItemsOrder: ', orderedItems);
     setIsDragging(true);
     setPubliclyVisibleNfts([...orderedItems.filter((nft: DetailedNft) => !nft.hidden),]);
   }, []);
@@ -440,12 +448,6 @@ export function ProfileContextProvider(
             );
           }
         }
-        if (getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED)) {
-          await updateOrder({
-            profileId: profileData?.profile?.id,
-            updates: editModeNfts?.map((nft, index) => ({ nftId: nft.id, newIndex: index }))
-          });
-        }
         const result = await updateProfile({
           id: profileData?.profile?.id,
           description: isNullOrEmpty(draftBio) ? profileData?.profile?.description : draftBio,
@@ -466,6 +468,13 @@ export function ProfileContextProvider(
         });
 
         if (result) {
+          if (getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED)) {
+            await updateOrder({
+              profileId: profileData?.profile?.id,
+              updates: editModeNfts?.map((nft, index) => ({ nftId: nft.id, newIndex: index }))
+            });
+          }
+          // setSavedCount(savedCount + 1); // update global state
           window.scrollTo(0, 0);
           setAfterCursorEditMode('');
           setPubliclyVisibleNfts(null);

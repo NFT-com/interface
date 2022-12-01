@@ -1,8 +1,9 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe, Nft, PageInfo } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
+import { useAtom } from 'jotai';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
 
@@ -18,14 +19,15 @@ export function useProfileNFTsQuery(
   profileId: string,
   chainId: Maybe<string>,
   first: number,
-  beforeCursor?: string,
+  beforeCursor?: string
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
+  const [savedCount,] = useAtom(profileSaveCounter);
   
   const keyString = 'ProfileNFTsQuery' +
     profileId +
     first +
-    beforeCursor;
+    beforeCursor + savedCount;
   
   const { data } = useSWR(keyString, async () => {
     if (isNullOrEmpty(profileId)) {

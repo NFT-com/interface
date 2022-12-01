@@ -97,7 +97,7 @@ export function NftGrid(props: NftGridProps) {
     }
     {items?.map((nft: PartialDeep<DetailedNft>, index) => (
       <DraggableGridItem
-        key={nft?.id}
+        key={`${nft?.contract}-${nft?.tokenId}`}
         item={{ id: nft?.id, hidden: nft?.hidden, draggable: props.draggable ?? true }}
         onMoveItem={moveItem}
       >
