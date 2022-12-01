@@ -15,13 +15,12 @@ import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQ
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { filterNulls, getChainIdString, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 
-import { BigNumber } from 'ethers';
-import moment from 'moment';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork } from 'wagmi';
@@ -48,10 +47,8 @@ export default function Settings() {
   const { getCurrentProfileUrl }= useUser();
   const { chain } = useNetwork();
   const { fetchEvents } = useFetchIgnoredEvents();
-  const { nftProfile } = useAllContracts();
   const selectedProfile = getCurrentProfileUrl();
-
-  const [profileExpiry, setProfileExpiry] = useState(null);
+  const { expiry } = useProfileExpiryDate(selectedProfile);
 
   // TODO: move settings page state/data management into Context
   const { data: associatedAddresses } = useSWR<AssociatedAddresses>(
@@ -120,16 +117,6 @@ export default function Settings() {
   }, [currentAddress, router]);
 
   const ownsProfilesAndSelectedProfile = myOwnedProfileTokens.length && myOwnedProfileTokens.some(t => t.title === selectedProfile);
-
-  const getProfileExpiry = useCallback(async () => {
-    const expiry = await nftProfile.getExpiryTimeline([selectedProfile]);
-    setProfileExpiry(moment.unix(Number(BigNumber.from(expiry[0]))).format('MM/DD/YYYY'));
-  },
-  [nftProfile, selectedProfile]);
-
-  useEffect(() => {
-    getProfileExpiry();
-  }, [getProfileExpiry, selectedProfile]);
   
   return (
     <>
@@ -152,7 +139,7 @@ export default function Settings() {
                     {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) &&
                       <div className='mt-10 font-grotesk' id="licensing">
                         <h2 className='text-black mb-2 font-bold text-2xl tracking-wide font-grotesk'>Profile Licensing</h2>
-                        {profileExpiry && <p>{selectedProfile} expires: {profileExpiry}</p>}
+                        {expiry && <p>{selectedProfile} expires: {expiry}</p>}
                         <MintPaidProfileCard profile={selectedProfile} type='renew' />
                       </div>
                     }
