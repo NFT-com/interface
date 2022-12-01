@@ -346,12 +346,8 @@ export function ProfileContextProvider(
   }, [editMode]);
 
   useEffect(() => {
-    setAfterCursorEditMode('');
-    setEditModeNfts(null);
     setAfterCursor('');
     setPubliclyVisibleNftsNoEdit(null);
-    setPubliclyVisibleNfts(null);
-    setPaginatedAllOwnerNfts([]);
   }, [debouncedSearch]);
 
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
