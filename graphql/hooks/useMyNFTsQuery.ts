@@ -32,7 +32,7 @@ export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: 
       input: {
         pageInput: { first: first, beforeCursor: beforeCursor },
         profileId: profileId,
-        query
+        ...(query && { query })
       }
     });
     return result;

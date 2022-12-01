@@ -260,10 +260,6 @@ export function ProfileContextProvider(
     }
   }, [afterCursor, editMode, loading, prevPublicProfileNfts, publicProfileNfts, publiclyVisibleNftsNoEdit]);
 
-  useEffect(() => {
-    !isNullOrEmpty(publicProfileNfts) && setPubliclyVisibleNftsNoEdit([...publicProfileNfts]);
-  }, [publicProfileNfts]);
-
   // Rendering of Edit mode NFTS only - for pagination, toggling and drop/dragging visibility
   useEffect(() => {
     if (!loadingAllOwnerNfts && editMode) {
@@ -350,7 +346,12 @@ export function ProfileContextProvider(
   }, [editMode]);
 
   useEffect(() => {
+    setAfterCursorEditMode('');
+    setEditModeNfts(null);
     setAfterCursor('');
+    setPubliclyVisibleNftsNoEdit(null);
+    setPubliclyVisibleNfts(null);
+    setPaginatedAllOwnerNfts([]);
   }, [debouncedSearch]);
 
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
