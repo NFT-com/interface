@@ -1,8 +1,8 @@
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { ProfileLayoutType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
+import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
@@ -30,12 +30,12 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const { address: currentAddress } = useAccount();
   const router = useRouter();
   const [, staticCopy] = useCopyClipboard();
-  const { user } = useUser();
   const { profileData } = useProfileQuery(profileURI);
   const [selectedLayout, setSelectedLayout] = useState(null);
   const [showDescriptions, setShowDescriptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
   const inputRef = useRef();
+  const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
 
   useOutsideClickAlerter(inputRef, () => {
     searchQuery === '' && setSearchVisible(false);
@@ -150,7 +150,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         )}>
           <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
         </div>
-        {user?.currentProfileUrl === profileURI &&
+        {isOwnerAndSignedIn &&
             <>
               <DropdownPickerModal
                 pointer
@@ -202,7 +202,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                 </div>
               </DropdownPickerModal>
 
-              {editMode &&
+              {editMode && isOwnerAndSignedIn &&
               <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none z-50'
               >
                 <button
@@ -248,7 +248,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
               }
             </>
         }
-        {!editMode &&
+        {(!editMode || editMode && !isOwnerAndSignedIn) &&
         <DropdownPickerModal
           pointer
           constrain
