@@ -235,7 +235,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                 setModalOpen(true);
               }}
             >
-              {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : type === 'mint' ? <span>Purchase</span> : <span>Renew Licensing</span>}
+              {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : type === 'mint' ? <span>Purchase</span> : <span>Renew License</span>}
             </button>
           }
               

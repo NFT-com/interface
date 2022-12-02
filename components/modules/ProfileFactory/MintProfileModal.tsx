@@ -362,7 +362,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                       submitHandler();
                     }}
                   >
-                    {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your profile</span>}
+                    {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : type === 'Renew' ? <span>Renew</span> : <span>Mint your profile</span>}
                   </button>
                 </div>
               </Dialog.Panel>
