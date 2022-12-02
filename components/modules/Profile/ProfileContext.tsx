@@ -15,7 +15,7 @@ import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
 
-// import { useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -168,6 +168,9 @@ export function ProfileContextProvider(
     PUBLIC_PROFILE_LOAD_COUNT,
     afterCursor
   );
+
+  console.log(`publicProfileNfts: ${afterCursor}-${PUBLIC_PROFILE_LOAD_COUNT}`, publicProfileNfts);
+
   const {
     data: allOwnerNfts,
     loading: loadingAllOwnerNfts,
@@ -248,7 +251,7 @@ export function ProfileContextProvider(
   const [showAllNFTsValue, setShowAllNFTsValue] = useState(publicProfileNftsCount === allOwnerNftCount);
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
 
-  // const [savedCount, setSavedCount] = useAtom(profileSaveCounter);
+  const [savedCount, setSavedCount] = useAtom(profileSaveCounter);
 
   console.log('************ publiclyVisibleNfts: ', publiclyVisibleNfts);
   console.log('************ publiclyVisibleNftsNoEdit: ', publiclyVisibleNftsNoEdit);
@@ -268,6 +271,7 @@ export function ProfileContextProvider(
       }
 
       if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
+        console.log('===========> appending publicProfileNfts: ', publicProfileNfts);
         setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
       }
     }
@@ -474,7 +478,7 @@ export function ProfileContextProvider(
               updates: editModeNfts?.map((nft, index) => ({ nftId: nft.id, newIndex: index }))
             });
           }
-          // setSavedCount(savedCount + 1); // update global state
+          setSavedCount(savedCount + 1); // update global state
           window.scrollTo(0, 0);
           setAfterCursorEditMode('');
           setPubliclyVisibleNfts(null);
@@ -494,7 +498,7 @@ export function ProfileContextProvider(
       clearDrafts();
       setSaving(false);
     }
-  }, [clearDrafts, draftBio, draftDeployedContractsVisible, draftGkIconVisible, draftHeaderImg, draftLayoutType, draftNftsDescriptionsVisible, draftProfileImg, editModeNfts, fileUpload, hideAllNFTsValue, mutateAllOwnerNfts, mutateProfileData, mutatePublicProfileNfts, profileData?.profile?.description, profileData?.profile?.id, props.profileURI, publiclyVisibleNfts, showAllNFTsValue, updateOrder, updateProfile, uploadProfileImages]);
+  }, [clearDrafts, draftBio, draftDeployedContractsVisible, draftGkIconVisible, draftHeaderImg, draftLayoutType, draftNftsDescriptionsVisible, draftProfileImg, editModeNfts, fileUpload, hideAllNFTsValue, mutateAllOwnerNfts, mutateProfileData, mutatePublicProfileNfts, profileData?.profile?.description, profileData?.profile?.id, props.profileURI, publiclyVisibleNfts, savedCount, setSavedCount, showAllNFTsValue, updateOrder, updateProfile, uploadProfileImages]);
 
   const setLayoutType = useCallback(async (type: ProfileLayoutType) => {
     try {

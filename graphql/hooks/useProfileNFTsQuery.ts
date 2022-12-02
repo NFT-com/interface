@@ -19,7 +19,7 @@ export function useProfileNFTsQuery(
   profileId: string,
   chainId: Maybe<string>,
   first: number,
-  beforeCursor?: string
+  beforeCursor?: string,
 ): ProfileNFTsQueryData {
   const sdk = useGraphQLSDK();
   const [savedCount,] = useAtom(profileSaveCounter);
