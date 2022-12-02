@@ -178,13 +178,13 @@ const Filter = (props: any) => {
 
   const formatTitle = (title) => {
     switch(title){
-    case 'listedPx':
+    case 'listedFloor':
       return 'Price';
     case 'nftType':
       return 'Contract';
     case 'contractName':
       return 'Collections';
-    case 'listingType':
+    case 'listings.type':
       return 'Listing Type';
     default:
       return title?.charAt(0).toUpperCase() + title?.slice(1);
@@ -261,7 +261,7 @@ const Filter = (props: any) => {
           transition={{ duration: 0.2 }}
           className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-hidden max-h-[16.5rem]')}
         >
-          { /* filter.field_name === 'listedPx' ?
+          { /* filter.field_name === 'listedFloor' ?
           ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) : */
             filter.field_name === 'contractName' ?
               (<ContractNameFilter
