@@ -48,7 +48,7 @@ export default function Settings() {
   const { chain } = useNetwork();
   const { fetchEvents } = useFetchIgnoredEvents();
   const selectedProfile = getCurrentProfileUrl();
-  const { expiry } = useProfileExpiryDate(selectedProfile);
+  const { expiry } = useProfileExpiryDate(selectedProfile, true);
 
   // TODO: move settings page state/data management into Context
   const { data: associatedAddresses } = useSWR<AssociatedAddresses>(

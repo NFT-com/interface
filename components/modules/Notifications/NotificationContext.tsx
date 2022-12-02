@@ -6,9 +6,11 @@ import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
 import { UserNotifications } from 'types';
 import { isNullOrEmpty } from 'utils/helpers';
 
+import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { useAccount } from 'wagmi';
@@ -22,7 +24,8 @@ export interface NotificationContextType {
     associatedProfileAdded: boolean,
     associatedProfileRemoved: boolean,
     hasSoldActivity: boolean,
-    hasExpiredListings: boolean
+    hasExpiredListings: boolean,
+    profileExpiration: boolean
   },
   setUserNotificationActive: (notification: keyof UserNotifications, notificationValue: boolean) => void,
   pendingAssociationCount: number,
@@ -31,7 +34,8 @@ export interface NotificationContextType {
   setRemovedAssociationNotifClicked: (input: boolean) => void,
   setAddedAssociatedNotifClicked: (input: boolean) => void,
   soldActivityDate: string,
-  expiredActivityDate: string
+  expiredActivityDate: string,
+  profileExpiringSoon: boolean
 }
 
 export const NotificationContext = React.createContext<NotificationContextType>({
@@ -43,7 +47,8 @@ export const NotificationContext = React.createContext<NotificationContextType>(
     associatedProfileAdded: false,
     associatedProfileRemoved: false,
     hasSoldActivity: false,
-    hasExpiredListings: false
+    hasExpiredListings: false,
+    profileExpiration: false
   },
   setUserNotificationActive: () => null,
   pendingAssociationCount: 0,
@@ -52,7 +57,8 @@ export const NotificationContext = React.createContext<NotificationContextType>(
   setRemovedAssociationNotifClicked: () => null,
   setAddedAssociatedNotifClicked: () => null,
   soldActivityDate: null,
-  expiredActivityDate: null
+  expiredActivityDate: null,
+  profileExpiringSoon: null
 });
 
 export function NotificationContextProvider(
@@ -74,6 +80,9 @@ export function NotificationContextProvider(
     defaultChainId
   );
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
+  const { expiry } = useProfileExpiryDate(user?.currentProfileUrl, false);
+  const now = moment();
+  const eightWeeksBeforeExpiry = moment(expiry).subtract(56, 'days');
 
   // Notification State
   const [count, setCount] = useState(0);
@@ -84,13 +93,15 @@ export function NotificationContextProvider(
     associatedProfileAdded: false,
     associatedProfileRemoved: false,
     hasSoldActivity: false,
-    hasExpiredListings: false
+    hasExpiredListings: false,
+    profileExpiration: false
   });
   const [removedAssociationNotifClicked, setRemovedAssociationNotifClicked] = useState(false);
   const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
   const [pendingAssociationCount, setPendingAssociationCount] = useState(null);
   const [soldActivityDate, setSoldActivityDate] = useState(null);
   const [expiredActivityDate, setExpiredActivityDate] = useState(null);
+  const [profileExpiringSoon, setProfileExpiringSoon] = useState(null);
 
   const setUserNotificationActive = useCallback((notification: keyof UserNotifications, notificationValue: boolean) => {
     setNotifications({
@@ -174,7 +185,14 @@ export function NotificationContextProvider(
       setUserNotificationActive('hasExpiredListings', false);
       setExpiredActivityDate(null);
     }
-  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, currentAddress, pendingAssociationCount, notifications, saleActivities, expiredListings]);
+
+    if(expiry && moment(now).isAfter(eightWeeksBeforeExpiry)){
+      setProfileExpiringSoon(true);
+    }
+    if(profileExpiringSoon && !moment(now).isAfter(eightWeeksBeforeExpiry)){
+      setProfileExpiringSoon(false);
+    }
+  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, currentAddress, pendingAssociationCount, notifications, saleActivities, expiredListings, expiry, now, eightWeeksBeforeExpiry, profileExpiringSoon]);
 
   return (
     <NotificationContext.Provider
@@ -194,7 +212,8 @@ export function NotificationContextProvider(
           setAddedAssociatedNotifClicked(input);
         },
         soldActivityDate: soldActivityDate,
-        expiredActivityDate: expiredActivityDate
+        expiredActivityDate: expiredActivityDate,
+        profileExpiringSoon: profileExpiringSoon
       }}>
       {props.children}
     </NotificationContext.Provider>);
