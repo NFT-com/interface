@@ -52,7 +52,7 @@ export function ProfileCard(props: ProfileCardProps) {
             </div>
           </div>
           <div className="pl-8 flex flex-row items-center justify-start">
-            <span className="pr-5 text-xl text-[#000000] font-[500]">@${props.url}</span>
+            <span className="pr-5 text-xl text-[#000000] font-[500]">${props.url}</span>
             {/*<VerifiedIcon/>*/}
             {/*<span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600] max-w-[60%]">{collectionName}</span>*/}
           </div>

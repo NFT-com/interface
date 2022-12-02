@@ -23,11 +23,11 @@ export interface TimePeriodProps {
 export default function TimePeriodToggle(props: TimePeriodProps) {
   return (
     <>
-      <ul className="flex flex-row p-[2px] border border-[#ECECEC] rounded-[16px] font-noi-grotesk">
+      <ul className="flex flex-row border border-[#ECECEC] rounded-[16px] font-noi-grotesk overflow-hidden">
         {
           TimePeriods.map((item, i) => {
             return (
-              <li onClick={() => props.onChange(item.key)} key={i} className={`${props.activePeriod === item.key ? 'bg-[#FFF4CA] text-[#000]' : 'bg-transparent'} w-[41px] h-[40px] flex items-center justify-center text-[#B2B2B2] rounded-[12px] list-none text-base m-0 cursor-pointer transition-all`}>{item.value}</li>
+              <li onClick={() => props.onChange(item.key)} key={i} className={`${props.activePeriod === item.key ? 'bg-[#F9D54C] text-[#000]' : 'bg-transparent'} w-[41px] h-[46px] flex items-center justify-center text-[#B2B2B2] list-none text-base m-0 cursor-pointer transition-all`}>{item.value}</li>
             );
           })
         }

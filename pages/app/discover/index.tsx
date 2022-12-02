@@ -177,12 +177,11 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   };
   const returnProfileBlock = () => {
     if(allLoadedProfiles && allLoadedProfiles.length){
-      console.log('leaderboardData',leaderboardData);
       return (
         <div>
           <div className={tw(
-            'minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-            isLeaderBoard ? 'minxl:grid-cols-1' : 'minxl:grid-cols-5 minlg:grid-cols-2 minhd:grid-cols-4')}>
+            'minmd:grid grid-cols-1 space-x-2 minlg:space-x-0 minlg:gap-4',
+            isLeaderBoard ? 'minxl:grid-cols-1' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
             {
               !isLeaderBoard
                 ? (

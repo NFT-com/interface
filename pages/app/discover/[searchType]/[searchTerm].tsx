@@ -1,7 +1,6 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { NFTCard } from 'components/elements/NFTCard';
 import PreloaderImage from 'components/elements/PreloaderImage';
-import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
 import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
@@ -22,8 +21,6 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple, SlidersHorizontal, X } from 'phosphor-react';
-import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
-import SearchIcon from 'public/search.svg';
 import { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
@@ -53,8 +50,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const prevVal = usePrevious(page);
   const prevSearchTerm = usePrevious(searchTerm);
   const addressesList = useRef([]);
-  const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
-  const [activePeriod, changeTimePeriod] = useState('all');
 
   useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
@@ -188,22 +183,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   }
                 </div>
               </div>
-              <div className="flex items-center">
-                {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
-
-                <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
-                  {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
-                  {!isLeaderBoard ? 'Show leaderboard' : 'Back to default view'}
-                </button>
-              </div>
-            </div>
-            <div className="flex items-center ">
-              <TimePeriodToggle
-                onChange={(val) => changeTimePeriod(val)}
-                activePeriod={activePeriod}/>
-              <button className="w-12 h-12 border-2 border-[#ECECEC] rounded-[50%] flex items-center justify-center hover:bg-[#ECECEC] transition-all">
-                <SearchIcon/>
-              </button>
             </div>
           </div>
           <div className="flex justify-center minlg:mt-0">

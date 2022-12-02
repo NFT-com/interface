@@ -11,7 +11,7 @@ export function useSearchModal() {
     {
       modalType: '',
       searchModalOpen: false,
-      activePeriod: 'all',
+      activePeriod: '7d',
       sideNavOpen: !router.pathname.includes('discover/') && !router.pathname.includes('collection/'),
       searchFilters: [],
       filtersList: null,
