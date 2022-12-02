@@ -5,6 +5,7 @@ import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getAddress } from 'utils/httpHooks';
 
@@ -14,6 +15,7 @@ import { useRouter } from 'next/router';
 import ETHIcon from 'public/eth_icon.svg';
 import { Fragment, useCallback, useState } from 'react';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 
@@ -48,6 +50,8 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   const contractAddress = getAddress('maxProfiles', defaultChainId);
   const provider = useProvider();
   const { setMintSuccessModalOpen }= useMintSuccessModal();
+  const profileToMint = profilesToMint && profilesToMint[0];
+  const { mutate: mutateProfileExpiry } = useProfileExpiryDate(type === 'Renew' ? profileToMint?.profileURI : null);
 
   const { data: feeData } = useSWR(
     `${currentAddress}_eth_est_${JSON.stringify(profilesToMint)}`,
@@ -56,7 +60,6 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
       return feeData;
     });
 
-  const profileToMint = profilesToMint && profilesToMint[0];
   const gkMintProfiles = profilesToMint?.map((profile) => {
     return {
       profileUrl: profile.profileURI,
@@ -183,9 +186,9 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
         }
         mutateFreeMintStatus();
         setIsOpen(false);
-        setMintSuccessModalOpen(true);
-        router.push(`/${profileToMint?.profileURI}`);
         setMinting(false);
+        mutateProfileExpiry();
+        toast.success('Renewal was successful!');
       } catch (err) {
         setMinting(false);
       }
