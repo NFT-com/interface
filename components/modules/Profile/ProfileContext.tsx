@@ -253,10 +253,6 @@ export function ProfileContextProvider(
 
   const [savedCount, setSavedCount] = useAtom(profileSaveCounter);
 
-  console.log('************ publiclyVisibleNfts: ', publiclyVisibleNfts);
-  console.log('************ publiclyVisibleNftsNoEdit: ', publiclyVisibleNftsNoEdit);
-  console.log('************ editModeNfts: ', editModeNfts);
-  
   // Profile page NO Edit Mode ONLY
   useEffect(() => {
     if(!loading && !editMode) {
@@ -271,7 +267,6 @@ export function ProfileContextProvider(
       }
 
       if (publicProfileNfts && prevPublicProfileNfts !== publicProfileNfts && afterCursor !== '') {
-        console.log('===========> appending publicProfileNfts: ', publicProfileNfts);
         setPubliclyVisibleNftsNoEdit([...publiclyVisibleNftsNoEdit || [], ...publicProfileNfts]);
       }
     }
