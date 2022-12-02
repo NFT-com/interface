@@ -80,7 +80,7 @@ export function NotificationContextProvider(
     defaultChainId
   );
   const hasUnclaimedProfiles = totalClaimableForThisAddress > 0;
-  const { expiry } = useProfileExpiryDate(user?.currentProfileUrl, false);
+  const { expiry } = useProfileExpiryDate(user?.currentProfileUrl);
   const now = moment();
   const eightWeeksBeforeExpiry = moment(expiry).subtract(56, 'days');
 

@@ -6,7 +6,7 @@ import { BigNumber } from 'ethers';
 import moment from 'moment';
 import useSWR, { mutate } from 'swr';
 
-export function useProfileExpiryDate(profileURI: string | null, formatted?: boolean) {
+export function useProfileExpiryDate(profileURI: string | null) {
   const { nftProfile } = useAllContracts();
   
   const keyString = 'ProfileExpiryDate-' + profileURI;
