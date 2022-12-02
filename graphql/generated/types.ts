@@ -1401,6 +1401,7 @@ export type NfTsInput = {
   ownedByWallet?: InputMaybe<Scalars['Boolean']>;
   pageInput?: InputMaybe<PageInput>;
   profileId?: InputMaybe<Scalars['ID']>;
+  query?: InputMaybe<Scalars['String']>;
   types?: InputMaybe<Array<NftType>>;
 };
 
@@ -2503,6 +2504,7 @@ export type UpdateNfTsForProfileInput = {
   chainId?: InputMaybe<Scalars['String']>;
   pageInput?: InputMaybe<PageInput>;
   profileId: Scalars['ID'];
+  query?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdateOfficialCollectionsOutput = {

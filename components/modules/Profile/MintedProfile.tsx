@@ -11,6 +11,7 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'utils/helpers';
@@ -64,6 +65,7 @@ export function MintedProfile(props: MintedProfileProps) {
   const { user } = useUser();
   const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
   const { nftResolver } = useAllContracts();
+  const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
 
   const fetchAssociatedContract = useCallback(async () => {
     if (profileData?.profile?.profileView !== ProfileViewType.Collection) {
@@ -151,7 +153,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     <div {...getRootProps()} style={{ outline: 'none' }}>
                       <input {...getInputProps()} />
                     </div>
-                    {editMode && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
+                    {editMode && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && <div
                       className={tw(
                         'absolute bottom-5 right-5 minmd:right-4'
                       )}
@@ -160,7 +162,7 @@ export function MintedProfile(props: MintedProfileProps) {
                       <PencilIconRounded alt="Edit banner" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
                     </div>}
 
-                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && !saving && <div
+                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && isOwnerAndSignedIn && !saving && <div
                       onClick={open}
                       className='group-hover:cursor-pointer'
                     >
@@ -247,13 +249,13 @@ export function MintedProfile(props: MintedProfileProps) {
                         'h-full w-full group',
                         'shrink-0 aspect-square',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && 'hover:cursor-pointer',
-                        userIsAdmin && editMode ? 'hover:cursor-pointer' : '',
+                        isOwnerAndSignedIn && editMode ? 'hover:cursor-pointer' : '',
                         !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'box-border border-[5px] border-white rounded-full',
                         getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
                       )}
                     >
-                      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && !saving && <div
+                      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && !saving && isOwnerAndSignedIn && <div
                         style={{ zIndex: 102, }}
                         className={tw(
                           'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
