@@ -1,8 +1,8 @@
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { ProfileLayoutType } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
-import { useUser } from 'hooks/state/useUser';
 import useCopyClipboard from 'hooks/useCopyClipboard';
+import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
 import { Doppler, getEnv } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
@@ -30,12 +30,12 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const { address: currentAddress } = useAccount();
   const router = useRouter();
   const [, staticCopy] = useCopyClipboard();
-  const { user } = useUser();
   const { profileData } = useProfileQuery(profileURI);
   const [selectedLayout, setSelectedLayout] = useState(null);
   const [showDescriptions, setShowDescriptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
   const inputRef = useRef();
+  const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
 
   useOutsideClickAlerter(inputRef, () => {
     searchQuery === '' && setSearchVisible(false);
@@ -109,11 +109,11 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   ];
 
   return (
-    <div className='w-full flex justify-end mt-5 minlg:mt-0 font-noi-grotesk'>
+    <div className='w-full flex justify-end items-center mt-5 minlg:mt-0 font-noi-grotesk'>
       <div ref={inputRef} className={tw(
         'w-full flex flex-row border-[#ECECEC] rounded-full justify-center items-center',
         'focus-within:border focus-within:border-[#F9D54C] focus-within:ring-1 focus-within:ring-[#F9D54C] ',
-        searchVisible ? 'w-full minlg:w-[320px] minlg:max-w-[320px]  p-[10px] border-[1.3px] transition-[width]' : 'w-0 p-0 border-0'
+        searchVisible ? 'w-full minlg:w-[320px] minlg:max-w-[320px] p-[10px] border-[1.3px] transition-[width] h-10 minlg:h-12' : 'w-0 p-0 border-0'
       )}>
         <input
           type="text"
@@ -125,7 +125,8 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
           maxLength={512}
           className={tw(
             'w-full text-black placeholder:text-black bg-inherit border-0 rounded-full py-0 pr-0 pl-2',
-            'focus:border-0 focus:ring-0 focus:placeholder:text-[#B2B2B2]'
+            'focus:border-0 focus:ring-0 focus:placeholder:text-[#B2B2B2]',
+            'h-10 minlg:h-12'
           )}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
@@ -149,7 +150,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         )}>
           <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
         </div>
-        {user?.currentProfileUrl === profileURI &&
+        {isOwnerAndSignedIn &&
             <>
               <DropdownPickerModal
                 pointer
@@ -201,7 +202,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
                 </div>
               </DropdownPickerModal>
 
-              {editMode &&
+              {editMode && isOwnerAndSignedIn &&
               <div className='fixed minlg:relative bottom-0 left-0 bg-white minlg:bg-transparent flex w-full py-5 px-3 space-x-4 shadow-[0_-16px_32px_rgba(0,0,0,0.08)] minlg:shadow-none z-50'
               >
                 <button
@@ -247,7 +248,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
               }
             </>
         }
-        {!editMode &&
+        {(!editMode || editMode && !isOwnerAndSignedIn) &&
         <DropdownPickerModal
           pointer
           constrain

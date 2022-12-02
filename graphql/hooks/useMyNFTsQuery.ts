@@ -18,13 +18,13 @@ export interface NftsData {
   mutate: () => void,
 }
 
-export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: string): NftsData {
+export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: string, query?: string): NftsData {
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const [savedCount,] = useAtom(profileSaveCounter);
-  const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first + profileId + beforeCursor + savedCount;
+  const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first + profileId + beforeCursor + savedCount + query;
 
   const { data } = useSWR(keyString, async () => {
     if (!currentAddress || isNullOrEmpty(profileId)) {
@@ -33,7 +33,8 @@ export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: 
     const result: MyNfTsQuery = await sdk.MyNFTs({
       input: {
         pageInput: { first: first, beforeCursor: beforeCursor },
-        profileId: profileId
+        profileId: profileId,
+        ...(query && { query })
       }
     });
     return result;
