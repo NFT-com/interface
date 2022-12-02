@@ -10,10 +10,11 @@ import { useUpdateProfileImagesMutation } from 'graphql/hooks/useUploadProfileIm
 import useDebounce from 'hooks/useDebounce';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { DetailedNft } from './NftGrid';
 
+import { useAtom } from 'jotai';
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -164,6 +165,7 @@ export function ProfileContextProvider(
     afterCursor,
     debouncedSearch
   );
+
   const {
     data: allOwnerNfts,
     loading: loadingAllOwnerNfts,
@@ -241,6 +243,9 @@ export function ProfileContextProvider(
 
   const [showAllNFTsValue, setShowAllNFTsValue] = useState(publicProfileNftsCount === allOwnerNftCount);
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
+
+  const [savedCount, setSavedCount] = useAtom(profileSaveCounter);
+
   // Profile page NO Edit Mode ONLY
   useEffect(() => {
     if(!loading && !editMode) {
@@ -439,12 +444,6 @@ export function ProfileContextProvider(
             );
           }
         }
-        if (getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED)) {
-          await updateOrder({
-            profileId: profileData?.profile?.id,
-            updates: editModeNfts?.map((nft, index) => ({ nftId: nft.id, newIndex: index }))
-          });
-        }
         const result = await updateProfile({
           id: profileData?.profile?.id,
           description: isNullOrEmpty(draftBio) ? profileData?.profile?.description : draftBio,
@@ -465,6 +464,13 @@ export function ProfileContextProvider(
         });
 
         if (result) {
+          if (getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED)) {
+            await updateOrder({
+              profileId: profileData?.profile?.id,
+              updates: editModeNfts?.map((nft, index) => ({ nftId: nft.id, newIndex: index }))
+            });
+          }
+          setSavedCount(savedCount + 1); // update global state
           window.scrollTo(0, 0);
           setAfterCursorEditMode('');
           setPubliclyVisibleNfts(null);
@@ -484,7 +490,7 @@ export function ProfileContextProvider(
       clearDrafts();
       setSaving(false);
     }
-  }, [clearDrafts, draftBio, draftDeployedContractsVisible, draftGkIconVisible, draftHeaderImg, draftLayoutType, draftNftsDescriptionsVisible, draftProfileImg, editModeNfts, fileUpload, hideAllNFTsValue, mutateAllOwnerNfts, mutateProfileData, mutatePublicProfileNfts, profileData?.profile?.description, profileData?.profile?.id, props.profileURI, publiclyVisibleNfts, showAllNFTsValue, updateOrder, updateProfile, uploadProfileImages]);
+  }, [clearDrafts, draftBio, draftDeployedContractsVisible, draftGkIconVisible, draftHeaderImg, draftLayoutType, draftNftsDescriptionsVisible, draftProfileImg, editModeNfts, fileUpload, hideAllNFTsValue, mutateAllOwnerNfts, mutateProfileData, mutatePublicProfileNfts, profileData?.profile?.description, profileData?.profile?.id, props.profileURI, publiclyVisibleNfts, savedCount, setSavedCount, showAllNFTsValue, updateOrder, updateProfile, uploadProfileImages]);
 
   const setLayoutType = useCallback(async (type: ProfileLayoutType) => {
     try {

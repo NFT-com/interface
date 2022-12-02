@@ -74,9 +74,15 @@ export function NftGallery(props: NftGalleryProps) {
     nftsToShow :
     [nftsToShow[spotlightIndex]];
 
+  const setNFTs = displayNFTs.filter(
+    (obj, index, self) => self.findIndex(
+      t => t.id === obj.id
+    ) === index
+  );
+
   return (
     <>
-      <GridContextProvider items={displayNFTs} key={JSON.stringify(displayNFTs)}>
+      <GridContextProvider items={setNFTs} key={JSON.stringify(setNFTs)}>
         <NftGrid profileURI={profileURI} />
       </GridContextProvider>
       {
