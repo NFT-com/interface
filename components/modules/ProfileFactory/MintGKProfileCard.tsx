@@ -9,6 +9,7 @@ import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useGetProfileClaimHash } from 'hooks/useProfileClaimHash';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -25,7 +26,11 @@ import { useAccount, useNetwork } from 'wagmi';
 
 const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 
-export default function MintGKProfileCard() {
+type MintGKProfileCardProps = {
+  setShowPaid?: (show: boolean) => void
+}
+
+export default function MintGKProfileCard({ setShowPaid } : MintGKProfileCardProps) {
   const [currentValue, setCurrentValue] = useState(null);
   const [profileStatus, setProfileStatus] = useState('');
   const [selectedGK, setSelectedGK] = useState(null);
@@ -41,6 +46,8 @@ export default function MintGKProfileCard() {
   const { profileClaimHash } = useGetProfileClaimHash(currentValue && currentValue[0]);
   const { profileTokenId } = useProfileTokenQuery(currentValue && currentValue[0]);
   const { data: nft } = useNftQuery(getAddress('nftProfile', defaultChainId), profileTokenId?._hex);
+  const hasMintsAvailable = getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ? claimable.some(key => key.claimable > 0) : true;
+
   const resetInputs = useCallback(() => {
     const inputArr = [];
     Array.from(Array(4).keys()).map((_, i) => {
@@ -277,7 +284,7 @@ export default function MintGKProfileCard() {
             </p>
             }
 
-            {claimable && claimable.length ?
+            {claimable && claimable.length && hasMintsAvailable ?
               <button
                 type="button"
                 className={tw(
@@ -308,6 +315,23 @@ export default function MintGKProfileCard() {
                 {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
               </button>
               : null
+            }
+
+            {!hasMintsAvailable &&
+            <button
+              type="button"
+              className={tw(
+                'inline-flex w-full justify-center',
+                'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
+                'px-4 py-4 text-lg font-medium text-black',
+                'focus:outline-none focus-visible:bg-[#E4BA18]',
+                'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
+              )}
+              onClick={() => setShowPaid(true)}
+            >
+              <span>Mint more NFT Profiles</span>
+            </button>
+            
             }
               
           </div>

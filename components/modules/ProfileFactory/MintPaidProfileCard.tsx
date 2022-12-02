@@ -69,7 +69,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
     addressOrName: contractAddress,
     contractInterface: maxProfilesABI,
     functionName: type === 'mint' ? 'publicMint' : 'extendLicense',
-    args: [type === 'mint' ? input[0]?.profileURI : profile, yearValue * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    args: [type === 'mint' ? input[0]?.profileURI : profile, yearValue * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000', input[0]?.hash, input[0]?.signature],
     onError(err){
       console.log('err:', err);
     },
