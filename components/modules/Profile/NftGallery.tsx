@@ -27,7 +27,6 @@ export function NftGallery(props: NftGalleryProps) {
     editModeNfts,
     saving,
     allOwnerNfts,
-    allOwnerNftCount,
     publiclyVisibleNftsNoEdit,
     loading,
     loadingAllOwnerNfts,
@@ -63,7 +62,7 @@ export function NftGallery(props: NftGalleryProps) {
     );
   }
 
-  if (editMode && allOwnerNftCount === 0 && !loadingAllOwnerNfts) {
+  if (editMode && editModeNfts?.length === 0 && !loadingAllOwnerNfts) {
     return (
       <div className="w-full flex items-center justify-center customHeight">
         <div className="flex flex-col items-center text-primary-txt dark:text-primary-txt-dk">
@@ -81,9 +80,15 @@ export function NftGallery(props: NftGalleryProps) {
     nftsToShow :
     [nftsToShow[spotlightIndex]];
 
+  const setNFTs = displayNFTs.filter(
+    (obj, index, self) => self.findIndex(
+      t => t.id === obj.id
+    ) === index
+  );
+
   return (
     <>
-      <GridContextProvider items={displayNFTs} key={JSON.stringify(displayNFTs)}>
+      <GridContextProvider items={setNFTs} key={JSON.stringify(setNFTs)}>
         <NftGrid profileURI={profileURI} />
       </GridContextProvider>
       {

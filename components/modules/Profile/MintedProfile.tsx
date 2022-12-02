@@ -6,9 +6,11 @@ import { BannerWrapper } from 'components/modules/Profile/BannerWrapper';
 import { AddressTupleStructOutput } from 'constants/typechain/Nft_resolver';
 import { ProfileViewType } from 'graphql/generated/types';
 import { useAssociatedCollectionForProfile } from 'graphql/hooks/useAssociatedCollectionForProfileQuery';
+import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getEtherscanLink, isNullOrEmpty, sameAddress, shortenAddress } from 'utils/helpers';
@@ -43,7 +45,7 @@ export function MintedProfile(props: MintedProfileProps) {
   const { profileURI, addressOwner } = props;
   const [isPicturedHovered, setIsPicturedHovered] = useState(false);
   const [selectedTab, setSelectedTab] = useState<'nfts' | 'deployed'>('nfts');
-
+  const defaultChainId = useDefaultChainId();
   const {
     editMode,
     saving,
@@ -56,11 +58,11 @@ export function MintedProfile(props: MintedProfileProps) {
     loading,
     draftDeployedContractsVisible
   } = useContext(ProfileContext);
-
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const { profileData } = useProfileQuery(profileURI);
   const { user } = useUser();
+  const { data: profileCustomizationStatus } = useIsProfileCustomized(user?.currentProfileUrl, defaultChainId.toString());
   const { nftResolver } = useAllContracts();
 
   const fetchAssociatedContract = useCallback(async () => {
@@ -341,7 +343,7 @@ export function MintedProfile(props: MintedProfileProps) {
               selectedTab === 'nfts' ? 'flex' : 'hidden'
             )}
           >
-            {user?.currentProfileUrl === props.profileURI && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
+            {user?.currentProfileUrl === props.profileURI && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
               <div className='block minlg:hidden mt-2 px-2'>
                 <ClaimProfileCard />
               </div>

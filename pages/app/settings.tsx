@@ -1,5 +1,6 @@
 import Toast from 'components/elements/Toast';
 import DefaultLayout from 'components/layouts/DefaultLayout';
+import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
 import ConnectedAccounts from 'components/modules/Settings/ConnectedAccounts';
 import ConnectedProfiles from 'components/modules/Settings/ConnectedProfiles';
 import DisplayMode from 'components/modules/Settings/DisplayMode';
@@ -14,7 +15,8 @@ import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQ
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { Doppler, getEnv } from 'utils/env';
+import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { filterNulls, getChainIdString, isNullOrEmpty, shortenAddress } from 'utils/helpers';
 
 import { useRouter } from 'next/router';
@@ -45,8 +47,8 @@ export default function Settings() {
   const { getCurrentProfileUrl }= useUser();
   const { chain } = useNetwork();
   const { fetchEvents } = useFetchIgnoredEvents();
-
   const selectedProfile = getCurrentProfileUrl();
+  const { expiry } = useProfileExpiryDate(selectedProfile);
 
   // TODO: move settings page state/data management into Context
   const { data: associatedAddresses } = useSWR<AssociatedAddresses>(
@@ -134,12 +136,18 @@ export default function Settings() {
                     <h3 className='mt-10 minlg:mt-24 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>Profile Settings for {selectedProfile}</h3>
                     <ConnectedAccounts associatedAddresses={associatedAddresses} selectedProfile={selectedProfile} />
                     <DisplayMode selectedProfile={selectedProfile}/>
+                    {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) &&
+                      <div className='mt-10 font-grotesk' id="licensing">
+                        <h2 className='text-black mb-2 font-bold text-2xl tracking-wide font-grotesk'>Profile Licensing</h2>
+                        {expiry && <p>{selectedProfile} expires: {expiry}</p>}
+                        <MintPaidProfileCard profile={selectedProfile} type='renew' />
+                      </div>
+                    }
                     <TransferProfile selectedProfile={selectedProfile} />
                   </>
                 )
                 : null }
             </div>
-
             <div className='bg-[#F8F8F8] pl-5 pr-5 minmd:pr-28 minmd:pl-28 minlg:pr-5 minlg:pl-5 pb-10 minlg:mb-24 minmd:rounded-[10px]'>
               <h3 className='mt-10 pt-10 minlg:mt-10 mb-4 text-xs uppercase font-extrabold font-grotesk text-[#6F6F6F] tracking-wide flex items-center relative'>
                 Address Settings for {shortenAddress(currentAddress, 4)}

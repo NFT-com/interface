@@ -5,6 +5,7 @@ import { useMintSuccessModal } from 'hooks/state/useMintSuccessModal';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useProfileExpiryDate } from 'hooks/useProfileExpiryDate';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getAddress } from 'utils/httpHooks';
 
@@ -14,6 +15,7 @@ import { useRouter } from 'next/router';
 import ETHIcon from 'public/eth_icon.svg';
 import { Fragment, useCallback, useState } from 'react';
 import ReactLoading from 'react-loading';
+import { toast } from 'react-toastify';
 import useSWR from 'swr';
 import { useAccount, usePrepareContractWrite, useProvider } from 'wagmi';
 
@@ -26,17 +28,17 @@ type Inputs = {
 };
 
 type MintProfileModalProps = {
+  type: 'GK' | 'Free' | 'Paid' | 'Renew';
   isOpen: boolean;
   setIsOpen: (input:boolean) => void;
   profilesToMint: Inputs[];
-  transactionCost?: number;
+  transactionCost?: number | BigNumber;
+  duration?: number;
   gkTokenId?: number;
-  type: 'GK' | 'Free' | 'Paid'
 };
 
-export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, profilesToMint, gkTokenId, type }: MintProfileModalProps) {
+export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, profilesToMint, gkTokenId, type, duration }: MintProfileModalProps) {
   const { address: currentAddress } = useAccount();
-  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
   const router = useRouter();
   const defaultChainId = useDefaultChainId();
   const [minting, setMinting] = useState(false);
@@ -48,6 +50,8 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   const contractAddress = getAddress('maxProfiles', defaultChainId);
   const provider = useProvider();
   const { setMintSuccessModalOpen }= useMintSuccessModal();
+  const profileToMint = profilesToMint && profilesToMint[0];
+  const { mutate: mutateProfileExpiry } = useProfileExpiryDate(type === 'Renew' ? profileToMint?.profileURI : null);
 
   const { data: feeData } = useSWR(
     `${currentAddress}_eth_est_${JSON.stringify(profilesToMint)}`,
@@ -56,7 +60,6 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
       return feeData;
     });
 
-  const freeMintProfile = profilesToMint && profilesToMint[0];
   const gkMintProfiles = profilesToMint?.map((profile) => {
     return {
       profileUrl: profile.profileURI,
@@ -67,23 +70,57 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     };
   });
 
+  const getFunctionName = useCallback(() => {
+    if(type === 'Free'){
+      return 'publicClaim';
+    }
+    if(type === 'GK'){
+      return 'genesisKeyBatchClaimProfile';
+    }
+    if(type === 'Paid'){
+      return 'publicMint';
+    }
+    if(type === 'Renew'){
+      return 'extendLicense';
+    }
+  },[type]);
+
+  const getArgs = useCallback(() => {
+    if(type === 'Free'){
+      return [profileToMint?.profileURI, profileToMint?.hash, profileToMint?.signature];
+    }
+    if(type === 'GK'){
+      return [gkMintProfiles];
+    }
+    if(type === 'Paid'){
+      return [profileToMint?.profileURI, duration * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000', profileToMint?.hash, profileToMint?.signature];
+    }
+    if(type === 'Renew'){
+      return [profileToMint?.profileURI, duration * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000'];
+    }
+  },[duration, gkMintProfiles, profileToMint?.hash, profileToMint?.profileURI, profileToMint?.signature, type]);
+
   const { data } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: maxProfilesABI,
-    functionName: type === 'GK' ? 'genesisKeyBatchClaimProfile' : 'publicClaim',
-    args: type === 'GK' ? [gkMintProfiles] : [freeMintProfile?.profileURI, freeMintProfile?.hash, freeMintProfile?.signature],
+    functionName: getFunctionName(),
+    args: getArgs(),
     onError(err){
       console.log('err:', err);
-    }
+    },
+    overrides: {
+      from: type ==='Paid' ? currentAddress : null,
+      value: transactionCost && (type ==='Paid' || type ==='Renew') ? transactionCost : null,
+    },
   });
 
   const submitHandler = async () => {
-    if(freeMintAvailable && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
+    if(type === 'Free' && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
       try {
         const tx = await (await (maxProfilesSigner)).publicClaim(
-          freeMintProfile?.profileURI,
-          freeMintProfile?.hash,
-          freeMintProfile?.signature,
+          profileToMint?.profileURI,
+          profileToMint?.hash,
+          profileToMint?.signature,
         );
         setMinting(true);
         if (tx) {
@@ -94,8 +131,64 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
         mutateFreeMintStatus();
         setIsOpen(false);
         setMintSuccessModalOpen(true);
-        router.push(`/${freeMintProfile?.profileURI}`);
+        router.push(`/${profileToMint?.profileURI}`);
         setMinting(false);
+      } catch (err) {
+        setMinting(false);
+      }
+    } else if (type === 'Paid' && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
+      try {
+        const tx = await (await (maxProfilesSigner)).publicMint(
+          profileToMint?.profileURI,
+          duration * 60 * 60 * 24 * 365,
+          0,
+          '0x0000000000000000000000000000000000000000000000000000000000000000',
+          '0x0000000000000000000000000000000000000000000000000000000000000000',
+          profileToMint?.hash,
+          profileToMint?.signature,
+          {
+            from: currentAddress,
+            value: transactionCost,
+          },
+        );
+        setMinting(true);
+        if (tx) {
+          await tx.wait(1);
+          setMintSuccess(true);
+          mutateMyProfileTokens();
+        }
+        mutateFreeMintStatus();
+        setIsOpen(false);
+        setMintSuccessModalOpen(true);
+        router.push(`/${profileToMint?.profileURI}`);
+        setMinting(false);
+      } catch (err) {
+        setMinting(false);
+      }
+    } else if (type === 'Renew' && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)){
+      try {
+        const tx = await (await (maxProfilesSigner)).extendLicense(
+          profileToMint?.profileURI,
+          duration * 60 * 60 * 24 * 365,
+          0,
+          '0x0000000000000000000000000000000000000000000000000000000000000000',
+          '0x0000000000000000000000000000000000000000000000000000000000000000',
+          {
+            from: currentAddress,
+            value: transactionCost,
+          },
+        );
+        setMinting(true);
+        if (tx) {
+          await tx.wait(1);
+          setMintSuccess(true);
+          mutateMyProfileTokens();
+        }
+        mutateFreeMintStatus();
+        setIsOpen(false);
+        setMinting(false);
+        mutateProfileExpiry();
+        toast.success('Renewal was successful!');
       } catch (err) {
         setMinting(false);
       }
@@ -127,7 +220,8 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     }
     if(feeData?.gasPrice){
       if(data?.request.gasLimit) {
-        return utils.formatEther(BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString())));
+        const gas = utils.formatEther(BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString())));
+        return type === 'Renew' ? Number(gas).toFixed(7) : parseFloat(Number(gas).toFixed(7));
       }
       else {
         return 0;
@@ -135,11 +229,28 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
     } else {
       return 0;
     }
-  }, [feeData, data, isOpen]);
+  }, [feeData, data, isOpen, type]);
+
+  const getTotalCost = useCallback(() => {
+    if(!isOpen){
+      return 0;
+    }
+    if(feeData?.gasPrice && transactionCost){
+      if(data?.request.gasLimit) {
+        const gasFee = BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString()));
+        return utils.formatEther(BigNumber.from(transactionCost).add(gasFee));
+      }
+      else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }, [isOpen, feeData?.gasPrice, transactionCost, data?.request.gasLimit]);
   
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-[105]" onClose={() => setIsOpen(false)}>
+      <Dialog as="div" className="relative z-[110]" onClose={() => setIsOpen(false)}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -169,7 +280,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                     as="h3"
                     className="text-[24px] leading-6 text-gray-900"
                   >
-                    Mint a Profile
+                    {type !== 'Renew' ? 'Mint a Profile' : 'Renew Profile'}
                   </Dialog.Title>
                   {!minting &&
                     <a onClick={() => setIsOpen(false)} className='text-[#0A8DD7] hover:cursor-pointer text-lg'>
@@ -179,7 +290,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                 </div>
                 <div className="mt-7 pb-6 border-b">
                   <p className="text-lg text-[#6F6F6F] w-4/5">
-                    Confirm your order details before minting.
+                    Confirm your order details before {type !== 'Renew' ? 'minting' : 'renewing'}.
                   </p>
                 </div>
 
@@ -188,19 +299,19 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                     <div className='flex justify-between mb-5' key={profile.profileURI + index}>
                       <div>
                         <p className="text-lg font-medium">
-                              nft.com/{profile.profileURI}
+                          nft.com/{profile.profileURI}
                         </p>
                         <p className="text-md text-[#686868] font-normal">
-                              Profile
+                          Profile
                         </p>
                       </div>
-                      {transactionCost ?
+                      {type === 'Paid' || type === 'Renew' ?
                         <p className="font-medium text-lg flex justify-center items-center">
-                          {transactionCost} <ETHIcon className='ml-1' stroke="black" />
+                          {transactionCost && utils.formatEther(BigNumber.from(transactionCost))} <ETHIcon className='ml-1' stroke="black" />
                         </p>
                         :
                         <p className="text-lg text-[#2AAE47] font-medium">
-                              Free
+                          Free
                         </p>
                       }
                     </div>
@@ -212,7 +323,7 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="font-medium text-lg flex justify-center items-center">
-                        {parseFloat(Number(getGasCost()).toFixed(7))} <ETHIcon className='ml-1' stroke="black" />
+                        {getGasCost()} <ETHIcon className='ml-1' stroke="black" />
                       </p>
                       <p className="text-[#686868]">
                         ${(ethPriceUSD * Number(getGasCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -224,15 +335,21 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
                 <div className="mt-7 pb-6">
                   <div className='flex justify-between'>
                     <p className="text-lg text-[#686868] font-medium">
-                    Total
+                      Total
                     </p>
                     <div className='flex flex-col items-end'>
                       <p className="text-xl font-medium">
-                        {parseFloat(Number(getGasCost()).toFixed(7))} ETH
+                        {type !== 'Paid' && type !== 'Renew' ? parseFloat(Number(getGasCost()).toFixed(7)) : parseFloat(Number(getTotalCost()).toFixed(7))} ETH
                       </p>
-                      <p className="text-lg text-[#686868]">
-                        (${(ethPriceUSD * Number(getGasCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
-                      </p>
+                      {type !== 'Paid' && type !== 'Renew' ?
+                        <p className="text-lg text-[#686868]">
+                          (${(ethPriceUSD * Number(getGasCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
+                        </p>
+                        :
+                        <p className="text-lg text-[#686868]">
+                          (${(ethPriceUSD * Number(getTotalCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
+                        </p>
+                      }
                     </div>
                   </div>
                 </div>

@@ -305,7 +305,19 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
           y: 0,
           duration: 2.2,
           ease: 'circ.out',
-        }, 0);
+        }, 0)
+        .to('.anim-build-profile-ttl-icon-2', {
+          y: 0,
+          duration: 2.2,
+          ease: 'circ.out',
+        }, '<0.5');
+    });
+
+    window.requestAnimationFrame(function() {
+      const HeroTtlIcons = document.querySelectorAll<HTMLElement>('.anim-profile-icon');
+      [...HeroTtlIcons].forEach(item => {
+        item.style.transform = 'translateY(0)';
+      });
     });
   }, []);
   return (
@@ -336,17 +348,17 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                 'text-[3rem] minmd:text-[6rem] minlg:text-[4rem] minxl:text-[6.25rem] minxxl:text-[7.5rem] leading-[1.15]',
                 'text-black font-normal tracking-tight mb-14'
               )}>
-                Build Your<img className={tw(
+                Build Your<span className='inline-block rotate-[40deg]'><img className={tw(
+                  'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
                   'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                  'mx-[1.8rem] -my-[.5rem]',
-                  'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.heroNfTsCollection?.items[0]?.url} alt="NFT image" />
+                  'mx-[1.8rem] -my-[.5rem] rounded-xl'
+                )} src={data_v2?.heroNfTsCollection?.items[0]?.url} alt="NFT image" /></span>
                 <br />
-                NFT<img className={tw(
+                NFT<span className='inline-block rotate-[40deg]'><img className={tw(
+                  'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
                   'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                  'mx-[1.8rem] -my-[.5rem]',
-                  'rotate-[40deg] rounded-xl'
-                )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="NFT image" />
+                  'mx-[1.8rem] -my-[.5rem] rounded-xl',
+                )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="NFT image" /></span>
                 <span data-aos="fade-left" data-aos-delay="200"
                   className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>Identity</span></h2>
 
@@ -925,7 +937,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
                     'minlg:translate-y-[18rem] transform-gpu'
                   )}>
                     NFT<span className='inline-block rotate-[40deg]'><img className={tw(
-                      'anim-build-profile-ttl-icon -translate-y-[120vw]',
+                      'anim-build-profile-ttl-icon-2 -translate-y-[120vw]',
                       'drop-shadow-md inline-block w-[0.8em] minxxl:w-[5.5rem]',
                       'minlg:-mt-7 mx-[.4em] rounded-xl',
                     )} src={data_v2?.bynpTitleNfTsCollection.items[1].url} alt="NFT image" /></span>

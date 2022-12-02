@@ -43,6 +43,7 @@ export function GridContextProvider(
   const moveItem = useCallback((sourceId: string, destinationId: string) => {
     const sourceIndex = props.items.findIndex(item => item.id === sourceId);
     const destinationIndex = props.items.findIndex(item => item.id === destinationId);
+
     if (sourceIndex === -1 || destinationIndex === -1) {
       return;
     }
