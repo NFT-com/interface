@@ -358,7 +358,6 @@ export function ProfileContextProvider(
   }, [editMode]);
 
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
-    console.log('setAllItemsOrder: ', orderedItems);
     setIsDragging(true);
     setPubliclyVisibleNfts([...orderedItems.filter((nft: DetailedNft) => !nft.hidden),]);
   }, []);
