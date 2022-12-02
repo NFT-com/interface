@@ -82,7 +82,14 @@ export function prettify(num: number | string, dec?: number) {
   }
   return formatted;
 }
-
+export const convertValue = (value: number, first: number, second: number) => {
+  const start = value.toString().slice(0,first);
+  const end = value.toString().slice(first,second);
+  return {
+    start,
+    end
+  };
+};
 export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
 
 export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;

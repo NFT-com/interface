@@ -1,3 +1,4 @@
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -15,10 +16,46 @@ interface ResultsDropDownProps {
 
 export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, itemListOnClick, extraClasses }: ResultsDropDownProps) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const router = useRouter();
+  const copy = [...searchResults];
+  const nfts = copy.map(item => {
+    if(item.request_params?.collection_name === 'nfts'){
+      return {
+        ...item,
+        hits: item.hits.filter(item => !item.document?.isProfile)
+      };
+    }
+  });
+  const profiles = copy.map(item => {
+    if(item.request_params?.collection_name === 'nfts'){
+      return {
+        ...item,
+        request_params: {
+          collection_name: 'profiles'
+        },
+        hits: item.hits.filter(item => item.document?.isProfile)
+      };
+    }
+  });
+  const newData = [
+    nfts[0],
+    searchResults[1],
+    profiles[0]
+  ];
   const { keyword, setDropDownSearchResults } = useSearchModal();
-
+  const clickByItemResult = (hit) => {
+    if (!hit.document.nftName) {
+      router.push(`/app/collection/${hit.document.contractAddr}/`);
+    } else {
+      if(hit.document.isProfile){
+        router.push('/' + `${hit.document.nftName}`);
+      }else {
+        router.push(`/app/nft/${hit.document.contractAddr}/${hit.document.tokenId}`);
+      }
+    }
+    setDropDownSearchResults([], '');
+    itemListOnClick && itemListOnClick(hit.document);
+  };
   const resultTitle = (found, collectionName) => {
     let title = '';
 
@@ -32,7 +69,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
     if(discoverPageEnv){
       return (
         <div className={tw(
-          `flex justify-${found > 0 ? 'between' : 'start'}`,
+          'flex justify-between',
           'text-lg text-blog-text-reskin font-medium py-3 px-8')}>
           <span className="text-[#B2B2B2]">{title}</span>
           <span
@@ -70,13 +107,13 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
   };
   const ResultsContent = (searchResults) => {
     if(discoverPageEnv) {
-      return searchResults && searchResults.length > 0 && searchResults.map((item, index) => {
+      return newData && newData.length > 0 && newData.filter(Boolean).map((item, index) => {
         return (
           <div key={index}>
-            {resultTitle(item.found, item?.request_params?.collection_name)}
+            {resultTitle(discoverPageEnv ? item.hits.length : item.found, item?.request_params?.collection_name)}
             <div className="flex flex-col items-start" key={index}>
-              {item.found === 0 ?
-                <div className={tw('text-sm py-3 text-gray-500 px-5')}>
+              {item.hits.length === 0 ?
+                <div className={tw('text-sm py-3 text-gray-500 px-9')}>
                   No {item?.request_params?.collection_name?.toLowerCase()} results
                 </div>
                 : (item?.hits?.map((hit, index) => {
@@ -90,17 +127,20 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                           'items-start py-1 w-full',
                           'text-sm font-semibold text-black',
                           'flex justify-start items-center whitespace-nowrap text-ellipsis overflow-hidden')}
-                        onClick={() => {
-                          if (!hit.document.nftName) {
-                            router.push(`/app/collection/${hit.document.contractAddr}/`);
-                          } else {
-                            router.push(`/app/nft/${hit.document.contractAddr}/${hit.document.tokenId}`);
-                          }
-                          setDropDownSearchResults([], '');
-                          itemListOnClick && itemListOnClick(hit.document);
-                        }}>
+                        onClick={() => clickByItemResult(hit)}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        {hit.document.imageURL ? <img className="w-[48px] h-[48px] rounded-[16px] mr-2" src={hit.document.imageURL} alt="search image"/> : <div className="w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image alt="preloader" color={'#B2B2B2'} size={32} /></div>}
+                        {hit.document.imageURL ?
+                          <div className="w-[48px] h-[48px] rounded-[16px] mr-2 overflow-hidden">
+                            <RoundedCornerMedia
+                              variant={RoundedCornerVariant.None}
+                              width={600}
+                              height={600}
+                              containerClasses='w-[100%] h-[100%]'
+                              extraClasses='hover:scale-105 transition'
+                              src={hit.document.imageURL}
+                            />
+                          </div>
+                          : <div className="min-w-[48px] w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image alt="preloader" color={'#B2B2B2'} size={32} /></div>}
                         <span className="text-base overflow-hidden text-ellipsis whitespace-nowrap font-[500]">{hit.document.nftName ?? hit.document.contractName}</span>
                       </div>
                     </div>

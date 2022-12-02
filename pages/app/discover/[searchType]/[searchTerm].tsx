@@ -80,6 +80,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS
     }] })
       .then((resp) => {
+        // console.log('resp.results[0]',resp.results[0])
         setNftsForCollections(null);
         setCollectionsSliderData(resp.results[0]);
       });
@@ -152,7 +153,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         });
     }
   }, [addressesList, fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, sideNavOpen]);
-
   if(discoverPageEnv){
     return (
       <div className="p-1 mt-7 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
@@ -165,21 +165,28 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
             </div>
           </div>
-          <div
-            className='hidden minlg:block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
-            onClick={() => setSideNavOpen(!sideNavOpen)}>
-            {sideNavOpen ?
-              <div className="flex items-center justify-center bg-[#F2F2F2] text-[#6A6A6A] py-3 px-5 text-lg rounded-[48px]">
-                Filters
-                <X size={22} className="text-[#6A6A6A] ml-2" />
-              </div> :
-              <div className="flex items-center justify-center bg-black text-white py-3 px-5 text-lg rounded-[48px]">
-                <SlidersHorizontal size={22} className="mr-2"/>
-                <p>Filter</p>
+          <div className='flex justify-between mt-6 mb-10'>
+            <div className='flex justify-between items-center'>
+              <div className={`${sideNavOpen ? 'w-[19rem]' : 'w-[auto] mr-6'}`}>
+                <div
+                  className='hidden minlg:block max-w-[112px] overflow-hidden cursor-pointer'
+                  onClick={() => setSideNavOpen(!sideNavOpen)}>
+                  {sideNavOpen ?
+                    <div className="flex items-center justify-center bg-[#F2F2F2] text-[#6A6A6A] py-3 px-5 text-lg rounded-[48px]">
+                        Filters
+                      <X size={22} className="text-[#6A6A6A] ml-2" />
+                    </div> :
+                    <div className="flex items-center justify-center bg-black text-white py-3 px-5 text-lg rounded-[48px]">
+                      <SlidersHorizontal size={22} className="mr-2"/>
+                      <p>Filter</p>
+                    </div>
+                  }
+                </div>
               </div>
-            }
+            </div>
           </div>
-          <div className="flex justify-center minmd:mt-5 minlg:mt-0">
+          <div className="flex justify-center minlg:mt-0">
+
             <div className="hidden minlg:block">
               <SideNav onSideNav={() => null} filtersData={filters}/>
             </div>
@@ -252,15 +259,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
                             customBackground={'white'}
                             lightModeForced/>
-                          // <NFTCard
-                          //   title={item.document.nftName}
-                          //   images={[item.document.imageURL]}
-                          //   collectionName={item.document.contractName}
-                          //   redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                          //   description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-                          //   customBackground={'white'}
-                          //   lightModeForced
-                          // />
                         }
                       </div>);
                   })}
