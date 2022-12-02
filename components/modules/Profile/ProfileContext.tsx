@@ -169,8 +169,6 @@ export function ProfileContextProvider(
     afterCursor
   );
 
-  console.log(`publicProfileNfts: ${afterCursor}-${PUBLIC_PROFILE_LOAD_COUNT}`, publicProfileNfts);
-
   const {
     data: allOwnerNfts,
     loading: loadingAllOwnerNfts,
