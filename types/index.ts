@@ -18,7 +18,8 @@ export type UserNotifications = {
   associatedProfileAdded: boolean;
   associatedProfileRemoved: boolean;
   hasSoldActivity: boolean;
-  hasExpiredListings: boolean
+  hasExpiredListings: boolean;
+  profileExpiration: boolean;
 };
 
 export type ValidTimeFrame = '1D' | '7D' | '1M' | '3M' | '1Y' | 'ALL';
