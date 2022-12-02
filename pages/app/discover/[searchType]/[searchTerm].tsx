@@ -113,10 +113,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   useEffect(() => {
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,isProfile' : '') : '',
+      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,traits.rarity,isProfile' : '') : '',
       max_facet_values: 200,
       collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
-      query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : '') : SearchableFields.COLLECTIONS_INDEX_FIELDS,
+      query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,traits.rarity' : '') : SearchableFields.COLLECTIONS_INDEX_FIELDS,
       q: searchTerm?.toString(),
       per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
       page: page,
@@ -133,10 +133,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
-        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,isProfile' : '') : '',
+        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,traits.rarity,isProfile' : '') : '',
         max_facet_values: 200,
         collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
-        query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
+        query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,traits.rarity' : ''),
         q: searchTerm?.toString(),
         per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
         page: page,

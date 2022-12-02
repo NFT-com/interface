@@ -2,8 +2,9 @@ import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { MyNfTsQuery, Nft, PageInfo } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
+import { useAtom } from 'jotai';
 import { useContext } from 'react';
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -22,7 +23,8 @@ export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: 
   const { signed } = useContext(GraphQLContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
-  const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first + profileId + beforeCursor;
+  const [savedCount,] = useAtom(profileSaveCounter);
+  const keyString = 'MyNFTsQuery ' + currentAddress + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + signed + first + profileId + beforeCursor + savedCount;
 
   const { data } = useSWR(keyString, async () => {
     if (!currentAddress || isNullOrEmpty(profileId)) {
