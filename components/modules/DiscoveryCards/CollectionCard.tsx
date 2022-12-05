@@ -148,13 +148,11 @@ export function CollectionCard(props: CollectionCardProps) {
   if(isLeaderBoard){
     const statsData = checkDataByPeriod();
     return (
-      <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="px-6 font-noi-grotesk  w-full flex justify-start items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] h-[6.25rem] shadow-lg overflow-hidden">
-        <div className="flex justify-start items-center w-[37.5%]">
-          <div className="flex justify-start items-center">
-            <div className="mr-4">
-              #{props.index + 1}
-            </div>
-            <div className="w-20  rounded-[16px] overflow-hidden">
+      <>
+        <a href={props.redirectTo} className="minlg:hidden flex flex-col rounded-[16px] shadow-lg overflow-hidden p-3 mb-3">
+          <div className='text-2xl text-[#000000] font-[500] flex items-center flex-row justify-center mb-3'>
+            #{props.index + 1}
+            <div className="w-14 ml-2 rounded-[16px] overflow-hidden">
               <RoundedCornerMedia
                 variant={RoundedCornerVariant.None}
                 width={600}
@@ -165,45 +163,111 @@ export function CollectionCard(props: CollectionCardProps) {
               />
             </div>
           </div>
-          <div className="pl-6 flex flex-row items-start justify-start">
-            <span className="pr-5 text-lg text-[#000000] font-[500]">{collection?.collection?.name ? collection?.collection?.name : props.title}</span>
-            {/*<VerifiedIcon/>*/}
-            {/*<span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600] max-w-[60%]">{collectionName}</span>*/}
+          <div className='flex flex-row justify-center text-[#000000] text-xl px-2 font-bold mb-3'>
+            <span className='text-center'>{collection?.collection?.name ? collection?.collection?.name : props.title}</span>
           </div>
-        </div>
-        <div className="flex flex-row items-center  w-[15.3%] pl-1">
-          <div className="pr-3">
-            <VolumeIcon/>
-          </div>
-          <div>
-            <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.volume.toFixed(2)}</div>
-            <div className="text-base leading-[18px] text-[#747474] font-[400]">${(statsData.volume / ethPriceUSD).toFixed(2)}</div>
-          </div>
-        </div>
-        <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500] w-[12%]  pl-1`}>
-          {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2)}%` : null}
-        </div>
-        <div className="flex flex-row items-center  w-[14.9%]  pl-1">
-          <div className="pr-3">
-            {statsData.floor_price && <VolumeIcon/>}
-          </div>
-          <div>
-            <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData.floor_price)}</div>
-            <div className="text-base leading-[18px] text-[#747474] font-[400]">
-              {
-                statsData.floor_price ? `$${((statsData.floor_price / ethPriceUSD).toFixed(2))}` : ''
-              }
-
+          <div className='flex flex-row items-start justify-between flex-wrap mb-3'>
+            <div className='minmd:w-[auto] mb-3 minmd:mb-0 w-[33.33%] flex flex-col justify-between'>
+              <span className='text-[#B2B2B2] leading-6 font-[600]'>VOLUME</span>
+              <div className="flex flex-row items-center">
+                <div className="pr-3">
+                  <VolumeIcon/>
+                </div>
+                <div>
+                  <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.volume.toFixed(2)}</div>
+                  <div className="text-base leading-[18px] text-[#747474] font-[400]">${(statsData.volume / ethPriceUSD).toFixed(2)}</div>
+                </div>
+              </div>
+            </div>
+            <div className='minmd:w-[auto] mb-3 minmd:mb-0 w-[33.33%] flex flex-col items-center justify-between'>
+              <span className='text-[#B2B2B2] leading-6 font-[600]'>% CHANGE</span>
+              <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500]`}>
+                {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2)}%` : null}
+              </div>
+            </div>
+            <div className='minmd:w-[auto] mb-3 minmd:mb-0 w-[33.33%] flex flex-col items-end justify-between'>
+              <span className='text-[#B2B2B2] leading-6 font-[600]'>FLOOR PRICE</span>
+              <div className="flex flex-row items-center">
+                <div className="pr-3">
+                  {statsData.floor_price && <VolumeIcon/>}
+                </div>
+                <div>
+                  <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData.floor_price)}</div>
+                  <div className="text-base leading-[18px] text-[#747474] font-[400]">
+                    {
+                      statsData.floor_price ? `$${((statsData.floor_price / ethPriceUSD).toFixed(2))}` : ''
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='minmd:w-[auto] w-[50%] flex flex-col justify-between'>
+              <div className='text-[#B2B2B2] leading-6 font-[600]'>ITEMS</div>
+              <div className="text-[#B2B2B2] text-lg font-[500]">{statsData.minted}</div>
+            </div>
+            <div className='minmd:w-[auto] w-[50%] flex flex-col items-end justify-between'>
+              <div className='text-[#B2B2B2] leading-6 font-[600]'>SALES</div>
+              <div className="text-[#000000] text-lg font-[500]">{checkSalesValue(statsData.sales)}</div>
             </div>
           </div>
-        </div>
-        <div className="text-[#B2B2B2] text-lg font-[500]  w-[13.3%] pl-1">{statsData.minted}</div>
-        <div className="text-[#000000] text-lg font-[500]  w-[7%] pl-1">{checkSalesValue(statsData.sales)}</div>
-      </a>
+        </a>
+        <a href={props.redirectTo} className="hidden minlg:flex px-6 font-noi-grotesk  w-full justify-start items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] h-[6.25rem] shadow-lg overflow-hidden">
+          <div className="flex justify-start items-center w-[37.5%]">
+            <div className="flex justify-start items-center">
+              <div className="mr-4">
+                #{props.index + 1}
+              </div>
+              <div className="w-20  rounded-[16px] overflow-hidden">
+                <RoundedCornerMedia
+                  variant={RoundedCornerVariant.None}
+                  width={600}
+                  height={600}
+                  containerClasses='w-[100%] object-cover h-[100%]'
+                  src={props?.logoUrl}
+                  extraClasses="hover:scale-105 transition"
+                />
+              </div>
+            </div>
+            <div className="pl-6 flex flex-row items-start justify-start">
+              <span className="pr-5 text-lg text-[#000000] font-[500]">{collection?.collection?.name ? collection?.collection?.name : props.title}</span>
+              {/*<VerifiedIcon/>*/}
+              {/*<span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600] max-w-[60%]">{collectionName}</span>*/}
+            </div>
+          </div>
+          <div className="flex flex-row items-center  w-[15.3%] pl-1">
+            <div className="pr-3">
+              <VolumeIcon/>
+            </div>
+            <div>
+              <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.volume.toFixed(2)}</div>
+              <div className="text-base leading-[18px] text-[#747474] font-[400]">${(statsData.volume / ethPriceUSD).toFixed(2)}</div>
+            </div>
+          </div>
+          <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500] w-[12%]  pl-1`}>
+            {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2)}%` : null}
+          </div>
+          <div className="flex flex-row items-center  w-[14.9%]  pl-1">
+            <div className="pr-3">
+              {statsData.floor_price && <VolumeIcon/>}
+            </div>
+            <div>
+              <div className="text-lg text-[#000000] font-[600] -mb-1">{checkMinPrice(statsData.floor_price)}</div>
+              <div className="text-base leading-[18px] text-[#747474] font-[400]">
+                {
+                  statsData.floor_price ? `$${((statsData.floor_price / ethPriceUSD).toFixed(2))}` : ''
+                }
+
+              </div>
+            </div>
+          </div>
+          <div className="text-[#B2B2B2] text-lg font-[500]  w-[13.3%] pl-1">{statsData.minted}</div>
+          <div className="text-[#000000] text-lg font-[500]  w-[7%] pl-1">{checkSalesValue(statsData.sales)}</div>
+        </a>
+      </>
     );
   }else {
     return (
-      <a href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
+      <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
         <div className="h-44 relative ">
           <RoundedCornerMedia
             variant={RoundedCornerVariant.None}

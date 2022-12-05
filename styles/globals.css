@@ -286,9 +286,6 @@ body {
 .address {
   font-family: 'Roboto Mono', sans-serif;
 }
-.margin-auto{
-  margin: 0 auto;
-}
 .textColorGradient{
   background: -webkit-linear-gradient(0deg, #FAC213, #FF9B37);
   -webkit-background-clip: text;
