@@ -125,13 +125,15 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
       setTransitionWidth('w-[18.4rem]');
     }
   };
+  const isDiscoverPage = router.asPath.split('/').some((w) => w === 'discover');
 
   if(mobileSearch){
     return (
       <>
         <div id='mobile-search' className={tw(
           'flex flex-col font-noi-grotesk  relative',
-          router.pathname !== '/' && 'px-6'
+          router.pathname !== '/' && 'px-6',
+          isDiscoverPage && discoverPageEnv ? 'hidden' : ''
         )}>
           <div ref={wrapperRef} onClick={() => setInputFocus(true)} className={tw(
             'flex space-x-2 p-5 py-3 minlg:space-x-0 minlg:p-0 rounded-full bg-[#F8F8F8]',
@@ -191,7 +193,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
   if(discoverPageEnv){
     return (
       <>
-        <div className={`${leaderBoardSearch ? 'max-w-[1018px] margin-auto' : ''} flex flex-col font-noi-grotesk relative`}>
+        <div className={`${leaderBoardSearch ? 'max-w-[1018px] mx-auto' : ''} flex flex-col font-noi-grotesk relative`}>
           <div className={`${leaderBoardSearch ? 'flex items-center justify-center' : 'flex space-x-2 p-5 minlg:space-x-0 minlg:p-0'}`}>
             <div className={tw(
               'relative flex items-center w-full text-black',
@@ -221,7 +223,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
                 />
               </div>
             </div>
-            <div className='items-center cursor-pointer block minlg:hidden' onClick={() => {
+            <div className={`${isDiscoverPage && discoverPageEnv ? 'hidden' : 'items-center cursor-pointer block minlg:hidden'}`} onClick={() => {
               setSearchModalOpen(false);
             }}>
               <EllipseX />

@@ -234,7 +234,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           nftsForCollections
                             ? <CollectionCard
                               key={index}
-                              redirectTo={`/app/collection/${item.document?.collectionAddress}/`}
+                              redirectTo={`/app/collection/${item.document?.contractAddr}/`}
                               contractAddress={item.document?.collectionAddress}
                               contract={item.document?.collectionAddress}
                               userName={item.document.contractName}
