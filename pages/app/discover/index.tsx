@@ -131,6 +131,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               ? collectionData?.items.map((collectionLeader, index) => {
                 return (
                   <CollectionCard
+                    redirectTo={'collection/' + collectionLeader?.contract}
                     index={index}
                     title={collectionLeader.name}
                     timePeriod={activePeriod}
@@ -180,7 +181,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
       return (
         <div>
           <div className={tw(
-            'minmd:grid grid-cols-1 space-x-2 minlg:space-x-0 minlg:gap-4',
+            'grid grid-cols-1 minlg:space-x-0 gap-1 minmd:gap-4',
             isLeaderBoard ? 'minxl:grid-cols-1' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
             {
               !isLeaderBoard
@@ -195,10 +196,11 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                   })
                 )
                 : (
-                  leaderboardData && leaderboardData?.leaderboard?.items.map((item, i) => {
+                  leaderboardData && leaderboardData?.leaderboard?.items.sort((a,b) =>(a.numberOfCollections > b.numberOfCollections) ? -1 : 1).map((item, i) => {
                     return (
                       <ProfileCard
                         key={i}
+                        number={i}
                         isLeaderBoard
                         id={item.id}
                         index={item.index}
@@ -220,7 +222,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                   <Loader />
                 )
                 : (
-                  !leaderboardData
+                  !isLeaderBoard
                     ? <Button
                       label={'Load More'}
                       onClick={() => loadMoreProfilesFunc()}
@@ -248,7 +250,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
             {
               isLeaderBoard
                 ? (
-                  <div className="px-6 flex text-sm text-[#B2B2B2] leading-6 font-[600] font-noi-grotesk">
+                  <div className="hidden minlg:flex px-6 text-sm text-[#B2B2B2] leading-6 font-[600] font-noi-grotesk">
                     <div className="w-[37.5%] pl-[32px]">COLLECTION</div>
                     <div className="w-[15.3%]">VOLUME</div>
                     <div className="w-[12%]">% CHANGE</div>
@@ -307,7 +309,8 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               {
                 isLeaderBoard && tabView === 'collections' && (
                   <div className='mb-10 mt-8'>
-                    <div className="text-[54px] font-semibold text-[#000000] text-center leading-[63px] mb-10">
+                    {/*<div className="text-[54px] font-semibold text-[#000000] text-center leading-[63px] mb-10">*/}
+                    <div className="text-xl mb-3 minmd:text-3xl minmd:mb-5 mb-3	minlg:text-[54px] font-semibold text-[#000000] text-center minlg:leading-[63px] minlg:mb-10">
                       Find your next collectible<br/> <span className="text-[#000000] textColorGradient">wherever it lives</span>
                     </div>
                     <div>
@@ -323,12 +326,11 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               <div>
                 <div className='flex justify-between mt-6 mb-10'>
                   <div className='flex justify-between items-center'>
-                    <div className="flex items-center">
+                    <div className="flex flex-col minmd:flex-row minmd:items-center">
                       {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
-
                       <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
                         {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
-                        {!isLeaderBoard ? 'Show leaderboard' : 'Back to default view'}
+                        {!isLeaderBoard ? 'Show leaderboard' : 'View Collections'}
                       </button>
                     </div>
                   </div>
