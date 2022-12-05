@@ -97,7 +97,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   useEffect(() => {
     page === 1 && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? 'listedFloor,listings.type,listings.currency,traits.rarity' : 'listedPx,listingType,currency'),
+      facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : 'listedPx,listingType,currency'),
       max_facet_values: 200,
       collection: 'nfts',
       query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : 'marketplace,listingType,currency'),
