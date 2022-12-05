@@ -4,7 +4,7 @@ import { Doppler, getEnv, getEnvBool } from 'utils/env';
 
 export enum SearchableFields {
   COLLECTIONS_INDEX_FIELDS = 'contractAddr,contractName,chain,nftType',
-  NFTS_INDEX_FIELDS = 'nftName,nftType,tokenId,ownerAddr,chain,contractName,contractAddr,status,traits.value,traits.type,isProfile',
+  NFTS_INDEX_FIELDS = 'nftName,nftType,tokenId,ownerAddr,chain,contractName,contractAddr,status,traits.value,traits.type',
   PROFILES_INDEX_FIELDS = 'url',
   NFTS_COLLECTION_FIELDS = 'contractName',
   FACET_NFTS_INDEX_FIELDS = 'nftType,chain,contractName,status,traits.value,traits.type',
