@@ -138,10 +138,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     }
   }, [addressesList, fetchTypesenseMultiSearch, filters.length, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, sideNavOpen]);
 
-  if (!getEnvBool(Doppler.NEXT_PUBLIC_DEV_CONTENT_MODEL_ENABLED)) {
-    return <NotFoundPage />;
-  }
-
   if (discoverPageEnv) {
     return (
       <div className="md:p-1 mt-7 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
