@@ -3,8 +3,6 @@ import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
-import useDebounce from 'hooks/useDebounce';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
@@ -32,12 +30,8 @@ export function NftGallery(props: NftGalleryProps) {
     loadingAllOwnerNfts,
     loadMoreNfts,
     loadMoreNftsEditMode,
-    draftLayoutType,
-    searchQuery,
-    searchVisibleNfts,
-    searchNfts
+    draftLayoutType
   } = useContext(ProfileContext);
-  const debouncedSearch = useDebounce(searchQuery, 1000);
   const { closeToBottom, currentScrollPosition } = useScrollToBottom();
 
   useSWR(closeToBottom.toString() + currentScrollPosition, async () => {
@@ -72,9 +66,9 @@ export function NftGallery(props: NftGalleryProps) {
     );
   }
 
-  const nftsToShow = getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-    editMode ? !debouncedSearch ? editModeNfts : (searchNfts ?? []) : !debouncedSearch ? (publiclyVisibleNftsNoEdit ?? []) : (searchVisibleNfts ?? []) :
-    editMode ? editModeNfts : (publiclyVisibleNftsNoEdit ?? []);
+  const nftsToShow = editMode ?
+    editModeNfts :
+    (publiclyVisibleNftsNoEdit ?? []);
 
   const displayNFTs = (draftLayoutType ?? savedLayoutType) !== 'Spotlight' ?
     nftsToShow :

@@ -42,7 +42,6 @@ type HeaderProps = {
 gsap.registerPlugin(ScrollTrigger);
 
 export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { primaryIcon } = useThemeColors();
@@ -184,19 +183,10 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               'minlg:px-0 minlg:mr-0',
               currentAddress && 'mr-3'
             )}>
-              {
-                discoverPageEnv
-                  ? (
-                    <div className="hidden minlg:block mr-1 w-[351px]">
-                      <SearchBar />
-                    </div>
-                  )
-                  : (
-                    <div className="hidden minlg:block mr-1">
-                      <SearchBar />
-                    </div>
-                  )
-              }
+
+              <div className="hidden minlg:block mr-1">
+                <SearchBar />
+              </div>
 
               {currentAddress &&
               <div className='block minlg:hidden'>

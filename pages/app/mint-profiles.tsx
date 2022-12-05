@@ -3,6 +3,7 @@ import MintFreeProfileCard from 'components/modules/ProfileFactory/MintFreeProfi
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
 import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
@@ -20,13 +21,15 @@ import NFTLogoSmall from 'public/nft_logo_small.svg';
 import ProfileClickIcon from 'public/profile-click-icon.svg';
 import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 export default function MintProfilesPage() {
+  const [showPaid, setShowPaid] = useState(false);
   const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
   const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
   const { claimable } = useClaimableProfileCount(currentAddress);
+  const { maxProfiles } = useAllContracts();
   
   useMaybeCreateUser();
 
@@ -41,16 +44,19 @@ export default function MintProfilesPage() {
       return <MintFreeProfileCard/>;
     }
     if(!isNullOrEmpty(claimable) && !freeMintAvailable) {
-      return <MintGKProfileCard />;
+      if(showPaid){
+        return <MintPaidProfileCard type='mint' />;
+      }
+      return <MintGKProfileCard setShowPaid={setShowPaid} />;
     }
-    if(freeMintAvailable && isNullOrEmpty(claimable)) {
+    if(freeMintAvailable && isNullOrEmpty(claimable) && maxProfiles.publicClaimBool) {
       return <MintFreeProfileCard />;
     }
-    if(!freeMintAvailable && isNullOrEmpty(claimable)) {
+    if((!freeMintAvailable && isNullOrEmpty(claimable)) || !maxProfiles.publicClaimBool) {
       return <MintPaidProfileCard type='mint' />;
     }
     return <MintProfileCardSkeleton />;
-  }, [claimable, freeMintAvailable]);
+  }, [claimable, freeMintAvailable, maxProfiles.publicClaimBool, showPaid]);
   
   return (
     <div

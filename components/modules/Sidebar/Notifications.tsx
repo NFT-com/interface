@@ -1,5 +1,6 @@
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useSidebar } from 'hooks/state/useSidebar';
+import { useUser } from 'hooks/state/useUser';
 import { filterNulls } from 'utils/helpers';
 
 import { NotificationButton } from './NotificationButton';
@@ -13,6 +14,7 @@ type NotificationsProps = {
 };
 
 export const Notifications = ({ setVisible }: NotificationsProps) => {
+  const { user } = useUser();
   const {
     count,
     activeNotifications,
@@ -22,12 +24,24 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     setRemovedAssociationNotifClicked,
     setAddedAssociatedNotifClicked,
     soldActivityDate,
-    expiredActivityDate
+    expiredActivityDate,
+    profileExpiringSoon
   } = useContext(NotificationContext);
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
 
   const notificationData = [
+    profileExpiringSoon ?
+      {
+        text: `Your licensing for your Profile ${user?.currentProfileUrl} is going to expire soon! Renew here`,
+        onClick: () => {
+          setVisible(false);
+          setSidebarOpen(false);
+          router.push('/app/settings');
+        },
+        date:  null
+      }
+      : null,
     activeNotifications.hasSoldActivity ?
       {
         text: 'NFT Sold! View My Activity',
