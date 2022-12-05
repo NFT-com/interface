@@ -58,7 +58,7 @@ export function NftGrid(props: NftGridProps) {
     mosaicArray2.push(seq2);
   }
 
-  const savedLayoutType = getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? currentLayoutType : profileData?.profile?.layoutType;
+  const savedLayoutType = getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'Default' : profileData?.profile?.layoutType;
 
   const mosaicCardType = (layoutType, index) => {
     if (layoutType === 'Mosaic') {
