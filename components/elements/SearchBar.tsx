@@ -1,6 +1,10 @@
 import { SearchContent } from 'components/modules/Search/SearchContent';
 
-export const SearchBar = () => {
+interface SearchBarProps {
+  leaderBoardSearch?: boolean;
+}
+
+export const SearchBar = (props: SearchBarProps) => {
   return (
-    <SearchContent isHeader />);
+    <SearchContent leaderBoardSearch={props.leaderBoardSearch} isHeader />);
 };

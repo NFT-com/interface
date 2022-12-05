@@ -121,4 +121,4 @@ export const DiscoveryTabs = [
     id: 2,
     key: 'profiles'
   }
-]
+];

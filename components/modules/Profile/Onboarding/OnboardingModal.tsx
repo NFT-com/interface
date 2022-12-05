@@ -50,7 +50,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                       <NftGoldLogo />
                     </div>
                     
-                    {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>11</span>
+                    {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>31</span>
                   </div>
                 </div>
                 <p className='mt-3 font-medium w-11/12'>Complete 5 steps to redeem all your <span className='bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>Reward points</span>!</p>
@@ -90,29 +90,29 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                         {
                           name: 'Customize Profile',
                           isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.CustomizeProfile),
-                          description: 'Get 1 reward point by adding a Profile picture, bio, and showcasing your favorite NFTs to your NFT Profile.',
+                          description: 'Get 1 reward point by adding a profile picture, bio, and showcasing your favorite NFTs to your NFT Profile.',
                           coins: 1,
                           buttonText: 'Continue',
                         },
                         {
                           name: 'Refer Network',
                           isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ReferNetwork),
-                          coins: 2,
-                          description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 Reward points!',
+                          coins: 10,
+                          description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 reward points per referral that mints a NFT Profile!',
                           buttonText: 'Continue'
                         },
                         {
                           name: 'Buy NFTs',
                           isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.BuyNfTs),
-                          coins: 1,
-                          description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase.',
+                          coins: 5,
+                          description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase on NFT.com.',
                           href: '/app/discover'
                         },
                         {
                           name: 'List NFTs',
                           isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ListNfTs),
-                          coins: 2,
-                          description: 'Get 2 reward points for each of the first 5 NFTs you list for at least one day.',
+                          coins: 10,
+                          description: 'Get 2 reward points for each of the first 5 NFTs you list on NFT.com for at least one day.',
                           href: '/app/assets'
                         }
                       ]
