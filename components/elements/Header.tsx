@@ -238,7 +238,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               <div className='hidden minlg:block'>
                 <WalletDropdown count={count} constrain>
                   <div
-                    className='h-full flex items-center relative ml-3 minlg:ml-0 -mr-5 cursor-pointer '
+                    className='h-full flex items-center relative ml-3 -mr-5 cursor-pointer '
                   >
                     {count
                       ? (
