@@ -2,6 +2,7 @@ import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/Ro
 import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -46,6 +47,9 @@ export function NftCard(props: NftCardProps) {
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
+
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   return (
     <div className={tw(
       'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p relative',
@@ -111,7 +115,9 @@ export function NftCard(props: NftCardProps) {
             />
             <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
               <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
+                {hasGks &&
+                  <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
+                }
                 <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500]">Icon</button>
               </div>
             </div>
