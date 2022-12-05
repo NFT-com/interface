@@ -66,7 +66,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       per_page: 20,
       page: 1,
       filter_by: nftsResultsFilterBy,
-      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS
+      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : '')
     }] })
       .then((resp) => {
         setNftsForCollections(null);
@@ -97,10 +97,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   useEffect(() => {
     page === 1 && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,traits.rarity,isProfile' : ''),
+      facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : 'listedPx,listingType,currency'),
       max_facet_values: 200,
       collection: 'nfts',
-      query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
+      query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : 'marketplace,listingType,currency'),
       q: searchTerm?.toString(),
       per_page: getPerPage('', screenWidth, sideNavOpen),
       page: page,
@@ -117,10 +117,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
-        facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,traits.rarity,isProfile' : ''),
+        facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : 'listedPx,listingType,currency'),
         max_facet_values: 200,
         collection: 'nfts',
-        query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
+        query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : 'marketplace,listingType,currency'),
         q: searchTerm?.toString(),
         per_page: getPerPage('', screenWidth, sideNavOpen),
         page: page,
