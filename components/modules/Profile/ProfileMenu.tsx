@@ -4,7 +4,7 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -143,29 +143,33 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         'flex flex-row items-center space-x-1 minlg:space-x-3',
         searchVisible && 'hidden minlg:flex'
       )}>
-        <div onClick={() => setSearchVisible(true)} className={tw(
-          'w-10 h-10 minlg:w-12 minlg:h-12 rounded-full px-2.5 minlg:px-3.5',
-          'flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer',
-          searchVisible && 'minlg:hidden'
-        )}>
-          <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
-        </div>
+        {!editMode &&
+          <div onClick={() => setSearchVisible(true)} className={tw(
+            'w-10 h-10 minlg:w-12 minlg:h-12 rounded-full px-2.5 minlg:px-3.5',
+            'flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer',
+            searchVisible && 'minlg:hidden'
+          )}>
+            <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
+          </div>
+        }
         {isOwnerAndSignedIn &&
             <>
-              <DropdownPickerModal
-                pointer
-                align='center'
-                constrain
-                stopMobileModal
-                disableMinWidth
-                disablePadding
-                selectedIndex={selectedLayout ? layoutOptions.findIndex(item => item.name === selectedLayout) : 0}
-                options={layoutOptions}
-              >
-                <div className='w-10 h-10 minlg:w-12 minlg:h-12 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
-                  {selectedLayout ? layoutOptions.filter(item => item?.name === selectedLayout)[0]?.icon : layoutOptions[0]?.icon}
-                </div>
-              </DropdownPickerModal>
+              {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) &&
+                <DropdownPickerModal
+                  pointer
+                  align='center'
+                  constrain
+                  stopMobileModal
+                  disableMinWidth
+                  disablePadding
+                  selectedIndex={selectedLayout ? layoutOptions.findIndex(item => item.name === selectedLayout) : 0}
+                  options={layoutOptions}
+                >
+                  <div className='w-10 h-10 minlg:w-12 minlg:h-12 rounded-full flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'>
+                    {selectedLayout ? layoutOptions.filter(item => item?.name === selectedLayout)[0]?.icon : layoutOptions[0]?.icon}
+                  </div>
+                </DropdownPickerModal>
+              }
 
               <DropdownPickerModal
                 pointer
