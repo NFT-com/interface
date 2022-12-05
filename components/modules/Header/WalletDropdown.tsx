@@ -47,7 +47,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
       <div
         ref={anchorRef}
         className={tw(
-          'flex flex-row items-end px-2.5',
+          'flex flex-row items-end px-2.5 minlg:px-0 minlg:ml-6 minlg:mr-2.5',
           'bg-transparent dark:bg-secondary-dk',
           'py-2 h-full',
           'justify-between rounded-xl w-full',
