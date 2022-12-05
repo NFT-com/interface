@@ -9,7 +9,6 @@ import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollect
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import NotFoundPage from 'pages/404';
 import { ResultsPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
@@ -142,14 +141,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     return (
       <div className="md:p-1 mt-7 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
-          {/*<div className="flex flex-col mt-6 minmd:px-4 minxl:px-0">*/}
-          {/*  <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>*/}
-          {/*  <div>*/}
-          {/*    <div className="text-3xl minlg:text-4xl font-semibold pt-1">*/}
-          {/*      <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
           <div
             className='block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
             onClick={() => setSideNavOpen(!sideNavOpen)}>
@@ -211,15 +202,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
                           customBackground={'white'}
                           lightModeForced/>
-                          // <NFTCard
-                          //   title={item.document.nftName}
-                          //   images={[item.document.imageURL]}
-                          //   collectionName={item.document.contractName}
-                          //   redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                          //   description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-                          //   customBackground={'white'}
-                          //   lightModeForced
-                          // />
                         }
                       </div>);
                   })}
