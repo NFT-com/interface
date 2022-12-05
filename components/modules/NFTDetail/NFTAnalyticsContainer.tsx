@@ -18,7 +18,7 @@ export type NFTAnalyticsContainerProps = {
 
 const nftActivityTabs = {
   0: 'Activity',
-  1: getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) && 'Sales',
+  1: 'Sales',
 };
 
 const timeFrames = {

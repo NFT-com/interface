@@ -178,13 +178,13 @@ const Filter = (props: any) => {
 
   const formatTitle = (title) => {
     switch(title){
-    case 'listedFloor':
+    case getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? 'listedFloor' : 'listedPx':
       return 'Price';
     case 'nftType':
       return 'Contract';
     case 'contractName':
       return 'Collections';
-    case 'listings.type':
+    case getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? 'listings.type' : 'listingType':
       return 'Listing Type';
     default:
       return title?.charAt(0).toUpperCase() + title?.slice(1);
@@ -261,7 +261,7 @@ const Filter = (props: any) => {
           transition={{ duration: 0.2 }}
           className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-hidden max-h-[16.5rem]')}
         >
-          { /* filter.field_name === 'listedFloor' ?
+          { /* filter.field_name === getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? 'listedFloor' : 'listedPx' ?
           ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) : */
             filter.field_name === 'contractName' ?
               (<ContractNameFilter
