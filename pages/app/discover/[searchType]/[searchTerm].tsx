@@ -80,7 +80,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : '')
     }] })
       .then((resp) => {
-        // console.log('resp.results[0]',resp.results[0])
         setNftsForCollections(null);
         setCollectionsSliderData(resp.results[0]);
       });
@@ -113,7 +112,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   useEffect(() => {
     page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency') : '',
+      facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency') : SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : ''),
       max_facet_values: 200,
       collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
       query_by: searchType?.toString() !== 'collections' ? SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : ',marketplace,listingType,currency') : SearchableFields.COLLECTIONS_INDEX_FIELDS,
@@ -133,7 +132,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
-        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency') : '',
+        facet_by: searchType?.toString() !== 'collections' ? SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency') : SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : ''),
         max_facet_values: 200,
         collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
         query_by: searchType?.toString() === 'collections' ? SearchableFields.COLLECTIONS_INDEX_FIELDS : SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : ',marketplace,listingType,currency'),
