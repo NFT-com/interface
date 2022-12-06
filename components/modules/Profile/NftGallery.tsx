@@ -3,6 +3,7 @@ import Loader from 'components/elements/Loader';
 import { GridContextProvider } from 'components/modules/Draggable/GridContext';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useScrollToBottom } from 'graphql/hooks/useScrollToBottom';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { NftGrid } from './NftGrid';
@@ -44,7 +45,7 @@ export function NftGallery(props: NftGalleryProps) {
     }
   });
 
-  const savedLayoutType = profileData?.profile?.layoutType;
+  const savedLayoutType = getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'Default' : profileData?.profile?.layoutType;
 
   if (allOwnerNfts == null || publiclyVisibleNftsNoEdit == null || profileData == null || saving) {
     return (

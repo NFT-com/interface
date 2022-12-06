@@ -9,7 +9,6 @@ import { useFetchNFTsForCollections } from 'graphql/hooks/useFetchNFTsForCollect
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
-import NotFoundPage from 'pages/404';
 import { ResultsPageProps } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getPerPage,isNullOrEmpty } from 'utils/helpers';
@@ -66,7 +65,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       per_page: 20,
       page: 1,
       filter_by: nftsResultsFilterBy,
-      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS
+      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : '')
     }] })
       .then((resp) => {
         setNftsForCollections(null);
@@ -97,10 +96,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   useEffect(() => {
     page === 1 && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,traits.rarity,isProfile' : ''),
+      facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
       max_facet_values: 200,
       collection: 'nfts',
-      query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
+      query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : ',marketplace,listingType,currency'),
       q: searchTerm?.toString(),
       per_page: getPerPage('', screenWidth, sideNavOpen),
       page: page,
@@ -117,10 +116,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
-        facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type,traits.rarity,isProfile' : ''),
+        facet_by: SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
         max_facet_values: 200,
         collection: 'nfts',
-        query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',traits.value,traits.type' : ''),
+        query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : ',marketplace,listingType,currency'),
         q: searchTerm?.toString(),
         per_page: getPerPage('', screenWidth, sideNavOpen),
         page: page,
@@ -142,14 +141,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     return (
       <div className="md:p-1 mt-7 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
-          {/*<div className="flex flex-col mt-6 minmd:px-4 minxl:px-0">*/}
-          {/*  <span className="text-xs font-medium text-blog-text-reskin">DISCOVER / RESULTS</span>*/}
-          {/*  <div>*/}
-          {/*    <div className="text-3xl minlg:text-4xl font-semibold pt-1">*/}
-          {/*      <span className="text-[#F9D963]">/ </span><span className="text-black">{searchTerm}</span>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
           <div
             className='block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
             onClick={() => setSideNavOpen(!sideNavOpen)}>
@@ -211,15 +202,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                           description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
                           customBackground={'white'}
                           lightModeForced/>
-                          // <NFTCard
-                          //   title={item.document.nftName}
-                          //   images={[item.document.imageURL]}
-                          //   collectionName={item.document.contractName}
-                          //   redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
-                          //   description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }
-                          //   customBackground={'white'}
-                          //   lightModeForced
-                          // />
                         }
                       </div>);
                   })}
