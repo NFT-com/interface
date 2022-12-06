@@ -8,6 +8,7 @@ import { StagedPurchase } from './NFTPurchaseContext';
 
 import { ethers } from 'ethers';
 import { MinusCircle } from 'phosphor-react';
+import { useCallback } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -25,6 +26,15 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
   });
 
   const { getByContractAddress } = useSupportedCurrencies();
+
+  const formatCurrency = useCallback((item: StagedPurchase) => {
+    const currency = getByContractAddress((item as StagedPurchase).currency);
+    if(currency.name === 'USDC'){
+      return ethers.utils.formatUnits(item.price, 6);
+    } else {
+      return ethers.utils.formatEther((item as StagedPurchase)?.price ?? 0);
+    }
+  },[getByContractAddress]);
 
   return (
     <div className='flex items-center w-full h-32 px-8'>
@@ -58,14 +68,16 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
         props.item?.['price'] &&
         <div className="flex flex-col w-1/2 items-end font-grotesk">
           <span className='font-black text-base line-clamp-1'>
-            {ethers.utils.formatEther((props.item as StagedPurchase)?.price ?? 0)}
+            {formatCurrency(props.item as StagedPurchase)}
             {' '}
             {getByContractAddress((props.item as StagedPurchase).currency)?.name ?? ''}
           </span>
           <span className='font-medium text-base text-[#6F6F6F] line-clamp-1'>
-            ${getByContractAddress((props.item as StagedPurchase).currency)?.usd(
-              Number(ethers.utils.formatEther((props.item as StagedPurchase)?.price))
-            ) ?? 0}
+            ${getByContractAddress((props.item as StagedPurchase).currency).name === 'USDC'
+              ? formatCurrency(props.item as StagedPurchase) :
+              getByContractAddress((props.item as StagedPurchase).currency)?.usd(
+                Number(ethers.utils.formatEther((props.item as StagedPurchase)?.price))
+              ) ?? 0}
           </span>
         </div>
       }
