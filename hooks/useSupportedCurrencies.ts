@@ -110,7 +110,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         logo: 'https://cdn.nft.com/usdc.svg',
         contract: usdc.address,
         usd: (val: number) => val,
-        decimals: 18,
+        decimals: 6,
         allowance: async (currentAddress: string, proxy: string) => {
           const usdcAllowance = await usdc.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return usdcAllowance;
