@@ -90,7 +90,7 @@ export function ProfileCard(props: ProfileCardProps) {
                   className="h-full"
                   alt="key Splash"
                   layout="fill"
-                  objectFit="contain"
+                  objectFit="cover"
                 />
               )
           }

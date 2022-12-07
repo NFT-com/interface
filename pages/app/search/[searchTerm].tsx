@@ -166,7 +166,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} typesenseCollections={collectionsSliderData?.hits}/>}
                 <div className="flex justify-between items-center mt-12 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
                   <div className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium">
-                    {found.current + ' ' + 'Nft' + `${found.current === 1 ? '' : 's'}`}
+                    {found.current + ' ' + 'NFT' + `${found.current === 1 ? '' : 's'}`}
                   </div>
                   {<span
                     className="cursor-pointer hover:font-semibold underline text-black text-lg"

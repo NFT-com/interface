@@ -2,17 +2,24 @@ import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/Ro
 import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
+import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { DetailedNft } from './CollectionCard';
 
+import { ethers } from 'ethers';
+import moment from 'moment';
 import Hidden from 'public/Hidden.svg';
 import Reorder from 'public/Reorder.svg';
 import ShopIcon from 'public/shop-icon.svg';
 import Visible from 'public/Visible.svg';
+import VolumeIcon from 'public/volumeIcon.svg';
 import { MouseEvent } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
@@ -44,6 +51,7 @@ export interface NftCardProps {
 export function NftCard(props: NftCardProps) {
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
+  const { getByContractAddress } = useSupportedCurrencies();
   const { data: nft } = useNftQuery(props.contractAddr, (props?.listings || props?.nft) ? null : props.tokenId); // skip query if listings are passed, or if nfts is passed by setting tokenId to null
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
@@ -51,6 +59,25 @@ export function NftCard(props: NftCardProps) {
 
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+
+  const chainId = useDefaultChainId();
+  const ethPriceUSD = useEthPriceUSD();
+  const bestListing = getLowestPriceListing(filterValidListings(nft?.listings?.items), ethPriceUSD, chainId);
+  const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
+
+  const checkEndDate = () => {
+    if(nft?.listings?.items?.length){
+      const endDateParams:any = bestListing.order?.protocolData?.parameters?.endTime;
+      const startDate = new Date();
+      const endDate = moment.unix(endDateParams).format('MM/DD/YYYY');
+      const date = moment(endDate).diff(startDate, 'days', false);
+      if(date > 1){
+        return `${date} days`;
+      }else{
+        return `${date} day`;
+      }
+    }
+  };
   return (
     <div className={tw(
       'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden cursor-p relative',
@@ -104,7 +131,7 @@ export function NftCard(props: NftCardProps) {
           props.onClick && props.onClick();
         }}
       >
-        <div className="relative h-[252px] object-cover">
+        <div className="relative h-[252px] object-cover ">
           <div className="sm:h-[171px] relative h-[252px] object-cover overflow-hidden">
             <div className='group-hover/ntfCard:scale-110 hover:scale-105 h-[252px] transition '>
               <RoundedCornerMedia
@@ -118,7 +145,7 @@ export function NftCard(props: NftCardProps) {
             </div>
             <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
               <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                {hasGks &&
+                {nft?.listings?.items?.length && hasGks &&
                   <>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]"><ShopIcon/></button>
@@ -137,23 +164,28 @@ export function NftCard(props: NftCardProps) {
                   className="sm:text-sm text-[16px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
               </ul>
               {
-                props.isOnSale
+                nft?.listings?.items?.length
                   ? (
                     <ul className="flex flex-row justify-between mt-[14px]">
                       <li className="p-0 m-[0] flex flex-col">
-                        <span className="font-[500] text-[#000000] text-[18px]">{props.secondPrice}</span>
+                        <span className="noi-grotesk font-[500] text-[#000000] text-[18px] flex items-center">
+                          <div className="pr-1">
+                            <VolumeIcon/>
+                          </div>
+                          {ethPriceUSD}
+                        </span>
                         <span className="text-[#B2B2B2] font-[400]">Price</span>
                       </li>
-                      <li className="text-[16px] p-0 m-[0] flex flex-col text-[#747474] font-[500]">{props.price}</li>
+                      <li className="text-[16px] p-0 m-[0] flex flex-col text-[#747474] font-[500]">
+                        ${listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
+                      </li>
                       <li className="text-[16px] p-0 m-[0] flex flex-col items-end">
                         <span className="text-[16px] text-[#B2B2B2] font-[400]">Ends in</span>
-                        <span className="text-[16px] text-[#6A6A6A] font-[500]">{props.ednDay}</span>
+                        <span className="text-[16px] text-[#6A6A6A] font-[500]">{checkEndDate()}</span>
                       </li>
                     </ul>
                   )
-                  : (
-                    <button className="sm:text-sm mt-2 px-[16px] py-[8px] bg-black text-[#ffffff] rounded-[10px] text-[18px] leading-[24px] font-[500]">Make an offer</button>
-                  )
+                  : null
               }
             </div>
           }
