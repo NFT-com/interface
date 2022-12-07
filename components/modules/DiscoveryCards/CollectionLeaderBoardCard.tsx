@@ -202,7 +202,7 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
         </div>
       </a>
       <a href={props.redirectTo} className="hidden minlg:flex px-6 font-noi-grotesk  w-full justify-start items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] h-[6.25rem] shadow-lg overflow-hidden">
-        <div className="flex justify-start items-center w-[37.5%]">
+        <div className="flex justify-start items-center w-[35%]">
           <div className="flex justify-start items-center">
             <div className="mr-4">
               #{props.index + 1}
@@ -224,7 +224,7 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
             {/*<span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600] max-w-[60%]">{collectionName}</span>*/}
           </div>
         </div>
-        <div className="flex flex-row items-center  w-[15.3%] pl-1">
+        <div className="flex flex-row items-center justify-center w-[15%] pl-1">
           <div className="pr-3">
             <VolumeIcon/>
           </div>
@@ -236,10 +236,10 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
             <div className="text-base leading-[18px] text-[#747474] font-[400]">{convertCurrency(statsData.volume)}</div>
           </div>
         </div>
-        <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500] w-[12%]  pl-1`}>
+        <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500] items-center text-center justify-center w-[15%]  pl-1`}>
           {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2)}%` : null}
         </div>
-        <div className="flex flex-row items-center  w-[14.9%]  pl-1">
+        <div className="flex flex-row items-center justify-center  w-[15%]  pl-1">
           <div className="pr-3">
             {statsData.floor_price && <VolumeIcon/>}
           </div>
@@ -253,8 +253,8 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
             </div>
           </div>
         </div>
-        <div className="text-[#B2B2B2] text-lg font-[500]  w-[13.3%] pl-1">{statsData.minted}</div>
-        <div className="text-[#000000] text-lg font-[500]  w-[7%] pl-1">{checkSalesValue(statsData.sales)}</div>
+        <div className="text-[#B2B2B2] text-lg font-[500] flex items-center justify-center  w-[10%] pl-1">{statsData.minted}</div>
+        <div className="text-[#000000] text-lg font-[500] flex items-center justify-center w-[10%] pl-1">{checkSalesValue(statsData.sales)}</div>
       </a>
     </>
   );

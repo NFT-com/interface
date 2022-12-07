@@ -56,7 +56,7 @@ export function NftCard(props: NftCardProps) {
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
-
+  console.log('nftnftnft',nft)
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
@@ -66,7 +66,7 @@ export function NftCard(props: NftCardProps) {
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
 
   const checkEndDate = () => {
-    if(props.listings.length ?? nft?.listings?.items?.length){
+    if(props?.listings?.length ?? nft?.listings?.items?.length){
       const endDateParams:any = bestListing.order?.protocolData?.parameters?.endTime;
       const startDate = new Date();
       const endDate = moment.unix(endDateParams).format('MM/DD/YYYY');
@@ -172,13 +172,13 @@ export function NftCard(props: NftCardProps) {
                           <div className="pr-1">
                             <VolumeIcon/>
                           </div>
-                          {ethPriceUSD}
+                          {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
+                          {listingCurrencyData?.name ?? 'WETH'}
                         </span>
                         <span className="text-[#B2B2B2] font-[400]">Price</span>
                       </li>
                       <li className="text-[16px] p-0 m-[0] flex flex-col text-[#747474] font-[500]">
-                        ${listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
-                      </li>
+                        ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}                      </li>
                       <li className="text-[16px] p-0 m-[0] flex flex-col items-end">
                         <span className="text-[16px] text-[#B2B2B2] font-[400]">Ends in</span>
                         <span className="text-[16px] text-[#6A6A6A] font-[500]">{checkEndDate()}</span>
