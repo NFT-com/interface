@@ -62,11 +62,11 @@ export function NftCard(props: NftCardProps) {
 
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
-  const bestListing = getLowestPriceListing(filterValidListings(nft?.listings?.items), ethPriceUSD, chainId);
+  const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
 
   const checkEndDate = () => {
-    if(nft?.listings?.items?.length){
+    if(props.listings.length ?? nft?.listings?.items?.length){
       const endDateParams:any = bestListing.order?.protocolData?.parameters?.endTime;
       const startDate = new Date();
       const endDate = moment.unix(endDateParams).format('MM/DD/YYYY');
@@ -145,7 +145,7 @@ export function NftCard(props: NftCardProps) {
             </div>
             <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
               <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                {nft?.listings?.items?.length && hasGks &&
+                {(props.listings || nft?.listings?.items?.length) && hasGks &&
                   <>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]"><ShopIcon/></button>
@@ -164,7 +164,7 @@ export function NftCard(props: NftCardProps) {
                   className="sm:text-sm text-[16px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
               </ul>
               {
-                nft?.listings?.items?.length
+                props.listings || nft?.listings?.items?.length
                   ? (
                     <ul className="flex flex-row justify-between mt-[14px]">
                       <li className="p-0 m-[0] flex flex-col">
