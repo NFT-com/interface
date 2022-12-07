@@ -139,7 +139,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   if (discoverPageEnv) {
     return (
-      <div className="md:p-1 mt-7 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
+      <div className="p-1 mt-7 minmd:p-4 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
           <div
             className='block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
@@ -189,7 +189,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     Filter
                   </div>
                 </div>}
-                <div className={tw(`grid grid-cols-2 mt-4 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3  minlg:grid-cols-2  minmd:grid-cols-2' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 '} `)}>
+                <div className={tw(`grid grid-cols-2 mt-4 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2  minmd:grid-cols-2 grid-cols-1' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1'} `)}>
                   {/*'gap-5'*/}
                   {results && results.current.map((item, index) => {
                     return (
@@ -197,6 +197,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                         {<NftCard
                           name={item.document.nftName}
                           images={[item.document.imageURL]}
+                          contractAddr={item.document.contractAddr}
+                          tokenId={item.document.tokenId}
                           collectionName={item.document.contractName}
                           redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
                           description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }

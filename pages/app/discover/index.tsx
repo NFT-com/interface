@@ -265,12 +265,12 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
               isLeaderBoard
                 ? (
                   <div className="hidden minlg:flex px-6 text-sm text-[#B2B2B2] leading-6 font-[600] font-noi-grotesk">
-                    <div className="w-[37.5%] pl-[32px]">COLLECTION</div>
-                    <div className="w-[15.3%]">VOLUME</div>
-                    <div className="w-[12%]">% CHANGE</div>
-                    <div className="w-[14.9%]">FLOOR PRICE</div>
-                    <div className="w-[13.3%]">ITEMS</div>
-                    <div className="w-[7%]">SALES</div>
+                    <div className="w-[35%] flex items-center  pl-[32px]">COLLECTION</div>
+                    <div className="w-[15%] flex items-center justify-center">VOLUME</div>
+                    <div className="w-[15%] flex items-center justify-center">% CHANGE</div>
+                    <div className="w-[15%] flex items-center justify-center">FLOOR PRICE</div>
+                    <div className="w-[10%] flex items-center justify-center">ITEMS</div>
+                    <div className="w-[10%] flex items-center justify-center">SALES</div>
                   </div>
                 )
                 : null
