@@ -172,7 +172,7 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
           <div className='minmd:w-[auto] mb-3 minmd:mb-0 w-[33.33%] flex flex-col items-center justify-between'>
             <span className='text-[#B2B2B2] leading-6 font-[600]'>% CHANGE</span>
             <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500]`}>
-              {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2).replaceAll('.', ',')}%` : null}
+              {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2)}%` : null}
             </div>
           </div>
           <div className='minmd:w-[auto] mb-3 minmd:mb-0 w-[33.33%] flex flex-col items-end justify-between'>
@@ -237,7 +237,7 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
           </div>
         </div>
         <div className={`${Math.sign(statsData?.change) === -1 ? 'text-[#ff5454]' : 'text-[#26AA73]' } text-lg font-[500] w-[12%]  pl-1`}>
-          {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2).replaceAll('.', ',')}%` : null}
+          {statsData?.change ? `${(statsData?.change * 10)?.toFixed(2)}%` : null}
         </div>
         <div className="flex flex-row items-center  w-[14.9%]  pl-1">
           <div className="pr-3">
