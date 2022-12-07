@@ -35,8 +35,7 @@ export const CollectionsResults = (props: {searchTerm?: string, found?: number, 
             <CollectionCard
               key={i}
               redirectTo={collection?.collectionAddress}
-              contractAddress={collection?.contractAddress}
-              contract={collection?.contract}
+              contract={collection?.collectionAddress}
               description={collection?.nfts && collection?.nfts[0].metadata?.description}
               images={[collection?.nfts[0].metadata?.imageUrl]}
               contractName={collection?.nfts[0].metadata?.name}

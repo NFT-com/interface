@@ -4,6 +4,7 @@ import { SearchBar } from 'components/elements/SearchBar';
 import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import { CollectionLeaderBoardCard } from 'components/modules/DiscoveryCards/CollectionLeaderBoardCard';
 import { ProfileCard } from 'components/modules/DiscoveryCards/ProfileCard';
 import { DiscoveryTabNav } from 'components/modules/DiscoveryTabNavigation/DiscoveryTabsNavigation';
 import { CollectionItem } from 'components/modules/Search/CollectionItem';
@@ -24,6 +25,7 @@ import { collectionCardImages, filterNulls, getPerPage, isNullOrEmpty } from 'ut
 import { tw } from 'utils/tw';
 
 import { getCollection } from 'lib/contentful/api';
+import { useRouter } from 'next/router';
 import { FunnelSimple } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -32,6 +34,7 @@ import { PartialDeep } from 'type-fest';
 
 export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const router = useRouter();
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
   const { width: screenWidth } = useWindowDimensions();
   const { usePrevious } = usePreviousValue();
@@ -66,6 +69,15 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
       setCuratedCollections(getEnvBool(Doppler.NEXT_PUBLIC_DEV_CONTENT_MODEL_ENABLED) ? dataDev : data);
     }
   },[curatedCollections, data, dataDev, setCuratedCollections]);
+
+  useEffect(() => {
+    const query = Object.keys(router.query);
+    if(query && query[0]){
+      toggleTabView(query[0]);
+    }else {
+      toggleTabView('collections');
+    }
+  }, [router]);
 
   useEffect(() => {
     setPage(1);
@@ -130,7 +142,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
             collectionData && collectionData?.items?.length > 0
               ? collectionData?.items.map((collectionLeader, index) => {
                 return (
-                  <CollectionCard
+                  <CollectionLeaderBoardCard
                     redirectTo={'collection/' + collectionLeader?.contract}
                     index={index}
                     title={collectionLeader.name}
@@ -156,7 +168,6 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
           {paginatedAddresses && paginatedAddresses.length > 0 && paginatedAddresses.map((collection, index) => {
             return (
               <CollectionCard
-                isLeaderBoard={false}
                 key={index}
                 redirectTo={`/app/collection/${collection?.collectionAddress}/`}
                 contractAddress={collection?.collectionAddress}
@@ -176,6 +187,9 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
     toggleLoadState(true);
     loadMoreProfiles();
   };
+  const filterUniq = (value, index, self) => {
+    return self.indexOf(value) === index;
+  };
   const returnProfileBlock = () => {
     if(allLoadedProfiles && allLoadedProfiles.length){
       return (
@@ -186,7 +200,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
             {
               !isLeaderBoard
                 ? (
-                  allLoadedProfiles.map((profile, index) => {
+                  allLoadedProfiles.filter(filterUniq).map((profile, index) => {
                     return (
                       <ProfileCard
                         key={index}
@@ -196,7 +210,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                   })
                 )
                 : (
-                  leaderboardData && leaderboardData?.leaderboard?.items.sort((a,b) =>(a.numberOfCollections > b.numberOfCollections) ? -1 : 1).map((item, i) => {
+                  leaderboardData && leaderboardData?.leaderboard?.items.map((item, i) => {
                     return (
                       <ProfileCard
                         key={i}
@@ -204,7 +218,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                         isLeaderBoard
                         id={item.id}
                         index={item.index}
-                        itemsVisible={item.index}
+                        itemsVisible={item.itemsVisible}
                         numberOfCollections={item.numberOfCollections}
                         numberOfGenesisKeys={item.numberOfGenesisKeys}
                         photoURL={item.photoURL}
@@ -330,7 +344,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                       {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
                       <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
                         {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
-                        {!isLeaderBoard ? 'Show leaderboard' : 'View Collections'}
+                        {!isLeaderBoard ? 'Show leaderboard' : tabView === 'profiles' ? 'View Profiles' : 'View Collections' }
                       </button>
                     </div>
                   </div>
