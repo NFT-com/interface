@@ -239,7 +239,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                               userName={item.document.contractName}
                               contractAddr={item.document.contractAddr}
                               tokenId={item.document.tokenId}
-                              images={collectionImages.length > 0 ? collectionCardImages(collectionImages[0]) : []}
+                              images={[item.document.logoUrl]}
                               countOfElements={collectionImages[0]?.actualNumberOfNFTs}
                               description={item?.document.description}
                               maxSymbolsInString={180}/>
