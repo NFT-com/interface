@@ -235,7 +235,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                               key={index}
                               redirectTo={`/app/collection/${item.document?.contractAddr}/`}
                               contractAddress={item.document?.collectionAddress}
-                              contract={item.document?.collectionAddress}
+                              contract={item.document?.contractAddr}
                               userName={item.document.contractName}
                               contractAddr={item.document.contractAddr}
                               tokenId={item.document.tokenId}
@@ -252,6 +252,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             </div>:
                           <NftCard
                             name={item.document.nftName}
+                            tokenId={item.document.tokenId}
+                            contractAddr={item.document.contractAddr}
                             images={[item.document.imageURL]}
                             collectionName={item.document.contractName}
                             redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}

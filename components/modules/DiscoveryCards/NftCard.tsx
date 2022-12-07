@@ -11,6 +11,7 @@ import { DetailedNft } from './CollectionCard';
 
 import Hidden from 'public/Hidden.svg';
 import Reorder from 'public/Reorder.svg';
+import ShopIcon from 'public/shop-icon.svg';
 import Visible from 'public/Visible.svg';
 import { MouseEvent } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -104,21 +105,23 @@ export function NftCard(props: NftCardProps) {
         }}
       >
         <div className="relative h-[252px] object-cover">
-          <div className="sm:h-[171px] relative h-[252px] object-cover">
-            <RoundedCornerMedia
-              variant={RoundedCornerVariant.None}
-              width={600}
-              height={600}
-              containerClasses='w-full h-full overflow-hidden'
-              src={processedImageURLs[0]}
-              extraClasses="hover:scale-105 transition"
-            />
+          <div className="sm:h-[171px] relative h-[252px] object-cover overflow-hidden">
+            <div className='group-hover/ntfCard:scale-110 hover:scale-105 h-[252px] transition '>
+              <RoundedCornerMedia
+                variant={RoundedCornerVariant.None}
+                width={600}
+                height={600}
+                containerClasses='w-full h-full overflow-hidden'
+                src={processedImageURLs[0]}
+                extraClasses='hover:scale-105 transition'
+              />
+            </div>
             <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
               <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
                 {hasGks &&
                   <>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
-                    <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500]">Icon</button>
+                    <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]"><ShopIcon/></button>
                   </>
                 }
               </div>

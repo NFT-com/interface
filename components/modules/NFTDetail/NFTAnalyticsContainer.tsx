@@ -2,7 +2,6 @@ import { LineVis } from 'components/modules/Analytics/LineVis';
 import { NFTActivity as StaticNFTActivity } from 'components/modules/Analytics/NFTActivity';
 import { Nft } from 'graphql/generated/types';
 import { useGetSales } from 'graphql/hooks/useGetSales';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
@@ -37,7 +36,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   const [selectedTab, setSelectedTab] = useState(nftActivityTabs[0]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(timeFrames[6]);
   const { getSales } = useGetSales();
-  
+
   const { data: nftData } = useSWR('getSales' + data?.contract + data?.tokenId + selectedTimeFrame, async () => {
     const dayTimeFrames = {
       '1D': '24h',
@@ -48,12 +47,12 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
       '1Y': '1y',
       'ALL': 'all'
     };
-    
+
     const resp = await getSales({
       contractAddress: data?.contract,
       tokenId: BigNumber.from(data?.tokenId).toString(),
       dateRange: dayTimeFrames[selectedTimeFrame] });
-    
+
     const sales = resp.getSales.map(i => {
       return { date: i.date, value: i.priceUSD };
     });
