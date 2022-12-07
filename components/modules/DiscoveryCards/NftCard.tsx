@@ -3,7 +3,7 @@ import { TxActivity } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
-// import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
@@ -57,8 +57,8 @@ export function NftCard(props: NftCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
 
-  // const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  // const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
@@ -67,7 +67,7 @@ export function NftCard(props: NftCardProps) {
 
   const checkEndDate = () => {
     if(nft?.listings?.items?.length){
-      const endDateParams = bestListing.order?.protocolData?.parameters?.endTime;
+      const endDateParams:any = bestListing.order?.protocolData?.parameters?.endTime;
       const startDate = new Date();
       const endDate = moment.unix(endDateParams).format('MM/DD/YYYY');
       const date = moment(endDate).diff(startDate, 'days', false);
@@ -145,7 +145,7 @@ export function NftCard(props: NftCardProps) {
             </div>
             <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
               <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                {nft?.listings?.items?.length &&
+                {nft?.listings?.items?.length && hasGks &&
                   <>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]"><ShopIcon/></button>
@@ -186,9 +186,6 @@ export function NftCard(props: NftCardProps) {
                     </ul>
                   )
                   : null
-                  // (
-                  //   <button className="sm:text-sm mt-2 px-[16px] py-[8px] bg-black text-[#ffffff] rounded-[10px] text-[18px] leading-[24px] font-[500]">Make an offer</button>
-                  // )
               }
             </div>
           }
