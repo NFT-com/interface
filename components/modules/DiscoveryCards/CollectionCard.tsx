@@ -26,8 +26,6 @@ export interface CollectionCardProps {
   contractAddress?: string;
   contractName?: string;
   description?: string;
-  stats?: any;
-  logoUrl?: any;
   timePeriod?: string;
   index?: number;
   userName?: string;

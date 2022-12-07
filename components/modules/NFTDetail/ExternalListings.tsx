@@ -63,7 +63,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   const nftInPurchaseCart = useMemo(() => {
     return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id) != null;
   }, [props.nft?.id, toBuy]);
-  
+
   const getListingSummaryTitle = useCallback(() => {
     const uniqueMarketplaces = filterDuplicates(
       filterValidListings(props.nft?.listings?.items),
@@ -175,7 +175,7 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const bestListing = getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
-  
+
   return <div className='w-full flex justify-center p-4'>
     <EditListingsModal
       nft={props.nft}
