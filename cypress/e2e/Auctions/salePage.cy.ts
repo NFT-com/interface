@@ -5,9 +5,9 @@ describe('sale page tests', () => {
     cy.visit('/app/sale');
   });
     
-  it('should redirect to the GK collections page', () => {
-    cy.get('.NftCollectionItem').should('exist');
-  });
+  // it('should redirect to the GK collections page', () => {
+  //   cy.get('.NftCollectionItem').should('exist');
+  // });
     
   // todo: sign in and test the actual sale page
 });
