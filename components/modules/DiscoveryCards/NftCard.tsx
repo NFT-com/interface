@@ -63,7 +63,6 @@ export function NftCard(props: NftCardProps) {
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
-  console.log('nftnftnft',nft)
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
