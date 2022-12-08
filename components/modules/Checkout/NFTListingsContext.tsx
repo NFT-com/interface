@@ -8,6 +8,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
+import { useSignX2Y2Order } from 'hooks/useSignX2Y2Order';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
@@ -15,11 +16,13 @@ import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
+import { createX2Y2ParametersForNFTListing } from 'utils/X2Y2Helpers';
 
 import { CartSidebarTab, NFTCartSidebar } from './NFTCartSidebar';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 
 import { MakerOrder } from '@looksrare/sdk';
+import { X2Y2Order } from '@x2y2-io/sdk/dist/types';
 import { BigNumber, BigNumberish } from 'ethers';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -34,6 +37,7 @@ export type ListingTarget = {
   // these are set when finalizing, before triggering the wallet requests
   looksrareOrder: MakerOrder; // looksrare
   seaportParameters: SeaportOrderParameters; // seaport
+  X2Y2Order: X2Y2Order; // X2Y2
 }
 
 export type StagedListing = {
@@ -51,6 +55,7 @@ export type StagedListing = {
   // approval-related data
   isApprovedForSeaport: boolean;
   isApprovedForLooksrare: boolean;
+  isApprovedForX2Y2: boolean;
 }
 
 export enum ListAllResult {
@@ -135,7 +140,9 @@ export function NFTListingsContextProvider(
 
   const seaportCounter = useSeaportCounter(currentAddress);
   const signOrderForSeaport = useSignSeaportOrder();
-  const { listNftSeaport, listNftLooksrare } = useListNFTMutations();
+  const { listNftSeaport, listNftLooksrare, listNftX2Y2 } = useListNFTMutations();
+
+  const signOrderForX2Y2 = useSignX2Y2Order();
 
   const stageListing = useCallback((
     listing: StagedListing
@@ -359,6 +366,19 @@ export function NFTListingsContextProvider(
             ...target,
             looksrareOrder: order,
           };
+        } else if (target.protocol === ExternalProtocol.X2Y2) {
+          const order: X2Y2Order = await createX2Y2ParametersForNFTListing(
+            currentAddress, // offerer
+            stagedNft.nft,
+            stagedNft.startingPrice ?? target.startingPrice,
+            Number(defaultChainId),
+            target.duration ?? stagedNft.duration,
+            stagedNft.nft.type
+          );
+          return {
+            ...target,
+            X2Y2Order: order,
+          };
         } else {
           const contract = await getOpenseaCollection(stagedNft?.nft?.contract);
           const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
@@ -406,6 +426,16 @@ export function NFTListingsContextProvider(
             return ListAllResult.ApiError;
           }
           return ListAllResult.Success;
+        } else if (target.protocol === ExternalProtocol.X2Y2) {
+          const signature = await signOrderForX2Y2(target.X2Y2Order).catch(() => null);
+          if (isNullOrEmpty(signature)) {
+            return ListAllResult.SignatureRejected;
+          }
+          const result = await listNftX2Y2({ ...target.X2Y2Order }, signature);
+          if (!result) {
+            return ListAllResult.ApiError;
+          }
+          return ListAllResult.Success;
         } else {
           const signature = await signOrderForSeaport(target.seaportParameters, seaportCounter).catch(() => null);
           if (isNullOrEmpty(signature)) {
@@ -430,7 +460,7 @@ export function NFTListingsContextProvider(
       results.includes(ListAllResult.ApiError) ?
         ListAllResult.ApiError :
         ListAllResult.Success;
-  }, [listNftSeaport, listNftLooksrare, seaportCounter, signOrderForLooksrare, signOrderForSeaport, toList]);
+  }, [toList, signOrderForLooksrare, listNftLooksrare, signOrderForX2Y2, listNftX2Y2, signOrderForSeaport, seaportCounter, listNftSeaport]);
 
   const removeListing = useCallback((nft: PartialDeep<Nft>) => {
     const newToList = toList.slice().filter(l => l.nft?.id !== nft?.id);
@@ -445,7 +475,7 @@ export function NFTListingsContextProvider(
     }
     const tx = await collection
       .connect(signer)
-      .setApprovalForAll(target === ExternalProtocol.LooksRare ? TransferProxyTarget.LooksRare : TransferProxyTarget.Opensea, true);
+      .setApprovalForAll(target === ExternalProtocol.LooksRare ? TransferProxyTarget.LooksRare : target === ExternalProtocol.X2Y2 ? TransferProxyTarget.X2Y2 : TransferProxyTarget.Opensea, true);
     if (tx) {
       return await tx.wait(1).then(() => {
         const newToList = toList.slice().map(l => {
@@ -454,6 +484,7 @@ export function NFTListingsContextProvider(
               ...listing,
               ...(target === ExternalProtocol.LooksRare ? { isApprovedForLooksrare: true } : {}),
               ...(target === ExternalProtocol.Seaport ? { isApprovedForSeaport: true } : {}),
+              ...(target === ExternalProtocol.X2Y2 ? { isApprovedForX2Y2: true } : {}),
             };
           }
           return l;
