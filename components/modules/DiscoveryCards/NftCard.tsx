@@ -74,9 +74,9 @@ export function NftCard(props: NftCardProps) {
 
   const checkEndDate = () => {
     if(props?.listings?.length || nft?.listings?.items?.length){
-      const endDateParams:any = bestListing.order?.protocolData?.parameters?.endTime;
+      const endDateParams:any = bestListing?.order?.protocolData?.parameters?.endTime;
       const startDate = new Date();
-      const endDate = moment.unix(endDateParams).format('MM/DD/YYYY');
+      const endDate = moment.unix(endDateParams);
       const date = moment(endDate).diff(startDate, 'days', false);
       if(date > 1){
         return `${date} days`;
@@ -193,7 +193,7 @@ export function NftCard(props: NftCardProps) {
                   className="sm:text-sm text-[16px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
               </ul>
               {
-                props?.listings?.length || nft?.listings?.items?.length
+                (props?.listings?.length || nft?.listings?.items?.length) && bestListing
                   ? (
                     <ul className="flex flex-row justify-between mt-[14px]">
                       <li className="p-0 m-[0] flex flex-col">
