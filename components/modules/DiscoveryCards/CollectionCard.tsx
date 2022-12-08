@@ -73,7 +73,7 @@ export function CollectionCard(props: CollectionCardProps) {
           <p className="text-base">
             {sliceString(collection?.collection?.description ? collection?.collection?.description : props.description, props.maxSymbolsInString, isStringCut)}
             {
-              (collection?.collection?.description.length || props.description) > props.maxSymbolsInString && (
+              ((collection?.collection?.description && collection?.collection?.description?.length) || props.description) > props.maxSymbolsInString && (
                 <button onClick={() => toggleStringLength(!isStringCut)} className="text-[#000000] font-[600] ml-[5px]">{isStringCut ? 'less' : 'more'}</button>
               )
             }
