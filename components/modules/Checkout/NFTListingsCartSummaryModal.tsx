@@ -15,6 +15,7 @@ import { BigNumber, ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X, XCircle } from 'phosphor-react';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
+import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
 import { useProvider, useSigner } from 'wagmi';
@@ -86,7 +87,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null && !stagedListing?.isApprovedForLooksrare) ||
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport)
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport) ||
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.X2Y2) != null && !stagedListing?.isApprovedForX2Y2)
     );
   }, [toList]);
   
@@ -132,7 +134,9 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                   return stagedListing.targets.map((target: ListingTarget) => {
                     const approved = target.protocol === ExternalProtocol.LooksRare ?
                       stagedListing?.isApprovedForLooksrare :
-                      stagedListing?.isApprovedForSeaport;
+                      target.protocol === ExternalProtocol.X2Y2
+                        ? stagedListing?.isApprovedForX2Y2 :
+                        stagedListing?.isApprovedForSeaport;
                     return {
                       label: 'Approve ' + stagedListing?.collectionName + ' for ' + target.protocol,
                       startIcon: target.protocol === ExternalProtocol.Seaport ?
@@ -141,11 +145,18 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                           alt="Opensea logo"
                           layout="fill"
                         /> :
-                        <LooksrareIcon
-                          className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
-                          alt="Looksrare logo"
-                          layout="fill"
-                        />,
+                        target.protocol === ExternalProtocol.LooksRare ?
+                          <LooksrareIcon
+                            className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
+                            alt="Looksrare logo"
+                            layout="fill"
+                          /> :
+                          <X2Y2Icon
+                            className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
+                            alt="Looksrare logo"
+                            layout="fill"
+                          />
+                      ,
                       endIcon: approved ?
                         <CheckCircle size={16} className="text-green-500 ml-2" /> :
                         error === 'ApprovalError' ?
@@ -288,7 +299,9 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                       const protocol = uniqueCollections[i].targets[j].protocol;
                       const approved = protocol === ExternalProtocol.LooksRare ?
                         stagedListing?.isApprovedForLooksrare :
-                        stagedListing?.isApprovedForSeaport;
+                        protocol === ExternalProtocol.X2Y2 ?
+                          stagedListing?.isApprovedForX2Y2 :
+                          stagedListing?.isApprovedForSeaport;
                       if (!approved && protocol === ExternalProtocol.LooksRare) {
                         const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
                           .then(result => {
@@ -320,6 +333,23 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                             return false;
                           });
                         stagedListing.isApprovedForSeaport = result;
+                        if (!result) {
+                          return;
+                        }
+                      } else if (!approved && protocol === ExternalProtocol.X2Y2) {
+                        const result = await approveCollection(stagedListing, ExternalProtocol.X2Y2)
+                          .then(result => {
+                            if (!result) {
+                              setError('ApprovalError');
+                              return false;
+                            }
+                            return true;
+                          })
+                          .catch(() => {
+                            setError('ApprovalError');
+                            return false;
+                          });
+                        stagedListing.isApprovedForX2Y2 = result;
                         if (!result) {
                           return;
                         }

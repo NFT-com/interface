@@ -29,6 +29,10 @@ export function ListingCheckout() {
     const hasTarget = nft.targets?.find(target => target?.protocol === ExternalProtocol.LooksRare) != null;
     return !hasTarget; // return true if missing the desired target.
   }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
+  const X2Y2FullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
+    const hasTarget = nft.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
+    return !hasTarget; // return true if missing the desired target.
+  }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
 
   return (
     <div className="flex flex-col items-center w-full mt-10">
@@ -62,6 +66,20 @@ export function ListingCheckout() {
               )}
             >
               <span>Looksrare</span>
+              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
+            </div>
+            <div
+              onClick={() => {
+                toggleTargetMarketplace(ExternalProtocol.X2Y2);
+                setShowSummary(false);
+              }}
+              className={tw(
+                'border border-[#D5D5D5] rounded-xl text-lg',
+                'px-4 py-6 cursor-pointer w-full mt-4 mx-4',
+                X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : ''
+              )}
+            >
+              <span>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
           </div>
