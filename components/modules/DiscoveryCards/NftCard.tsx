@@ -112,7 +112,7 @@ export function NftCard(props: NftCardProps) {
       }
 
       {
-        props.visible != null &&
+        props.visible === true &&
           <div
             className='absolute right-3 top-4 z-30'
           >
@@ -152,7 +152,7 @@ export function NftCard(props: NftCardProps) {
             </div>
             <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
               <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                {(props?.listings?.length || nft?.listings?.items?.length) && !isOwnedByMe && hasGks &&
+                {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && hasGks ?
                   <>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
                     <button
@@ -179,7 +179,7 @@ export function NftCard(props: NftCardProps) {
                       <ShopIcon/>
                     </button>
                   </>
-                }
+                  : null}
               </div>
             </div>
           </div>
