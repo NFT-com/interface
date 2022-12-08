@@ -144,7 +144,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
               <X onClick={() => toggleCartSidebar()} className='hover:cursor-pointer' weight="fill" size={27} color="black" />
             </div>
           </div>
-          <div className='w-full px-4'>
+          <div className='w-full px-6'>
             <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])} selectedIndex={props.selectedTab === 'Buy' ? 0 : 1}>
               <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
                 {['Buy', 'Sell'].map((detailTab, index) => (
@@ -160,7 +160,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
                     <span className='font-semibold ml-2'>{cartTabTypes[index]}</span>
                     <div
                       className={tw(
-                        'rounded-full h-5 w-5 flex items-center justify-center text-sm ml-2 pr-1',
+                        'rounded-full h-5 w-5 flex items-center justify-center text-sm ml-2 justify-self-center',
                         cartTabTypes[index] === props.selectedTab ? 'bg-white text-black' : 'bg-[#6F6F6F] text-white'
                       )}>
                       {(cartTabTypes[index] === 'Buy' ? toBuy : toList).length}
@@ -170,7 +170,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
               </Tab.List>
             </Tab.Group>
           </div>
-          <div className='flex items-center justify-between w-full font-semibold font-noi-grotesk px-5 pt-7'>
+          <div className='flex items-center justify-between w-full font-semibold font-noi-grotesk px-7 pt-7'>
             <span>{stagedNFTs.length} items</span>
             <div className="flex font-semibold font-noi-grotesk items-end justify-between">
               {stagedNFTs?.length > 0 && <span

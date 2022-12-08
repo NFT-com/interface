@@ -38,7 +38,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
 
   return (
     <div className='flex items-center w-full h-32 px-8'>
-      <div className='flex items-center h-full w-1/2'>
+      <div className='flex items-center h-full w-full'>
         <div className='relative h-2/4 aspect-square'>
           <MinusCircle
             size={20}
@@ -58,15 +58,16 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
             )}
           />
         </div>
-        <div className='flex flex-col ml-4 font-grotesk font-bold'>
-          <span className="text-sm text-[#6F6F6F] mb-1 line-clamp-1">{collection?.contractMetadata?.name}</span>
-          <span className='line-clamp-1'>{nft?.metadata?.name}</span>
+        <div className='flex flex-col ml-4 font-grotesk'>
+          <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
+          <span className='text-sm -mt-1 mb-1 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
+          <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: %10</span>
         </div>
       </div>
       {
         // this is a staged purchase
         props.item?.['price'] &&
-        <div className="flex flex-col w-1/2 items-end font-grotesk">
+        <div className="flex flex-col w-1/3 items-end font-grotesk">
           <span className='font-black text-base line-clamp-1'>
             {formatCurrency(props.item as StagedPurchase)}
             {' '}
