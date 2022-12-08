@@ -89,7 +89,7 @@ export function NftGrid(props: NftGridProps) {
     )}
     data-testid={savedLayoutType+'-layout-option'}
   >
-    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
+    {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
       <div className='hidden minlg:block'>
         <ClaimProfileCard />
       </div>

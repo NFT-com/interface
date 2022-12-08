@@ -345,7 +345,7 @@ export function MintedProfile(props: MintedProfileProps) {
               selectedTab === 'nfts' ? 'flex' : 'hidden'
             )}
           >
-            {user?.currentProfileUrl === props.profileURI && getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
+            {user?.currentProfileUrl === props.profileURI && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
               <div className='block minlg:hidden mt-2 px-2'>
                 <ClaimProfileCard />
               </div>
