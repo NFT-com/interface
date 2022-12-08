@@ -84,7 +84,7 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
       return '';
     }
     if(price < 0.01){
-      return '< 0,1 ETH';
+      return '< 0.1 ETH';
     }else {
       return `${ethFormatting(price)} ETH`;
       // return `${price.toFixed(3).replaceAll('.', ',')} ETH`;
