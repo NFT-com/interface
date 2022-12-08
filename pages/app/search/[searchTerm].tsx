@@ -196,7 +196,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                       <div key={index} className='DiscoverCollectionItem'>
                         {<NftCard
                           name={item.document.nftName}
-                          listings={item?.document?.listings?.items || []}
                           images={[item.document.imageURL]}
                           contractAddr={item.document.contractAddr}
                           tokenId={item.document.tokenId}
