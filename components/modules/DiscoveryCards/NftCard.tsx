@@ -112,7 +112,7 @@ export function NftCard(props: NftCardProps) {
       }
 
       {
-        props.visible != null && props.visible === true &&
+        props.visible === true &&
           <div
             className='absolute right-3 top-4 z-30'
           >
