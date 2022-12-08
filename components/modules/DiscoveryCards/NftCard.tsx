@@ -197,17 +197,23 @@ export function NftCard(props: NftCardProps) {
                   ? (
                     <ul className="flex flex-row justify-between mt-[14px]">
                       <li className="p-0 m-[0] flex flex-col">
-                        <span className="noi-grotesk font-[500] text-[#000000] text-[18px] flex items-center">
-                          <div className="pr-1">
-                            <VolumeIcon/>
+                        <div>
+                          <div className="noi-grotesk font-[500] text-[#000000] text-[18px] flex items-center">
+                            <div className="pr-1">
+                            </div>
+                            <div className='flex flex-col'>
+                              <span className="flex flex-row">
+                                <VolumeIcon className="mr-1"/>
+                                {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
+                                {listingCurrencyData?.name ?? 'WETH'}
+                              </span>
+                              <span className='text-base text-[#747474]'>
+                                ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}
+                              </span>
+                            </div>
                           </div>
-                          {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
-                          {listingCurrencyData?.name ?? 'WETH'}
-                        </span>
-                        <span className="text-[#B2B2B2] font-[400]">Price</span>
+                        </div>
                       </li>
-                      <li className="text-[16px] p-0 m-[0] flex flex-col text-[#747474] font-[500]">
-                        ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}                      </li>
                       <li className="text-[16px] p-0 m-[0] flex flex-col items-end">
                         <span className="text-[16px] text-[#B2B2B2] font-[400]">Ends in</span>
                         <span className="text-[16px] text-[#6A6A6A] font-[500]">{checkEndDate()}</span>
