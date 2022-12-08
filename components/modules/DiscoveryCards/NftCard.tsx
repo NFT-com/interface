@@ -73,10 +73,10 @@ export function NftCard(props: NftCardProps) {
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
 
   const checkEndDate = () => {
-    if(props?.listings?.length || nft?.listings?.items?.length){
-      const endDateParams:any = bestListing?.order?.protocolData?.parameters?.endTime;
+    if(bestListing){
+      const endDateParams:any = bestListing?.order?.protocolData;
       const startDate = new Date();
-      const endDate = moment.unix(endDateParams);
+      const endDate = moment.unix(bestListing.order?.protocol === ExternalProtocol.LooksRare ? endDateParams?.endTime : endDateParams?.parameters?.endTime);
       const date = moment(endDate).diff(startDate, 'days', false);
       if(date > 1){
         return `${date} days`;
