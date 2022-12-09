@@ -1,4 +1,4 @@
-import { Maybe, Nft } from 'graphql/generated/types';
+import { Maybe, Nft, NftType } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { get721Contract } from 'hooks/contracts/get721Contract';
@@ -8,7 +8,6 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
-import { useSignX2Y2Order } from 'hooks/useSignX2Y2Order';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
@@ -24,6 +23,7 @@ import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { MakerOrder } from '@looksrare/sdk';
 import { X2Y2Order } from '@x2y2-io/sdk/dist/types';
 import { BigNumber, BigNumberish } from 'ethers';
+import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useProvider, useSigner } from 'wagmi';
@@ -141,8 +141,6 @@ export function NFTListingsContextProvider(
   const seaportCounter = useSeaportCounter(currentAddress);
   const signOrderForSeaport = useSignSeaportOrder();
   const { listNftSeaport, listNftLooksrare, listNftX2Y2 } = useListNFTMutations();
-
-  const signOrderForX2Y2 = useSignX2Y2Order();
 
   const stageListing = useCallback((
     listing: StagedListing
@@ -367,18 +365,7 @@ export function NFTListingsContextProvider(
             looksrareOrder: order,
           };
         } else if (target.protocol === ExternalProtocol.X2Y2) {
-          const order: X2Y2Order = await createX2Y2ParametersForNFTListing(
-            currentAddress, // offerer
-            stagedNft.nft,
-            stagedNft.startingPrice ?? target.startingPrice,
-            Number(defaultChainId),
-            target.duration ?? stagedNft.duration,
-            stagedNft.nft.type
-          );
-          return {
-            ...target,
-            X2Y2Order: order,
-          };
+          return target;
         } else {
           const contract = await getOpenseaCollection(stagedNft?.nft?.contract);
           const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
@@ -410,7 +397,7 @@ export function NFTListingsContextProvider(
       };
     }));
     setToList(preparedListings);
-  }, [defaultChainId, currentAddress, looksrareRoyaltyFeeRegistry, looksrareStrategy, toList, supportedCurrencyData]);
+  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry]);
 
   const listAll: () => Promise<ListAllResult> = useCallback(async () => {
     setSubmitting(true);
@@ -427,11 +414,19 @@ export function NFTListingsContextProvider(
           }
           return ListAllResult.Success;
         } else if (target.protocol === ExternalProtocol.X2Y2) {
-          const signature = await signOrderForX2Y2(target.X2Y2Order).catch(() => null);
-          if (isNullOrEmpty(signature)) {
+          const order: X2Y2Order = await createX2Y2ParametersForNFTListing(
+            'mainnet',
+            signer,
+            listing.nft.contract,
+            listing.nft.tokenId,
+            listing.nft.type === NftType.Erc1155 ? 'erc1155' : 'erc721',
+            listing.startingPrice.toString() ?? target.startingPrice.toString(),
+            moment().unix() + Number(listing.duration) ?? moment().unix() + Number(target.duration)
+          );
+          if (!order) {
             return ListAllResult.SignatureRejected;
           }
-          const result = await listNftX2Y2({ ...target.X2Y2Order }, signature);
+          const result = await listNftX2Y2({ ...order });
           if (!result) {
             return ListAllResult.ApiError;
           }
@@ -460,7 +455,7 @@ export function NFTListingsContextProvider(
       results.includes(ListAllResult.ApiError) ?
         ListAllResult.ApiError :
         ListAllResult.Success;
-  }, [toList, signOrderForLooksrare, listNftLooksrare, signOrderForX2Y2, listNftX2Y2, signOrderForSeaport, seaportCounter, listNftSeaport]);
+  }, [toList, signOrderForLooksrare, listNftLooksrare, signer, listNftX2Y2, signOrderForSeaport, seaportCounter, listNftSeaport]);
 
   const removeListing = useCallback((nft: PartialDeep<Nft>) => {
     const newToList = toList.slice().filter(l => l.nft?.id !== nft?.id);
