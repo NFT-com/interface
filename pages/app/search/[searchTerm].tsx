@@ -65,7 +65,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       per_page: 20,
       page: 1,
       filter_by: nftsResultsFilterBy,
-      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : '')
+      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : ''),
+      exhaustive_search: true,
     }] })
       .then((resp) => {
         setNftsForCollections(null);
