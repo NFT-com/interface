@@ -12,7 +12,7 @@ import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { X } from 'phosphor-react';
 import { XCircle } from 'phosphor-react';
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 export type CartSidebarTab = 'Buy' | 'Sell';
 
@@ -28,6 +28,7 @@ export interface NFTCartSidebarProps {
 
 export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const router = useRouter();
+  const [showAll, setShowAll] = useState(true);
 
   const {
     toggleCartSidebar,
@@ -48,7 +49,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const sidebarRef = useRef();
   useOutsideClickAlerter(sidebarRef, () => toggleCartSidebar());
 
-  return !getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED)
+  return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <div ref={sidebarRef} className={tw(
         'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-md bg-white flex flex-col grow',
@@ -138,13 +139,13 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-sm bg-white flex flex-col grow',
           'drop-shadow-md'
         )}>
-          <div className='flex items-center justify-between w-full px-6 py-9'>
+          <div className='flex items-center justify-between w-full px-5 py-9'>
             <span className="text-xl font-semibold font-noi-grotesk">My Cart</span>
             <div className='w-6'>
               <X onClick={() => toggleCartSidebar()} className='hover:cursor-pointer' weight="fill" size={27} color="black" />
             </div>
           </div>
-          <div className='w-full px-6'>
+          <div className='w-full px-5'>
             <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])} selectedIndex={props.selectedTab === 'Buy' ? 0 : 1}>
               <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
                 {['Buy', 'Sell'].map((detailTab, index) => (
@@ -170,7 +171,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
               </Tab.List>
             </Tab.Group>
           </div>
-          <div className='flex items-center justify-between w-full font-semibold font-noi-grotesk px-7 pt-7'>
+          <div className='flex items-center justify-between w-full font-semibold font-noi-grotesk px-5 py-6'>
             <span>{stagedNFTs.length} items</span>
             <div className="flex font-semibold font-noi-grotesk items-end justify-between">
               {stagedNFTs?.length > 0 && <span
@@ -187,19 +188,32 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
               </span>}
             </div>
           </div>
-          {stagedNFTs.map((stagedItem, index) => {
-            return <CartSidebarNft
-              item={stagedItem}
-              key={index}
-              onRemove={() => {
-                if (props.selectedTab === 'Sell') {
-                  removeListing(stagedItem.nft);
-                } else {
-                  removePurchase(stagedItem.nft);
-                }
-              }}
-            />;
-          })}
+          <div className={tw(
+            'pr-2',
+            !showAll ? 'max-h-[30rem] overflow-y-scroll filter-scrollbar' : 'max-h-[17.3rem] overflow-y-hidden')}>
+            {stagedNFTs.map((stagedItem, index) => {
+              return <CartSidebarNft
+                item={stagedItem}
+                key={index}
+                onRemove={() => {
+                  if (props.selectedTab === 'Sell') {
+                    removeListing(stagedItem.nft);
+                  } else {
+                    removePurchase(stagedItem.nft);
+                  }
+                }}
+              />;
+            })}
+          </div>
+          {stagedNFTs?.length > 0 && <span
+            className="text-base cursor-pointer hover:underline font-semibold font-noi-grotesk self-center"
+            onClick={() => {
+              setShowAll(!showAll);
+            }}
+          >
+            {showAll ? 'Show all' : 'Show less'}
+          </span>}
+          <span>Once the transaction is confirmed, the NFT will be sent to your wallet instantly.</span>
           {(stagedNFTs.length > 0 &&
         !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell')
           ) && <div className="mx-8 my-4 flex">
