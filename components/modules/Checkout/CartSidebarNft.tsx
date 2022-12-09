@@ -1,5 +1,6 @@
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata } from 'utils/alchemyNFT';
+import { Doppler,getEnvBool } from 'utils/env';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -36,37 +37,39 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     }
   },[getByContractAddress]);
 
-  return (
-    <div className='flex items-center w-full h-32 px-8'>
-      <div className='flex items-center h-full w-1/2'>
-        <div className='relative h-2/4 aspect-square'>
-          <MinusCircle
-            size={20}
-            color={'red'}
-            className="absolute right-1 top-1 cursor-pointer z-40"
-            onClick={props.onRemove}
-          />
-          <video
-            autoPlay
-            muted
-            loop
-            key={nft?.metadata?.imageURL}
-            src={processIPFSURL(nft?.metadata?.imageURL)}
-            poster={processIPFSURL(nft?.metadata?.imageURL)}
-            className={tw(
-              'flex object-fit w-full justify-center rounded-md',
-            )}
-          />
+  return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
+    ? (
+      <div className='flex items-center w-full h-32 px-8'>
+        <div className='flex items-center h-full w-full'>
+          <div className='relative h-2/4 aspect-square'>
+            <MinusCircle
+              size={20}
+              color={'red'}
+              className="absolute right-1 top-1 cursor-pointer z-40"
+              onClick={props.onRemove}
+            />
+            <video
+              autoPlay
+              muted
+              loop
+              key={nft?.metadata?.imageURL}
+              src={processIPFSURL(nft?.metadata?.imageURL)}
+              poster={processIPFSURL(nft?.metadata?.imageURL)}
+              className={tw(
+                'flex object-fit w-full justify-center rounded-md',
+              )}
+            />
+          </div>
+          <div className='flex flex-col ml-4 font-grotesk'>
+            <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
+            <span className='text-sm -mt-1 mb-1 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
+            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: %10</span>
+          </div>
         </div>
-        <div className='flex flex-col ml-4 font-grotesk font-bold'>
-          <span className="text-sm text-[#6F6F6F] mb-1 line-clamp-1">{collection?.contractMetadata?.name}</span>
-          <span className='line-clamp-1'>{nft?.metadata?.name}</span>
-        </div>
-      </div>
-      {
+        {
         // this is a staged purchase
-        props.item?.['price'] &&
-        <div className="flex flex-col w-1/2 items-end font-grotesk">
+          props.item?.['price'] &&
+        <div className="flex flex-col w-1/3 items-end font-grotesk">
           <span className='font-black text-base line-clamp-1'>
             {formatCurrency(props.item as StagedPurchase)}
             {' '}
@@ -80,7 +83,58 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
               ) ?? 0}
           </span>
         </div>
-      }
-    </div>
-  );
+        }
+      </div>
+    ) :
+    (
+      <div className='flex items-start w-full px-5 mb-4'>
+        <div className='flex w-2/3'>
+          <div className='relative aspect-square w-20 h-20
+      1'>
+            <video
+              autoPlay
+              muted
+              loop
+              key={nft?.metadata?.imageURL}
+              src={processIPFSURL(nft?.metadata?.imageURL)}
+              poster={processIPFSURL(nft?.metadata?.imageURL)}
+              className={tw(
+                'flex object-fit w-full justify-center rounded-xl',
+              )}
+            />
+          </div>
+          <div className='flex flex-col ml-4 font-grotesk'>
+            <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
+            <span className='text-sm mb-3 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
+            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: %10</span>
+          </div>
+        </div>
+        <div className='w-1/3 h-full'>
+          {
+            // this is a staged purchase
+            props.item?.['price'] &&
+        <div className="flex flex-col items-end justify-between font-grotesk mt-1 h-full">
+          <span className='font-black text-base line-clamp-1'>
+            {formatCurrency(props.item as StagedPurchase)}
+            {' '}
+            <span className='text-[#6F6F6F]'>
+              {getByContractAddress((props.item as StagedPurchase).currency)?.name ?? ''}
+            </span>
+          </span>
+          <span
+            onClick={props.onRemove}
+            className='text-sm mb-3 line-clamp-1 text-[#6F6F6F] cursor-pointer hover:underline'>
+            Remove
+          </span>
+          {/* <span className='font-medium text-base text-[#6F6F6F] line-clamp-1'>
+            ${getByContractAddress((props.item as StagedPurchase).currency).name === 'USDC'
+              ? formatCurrency(props.item as StagedPurchase) :
+              getByContractAddress((props.item as StagedPurchase).currency)?.usd(
+                Number(ethers.utils.formatEther((props.item as StagedPurchase)?.price))
+              ) ?? 0}
+          </span> */}
+        </div>
+          }</div>
+      </div>
+    );
 }
