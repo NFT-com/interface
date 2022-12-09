@@ -121,6 +121,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       page: page,
       filter_by: getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) && searchType?.toString() === 'profiles' ? 'isProfile: [true] && ' + nftsResultsFilterBy : nftsResultsFilterBy,
       sort_by: nftsPageSortyBy,
+      exhaustive_search: true,
     }] })
       .then((resp) => {
         results.current = [...resp.results[0].hits];
@@ -141,6 +142,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         page: page,
         filter_by: getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) && searchType?.toString() === 'profiles' ? 'isProfile: [true] && ' + nftsResultsFilterBy : nftsResultsFilterBy,
         sort_by: nftsPageSortyBy,
+        exhaustive_search: true,
       }] })
         .then((resp) => {
           results.current = [...results.current,...resp.results[0].hits];

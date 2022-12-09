@@ -105,6 +105,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       page: page,
       filter_by: nftsResultsFilterBy,
       sort_by: nftsPageSortyBy,
+      exhaustive_search: true,
     }] })
       .then((resp) => {
         results.current = [...resp.results[0].hits];
@@ -125,6 +126,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         page: page,
         filter_by: nftsResultsFilterBy,
         sort_by: nftsPageSortyBy,
+        exhaustive_search: true,
       }] })
         .then((resp) => {
           results.current = [...results.current,...resp.results[0].hits];
