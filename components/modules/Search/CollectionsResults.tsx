@@ -36,7 +36,7 @@ export const CollectionsResults = (props:
         })
       );
     } else {
-      if (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED)) {
+      if (getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)) {
         return typesenseCollections?.slice(0, screenWidth < 1200 ? 2 : sideNavOpen ? 2 : 3).map((collection, i) => {
           return (<CollectionCard
             key={'collection'+i}

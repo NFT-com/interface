@@ -172,7 +172,7 @@ export function ProfileContextProvider(
     totalItems: allOwnerNftCount,
     mutate: mutateAllOwnerNfts,
     pageInfo: allOwnerNftsPageInfo,
-  } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode, debouncedSearch);
+  } = useMyNFTsQuery(PUBLIC_PROFILE_LOAD_COUNT, profileData?.profile?.id, afterCursorEditMode, getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ? debouncedSearch : null);
   /**
    * Profile v2 instant update state
    */
