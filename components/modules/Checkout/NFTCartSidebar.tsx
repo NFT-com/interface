@@ -50,8 +50,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const sidebarRef = useRef();
   useOutsideClickAlerter(sidebarRef, () => toggleCartSidebar());
 
-  // return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
-  return !getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED)
+  return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <div ref={sidebarRef} className={tw(
         'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-md bg-white flex flex-col grow',

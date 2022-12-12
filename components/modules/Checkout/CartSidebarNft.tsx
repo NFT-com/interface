@@ -37,8 +37,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     }
   },[getByContractAddress]);
 
-  //return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
-  return !getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED)
+  return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <div className='flex items-center w-full h-32 px-8'>
         <div className='flex items-center h-full w-full'>
