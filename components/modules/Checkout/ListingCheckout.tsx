@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { ExternalProtocol } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
@@ -68,20 +69,22 @@ export function ListingCheckout() {
               <span>Looksrare</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
-            <div
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.X2Y2);
-                setShowSummary(false);
-              }}
-              className={tw(
-                'border border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 py-6 cursor-pointer w-full mt-4 mx-4',
-                X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : ''
-              )}
-            >
-              <span>X2Y2</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
-            </div>
+            {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
+              <div
+                onClick={() => {
+                  toggleTargetMarketplace(ExternalProtocol.X2Y2);
+                  setShowSummary(false);
+                }}
+                className={tw(
+                  'border border-[#D5D5D5] rounded-xl text-lg',
+                  'px-4 py-6 cursor-pointer w-full mt-4 mx-4',
+                  X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : ''
+                )}
+              >
+                <span>X2Y2</span>
+                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
+              </div>
+            }
           </div>
         </div>
         <div className='w-full flex flex-col px-8 mt-8 items-center'>

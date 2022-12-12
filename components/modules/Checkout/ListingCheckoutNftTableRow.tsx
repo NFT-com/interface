@@ -3,6 +3,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
+import { Doppler, getEnvBool } from 'utils/env';
 import { processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -232,20 +233,22 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
             }}
           />
-          <X2Y2Icon
-            className={tw(
-              'h-9 w-9 relative shrink-0 cursor-pointer',
-              !X2Y2Enabled && 'opacity-40'
-            )}
-            alt="X2Y2 logo redirect"
-            layout="fill"
-            onClick={() => {
-              if (expanded) {
-                return;
-              }
-              toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
-            }}
-          />
+          {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
+            <X2Y2Icon
+              className={tw(
+                'h-9 w-9 relative shrink-0 cursor-pointer',
+                !X2Y2Enabled && 'opacity-40'
+              )}
+              alt="X2Y2 logo redirect"
+              layout="fill"
+              onClick={() => {
+                if (expanded) {
+                  return;
+                }
+                toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
+              }}
+            />
+          }
         </div>
       </td>
     </tr>
