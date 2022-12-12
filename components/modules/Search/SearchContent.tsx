@@ -81,6 +81,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
           'query_by': SearchableFields.NFTS_INDEX_FIELDS,
           'per_page': 3,
           'page': 1,
+          'exhaustive_search': true,
         },
         {
           'collection': 'collections',
@@ -88,6 +89,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
           'query_by': SearchableFields.COLLECTIONS_INDEX_FIELDS,
           'per_page': 3,
           'page': 1,
+          'exhaustive_search': true,
         },
       ]
     };

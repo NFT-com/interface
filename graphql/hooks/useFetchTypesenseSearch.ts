@@ -40,10 +40,14 @@ export function useFetchTypesenseSearch(): FetchTypesenseSearchData {
       const result = await client.collections(input.index)
         .documents()
         .search({
-          'q'       : input.q.toString(),
-          'query_by': input.query_by,
-          'per_page': input.per_page,
-          'page'    : input.page,
+          'q'        : input.q.toString(),
+          'query_by' : input.query_by,
+          'per_page' : input.per_page,
+          'page'     : input.page,
+          'filter_by': input.filter_by,
+          'facet_by' : input.facet_by,
+          'sort_by'  : input.sort_by,
+          'exhaustive_search': true,
         });
       setLoading(false);
       return result;
