@@ -30,7 +30,6 @@ export async function createLooksrareParametersForNFTListing(
     royaltyAmount
   ]: [string, BigNumber] = await looksrareRoyaltyFeeManager.calculateRoyaltyFeeAndGetRecipient(nft.contract, nft.tokenId, price);
   const netPriceRatio = BigNumber.from(10000).sub(protocolFees.add(royaltyAmount && Number(royaltyAmount) > 0 ? 50 : 0)).toNumber();
-  console.log('🚀 ~ file: looksrareHelpers.ts:33 ~ netPriceRatio', netPriceRatio);
   // This variable is used to enforce a max slippage of 25% on all orders, if a collection change the fees to be >25%, the order will become invalid
   const minNetPriceRatio = 7500;
   return {
