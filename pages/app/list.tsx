@@ -37,7 +37,7 @@ export default function ListPage() {
       'w-full pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
       'bg-white dark:bg-footer-bg-dk font-grotesk'
     )}>
-      <div className='w-full my-8'>
+      <div className='w-full'>
         <ListingCheckout />
       </div>
     </div>;
