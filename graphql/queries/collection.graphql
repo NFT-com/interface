@@ -1,27 +1,3 @@
-query Collection($input: CollectionInput!) {
-  collection(input: $input) {
-    collection {
-      id
-      contract
-      name
-      chainId
-      deployer
-      bannerUrl
-      logoUrl
-      description
-      isCurated
-      isSpam
-    }
-    nftPortResults {
-      name
-      symbol
-      bannerUrl
-      logoUrl
-      description
-    }
-  }
-}
-
 query CollectionLeaderboard($input: CollectionLeaderboardInput){
   collectionLeaderboard(input: $input) {
     items {
@@ -54,6 +30,30 @@ query CollectionLeaderboard($input: CollectionLeaderboardInput){
         floor_price_historic_thirty_day
         updated_date
         }
+    }
+  }
+}
+
+query Collection($input: CollectionInput!) {
+  collection(input: $input) {
+    collection {
+      id
+      contract
+      name
+      chainId
+      deployer
+      bannerUrl
+      logoUrl
+      description
+      isCurated
+      isSpam
+    }
+    nftPortResults {
+      name
+      symbol
+      bannerUrl
+      logoUrl
+      description
     }
   }
 }
