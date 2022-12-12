@@ -232,9 +232,6 @@ export type CollectionInput = {
   contract: Scalars['Address'];
   network: Scalars['String'];
 };
-export type CollectionInputLeaderBoard = {
-  dateRange?: Scalars['String'];
-};
 
 export type CollectionLeaderboard = {
   __typename?: 'CollectionLeaderboard';
@@ -570,7 +567,6 @@ export type LooksrareProtocolData = {
   minPercentageToAsk?: Maybe<Scalars['String']>;
   nonce?: Maybe<Scalars['String']>;
   params?: Maybe<Scalars['String']>;
-  parameters?: Maybe<SeaportProtocolDataParams>;
   price?: Maybe<Scalars['String']>;
   r?: Maybe<Scalars['String']>;
   s?: Maybe<Scalars['String']>;
@@ -1392,6 +1388,7 @@ export type NftTrait = {
 };
 
 export enum NftType {
+  CryptoPunks = 'CRYPTO_PUNKS',
   Erc721 = 'ERC721',
   Erc1155 = 'ERC1155',
   GenesisKey = 'GenesisKey',
@@ -1551,6 +1548,7 @@ export type Profile = {
   deployedContractsVisible?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
   displayType?: Maybe<ProfileDisplayType>;
+  expireAt?: Maybe<Scalars['DateTime']>;
   followersCount?: Maybe<Scalars['Int']>;
   gkIconVisible?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
@@ -2624,41 +2622,6 @@ export type Wallet = {
   profileId?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
 };
-export type LeaderBoard = {
-  items: Array<LeaderBoardItem>;
-}
-export type LeaderBoardItem = {
-  __typename?: 'LeaderBoardItem';
-  contract: string,
-  name: string,
-  logoUrl: string,
-  stats: {
-    average_price: number | null,
-    floor_price: number | null,
-    floor_price_historic_one_day: number | null,
-    floor_price_historic_seven_day: number | null,
-    floor_price_historic_thirty_day: number | null,
-    market_cap: number | null,
-    num_owners: number | null,
-    one_day_average_price: number | null,
-    one_day_change: number | null,
-    one_day_sales: number | null,
-    one_day_volume: number | null,
-    seven_day_average_price: number | null,
-    seven_day_change: number | null,
-    seven_day_sales: number | null,
-    seven_day_volume: number | null,
-    thirty_day_average_price: number | null,
-    thirty_day_change: number | null,
-    thirty_day_sales: number | null,
-    thirty_day_volume: number | null,
-    total_minted: number | null
-    total_sales: number | null,
-    total_supply: number | null,
-    total_volume: number | null,
-    updated_date: string
-  }
-};
 
 export type WalletInput = {
   address: Scalars['Address'];
@@ -2985,18 +2948,10 @@ export type AssociatedCollectionForProfileQuery = { __typename?: 'Query', associ
 export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
 }>;
-export type CollectionLeaderBoardNewQueryVariables = Exact<{
-  input: CollectionInputLeaderBoard;
-}>;
-
-export type LeaderBoardCollectionsQuery = {
-  __typename?: 'Query',
-  collectionLeaderboard: Maybe<Array<LeaderBoard>>
-}
 
 
 export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, chainId?: string | null, deployer?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null, isCurated?: boolean | null, isSpam?: boolean | null } | null, nftPortResults?: { __typename?: 'NFTPortResults', name?: string | null, symbol?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null } | null } | null };
-export type CollectionLeaderBoardQuery = {};
+
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
 }>;
@@ -3925,43 +3880,6 @@ export const AssociatedCollectionForProfileDocument = gql`
   }
 }
     `;
-export const CollectionDocumentLeaderBoard = gql`
-    query CollectionLeaderboard($input: CollectionLeaderboardInput){
-      collectionLeaderboard(input: $input) {
-        items {
-        contract
-        logoUrl
-        name
-          stats {
-            one_day_volume
-            one_day_change
-            one_day_sales
-            one_day_average_price
-            seven_day_volume
-            seven_day_change
-            seven_day_sales
-            seven_day_average_price
-            thirty_day_volume
-            thirty_day_change
-            thirty_day_sales
-            thirty_day_average_price
-            total_volume
-            total_sales
-            total_supply
-            total_minted
-            num_owners
-            average_price
-            market_cap
-            floor_price
-            floor_price_historic_one_day
-            floor_price_historic_seven_day
-            floor_price_historic_thirty_day
-            updated_date
-           }
-        }
-      }
-    }
-`
 export const CollectionDocument = gql`
     query Collection($input: CollectionInput!) {
   collection(input: $input) {
@@ -5502,9 +5420,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');
-    },
-    CollectionLeaderBoard(variables: CollectionLeaderBoardNewQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<LeaderBoardCollectionsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<LeaderBoardCollectionsQuery>(CollectionDocumentLeaderBoard, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionLeaderboard', 'query');
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');
