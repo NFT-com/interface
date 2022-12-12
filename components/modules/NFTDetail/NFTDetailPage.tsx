@@ -47,7 +47,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     refreshNftOrders(nft?.id);
   }, [refreshNftOrders, nft]);
 
-  const [selectedDetailTab, setSelectedDetailTab] = useState(detailTabTypes[0]);
+  const [selectedDetailTab, setSelectedDetailTab] = useState(0);
 
   const showListings = useMemo(() => {
     return !isNullOrEmpty(filterValidListings(nft?.listings?.items));
@@ -59,26 +59,29 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         <div className='flex flex-col w-full'>
           <div className='flex w-full items-center p-4 justify-start'>
             <div className='justify-start'>
-              <Tab.Group onChange={(index) => {setSelectedDetailTab(detailTabTypes[index]);}}>
+              <Tab.Group selectedIndex={selectedDetailTab} onChange={(index) => {setSelectedDetailTab(index);}}>
                 <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
                   {Object.keys(detailTabTypes).map((detailTab) => (
-                    <Tab
-                      key={detailTab}
-                      className={({ selected }) =>
-                        tw(
-                          'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
-                          selected && 'bg-black text-[#F8F8F8] font-grotesk text-base font-semibold leading-6'
-                        )
+                    <Tab key={detailTab}>
+                      {({ selected }) =>
+                        <div
+                          className={
+                            tw(
+                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
+                              selected && 'bg-black text-[#F8F8F8] font-grotesk text-base font-semibold leading-6'
+                            )
+                          }
+                        >
+                          {detailTabTypes[detailTab]}
+                        </div>
                       }
-                    >
-                      {detailTabTypes[detailTab]}
                     </Tab>
                   ))}
                 </Tab.List>
               </Tab.Group>
             </div>
           </div>
-          {selectedDetailTab === 'Info' &&
+          {selectedDetailTab == 0 &&
             <>
               <div className='flex w-full p-4 font-grotesk'>
                 <DescriptionDetail nft={nft} />
@@ -88,7 +91,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
               </div>
             </>
           }
-          {selectedDetailTab === 'Traits' &&
+          {selectedDetailTab == 1 &&
             <>
               <div className='flex w-full p-4'>
                 <div className='border border-[#E1E1E1] rounded-md py-4 font-grotesk w-full'>

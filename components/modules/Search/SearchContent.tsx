@@ -81,6 +81,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
           'query_by': SearchableFields.NFTS_INDEX_FIELDS,
           'per_page': 3,
           'page': 1,
+          'exhaustive_search': true,
         },
         {
           'collection': 'collections',
@@ -88,6 +89,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
           'query_by': SearchableFields.COLLECTIONS_INDEX_FIELDS,
           'per_page': 3,
           'page': 1,
+          'exhaustive_search': true,
         },
       ]
     };
@@ -213,7 +215,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
                   spellCheck="false"
                   maxLength={512}
                   className={tw(
-                    'text-black text-lg border-none p-0 focus:outline-none',
+                    'focus:ring-0 text-black text-lg border-none p-0 focus:outline-none',
                     `${leaderBoardSearch ? 'bg-[#F8F8F8] placeholder:text-[#6A6A6A] w-full' : 'placeholder:text-black bg-inherit focus:border-transparent focus:ring-0 focus:placeholder:text-[#B2B2B2]'}`,
                     leaderBoardSearch ? 'w-full' : transitionWidth
                   )}

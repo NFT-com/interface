@@ -121,6 +121,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       page: page,
       filter_by: getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) && searchType?.toString() === 'profiles' ? 'isProfile: [true] && ' + nftsResultsFilterBy : nftsResultsFilterBy,
       sort_by: nftsPageSortyBy,
+      exhaustive_search: true,
     }] })
       .then((resp) => {
         results.current = [...resp.results[0].hits];
@@ -141,6 +142,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         page: page,
         filter_by: getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED) && searchType?.toString() === 'profiles' ? 'isProfile: [true] && ' + nftsResultsFilterBy : nftsResultsFilterBy,
         sort_by: nftsPageSortyBy,
+        exhaustive_search: true,
       }] })
         .then((resp) => {
           results.current = [...results.current,...resp.results[0].hits];
@@ -195,7 +197,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
                 <div className="flex justify-between items-center mt-12 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
                   <div className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium">
-                    {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'Nft' : 'Collection') + `${found.current === 1 ? '' : 's'}`}
+                    {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'Collection') + `${found.current === 1 ? '' : 's'}`}
                   </div>
                   {searchType?.toString() === 'allResults' && <span
                     className="cursor-pointer hover:font-semibold underline text-black text-lg"
@@ -235,11 +237,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                               key={index}
                               redirectTo={`/app/collection/${item.document?.contractAddr}/`}
                               contractAddress={item.document?.collectionAddress}
-                              contract={item.document?.collectionAddress}
+                              contract={item.document?.contractAddr}
                               userName={item.document.contractName}
                               contractAddr={item.document.contractAddr}
                               tokenId={item.document.tokenId}
-                              images={collectionImages.length > 0 ? collectionCardImages(collectionImages[0]) : []}
+                              images={[item.document.bannerUrl]}
                               countOfElements={collectionImages[0]?.actualNumberOfNFTs}
                               description={item?.document.description}
                               maxSymbolsInString={180}/>
@@ -252,6 +254,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                             </div>:
                           <NftCard
                             name={item.document.nftName}
+                            tokenId={item.document.tokenId}
+                            contractAddr={item.document.contractAddr}
                             images={[item.document.imageURL]}
                             collectionName={item.document.contractName}
                             redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}

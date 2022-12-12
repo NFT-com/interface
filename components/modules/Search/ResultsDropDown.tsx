@@ -18,29 +18,10 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const router = useRouter();
   const copy = [...searchResults];
-  const nfts = copy.map(item => {
-    if(item.request_params?.collection_name === 'nfts'){
-      return {
-        ...item,
-        hits: item.hits.filter(item => !item.document?.isProfile)
-      };
-    }
-  });
-  const profiles = copy.map(item => {
-    if(item.request_params?.collection_name === 'nfts'){
-      return {
-        ...item,
-        request_params: {
-          collection_name: 'profiles'
-        },
-        hits: item.hits.filter(item => item.document?.isProfile)
-      };
-    }
-  });
+  const nfts = copy.map(item => item);
   const newData = [
-    nfts[0],
     searchResults[1],
-    profiles[0]
+    nfts[0]
   ];
   const { keyword, setDropDownSearchResults } = useSearchModal();
   const clickByItemResult = (hit) => {
@@ -62,7 +43,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
     if (found < 1 && collectionName !== '')
       title = 'O ' + collectionName?.toUpperCase();
     else if (found > 3) {
-      title = collectionName?.toUpperCase();
+      title = found + ' ' + collectionName?.toUpperCase();
     } else {
       title = found + ' ' + collectionName?.toUpperCase();
     }
@@ -110,7 +91,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
       return newData && newData.length > 0 && newData.filter(Boolean).map((item, index) => {
         return (
           <div key={index}>
-            {resultTitle(discoverPageEnv ? item.hits.length : item.found, item?.request_params?.collection_name)}
+            {resultTitle(item.found, item?.request_params?.collection_name)}
             <div className="flex flex-col items-start" key={index}>
               {item.hits.length === 0 ?
                 <div className={tw('text-sm py-3 text-gray-500 px-9')}>
@@ -129,19 +110,24 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                           'flex justify-start items-center whitespace-nowrap text-ellipsis overflow-hidden')}
                         onClick={() => clickByItemResult(hit)}>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        {hit.document.imageURL ?
-                          <div className="w-[48px] h-[48px] rounded-[16px] mr-2 overflow-hidden">
+                        {hit.document.imageURL || hit.document.logoUrl ?
+                          <div className="relative min-w-[48px] w-[48px] h-[48px] rounded-[16px] mr-2 overflow-hidden">
                             <RoundedCornerMedia
                               variant={RoundedCornerVariant.None}
                               width={600}
                               height={600}
                               containerClasses='w-[100%] h-[100%]'
                               extraClasses='hover:scale-105 transition'
-                              src={hit.document.imageURL}
+                              src={item?.request_params?.collection_name === 'collections' ? hit.document.logoUrl : hit.document.imageURL}
                             />
                           </div>
                           : <div className="min-w-[48px] w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image alt="preloader" color={'#B2B2B2'} size={32} /></div>}
-                        <span className="text-base overflow-hidden text-ellipsis whitespace-nowrap font-[500]">{hit.document.nftName ?? hit.document.contractName}</span>
+                        <span className="flex items-center text-base overflow-hidden text-ellipsis whitespace-nowrap font-[500]">
+                          {
+                            hit.document.isProfile ? <span className="text-[#F9D54C] text-xl font-bold">/ </span> : null
+                          }
+                          {hit.document.nftName ?? hit.document.contractName}
+                        </span>
                       </div>
                     </div>
                   );
@@ -196,14 +182,14 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
       <div
         className={tw(
           isHeader ? 'absolute left-0 max-w-[27rem]' : '',
-          'bg-always-white flex flex-col w-full text-rubik',
+          'flex flex-col w-full text-rubik',
           extraClasses)}>
         {searchResults.length > 0 && <>
           {searchResults[0].found === 0 && searchResults[1].found === 0 ?
-            (<div className="mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
+            (<div className="bg-white mt-10 self-center text-base font-medium text-gray-500 pb-4 text-center">
               No results found. Please try another keyword.
             </div>) :
-            <div className="py-4 rounded-b-2xl shadow-lg">
+            <div className="bg-white py-4 rounded-b-2xl shadow-lg">
               {ResultsContent(searchResults)}
               {/*{isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}*/}
             </div>

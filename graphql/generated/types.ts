@@ -567,6 +567,7 @@ export type LooksrareProtocolData = {
   minPercentageToAsk?: Maybe<Scalars['String']>;
   nonce?: Maybe<Scalars['String']>;
   params?: Maybe<Scalars['String']>;
+  parameters?: Maybe<SeaportProtocolDataParams>;
   price?: Maybe<Scalars['String']>;
   r?: Maybe<Scalars['String']>;
   s?: Maybe<Scalars['String']>;

@@ -65,7 +65,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       per_page: 20,
       page: 1,
       filter_by: nftsResultsFilterBy,
-      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : '')
+      facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : ''),
+      exhaustive_search: true,
     }] })
       .then((resp) => {
         setNftsForCollections(null);
@@ -105,6 +106,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       page: page,
       filter_by: nftsResultsFilterBy,
       sort_by: nftsPageSortyBy,
+      exhaustive_search: true,
     }] })
       .then((resp) => {
         results.current = [...resp.results[0].hits];
@@ -125,6 +127,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         page: page,
         filter_by: nftsResultsFilterBy,
         sort_by: nftsPageSortyBy,
+        exhaustive_search: true,
       }] })
         .then((resp) => {
           results.current = [...results.current,...resp.results[0].hits];
@@ -139,7 +142,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   if (discoverPageEnv) {
     return (
-      <div className="md:p-1 mt-7 p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
+      <div className="p-1 mt-7 minmd:p-4 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
           <div
             className='block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
@@ -163,10 +166,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>
               <div className="mt-5 minlg:mt-0">
                 {!isNullOrEmpty(collectionsSliderData) &&
-                  <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
+                  <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} typesenseCollections={collectionsSliderData?.hits}/>}
                 <div className="flex justify-between items-center mt-12 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
                   <div className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium">
-                    {found.current + ' ' + 'Nft' + `${found.current === 1 ? '' : 's'}`}
+                    {found.current + ' ' + 'NFT' + `${found.current === 1 ? '' : 's'}`}
                   </div>
                   {<span
                     className="cursor-pointer hover:font-semibold underline text-black text-lg"
@@ -189,7 +192,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     Filter
                   </div>
                 </div>}
-                <div className={tw(`grid grid-cols-2 mt-4 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3  minlg:grid-cols-2  minmd:grid-cols-2' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 '} `)}>
+                <div className={tw(`grid grid-cols-2 mt-4 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2  minmd:grid-cols-2 grid-cols-1' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1'} `)}>
                   {/*'gap-5'*/}
                   {results && results.current.map((item, index) => {
                     return (
@@ -197,6 +200,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                         {<NftCard
                           name={item.document.nftName}
                           images={[item.document.imageURL]}
+                          contractAddr={item.document.contractAddr}
+                          tokenId={item.document.tokenId}
                           collectionName={item.document.contractName}
                           redirectTo={`/app/nft/${item.document.contractAddr}/${item.document.tokenId}`}
                           description={item.document.nftDescription ? item.document.nftDescription.slice(0,50) + '...': '' }

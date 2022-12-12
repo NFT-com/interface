@@ -8,11 +8,18 @@ import { tw } from 'utils/tw';
 
 import router from 'next/router';
 
-export const CollectionsResults = (props: {searchTerm?: string, found?: number, nftsForCollections?: any, sideNavOpen?: boolean}) => {
+export const CollectionsResults = (props:
+{
+  searchTerm?: string,
+  found?: number,
+  nftsForCollections?: any,
+  typesenseCollections?: any,
+  sideNavOpen?: boolean
+}) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const { width: screenWidth } = useWindowDimensions();
 
-  const { searchTerm, found, nftsForCollections, sideNavOpen } = props;
+  const { searchTerm, found, nftsForCollections, sideNavOpen, typesenseCollections } = props;
 
   const showCollectionsItems = () => {
     const preloadersArray = screenWidth < 1200 ? [1,2] : sideNavOpen ? [1,2] : [1,2,3];
@@ -28,27 +35,44 @@ export const CollectionsResults = (props: {searchTerm?: string, found?: number, 
           );
         })
       );
-    }else {
-      return nftsForCollections?.filter(item => item.nfts.length).slice(0, screenWidth < 1200 ? 2 : sideNavOpen ? 2 : 3).map((collection, i) => {
-        if(collection?.nfts.length){
-          return (
-            <CollectionCard
-              key={i}
-              redirectTo={collection?.collectionAddress}
-              contractAddress={collection?.contractAddress}
-              contract={collection?.contract}
-              description={collection?.nfts && collection?.nfts[0].metadata?.description}
-              images={[collection?.nfts[0].metadata?.imageUrl]}
-              contractName={collection?.nfts[0].metadata?.name}
-              maxSymbolsInString={180}
-            />
+    } else {
+      if (getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)) {
+        return typesenseCollections?.slice(0, screenWidth < 1200 ? 2 : sideNavOpen ? 2 : 3).map((collection, i) => {
+          return (<CollectionCard
+            key={'collection'+i}
+            redirectTo={`/app/collection/${collection.document?.contractAddr}/`}
+            contractAddress={collection.document?.collectionAddress}
+            contract={collection.document?.collectionAddress}
+            description={collection?.document.description}
+            images={[collection.document.bannerUrl]}
+            contractName={collection.document.contractName}
+            maxSymbolsInString={180}
+            userName={collection.document.contractName}
+            contractAddr={collection.document.contractAddr} />
           );
-        }
-      });
+        });
+      } else {
+        return nftsForCollections?.filter(item => item.nfts.length).slice(0, screenWidth < 1200 ? 2 : sideNavOpen ? 2 : 3).map((collection, i) => {
+          if(collection?.nfts.length){
+            return (
+              <CollectionCard
+                key={i}
+                redirectTo={collection?.collectionAddress}
+                contractAddress={collection?.contractAddress}
+                contract={collection?.contract}
+                description={collection?.nfts && collection?.nfts[0].metadata?.description}
+                images={[collection?.nfts[0].metadata?.imageUrl]}
+                contractName={collection?.nfts[0].metadata?.name}
+                maxSymbolsInString={180}
+              />
+            );
+          }
+        });
+      }
     }
   };
-  if(discoverPageEnv){
-    return(
+  if (discoverPageEnv) {
+    return (
       <>
         <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin mb-7">
           <span className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium"> {found + ' ' + 'Collection' + `${found === 1 ? '' : 's'}`} </span>
@@ -66,8 +90,8 @@ export const CollectionsResults = (props: {searchTerm?: string, found?: number, 
         </div>
       </>
     );
-  }else {
-    return(
+  } else {
+    return (
       <>
         <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin">
           <span> {found + ' ' + 'COLLECTION' + `${found === 1 ? '' : 'S'}`} </span>

@@ -113,7 +113,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       <div ref={inputRef} className={tw(
         'w-full flex flex-row border-[#ECECEC] rounded-full justify-center items-center',
         'focus-within:border focus-within:border-[#F9D54C] focus-within:ring-1 focus-within:ring-[#F9D54C] ',
-        searchVisible ? 'w-full minlg:w-[320px] minlg:max-w-[320px] p-[10px] border-[1.3px] transition-[width] h-10 minlg:h-12' : 'w-0 p-0 border-0'
+        searchVisible && !editMode ? 'w-full minlg:w-[320px] minlg:max-w-[320px] p-[10px] border-[1.3px] transition-[width] h-10 minlg:h-12' : 'w-0 p-0 border-0'
       )}>
         <input
           type="text"
@@ -141,7 +141,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         
       <div className={tw(
         'flex flex-row items-center space-x-1 minlg:space-x-3',
-        searchVisible && 'hidden minlg:flex'
+        searchVisible && 'hidden minlg:flex',
       )}>
         {!editMode &&
           <div onClick={() => setSearchVisible(true)} className={tw(
