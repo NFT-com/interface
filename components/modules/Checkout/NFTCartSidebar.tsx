@@ -7,6 +7,7 @@ import { tw } from 'utils/tw';
 import { CartSidebarNft } from './CartSidebarNft';
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { NFTPurchasesContext, StagedPurchase } from './NFTPurchaseContext';
+import { PurchaseSummary } from './PurchaseSummary';
 
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
@@ -136,8 +137,8 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
       <>
         <div className='fixed inset-0 z-[105] w-screen h-screen backdrop-blur bg-gray-900 bg-opacity-20 '></div>
         <div ref={sidebarRef} className={tw(
-          'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-sm bg-white flex flex-col grow',
-          'drop-shadow-md'
+          'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-sm bg-white flex flex-col grow drop-shadow-md',
+          !showAll ? 'overflow-y-scroll' : ''
         )}>
           <div className='flex items-center justify-between w-full px-5 py-9'>
             <span className="text-xl font-semibold font-noi-grotesk">My Cart</span>
@@ -190,7 +191,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           </div>
           <div className={tw(
             'pr-2',
-            !showAll ? 'max-h-[30rem] overflow-y-scroll filter-scrollbar' : 'max-h-[17.3rem] overflow-y-hidden')}>
+            !showAll ? 'max-h-[30rem] min-h-[24rem]'/* +' overflow-y-scroll filter-scrollbar' */ : 'max-h-[17.3rem] overflow-y-hidden')}>
             {stagedNFTs.map((stagedItem, index) => {
               return <CartSidebarNft
                 item={stagedItem}
@@ -205,21 +206,21 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
               />;
             })}
           </div>
-          {stagedNFTs?.length > 0 && <span
-            className="text-base cursor-pointer hover:underline font-semibold font-noi-grotesk self-center"
+          {stagedNFTs?.length > 3 && <span
+            className="text-base cursor-pointer hover:underline font-medium font-noi-grotesk self-center mt-2"
             onClick={() => {
               setShowAll(!showAll);
             }}
           >
             {showAll ? 'Show all' : 'Show less'}
           </span>}
-          <span>Once the transaction is confirmed, the NFT will be sent to your wallet instantly.</span>
-          {(stagedNFTs.length > 0 &&
+          {props.selectedTab === 'Buy' ? <PurchaseSummary /> : null}
+          {(stagedNFTs.length > 0 && props.selectedTab === 'Sell' &&
         !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell')
-          ) && <div className="mx-8 my-4 flex">
+          ) && <div className="mx-7 my-4 flex">
             <Button
               stretch
-              label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Continue to Buy'}
+              label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Buy now'}
               onClick={() => {
                 if (props.selectedTab === 'Sell') {
                   toggleCartSidebar();
