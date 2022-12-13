@@ -182,24 +182,44 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   }
                 />
                 :
-                <PriceInput
-                  initial={
-                    props.listing?.startingPrice == null ?
-                      '' :
-                      ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
-                  }
-                  currencyAddress={getAddress('weth', defaultChainId)}
-                  currencyOptions={['WETH']}
-                  onCurrencyChange={null}
-                  onPriceChange={(val: BigNumber) => {
-                    setPrice(props.listing, val);
-                    props.onPriceChange();
-                  }}
-                  error={
-                    (props.listing.startingPrice == null) ||
+                X2Y2Enabled && !looksrareEnabled && !seaportEnabled ?
+                  <PriceInput
+                    initial={
+                      props.listing?.startingPrice == null ?
+                        '' :
+                        ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
+                    }
+                    currencyAddress={'0x0000000000000000000000000000000000000000'}
+                    currencyOptions={['ETH']}
+                    onCurrencyChange={null}
+                    onPriceChange={(val: BigNumber) => {
+                      setPrice(props.listing, val);
+                      props.onPriceChange();
+                    }}
+                    error={
+                      (props.listing.startingPrice == null) ||
                   (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
-                  }
-                />
+                    }
+                  />
+                  :
+                  <PriceInput
+                    initial={
+                      props.listing?.startingPrice == null ?
+                        '' :
+                        ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
+                    }
+                    currencyAddress={getAddress('weth', defaultChainId)}
+                    currencyOptions={['WETH']}
+                    onCurrencyChange={null}
+                    onPriceChange={(val: BigNumber) => {
+                      setPrice(props.listing, val);
+                      props.onPriceChange();
+                    }}
+                    error={
+                      (props.listing.startingPrice == null) ||
+                  (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
+                    }
+                  />
           }
         </div>
       </td>

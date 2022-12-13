@@ -113,6 +113,7 @@ export function NFTListingsContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toList, setToList] = useState<Array<StagedListing>>([]);
+  console.log('🚀 ~ file: NFTListingsContext.tsx:116 ~ toList', toList);
   const [submitting, setSubmitting] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
@@ -213,7 +214,7 @@ export function NFTListingsContextProvider(
                 {
                   protocol: targetMarketplace,
                   duration: stagedNft.duration ,
-                  currency: stagedNft.currency ?? supportedCurrencyData['WETH'].contract
+                  currency: stagedNft.currency ?? targetMarketplace === ExternalProtocol.X2Y2 ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract
                 }
               ]
           };
@@ -240,7 +241,7 @@ export function NFTListingsContextProvider(
               {
                 protocol: targetMarketplace,
                 duration: stagedNft.duration ,
-                currency: stagedNft.currency ?? supportedCurrencyData['WETH'].contract
+                currency: stagedNft.currency ?? targetMarketplace === ExternalProtocol.X2Y2 ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract
               }
             ],
         };
