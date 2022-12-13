@@ -3,6 +3,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
+import { Doppler, getEnvBool } from 'utils/env';
 import { processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -13,6 +14,7 @@ import { BigNumber, ethers } from 'ethers';
 import { CaretDown, CaretRight } from 'phosphor-react';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
+import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -42,6 +44,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const rowHeightClass = expanded ? 'h-48' : 'h-24';
   const seaportEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Seaport) != null, [getTarget, props.listing]);
   const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
+  const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
 
   useEffect(() => {
     if (expanded) {
@@ -51,8 +54,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       if (!seaportEnabled) {
         toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
       }
+      if (!X2Y2Enabled) {
+        toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
+      }
     }
-  }, [expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
+  }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
 
   return (
     <tr>
@@ -133,8 +139,27 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                     props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null
                   }
                 />
+                <PriceInput
+                  key={expanded + 'X2Y2PriceInput'}
+                  initial={
+                    getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice == null ?
+                      '' :
+                      ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice ?? 0))
+                  }
+                  currencyAddress={getTarget(props.listing, ExternalProtocol.X2Y2)?.currency ?? getAddress('weth', defaultChainId)}
+                  currencyOptions={['ETH']}
+                  onCurrencyChange={null}
+                  onPriceChange={(val: BigNumber) => {
+                    setPrice(props.listing, val, ExternalProtocol.X2Y2);
+                    props.onPriceChange();
+                  }}
+                  error={
+                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
+                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
+                  }
+                />
               </> :
-              seaportEnabled && !looksrareEnabled ?
+              seaportEnabled && !looksrareEnabled && !X2Y2Enabled ?
                 <PriceInput
                   initial={
                     getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
@@ -157,24 +182,44 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   }
                 />
                 :
-                <PriceInput
-                  initial={
-                    props.listing?.startingPrice == null ?
-                      '' :
-                      ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
-                  }
-                  currencyAddress={getAddress('weth', defaultChainId)}
-                  currencyOptions={['WETH']}
-                  onCurrencyChange={null}
-                  onPriceChange={(val: BigNumber) => {
-                    setPrice(props.listing, val);
-                    props.onPriceChange();
-                  }}
-                  error={
-                    (props.listing.startingPrice == null) ||
+                X2Y2Enabled && !looksrareEnabled && !seaportEnabled ?
+                  <PriceInput
+                    initial={
+                      props.listing?.startingPrice == null ?
+                        '' :
+                        ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
+                    }
+                    currencyAddress={'0x0000000000000000000000000000000000000000'}
+                    currencyOptions={['ETH']}
+                    onCurrencyChange={null}
+                    onPriceChange={(val: BigNumber) => {
+                      setPrice(props.listing, val);
+                      props.onPriceChange();
+                    }}
+                    error={
+                      (props.listing.startingPrice == null) ||
                   (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
-                  }
-                />
+                    }
+                  />
+                  :
+                  <PriceInput
+                    initial={
+                      props.listing?.startingPrice == null ?
+                        '' :
+                        ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
+                    }
+                    currencyAddress={getAddress('weth', defaultChainId)}
+                    currencyOptions={['WETH']}
+                    onCurrencyChange={null}
+                    onPriceChange={(val: BigNumber) => {
+                      setPrice(props.listing, val);
+                      props.onPriceChange();
+                    }}
+                    error={
+                      (props.listing.startingPrice == null) ||
+                  (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
+                    }
+                  />
           }
         </div>
       </td>
@@ -208,6 +253,22 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
             }}
           />
+          {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
+            <X2Y2Icon
+              className={tw(
+                'h-9 w-9 relative shrink-0 cursor-pointer',
+                !X2Y2Enabled && 'opacity-40'
+              )}
+              alt="X2Y2 logo redirect"
+              layout="fill"
+              onClick={() => {
+                if (expanded) {
+                  return;
+                }
+                toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
+              }}
+            />
+          }
         </div>
       </td>
     </tr>

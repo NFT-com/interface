@@ -1,6 +1,7 @@
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { ExternalProtocol } from 'types';
 import { getContractMetadata, getNftMetadata } from 'utils/alchemyNFT';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -105,6 +106,34 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
         );
       }
 
+      return (
+        <>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            <p>—</p>
+          </td>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            <p>—</p>
+          </td>
+        </>
+      );
+    }
+
+    if(item[type]?.protocol === ExternalProtocol.X2Y2){
+      if(type === 'transaction' || type === 'order'){
+        const ethAmount = ethers.utils.formatEther(item[type]?.protocolData?.price);
+        const currencyData = getByContractAddress(item[type]?.protocolData?.currencyAddress);
+        return (
+          <>
+            <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
+              {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+            </td>
+            <td className="text-body leading-body pr-8 minmd:pr-4" >
+              {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            </td>
+          </>
+        );
+      }
+      
       return (
         <>
           <td className="text-body leading-body pr-8 minmd:pr-4" >

@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
 
 import { isNullOrEmpty, sameAddress } from './helpers';
@@ -18,6 +18,10 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
     const order = listing?.order?.protocolData as SeaportProtocolData;
     return order?.parameters?.consideration
       ?.reduce((total, consideration) => total.add(BigNumber.from(consideration?.startAmount ?? 0)), BigNumber.from(0));
+  }
+  case (ExternalProtocol.X2Y2): {
+    const order = listing?.order?.protocolData as X2Y2ProtocolData;
+    return BigNumber.from(order?.price ?? 0);
   }
   }
 };
@@ -49,6 +53,10 @@ export const getListingCurrencyAddress = (listing: PartialDeep<TxActivity>) => {
   case (ExternalProtocol.Seaport): {
     const order = listing?.order?.protocolData as SeaportProtocolData;
     return order?.parameters?.consideration?.[0]?.token;
+  }
+  case (ExternalProtocol.X2Y2): {
+    const order = listing?.order?.protocolData as X2Y2ProtocolData;
+    return order?.currencyAddress ?? order?.['currency'];
   }
   }
 };
