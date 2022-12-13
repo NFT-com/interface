@@ -2,6 +2,7 @@ import { Maybe, Nft } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { get721Contract } from 'hooks/contracts/get721Contract';
+import { useLooksrareRoyaltyFeeManagerContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeManagerContract';
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -132,6 +133,7 @@ export function NFTListingsContextProvider(
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
   const looksrareStrategy = useLooksrareStrategyContract(provider);
+  const looksrareRoyaltyFeeManager = useLooksrareRoyaltyFeeManagerContractContract(provider);
 
   const seaportCounter = useSeaportCounter(currentAddress);
   const signOrderForSeaport = useSignSeaportOrder();
@@ -352,6 +354,7 @@ export function NFTListingsContextProvider(
             looksrareStrategy,
             looksrareRoyaltyFeeRegistry,
             target.duration ?? stagedNft.duration,
+            looksrareRoyaltyFeeManager
             // listing.takerAddress
           );
           nonce++;
@@ -390,7 +393,7 @@ export function NFTListingsContextProvider(
       };
     }));
     setToList(preparedListings);
-  }, [defaultChainId, currentAddress, looksrareRoyaltyFeeRegistry, looksrareStrategy, toList, supportedCurrencyData]);
+  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager]);
 
   const listAll: () => Promise<ListAllResult> = useCallback(async () => {
     setSubmitting(true);
