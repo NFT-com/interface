@@ -109,32 +109,36 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
             <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: %10</span>
           </div>
         </div>
-        <div className='w-1/3 h-full'>
-          {
+        <div className='w-1/3 h-full flex flex-col items-end justify-between mt-1 h-full'>
+          <div>
+            {
             // this is a staged purchase
-            props.item?.['price'] &&
-        <div className="flex flex-col items-end justify-between font-grotesk mt-1 h-full">
-          <span className='font-black text-base line-clamp-1'>
-            {formatCurrency(props.item as StagedPurchase)}
-            {' '}
-            <span className='text-[#6F6F6F]'>
-              {getByContractAddress((props.item as StagedPurchase).currency)?.name ?? ''}
-            </span>
-          </span>
-          <span
-            onClick={props.onRemove}
-            className='text-sm mb-3 line-clamp-1 text-[#6F6F6F] cursor-pointer hover:underline'>
-            Remove
-          </span>
-          {/* <span className='font-medium text-base text-[#6F6F6F] line-clamp-1'>
+              props.item?.['price'] ?
+                <div className='font-medium text-base line-clamp-1'>
+                  {formatCurrency(props.item as StagedPurchase)}
+                  {' '}
+                  <span className='text-[#6F6F6F]'>
+                    {getByContractAddress((props.item as StagedPurchase).currency)?.name ?? ''}
+                  </span>
+                </div>
+                : null
+            }
+            {/* <span className='font-medium text-base text-[#6F6F6F] line-clamp-1'>
             ${getByContractAddress((props.item as StagedPurchase).currency).name === 'USDC'
               ? formatCurrency(props.item as StagedPurchase) :
               getByContractAddress((props.item as StagedPurchase).currency)?.usd(
                 Number(ethers.utils.formatEther((props.item as StagedPurchase)?.price))
               ) ?? 0}
           </span> */}
+          </div>
+          <span
+            onClick={props.onRemove}
+            className={tw(
+              'text-sm line-clamp-1 text-[#6F6F6F] cursor-pointer hover:underline',
+              props.item?.['price'] && 'mt-5')}>
+            Remove
+          </span>
         </div>
-          }</div>
       </div>
     );
 }

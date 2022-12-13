@@ -3,15 +3,19 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { processIPFSURL } from 'utils/helpers';
 import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
 import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
 
+import { useRouter } from 'next/router';
+import { ArrowLeft } from 'phosphor-react';
 import { useContext, useState } from 'react';
 
 export function ListingCheckout() {
+  const router = useRouter();
   const {
     toList,
     setDuration,
@@ -35,8 +39,8 @@ export function ListingCheckout() {
     return !hasTarget; // return true if missing the desired target.
   }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
 
-  return (
-    <div className="flex flex-col items-center w-full mt-10">
+  const ListingCheckoutInfo = () => {
+    return <div className="flex flex-col items-center w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className='w-full flex flex-col px-8 items-center'>
           <span className='text-2xl w-full flex font-bold'>Select Marketplace</span>
@@ -132,7 +136,7 @@ export function ListingCheckout() {
         </div>
         {
           isNullOrEmpty(toList) && <div className='flex flex-col items-center justify-center my-12'>
-          No NFTs staged for listing
+    No NFTs staged for listing
           </div>
         }
         {!showSummary && toList.length > 0 && <Button
@@ -146,6 +150,38 @@ export function ListingCheckout() {
         />}
       </div>
       <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
+    </div>;
+  };
+
+  return (
+    <div className='flex justify-between items-center'>
+      <div className='grid place-items-center bg-gray-100 mx-auto py-72 h-full'>
+        <video
+          autoPlay
+          muted
+          loop
+          key={toList[0]?.nft?.metadata?.imageURL}
+          src={processIPFSURL(toList[0]?.nft?.metadata?.imageURL)}
+          poster={processIPFSURL(toList[0]?.nft?.metadata?.imageURL)}
+          className={tw(
+            'rounded-md w-2/5',
+          )}
+        />
+      </div>
+      <div className='w-full flex flex-col justify-between items-center w-3/5'>
+        <div className='w-full flex px-8 items-center'>
+          <div
+            className='flex items-center justify-center h-full aspect-square cursor-pointer'
+            onClick={() => {
+              router.back();
+            }}
+          >
+            <ArrowLeft size={24} color="black" className='ListingPageBackButton' />
+          </div>
+          <h1 className='text-3xl font-normal ml-4'>Create Listings</h1>
+        </div>
+        <ListingCheckoutInfo />
+      </div>
     </div>
   );
 }

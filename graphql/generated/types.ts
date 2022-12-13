@@ -3026,8 +3026,13 @@ export type CollectionQueryVariables = Exact<{
   input: CollectionInput;
 }>;
 
-
 export type CollectionQuery = { __typename?: 'Query', collection?: { __typename?: 'CollectionInfo', collection?: { __typename?: 'Collection', id?: string | null, contract?: any | null, name?: string | null, chainId?: string | null, deployer?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null, isCurated?: boolean | null, isSpam?: boolean | null } | null, nftPortResults?: { __typename?: 'NFTPortResults', name?: string | null, symbol?: string | null, bannerUrl?: string | null, logoUrl?: string | null, description?: string | null } | null } | null };
+
+export type CollectionLeaderboardQueryVariables = Exact<{
+  input?: InputMaybe<CollectionLeaderboardInput>;
+}>;
+
+export type CollectionLeaderboardQuery = { __typename?: 'Query', collectionLeaderboard?: { __typename?: 'CollectionLeaderboard', items: Array<{ __typename?: 'Collection', contract?: any | null, logoUrl?: string | null, name?: string | null, stats?: { __typename?: 'NFTPortStatistics', one_day_volume?: number | null, one_day_change?: number | null, one_day_sales?: number | null, one_day_average_price?: number | null, seven_day_volume?: number | null, seven_day_change?: number | null, seven_day_sales?: number | null, seven_day_average_price?: number | null, thirty_day_volume?: number | null, thirty_day_change?: number | null, thirty_day_sales?: number | null, thirty_day_average_price?: number | null, total_volume?: number | null, total_sales?: number | null, total_supply?: number | null, total_minted?: number | null, num_owners?: number | null, average_price?: number | null, market_cap?: number | null, floor_price?: number | null, floor_price_historic_one_day?: number | null, floor_price_historic_seven_day?: number | null, floor_price_historic_thirty_day?: number | null, updated_date?: string | null } | null } | null> } | null };
 
 export type CollectionNfTsQueryVariables = Exact<{
   input: CollectionNfTsInput;
@@ -4003,6 +4008,43 @@ export const CollectionDocument = gql`
       bannerUrl
       logoUrl
       description
+    }
+  }
+}
+    `;
+export const CollectionLeaderboardDocument = gql`
+    query CollectionLeaderboard($input: CollectionLeaderboardInput) {
+  collectionLeaderboard(input: $input) {
+    items {
+      contract
+      logoUrl
+      name
+      stats {
+        one_day_volume
+        one_day_change
+        one_day_sales
+        one_day_average_price
+        seven_day_volume
+        seven_day_change
+        seven_day_sales
+        seven_day_average_price
+        thirty_day_volume
+        thirty_day_change
+        thirty_day_sales
+        thirty_day_average_price
+        total_volume
+        total_sales
+        total_supply
+        total_minted
+        num_owners
+        average_price
+        market_cap
+        floor_price
+        floor_price_historic_one_day
+        floor_price_historic_seven_day
+        floor_price_historic_thirty_day
+        updated_date
+      }
     }
   }
 }
@@ -5548,6 +5590,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     Collection(variables: CollectionQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionQuery>(CollectionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'Collection', 'query');
+    },
+    CollectionLeaderboard(variables?: CollectionLeaderboardQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionLeaderboardQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CollectionLeaderboardQuery>(CollectionLeaderboardDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionLeaderboard', 'query');
     },
     CollectionNFTs(variables: CollectionNfTsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CollectionNfTsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<CollectionNfTsQuery>(CollectionNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CollectionNFTs', 'query');
