@@ -22,7 +22,7 @@ describe('looksrareHelpers', () => {
       };
       // 1bps royalty fee
       const mockFeeManager = {
-        calculateRoyaltyFeeAndGetRecipient: cy.stub().resolves([0, 0, BigNumber.from(2)])
+        calculateRoyaltyFeeAndGetRecipient: cy.stub().resolves([0, 0, BigNumber.from(1)])
       };
 
       const result = await createLooksrareParametersForNFTListing(
@@ -47,7 +47,7 @@ describe('looksrareHelpers', () => {
         currency: WETH.address,
         endTime: '604800',
         isOrderAsk: true,
-        minPercentageToAsk: 9999, // 2 BPS deducted
+        minPercentageToAsk: 9999, // 1 BPS deducted
         nonce: 99,
         params: [],
         price: ethers.utils.parseEther('10').toString(),
