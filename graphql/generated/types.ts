@@ -553,7 +553,11 @@ export type ListNftSeaportInput = {
 
 export type ListNftx2Y2Input = {
   chainId?: InputMaybe<Scalars['String']>;
+  contract?: InputMaybe<Scalars['String']>;
+  createdInternally?: InputMaybe<Scalars['Boolean']>;
+  maker?: InputMaybe<Scalars['String']>;
   profileUrl?: InputMaybe<Scalars['String']>;
+  tokenId?: InputMaybe<Scalars['String']>;
   x2y2Order?: InputMaybe<Scalars['String']>;
 };
 
@@ -567,7 +571,6 @@ export type LooksrareProtocolData = {
   minPercentageToAsk?: Maybe<Scalars['String']>;
   nonce?: Maybe<Scalars['String']>;
   params?: Maybe<Scalars['String']>;
-  parameters?: Maybe<SeaportProtocolDataParams>;
   price?: Maybe<Scalars['String']>;
   r?: Maybe<Scalars['String']>;
   s?: Maybe<Scalars['String']>;

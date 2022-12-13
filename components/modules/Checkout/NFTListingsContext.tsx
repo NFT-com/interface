@@ -426,7 +426,12 @@ export function NFTListingsContextProvider(
           if (!order) {
             return ListAllResult.SignatureRejected;
           }
-          const result = await listNftX2Y2({ ...order });
+          const result = await listNftX2Y2(
+            { ...order },
+            listing.nft.tokenId,
+            listing.nft.contract,
+            currentAddress
+          );
           if (!result) {
             return ListAllResult.ApiError;
           }
@@ -455,7 +460,7 @@ export function NFTListingsContextProvider(
       results.includes(ListAllResult.ApiError) ?
         ListAllResult.ApiError :
         ListAllResult.Success;
-  }, [toList, signOrderForLooksrare, listNftLooksrare, signer, listNftX2Y2, signOrderForSeaport, seaportCounter, listNftSeaport]);
+  }, [toList, signOrderForLooksrare, listNftLooksrare, signer, listNftX2Y2, currentAddress, signOrderForSeaport, seaportCounter, listNftSeaport]);
 
   const removeListing = useCallback((nft: PartialDeep<Nft>) => {
     const newToList = toList.slice().filter(l => l.nft?.id !== nft?.id);

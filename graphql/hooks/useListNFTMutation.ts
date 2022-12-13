@@ -17,7 +17,10 @@ export interface ListNftResult {
     order: MakerOrderWithSignature
   ) => Promise<boolean>,
   listNftX2Y2: (
-    order: X2Y2Order
+    order: X2Y2Order,
+    tokenId: string,
+    contract: string,
+    maker: string
   ) => Promise<boolean>,
 }
 
@@ -69,7 +72,7 @@ export function useListNFTMutations(): ListNftResult {
   );
 
   const listNftX2Y2 = useCallback(
-    async (order: X2Y2Order) => {
+    async (order: X2Y2Order, tokenId: string, contract: string, maker: string) => {
       try {
         const result = await sdk.ListNFTX2Y2({
           input: {
@@ -86,6 +89,10 @@ export function useListNFTMutations(): ListNftResult {
               taker: null,
             }),
             chainId:  defaultChainId,
+            tokenId,
+            contract,
+            maker,
+            createdInternally: true
           }
         });
         return result?.listNFTX2Y2 ?? false;
