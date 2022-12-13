@@ -113,7 +113,6 @@ export function NFTListingsContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toList, setToList] = useState<Array<StagedListing>>([]);
-  console.log('🚀 ~ file: NFTListingsContext.tsx:116 ~ toList', toList);
   const [submitting, setSubmitting] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
