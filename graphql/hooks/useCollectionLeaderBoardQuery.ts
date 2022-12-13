@@ -1,11 +1,11 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import {CollectionLeaderboardQuery} from 'graphql/generated/types';
+import { CollectionLeaderboard, CollectionLeaderboardQuery } from 'graphql/generated/types';
 
 import useSWR, { mutate } from 'swr';
 import { PartialDeep } from 'type-fest';
 
 export interface CollectionDataLeaderBoard {
-  data: PartialDeep<CollectionLeaderboardQuery>;
+  data: PartialDeep<CollectionLeaderboard>;
   loading: boolean;
   mutate: () => void;
 }
