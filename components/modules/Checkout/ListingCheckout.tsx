@@ -32,7 +32,7 @@ export function ListingCheckout() {
     allListingsConfigured
   } = useContext(NFTListingsContext);
 
-  // toList.length < 2 && toList.push(toList[0]);
+  toList.length < 2 && toList.push(toList[0]);
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
@@ -196,7 +196,7 @@ export function ListingCheckout() {
               })}
             </datalist>
           </div>
-{/*           <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
+          {/*           <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
             {
               ['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
                 return <div
@@ -225,7 +225,10 @@ export function ListingCheckout() {
               <tr>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">NFT</th>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Marketplaces</th>
+                <th className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</th>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</th>
+                <th className="font-medium pb-3 text-blog-text-reskin text-left"></th>
+                <th className="font-medium pb-3 text-blog-text-reskin text-left"></th>
               </tr>
             </thead>
             <tbody>
@@ -256,7 +259,7 @@ export function ListingCheckout() {
     </div>;
   };
 
-  // console.log('toList fdo', toList);
+  console.log('toList fdo', toList);
   
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
