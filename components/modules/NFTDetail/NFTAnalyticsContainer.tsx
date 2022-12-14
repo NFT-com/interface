@@ -131,7 +131,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                           setSelectedTimeFrame(timeFrames[index]);
                         }}
                         className={tw(
-                          'font-noi-grotesk hover:bg-gray-50 w-full p-2 text[15px] text-center leading-5 text-[#6A6A6A] ',
+                          'font-noi-grotesk hover:bg-gray-50 w-full p-2 text[15px] text-center cursor-pointer leading-5 text-[#6A6A6A] ',
                         )}
                       >
                         {timeFrames[timeFrame]}
