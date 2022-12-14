@@ -46,7 +46,7 @@ export default function CopyHelper(props: {
           'active:hover:no-underline',
           props.lightModeForced ? 'active:hover:text-primary-txt' : 'active:hover:text-primary-txt active:hover:dark:text-primary-txt-dk',
           'focus:no-underline focus:outline-0',
-          props.lightModeForced ? 'focus:text-primary-txt': 'focus:text-primary-txt focus:dark:text-primary-txt-dk',
+          props.lightModeForced ? 'focus:text-[#6A6A6A]': 'focus:text-[#6A6A6A] focus:dark:text-primary-txt-dk',
         )}>
         {props.after === true && (props.keepContent !== true && isCopied ? '' : props.children)}
         {isCopied
