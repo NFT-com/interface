@@ -19,6 +19,7 @@ import router from 'next/router';
 import LooksrareGray from 'public/looksrare_gray.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
+import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -43,7 +44,6 @@ export function ListingCheckout() {
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
   const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
-  const [x2y2MarketplaceEnabled, setX2y2MarketplaceEnabled] = useState(false);
 
   const openseaFullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     const hasTarget = nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
@@ -174,10 +174,10 @@ export function ListingCheckout() {
               className={tw(
                 'border-[#D5D5D5] rounded-xl text-lg w-1/4',
                 'px-4 py-3 cursor-pointer w-full mt-4 flex flex-col items-center',
-                x2y2MarketplaceEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
+                X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <NFTLogo className={tw('w-fit h-fit')} />
+              <X2Y2Icon className={tw('w-fit h-fit')} />
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
             </div>}
