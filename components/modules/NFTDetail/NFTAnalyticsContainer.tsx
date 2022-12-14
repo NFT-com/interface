@@ -122,7 +122,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute right-0 z-10 mt-2 w-[190px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="py-1">
                   {Object.keys(timeFrames).map((timeFrame, index) => (
                     <Menu.Item key={timeFrame}>
@@ -132,7 +132,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                             setSelectedTimeFrame(timeFrames[index]);
                           }}
                           className={tw(
-                            'font-noi-grotesk hover:bg-gray-50 w-[190px] p-2 text[15px] text-center font-semibold leading-5 text-[#6A6A6A] ',
+                            'font-noi-grotesk hover:bg-gray-50 w-full p-2 text[15px] text-center font-semibold leading-5 text-[#6A6A6A] ',
                             active
                               ? 'bg-gray-100 font-black'
                               : ''
