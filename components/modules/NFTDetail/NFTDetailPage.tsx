@@ -117,7 +117,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   return (
     <div className="flex flex-col pt-20 items-center w-full">
       {nft?.metadata?.imageURL &&
-        <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
+        <div className='flex w-full bg-[#F2F2F2] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
           <div className="flex w-full max-h-[600px] max-w-nftcom h-full object-contain drop-shadow-lg rounded aspect-square">
             <RoundedCornerMedia
               key={nft?.id}
