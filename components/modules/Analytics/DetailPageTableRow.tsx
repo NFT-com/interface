@@ -42,8 +42,8 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     if(tx.type === 'mint'){
       return (
         <>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">{'0x0000...0000' || '—'}</td>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">{shortenAddress(tx.owner_address, 4) || '—'}</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{'0x0000...0000' || '—'}</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.owner_address, 4) || '—'}</td>
         </>
       );
     }
@@ -51,61 +51,61 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     if(tx.type === 'sale'){
       return (
         <>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">{shortenAddress(tx.seller_address, 4) || '—'}</td>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">{shortenAddress(tx.buyer_address, 4) || '—'}</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.seller_address, 4) || '—'}</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.buyer_address, 4) || '—'}</td>
         </>
       );
     }
         
     return (
       <>
-        <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>
-        <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>
+        <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>
+        <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>
       </>
     );
   }, [tx]);
   
   return (
     <tr key={index} className={tw(
-      'font-noi-grotesk text-[16px] leading-6 text-[#1F2127] overflow-auto'
+      'font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] overflow-auto'
     )}
     >
-      <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4 capitalize">{tx?.type || '—'}</td>
+      <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 capitalize">{tx?.type || '—'}</td>
       {!isNftDetailPage ?
         tx?.type === 'sale' ?
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">{tx?.nft.token_id?.length > 10 ? shorten(tx?.nft.token_id, true) || '—' : tx?.nft.token_id || '—'}</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{tx?.nft.token_id?.length > 10 ? shorten(tx?.nft.token_id, true) || '—' : tx?.nft.token_id || '—'}</td>
           :
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">{tx?.token_id?.length > 10 ? shorten(tx?.token_id, true) || '—' : tx?.token_id || '—'}</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{tx?.token_id?.length > 10 ? shorten(tx?.token_id, true) || '—' : tx?.token_id || '—'}</td>
         : null
       }
         
       {getRowContent()}
         
-      <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4 capitalize">{
+      <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 capitalize">{
         formatMarketplaceName(tx.marketplace) || '—'
       }
       </td>
       {tx?.price_details ?
         <>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4 whitespace-nowrap">
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 whitespace-nowrap">
             {tx.price_details.price} {tx.price_details.asset_type}
           </td>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
             ${tx.price_details.price_usd?.toFixed(2) ?? 0}
           </td></>
         :
         <>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">—</td>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">—</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">—</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">—</td>
         </>
       }
-      <td className="font-noi-grotesk text-[16px] leading-6 text-[#1F2127] p-4">
+      <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
         {moment.utc(tx.transaction_date).format('lll').toString() || '—'}
       </td>
-      <td className="font-noi-grotesk text-[16px] leading-6 text-[#B59007] p-4">
+      <td className="font-noi-grotesk text-[16px] leading-6 text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37] p-4">
         <a
           target="_blank"
-          rel="noreferrer" href={`https://etherscan.io/tx/${tx.transaction_hash}`} className='font-bold tracking-wide'>
+          rel="noreferrer" href={`https://etherscan.io/tx/${tx.transaction_hash}`} className='underline tracking-wide'>
           {shorten(tx?.transaction_hash, true) || '—'}
         </a>
       </td>
