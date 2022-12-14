@@ -105,7 +105,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       <td className="font-noi-grotesk text-[16px] leading-6 underline text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37] p-4">
         <a
           target="_blank"
-          rel="noreferrer" href={`https://etherscan.io/tx/${tx.transaction_hash}`} className='tracking-wide'>
+          rel="noreferrer" href={`https://etherscan.io/tx/${tx.transaction_hash}`} className='tracking-wide underline'>
           {shorten(tx?.transaction_hash, true) || '—'}
         </a>
       </td>
