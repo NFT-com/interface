@@ -1,11 +1,12 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
+import { getX2Y2Hex } from 'utils/X2Y2Helpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
 import { PurchaseSummaryModal } from './PurchaseSummaryModal';
@@ -27,7 +28,8 @@ export type StagedPurchase = {
    * purchasers need to give ERC20 approval to the Aggregator contract
    */
   isApproved: boolean;
-  protocolData: SeaportProtocolData | LooksrareProtocolData;
+  orderHash?: string;
+  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData;
 }
 
 interface NFTPurchaseContextType {
@@ -136,6 +138,15 @@ export function NFTPurchaseContextProvider(
           looksrareExchange,
           // If this is an ETH listing, we need to specify how much of the the sent ETH (below) should be spent on this specific NFT.
           looksrarePurchase.currency === NULL_ADDRESS ? BigNumber.from(looksrarePurchase?.price).toString() : '0'
+        );
+      }) ?? []),
+      ...(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.X2Y2)?.map(X2Y2Purchase => {
+        return getX2Y2Hex(
+          aggregator.address,
+          X2Y2Purchase?.protocolData as X2Y2ProtocolData,
+          X2Y2Purchase.currency === NULL_ADDRESS ? BigNumber.from(X2Y2Purchase?.price).toString() : '0',
+          X2Y2Purchase.nft.type === NftType.Erc1155 ? 'erc1155' : 'erc721',
+          X2Y2Purchase.orderHash
         );
       }) ?? []),
       // Seaport orders are combined

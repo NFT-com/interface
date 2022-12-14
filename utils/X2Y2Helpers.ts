@@ -1,5 +1,7 @@
+import { nftAggregator } from 'constants/contracts';
+import { X2Y2ProtocolData } from 'graphql/generated/types';
 import {
-  data721ParamType,
+  AggregatorResponse, data721ParamType,
   data1155ParamType,
   DELEGATION_TYPE_ERC721,
   DELEGATION_TYPE_ERC1155,
@@ -10,10 +12,11 @@ import {
   Order,
   orderParamType, orderParamTypes, RunInput, runInputParamType } from 'types';
 
+import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
+
 import { TokenPair, TokenStandard, X2Y2Order } from '@x2y2-io/sdk/dist/types';
 import axios from 'axios';
 import { BigNumber, ethers } from 'ethers';
-import { _TypedDataEncoder } from 'ethers/lib/utils';
 
 export const getNetworkMeta = (network: Network): NetworkMeta => {
   switch (network) {
@@ -281,3 +284,66 @@ export async function createX2Y2ParametersForNFTListing(
 
   return order;
 }
+
+export const getX2Y2Hex = (
+  executorAddress: string,
+  protocolData: X2Y2ProtocolData,
+  ethValue: string,
+  tokenStandard: TokenStandard,
+  hash: string
+): AggregatorResponse => {
+  try {
+    const {
+      contract,
+      created_at,
+      currencyAddress,
+      end_at,
+      id,
+      maker,
+      price,
+      side,
+      status,
+      tokenId,
+      type,
+    } = protocolData;
+    
+    const order = {
+      item_hash: hash,
+      maker,
+      type,
+      side,
+      status,
+      currency: currencyAddress,
+      end_at: end_at.toString(),
+      created_at: created_at.toString(),
+      token: {
+        contract,
+        token_id: Number(tokenId),
+        erc_type: tokenStandard,
+      },
+      id,
+      price,
+      taker: executorAddress,
+    };
+
+    const headers = {
+      headers: {
+        'X-API-KEY': 'b81d7374-9363-4266-9e37-d0aee62c1c77'
+      },
+    };
+
+    const failIfRevert = true;
+    const runInput = buyOrder('mainnet', nftAggregator.mainnet, order, {}, JSON.stringify(headers));
+    const inputData = [runInput, ethValue, protocolData?.contract, protocolData?.tokenId, failIfRevert];
+    const wholeHex = X2Y2Lib.encodeFunctionData('_run', inputData);
+    const genHex = libraryCall('_tradeHelper(uint256,bytes,address,uint256,bool)', wholeHex.slice(10));
+    
+    return {
+      tradeData: genHex,
+      value: BigNumber.from(ethValue),
+      marketId: '2',
+    };
+  } catch (err) {
+    throw `error in getX2Y2Hex: ${err}`;
+  }
+};
