@@ -87,7 +87,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
       <div className="w-full flex flex-col p-4">
         <div className='justify-start flex'>
           <Tab.Group onChange={(index) => {setSelectedTab(nftActivityTabs[index]);}}>
-            <Tab.List className="flex rounded-3xl">
+            <Tab.List className="flex rounded-3xl z-10">
               {Object.keys(nftActivityTabs).map((chartType) => (
                 <Tab
                   key={chartType}
@@ -106,7 +106,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </div>
         {selectedTab === 'Sales' &&
           <Menu as="div" className="relative inline-block text-left">
-            <div className='flex items-center justify-end mt-[-35px]'>
+            <div className='flex items-center justify-end mt-[-35px] z-9'>
               <Menu.Button className="flex items-center justify-between w-[190px] rounded-[8px] bg-[#F2F2F2] px-3 py-2 text-[16px] text-black font-noi-grotesk hover:bg-gray-50">
                 {getTimeFrameString(selectedTimeFrame)}
                 <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
