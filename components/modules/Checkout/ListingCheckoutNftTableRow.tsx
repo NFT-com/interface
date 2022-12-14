@@ -70,7 +70,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     {
       label: 'X2Y2',
       icon: <X2Y2Icon className='w-[1.63rem]'
-        alt="Looksrare logo"
+        alt="X2Y2 logo"
         layout="fill"
       />,
       onSelect: () => {

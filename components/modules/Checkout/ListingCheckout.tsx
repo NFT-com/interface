@@ -241,7 +241,7 @@ export function ListingCheckout() {
           </table>
         </div>
         {
-          isNullOrEmpty(toList) && <div className='flex flex-col items-center justify-center my-12'>
+          (isNullOrEmpty(toList) || toList.length === 0) && <div className='flex flex-col items-center justify-center my-12'>
     No NFTs staged for listing
           </div>
         }
@@ -342,7 +342,7 @@ export function ListingCheckout() {
             </table>
           </div>
           {
-            isNullOrEmpty(toList) && <div className='flex flex-col items-center justify-center my-12'>
+            (isNullOrEmpty(toList) || toList.length === 0) && <div className='flex flex-col items-center justify-center my-12'>
           No NFTs staged for listing
             </div>
           }
