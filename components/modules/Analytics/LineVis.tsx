@@ -110,8 +110,8 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
         <LineChart data={data} margin={{ top: 10, right: 30, bottom: 65, left: 5 }} height={isMobile ? 227 : 357}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0.2}/>
-              <stop offset="80%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0}/>
+              <stop offset="5%" stopColor={'#FAC213'} stopOpacity={0.2}/>
+              <stop offset="80%" stopColor={'#FAC213'} stopOpacity={0}/>
             </linearGradient>
           </defs>
           {!data &&

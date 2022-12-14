@@ -106,8 +106,8 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </div>
         {selectedTab === 'Sales' &&
           <Menu as="div" className="relative inline-block text-left">
-            <div className='flex items-center justify-end mt-[-20px]'>
-              <Menu.Button className="flex items-center justify-between w-[200px] rounded-[8px] border border-gray-300 bg-[#F2F2F2] px-4 py-3 text-[18px] font-medium text-black font-noi-grotesk shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+            <div className='flex items-center justify-end mt-[-37px]'>
+              <Menu.Button className="flex items-center justify-between w-[190px] rounded-[8px] bg-[#F2F2F2] px-3 py-2 text-[16px] text-black font-noi-grotesk hover:bg-gray-50">
                 {getTimeFrameString(selectedTimeFrame)}
                 <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
               </Menu.Button>
