@@ -328,7 +328,7 @@ export const getX2Y2Hex = (
 
     const headers = {
       headers: {
-        'X-API-KEY': 'b81d7374-9363-4266-9e37-d0aee62c1c77'
+        'X-API-KEY': process.env.X2Y2_API_KEY,
       },
     };
 
