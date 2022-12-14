@@ -27,7 +27,6 @@ export interface ListingCheckoutNftTableRowProps {
 }
 
 export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProps) {
-  console.log('props.listing fdo', props.listing);
   const { chain } = useNetwork();
   const { data: collection } = useSWR('ContractMetadata' + props.listing?.nft?.contract, async () => {
     return await getContractMetadata(props.listing?.nft?.contract, chain?.id);
@@ -48,31 +47,19 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const marketPlacesOptions = [
     {
-      label: 'Opensea',
-      icon: OpenseaIcon,
+      label: 'Seaport',
       onSelect: () => {
         setSelectedOpensea(!selectedOpensea);
       }
     },
     {
-      label: 'Looksrare',
-      icon: <LooksrareIcon
-        className={tw(
-          'h-9 w-9 relative shrink-0 cursor-pointer',
-        )}
-        alt="Looksrare logo"
-        layout="fill"
-      />,
+      label: 'LooksRare',
       onSelect: () => {
         setSelectedLooksrare(!selectedLooksrare);
       }
     },
     {
       label: 'X2Y2',
-      icon: <X2Y2Icon className='w-[1.63rem]'
-        alt="X2Y2 logo"
-        layout="fill"
-      />,
       onSelect: () => {
         setSelectedx2y2(!selectedx2y2);
       }
@@ -347,15 +334,16 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         </td>
         <td className={tw(rowHeightClass, 'flex flex-col items-start')}>
           {props.listing?.targets?.length > 0
-            ? props.listing?.targets?.map((target) => (
-              <div key={target.protocol}>
-                <DropdownPicker
-                  options={marketPlacesOptions}
-                  selectedIndex={0}
-                  placeholder={'Select Marketplace'}
-                />
-              </div>
-            )) :
+            ? props.listing?.targets?.map((target) => {
+              return (
+                <div key={target.protocol}>
+                  <DropdownPicker
+                    options={marketPlacesOptions}
+                    selectedIndex={marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) >= 0 ? marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) : 0}
+                    placeholder={'Select Marketplace'}
+                  />
+                </div>
+              );}) :
             <div>
               <DropdownPicker
                 options={marketPlacesOptions}

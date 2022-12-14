@@ -32,8 +32,6 @@ export function ListingCheckout() {
     allListingsConfigured
   } = useContext(NFTListingsContext);
 
-  toList.length < 2 && toList.push(toList[0]);
-
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
     toList[0]?.nft?.wallet?.preferredProfile == null ?
@@ -189,7 +187,7 @@ export function ListingCheckout() {
             {['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
               return (<div key={duration} className='slider-label'></div>);
             })}
-            <input type="range" min="0" max="6" step="1" className="relative w-[102%] -ml-2 z-20" onChange={(event) => console.log(event.target.value)}/>
+            <input type="range" min="0" max="6" step="1" className="relative w-[102%] -ml-2 z-20"/>
             <datalist className="relative ticks flex justify-between -mt-1 z-10">
               {['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
                 return (<option className="text-gray-400 text-[7px]" key={duration} value={duration}>|</option>);
@@ -258,8 +256,6 @@ export function ListingCheckout() {
       <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
     </div>;
   };
-
-  console.log('toList fdo', toList);
   
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
