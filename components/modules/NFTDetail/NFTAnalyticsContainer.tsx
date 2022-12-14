@@ -64,13 +64,13 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
       <div className="w-full flex flex-col p-4">
         <div className='justify-start flex'>
           <Tab.Group onChange={(index) => {setSelectedTab(nftActivityTabs[index]);}}>
-            <Tab.List className="flex rounded-3xl font-noi-grotesk">
+            <Tab.List className="flex rounded-3xl">
               {Object.keys(nftActivityTabs).map((chartType) => (
                 <Tab
                   key={chartType}
                   className={({ selected }) =>
                     tw(
-                      'rounded-3xl py-2.5 px-8 text-[16px] leading-5 text-[#6A6A6A]',
+                      'rounded-3xl py-2.5 px-8 font-noi-grotesk text-[16px] leading-5 text-[#6A6A6A]',
                       selected && 'bg-black text-[#FFFFFF]'
                     )
                   }

@@ -34,7 +34,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
         :
         <table className="border-collapse table-auto w-full overflow-x-auto">
           <thead className='text-[#939393] text-[16px] leading-6'>
-            <tr className='p-4 pt-0 pb-3 text-left ...'>
+            <tr className='px-4 pb-3 text-left ...'>
               <th className='p-4 font-light'>Event</th>
               <th className='p-4 font-light'>From</th>
               <th className='p-4 font-light'>To</th>
