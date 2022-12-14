@@ -37,7 +37,7 @@ export function ListingCheckout() {
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
     toList[0]?.nft?.wallet?.preferredProfile == null ?
-      profileTokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
+      profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
       null
   );
   
@@ -127,7 +127,7 @@ export function ListingCheckout() {
                   nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border'
                 )}
               >
-                <NFTLogo className={tw('w-fit h-fit')} />
+                <NFTLogo className='w-fit h-fit' />
                 <span className='font-semibold text-base'>NFT</span>
                 <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
               </div>
@@ -147,7 +147,7 @@ export function ListingCheckout() {
                 openseaFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <OpenSeaGray className={tw('w-fit h-fit')} />
+              <OpenSeaGray className='w-fit h-fit' />
               <span className='font-semibold text-base'>Opensea</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(1.5% fee)</span>
             </div>
@@ -162,7 +162,7 @@ export function ListingCheckout() {
                 looksrareFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <LooksrareGray className={tw('w-fit h-fit')} />
+              <LooksrareGray className='w-fit h-fit' />
               <span className='font-semibold text-base'>Looksrare</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
@@ -177,7 +177,7 @@ export function ListingCheckout() {
                 X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <X2Y2Icon className={tw('w-fit h-fit')} />
+              <X2Y2Icon className='w-[1.63rem]' />
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
             </div>}
