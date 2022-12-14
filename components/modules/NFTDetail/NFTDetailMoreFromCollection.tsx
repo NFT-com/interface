@@ -48,7 +48,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
     <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
       <div className='flex flex-col w-full px-[16px]'>
         <span className="text-2xl font-bold font-grotesk mb-2">More from collection</span>
-        {screenWidth >= 1200 && data?.length < 4 ?
+        {screenWidth >= 1200 && data?.length < 5 ?
           <div className='flex py-2 h-full items-stretch mx-auto'>
             {data?.map((nft, index) => {
               return (
@@ -72,17 +72,17 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
           :
           <div className='flex py-2 h-full items-stretch'>
             <Swiper
-              slidesPerView={Math.min(data?.length ?? 4, screenWidth < 600
+              slidesPerView={Math.min(data?.length ?? 5, screenWidth < 600
                 ? 1
                 : (screenWidth >= 600 && screenWidth < 900)
                   ? (data?.length >= 3)
-                    ? 3
+                    ? 4
                     : data?.length
                   : (data?.length >= 4)
-                    ? 4
+                    ? 5
                     : data?.length)}
-              centeredSlides={false}
-              loop={data?.length > 3}
+              centeredSlides={true}
+              loop={data?.length > 4}
               autoplay={{
                 'delay': 4500,
                 'disableOnInteraction': false
@@ -92,7 +92,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
               {data?.map((nft, index) => {
                 return (
                   <SwiperSlide className={tw(
-                    'NftCollectionItem flex flex-col w-60 shrink-0 cursor-pointer self-stretch mr-4',
+                    'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                   )} key={nft?.id ?? index}>
                     <NftCard
                       contractAddr={props.contract}
