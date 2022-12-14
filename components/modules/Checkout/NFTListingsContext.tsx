@@ -2,7 +2,7 @@ import { Maybe, Nft, NftType } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { get721Contract } from 'hooks/contracts/get721Contract';
-import { useLooksrareRoyaltyFeeManagerContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeManagerContract';
+import { useLooksrareRoyaltyFeeManagerContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeManagerContract.ts';
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
