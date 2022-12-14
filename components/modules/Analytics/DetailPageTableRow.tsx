@@ -51,8 +51,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
   
   return (
     <tr key={index} className={tw(
-      'font-normal text-base leading-6 text-[#1F2127] overflow-auto',
-      index % 2 === 0 && 'bg-[#F8F8F8]'
+      'font-normal text-base leading-6 text-[#1F2127] overflow-auto'
     )}
     >
       <td className="font-normal text-base leading-6 text-[#1F2127] p-4 capitalize">{tx?.type || '—'}</td>

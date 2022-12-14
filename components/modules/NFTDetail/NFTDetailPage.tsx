@@ -57,7 +57,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return (
       <div>
         <div className='flex flex-col w-full'>
-          <div className='flex w-full items-center p-4 justify-start'>
+          <div className='flex w-full items-center p-4 pb-0 justify-start'>
             <div className='justify-start'>
               <Tab.Group selectedIndex={selectedDetailTab} onChange={(index) => {setSelectedDetailTab(index);}}>
                 <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
@@ -67,8 +67,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
                         <div
                           className={
                             tw(
-                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-noi-grotesk text-[18px] w-[150px] font-medium leading-6',
-                              selected && 'bg-black text-[#F8F8F8] font-noi-grotesk text-[18px] font-medium leading-6'
+                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-noi-grotesk text-[16px] w-[150px] leading-6',
+                              selected && 'bg-black text-[#F8F8F8] font-noi-grotesk text-[16px] leading-6'
                             )
                           }
                         >
@@ -152,7 +152,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           (defaultChainId === '1') &&
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
             <div className="min-h-[13.7em]"></div>
-            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
+            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end shadow-xl rounded-[24px]">
               <NFTAnalyticsContainer data={nft} />
             </div>
           </div>

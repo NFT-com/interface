@@ -60,18 +60,18 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   });
 
   return (
-    <div className="bg-transparent overflow-x-auto p-4 minxl:p-5 minxl:pb-0 minxl:-mb-10 w-full">
-      <div className="w-full flex flex-col">
+    <div className="overflow-x-auto py-4 pt-0 minxl:py-5 minxl:pb-0 minxl:-mb-10 w-full">
+      <div className="w-full flex flex-col p-4">
         <div className='justify-start flex'>
           <Tab.Group onChange={(index) => {setSelectedTab(nftActivityTabs[index]);}}>
-            <Tab.List className="flex rounded-3xl font-grotesk">
+            <Tab.List className="flex rounded-3xl font-noi-grotesk">
               {Object.keys(nftActivityTabs).map((chartType) => (
                 <Tab
                   key={chartType}
                   className={({ selected }) =>
                     tw(
-                      'rounded-3xl py-2.5 px-8 text-sm font-medium leading-5 text-[#6F6F6F]',
-                      selected && 'bg-black text-[#F8F8F8]'
+                      'rounded-3xl py-2.5 px-8 text-[16px] leading-5 text-[#6A6A6A]',
+                      selected && 'bg-black text-[#FFFFFF]'
                     )
                   }
                 >
@@ -94,7 +94,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                 key={timeFrame}
                 className={({ selected }) =>
                   tw(
-                    'font-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6F6F6F] ',
+                    'font-noi-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6A6A6A] ',
                     'ring-white ring-opacity-60 ring-offset-2 focus:outline-none focus:ring-2',
                     selected
                       ? 'bg-gray-200 shadow text-[#1F2127] font-black cursor-default'
@@ -117,7 +117,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
           data={nftData}
           selectedTimeFrame={selectedTimeFrame}
         />}
-      {selectedTab === 'Sales' && nftData?.length === 0 && <div className="my-14 font-grotesk mx-auto text-center">No data yet</div>}
+      {selectedTab === 'Sales' && nftData?.length === 0 && <div className="my-14 font-noi-grotesk mx-auto text-center">No data yet</div>}
     </div>
   );
 };
