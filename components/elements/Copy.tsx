@@ -1,8 +1,9 @@
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { joinClasses } from 'utils/helpers';
 
+import Copy from 'public/copy.svg';
 import React from 'react';
-import { CheckCircle, Copy } from 'react-feather';
+import { CheckCircle } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
 
 type TransactionStatusTextProps = {
@@ -16,8 +17,8 @@ const TransactionStatusText = ({
 }: TransactionStatusTextProps) => {
   return (
     <span
-      className={`${ color ? 'text-always-white' : 'text-primary-txt dark:text-primary-txt-dk' }
-        ml-1 text-copy-size flex flex-row flex-nowrap items-center`}>
+      className={`${ color ? 'text-always-white' : 'text-[#6A6A6A] dark:text-primary-txt-dk' }
+        ml-1 flex font-[18px] flex-row flex-nowrap items-center`}>
       {children}
     </span>);
 };
@@ -38,10 +39,10 @@ export default function CopyHelper(props: {
       <button
         onClick={() => setCopied(props.toCopy)}
         className={joinClasses(
-          'bg-none cursor-pointer font-medium',
+          'bg-none cursor-pointer font-noi-grotesk',
           'border-0 shrink-0 flex items-center',
-          'no-underline text-copy-size',
-          props.lightModeForced ? ' text-[#6F6F6F]': 'dark:text-primary-txt-dk text-copy-size',
+          'no-underline font-[18px]',
+          props.lightModeForced ? ' text-[#6F6F6F]': 'dark:text-primary-txt-dk font-[18px]',
           'active:hover:no-underline',
           props.lightModeForced ? 'active:hover:text-primary-txt' : 'active:hover:text-primary-txt active:hover:dark:text-primary-txt-dk',
           'focus:no-underline focus:outline-0',
@@ -59,7 +60,7 @@ export default function CopyHelper(props: {
           )
           : (
             <TransactionStatusText>
-              <Copy size={props.size ?? '16'} color={props.white ? alwaysWhite : primaryIcon} />
+              <Copy className='ml-1' style={{ height: props.size ?? '16px', width: props.size ?? '16px' }} />
             </TransactionStatusText>
           )}
         {props.after !== true && (props.keepContent !== true && isCopied ? '' : props.children)}

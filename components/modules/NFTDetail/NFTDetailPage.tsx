@@ -67,8 +67,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
                         <div
                           className={
                             tw(
-                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
-                              selected && 'bg-black text-[#F8F8F8] font-grotesk text-base font-semibold leading-6'
+                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-noi-grotesk text-[18px] w-[150px] font-medium leading-6',
+                              selected && 'bg-black text-[#F8F8F8] font-noi-grotesk text-[18px] font-medium leading-6'
                             )
                           }
                         >
@@ -83,10 +83,10 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
           {selectedDetailTab == 0 &&
             <>
-              <div className='flex w-full p-4 font-grotesk'>
+              <div className='flex w-full p-4 font-noi-grotesk'>
                 <DescriptionDetail nft={nft} />
               </div>
-              <div className='flex w-full p-4 font-grotesk'>
+              <div className='flex w-full p-4 font-noi-grotesk'>
                 <NftChainInfo nft={nft} />
               </div>
             </>
@@ -94,7 +94,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           {selectedDetailTab == 1 &&
             <>
               <div className='flex w-full p-4'>
-                <div className='border border-[#E1E1E1] rounded-md py-4 font-grotesk w-full'>
+                <div className='border border-[#E1E1E1] rounded-md py-4 font-noi-grotesk w-full'>
                   <Properties nft={nft} />
                 </div>
               </div>
@@ -135,7 +135,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
           }} key={nft?.id} />
-          <div className="hidden minxl:block minxl:pt-10">
+          <div className="hidden minxl:block minxl:pt-5">
             <DetailTabsComponent />
           </div>
         </div>
