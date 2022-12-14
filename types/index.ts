@@ -3,6 +3,7 @@ export * from './balanceData';
 export * from './blogs';
 export * from './marketplaces';
 export * from './seaport';
+export * from './X2Y2';
 
 export type TickerStat = {
   stat: {

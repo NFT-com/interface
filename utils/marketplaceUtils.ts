@@ -1,7 +1,7 @@
 import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 
@@ -189,6 +189,7 @@ export function filterValidListings(listings: PartialDeep<TxActivity>[]): Partia
     const seaportValid = (listing.order?.protocolData as SeaportProtocolData)?.parameters &&
       (listing.order?.protocolData as SeaportProtocolData)?.signature != null;
     const looksrareValid = (listing.order?.protocolData as LooksrareProtocolData)?.price != null;
-    return listing.order?.protocolData != null && (looksrareValid || seaportValid);
+    const X2Y2Valid = (listing.order?.protocolData as X2Y2ProtocolData)?.price != null;
+    return listing.order?.protocolData != null && (looksrareValid || seaportValid || X2Y2Valid);
   }) ?? [];
 }
