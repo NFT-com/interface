@@ -4,10 +4,12 @@ import { Nft } from 'graphql/generated/types';
 import { useGetSales } from 'graphql/hooks/useGetSales';
 import { tw } from 'utils/tw';
 
+import { Menu, Transition } from '@headlessui/react';
 import { Tab } from '@headlessui/react';
 import { BigNumber } from 'ethers';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import ChevronUpDownIcon from 'public/ChevronUpDown.svg';
+import { Fragment, useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 
@@ -82,31 +84,47 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
           </Tab.Group>
         </div>
         {selectedTab === 'Sales' &&
-        <Tab.Group
-          defaultIndex={6}
-          onChange={(index) => {
-            setSelectedTimeFrame(timeFrames[index]);
-          }}
-        >
-          <Tab.List className="flex w-[250px] items-center order-last rounded-lg p-2">
-            {Object.keys(timeFrames).map((timeFrame) => (
-              <Tab
-                key={timeFrame}
-                className={({ selected }) =>
-                  tw(
-                    'font-noi-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6A6A6A] ',
-                    'ring-white ring-opacity-60 ring-offset-2 focus:outline-none focus:ring-2',
-                    selected
-                      ? 'bg-gray-200 shadow text-[#1F2127] font-black cursor-default'
-                      : 'hover:bg-black/[0.12] hover:text-black'
-                  )
-                }
-              >
-                {timeFrames[timeFrame]}
-              </Tab>
-            ))}
-          </Tab.List>
-        </Tab.Group>
+          <Menu as="div" className="relative inline-block text-left">
+            <div>
+              <Menu.Button className="inline-flex w-[200px] justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+                Past {timeFrames[selectedTimeFrame]}
+                <ChevronUpDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+              </Menu.Button>
+            </div>
+      
+            <Transition
+              as={Fragment}
+              enter="transition ease-out duration-100"
+              enterFrom="transform opacity-0 scale-95"
+              enterTo="transform opacity-100 scale-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="transform opacity-100 scale-100"
+              leaveTo="transform opacity-0 scale-95"
+            >
+              <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="py-1">
+                  {Object.keys(timeFrames).map((timeFrame, index) => (
+                    <Menu.Item key={timeFrame}>
+                      {({ active }) => (
+                        <div
+                          onClick={() => {
+                            setSelectedTimeFrame(timeFrames[index]);
+                          }}
+                          className={tw(
+                            'font-noi-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6A6A6A] ',
+                            'ring-white ring-opacity-60 ring-offset-2 focus:outline-none focus:ring-2',
+                            active
+                              ? 'bg-gray-200 shadow text-[#1F2127] font-black cursor-default'
+                              : 'hover:bg-black/[0.12] hover:text-black'
+                          )}
+                        >{timeFrames[timeFrame]}</div>
+                      )}
+                    </Menu.Item>
+                  ))}
+                </div>
+              </Menu.Items>
+            </Transition>
+          </Menu>
         }
       </div>
       {selectedTab === 'Activity' && <DynamicNFTActivity data={data} />}

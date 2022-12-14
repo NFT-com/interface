@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import {
+  CartesianGrid,
   Label,
   Line,
   LineChart,
@@ -60,9 +61,9 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
         return null;
       }
       return (
-        <div className="bg-[#1F2127] py-4 px-5">
-          <p className="text-white mb-2">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
-          <p className="text-[#18A0FB]">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
+        <div className="rounded-[16px] font-medium font-noi-grotesk text-[16px] bg-[#000000] py-3 px-4">
+          <p className="text-[#B2B2B2]">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
+          <p className="text-white">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
         </div>
       );
     }
@@ -106,7 +107,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
       </div>
       }
       <ResponsiveContainer height={isMobile ? 227 : 357} width={'100%'} >
-        <LineChart data={data} margin={{ top: 60, right: 30, bottom: 65, left: 5 }} height={isMobile ? 227 : 357}>
+        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 65, left: 5 }} height={isMobile ? 227 : 357}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={selectedMarketplace === 'OpenSea' ? '#00A4FF' : '#0bc355'} stopOpacity={0.2}/>
@@ -114,14 +115,15 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
             </linearGradient>
           </defs>
           {!data &&
-            <Label position={'center'} value={'No Data Yet'} />
+            <Label position='center' className='font-noi-grotesk' style={{ fontSize: '12px', height: '140px' }} value={'No Data Yet'} />
           }
-          <XAxis label={{ value: 'Date', position: 'insideBottom', offset: -10 }} dataKey={'date'} style={{ fontSize: '11px', fontFamily: 'Grotesk' }} tickFormatter={xAxisFormatter}/>
-          <YAxis label={{ value: 'Value (USD)', position: 'insideTopRight', offset: -30 }} dataKey={'value'} style={{ fontSize: '11px', fontFamily: 'Grotesk' }} orientation={'right'} tickFormatter={yAxisFormatter} />
+          <CartesianGrid strokeDasharray="5" vertical={false} />
+          <XAxis dataKey={'date'} className='font-noi-grotesk' style={{ fontSize: '12px' }} tickFormatter={xAxisFormatter}/>
+          <YAxis dataKey={'value'} className='font-noi-grotesk' style={{ fontSize: '12px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
           <Tooltip
             content={<CustomTooltip dataLength={data.length}/>}
           />
-          <Line type="monotone" dataKey="value" stroke="#18A0FB" dot={false} />
+          <Line type="linearClosed" dataKey="value" dot={{ stroke: '#FAC213', strokeWidth: 2 }} />
         </LineChart>
       </ResponsiveContainer>
       {(showMarketplaceOptions && !!data) &&
