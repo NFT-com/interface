@@ -106,7 +106,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </div>
         {selectedTab === 'Sales' &&
           <Menu as="div" className="relative inline-block text-left">
-            <div className='flex items-center justify-end mt-[-37px]'>
+            <div className='flex items-center justify-end mt-[-35px]'>
               <Menu.Button className="flex items-center justify-between w-[190px] rounded-[8px] bg-[#F2F2F2] px-3 py-2 text-[16px] text-black font-noi-grotesk hover:bg-gray-50">
                 {getTimeFrameString(selectedTimeFrame)}
                 <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
@@ -132,11 +132,10 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                             setSelectedTimeFrame(timeFrames[index]);
                           }}
                           className={tw(
-                            'font-noi-grotesk w-full rounded-lg p-1 text-xs font-semibold leading-5 text-[#6A6A6A] ',
-                            'ring-white ring-opacity-60 ring-offset-2 focus:outline-none focus:ring-2',
+                            'font-noi-grotesk hover:bg-gray-50 w-[190px] p-2 text[16px] text-center font-semibold leading-5 text-[#6A6A6A] ',
                             active
-                              ? 'bg-gray-200 shadow text-[#1F2127] font-black cursor-default'
-                              : 'hover:bg-black/[0.12] hover:text-black'
+                              ? 'bg-gray-100 font-black'
+                              : ''
                           )}
                         >{timeFrames[timeFrame]}</div>
                       )}
