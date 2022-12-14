@@ -126,7 +126,7 @@ export function getMaxMarketplaceFeesUSD(
   getByContractAddress: (contract: string) => NFTSupportedCurrency
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
-    const feesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+    const feesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
       const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
       if (target.protocol === ExternalProtocol.LooksRare) {
         // Looksrare fee is fetched from the smart contract.
@@ -146,7 +146,7 @@ export function getMaxMarketplaceFeesUSD(
         ))) ?? 0;
       }
     });
-    return cartTotal + Math.max(...feesByMarketplace);
+    return cartTotal + Math.max(...feesByMarketplace || []);
   }, 0);
 }
 
@@ -156,7 +156,7 @@ export function getMaxRoyaltyFeesUSD(
   getByContractAddress: (contract: string) => NFTSupportedCurrency
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
-    const royaltiesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+    const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
       const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
       if (target.protocol === ExternalProtocol.LooksRare) {
         const minAskAmount = BigNumber.from(target?.looksrareOrder?.minPercentageToAsk ?? 0)
@@ -180,7 +180,7 @@ export function getMaxRoyaltyFeesUSD(
         ))) ?? 0;
       }
     });
-    return cartTotal + Math.max(...royaltiesByMarketplace);
+    return cartTotal + Math.max(...royaltiesByMarketplace || []);
   }, 0);
 }
 

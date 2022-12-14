@@ -169,7 +169,7 @@ export function NFTListingsContextProvider(
 
   const allListingsConfigured = useCallback(() => {
     const unconfiguredNft = toList.find((stagedNft: StagedListing) => {
-      if (stagedNft.nft == null || isNullOrEmpty(stagedNft.targets)) {
+      if (stagedNft?.nft == null || isNullOrEmpty(stagedNft?.targets)) {
         return true; // no targets or NFT to list?
       }
       const hasGeneralConfig = stagedNft.startingPrice != null &&
