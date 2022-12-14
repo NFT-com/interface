@@ -80,7 +80,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
       )}>
         <div className='flex flex-col'>
           <Link href={`/app/collection/${collection?.collection?.contract}`}>
-            <div className="whitespace-nowrap text-lg font-normal font-grotesk leading-6 tracking-wide text-[#1F2127] underline cursor-pointer">
+            <div className="whitespace-nowrap text-[18px] font-medium font-noi-grotesk leading-[3rem] tracking-wide text-[#6A6A6A] cursor-pointer">
               {isNullOrEmpty(collectionName) ?
                 (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
                   <div className="w-full">
@@ -91,7 +91,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 : collectionName}
             </div>
           </Link>
-          <div className='font-grotesk font-bold text-2xl leading-9'>
+          <div className='font-noi-grotesk font-semibold text-[28px] leading-9 tracking-[-2px]'>
             {isNullOrEmpty(props.nft?.metadata?.name) ?
               (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
                 <div className="w-full">
@@ -102,7 +102,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
               : `${props.nft?.metadata?.name}`}
           </div>
         </div>
-        <div className='flex flex-col pl-12 minmd:pr-12'>
+        <div className='flex flex-col pl-12'>
           <div
             id="refreshNftButton"
             onClick={refreshNftCallback}
@@ -116,98 +116,111 @@ export const NFTDetail = (props: NFTDetailProps) => {
         </div>
       </div>
       <div className='flex flex-row items-center w-full p-4'>
-        <div className='flex flex-col h-full aspect-square'>
-          {collectionOwnerToShow?.photoURL ?
-            <RoundedCornerMedia
-              containerClasses='w-full aspect-square'
-              variant={RoundedCornerVariant.All}
-              amount={RoundedCornerAmount.Medium}
-              src={collectionOwnerToShow?.photoURL}
-            />
-            :
-            <LoggedInIdenticon round border />
-          }
-        </div>
-        <div className='flex flex-col w-1/2 h-full'>
-          <div className='flex flex-col h-full'>
-            <span className='flex flex-col pl-3 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
-              CREATOR
-            </span>
-            {
-              creatorTokens?.length > 0 ?
-                <div
-                  className={tw(
-                    'flex px-3 items-center',
-                    collectionOwnerToShow?.url != null && 'cursor-pointer'
-                  )}
-                  onClick={() => {
-                    if (collectionOwnerToShow?.url == null) {
-                      return;
-                    }
-                    router.push('/' + collectionOwnerToShow?.url);
-                  }}
-                >
-                  <span className={tw('text-base font-medium leading-5',
-                    `${collectionOwnerToShow?.url == null ? 'font-dm-mono text-[#B59007]' : 'font-grotesk'}`,
-                    'text-link'
-                  )}>
-                    {collectionOwnerToShow?.url == null ?
-                      shortenAddress(collectionOwnerToShow?.owner?.address, 2) :
-                      collectionOwnerToShow?.url
-                    }
-                  </span>
-                </div> :
-                <Link href={getEtherscanLink(Number(defaultChainId), collection?.collection?.contract, 'address')}>
-                  <span className="text-[#B59007] text-base font-medium leading-5 font-dm-mono pl-3 pt-1">
-                    {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
-                  </span>
-                </Link>
-            }
-          </div>
-        </div>
-        <div className='flex flex-col h-full'>
-          <div className='flex flex-col h-[42px] w-[42px]'>
-            {profileOwnerToShow?.photoURL ?
-              <RoundedCornerMedia
-                containerClasses='w-full aspect-square'
-                variant={RoundedCornerVariant.All}
-                amount={RoundedCornerAmount.Medium}
-                src={profileOwnerToShow?.photoURL}
-              />
-              :
-              <LoggedInIdenticon round border />
-            }
-          </div>
-        </div>
-        <div className='flex flex-col h-full'>
-          <span className='flex flex-col pl-3 font-grotesk text-[10px] not-italic font-bold leading-5 tracking-widest text-[#6F6F6F]'>
-            OWNER
+        <div>
+          <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
+            Creator
           </span>
-          {
-            profileTokens?.length > 0 ?
-              <div
-                className={tw(
-                  'flex px-3 items-center',
-                  profileOwnerToShow?.url != null && 'cursor-pointer'
-                )}
-                onClick={() => {
-                  if (profileOwnerToShow?.url == null) {
-                    return;
-                  }
-                  router.push('/' + profileOwnerToShow?.url);
-                }}
-              >
-                <span className="text-base font-medium leading-5 font-grotesk text-link">
-                  {!profileOwnerToShow?.url == null ?
-                    shortenAddress(props.nft?.wallet?.address, 0) :
-                    profileOwnerToShow?.url
-                  }
-                </span>
-              </div> :
-              <span className="text-[#1F2127] text-base font-medium leading-5 font-grotesk pl-3">
-                {shortenAddress(props.nft?.wallet?.address, 2) ?? 'Unknown'}
-              </span>
-          }
+          <div className='flex items-center'>
+            <div className='flex flex-col h-full aspect-square'>
+              {collectionOwnerToShow?.photoURL ?
+                <RoundedCornerMedia
+                  containerClasses='w-full aspect-square'
+                  variant={RoundedCornerVariant.All}
+                  amount={RoundedCornerAmount.Medium}
+                  src={collectionOwnerToShow?.photoURL}
+                />
+                :
+                <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
+                  <LoggedInIdenticon round border />
+                </div>
+              }
+            </div>
+
+            <div className='flex flex-col w-1/2 h-full'>
+              <div className='flex flex-col h-full'>
+                {
+                  creatorTokens?.length > 0 ?
+                    <div
+                      className={tw(
+                        'flex px-3 items-center',
+                        collectionOwnerToShow?.url != null && 'cursor-pointer'
+                      )}
+                      onClick={() => {
+                        if (collectionOwnerToShow?.url == null) {
+                          return;
+                        }
+                        router.push('/' + collectionOwnerToShow?.url);
+                      }}
+                    >
+                      <span className={tw('text-base font-noi-grotesk font-medium leading-5',
+                        'text-black'
+                      )}>
+                        {collectionOwnerToShow?.url == null ?
+                          shortenAddress(collectionOwnerToShow?.owner?.address, 2) :
+                          collectionOwnerToShow?.url
+                        }
+                      </span>
+                    </div> :
+                    <Link href={getEtherscanLink(Number(defaultChainId), collection?.collection?.contract, 'address')}>
+                      <span className="text-base font-medium leading-5 font-noi-grotesk pl-3 pt-1">
+                        {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
+                      </span>
+                    </Link>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className='ml-14'>
+          <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
+            Owner
+          </span>
+          <div className='flex items-center'>
+            <div className='flex flex-col h-full aspect-square'>
+              {profileOwnerToShow?.photoURL ?
+                <RoundedCornerMedia
+                  containerClasses='w-full aspect-square'
+                  variant={RoundedCornerVariant.All}
+                  amount={RoundedCornerAmount.Medium}
+                  src={profileOwnerToShow?.photoURL}
+                />
+                :
+                <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
+                  <LoggedInIdenticon round border />
+                </div>
+              }
+            </div>
+
+            <div className='flex flex-col w-1/2 h-full'>
+              <div className='flex flex-col h-full'>
+                {
+                  profileTokens?.length > 0 ?
+                    <div
+                      className={tw(
+                        'flex px-3 items-center',
+                        profileOwnerToShow?.url != null && 'cursor-pointer'
+                      )}
+                      onClick={() => {
+                        if (profileOwnerToShow?.url == null) {
+                          return;
+                        }
+                        router.push('/' + profileOwnerToShow?.url);
+                      }}
+                    >
+                      <span className="text-base font-medium leading-5 font-noi-grotesk text-link">
+                        {!profileOwnerToShow?.url == null ?
+                          shortenAddress(props.nft?.wallet?.address, 0) :
+                          profileOwnerToShow?.url
+                        }
+                      </span>
+                    </div> :
+                    <span className="text-[#1F2127] text-base font-medium leading-5 font-noi-grotesk pl-3">
+                      {shortenAddress(props.nft?.wallet?.address, isMobile ? 2 : 6) ?? 'Unknown'}
+                    </span>
+                }
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       {

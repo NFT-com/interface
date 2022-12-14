@@ -45,5 +45,5 @@ export default function LoggedInIdenticon({ large, round, border }: LoggedInIden
   }
 
   // 'polkadot', 'substrate', 'beachball' or 'jdenticon'
-  return <Identicon1 size={large === true ? 120 : 42} string={currentAddress} />;
+  return <Identicon1 size={large === true ? 120 : 32} string={currentAddress} />;
 }

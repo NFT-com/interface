@@ -10,6 +10,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { tw } from 'utils/tw';
 
+import NoActivityIcon from 'public/no_activity.svg';
 import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -70,8 +71,13 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
       </div>
     </div> :
     (
-      <span className="text-2xl font-bold font-grotesk mb-2 w-full px-[16px]">
-        Not Featured on a NFT Profile yet
-      </span>
+      <div className='flex flex-col w-screen'>
+        <span className="text-2xl font-bold font-grotesk mb-2 w-full px-[16px]">
+          Not Featured on a NFT Profile yet
+        </span>
+        <div className='w-full flex items-center justify-center'>
+          <NoActivityIcon className='w-[450px] mt-5' />
+        </div>
+      </div>
     );
 }
