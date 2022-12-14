@@ -132,7 +132,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                             setSelectedTimeFrame(timeFrames[index]);
                           }}
                           className={tw(
-                            'font-noi-grotesk hover:bg-gray-50 w-[190px] p-2 text[16px] text-center font-semibold leading-5 text-[#6A6A6A] ',
+                            'font-noi-grotesk hover:bg-gray-50 w-[190px] p-2 text[15px] text-center font-semibold leading-5 text-[#6A6A6A] ',
                             active
                               ? 'bg-gray-100 font-black'
                               : ''
