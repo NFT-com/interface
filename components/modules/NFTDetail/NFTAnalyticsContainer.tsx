@@ -126,19 +126,16 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                 <div className="py-1">
                   {Object.keys(timeFrames).map((timeFrame, index) => (
                     <Menu.Item key={timeFrame}>
-                      {({ active }) => (
-                        <div
-                          onClick={() => {
-                            setSelectedTimeFrame(timeFrames[index]);
-                          }}
-                          className={tw(
-                            'font-noi-grotesk hover:bg-gray-50 w-full p-2 text[15px] text-center font-semibold leading-5 text-[#6A6A6A] ',
-                            active
-                              ? 'bg-gray-100 font-black'
-                              : ''
-                          )}
-                        >{timeFrames[timeFrame]}</div>
-                      )}
+                      <div
+                        onClick={() => {
+                          setSelectedTimeFrame(timeFrames[index]);
+                        }}
+                        className={tw(
+                          'font-noi-grotesk hover:bg-gray-50 w-full p-2 text[15px] text-center leading-5 text-[#6A6A6A] ',
+                        )}
+                      >
+                        {timeFrames[timeFrame]}
+                      </div>
                     </Menu.Item>
                   ))}
                 </div>
