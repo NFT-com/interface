@@ -32,6 +32,27 @@ const timeFrames = {
   6: 'ALL'
 };
 
+const getTimeFrameString = (input: string) => {
+  switch (input) {
+    case '1D':
+      return 'Past Day';
+    case '7D':
+      return 'Past 7 Days';
+    case '1M':
+      return 'Past Month';
+    case '3M':
+      return 'Past 3 Months';
+    case '6M':
+      return 'Past 6 Months';
+    case '1Y':
+      return 'Past Year';
+    case 'ALL':
+      return 'All Time';
+    default:
+      return 'All Time';
+  }
+};
+
 const DynamicNFTActivity = dynamic<React.ComponentProps<typeof StaticNFTActivity>>(() => import('components/modules/Analytics/NFTActivity').then(mod => mod.NFTActivity));
 
 export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
@@ -85,10 +106,10 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </div>
         {selectedTab === 'Sales' &&
           <Menu as="div" className="relative inline-block text-left">
-            <div>
-              <Menu.Button className="inline-flex w-[200px] justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                Past {timeFrames[selectedTimeFrame]}
-                <ChevronUpDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+            <div className='flex items-center justify-end mt-[-20px]'>
+              <Menu.Button className="flex items-center justify-between w-[200px] rounded-[8px] border border-gray-300 bg-[#F2F2F2] px-4 py-3 text-[18px] font-medium text-black font-noi-grotesk shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+                {getTimeFrameString(selectedTimeFrame)}
+                <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
               </Menu.Button>
             </div>
       
