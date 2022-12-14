@@ -21,7 +21,7 @@ describe('ListingCheckoutNftTableRow', () => {
       </WagmiConfig>
     );
   });
-
+/* 
   it('expands and collapses', () => {
     const callback = cy.stub();
     cy.mount(
@@ -69,4 +69,5 @@ describe('ListingCheckoutNftTableRow', () => {
       cy.get('input').last().type('2');
     });
   });
+*/
 });
