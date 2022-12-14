@@ -32,7 +32,7 @@ export function ListingCheckout() {
     allListingsConfigured
   } = useContext(NFTListingsContext);
 
-  toList.length < 2 && toList.push(toList[0]);
+  // toList.length < 2 && toList.push(toList[0]);
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
@@ -256,7 +256,7 @@ export function ListingCheckout() {
     </div>;
   };
 
-  console.log('toList fdo', toList);
+  // console.log('toList fdo', toList);
   
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
