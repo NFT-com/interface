@@ -71,14 +71,14 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
   const getTotalMinimumProfitUSD: () => number = useCallback(() => {
     const total = toList?.reduce((cartTotal, stagedListing) => {
-      const targetValues = stagedListing.targets.map((target) => {
+      const targetValues = stagedListing?.targets.map((target) => {
         const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           BigNumber.from(stagedListing.startingPrice ?? target.startingPrice ?? 0),
           currencyData?.decimals ?? 18
         ))) ?? 0;
       });
-      return cartTotal + Math.min(...targetValues);
+      return cartTotal + Math.min(...targetValues || []);
     }, 0);
 
     return total - getMaxMarketplaceFees() - getMaxRoyaltyFees();
