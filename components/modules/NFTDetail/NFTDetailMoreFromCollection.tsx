@@ -56,10 +56,11 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                   'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                 )} key={nft?.id ?? index}>
                   <NftCard
-                    contractAddress={props.contract}
+                    contractAddr={props.contract}
                     tokenId={nft.tokenId}
-                    title={nft.metadata.name}
-                    images={[nft?.previewLink || nft.metadata.imageURL]}
+                    name={nft.metadata.name}
+                    nft={nft}
+                    images={[nft.metadata.imageURL]}
                     fallbackImage={nft.metadata.imageURL}
                     collectionName={props.collectionName}
                     redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
@@ -91,7 +92,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
               {data?.map((nft, index) => {
                 return (
                   <SwiperSlide className={tw(
-                    'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
+                    'NftCollectionItem flex flex-col w-60 shrink-0 cursor-pointer self-stretch mr-4',
                   )} key={nft?.id ?? index}>
                     <NftCard
                       contractAddr={props.contract}
