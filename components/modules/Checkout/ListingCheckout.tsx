@@ -54,7 +54,7 @@ export function ListingCheckout() {
     return !hasTarget; // return true if missing the desired target.
   }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
   const X2Y2FullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
-    const hasTarget = nft.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
+    const hasTarget = nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
     return !hasTarget; // return true if missing the desired target.
   }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
 
@@ -115,7 +115,7 @@ export function ListingCheckout() {
         <div className='w-full flex flex-col px-8 items-center'>
           <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace/s</span>
           <div className='flex flex-col minlg:flex-row items-start w-full '>
-            <div className='w-1/4 flex flex-col items-center mt-4'>
+            <div className='flex flex-col items-center mt-4  w-1/4'>
               <div
                 onClick={() => {
                   setNftcomMarketplaceEnabled(!nftcomMarketplaceEnabled);
@@ -142,7 +142,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-1/4',
+                'border-[#D5D5D5] rounded-xl text-lg  w-1/4',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
                 openseaFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
@@ -157,7 +157,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-1/4',
+                'border-[#D5D5D5] rounded-xl text-lg  w-1/4',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
                 looksrareFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
@@ -166,9 +166,9 @@ export function ListingCheckout() {
               <span className='font-semibold text-base'>Looksrare</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
-            <div
+            {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && <div
               onClick={() => {
-                setX2y2MarketplaceEnabled(!x2y2MarketplaceEnabled);
+                toggleTargetMarketplace(ExternalProtocol.X2Y2);
                 setShowSummary(false);
               }}
               className={tw(
@@ -179,24 +179,8 @@ export function ListingCheckout() {
             >
               <NFTLogo className={tw('w-fit h-fit')} />
               <span className='font-semibold text-base'>X2Y2</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
-            </div>
-            {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
-              <div
-                onClick={() => {
-                  toggleTargetMarketplace(ExternalProtocol.X2Y2);
-                  setShowSummary(false);
-                }}
-                className={tw(
-                  'border border-[#D5D5D5] rounded-xl text-lg',
-                  'px-4 py-6 cursor-pointer w-full mt-4 mx-4',
-                  X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : ''
-                )}
-              >
-                <span>X2Y2</span>
-                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
-              </div>
-            }
+              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
+            </div>}
           </div>
         </div>
         <div className='w-full flex flex-col px-8 mt-8 items-center'>
@@ -212,7 +196,7 @@ export function ListingCheckout() {
               })}
             </datalist>
           </div>
-          <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
+{/*           <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
             {
               ['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
                 return <div
@@ -230,7 +214,7 @@ export function ListingCheckout() {
                 </div>;
               })
             }
-          </div>
+          </div> */}
         </div>
         <div className='my-8 w-full overflow-x-scroll flex flex-col'>
           <div className="border-t border-[#D5D5D5] mx-8">
