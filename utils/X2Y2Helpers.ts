@@ -12,10 +12,10 @@ import {
   Order,
   orderParamType, orderParamTypes, RunInput, runInputParamType } from 'types';
 
+import { Doppler, getEnv } from './env';
 import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
 
 import { TokenPair, TokenStandard, X2Y2Order } from '@x2y2-io/sdk/dist/types';
-import axios from 'axios';
 import { BigNumber, ethers } from 'ethers';
 
 export const getNetworkMeta = (network: Network): NetworkMeta => {
@@ -152,20 +152,21 @@ async function fetchOrderSign(
   price: string,
   royalty: number | undefined,
   payback: number | undefined,
-  tokenId: string,
-  headers: any,
-  network: Network
+  tokenId: string
 ): Promise<RunInput | undefined> {
   try {
-    const { data } = await axios.post(`${getNetworkMeta(network)?.apiBaseURL}/api/orders/sign`, {
-      caller,
-      op,
-      amountToEth: '0',
-      amountToWeth: '0',
-      items: [{ orderId, currency, price, royalty, payback, tokenId }],
-      check: false, // set false to skip nft ownership check
-    }, JSON.parse(headers));
-
+    const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
+    url.searchParams.set('action', 'fetchOrderSign');
+    url.searchParams.set('caller', caller);
+    url.searchParams.set('op', op.toString());
+    url.searchParams.set('orderId', orderId.toString());
+    url.searchParams.set('currency', currency);
+    url.searchParams.set('price', price);
+    url.searchParams.set('royalty', royalty ? royalty.toString() : null);
+    url.searchParams.set('payback', payback ? payback.toString() : null);
+    url.searchParams.set('tokenId', tokenId);
+  
+    const data = await fetch(url.toString()).then(res => res.json());
     const inputData = (data.data ?? []) as { order_id: number; input: string }[];
     const input = inputData.find(d => d.order_id === orderId);
     return input ? decodeRunInput(input.input) : undefined;
@@ -185,9 +186,7 @@ async function acceptOrder(
   price: string,
   royalty: number | undefined,
   payback: number | undefined,
-  tokenId: string,
-  callOverrides: ethers.Overrides = {},
-  headers: any,
+  tokenId: string
 ) {
   const runInput: RunInput | undefined = await fetchOrderSign(
     accountAddress,
@@ -197,9 +196,7 @@ async function acceptOrder(
     price,
     royalty,
     payback,
-    tokenId,
-    headers,
-    network
+    tokenId
   );
   // check
   let value: BigNumber = ethers.constants.Zero;
@@ -228,9 +225,7 @@ async function acceptOrder(
 export async function buyOrder(
   network: Network,
   accountAddress: string,
-  order: Order,
-  callOverrides: ethers.Overrides = {},
-  headers: any
+  order: Order
 ): Promise<RunInput | undefined> {
   if (
     !(order.id && order.price && order.token)
@@ -247,9 +242,7 @@ export async function buyOrder(
     order.price,
     undefined,
     undefined,
-    '',
-    callOverrides,
-    headers
+    ''
   );
 }
 
@@ -263,7 +256,6 @@ export async function createX2Y2ParametersForNFTListing(
   expirationTime: number,
 ): Promise<X2Y2Order> {
   const accountAddress = await signer.getAddress();
-
   const data = encodeItemData([
     {
       token: tokenAddress,
@@ -285,13 +277,13 @@ export async function createX2Y2ParametersForNFTListing(
   return order;
 }
 
-export const getX2Y2Hex = (
+export const getX2Y2Hex = async (
   executorAddress: string,
   protocolData: X2Y2ProtocolData,
   ethValue: string,
   tokenStandard: TokenStandard,
   hash: string
-): AggregatorResponse => {
+): Promise<AggregatorResponse> => {
   try {
     const {
       contract,
@@ -325,18 +317,14 @@ export const getX2Y2Hex = (
       price,
       taker: executorAddress,
     };
-
-    const headers = {
-      headers: {
-        'X-API-KEY': process.env.X2Y2_API_KEY,
-      },
-    };
-
     const failIfRevert = true;
-    const runInput = buyOrder('mainnet', nftAggregator.mainnet, order, {}, JSON.stringify(headers));
+    const runInput = await buyOrder('mainnet', nftAggregator.mainnet, order);
+
     const inputData = [runInput, ethValue, protocolData?.contract, protocolData?.tokenId, failIfRevert];
-    const wholeHex = X2Y2Lib.encodeFunctionData('_run', inputData);
-    const genHex = libraryCall('_tradeHelper(uint256,bytes,address,uint256,bool)', wholeHex.slice(10));
+
+    const wholeHex = await X2Y2Lib.encodeFunctionData('_run', inputData);
+
+    const genHex = libraryCall('_run(RunInput,uint256,address,uint256,bool)', wholeHex.slice(10));
     
     return {
       tradeData: genHex,

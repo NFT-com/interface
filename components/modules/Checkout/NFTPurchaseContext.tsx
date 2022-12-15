@@ -112,6 +112,17 @@ export function NFTPurchaseContextProvider(
     localStorage.setItem('stagedNftPurchases', JSON.stringify(newToBuy));
   }, [toBuy]);
 
+  const fetchX2Y2Hex = useCallback(async (purchase) => {
+    const response = await getX2Y2Hex(
+      aggregator.address,
+      purchase?.protocolData as X2Y2ProtocolData,
+      purchase.currency === NULL_ADDRESS ? BigNumber.from(purchase?.price).toString() : '0',
+      purchase.nft.type === NftType.Erc1155 ? 'erc1155' : 'erc721',
+      purchase.orderHash
+    );
+    return response;
+  },[aggregator.address]);
+
   const buyAll = useCallback(async () => {
     const allDistinctErc20s: string[] = filterDuplicates(
       toBuy?.filter(purchase => purchase.currency !== NULL_ADDRESS)?.map(purchase => purchase?.currency),
@@ -140,15 +151,11 @@ export function NFTPurchaseContextProvider(
           looksrarePurchase.currency === NULL_ADDRESS ? BigNumber.from(looksrarePurchase?.price).toString() : '0'
         );
       }) ?? []),
-      ...(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.X2Y2)?.map(X2Y2Purchase => {
-        return getX2Y2Hex(
-          aggregator.address,
-          X2Y2Purchase?.protocolData as X2Y2ProtocolData,
-          X2Y2Purchase.currency === NULL_ADDRESS ? BigNumber.from(X2Y2Purchase?.price).toString() : '0',
-          X2Y2Purchase.nft.type === NftType.Erc1155 ? 'erc1155' : 'erc721',
-          X2Y2Purchase.orderHash
-        );
-      }) ?? []),
+      //X2Y2
+      ...(await Promise.all(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.X2Y2)?.map(X2Y2Purchase => {
+        return fetchX2Y2Hex(X2Y2Purchase);
+      })))
+      ,
       // Seaport orders are combined
       toBuy?.find(purchase => purchase.protocol === ExternalProtocol.Seaport) != null ?
         getSeaportHex(
@@ -187,7 +194,7 @@ export function NFTPurchaseContextProvider(
       return await tx.wait(1).then(() => true).catch(() => false);
     }
     return false;
-  }, [aggregator, currentAddress, looksrareExchange, toBuy]);
+  }, [aggregator, currentAddress, fetchX2Y2Hex, looksrareExchange, toBuy]);
 
   return <NFTPurchasesContext.Provider value={{
     removePurchase,
