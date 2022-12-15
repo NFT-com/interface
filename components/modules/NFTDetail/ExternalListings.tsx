@@ -181,9 +181,6 @@ export function ExternalListings(props: ExternalListingsProps) {
     );
   }
 
-  const bestListing = getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId);
-  const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
-
   return <div className='w-full flex justify-center p-4'>
     <EditListingsModal
       nft={props.nft}
@@ -221,12 +218,12 @@ export function ExternalListings(props: ExternalListingsProps) {
           <div className='flex font-noi-grotesk text-black leading-6 items-center my-8 px-6 justify-between'>
             <div className='flex items-end leading-6'>
               <div className='flex items-end'>
-                {getIcon(listingCurrencyData?.name ?? 'WETH')}
-                <span className='text-[37px] font-semibold'>{listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}</span>
+                {getIcon(getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH')}
+                <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}</span>
               </div>
-              <span className='mx-1.5 text-[15px] uppercase font-semibold'>{listingCurrencyData?.name ?? 'WETH'}</span>
+              <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
               <span className="ml-2 text-[15px] uppercase font-medium text-[#6A6A6A]">
-                ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)))?.toFixed(2) ?? 0}{' USD'}
+                ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}{' USD'}
               </span>
             </div>
 
