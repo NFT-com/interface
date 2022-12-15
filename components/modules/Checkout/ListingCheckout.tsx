@@ -214,7 +214,7 @@ export function ListingCheckout() {
             }
           </div> */}
         </div>
-        <div className='my-8 w-full overflow-x-scroll flex flex-col'>
+        <div className='my-8 flex flex-col items-start w-full'>
           <div className="border-t border-[#D5D5D5] mx-8">
             <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
           </div>
@@ -225,8 +225,6 @@ export function ListingCheckout() {
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Marketplaces</th>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</th>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left"></th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left"></th>
               </tr>
             </thead>
             <tbody>
