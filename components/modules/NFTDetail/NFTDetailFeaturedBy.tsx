@@ -73,8 +73,8 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
         <span className="text-2xl font-bold font-grotesk mb-2 w-full px-[16px]">
           Not Featured on a NFT Profile yet
         </span>
-        <div className='w-full flex items-center justify-center'>
-          <NoActivityIcon className='w-[450px] mt-5' />
+        <div className='flex items-center justify-center'>
+          <NoActivityIcon className='mt-5' />
         </div>
       </div>
     );

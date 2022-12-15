@@ -94,7 +94,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
         stretch
-        label={filterValidListings(props.nft?.listings?.items).length > 1 ? 'Edit Listings' : 'Edit Listing'}
+        label={'Edit Listing'}
         onClick={() => {
           setEditListingsModalOpen(true);
         }}
