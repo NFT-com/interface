@@ -66,27 +66,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     },
   ];
 
-  const typeOfAuctionOptions = [
-    {
-      label: 'Fixed Price',
-      onSelect: () => {
-        setSelectedOpensea(!selectedOpensea);
-      }
-    },
-    {
-      label: 'English Auction',
-      onSelect: () => {
-        setSelectedLooksrare(!selectedLooksrare);
-      }
-    },
-    {
-      label: 'Decresing Price',
-      onSelect: () => {
-        setSelectedx2y2(!selectedx2y2);
-      }
-    },
-  ];
-
   const rowHeightClass = expanded ? 'h-48' : 'h-24';
   const seaportEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Seaport) != null, [getTarget, props.listing]);
   const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
@@ -321,8 +300,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       </tr>
     )
     : (
-      <tr className={rowHeightClass}>
-        <td className='w-auto'>
+      <tr>
+        <td className={rowHeightClass}>
           <div className='flex flex-col items-start w-28'>
             {/*             {
               expanded ?
@@ -353,38 +332,26 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             </ div>
           </ div>
         </td>
-        <td className='align-top w-auto'>
-          <div className='flex flex-col items-start h-full'>
-            {props.listing?.targets?.map((target) =>
-              <div key={target.protocol}>
-                <DropdownPicker
-                  options={marketPlacesOptions}
-                  selectedIndex={marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) >= 0 ? marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) : 0}
-                />
-              </div>) }
-            {props.listing?.targets?.length < 3 && <div>
+        <td className={tw(rowHeightClass, 'flex flex-col items-start')}>
+          {props.listing?.targets?.length > 0
+            ? props.listing?.targets?.map((target) => {
+              return (
+                <div key={target.protocol}>
+                  <DropdownPicker
+                    options={marketPlacesOptions}
+                    selectedIndex={marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) >= 0 ? marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) : 0}
+                    placeholder={'Select Marketplace'}
+                  />
+                </div>
+              );}) :
+            <div>
               <DropdownPicker
                 options={marketPlacesOptions}
+                selectedIndex={0}
                 placeholder={'Select Marketplace'}
               />
-            </div>}
-          </div>
-        </td>
-        <td className='align-top w-auto'>
-          <div className='flex flex-col items-start h-full w-44'>
-            {props.listing?.targets?.map((target) =>
-              <div key={target.protocol}>
-                <DropdownPicker
-                  options={typeOfAuctionOptions}
-                  placeholder={'Select'}
-                />
-              </div>)}
-            {props.listing?.targets?.length < 3 &&
-              <DropdownPicker
-                options={typeOfAuctionOptions}
-                placeholder={'Select'}
-              />}
-          </div>
+            </div>
+          }
         </td>
         <td className={tw(rowHeightClass)}>
           <div className='h-full w-full py-4 flex flex-col justify-around'>
