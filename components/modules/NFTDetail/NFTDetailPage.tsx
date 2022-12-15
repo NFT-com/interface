@@ -57,7 +57,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     return (
       <div>
         <div className='flex flex-col w-full'>
-          <div className='flex w-full items-center p-4 pb-0 justify-start'>
+          <div className='flex w-full items-center p-4 justify-start'>
             <div className='justify-start'>
               <Tab.Group selectedIndex={selectedDetailTab} onChange={(index) => {setSelectedDetailTab(index);}}>
                 <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
@@ -67,8 +67,8 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
                         <div
                           className={
                             tw(
-                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-noi-grotesk text-[16px] w-[150px] leading-6',
-                              selected && 'bg-black text-[#F8F8F8] font-noi-grotesk text-[16px] leading-6'
+                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
+                              selected && 'bg-black text-[#F8F8F8] font-grotesk text-base font-semibold leading-6'
                             )
                           }
                         >
@@ -83,10 +83,10 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
           {selectedDetailTab == 0 &&
             <>
-              <div className='flex w-full p-4 font-noi-grotesk'>
+              <div className='flex w-full p-4 font-grotesk'>
                 <DescriptionDetail nft={nft} />
               </div>
-              <div className='flex w-full p-4 font-noi-grotesk'>
+              <div className='flex w-full p-4 font-grotesk'>
                 <NftChainInfo nft={nft} />
               </div>
             </>
@@ -94,7 +94,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           {selectedDetailTab == 1 &&
             <>
               <div className='flex w-full p-4'>
-                <div className='border border-[#E1E1E1] rounded-md py-4 font-noi-grotesk w-full'>
+                <div className='border border-[#E1E1E1] rounded-md py-4 font-grotesk w-full'>
                   <Properties nft={nft} />
                 </div>
               </div>
@@ -117,7 +117,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   return (
     <div className="flex flex-col pt-20 items-center w-full">
       {nft?.metadata?.imageURL &&
-        <div className='flex w-full bg-[#F2F2F2] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
+        <div className='flex w-full bg-[#F0F0F0] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
           <div className="flex w-full max-h-[600px] max-w-nftcom h-full object-contain drop-shadow-lg rounded aspect-square">
             <RoundedCornerMedia
               key={nft?.id}
@@ -130,12 +130,12 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
         </div>
       }
-      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] pb-16 minxl:-mb-8">
+      <div className="flex flex-col minxl:flex-row w-full minxl:max-w-nftcom minlg:max-w-[650px] pb-8 minxl:-mb-8">
         <div className='flex minxl:w-1/2 w-full minxl:flex-col'>
           <NFTDetail nft={nft} onRefreshSuccess={() => {
             mutateNft();
           }} key={nft?.id} />
-          <div className="hidden minxl:block minxl:pt-5">
+          <div className="hidden minxl:block minxl:pt-10">
             <DetailTabsComponent />
           </div>
         </div>
@@ -152,7 +152,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           (defaultChainId === '1') &&
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
             <div className="min-h-[13.7em]"></div>
-            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end shadow-xl rounded-[24px]">
+            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
               <NFTAnalyticsContainer data={nft} />
             </div>
           </div>
