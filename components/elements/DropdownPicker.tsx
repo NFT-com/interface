@@ -16,7 +16,7 @@ export interface PickerOption {
 
 export interface DropdownPickerProps {
   options: Array<PickerOption>;
-  selectedIndex: number;
+  selectedIndex?: number;
   constrain?: boolean;
   above?: boolean;
   placeholder?: string;
@@ -50,11 +50,18 @@ export function DropdownPicker(props: DropdownPickerProps) {
     setExpanded(false);
   });
 
+  console.log('props.selectedIndex fdo', props.selectedIndex);
   const onChangeHandler = useCallback(
     () => props.onChange ? props.onChange(selected?.label || props.options[selectedIndex]?.label) : null
     ,
     [selected, props, selectedIndex],
   );
+
+  useEffect(() => {
+    setSelectedIndex(props.selectedIndex);
+    setSelected(props.options[props.selectedIndex]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : 0);
