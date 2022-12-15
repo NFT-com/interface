@@ -50,7 +50,6 @@ export function DropdownPicker(props: DropdownPickerProps) {
     setExpanded(false);
   });
 
-  console.log('props.selectedIndex fdo', props.selectedIndex);
   const onChangeHandler = useCallback(
     () => props.onChange ? props.onChange(selected?.label || props.options[selectedIndex]?.label) : null
     ,

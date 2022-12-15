@@ -225,9 +225,6 @@ export function ListingCheckout() {
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Marketplaces</th>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</th>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left"></th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left"></th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left"></th>
               </tr>
             </thead>
             <tbody>
