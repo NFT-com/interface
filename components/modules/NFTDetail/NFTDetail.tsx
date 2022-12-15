@@ -116,10 +116,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
         </div>
       </div>
       <div className='flex flex-row items-center w-full p-4'>
-        <div>
+        <div className="grid grid-cols-2 gap-x-32 gap-y-1">
           <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
             Creator
           </span>
+          <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
+            Owner
+          </span>
+
           <div className='flex items-center'>
             <div className='flex flex-col h-full aspect-square'>
               {collectionOwnerToShow?.photoURL ?
@@ -136,7 +140,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
               }
             </div>
 
-            <div className='flex flex-col w-1/2 h-full'>
+            <div className=''>
               <div className='flex flex-col h-full'>
                 {
                   creatorTokens?.length > 0 ?
@@ -170,28 +174,24 @@ export const NFTDetail = (props: NFTDetailProps) => {
               </div>
             </div>
           </div>
-        </div>
-        <div className='ml-14'>
-          <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
-            Owner
-          </span>
+
           <div className='flex items-center'>
-            <div className='flex flex-col h-full aspect-square'>
-              {profileOwnerToShow?.photoURL ?
-                <RoundedCornerMedia
-                  containerClasses='w-full aspect-square'
-                  variant={RoundedCornerVariant.All}
-                  amount={RoundedCornerAmount.Medium}
-                  src={profileOwnerToShow?.photoURL}
-                />
-                :
+            {profileOwnerToShow?.photoURL ?
+              <RoundedCornerMedia
+                containerClasses='w-[34px] height-[34px] aspect-square'
+                variant={RoundedCornerVariant.All}
+                amount={RoundedCornerAmount.Medium}
+                src={profileOwnerToShow?.photoURL}
+              />
+              :
+              <div className='flex flex-col h-full aspect-square'>
                 <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
                   <LoggedInIdenticon round border />
                 </div>
-              }
-            </div>
+              </div>
+            }
 
-            <div className='flex flex-col w-1/2 h-full'>
+            <div className=''>
               <div className='flex flex-col h-full'>
                 {
                   profileTokens?.length > 0 ?
