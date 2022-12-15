@@ -90,7 +90,7 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const getListingSummaryButtons = useCallback(() => {
     if (!hasGks) {
-      return null;
+      return 'You must have a Genesis Key to purchase';
     } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
         stretch

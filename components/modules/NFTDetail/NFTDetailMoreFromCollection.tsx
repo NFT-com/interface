@@ -12,6 +12,8 @@ import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, BigNumberish } from 'ethers';
+import RightSlider from 'public/right-slider.svg';
+import { useState } from 'react';
 import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';
@@ -27,6 +29,7 @@ export interface NFTDetailMoreFromCollectionProps {
 
 export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionProps) {
   const { width: screenWidth } = useWindowDimensions();
+  const [my_swiper, set_my_swiper] = useState({});
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const { chain } = useNetwork();
   const { data } = useSWR('NFTDetailMoreFromCollection' + props.contract + props.hideTokenId, async () => {
@@ -70,10 +73,18 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
             })}
           </div>
           :
-          <div className='flex py-2 h-full items-stretch'>
+          <div className='flex py-2 h-full items-stretch relative'>
+            <div className='absolute right-[-1px] top-0 bottom-0 w-[150px] z-10 lg:hidden bg-gradient-to-r from-transparent to-[#ECECEC]' />
+            <RightSlider onClick={() => {
+              // @ts-ignore
+              my_swiper.slideNext();
+            }} className='cursor-pointer absolute right-[-50px] lg:hidden top-1/2 bottom-1/2 z-20' />
             <Swiper
+              onInit={(ev) => {
+                set_my_swiper(ev);
+              }}
               slidesPerView={Math.min(data?.length ?? 5, screenWidth < 600
-                ? 1
+                ? 2
                 : (screenWidth >= 600 && screenWidth < 900)
                   ? (data?.length >= 3)
                     ? 4
@@ -81,7 +92,8 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                   : (data?.length >= 4)
                     ? 5
                     : data?.length)}
-              centeredSlides={true}
+              centeredSlides={screenWidth < 600 ? false : true}
+              allowSlideNext={true}
               loop={data?.length > 4}
               autoplay={{
                 'delay': 4500,

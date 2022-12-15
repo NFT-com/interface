@@ -447,6 +447,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+.grid-gap {
+  background-color: #ffffff00;
+}
+
 .Navigation {
   width: 100%;
 }

@@ -94,7 +94,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           {selectedDetailTab == 1 &&
             <>
               <div className='flex w-full p-4'>
-                <div className='border border-[#E1E1E1] rounded-md py-4 font-noi-grotesk w-full'>
+                <div className='py-4 font-noi-grotesk w-full'>
                   <Properties nft={nft} />
                 </div>
               </div>
@@ -118,7 +118,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
     <div className="flex flex-col pt-20 items-center w-full">
       {nft?.metadata?.imageURL &&
         <div className='flex w-full bg-[#F2F2F2] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
-          <div className="flex w-full max-h-[600px] max-w-nftcom h-full object-contain drop-shadow-lg rounded aspect-square">
+          <div className="flex w-full max-h-[600px] h-full max-w-nftcom object-contain drop-shadow-lg rounded aspect-square">
             <RoundedCornerMedia
               key={nft?.id}
               src={processIPFSURL(nft?.metadata?.imageURL)}
@@ -141,7 +141,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         </div>
         {(showListings || nft?.wallet?.address === currentAddress) ?
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
-            <div className="flex minxl:flex-row w-full items-start">
+            <div className="lg:hidden flex minxl:flex-row w-full items-start">
               <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
             </div>
             <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">

@@ -20,7 +20,7 @@ export function NftDetailCard(props: NftDetailCardProps) {
       className={tw(
         'NftDetailCard',
         'flex w-full h-full',
-        'bg-[#F8F8F8] rounded-sm',
+        'bg-white border border-gray-200 px-3 py-4 rounded-[18px]',
         'overflow-hidden cursor-pointer',
         props.onClick &&
        'cursor-pointer transition hover:scale-[0.97] transition-spacing duration-100 ease-in-out'
@@ -35,14 +35,13 @@ export function NftDetailCard(props: NftDetailCardProps) {
       <div className={tw(
         'flex flex-col p-2 w-full',
         props.center ? 'items-center' : null,
-        'overflow-hidden',
-        'border border-[#E1E1E1] rounded-sm'
+        'overflow-hidden'
       )}>
-        <span className='font-grotesk text-[#6F6F6F] font-bold text-[10px] leading-5 tracking-[10%]'>
+        <span className='font-noi-grotesk text-[#6A6A6A] text-[16px] lowercase font-medium mb-4 leading-5 tracking-[10%]'>
           {props.type}
         </span>
         <span className={tw(
-          'font-grotesk text-[#1F2127] font-bold text-[14px] leading-5',
+          'font-noi-grotesk text-black font-medium text-[16px] leading-5',
           'line-clamp-1 text-ellipsis',
           props.valueClasses
         )}>
