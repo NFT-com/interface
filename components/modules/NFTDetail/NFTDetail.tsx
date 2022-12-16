@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
 import { useCallback } from 'react';
+import { isMobile } from 'react-device-detect';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
@@ -169,7 +170,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     </div> :
                     <Link href={getEtherscanLink(Number(defaultChainId), collection?.collection?.contract, 'address')}>
                       <span className="cursor-pointer text-base hover:underline font-medium leading-5 font-noi-grotesk pl-3 pt-1">
-                        {shortenAddress(collection?.collection?.contract, 6) ?? 'Unknown'}
+                        {shortenAddress(collection?.collection?.contract, isMobile ? 4 : 6) ?? 'Unknown'}
                       </span>
                     </Link>
                 }
@@ -218,7 +219,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                     </div> :
                     <Link href={getEtherscanLink(Number(defaultChainId), props.nft?.wallet?.address, 'address')}>
                       <span className="text-[#1F2127] text-base cursor-pointer hover:underline font-medium leading-5 font-noi-grotesk pl-3">
-                        {shortenAddress(props.nft?.wallet?.address, 6) ?? 'Unknown'}
+                        {shortenAddress(props.nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown'}
                       </span>
                     </Link>
                 }
