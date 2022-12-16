@@ -181,7 +181,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     );
   }
 
-  return <div className='w-full flex justify-center p-4'>
+  return <div className='w-full flex justify-center'>
     <EditListingsModal
       nft={props.nft}
       collectionName={props.collectionName}
@@ -194,7 +194,7 @@ export function ExternalListings(props: ExternalListingsProps) {
       listings={[
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare)
-      ]}
+      ]?.filter( Boolean )}
       nft={props.nft}
       collectionName={props.collectionName}
       visible={selectListingModalOpen}
@@ -206,7 +206,7 @@ export function ExternalListings(props: ExternalListingsProps) {
       {[
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare)
-      ]?.map((listing, index) => {
+      ]?.filter( Boolean )?.map((listing, index) => {
         return <div key={index} className={tw(
           'flex flex-col bg-white rounded-[18px] border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
         )}>

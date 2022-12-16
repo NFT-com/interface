@@ -67,7 +67,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
                         <div
                           className={
                             tw(
-                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-noi-grotesk text-[16px] w-[150px] leading-6',
+                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-medium font-noi-grotesk text-[16px] w-[150px] leading-6',
                               selected && 'bg-black text-[#F8F8F8] font-noi-grotesk text-[16px] leading-6'
                             )
                           }
@@ -140,19 +140,18 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
         </div>
         {(showListings || nft?.wallet?.address === currentAddress) ?
-          <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
+          <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4 minxl:pt-12'>
             <div className="md:hidden flex minxl:flex-row w-full items-start">
               <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
             </div>
-            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
+            <div className="w-full hidden minxl:flex minxl:items-end">
               <NFTAnalyticsContainer data={nft} />
             </div>
           </div>
           :
           (defaultChainId === '1') &&
-          <div className='md:hidden flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
-            <div className="min-h-[13.7em]"></div>
-            <div className="w-full hidden  minxl:flex minxl:overflow-hidden minxl:items-end shadow-xl rounded-[24px]">
+          <div className='md:hidden flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4 minxl:pt-12'>
+            <div className="w-full hidden  minxl:flex minxl:items-end shadow-xl rounded-[24px]">
               <NFTAnalyticsContainer data={nft} />
             </div>
           </div>

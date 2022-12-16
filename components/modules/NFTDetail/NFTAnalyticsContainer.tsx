@@ -85,64 +85,66 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   return (
     <div className="overflow-x-auto py-4 pt-0 minxl:py-5 minxl:pb-0 minxl:-mb-10 w-full">
       <div className="w-full flex flex-col p-4">
-        <div className='justify-start flex'>
-          <Tab.Group onChange={(index) => {setSelectedTab(nftActivityTabs[index]);}}>
-            <Tab.List className="flex rounded-3xl z-10">
-              {Object.keys(nftActivityTabs).map((chartType) => (
-                <Tab
-                  key={chartType}
-                  className={({ selected }) =>
-                    tw(
-                      'rounded-3xl py-2.5 px-8 font-noi-grotesk text-[16px] leading-5 text-[#6A6A6A]',
-                      selected && 'bg-black text-[#FFFFFF]'
-                    )
-                  }
-                >
-                  {nftActivityTabs[chartType]}
-                </Tab>
-              ))}
-            </Tab.List>
-          </Tab.Group>
+        <div className='flex items-center justify-between'>
+          <div className='justify-start flex'>
+            <Tab.Group onChange={(index) => {setSelectedTab(nftActivityTabs[index]);}}>
+              <Tab.List className="flex rounded-3xl z-10 bg-[#F6F6F6]">
+                {Object.keys(nftActivityTabs).map((chartType) => (
+                  <Tab
+                    key={chartType}
+                    className={({ selected }) =>
+                      tw(
+                        'rounded-3xl font-medium py-2.5 px-8 font-noi-grotesk text-[16px] leading-5 text-[#6A6A6A]',
+                        selected && 'bg-black text-[#FFFFFF]'
+                      )
+                    }
+                  >
+                    {nftActivityTabs[chartType]}
+                  </Tab>
+                ))}
+              </Tab.List>
+            </Tab.Group>
+          </div>
+          {selectedTab === 'Sales' &&
+            <Menu as="div" className="relative inline-block text-left">
+              <div className='flex items-center justify-end z-9'>
+                <Menu.Button className="flex items-center justify-between md:w-[120px] w-[190px] rounded-[8px] bg-[#F2F2F2] px-3 py-2 text-[16px] text-black font-noi-grotesk hover:bg-gray-50">
+                  {getTimeFrameString(selectedTimeFrame)}
+                  <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
+                </Menu.Button>
+              </div>
+        
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute right-0 z-10 mt-2 md:w-[120px] w-[190px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="py-1">
+                    {Object.keys(timeFrames).map((timeFrame, index) => (
+                      <Menu.Item key={timeFrame}>
+                        <div
+                          onClick={() => {
+                            setSelectedTimeFrame(timeFrames[index]);
+                          }}
+                          className={tw(
+                            'font-noi-grotesk hover:bg-gray-50 w-full p-2 text[15px] text-center cursor-pointer leading-5 text-[#6A6A6A] ',
+                          )}
+                        >
+                          {timeFrames[timeFrame]}
+                        </div>
+                      </Menu.Item>
+                    ))}
+                  </div>
+                </Menu.Items>
+              </Transition>
+            </Menu>
+          }
         </div>
-        {selectedTab === 'Sales' &&
-          <Menu as="div" className="relative inline-block text-left">
-            <div className='flex items-center justify-end md:mt-5 mt-[-35px] z-9'>
-              <Menu.Button className="flex items-center justify-between md:w-[130px] w-[190px] rounded-[8px] bg-[#F2F2F2] px-3 py-2 text-[16px] text-black font-noi-grotesk hover:bg-gray-50">
-                {getTimeFrameString(selectedTimeFrame)}
-                <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
-              </Menu.Button>
-            </div>
-      
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
-              <Menu.Items className="absolute right-0 z-10 mt-2 md:w-[130px] w-[190px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="py-1">
-                  {Object.keys(timeFrames).map((timeFrame, index) => (
-                    <Menu.Item key={timeFrame}>
-                      <div
-                        onClick={() => {
-                          setSelectedTimeFrame(timeFrames[index]);
-                        }}
-                        className={tw(
-                          'font-noi-grotesk hover:bg-gray-50 w-full p-2 text[15px] text-center cursor-pointer leading-5 text-[#6A6A6A] ',
-                        )}
-                      >
-                        {timeFrames[timeFrame]}
-                      </div>
-                    </Menu.Item>
-                  ))}
-                </div>
-              </Menu.Items>
-            </Transition>
-          </Menu>
-        }
       </div>
       {selectedTab === 'Activity' && <DynamicNFTActivity data={data} />}
       {nftData?.length > 0 && selectedTab === 'Sales' &&
