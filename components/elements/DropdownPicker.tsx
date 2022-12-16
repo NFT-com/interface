@@ -40,10 +40,10 @@ export interface DropdownPickerProps {
 export function DropdownPicker(props: DropdownPickerProps) {
   const [optionHoverIndex, setOptionHoverIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(props.options[props.selectedIndex]);
   const { primaryIcon, secondaryText } =
     useThemeColors();
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(props.selectedIndex);
   const wrapperRef = useRef(null);
   const activeRowRef = useRef(null);
   useOutsideClickAlerter(wrapperRef, () => {
@@ -57,15 +57,10 @@ export function DropdownPicker(props: DropdownPickerProps) {
   );
 
   useEffect(() => {
-    setSelectedIndex(props.selectedIndex);
-    setSelected(props.options[props.selectedIndex]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : 0);
+    console.log('condition: ', props.options.findIndex((i) => i.label === selected?.label));
+    setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : selectedIndex);
     onChangeHandler();
-  }, [selected, props, onChangeHandler]);
+  }, [selected, props, onChangeHandler, selectedIndex]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
     return (
@@ -77,7 +72,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
-          item.onSelect();
+          // item.onSelect();
           setSelected(item);
         }}
       >

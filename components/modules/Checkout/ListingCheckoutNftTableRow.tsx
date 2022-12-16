@@ -48,21 +48,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const marketPlacesOptions = [
     {
       label: 'Seaport',
-      onSelect: () => {
-        setSelectedOpensea(!selectedOpensea);
-      }
     },
     {
       label: 'LooksRare',
-      onSelect: () => {
-        setSelectedLooksrare(!selectedLooksrare);
-      }
     },
     {
       label: 'X2Y2',
-      onSelect: () => {
-        setSelectedx2y2(!selectedx2y2);
-      }
     },
   ];
 
@@ -92,6 +83,78 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
   const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
 
+  const OpenseaPriceInput = () => {
+    return <PriceInput
+      key={expanded + 'OpenseaPriceInput'}
+      initial={
+        getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
+          '' :
+          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice ?? 0))
+      }
+      currencyAddress={getTarget(props.listing, ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
+      currencyOptions={['WETH', 'ETH']}
+      onPriceChange={(val: BigNumber) => {
+        console.log('openseainput');
+        setPrice(props.listing, val, ExternalProtocol.Seaport);
+        props.onPriceChange();
+      }}
+      onCurrencyChange={(currency: SupportedCurrency) => {
+        setCurrency(props.listing, currency, ExternalProtocol.Seaport);
+        props.onPriceChange();
+      }}
+      error={
+        props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && target.startingPrice == null) != null ||
+    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && BigNumber.from(target.startingPrice).eq(0)) != null
+      }
+    />;
+  };
+
+  const LooksRarePriceInput = () => {
+    return <PriceInput
+      key={expanded + 'LooksrarePriceInput'}
+      initial={
+        getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice == null ?
+          '' :
+          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice ?? 0))
+      }
+      currencyAddress={getAddress('weth', defaultChainId)}
+      currencyOptions={['WETH']}
+      onCurrencyChange={null}
+      onPriceChange={(val: BigNumber) => {
+        console.log('looksrareinput');
+        setPrice(props.listing, val, ExternalProtocol.LooksRare);
+        props.onPriceChange();
+      }}
+      error={
+        props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && target.startingPrice == null) != null ||
+    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null
+      }
+    />;
+  };
+
+  const X2Y2PriceInput = () => {
+    return <PriceInput
+      key={expanded + 'X2Y2PriceInput'}
+      initial={
+        getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice == null ?
+          '' :
+          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice ?? 0))
+      }
+      currencyAddress={getTarget(props.listing, ExternalProtocol.X2Y2)?.currency ?? getAddress('weth', defaultChainId)}
+      currencyOptions={['ETH']}
+      onCurrencyChange={null}
+      onPriceChange={(val: BigNumber) => {
+        console.log('x2y2input');
+        setPrice(props.listing, val, ExternalProtocol.X2Y2);
+        props.onPriceChange();
+      }}
+      error={
+        props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
+    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
+      }
+    />;
+  };
+
   useEffect(() => {
     if (expanded) {
       if (!looksrareEnabled) {
@@ -105,6 +168,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }
     }
   }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
+
+  console.log('props.listings fdo', props.listing);
 
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
@@ -322,8 +387,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     )
     : (
       <tr className={rowHeightClass}>
-        <td className='w-auto'>
-          <div className='flex flex-col items-start w-28'>
+        <td className='w-auto mr-10'>
+          <div className='flex flex-col items-start w-40'>
             {/*             {
               expanded ?
                 <CaretDown onClick={() => {
@@ -334,7 +399,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   clearGeneralConfig(props.listing);
                 }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' />
             } */}
-            <div className='relative h-20 aspect-square'>
+            <div className='relative h-28 aspect-square'>
               <video
                 autoPlay
                 muted
@@ -354,166 +419,127 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           </ div>
         </td>
         <td className='align-top w-auto'>
-          <div className='flex flex-col items-start h-full'>
-            {props.listing?.targets?.map((target) =>
-              <div key={target.protocol}>
+          <div className='flex flex-col items-start h-full pr-2'>
+            {/* {props.listing?.targets?.map((target) =>
+
+              <div key={target?.protocol + props?.listing?.nft?.id + 'dropdownpicker'} className='mb-2 border border-gray-300 rounded-md w-full'>
                 <DropdownPicker
                   options={marketPlacesOptions}
                   selectedIndex={marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) >= 0 ? marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) : 0}
                 />
-              </div>) }
-            {props.listing?.targets?.length < 3 && <div>
+              </div>) } */}
+            {seaportEnabled && <div className='mb-2 border border-gray-300 rounded-md w-full'>
               <DropdownPicker
                 options={marketPlacesOptions}
-                placeholder={'Select Marketplace'}
+                selectedIndex={0}
               />
             </div>}
+            {looksrareEnabled && <div className='mb-2 border border-gray-300 rounded-md w-full'>
+              <DropdownPicker
+                options={marketPlacesOptions}
+                selectedIndex={1}
+              />
+            </div>}
+            {X2Y2Enabled && <div className='mb-2 border border-gray-300 rounded-md w-full'>
+              <DropdownPicker
+                options={marketPlacesOptions}
+                selectedIndex={2}
+              />
+            </div>}
+            {props.listing?.targets?.length < 3 &&
+              <div className='mb-2 border border-gray-300 rounded-md w-full'>
+                <DropdownPicker
+                  options={marketPlacesOptions}
+                  placeholder={'Select Marketplace'}
+                />
+              </div>}
           </div>
         </td>
-        <td className='align-top w-auto'>
+        <td className='align-top w-auto pr-2'>
           <div className='flex flex-col items-start h-full w-44'>
-            {props.listing?.targets?.map((target) =>
-              <div key={target.protocol}>
+            {/* {props.listing?.targets?.map((target) =>
+              <div key={'toa' + target.protocol} className='mb-2 border border-gray-300 rounded-md w-full'>
                 <DropdownPicker
                   options={typeOfAuctionOptions}
                   placeholder={'Select'}
                 />
               </div>)}
             {props.listing?.targets?.length < 3 &&
+            <div className='mb-2 border border-gray-300 rounded-md w-full'>
               <DropdownPicker
                 options={typeOfAuctionOptions}
                 placeholder={'Select'}
+              />
+            </div>} */}
+            {seaportEnabled &&
+              <input
+                disabled
+                type="text"
+                value='Fixed price'
+                className={tw(
+                  'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                  'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
+                )}
+              />}
+            {looksrareEnabled &&
+              <input
+                disabled
+                type="text"
+                value='Fixed price'
+                className={tw(
+                  'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                  'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
+                )}
+              />}
+            {X2Y2Enabled &&
+              <input
+                disabled
+                type="text"
+                value='Fixed price'
+                className={tw(
+                  'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                  'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
+                )}
+              />}
+            {props.listing?.targets?.length < 3 &&
+              <input
+                disabled
+                type="text"
+                value='Fixed price'
+                className={tw(
+                  'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                  'text-left p-1 rounded-md bg-gray-200 pl-3',
+                )}
               />}
           </div>
         </td>
-        <td className={tw(rowHeightClass)}>
-          <div className='h-full w-full py-4 flex flex-col justify-around'>
-            {
-              expanded ?
-                <>
-                  <PriceInput
-                    key={expanded + 'OpenseaPriceInput'}
-                    initial={
-                      getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
-                        '' :
-                        ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice ?? 0))
-                    }
-                    currencyAddress={getTarget(props.listing, ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
-                    currencyOptions={['WETH', 'ETH']}
-                    onPriceChange={(val: BigNumber) => {
-                      setPrice(props.listing, val, ExternalProtocol.Seaport);
-                      props.onPriceChange();
-                    }}
-                    onCurrencyChange={(currency: SupportedCurrency) => {
-                      setCurrency(props.listing, currency, ExternalProtocol.Seaport);
-                      props.onPriceChange();
-                    }}
-                    error={
-                      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && target.startingPrice == null) != null ||
-                  props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && BigNumber.from(target.startingPrice).eq(0)) != null
-                    }
-                  />
-                  <PriceInput
-                    key={expanded + 'LooksrarePriceInput'}
-                    initial={
-                      getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice == null ?
-                        '' :
-                        ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice ?? 0))
-                    }
-                    currencyAddress={getAddress('weth', defaultChainId)}
-                    currencyOptions={['WETH']}
-                    onCurrencyChange={null}
-                    onPriceChange={(val: BigNumber) => {
-                      setPrice(props.listing, val, ExternalProtocol.LooksRare);
-                      props.onPriceChange();
-                    }}
-                    error={
-                      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && target.startingPrice == null) != null ||
-                  props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null
-                    }
-                  />
-                  <PriceInput
-                    key={expanded + 'X2Y2PriceInput'}
-                    initial={
-                      getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice == null ?
-                        '' :
-                        ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice ?? 0))
-                    }
-                    currencyAddress={getTarget(props.listing, ExternalProtocol.X2Y2)?.currency ?? getAddress('weth', defaultChainId)}
-                    currencyOptions={['ETH']}
-                    onCurrencyChange={null}
-                    onPriceChange={(val: BigNumber) => {
-                      setPrice(props.listing, val, ExternalProtocol.X2Y2);
-                      props.onPriceChange();
-                    }}
-                    error={
-                      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
-                  props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
-                    }
-                  />
-                </> :
-                seaportEnabled && !looksrareEnabled && !X2Y2Enabled ?
-                  <PriceInput
-                    initial={
-                      getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
-                        '' :
-                        ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice ?? 0))
-                    }
-                    currencyAddress={getTarget(props.listing, ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
-                    currencyOptions={['WETH', 'ETH']}
-                    onPriceChange={(val: BigNumber) => {
-                      setPrice(props.listing, val, ExternalProtocol.Seaport);
-                      props.onPriceChange();
-                    }}
-                    onCurrencyChange={(currency: SupportedCurrency) => {
-                      setCurrency(props.listing, currency, ExternalProtocol.Seaport);
-                      props.onPriceChange();
-                    }}
-                    error={
-                      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && target.startingPrice == null) != null ||
-              props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && BigNumber.from(target.startingPrice).eq(0)) != null
-                    }
-                  />
-                  :
-                  X2Y2Enabled && !looksrareEnabled && !seaportEnabled ?
-                    <PriceInput
-                      initial={
-                        props.listing?.startingPrice == null ?
-                          '' :
-                          ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
-                      }
-                      currencyAddress={'0x0000000000000000000000000000000000000000'}
-                      currencyOptions={['ETH']}
-                      onCurrencyChange={null}
-                      onPriceChange={(val: BigNumber) => {
-                        setPrice(props.listing, val);
-                        props.onPriceChange();
-                      }}
-                      error={
-                        (props.listing.startingPrice == null) ||
-                (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
-                      }
-                    />
-                    :
-                    <PriceInput
-                      initial={
-                        props.listing?.startingPrice == null ?
-                          '' :
-                          ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
-                      }
-                      currencyAddress={getAddress('weth', defaultChainId)}
-                      currencyOptions={['WETH']}
-                      onCurrencyChange={null}
-                      onPriceChange={(val: BigNumber) => {
-                        setPrice(props.listing, val);
-                        props.onPriceChange();
-                      }}
-                      error={
-                        (props.listing.startingPrice == null) ||
-                (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
-                      }
-                    />
-            }
+        <td className='align-top w-auto'>
+          <div className='h-full w-48 flex flex-col justify-around'>
+            {seaportEnabled && <div className='mb-2'><OpenseaPriceInput /></div>}
+            
+            {looksrareEnabled && <div className='mb-2'><LooksRarePriceInput /></div>}
+            
+            {X2Y2Enabled && <div className='mb-2'><X2Y2PriceInput /></div>}
+            
+            {props.listing?.targets?.length < 3 &&
+            <div className='flex'>
+              <input
+                disabled
+                type="text"
+                placeholder='Price'
+                className={tw(
+                  'text-sm min-w-0 border border-gray-300 h-[2.65rem] w-3/5 shrink-0 ',
+                  'text-left p-1 rounded-md mr-2',
+                )}
+              />
+              <div className='border border-gray-300 rounded-md w-full'>
+                <DropdownPicker
+                  options={typeOfAuctionOptions}
+                  placeholder={'Currency'}
+                  constrain
+                />
+              </div>
+            </div>}
           </div>
         </td>
         <td className={rowHeightClass}>

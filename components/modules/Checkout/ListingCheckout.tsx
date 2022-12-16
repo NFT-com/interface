@@ -220,9 +220,9 @@ export function ListingCheckout() {
           </div>
           <table className=" mx-8 text-sm table-auto">
             <thead>
-              <tr>
+              <tr className='text-lg'>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">NFT</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">Marketplaces</th>
+                <th className="font-medium pb-3 text-blog-text-reskin text-left">Marketplace</th>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</th>
                 <th className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</th>
               </tr>
