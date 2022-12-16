@@ -88,7 +88,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         <div className='flex items-center justify-between'>
           <div className='justify-start flex'>
             <Tab.Group onChange={(index) => {setSelectedTab(nftActivityTabs[index]);}}>
-              <Tab.List className="flex rounded-3xl z-10">
+              <Tab.List className="flex rounded-3xl z-10 bg-[#F6F6F6]">
                 {Object.keys(nftActivityTabs).map((chartType) => (
                   <Tab
                     key={chartType}

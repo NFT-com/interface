@@ -181,7 +181,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     );
   }
 
-  return <div className='w-full flex justify-center pt-8'>
+  return <div className='w-full flex justify-center'>
     <EditListingsModal
       nft={props.nft}
       collectionName={props.collectionName}
