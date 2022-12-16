@@ -22,6 +22,7 @@ import { cancelX2Y2Listing } from 'utils/X2Y2Helpers';
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import React from 'react';
 import { PartialDeep } from 'type-fest';
@@ -41,8 +42,7 @@ const Colors = {
 
 const Icons = {
   [ExternalExchange.LooksRare]: '/looksrare_black.svg',
-  [ExternalExchange.Opensea]: '/opensea_blue.png',
-  [ExternalExchange.X2Y2]: '/x2y2-icon.svg'
+  [ExternalExchange.Opensea]: '/opensea_blue.png'
 };
 
 export enum ListingButtonType {
@@ -235,9 +235,14 @@ function ExternalListingTile(props: ExternalListingTileProps) {
         'aspect-square h-8 w-8 rounded-full',
         Colors[listing?.order?.exchange]
       )}>
-        <div className='relative h-6 w-6 shrink-0 flex'>
-          <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
-        </div>
+        {listing?.order?.exchange === ExternalExchange.X2Y2 ?
+          <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo" layout="fill"/>
+          :
+          <div className='relative h-6 w-6 shrink-0 flex'>
+            <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
+          </div>
+        }
+        
       </div>
       <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
         <span className='text-sm text-secondary-txt'>
