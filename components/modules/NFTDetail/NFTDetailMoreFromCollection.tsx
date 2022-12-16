@@ -75,6 +75,10 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
           :
           <div className='flex py-2 h-full items-stretch relative'>
             <div className='absolute right-[-1px] top-0 bottom-0 w-[150px] z-10 lg:hidden bg-gradient-to-r from-transparent to-[#ECECEC]' />
+            <div className='absolute left-[-1px] top-0 bottom-0 w-[150px] z-10 lg:hidden bg-gradient-to-l from-transparent to-[#ECECEC]' />
+            <RightSlider onClick={() => {
+              my_swiper.slidePrev();
+            }} className='rotate-180 cursor-pointer absolute left-[-50px] lg:hidden hover:scale-105 top-1/2 bottom-1/2 z-20' />
             <RightSlider onClick={() => {
               my_swiper.slideNext();
             }} className='cursor-pointer absolute right-[-50px] lg:hidden hover:scale-105 top-1/2 bottom-1/2 z-20' />
