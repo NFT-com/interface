@@ -60,7 +60,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const collectionOwnerToShow: PartialDeep<Profile> = collectionPreferredOwnerData?.profile ?? null;
 
-  const { refreshNft, loading } = useRefreshNftMutation();
+  const { refreshNft, loading, success } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
   const refreshNftCallback = useCallback(() => {
@@ -103,23 +103,30 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
         </div>
         <div className='flex flex-col pl-12'>
-          <div
-            id="refreshNftButton"
-            onClick={refreshNftCallback}
-            className={tw(
-              'rounded-full bg-[#F6F6F6] h-8 w-8 flex items-center justify-center cursor-pointer',
-              loading ? 'animate-spin' : null
-            )}
-          >
-            <ArrowClockwise className='text-[#6F6F6F] h-5 w-5'/>
-          </div>
+          {success ?
+            <span className='font-noi-grotesk text-[#26AA73]'>Refreshed!</span> :
+            <div
+              id="refreshNftButton"
+              onClick={refreshNftCallback}
+              className={tw(
+                'rounded-full bg-[#F6F6F6] h-8 w-8 flex items-center justify-center cursor-pointer',
+                loading && !success ? 'animate-spin' : null,
+              )}
+            >
+              <ArrowClockwise className='text-[#6F6F6F] h-5 w-5'/>
+            </div>
+          }
         </div>
       </div>
       <div className='flex flex-row items-center w-full p-4'>
-        <div>
+        <div className="grid grid-cols-2 gap-x-32 gap-y-1">
           <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
             Creator
           </span>
+          <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
+            Owner
+          </span>
+
           <div className='flex items-center'>
             <div className='flex flex-col h-full aspect-square'>
               {collectionOwnerToShow?.photoURL ?
@@ -131,12 +138,12 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 />
                 :
                 <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
-                  <LoggedInIdenticon round border />
+                  <LoggedInIdenticon customString={collection?.collection?.contract} round border />
                 </div>
               }
             </div>
 
-            <div className='flex flex-col w-1/2 h-full'>
+            <div className=''>
               <div className='flex flex-col h-full'>
                 {
                   creatorTokens?.length > 0 ?
@@ -162,7 +169,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                       </span>
                     </div> :
                     <Link href={getEtherscanLink(Number(defaultChainId), collection?.collection?.contract, 'address')}>
-                      <span className="text-base font-medium leading-5 font-noi-grotesk pl-3 pt-1">
+                      <span className="cursor-pointer text-base hover:underline font-medium leading-5 font-noi-grotesk pl-3 pt-1">
                         {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
                       </span>
                     </Link>
@@ -170,28 +177,24 @@ export const NFTDetail = (props: NFTDetailProps) => {
               </div>
             </div>
           </div>
-        </div>
-        <div className='ml-14'>
-          <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
-            Owner
-          </span>
+
           <div className='flex items-center'>
-            <div className='flex flex-col h-full aspect-square'>
-              {profileOwnerToShow?.photoURL ?
-                <RoundedCornerMedia
-                  containerClasses='w-full aspect-square'
-                  variant={RoundedCornerVariant.All}
-                  amount={RoundedCornerAmount.Medium}
-                  src={profileOwnerToShow?.photoURL}
-                />
-                :
+            {profileOwnerToShow?.photoURL ?
+              <RoundedCornerMedia
+                containerClasses='w-[34px] height-[34px] aspect-square'
+                variant={RoundedCornerVariant.All}
+                amount={RoundedCornerAmount.Medium}
+                src={profileOwnerToShow?.photoURL}
+              />
+              :
+              <div className='flex flex-col h-full aspect-square'>
                 <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
                   <LoggedInIdenticon round border />
                 </div>
-              }
-            </div>
+              </div>
+            }
 
-            <div className='flex flex-col w-1/2 h-full'>
+            <div className=''>
               <div className='flex flex-col h-full'>
                 {
                   profileTokens?.length > 0 ?
@@ -214,9 +217,11 @@ export const NFTDetail = (props: NFTDetailProps) => {
                         }
                       </span>
                     </div> :
-                    <span className="text-[#1F2127] text-base font-medium leading-5 font-noi-grotesk pl-3">
-                      {shortenAddress(props.nft?.wallet?.address, isMobile ? 2 : 6) ?? 'Unknown'}
-                    </span>
+                    <Link href={getEtherscanLink(Number(defaultChainId), props.nft?.wallet?.address, 'address')}>
+                      <span className="text-[#1F2127] text-base cursor-pointer hover:underline font-medium leading-5 font-noi-grotesk pl-3">
+                        {shortenAddress(props.nft?.wallet?.address, isMobile ? 2 : 6) ?? 'Unknown'}
+                      </span>
+                    </Link>
                 }
               </div>
             </div>
