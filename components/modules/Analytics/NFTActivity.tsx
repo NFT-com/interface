@@ -26,7 +26,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
   }, [defaultChainId, nftData, nftTransactionHistory]);
 
   return (
-    <div className="font-noi-grotesk p-4 max-h-80 md:mb-0 overflow-x-auto overflow-y-hidden sales-scrollbar whitespace-nowrap">
+    <div className="font-noi-grotesk p-4 max-h-80 md:mb-0 overflow-x-auto sales-scrollbar whitespace-nowrap">
       {!nftData ?
         <span className='bg-white flex justify-center px-auto mx-auto w-full whitespace-nowrap font-normal text-base leading-6 text-[#1F2127] text-center items-center min-h-[280px]'>
           No Activity for this NFT yet
