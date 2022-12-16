@@ -117,6 +117,8 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             isApprovedForSeaport: openseaAllowed,
             isApprovedForLooksrare: looksRareAllowed,
             isApprovedForX2Y2: X2Y2Allowed,
+            hasOpenOrder: true,
+            openOrderId: (listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.X2Y2 ? (listing?.order?.protocolData as X2Y2ProtocolData).id : null,
             targets: [{
               protocol: listing?.order?.protocol as ExternalProtocol,
               startingPrice: 0,
@@ -124,7 +126,8 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               currency: WETH.address,
               duration: null,
               looksrareOrder: null,
-              seaportParameters: null
+              seaportParameters: null,
+              X2Y2Order: null
             }]
           });
           router.push('/app/list');

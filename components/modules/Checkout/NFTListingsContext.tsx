@@ -53,6 +53,9 @@ export type StagedListing = {
   endingPrice: BigNumberish;
   currency: string;
   duration: BigNumberish;
+  // for x2y2 order price adjustments
+  hasOpenOrder?: boolean;
+  openOrderId?: number;
   // approval-related data
   isApprovedForSeaport: boolean;
   isApprovedForLooksrare: boolean;
@@ -433,7 +436,9 @@ export function NFTListingsContextProvider(
             { ...order },
             listing.nft.tokenId,
             listing.nft.contract,
-            currentAddress
+            currentAddress,
+            listing?.hasOpenOrder ?? false,
+            [listing?.openOrderId] ?? []
           );
           if (!result) {
             return ListAllResult.ApiError;
