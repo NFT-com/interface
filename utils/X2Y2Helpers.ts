@@ -1,7 +1,10 @@
 import { nftAggregator } from 'constants/contracts';
+import { X2y2_exchange } from 'constants/typechain/X2y2_exchange';
 import { X2Y2ProtocolData } from 'graphql/generated/types';
 import {
-  AggregatorResponse, data721ParamType,
+  AggregatorResponse,
+  cancelInputParamType,
+  data721ParamType,
   data1155ParamType,
   DELEGATION_TYPE_ERC721,
   DELEGATION_TYPE_ERC1155,
@@ -15,9 +18,9 @@ import {
 import { Doppler, getEnv } from './env';
 import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
 
-import { TokenPair, TokenStandard, X2Y2Order } from '@x2y2-io/sdk/dist/types';
+import { OP_CANCEL_OFFER } from '@x2y2-io/sdk';
+import { CancelInput, TokenPair, TokenStandard, X2Y2Order } from '@x2y2-io/sdk/dist/types';
 import { BigNumber, ethers } from 'ethers';
-
 export const getNetworkMeta = (network: Network): NetworkMeta => {
   switch (network) {
   case 'mainnet':
@@ -335,3 +338,54 @@ export const getX2Y2Hex = async (
     throw `error in getX2Y2Hex: ${err}`;
   }
 };
+
+export function decodeCancelInput(input: string): CancelInput {
+  return ethers.utils.defaultAbiCoder.decode(
+    [cancelInputParamType],
+    input
+  )[0] as CancelInput;
+}
+
+async function getCancelInput(
+  caller: string,
+  op: number,
+  orderId: number,
+  signMessage: string,
+  sign: string
+): Promise<CancelInput> {
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
+  url.searchParams.set('action', 'fetchOrderCancel');
+  url.searchParams.set('caller', caller);
+  url.searchParams.set('op', op.toString());
+  url.searchParams.set('orderId', orderId.toString());
+  url.searchParams.set('signMessage', signMessage);
+  url.searchParams.set('sign', sign);
+
+  const cancelData = await fetch(url.toString()).then(res => res.json());
+
+  return decodeCancelInput(cancelData.data.input);
+}
+
+export async function cancelX2Y2Listing(
+  network: Network,
+  signer: ethers.Signer,
+
+  orderId: number,
+  X2Y2Exchange: X2y2_exchange
+) {
+  const accountAddress = await signer.getAddress();
+
+  const signMessage = ethers.utils.keccak256('0x');
+  const sign = await signer.signMessage(ethers.utils.arrayify(signMessage));
+  const input: CancelInput = await getCancelInput(
+    accountAddress,
+    OP_CANCEL_OFFER,
+    orderId,
+    signMessage,
+    sign
+  );
+
+  const cancel = await X2Y2Exchange.cancel(input.itemHashes, input.deadline, input.v, input.r, input.s);
+  console.log('🚀 ~ file: X2Y2Helpers.ts:390 ~ cancel', cancel);
+  return cancel;
+}
