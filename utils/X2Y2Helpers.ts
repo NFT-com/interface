@@ -386,6 +386,5 @@ export async function cancelX2Y2Listing(
   );
 
   const cancel = await X2Y2Exchange.cancel(input.itemHashes, input.deadline, input.v, input.r, input.s);
-  console.log('🚀 ~ file: X2Y2Helpers.ts:390 ~ cancel', cancel);
   return cancel;
 }
