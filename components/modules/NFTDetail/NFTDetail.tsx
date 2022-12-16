@@ -135,7 +135,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 />
                 :
                 <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
-                  <LoggedInIdenticon round border />
+                  <LoggedInIdenticon customString={collection?.collection?.contract} round border />
                 </div>
               }
             </div>
@@ -166,7 +166,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
                       </span>
                     </div> :
                     <Link href={getEtherscanLink(Number(defaultChainId), collection?.collection?.contract, 'address')}>
-                      <span className="text-base font-medium leading-5 font-noi-grotesk pl-3 pt-1">
+                      <span className="cursor-pointer text-base hover:underline font-medium leading-5 font-noi-grotesk pl-3 pt-1">
                         {shortenAddress(collection?.collection?.contract, isMobile ? 2 : 6) ?? 'Unknown'}
                       </span>
                     </Link>
@@ -214,9 +214,11 @@ export const NFTDetail = (props: NFTDetailProps) => {
                         }
                       </span>
                     </div> :
-                    <span className="text-[#1F2127] text-base font-medium leading-5 font-noi-grotesk pl-3">
-                      {shortenAddress(props.nft?.wallet?.address, isMobile ? 2 : 6) ?? 'Unknown'}
-                    </span>
+                    <Link href={getEtherscanLink(Number(defaultChainId), props.nft?.wallet?.address, 'address')}>
+                      <span className="text-[#1F2127] text-base cursor-pointer hover:underline font-medium leading-5 font-noi-grotesk pl-3">
+                        {shortenAddress(props.nft?.wallet?.address, isMobile ? 2 : 6) ?? 'Unknown'}
+                      </span>
+                    </Link>
                 }
               </div>
             </div>

@@ -1,6 +1,7 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Maybe } from 'graphql/generated/types';
 
+import delay from 'delay';
 import { useCallback, useState } from 'react';
 
 export interface RefreshNftResult {
@@ -19,6 +20,7 @@ export function useRefreshNftMutation(): RefreshNftResult {
     async (nftId: string) => {
       setLoading(true);
       try {
+        await delay(1500); // give more UI time for user
         await sdk.RefreshNft({ id: nftId });
         setLoading(false);
         return true;

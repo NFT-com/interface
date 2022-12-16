@@ -78,7 +78,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
             <RightSlider onClick={() => {
               // @ts-ignore
               my_swiper.slideNext();
-            }} className='cursor-pointer absolute right-[-50px] lg:hidden top-1/2 bottom-1/2 z-20' />
+            }} className='cursor-pointer absolute right-[-50px] lg:hidden hover:scale-105 top-1/2 bottom-1/2 z-20' />
             <Swiper
               onInit={(ev) => {
                 set_my_swiper(ev);

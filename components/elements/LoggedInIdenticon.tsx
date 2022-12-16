@@ -12,9 +12,10 @@ export interface LoggedInIdenticonProps {
   large?: boolean;
   round?: boolean;
   border?: boolean;
+  customString?: string;
 }
 
-export default function LoggedInIdenticon({ large, round, border }: LoggedInIdenticonProps) {
+export default function LoggedInIdenticon({ large, round, border, customString }: LoggedInIdenticonProps) {
   const ref = useRef<HTMLDivElement>();
 
   const { address: currentAddress } = useAccount();
@@ -45,5 +46,5 @@ export default function LoggedInIdenticon({ large, round, border }: LoggedInIden
   }
 
   // 'polkadot', 'substrate', 'beachball' or 'jdenticon'
-  return <Identicon1 size={large === true ? 120 : 32} string={currentAddress} />;
+  return <Identicon1 size={large === true ? 120 : 32} string={customString || currentAddress} />;
 }
