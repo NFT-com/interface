@@ -82,6 +82,8 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
     return sales.sort((a,b) =>(a.date > b.date) ? 1 : -1);
   });
 
+  console.log('nftData: ', nftData);
+
   return (
     <div className="overflow-x-auto py-4 pt-0 minxl:py-5 minxl:pb-0 minxl:-mb-10 w-full">
       <div className="w-full flex flex-col p-4">
@@ -152,7 +154,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
           data={nftData}
           selectedTimeFrame={selectedTimeFrame}
         />}
-      {selectedTab === 'Sales' && nftData?.length === 0 && <div className="my-14 font-noi-grotesk mx-auto text-center">No data yet</div>}
+      {selectedTab === 'Sales' && (nftData?.length === 0 || !nftData) && <div className="p-4 max-h-80 mb-10 bg-white font-noi-grotesk flex justify-center px-auto mx-auto w-full whitespace-nowrap font-normal text-base leading-6 text-[#1F2127] text-center items-center min-h-[10rem]">No data yet</div>}
     </div>
   );
 };

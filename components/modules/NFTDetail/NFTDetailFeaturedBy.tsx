@@ -33,7 +33,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
 
   return profiles.length > 0 ?
     <div className='flex flex-col w-full px-[16px]'>
-      <span className="text-[28px] font-semibold font-noi-grotesk mb-2">
+      <span className="md:text-[24px] text-[28px] font-semibold font-noi-grotesk mb-2">
         Profiles that feature this NFT
       </span>
       {profiles?.map((profile, index) => {
@@ -47,7 +47,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
                 amount={RoundedCornerAmount.Medium}
                 src={processIPFSURL(profile?.photoURL)}
               />
-              <div className="flex w-full items-center text-[20px] font-medium ml-12 font-noi-grotesk my-4">
+              <div className="flex w-full items-center text-[20px] font-medium md:ml-3 ml-12 font-noi-grotesk my-4">
                 <span className='font-dm-mono text-primary-yellow'>/</span>
                 <span className='ml-1 whitespace-nowrap text-[#4D4D4D] text-ellipsis overflow-hidden'>{profile?.url}</span>
                 {hasGks && <GK className='w-[24px] h-[24px] ml-3' />}
@@ -58,7 +58,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
               <PublicProfileNftsCount id={profile?.id} />
               <Link href={'/' + profile?.url} passHref>
                 <a>
-                  <div className='cursor-pointer rounded-[8px] px-10 py-2 bg-[#F9D54C] flex items-center text-black font-medium text-[18px] justify-center'>
+                  <div className='cursor-pointer rounded-[8px] md:px-7 md:py-1.5 px-10 py-2 bg-[#F9D54C] flex items-center text-black font-medium md:text-[14px[ text-[18px] justify-center'>
                     View
                   </div>
                 </a>
@@ -91,7 +91,7 @@ const PublicProfileNftsCount = ({ id }: { id: string }) => {
   );
 
   return (
-    <div className='flex w-full text-[18px] font-noi-grotesk mr-36'>
+    <div className='lg:hidden flex w-full text-[18px] font-noi-grotesk mr-36'>
       <span className='font-bold mr-1'>{publicProfileNftsCount}</span>
       <span className='text-[#6A6A6A]'>NFTs Displayed</span>
     </div>
