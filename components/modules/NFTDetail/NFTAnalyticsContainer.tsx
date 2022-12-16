@@ -83,7 +83,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
   });
 
   return (
-    <div className="overflow-x-auto py-4 pt-0 rounded-[16px] shadow-xl minxl:py-5 minxl:pb-0 minxl:-mb-10 w-full">
+    <div className="overflow-x-auto py-4 pt-0 minxl:py-5 minxl:pb-0 minxl:-mb-10 w-full">
       <div className="w-full flex flex-col p-4">
         <div className='flex items-center justify-between'>
           <div className='justify-start flex'>

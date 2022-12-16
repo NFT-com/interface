@@ -6,6 +6,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import {
   CartesianGrid,
+  Dot,
   Label,
   Line,
   LineChart,
@@ -61,8 +62,8 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
         return null;
       }
       return (
-        <div className="rounded-[16px] font-medium font-noi-grotesk text-[16px] bg-[#000000] py-3 px-4">
-          <p className="text-[#B2B2B2]">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
+        <div className="rounded-[16px] font-medium font-noi-grotesk text-[16px] bg-[#000000] py-2 px-4">
+          <p className="text-[#B2B2B2]">{`${moment(payload[0].payload.date).format('dddd, MMMM Do')}`}</p>
           <p className="text-white">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
         </div>
       );
@@ -115,15 +116,24 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
             </linearGradient>
           </defs>
           {!data &&
-            <Label position='center' className='font-noi-grotesk' style={{ fontSize: '12px', height: '140px' }} value={'No Data Yet'} />
+            <Label position='center' className='font-noi-grotesk' style={{ fontSize: '13px', height: '140px' }} value={'No Data Yet'} />
           }
-          <CartesianGrid strokeDasharray="5" vertical={false} />
-          <XAxis dataKey={'date'} className='font-noi-grotesk' style={{ fontSize: '12px' }} tickFormatter={xAxisFormatter}/>
-          <YAxis dataKey={'value'} className='font-noi-grotesk' style={{ fontSize: '12px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
+          <CartesianGrid strokeDasharray="3-3" stroke="#E6E6E6" vertical={false} />
+          <XAxis dataKey={'date'} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} tickFormatter={xAxisFormatter}/>
+          <YAxis dataKey={'value'} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
           <Tooltip
+            cursor={false}
             content={<CustomTooltip dataLength={data.length}/>}
           />
-          <Line type="linearClosed" dataKey="value" dot={{ stroke: '#FAC213', strokeWidth: 2 }} />
+          <Line
+            type="linearClosed"
+            isAnimationActive={true}
+            dataKey="value"
+            stroke="#FCE795"
+            strokeWidth={4}
+            activeDot={{ stroke: '#FAC213', fill: '#FAC213', r: 5, strokeWidth: 5 }}
+            dot={{ stroke: '#FAC213', fill: '#FAC213', r: 5, strokeWidth: 5 }}
+          />
         </LineChart>
       </ResponsiveContainer>
       {(showMarketplaceOptions && !!data) &&
