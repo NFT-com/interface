@@ -177,6 +177,17 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               <span className='font-semibold'>{'$' + getTotalRoyalties()}</span>
             </div>
           </div>
+          <div className="mx-4 my-4 flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className='font-semibold'>Total Price</span>
+              <span className='font-medium text-[#6F6F6F] text-sm'>
+                Estimated Amount
+              </span>
+            </div>
+            <div className="flex flex-col align-end">
+              <span className='font-semibold'>${Number(getTotalRoyalties()) + Number(getTotalMarketplaceFees()) + Number(getTotalPriceUSD())}</span>
+            </div>
+          </div>
         </div>
       );
     }

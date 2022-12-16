@@ -4,7 +4,7 @@ import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 
-import { NFTCard } from 'components/elements/NFTCard';
+import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { useFetchCollectionNFTs } from 'graphql/hooks/useFetchCollectionNFTs';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnv } from 'utils/env';
@@ -12,6 +12,8 @@ import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { BigNumber, BigNumberish } from 'ethers';
+import RightSlider from 'public/right-slider.svg';
+import { useState } from 'react';
 import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import useSWR from 'swr';
@@ -27,6 +29,7 @@ export interface NFTDetailMoreFromCollectionProps {
 
 export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionProps) {
   const { width: screenWidth } = useWindowDimensions();
+  const [my_swiper, set_my_swiper] = useState({} as SwiperCore);
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const { chain } = useNetwork();
   const { data } = useSWR('NFTDetailMoreFromCollection' + props.contract + props.hideTokenId, async () => {
@@ -44,69 +47,81 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
     return null;
   }
   
-  return <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
-    <div className='flex flex-col w-full px-[16px]'>
-      <span className="text-2xl font-bold font-grotesk mb-2">More from collection</span>
-      {screenWidth >= 1200 && data?.length < 4 ?
-        <div className='flex py-2 h-full items-stretch mx-auto'>
-          {data?.map((nft, index) => {
-            return (
-              <div className={tw(
-                'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
-              )} key={nft?.id ?? index}>
-                <NFTCard
-                  contractAddress={props.contract}
-                  tokenId={nft.tokenId}
-                  title={nft.metadata.name}
-                  images={[nft?.previewLink || nft.metadata.imageURL]}
-                  fallbackImage={nft.metadata.imageURL}
-                  collectionName={props.collectionName}
-                  redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
-                />
-              </div>
-            );
-          })}
-        </div>
-        :
-        <div className='flex py-2 h-full items-stretch'>
-          <Swiper
-            slidesPerView={Math.min(data?.length ?? 4, screenWidth < 600
-              ? 1
-              : (screenWidth >= 600 && screenWidth < 900)
-                ? (data?.length >= 3)
-                  ? 3
-                  : data?.length
-                : (data?.length >= 4)
-                  ? 4
-                  : data?.length)}
-            centeredSlides={false}
-            loop={data?.length > 3}
-            autoplay={{
-              'delay': 4500,
-              'disableOnInteraction': false
-            }}
-            className="flex"
-          >
+  return <div className='bg-[#ECECEC] w-screen flex items-center justify-center'>
+    <div className="w-full my-10 flex items-center -px-4 minxl:max-w-nftcom minlg:max-w-[650px]">
+      <div className='flex flex-col w-full px-[16px]'>
+        <span className="text-2xl font-bold font-grotesk mb-2">More from collection</span>
+        {screenWidth >= 1200 && data?.length < 5 ?
+          <div className='flex py-2 h-full items-stretch mx-auto'>
             {data?.map((nft, index) => {
               return (
-                <SwiperSlide className={tw(
+                <div className={tw(
                   'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
                 )} key={nft?.id ?? index}>
-                  <NFTCard
-                    contractAddress={props.contract}
+                  <NftCard
+                    contractAddr={props.contract}
                     tokenId={nft.tokenId}
-                    title={nft.metadata.name}
-                    images={[nft?.previewLink || nft.metadata.imageURL]}
+                    name={nft.metadata.name}
+                    nft={nft}
+                    images={[nft.metadata.imageURL]}
                     fallbackImage={nft.metadata.imageURL}
                     collectionName={props.collectionName}
                     redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
                   />
-                </SwiperSlide>
+                </div>
               );
             })}
-          </Swiper>
-        </div>
-      }
+          </div>
+          :
+          <div className='flex py-2 h-full items-stretch relative'>
+            <div className='absolute right-[-1px] top-0 bottom-0 w-[150px] z-10 lg:hidden bg-gradient-to-r from-transparent to-[#ECECEC]' />
+            <RightSlider onClick={() => {
+              my_swiper.slideNext();
+            }} className='cursor-pointer absolute right-[-50px] lg:hidden hover:scale-105 top-1/2 bottom-1/2 z-20' />
+            <Swiper
+              onInit={(ev) => {
+                set_my_swiper(ev);
+              }}
+              slidesPerView={Math.min(data?.length ?? 5, screenWidth < 600
+                ? 2
+                : (screenWidth >= 600 && screenWidth < 900)
+                  ? (data?.length >= 3)
+                    ? 4
+                    : data?.length
+                  : (data?.length >= 4)
+                    ? 5
+                    : data?.length)}
+              centeredSlides={screenWidth < 600 ? false : true}
+              allowSlideNext={true}
+              loop={data?.length > 4}
+              autoplay={{
+                'delay': 4500,
+                'disableOnInteraction': false
+              }}
+              className="flex"
+            >
+              {data?.map((nft, index) => {
+                return (
+                  <SwiperSlide className={tw(
+                    'NftCollectionItem flex flex-col w-72 shrink-0 cursor-pointer self-stretch mr-4',
+                  )} key={nft?.id ?? index}>
+                    <NftCard
+                      contractAddr={props.contract}
+                      tokenId={nft.tokenId}
+                      name={nft.metadata.name}
+                      nft={nft}
+                      images={[nft.metadata.imageURL]}
+                      fallbackImage={nft.metadata.imageURL}
+                      collectionName={props.collectionName}
+                      redirectTo={`/app/nft/${props.contract}/${nft.tokenId}`}
+                    />
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          </div>
+        }
+      </div>
     </div>
   </div>;
 }
