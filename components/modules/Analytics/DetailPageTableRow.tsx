@@ -1,8 +1,11 @@
 import { NftPortTxByContractTransactions } from 'graphql/generated/types';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import moment from 'moment';
+import Link from 'next/link';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import { useCallback } from 'react';
@@ -38,12 +41,56 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     }
   };
 
+  const { profileTokens: tx_owner_tokens } = useNftProfileTokens(tx.owner_address);
+  const { profileData: tx_owner } = useProfileQuery(
+    tx.owner_address == null ?
+      tx_owner_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
+      null
+  );
+
+  const { profileTokens: tx_seller_tokens } = useNftProfileTokens(tx.seller_address);
+  const { profileData: tx_seller } = useProfileQuery(
+    tx.owner_address == null ?
+      tx_seller_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
+      null
+  );
+
+  const { profileTokens: tx_buyer_tokens } = useNftProfileTokens(tx.buyer_address);
+  const { profileData: tx_buyer } = useProfileQuery(
+    tx.owner_address == null ?
+      tx_buyer_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
+      null
+  );
+
+  const { profileTokens: tx_from_tokens } = useNftProfileTokens(tx.transfer_from);
+  const { profileData: tx_from } = useProfileQuery(
+    tx.owner_address == null ?
+      tx_from_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
+      null
+  );
+
+  const { profileTokens: tx_to_tokens } = useNftProfileTokens(tx.transfer_to);
+  const { profileData: tx_to } = useProfileQuery(
+    tx.owner_address == null ?
+      tx_to_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
+      null
+  );
+
+  const styledProfile = (url: string) => <Link href={'/' + url} passHref>
+    <a>
+      <div className="hover:font-bold lex w-full items-center text-[16px] font-medium cursor-pointer font-noi-grotesk my-4">
+        <span className='font-dm-mono text-primary-yellow'>/</span>
+        <span className='ml-1 whitespace-nowrap text-[#4D4D4D] text-ellipsis overflow-hidden'>{url}</span>
+      </div>
+    </a>
+  </Link>;
+
   const getRowContent = useCallback(() => {
-    if(tx.type === 'mint'){
+    if (tx.type === 'mint'){
       return (
         <>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{'0x0000...0000' || '—'}</td>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.owner_address, 4) || '—'}</td>
+          {tx_owner?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_owner?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.owner_address, 4) || '—'}</td>}
         </>
       );
     }
@@ -51,19 +98,19 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     if(tx.type === 'sale'){
       return (
         <>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.seller_address, 4) || '—'}</td>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.buyer_address, 4) || '—'}</td>
+          {tx_seller?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_seller?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.seller_address, 4) || '—'}</td>}
+          {tx_buyer?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_buyer?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.buyer_address, 4) || '—'}</td>}
         </>
       );
     }
         
     return (
       <>
-        <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>
-        <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>
+        {tx_from?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_from?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>}
+        {tx_to?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_to?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>}
       </>
     );
-  }, [tx]);
+  }, [tx, tx_owner, tx_seller, tx_buyer, tx_from, tx_to]);
   
   return (
     <tr key={index} className={tw(
