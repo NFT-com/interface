@@ -20,7 +20,7 @@ export const Properties = (props: PropertiesProps) => {
               No Properties Found
           </div> :
           <div className={tw(
-            'traits-gap grid grid-cols-2 gap-3 rounded-[18px] overflow-y-auto overflow-x-hidden',
+            'traits-gap grid grid-cols-2 gap-3 rounded-[18px]',
             'grid-cols-2 minlg:grid-cols-3',
           )}>
             {nftTraits?.map((item, index) => {
