@@ -151,7 +151,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           :
           (defaultChainId === '1') &&
           <div className='md:hidden flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4 minxl:pt-12'>
-            <div className="w-full hidden  minxl:flex minxl:items-end shadow-xl rounded-[24px]">
+            <div className="w-full hidden minxl:flex minxl:items-end">
               <NFTAnalyticsContainer data={nft} />
             </div>
           </div>
