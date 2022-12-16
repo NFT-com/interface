@@ -29,7 +29,7 @@ export interface NFTDetailMoreFromCollectionProps {
 
 export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionProps) {
   const { width: screenWidth } = useWindowDimensions();
-  const [my_swiper, set_my_swiper] = useState({});
+  const [my_swiper, set_my_swiper] = useState({} as SwiperCore);
   const { fetchCollectionsNFTs } = useFetchCollectionNFTs();
   const { chain } = useNetwork();
   const { data } = useSWR('NFTDetailMoreFromCollection' + props.contract + props.hideTokenId, async () => {
@@ -76,7 +76,6 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
           <div className='flex py-2 h-full items-stretch relative'>
             <div className='absolute right-[-1px] top-0 bottom-0 w-[150px] z-10 lg:hidden bg-gradient-to-r from-transparent to-[#ECECEC]' />
             <RightSlider onClick={() => {
-              // @ts-ignore
               my_swiper.slideNext();
             }} className='cursor-pointer absolute right-[-50px] lg:hidden hover:scale-105 top-1/2 bottom-1/2 z-20' />
             <Swiper
