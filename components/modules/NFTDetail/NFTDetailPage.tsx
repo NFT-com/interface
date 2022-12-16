@@ -115,7 +115,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
   };
 
   return (
-    <div className="flex flex-col pt-20 items-center w-full">
+    <div className="flex flex-col md:pt-0 pt-20 items-center w-full">
       {nft?.metadata?.imageURL &&
         <div className='flex w-full bg-[#F2F2F2] justify-around minmd:py-3 minlg:py minxl:py-10 minmd:px-auto'>
           <div className="flex w-full max-h-[600px] h-full max-w-nftcom object-contain drop-shadow-lg rounded aspect-square">
@@ -141,7 +141,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         </div>
         {(showListings || nft?.wallet?.address === currentAddress) ?
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
-            <div className="lg:hidden flex minxl:flex-row w-full items-start">
+            <div className="md:hidden flex minxl:flex-row w-full items-start">
               <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
             </div>
             <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end">
@@ -150,9 +150,9 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           </div>
           :
           (defaultChainId === '1') &&
-          <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
+          <div className='md:hidden flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4'>
             <div className="min-h-[13.7em]"></div>
-            <div className="w-full hidden minxl:flex minxl:overflow-hidden minxl:items-end shadow-xl rounded-[24px]">
+            <div className="w-full hidden  minxl:flex minxl:overflow-hidden minxl:items-end shadow-xl rounded-[24px]">
               <NFTAnalyticsContainer data={nft} />
             </div>
           </div>

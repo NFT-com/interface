@@ -106,8 +106,8 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
         </div>
         {selectedTab === 'Sales' &&
           <Menu as="div" className="relative inline-block text-left">
-            <div className='flex items-center justify-end mt-[-35px] z-9'>
-              <Menu.Button className="flex items-center justify-between w-[190px] rounded-[8px] bg-[#F2F2F2] px-3 py-2 text-[16px] text-black font-noi-grotesk hover:bg-gray-50">
+            <div className='flex items-center justify-end md:mt-5 mt-[-35px] z-9'>
+              <Menu.Button className="flex items-center justify-between md:w-[130px] w-[190px] rounded-[8px] bg-[#F2F2F2] px-3 py-2 text-[16px] text-black font-noi-grotesk hover:bg-gray-50">
                 {getTimeFrameString(selectedTimeFrame)}
                 <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
               </Menu.Button>
@@ -122,7 +122,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items className="absolute right-0 z-10 mt-2 w-[190px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute right-0 z-10 mt-2 md:w-[130px] w-[190px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="py-1">
                   {Object.keys(timeFrames).map((timeFrame, index) => (
                     <Menu.Item key={timeFrame}>
@@ -152,7 +152,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
           data={nftData}
           selectedTimeFrame={selectedTimeFrame}
         />}
-      {selectedTab === 'Sales' && nftData?.length === 0 && <div className="my-14 font-noi-grotesk mx-auto text-center">No data yet</div>}
+      {selectedTab === 'Sales' && (nftData?.length === 0 || !nftData) && <div className="p-4 max-h-80 mb-10 bg-white font-noi-grotesk flex justify-center px-auto mx-auto w-full whitespace-nowrap font-normal text-base leading-6 text-[#1F2127] text-center items-center min-h-[10rem]">No data yet</div>}
     </div>
   );
 };
