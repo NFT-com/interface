@@ -60,7 +60,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const profileOwnerToShow: PartialDeep<Profile> = props.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const collectionOwnerToShow: PartialDeep<Profile> = collectionPreferredOwnerData?.profile ?? null;
 
-  const { refreshNft, loading } = useRefreshNftMutation();
+  const { refreshNft, loading, success } = useRefreshNftMutation();
   const { refreshNftOrders } = useRefreshNftOrdersMutation();
 
   const refreshNftCallback = useCallback(() => {
@@ -103,16 +103,19 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </div>
         </div>
         <div className='flex flex-col pl-12'>
-          <div
-            id="refreshNftButton"
-            onClick={refreshNftCallback}
-            className={tw(
-              'rounded-full bg-[#F6F6F6] h-8 w-8 flex items-center justify-center cursor-pointer',
-              loading ? 'animate-spin' : null
-            )}
-          >
-            <ArrowClockwise className='text-[#6F6F6F] h-5 w-5'/>
-          </div>
+          {success ?
+            <span className='font-noi-grotesk text-[#26AA73]'>Refreshed!</span> :
+            <div
+              id="refreshNftButton"
+              onClick={refreshNftCallback}
+              className={tw(
+                'rounded-full bg-[#F6F6F6] h-8 w-8 flex items-center justify-center cursor-pointer',
+                loading && !success ? 'animate-spin' : null,
+              )}
+            >
+              <ArrowClockwise className='text-[#6F6F6F] h-5 w-5'/>
+            </div>
+          }
         </div>
       </div>
       <div className='flex flex-row items-center w-full p-4'>
