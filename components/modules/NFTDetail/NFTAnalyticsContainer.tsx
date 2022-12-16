@@ -94,7 +94,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                     key={chartType}
                     className={({ selected }) =>
                       tw(
-                        'rounded-3xl py-2.5 px-8 font-noi-grotesk text-[16px] leading-5 text-[#6A6A6A]',
+                        'rounded-3xl font-medium py-2.5 px-8 font-noi-grotesk text-[16px] leading-5 text-[#6A6A6A]',
                         selected && 'bg-black text-[#FFFFFF]'
                       )
                     }

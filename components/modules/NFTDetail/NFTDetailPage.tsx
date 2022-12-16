@@ -67,7 +67,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
                         <div
                           className={
                             tw(
-                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-noi-grotesk text-[16px] w-[150px] leading-6',
+                              'rounded-3xl py-2.5 px-8 minmd:px-10 text-[#6F6F6F] font-medium font-noi-grotesk text-[16px] w-[150px] leading-6',
                               selected && 'bg-black text-[#F8F8F8] font-noi-grotesk text-[16px] leading-6'
                             )
                           }
