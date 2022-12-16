@@ -21,7 +21,7 @@ export const convertDurationToSec = (d: SaleDuration) => {
     '7 Days': 7,
     '30 Days': 30,
     '60 Days': 60,
-    '90 Days': 7 * 4 * 3,
+    '90 Days': 3 * 30,
     '180 Days': 7 * 4 * 6,
     '1 Year': 7 * 4 * 12,
   };
