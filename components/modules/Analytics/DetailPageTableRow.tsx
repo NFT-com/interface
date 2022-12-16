@@ -78,7 +78,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
 
   const styledProfile = (url: string) => <Link href={'/' + url} passHref>
     <a>
-      <div className="hover:font-bold lex w-full items-center text-[16px] font-medium cursor-pointer font-noi-grotesk my-4">
+      <div className="hover:font-bold px-4 w-full items-center text-[16px] font-medium cursor-pointer font-noi-grotesk my-4">
         <span className='font-dm-mono text-primary-yellow'>/</span>
         <span className='ml-1 whitespace-nowrap text-[#4D4D4D] text-ellipsis overflow-hidden'>{url}</span>
       </div>
@@ -89,8 +89,8 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     if (tx.type === 'mint'){
       return (
         <>
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{'0x0000...0000' || '—'}</td>
-          {tx_owner?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_owner?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.owner_address, 4) || '—'}</td>}
+          <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{'0x0000...0000' || '—'}</td>
+          {tx_owner?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_owner?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.owner_address, 4) || '—'}</td>}
         </>
       );
     }
@@ -98,16 +98,16 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     if(tx.type === 'sale'){
       return (
         <>
-          {tx_seller?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_seller?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.seller_address, 4) || '—'}</td>}
-          {tx_buyer?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_buyer?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.buyer_address, 4) || '—'}</td>}
+          {tx_seller?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_seller?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.seller_address, 4) || '—'}</td>}
+          {tx_buyer?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_buyer?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.buyer_address, 4) || '—'}</td>}
         </>
       );
     }
         
     return (
       <>
-        {tx_from?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_from?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>}
-        {tx_to?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_to?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>}
+        {tx_from?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_from?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>}
+        {tx_to?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_to?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>}
       </>
     );
   }, [tx, tx_owner, tx_seller, tx_buyer, tx_from, tx_to]);
