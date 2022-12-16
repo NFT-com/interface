@@ -72,7 +72,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
   };
 
   return (
-    <div className="bg-transparent min-w-full">
+    <div className="bg-transparent min-w-full min-h-[10rem] ">
       {(showMarketplaceOptions && !!data) &&
       <div className="w-full px-2 py-2 -mt-16 minmd:ml-[17.5px] minmd:visible sm:hidden">
         <div className="flex flex-row items-center justify-end space-x-2">
