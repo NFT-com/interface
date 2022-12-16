@@ -6,7 +6,6 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import {
   CartesianGrid,
-  Dot,
   Label,
   Line,
   LineChart,
@@ -33,10 +32,10 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
       '1D': { format: 'HH' },
       '7D': { format: 'DD' },
       '1M': { format: 'MMM DD' },
-      '3M': { format: 'MMM' },
-      '6M': { format: 'MMM' },
-      '1Y': { format: 'MMM' },
-      'ALL': { format: 'MMM' }
+      '3M': { format: 'MMM DD' },
+      '6M': { format: 'MMM DD' },
+      '1Y': { format: 'MMM DD' },
+      'ALL': { format: 'MMM DD' }
     };
 
     if (moment(item).isValid()) {
@@ -49,7 +48,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
 
   const yAxisFormatter = (item) => {
     if (moment(item).isValid()) {
-      return Number(item.toFixed(2)).toLocaleString('en-US');
+      return '$' + Number(item.toFixed(2)).toLocaleString('en-US');
     } else {
       return item;
     }
@@ -63,7 +62,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
       }
       return (
         <div className="rounded-[16px] font-medium font-noi-grotesk text-[16px] bg-[#000000] py-2 px-4">
-          <p className="text-[#B2B2B2]">{`${moment(payload[0].payload.date).format('dddd, MMMM Do')}`}</p>
+          <p className="text-[#B2B2B2]">{`${moment(payload[0].payload.date).format('dddd, MMM Do YY')}`}</p>
           <p className="text-white">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
         </div>
       );
@@ -108,7 +107,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
       </div>
       }
       <ResponsiveContainer height={isMobile ? 227 : 320} width={'100%'} >
-        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: -10 }} height={isMobile ? 227 : 320}>
+        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: -5 }} height={isMobile ? 227 : 320}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'#FAC213'} stopOpacity={0.2}/>
@@ -126,7 +125,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
             content={<CustomTooltip dataLength={data.length}/>}
           />
           <Line
-            type="linearClosed"
+            type="linear"
             isAnimationActive={true}
             dataKey="value"
             stroke="#FCE795"
