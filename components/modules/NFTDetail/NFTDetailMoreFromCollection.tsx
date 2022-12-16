@@ -102,7 +102,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 'delay': 4500,
                 'disableOnInteraction': false
               }}
-              className="flex"
+              className="flex overflow-y-visible"
             >
               {data?.map((nft, index) => {
                 return (

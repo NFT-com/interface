@@ -73,7 +73,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
   };
 
   return (
-    <div className="bg-transparent min-w-full min-h-[10rem] ">
+    <div className="bg-transparent min-w-full min-h-[320px]">
       {(showMarketplaceOptions && !!data) &&
       <div className="w-full px-2 py-2 -mt-16 minmd:ml-[17.5px] minmd:visible sm:hidden">
         <div className="flex flex-row items-center justify-end space-x-2">
@@ -107,8 +107,8 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
         </div>
       </div>
       }
-      <ResponsiveContainer height={isMobile ? 227 : 357} width={'100%'} >
-        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 65, left: 5 }} height={isMobile ? 227 : 357}>
+      <ResponsiveContainer height={isMobile ? 227 : 320} width={'100%'} >
+        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: -10 }} height={isMobile ? 227 : 320}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'#FAC213'} stopOpacity={0.2}/>
@@ -119,8 +119,8 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
             <Label position='center' className='font-noi-grotesk' style={{ fontSize: '13px', height: '140px' }} value={'No Data Yet'} />
           }
           <CartesianGrid strokeDasharray="3-3" stroke="#E6E6E6" vertical={false} />
-          <XAxis dataKey={'date'} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} tickFormatter={xAxisFormatter}/>
-          <YAxis dataKey={'value'} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
+          <XAxis dataKey={'date'} tickCount={7} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} tickFormatter={xAxisFormatter}/>
+          <YAxis dataKey={'value'} tickCount={6} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
           <Tooltip
             cursor={false}
             content={<CustomTooltip dataLength={data.length}/>}
