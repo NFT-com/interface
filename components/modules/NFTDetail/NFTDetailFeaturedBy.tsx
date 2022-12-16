@@ -1,14 +1,15 @@
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
+import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 import Link from 'next/link';
 import GK from 'public/hasGk.svg';
 import NoActivityIcon from 'public/no_activity.svg';
-import { useAccount } from 'wagmi';
 export interface NFTDetailFeaturedByProps {
   contract: string,
   tokenId: string
@@ -22,10 +23,6 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     defaultChainId,
     true
   );
-
-  const { address: currentAddress } = useAccount();
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
   if (profiles == null) {
     return null;
@@ -49,7 +46,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
             <div className="flex w-full items-center text-[20px] font-medium md:ml-3 ml-12 font-noi-grotesk my-4">
               <span className='font-dm-mono text-primary-yellow'>/</span>
               <span className='ml-1 whitespace-nowrap text-[#4D4D4D] text-ellipsis overflow-hidden'>{profile?.url}</span>
-              {hasGks && <GK className='w-[24px] h-[24px] ml-3' />}
+              <ShowGk profile={profile?.url} />
             </div>
           </div>
 
@@ -75,6 +72,29 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     }
   </div>;
 }
+
+const ShowGk = ({ profile }: { profile: string }) => {
+  const { profileTokenId } = useProfileTokenQuery(
+    profile,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 0,
+    }
+  );
+  const { profileOwner } = useProfileTokenOwner(
+    profileTokenId,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 0,
+    }
+  );
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(profileOwner);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+
+  return hasGks && <GK className='w-[24px] h-[24px] ml-3' />;
+};
 
 const PublicProfileNftsCount = ({ id }: { id: string }) => {
   const defaultChainId = useDefaultChainId();

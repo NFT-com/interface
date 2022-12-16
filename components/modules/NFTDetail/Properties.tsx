@@ -13,7 +13,7 @@ export const Properties = (props: PropertiesProps) => {
   const nftTraits = props?.nft?.metadata?.traits;
 
   return (
-    <div className="flex flex-col w-full justify-between" id="NftPropertiesContainer">
+    <div className="flex flex-col w-full h-fit justify-between" id="NftPropertiesContainer">
       {
         !nftTraits || nftTraits.length === 0 ?
           <div className='text-secondary-txt'>

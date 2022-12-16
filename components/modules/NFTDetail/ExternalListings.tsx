@@ -152,7 +152,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     return (
       currentAddress === props.nft?.wallet?.address && hasGks &&
         <div className={tw(
-          'w-full flex p-4',
+          'w-full flex mb-5',
         )}>
           <div className="flex flex-col items-center bg-[#F8F8F8] rounded-[10px] w-full px-4 pb-4 pt-12 relative">
             <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
@@ -208,7 +208,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare)
       ]?.filter( Boolean )?.map((listing, index) => {
         return <div key={index} className={tw(
-          'flex flex-col bg-white rounded-[18px] border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
+          'flex flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
         )}>
           <div className="h-8 px-6 pb-6 pt-10 w-full flex items-center">
             <span className='text-[28px] font-semibold text-black'>

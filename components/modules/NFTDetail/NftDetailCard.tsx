@@ -19,7 +19,7 @@ export function NftDetailCard(props: NftDetailCardProps) {
     <div
       className={tw(
         'NftDetailCard',
-        'flex w-full h-full',
+        'flex w-full',
         'bg-white px-3 py-4 shadow-xl rounded-[18px]',
         'overflow-hidden cursor-pointer',
         props.onClick &&
