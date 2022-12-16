@@ -181,9 +181,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     );
   }
 
-  console.log('getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare): ', getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare));
-
-  return <div className='w-full flex justify-center p-4'>
+  return <div className='w-full flex justify-center pt-8'>
     <EditListingsModal
       nft={props.nft}
       collectionName={props.collectionName}
