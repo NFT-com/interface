@@ -222,7 +222,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2)
       ]?.map((listing, index) => {
-        return <div key={index} className={tw(
+        return listing && <div key={index} className={tw(
           'flex flex-col bg-white rounded-[18px] border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
         )}>
           <div className="h-8 px-6 pb-6 pt-10 w-full flex items-center">
