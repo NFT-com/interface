@@ -18,6 +18,7 @@ export interface PriceInputProps {
   // Omit this to just display the currency, without a dropdown picker.
   onCurrencyChange?: (currency: SupportedCurrency) => void,
   error: boolean,
+  errorMessage?: string
 }
 
 export function PriceInput(props: PriceInputProps) {
@@ -51,7 +52,7 @@ export function PriceInput(props: PriceInputProps) {
       className={tw(
         'flex flex-row rounded-xl',
       )}>
-      <div className='flex'>
+      <div className='flex flex-col'>
         <input
           type="text"
           className={tw(
@@ -84,6 +85,7 @@ export function PriceInput(props: PriceInputProps) {
             color: alwaysBlack,
           }}
         />
+        {props.errorMessage && <p className='text-red-500 mt-2'>{props.errorMessage}</p>}
       </div>
       {
         props.onCurrencyChange == null
