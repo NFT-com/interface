@@ -78,7 +78,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
 
   const styledProfile = (url: string) => <Link href={'/' + url} passHref>
     <a>
-      <div className="hover:font-bold lex w-full items-center text-[16px] font-medium cursor-pointer font-noi-grotesk my-4">
+      <div className="hover:font-bold px-4 w-full items-center text-[16px] font-medium cursor-pointer font-noi-grotesk my-4">
         <span className='font-dm-mono text-primary-yellow'>/</span>
         <span className='ml-1 whitespace-nowrap text-[#4D4D4D] text-ellipsis overflow-hidden'>{url}</span>
       </div>

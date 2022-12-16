@@ -1845,6 +1845,28 @@ input[type="search"]::-webkit-search-cancel-button {
   }
 }
 
+.sales-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 8px;
+  position: absolute;
+  bottom: 20px;
+  left: 0px;
+  background: transparent;
+}
+
+.sales-scrollbar::-web10it-scrollbar-track {
+  background: #B2B2B2;
+}
+
+.sales-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 100vh;
+  border: 8px solid #B2B2B2;
+}
+
+.sales-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #B2B2B2;
+}
+
 .filter-scrollbar::-webkit-scrollbar {
   width: 10px;
   height: 10px;

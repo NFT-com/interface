@@ -88,7 +88,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
               }}
               slidesPerView={Math.min(data?.length ?? 5, screenWidth < 600
                 ? 2
-                : (screenWidth >= 600 && screenWidth < 900)
+                : (screenWidth >= 600 && screenWidth < 950)
                   ? (data?.length >= 3)
                     ? 4
                     : data?.length
