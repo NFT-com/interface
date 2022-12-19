@@ -385,7 +385,7 @@ export function ListingCheckout() {
           <div className='w-full px-8 mt-20'>
             <h1 className='text-3xl font-semibold font-noi-grotesk'>Create Listings</h1>
           </div>
-          <ListingCheckoutInfo />
+          {ListingCheckoutInfo()}
         </div>
       </div>
     );
