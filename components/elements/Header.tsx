@@ -307,12 +307,14 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   }
 
   return (
-    <header className={tw(
-      'font-noi-grotesk bg-white',
-      'fixed w-full px-6 minlg:px-10',
-      'h-[5rem] minlg:h-[5.5rem] z-[106]',
-      !mobileSidebarOpen && 'shadow-lg'
-    )}>
+    <header
+      className={tw(
+        'font-noi-grotesk bg-white',
+        'fixed inset-x-0 top-0',
+        'h-[5rem] minlg:h-[5.5rem] z-[110]',
+        'px-6 minlg:px-10'
+      )}
+    >
       <div className="w-full h-full mx-auto">
         <div className="flex items-center justify-between h-full">
           <div className="flex items-center h-full minlg:w-[60%]">

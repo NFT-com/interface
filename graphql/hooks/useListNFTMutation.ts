@@ -20,7 +20,9 @@ export interface ListNftResult {
     order: X2Y2Order,
     tokenId: string,
     contract: string,
-    maker: string
+    maker: string,
+    hasOpenOrder: boolean,
+    openOrderId: number[]
   ) => Promise<boolean>,
 }
 
@@ -39,8 +41,7 @@ export function useListNFTMutations(): ListNftResult {
           input: {
             seaportSignature: signature,
             seaportParams: JSON.stringify(parameters),
-            chainId: defaultChainId,
-            createdInternally: true
+            chainId: defaultChainId
           }
         });
         return result?.listNFTSeaport ?? false;
@@ -58,8 +59,7 @@ export function useListNFTMutations(): ListNftResult {
         const result = await sdk.ListNftLooksrare({
           input: {
             looksrareOrder: JSON.stringify(order),
-            chainId: defaultChainId,
-            createdInternally: true
+            chainId: defaultChainId
           }
         });
         return result?.listNFTLooksrare ?? false;
@@ -72,7 +72,7 @@ export function useListNFTMutations(): ListNftResult {
   );
 
   const listNftX2Y2 = useCallback(
-    async (order: X2Y2Order, tokenId: string, contract: string, maker: string) => {
+    async (order: X2Y2Order, tokenId: string, contract: string, maker: string, hasOpenOrder: boolean, openOrderId: number[]) => {
       try {
         const result = await sdk.ListNFTX2Y2({
           input: {
@@ -81,9 +81,9 @@ export function useListNFTMutations(): ListNftResult {
               isBundle: false,
               bundleName: '',
               bundleDesc: '',
-              orderIds: [],
+              orderIds: openOrderId,
               royalties: [],
-              changePrice: false,
+              changePrice: hasOpenOrder,
               isCollection: false, // for sell orders
               isPrivate: false,
               taker: null,
@@ -91,8 +91,7 @@ export function useListNFTMutations(): ListNftResult {
             chainId:  defaultChainId,
             tokenId,
             contract,
-            maker,
-            createdInternally: true
+            maker
           }
         });
         return result?.listNFTX2Y2 ?? false;
