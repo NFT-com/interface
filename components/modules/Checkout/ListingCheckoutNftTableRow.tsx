@@ -20,7 +20,7 @@ import { CaretDown, CaretRight } from 'phosphor-react';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -49,16 +49,25 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const [selectedOpensea, setSelectedOpensea] = useState(false);
   const [selectedLooksrare, setSelectedLooksrare] = useState(false);
   const [selectedx2y2, setSelectedx2y2] = useState(false);
+  // const [pricesForX2Y2, setPricesForX2Y2] = useState(null);
+  const pricesForX2Y2 = useRef(null);
+
+  useEffect(() => {
+    console.log('pricesForX2Y2 fdo', pricesForX2Y2);
+  }, []);
 
   const marketPlacesOptions = [
     {
       label: 'Seaport',
+      onSelect: () => { return; },
     },
     {
       label: 'LooksRare',
+      onSelect: () => { return; },
     },
     {
       label: 'X2Y2',
+      onSelect: () => { return; },
     },
   ];
 
@@ -149,8 +158,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       currencyOptions={['ETH']}
       onCurrencyChange={null}
       onPriceChange={(val: BigNumber) => {
-        console.log('x2y2input');
-        setPrice(props.listing, val, ExternalProtocol.X2Y2);
+        console.log('x2y2input fdo', props.listing);
+        // setPrice(props.listing, val, ExternalProtocol.X2Y2);
+        // setPricesForX2Y2({ });
+        pricesForX2Y2.current = val;
+        console.log('pricesForX2Y2 fdo ****: ', pricesForX2Y2);
         props.onPriceChange();
       }}
       error={

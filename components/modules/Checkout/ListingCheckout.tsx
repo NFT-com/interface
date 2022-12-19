@@ -29,7 +29,7 @@ export function ListingCheckout() {
     setDuration,
     toggleTargetMarketplace,
     prepareListings,
-    allListingsConfigured
+    allListingsConfigured,
   } = useContext(NFTListingsContext);
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
@@ -215,9 +215,7 @@ export function ListingCheckout() {
           </div> */}
         </div>
         <div className='my-8 flex flex-col items-start w-full'>
-          <div className="border-t border-[#D5D5D5] mx-8">
-            <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
-          </div>
+          <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
           <table className=" mx-8 text-sm table-auto">
             <thead>
               <tr className='text-lg'>
@@ -332,7 +330,7 @@ export function ListingCheckout() {
           </div>
           <div className='my-8 w-full overflow-x-scroll flex flex-col'>
             <div className="border-t border-[#D5D5D5] mx-8">
-              <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
+              <span className='text-2xl w-full flex font-bold mt-10 mb-8 mx-8'>Your Listings</span>
             </div>
             <table className="w-full mx-8 text-sm table-auto">
               <thead>

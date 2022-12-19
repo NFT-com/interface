@@ -48,7 +48,7 @@ export function PriceInput(props: PriceInputProps) {
     setSelectedCurrencyIndex(currencies.findIndex((c) => c.label === currencyData.name));
   }, [currencies, currencyData.name]);
 
-  return!getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
+  return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <div
         className={tw(
