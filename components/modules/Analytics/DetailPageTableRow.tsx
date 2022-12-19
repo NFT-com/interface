@@ -37,6 +37,9 @@ const getSymbol = (contract_address: string, symbol: string, price: string) => {
   case 'WETH':
     return <div><WETH className='mr-1.5 h-5 w-5 relative shrink-0' />{price} WETH</div>;
   default:
+    if (!contract_address) {
+      return <div>{price} {symbol}</div>;
+    }
     // eslint-disable-next-line @next/next/no-img-element
     return <div><img
       className='mr-1.5 h-5 w-5 relative shrink-0'
@@ -202,4 +205,4 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       </td>
     </tr>
   );
-};
+}
