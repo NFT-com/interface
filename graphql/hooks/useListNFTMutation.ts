@@ -41,8 +41,7 @@ export function useListNFTMutations(): ListNftResult {
           input: {
             seaportSignature: signature,
             seaportParams: JSON.stringify(parameters),
-            chainId: defaultChainId,
-            createdInternally: true
+            chainId: defaultChainId
           }
         });
         return result?.listNFTSeaport ?? false;
@@ -60,8 +59,7 @@ export function useListNFTMutations(): ListNftResult {
         const result = await sdk.ListNftLooksrare({
           input: {
             looksrareOrder: JSON.stringify(order),
-            chainId: defaultChainId,
-            createdInternally: true
+            chainId: defaultChainId
           }
         });
         return result?.listNFTLooksrare ?? false;
@@ -93,8 +91,7 @@ export function useListNFTMutations(): ListNftResult {
             chainId:  defaultChainId,
             tokenId,
             contract,
-            maker,
-            createdInternally: true
+            maker
           }
         });
         return result?.listNFTX2Y2 ?? false;
