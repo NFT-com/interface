@@ -1,4 +1,9 @@
+import { nftAggregator } from 'constants/contracts';
+import { X2y2_exchange } from 'constants/typechain/X2y2_exchange';
+import { X2Y2ProtocolData } from 'graphql/generated/types';
 import {
+  AggregatorResponse,
+  cancelInputParamType,
   data721ParamType,
   data1155ParamType,
   DELEGATION_TYPE_ERC721,
@@ -10,11 +15,12 @@ import {
   Order,
   orderParamType, orderParamTypes, RunInput, runInputParamType } from 'types';
 
-import { TokenPair, TokenStandard, X2Y2Order } from '@x2y2-io/sdk/dist/types';
-import axios from 'axios';
-import { BigNumber, ethers } from 'ethers';
-import { _TypedDataEncoder } from 'ethers/lib/utils';
+import { Doppler, getEnv } from './env';
+import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
 
+import { OP_CANCEL_OFFER } from '@x2y2-io/sdk';
+import { CancelInput, TokenPair, TokenStandard, X2Y2Order } from '@x2y2-io/sdk/dist/types';
+import { BigNumber, ethers } from 'ethers';
 export const getNetworkMeta = (network: Network): NetworkMeta => {
   switch (network) {
   case 'mainnet':
@@ -149,20 +155,21 @@ async function fetchOrderSign(
   price: string,
   royalty: number | undefined,
   payback: number | undefined,
-  tokenId: string,
-  headers: any,
-  network: Network
+  tokenId: string
 ): Promise<RunInput | undefined> {
   try {
-    const { data } = await axios.post(`${getNetworkMeta(network)?.apiBaseURL}/api/orders/sign`, {
-      caller,
-      op,
-      amountToEth: '0',
-      amountToWeth: '0',
-      items: [{ orderId, currency, price, royalty, payback, tokenId }],
-      check: false, // set false to skip nft ownership check
-    }, JSON.parse(headers));
-
+    const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
+    url.searchParams.set('action', 'fetchOrderSign');
+    url.searchParams.set('caller', caller);
+    url.searchParams.set('op', op.toString());
+    url.searchParams.set('orderId', orderId.toString());
+    url.searchParams.set('currency', currency);
+    url.searchParams.set('price', price);
+    url.searchParams.set('royalty', royalty ? royalty.toString() : null);
+    url.searchParams.set('payback', payback ? payback.toString() : null);
+    url.searchParams.set('tokenId', tokenId);
+  
+    const data = await fetch(url.toString()).then(res => res.json());
     const inputData = (data.data ?? []) as { order_id: number; input: string }[];
     const input = inputData.find(d => d.order_id === orderId);
     return input ? decodeRunInput(input.input) : undefined;
@@ -182,9 +189,7 @@ async function acceptOrder(
   price: string,
   royalty: number | undefined,
   payback: number | undefined,
-  tokenId: string,
-  callOverrides: ethers.Overrides = {},
-  headers: any,
+  tokenId: string
 ) {
   const runInput: RunInput | undefined = await fetchOrderSign(
     accountAddress,
@@ -194,9 +199,7 @@ async function acceptOrder(
     price,
     royalty,
     payback,
-    tokenId,
-    headers,
-    network
+    tokenId
   );
   // check
   let value: BigNumber = ethers.constants.Zero;
@@ -225,9 +228,7 @@ async function acceptOrder(
 export async function buyOrder(
   network: Network,
   accountAddress: string,
-  order: Order,
-  callOverrides: ethers.Overrides = {},
-  headers: any
+  order: Order
 ): Promise<RunInput | undefined> {
   if (
     !(order.id && order.price && order.token)
@@ -244,9 +245,7 @@ export async function buyOrder(
     order.price,
     undefined,
     undefined,
-    '',
-    callOverrides,
-    headers
+    ''
   );
 }
 
@@ -260,7 +259,6 @@ export async function createX2Y2ParametersForNFTListing(
   expirationTime: number,
 ): Promise<X2Y2Order> {
   const accountAddress = await signer.getAddress();
-
   const data = encodeItemData([
     {
       token: tokenAddress,
@@ -280,4 +278,113 @@ export async function createX2Y2ParametersForNFTListing(
   await signOrderForX2Y2(signer, order);
 
   return order;
+}
+
+export const getX2Y2Hex = async (
+  executorAddress: string,
+  protocolData: X2Y2ProtocolData,
+  ethValue: string,
+  tokenStandard: TokenStandard,
+  hash: string
+): Promise<AggregatorResponse> => {
+  try {
+    const {
+      contract,
+      created_at,
+      currencyAddress,
+      end_at,
+      id,
+      maker,
+      price,
+      side,
+      status,
+      tokenId,
+      type,
+    } = protocolData;
+    
+    const order = {
+      item_hash: hash,
+      maker,
+      type,
+      side,
+      status,
+      currency: currencyAddress,
+      end_at: end_at.toString(),
+      created_at: created_at.toString(),
+      token: {
+        contract,
+        token_id: Number(tokenId),
+        erc_type: tokenStandard,
+      },
+      id,
+      price,
+      taker: executorAddress,
+    };
+    const failIfRevert = true;
+    const runInput = await buyOrder('mainnet', nftAggregator.mainnet, order);
+
+    const inputData = [runInput, ethValue, protocolData?.contract, protocolData?.tokenId, failIfRevert];
+
+    const wholeHex = await X2Y2Lib.encodeFunctionData('_run', inputData);
+
+    const genHex = libraryCall('_run(RunInput,uint256,address,uint256,bool)', wholeHex.slice(10));
+    
+    return {
+      tradeData: genHex,
+      value: BigNumber.from(ethValue),
+      marketId: '2',
+    };
+  } catch (err) {
+    throw `error in getX2Y2Hex: ${err}`;
+  }
+};
+
+export function decodeCancelInput(input: string): CancelInput {
+  return ethers.utils.defaultAbiCoder.decode(
+    [cancelInputParamType],
+    input
+  )[0] as CancelInput;
+}
+
+async function getCancelInput(
+  caller: string,
+  op: number,
+  orderId: number,
+  signMessage: string,
+  sign: string
+): Promise<CancelInput> {
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
+  url.searchParams.set('action', 'fetchOrderCancel');
+  url.searchParams.set('caller', caller);
+  url.searchParams.set('op', op.toString());
+  url.searchParams.set('orderId', orderId.toString());
+  url.searchParams.set('signMessage', signMessage);
+  url.searchParams.set('sign', sign);
+
+  const cancelData = await fetch(url.toString()).then(res => res.json());
+
+  return decodeCancelInput(cancelData.data.input);
+}
+
+export async function cancelX2Y2Listing(
+  network: Network,
+  signer: ethers.Signer,
+
+  orderId: number,
+  X2Y2Exchange: X2y2_exchange
+) {
+  const accountAddress = await signer.getAddress();
+
+  const signMessage = ethers.utils.keccak256('0x');
+  const sign = await signer.signMessage(ethers.utils.arrayify(signMessage));
+  const input: CancelInput = await getCancelInput(
+    accountAddress,
+    OP_CANCEL_OFFER,
+    orderId,
+    signMessage,
+    sign
+  );
+
+  const cancel = await X2Y2Exchange.cancel(input.itemHashes, input.deadline, input.v, input.r, input.s);
+  return cancel;
 }
