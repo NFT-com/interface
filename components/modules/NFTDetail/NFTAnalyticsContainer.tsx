@@ -114,7 +114,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                   <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
                 </Menu.Button>
               </div>
-        
+
               <Transition
                 as={Fragment}
                 enter="transition ease-out duration-100"

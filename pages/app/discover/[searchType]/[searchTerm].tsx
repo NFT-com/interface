@@ -158,7 +158,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     return (
       <div className="p-1 mt-7 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
-          <div className="px-0 flex mt-0 mb-4 justify-between minlg:hidden">
+          <div className="px-0 flex mt-0 mb-2 justify-between minlg:hidden">
             <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
               <SlidersHorizontal size={22}/>
             </div>
@@ -166,7 +166,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
             </div>
           </div>
-          <div className='flex justify-between mt-6 mb-10'>
+          <div className='hidden minlg:block flex justify-between mt-6 mb-10'>
             <div className='flex justify-between items-center'>
               <div className={`${sideNavOpen ? 'w-[19rem]' : 'w-[auto] mr-6'}`}>
                 <div
@@ -191,11 +191,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             <div className="hidden minlg:block">
               <SideNav onSideNav={() => null} filtersData={filters}/>
             </div>
-            <div className="flex-auto minmd:px-4 minxl:px-0">
+            <div className="flex-auto minxl:px-0">
               <div className="mt-5 minlg:mt-0">
                 {searchType?.toString() === 'allResults' && !isNullOrEmpty(collectionsSliderData) &&
                   <CollectionsResults sideNavOpen={sideNavOpen} searchTerm={searchTerm.toString()} nftsForCollections={nftsForCollections} found={collectionsSliderData?.found} />}
-                <div className="flex justify-between items-center mt-12 font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
+                <div className="flex justify-between items-center font-grotesk text-blog-text-reskin text-xs minmd:text-sm font-black">
                   <div className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium">
                     {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'Collection') + `${found.current === 1 ? '' : 's'}`}
                   </div>
@@ -241,6 +241,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                               userName={item.document.contractName}
                               contractAddr={item.document.contractAddr}
                               tokenId={item.document.tokenId}
+                              isOfficial={item.document.isOfficial}
                               images={[item.document.bannerUrl]}
                               countOfElements={collectionImages[0]?.actualNumberOfNFTs}
                               description={item?.document.description}

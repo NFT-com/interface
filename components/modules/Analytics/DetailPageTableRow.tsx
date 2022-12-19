@@ -141,7 +141,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         </>
       );
     }
-    
+
     if(tx.type === 'sale'){
       return (
         <>
@@ -150,7 +150,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         </>
       );
     }
-        
+
     return (
       <>
         {tx_from?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_from?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>}
@@ -158,7 +158,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       </>
     );
   }, [tx, tx_owner, tx_seller, tx_buyer, tx_from, tx_to]);
-  
+
   return (
     <tr key={index} className={tw(
       'font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] overflow-auto'
@@ -172,9 +172,9 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{tx?.token_id?.length > 10 ? shorten(tx?.token_id, true) || '—' : tx?.token_id || '—'}</td>
         : null
       }
-        
+
       {getRowContent()}
-        
+
       <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 capitalize">{
         formatMarketplaceName(tx.marketplace) || '—'
       }
