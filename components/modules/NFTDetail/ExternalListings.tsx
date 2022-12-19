@@ -78,13 +78,13 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const getIcon = useCallback((currency: string) => {
     switch (currency) {
-      case 'ETH':
-      case 'WETH':
-        return <ETH className='h-6 w-6 relative mr-2 shrink-0' alt="ETH logo redirect" layout="fill"/>;
-      case 'USDC':
-        return <USDC className='h-6 w-6 relative mr-2 shrink-0' alt="USDC logo redirect" layout="fill"/>;
-      default:
-        return null;
+    case 'ETH':
+    case 'WETH':
+      return <ETH className='h-6 w-6 relative mr-2 shrink-0' alt="ETH logo redirect" layout="fill"/>;
+    case 'USDC':
+      return <USDC className='h-6 w-6 relative mr-2 shrink-0' alt="USDC logo redirect" layout="fill"/>;
+    default:
+      return null;
     }
   }, []);
 

@@ -54,7 +54,7 @@ describe('Unit test our helper functions', () => {
     it('should return the shortened address with chars input', () => {
       expect(shortenAddress('0x1234567890123456789012345678901234567890', 3)).to.equal('0x123...890');
     });
-    
+
     it('should return empty if the address is invalid', () => {
       expect(shortenAddress('0x12345678901234567890123456789012345678901')).to.equal('');
     });
@@ -184,7 +184,7 @@ describe('Unit test our helper functions', () => {
       expect(getChainIdString(null)).to.equal(null);
     });
   });
-  
+
   context('getPerPage', () => {
     it('should return the right page size - collections index', () => {
       expect(getPerPage('collections', 1200, false)).to.equal(12);
@@ -225,7 +225,7 @@ describe('Unit test our helper functions', () => {
       expect(max()).to.be.null;
       expect(max(null)).to.be.null;
     });
-    
+
     it('should return the largest', () => {
       const five = BigNumber.from(5);
       const six = BigNumber.from(6);
@@ -238,7 +238,7 @@ describe('Unit test our helper functions', () => {
       expect(min()).to.be.null;
       expect(min(null)).to.be.null;
     });
-    
+
     it('should return the smallest', () => {
       const five = BigNumber.from(5);
       const six = BigNumber.from(6);

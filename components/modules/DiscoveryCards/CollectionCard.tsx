@@ -13,6 +13,7 @@ import {
 } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
+import VerifiedIcon from 'public/verifiedIcon.svg';
 import { useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -39,6 +40,7 @@ export interface CollectionCardProps {
   nft?: PartialDeep<DetailedNft>;
   tokenId?: string;
   images?: Array<string | null>,
+  isOfficial?: boolean;
 }
 
 export function CollectionCard(props: CollectionCardProps) {
@@ -51,6 +53,7 @@ export function CollectionCard(props: CollectionCardProps) {
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props?.images?.length > 0 ? props?.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
+
   return (
     <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
       <div className="h-44 relative ">
@@ -66,7 +69,10 @@ export function CollectionCard(props: CollectionCardProps) {
       <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem">
         <div className="border-b-[1px] border-[#F2F2F2] pb-[11px] mb-[16px]">
           <div className="flex justify-between items-start">
-            <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">{collection?.collection?.name ? collection?.collection?.name : props.contractName}</span>
+            <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
+              {collection?.collection?.name ? collection?.collection?.name : props.contractName}
+              {props.isOfficial && <VerifiedIcon className='inline ml-3'/>}
+            </span>
           </div>
         </div>
         <div onClick={(event) => event.preventDefault()} className="leading-[23.2px] text-[#959595] font-[400]">
