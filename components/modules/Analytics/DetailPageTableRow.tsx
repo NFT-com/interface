@@ -43,12 +43,6 @@ const getSymbol = (symbol: string, price: string) => {
 function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
   const symbol = useERC20Symbol(contract_address);
 
-  if (price == 21) {
-    console.log('price: ', price);
-    console.log('asset_type: ', asset_type);
-    console.log('contract_address: ', contract_address);
-    console.log('symbol: ', symbol);
-  }
   switch (asset_type) {
     case 'ETH':
       return <div className='flex items-center'><ETH className='mr-1.5 h-6 w-6 relative shrink-0' /> {price} ETH</div>;
