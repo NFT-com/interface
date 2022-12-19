@@ -51,7 +51,7 @@ const getTimeFrameString = (input: string) => {
     return isMobile ? 'ALL' : 'All Time';
   default:
     return 'All Time';
-}
+  }
 };
 
 const DynamicNFTActivity = dynamic<React.ComponentProps<typeof StaticNFTActivity>>(() => import('components/modules/Analytics/NFTActivity').then(mod => mod.NFTActivity));
