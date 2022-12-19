@@ -119,7 +119,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
         </div>
       </div>
       <div className='flex flex-row items-center w-full p-4'>
-        <div className="grid grid-cols-2 gap-x-32 gap-y-1">
+        <div className="grid grid-cols-2 md:gap-x-10 gap-x-32 gap-y-1">
           <span className='flex flex-col font-noi-grotesk text-[16px] not-italic font-medium mb-3 leading-5 text-[#6A6A6A]'>
             Creator
           </span>

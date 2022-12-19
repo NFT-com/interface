@@ -52,6 +52,14 @@ export function EditListingsModal(props: EditListingsModalProps) {
     TransferProxyTarget.LooksRare
   );
 
+  const {
+    allowedAll: X2Y2Allowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.X2Y2
+  );
+
   const getModalContent = useCallback(() => {
     return <div className='flex flex-col'>
       <div className="flex items-center">
@@ -92,6 +100,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
                 collectionName: props.collectionName,
                 isApprovedForSeaport: openseaAllowed,
                 isApprovedForLooksrare: looksRareAllowed,
+                isApprovedForX2Y2: X2Y2Allowed,
                 targets: []
               });
               router.push('/app/list');
@@ -101,17 +110,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
         </div>
       </div>
     </div>;
-  }, [
-    nft,
-    collectionName,
-    listings,
-    stageListing,
-    props.nft,
-    props.collectionName,
-    openseaAllowed,
-    looksRareAllowed,
-    router
-  ]);
+  }, [nft, collectionName, listings, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, X2Y2Allowed, router]);
 
   return (
     <Modal

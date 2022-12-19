@@ -32,10 +32,10 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
       '1D': { format: 'HH' },
       '7D': { format: 'DD' },
       '1M': { format: 'MMM DD' },
-      '3M': { format: 'MMM' },
-      '6M': { format: 'MMM' },
-      '1Y': { format: 'MMM' },
-      'ALL': { format: 'MMM' }
+      '3M': { format: 'MMM DD' },
+      '6M': { format: 'MMM DD' },
+      '1Y': { format: 'MMM DD' },
+      'ALL': { format: 'MMM DD' }
     };
 
     if (moment(item).isValid()) {
@@ -48,7 +48,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
 
   const yAxisFormatter = (item) => {
     if (moment(item).isValid()) {
-      return Number(item.toFixed(2)).toLocaleString('en-US');
+      return '$' + Number(item.toFixed(2)).toLocaleString('en-US');
     } else {
       return item;
     }
@@ -61,8 +61,8 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
         return null;
       }
       return (
-        <div className="rounded-[16px] font-medium font-noi-grotesk text-[16px] bg-[#000000] py-3 px-4">
-          <p className="text-[#B2B2B2]">{`${moment(payload[0].payload.date).format('MMM D, YYYY hh:mma')}`}</p>
+        <div className="rounded-[16px] font-medium font-noi-grotesk text-[16px] bg-[#000000] py-2 px-4">
+          <p className="text-[#B2B2B2]">{`${moment(payload[0].payload.date).format('dddd, MMM Do YY')}`}</p>
           <p className="text-white">{`$${Number(payload[0].value.toFixed(2)).toLocaleString('en-US')}`}</p>
         </div>
       );
@@ -72,7 +72,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
   };
 
   return (
-    <div className="bg-transparent min-w-full min-h-[10rem] ">
+    <div className="bg-transparent min-w-full min-h-[320px]">
       {(showMarketplaceOptions && !!data) &&
       <div className="w-full px-2 py-2 -mt-16 minmd:ml-[17.5px] minmd:visible sm:hidden">
         <div className="flex flex-row items-center justify-end space-x-2">
@@ -106,8 +106,8 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
         </div>
       </div>
       }
-      <ResponsiveContainer height={isMobile ? 227 : 357} width={'100%'} >
-        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 65, left: 5 }} height={isMobile ? 227 : 357}>
+      <ResponsiveContainer height={isMobile ? 227 : 320} width={'100%'} >
+        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: -5 }} height={isMobile ? 227 : 320}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'#FAC213'} stopOpacity={0.2}/>
@@ -115,15 +115,24 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
             </linearGradient>
           </defs>
           {!data &&
-            <Label position='center' className='font-noi-grotesk' style={{ fontSize: '12px', height: '140px' }} value={'No Data Yet'} />
+            <Label position='center' className='font-noi-grotesk' style={{ fontSize: '13px', height: '140px' }} value={'No Data Yet'} />
           }
-          <CartesianGrid strokeDasharray="5" vertical={false} />
-          <XAxis dataKey={'date'} className='font-noi-grotesk' style={{ fontSize: '12px' }} tickFormatter={xAxisFormatter}/>
-          <YAxis dataKey={'value'} className='font-noi-grotesk' style={{ fontSize: '12px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
+          <CartesianGrid strokeDasharray="3-3" stroke="#E6E6E6" vertical={false} />
+          <XAxis dataKey={'date'} tickCount={7} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} tickFormatter={xAxisFormatter}/>
+          <YAxis dataKey={'value'} tickCount={6} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
           <Tooltip
+            cursor={false}
             content={<CustomTooltip dataLength={data.length}/>}
           />
-          <Line type="linearClosed" dataKey="value" dot={{ stroke: '#FAC213', strokeWidth: 2 }} />
+          <Line
+            type="linear"
+            isAnimationActive={true}
+            dataKey="value"
+            stroke="#FCE795"
+            strokeWidth={4}
+            activeDot={{ stroke: '#FAC213', fill: '#FAC213', r: 5, strokeWidth: 5 }}
+            dot={{ stroke: '#FAC213', fill: '#FAC213', r: 5, strokeWidth: 5 }}
+          />
         </LineChart>
       </ResponsiveContainer>
       {(showMarketplaceOptions && !!data) &&

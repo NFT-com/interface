@@ -19,6 +19,7 @@ export interface PriceInputProps {
   // Omit this to just display the currency, without a dropdown picker.
   onCurrencyChange?: (currency: SupportedCurrency) => void,
   error: boolean,
+  errorMessage?: string
 }
 
 export function PriceInput(props: PriceInputProps) {
@@ -103,40 +104,43 @@ export function PriceInput(props: PriceInputProps) {
     : (
       <div
         className={tw(
-          'flex justify-start',
+          'flex flex-row rounded-xl',
         )}>
-        <input
-          type="text"
-          className={tw(
-            'text-sm min-w-0 border h-[2.65rem] mr-4 w-3/5',
-            'text-left p-1 rounded-md pl-2',
-            props.error ? 'border-red-500 border-2' : 'border-gray-300  border-2'
-          )}
-          placeholder={'Price'}
-          autoFocus={true}
-          value={formattedPrice ?? ''}
-          onChange={e => {
-            const validReg = /^[0-9.]*$/;
-            if (e.target.value.split('').filter(char => char === '.').length > 1) {
-              e.preventDefault();
-            } else if (isNullOrEmpty(e.target.value)) {
-              props.onPriceChange(null);
-              setFormattedPrice('');
-            } else if (
-              validReg.test(e.target.value.toLowerCase()) && e.target.value.length <= 6
-            ) {
-              const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
-              setFormattedPrice(paddedValue);
+        <div className='flex flex-col'>
+          <input
+            type="text"
+            className={tw(
+              'text-sm min-w-0 border h-[2.65rem] mr-4 w-3/5',
+              'text-left p-1 rounded-md pl-2',
+              props.error ? 'border-red-500 border-2' : 'border-gray-300  border-2'
+            )}
+            placeholder={'Price'}
+            autoFocus={true}
+            value={formattedPrice ?? ''}
+            onChange={e => {
+              const validReg = /^[0-9.]*$/;
+              if (e.target.value.split('').filter(char => char === '.').length > 1) {
+                e.preventDefault();
+              } else if (isNullOrEmpty(e.target.value)) {
+                props.onPriceChange(null);
+                setFormattedPrice('');
+              } else if (
+                validReg.test(e.target.value.toLowerCase()) && e.target.value.length <= 6
+              ) {
+                const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
+                setFormattedPrice(paddedValue);
             
-              props.onPriceChange(ethers.utils.parseEther(paddedValue));
-            } else {
-              e.preventDefault();
-            }
-          }}
-          style={{
-            color: alwaysBlack,
-          }}
-        />
+                props.onPriceChange(ethers.utils.parseEther(paddedValue));
+              } else {
+                e.preventDefault();
+              }
+            }}
+            style={{
+              color: alwaysBlack,
+            }}
+          />
+          {props.errorMessage && <p className='text-red-500 mt-2'>{props.errorMessage}</p>}
+        </div>
         {
           props.onCurrencyChange == null
             ? <div className='font-medium text-base flex items-center pl-2'>

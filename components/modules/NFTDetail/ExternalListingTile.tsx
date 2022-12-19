@@ -3,12 +3,13 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { ActivityStatus, LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { ActivityStatus, LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
+import { useX2Y2ExchangeContract } from 'hooks/contracts/useX2Y2ExchangeContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
@@ -16,10 +17,12 @@ import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
+import { cancelX2Y2Listing } from 'utils/X2Y2Helpers';
 
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import React from 'react';
 import { PartialDeep } from 'type-fest';
@@ -39,7 +42,7 @@ const Colors = {
 
 const Icons = {
   [ExternalExchange.LooksRare]: '/looksrare_black.svg',
-  [ExternalExchange.Opensea]: '/opensea_blue.png',
+  [ExternalExchange.Opensea]: '/opensea_blue.png'
 };
 
 export enum ListingButtonType {
@@ -61,6 +64,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const { stageListing } = useContext(NFTListingsContext);
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
+  const X2Y2Exchange = useX2Y2ExchangeContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
 
@@ -89,6 +93,14 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     TransferProxyTarget.LooksRare
   );
 
+  const {
+    allowedAll: X2Y2Allowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.X2Y2
+  );
+
   const listingProtocol = props.listing?.order?.protocol;
 
   const getButton = useCallback((type: ListingButtonType) => {
@@ -104,6 +116,9 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             collectionName: props.collectionName,
             isApprovedForSeaport: openseaAllowed,
             isApprovedForLooksrare: looksRareAllowed,
+            isApprovedForX2Y2: X2Y2Allowed,
+            hasOpenOrder: true,
+            openOrderId: (listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.X2Y2 ? (listing?.order?.protocolData as X2Y2ProtocolData).id : null,
             targets: [{
               protocol: listing?.order?.protocol as ExternalProtocol,
               startingPrice: 0,
@@ -111,7 +126,8 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               currency: WETH.address,
               duration: null,
               looksrareOrder: null,
-              seaportParameters: null
+              seaportParameters: null,
+              X2Y2Order: null
             }]
           });
           router.push('/app/list');
@@ -136,6 +152,22 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               return;
             }
             const result = await cancelLooksrareListing(BigNumber.from(order.nonce), looksrareExchange);
+            if (result) {
+              updateActivityStatus([listing?.id], ActivityStatus.Cancelled);
+            }
+            setCancelling(false);
+          } else if (listingProtocol === ExternalProtocol.X2Y2) {
+            const order = listing?.order?.protocolData as X2Y2ProtocolData;
+            if (order == null) {
+              setCancelling(false);
+              return;
+            }
+            const result = await cancelX2Y2Listing(
+              listing?.order?.chainId === '1' ? 'mainnet' : 'goerli',
+              signer,
+              order?.id,
+              X2Y2Exchange
+            );
             if (result) {
               updateActivityStatus([listing?.id], ActivityStatus.Cancelled);
             }
@@ -182,28 +214,9 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       />;
     }
     }
-  }, [
-    nftInPurchaseCart,
-    router,
-    cancelling,
-    defaultChainId,
-    currentAddress,
-    getByContractAddress,
-    listing,
-    listingProtocol,
-    looksRareAllowed,
-    looksrareExchange,
-    openseaAllowed,
-    props.collectionName,
-    props.nft,
-    seaportExchange,
-    stageListing,
-    stagePurchase,
-    updateActivityStatus,
-    mutateNft
-  ]);
+  }, [stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, X2Y2Allowed, listing, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
 
-  if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport].includes(listingProtocol as ExternalProtocol)) {
+  if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
     return null;
   }
@@ -222,9 +235,14 @@ function ExternalListingTile(props: ExternalListingTileProps) {
         'aspect-square h-8 w-8 rounded-full',
         Colors[listing?.order?.exchange]
       )}>
-        <div className='relative h-6 w-6 shrink-0 flex'>
-          <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
-        </div>
+        {listing?.order?.exchange === ExternalExchange.X2Y2 ?
+          <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo" layout="fill"/>
+          :
+          <div className='relative h-6 w-6 shrink-0 flex'>
+            <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
+          </div>
+        }
+        
       </div>
       <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
         <span className='text-sm text-secondary-txt'>

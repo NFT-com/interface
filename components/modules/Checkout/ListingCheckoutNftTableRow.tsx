@@ -1,12 +1,16 @@
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
+import { X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
 import { processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
+import { getLowestPriceListing } from 'utils/listingUtils';
+import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
@@ -20,13 +24,15 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
-
 export interface ListingCheckoutNftTableRowProps {
   listing: PartialDeep<StagedListing>;
   onPriceChange: () => void;
 }
 
 export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProps) {
+  const defaultChainId = useDefaultChainId();
+  const ethPriceUSD = useEthPriceUSD();
+  const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(props?.listing?.nft?.listings.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
   const { chain } = useNetwork();
   const { data: collection } = useSWR('ContractMetadata' + props.listing?.nft?.contract, async () => {
     return await getContractMetadata(props.listing?.nft?.contract, chain?.id);
@@ -38,7 +44,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     clearGeneralConfig,
     getTarget
   } = useContext(NFTListingsContext);
-  const defaultChainId = useDefaultChainId();
 
   const [expanded, setExpanded] = useState(false);
   const [selectedOpensea, setSelectedOpensea] = useState(false);
@@ -258,7 +263,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                         '' :
                         ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice ?? 0))
                     }
-                    currencyAddress={getTarget(props.listing, ExternalProtocol.X2Y2)?.currency ?? getAddress('weth', defaultChainId)}
+                    currencyAddress={'0x0000000000000000000000000000000000000000'}
                     currencyOptions={['ETH']}
                     onCurrencyChange={null}
                     onPriceChange={(val: BigNumber) => {
@@ -267,7 +272,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                     }}
                     error={
                       props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
-                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
+                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null ||
+                    (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
+                    }
+                    errorMessage={
+                      (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice)) && 'Active listing has a greater price, please enter a lower value.'
                     }
                   />
                 </> :
@@ -310,7 +319,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                       }}
                       error={
                         (props.listing.startingPrice == null) ||
-                  (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
+                  (BigNumber.from(props.listing.startingPrice ?? 0).eq(0)) ||
+                  (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing.startingPrice))
+                      }
+                      errorMessage={
+                        (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing.startingPrice)) && 'Active listing has a greater price, please enter a lower value.'
                       }
                     />
                     :
