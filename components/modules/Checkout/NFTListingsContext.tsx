@@ -270,7 +270,7 @@ export function NFTListingsContextProvider(
     price: Maybe<BigNumberish>,
     targetProtocol?: ExternalProtocol
   ) => {
-    const tempList = toList.slice().map(stagedNft => {
+    setToList(toList.slice().map(stagedNft => {
       if (listing?.nft?.id === stagedNft.nft?.id) {
         return {
           ...stagedNft,
@@ -290,10 +290,7 @@ export function NFTListingsContextProvider(
         };
       }
       return stagedNft;
-    });
-
-    console.log('========================= setPrice: ', tempList);
-    setToList(tempList);
+    }));
   }, [supportedCurrencyData, toList]);
 
   const setCurrency = useCallback((

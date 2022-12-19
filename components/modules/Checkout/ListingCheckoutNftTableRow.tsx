@@ -132,48 +132,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     />;
   };
 
-  // <PriceInput
-  //   key={expanded + 'OpenseaPriceInput'}
-  //   initial={
-  //     getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
-  //       '' :
-  //       ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice ?? 0))
-  //   }
-  //   currencyAddress={getTarget(props.listing, ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
-  //   currencyOptions={['WETH', 'ETH']}
-  //   onPriceChange={(val: BigNumber) => {
-  //     setPrice(props.listing, val, ExternalProtocol.Seaport);
-  //     props.onPriceChange();
-  //   }}
-  //   onCurrencyChange={(currency: SupportedCurrency) => {
-  //     setCurrency(props.listing, currency, ExternalProtocol.Seaport);
-  //     props.onPriceChange();
-  //   }}
-  //   error={
-  //     props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && target.startingPrice == null) != null ||
-  //   props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && BigNumber.from(target.startingPrice).eq(0)) != null
-  //   }
-  // />
-  // <PriceInput
-  //   key={expanded + 'LooksrarePriceInput'}
-  //   initial={
-  //     getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice == null ?
-  //       '' :
-  //       ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice ?? 0))
-  //   }
-  //   currencyAddress={getAddress('weth', defaultChainId)}
-  //   currencyOptions={['WETH']}
-  //   onCurrencyChange={null}
-  //   onPriceChange={(val: BigNumber) => {
-  //     setPrice(props.listing, val, ExternalProtocol.LooksRare);
-  //     props.onPriceChange();
-  //   }}
-  //   error={
-  //     props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && target.startingPrice == null) != null ||
-  //   props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null
-  //   }
-  // />
-
   const X2Y2PriceInput = () => {
     return <PriceInput
       key={expanded + 'X2Y2PriceInput'}
@@ -194,30 +152,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
       }
     />;
-    // return <PriceInput
-    //   key={expanded + 'X2Y2PriceInput'}
-    //   initial={
-    //     getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice == null ?
-    //       '' :
-    //       ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice ?? 0))
-    //   }
-    //   currencyAddress={getTarget(props.listing, ExternalProtocol.X2Y2)?.currency ?? getAddress('weth', defaultChainId)}
-    //   currencyOptions={['ETH']}
-    //   onCurrencyChange={null}
-    //   onPriceChange={(val: BigNumber) => {
-    //     try {
-    //       console.log('x2y2input');
-    //       setPrice(props.listing, val, ExternalProtocol.X2Y2);
-    //       props.onPriceChange();
-    //     } catch (e) {
-    //       console.log('onPriceChange: ', e);
-    //     }
-    //   }}
-    //   error={
-    //     props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
-    // props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
-    //   }
-    // />;
   };
 
   useEffect(() => {
