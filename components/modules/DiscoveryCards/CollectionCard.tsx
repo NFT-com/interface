@@ -3,7 +3,7 @@ import { Nft, TxActivity } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import {
   getGenesisKeyThumbnail,
   isNullOrEmpty,
@@ -44,6 +44,8 @@ export interface CollectionCardProps {
 }
 
 export function CollectionCard(props: CollectionCardProps) {
+  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+
   const { chain } = useNetwork();
   const [isStringCut, toggleStringLength] = useState(false);
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract);
@@ -69,10 +71,20 @@ export function CollectionCard(props: CollectionCardProps) {
       <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem">
         <div className="border-b-[1px] border-[#F2F2F2] pb-[11px] mb-[16px]">
           <div className="flex justify-between items-start">
-            <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
-              {collection?.collection?.name ? collection?.collection?.name : props.contractName}
-              {props.isOfficial && <VerifiedIcon className='inline ml-3'/>}
-            </span>
+            {
+              newFiltersEnabled
+                ? (
+                  <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
+                    {collection?.collection?.name ? collection?.collection?.name : props.contractName}
+                    {props.isOfficial && <VerifiedIcon className='inline ml-3'/>}
+                  </span>
+                )
+                : (
+                  <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
+                    {collection?.collection?.name ? collection?.collection?.name : props.contractName}
+                  </span>
+                )
+            }
           </div>
         </div>
         <div onClick={(event) => event.preventDefault()} className="leading-[23.2px] text-[#959595] font-[400]">
