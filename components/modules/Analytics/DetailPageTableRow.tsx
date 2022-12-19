@@ -5,6 +5,7 @@ import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { ethers } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
 import DAI from 'public/dai.svg';
@@ -27,16 +28,22 @@ type GetAssetProps = {
   contract_address: string;
 }
 
-const getSymbol = (symbol: string, price: string) => {
+const getSymbol = (contract_address: string, symbol: string, price: string) => {
   switch (symbol) {
-    case 'USDC':
-      return <div><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{price} USDC</div>;
-    case 'DAI':
-      return <div><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{price} DAI</div>;
-    case 'WETH':
-      return <div><WETH className='mr-1.5 h-5 w-5 relative shrink-0' />{price} WETH</div>;
-    default:
-      return <div>{price} {symbol}</div>;
+  case 'USDC':
+    return <div><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{price} USDC</div>;
+  case 'DAI':
+    return <div><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{price} DAI</div>;
+  case 'WETH':
+    return <div><WETH className='mr-1.5 h-5 w-5 relative shrink-0' />{price} WETH</div>;
+  default:
+    // eslint-disable-next-line @next/next/no-img-element
+    return <div><img
+      className='mr-1.5 h-5 w-5 relative shrink-0'
+      src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract_address)}/logo.png`}
+      alt={symbol}
+    />{price} {symbol}
+    </div>;
   }
 };
 
@@ -44,14 +51,14 @@ function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
   const symbol = useERC20Symbol(contract_address);
 
   switch (asset_type) {
-    case 'ETH':
-      return <div className='flex items-center'><ETH className='mr-1.5 h-6 w-6 relative shrink-0' /> {price} ETH</div>;
-    case 'ERC20':
-      return <div className='flex items-center'>{getSymbol(symbol, price)}</div>;
-    default:
-      return <div>{price} {asset_type}</div>;
+  case 'ETH':
+    return <div className='flex items-center'><ETH className='mr-1.5 h-6 w-6 relative shrink-0' /> {price} ETH</div>;
+  case 'ERC20':
+    return <div className='flex items-center'>{getSymbol(contract_address, symbol, price)}</div>;
+  default:
+    return <div>{price} {asset_type}</div>;
   }
-};
+}
 
 export default function DetailPageTableRow({ tx, index, isNftDetailPage }: DetailPageTableRowProps) {
   const formatMarketplaceName = (name) => {
