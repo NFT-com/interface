@@ -1,13 +1,18 @@
 import { NftPortTxByContractTransactions } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useERC20Symbol } from 'hooks/useERC20Symbol';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import moment from 'moment';
 import Link from 'next/link';
+import DAI from 'public/dai.svg';
+import WETH from 'public/eth.svg';
+import ETH from 'public/eth.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
+import USDC from 'public/usdc.svg';
 import { useCallback } from 'react';
 
 export interface DetailPageTableRowProps {
@@ -15,6 +20,44 @@ export interface DetailPageTableRowProps {
   index: number;
   isNftDetailPage?: boolean;
 }
+
+type GetAssetProps = {
+  price: string;
+  asset_type: string;
+  contract_address: string;
+}
+
+const getSymbol = (symbol: string, price: string) => {
+  switch (symbol) {
+    case 'USDC':
+      return <div><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{price} USDC</div>;
+    case 'DAI':
+      return <div><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{price} DAI</div>;
+    case 'WETH':
+      return <div><WETH className='mr-1.5 h-5 w-5 relative shrink-0' />{price} WETH</div>;
+    default:
+      return <div>{price} {symbol}</div>;
+  }
+};
+
+function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
+  const symbol = useERC20Symbol(contract_address);
+
+  if (price == 21) {
+    console.log('price: ', price);
+    console.log('asset_type: ', asset_type);
+    console.log('contract_address: ', contract_address);
+    console.log('symbol: ', symbol);
+  }
+  switch (asset_type) {
+    case 'ETH':
+      return <div className='flex items-center'><ETH className='mr-1.5 h-6 w-6 relative shrink-0' /> {price} ETH</div>;
+    case 'ERC20':
+      return <div className='flex items-center'>{getSymbol(symbol, price)}</div>;
+    default:
+      return <div>{price} {asset_type}</div>;
+  }
+};
 
 export default function DetailPageTableRow({ tx, index, isNftDetailPage }: DetailPageTableRowProps) {
   const formatMarketplaceName = (name) => {
@@ -135,7 +178,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       {tx?.price_details ?
         <>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 whitespace-nowrap">
-            {tx.price_details.price} {tx.price_details.asset_type}
+            <GetAsset price={tx.price_details.price} asset_type={tx.price_details.asset_type} contract_address={tx.price_details.contract_address} />
           </td>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
             {tx.price_details.price_usd?.toFixed(2) ? `$${tx.price_details.price_usd?.toFixed(2)}` : '-'}
@@ -158,4 +201,4 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       </td>
     </tr>
   );
-}
+};
