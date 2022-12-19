@@ -538,14 +538,12 @@ export type LeaderboardProfile = {
 
 export type ListNftLooksrareInput = {
   chainId?: InputMaybe<Scalars['String']>;
-  createdInternally?: InputMaybe<Scalars['Boolean']>;
   looksrareOrder?: InputMaybe<Scalars['String']>;
   profileUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type ListNftSeaportInput = {
   chainId?: InputMaybe<Scalars['String']>;
-  createdInternally?: InputMaybe<Scalars['Boolean']>;
   profileUrl?: InputMaybe<Scalars['String']>;
   seaportParams?: InputMaybe<Scalars['String']>;
   seaportSignature?: InputMaybe<Scalars['String']>;
@@ -554,7 +552,6 @@ export type ListNftSeaportInput = {
 export type ListNftx2Y2Input = {
   chainId?: InputMaybe<Scalars['String']>;
   contract?: InputMaybe<Scalars['String']>;
-  createdInternally?: InputMaybe<Scalars['Boolean']>;
   maker?: InputMaybe<Scalars['String']>;
   profileUrl?: InputMaybe<Scalars['String']>;
   tokenId?: InputMaybe<Scalars['String']>;

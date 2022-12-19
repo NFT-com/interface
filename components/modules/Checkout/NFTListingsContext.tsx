@@ -1,4 +1,4 @@
-import { Maybe, Nft, NftType } from 'graphql/generated/types';
+import { Maybe, Nft, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { get721Contract } from 'hooks/contracts/get721Contract';
@@ -6,15 +6,17 @@ import { useLooksrareRoyaltyFeeManagerContractContract } from 'hooks/contracts/u
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { getLowestPriceListing } from 'utils/listingUtils';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
-import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
+import { convertDurationToSec, filterValidListings, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { createX2Y2ParametersForNFTListing } from 'utils/X2Y2Helpers';
 
@@ -54,6 +56,9 @@ export type StagedListing = {
   endingPrice: BigNumberish;
   currency: string;
   duration: BigNumberish;
+  // for x2y2 order price adjustments
+  hasOpenOrder?: boolean;
+  openOrderId?: number;
   // approval-related data
   isApprovedForSeaport: boolean;
   isApprovedForLooksrare: boolean;
@@ -131,6 +136,7 @@ export function NFTListingsContextProvider(
 
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
+  const ethPriceUSD = useEthPriceUSD();
   const provider = useProvider();
   const { data: signer } = useSigner();
 
@@ -177,8 +183,13 @@ export function NFTListingsContextProvider(
 
   const allListingsConfigured = useCallback(() => {
     const unconfiguredNft = toList.find((stagedNft: StagedListing) => {
+      const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
       if (stagedNft?.nft == null || isNullOrEmpty(stagedNft?.targets)) {
         return true; // no targets or NFT to list?
+      }
+      const hasX2Y2LowerListing = (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2) && stagedNft?.startingPrice)) ||(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice));
+      if(hasX2Y2LowerListing) {
+        return true;
       }
       const hasGeneralConfig = stagedNft.startingPrice != null &&
         !BigNumber.from(stagedNft.startingPrice).eq(0) &&
@@ -196,7 +207,7 @@ export function NFTListingsContextProvider(
       return unconfiguredTarget != null;
     });
     return unconfiguredNft == null;
-  }, [toList]);
+  }, [defaultChainId, ethPriceUSD, toList]);
 
   const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol, toggleListing?: PartialDeep<StagedListing>) => {
     const targetFullyEnabled = toList.find(nft => {
@@ -434,7 +445,9 @@ export function NFTListingsContextProvider(
             { ...order },
             listing.nft.tokenId,
             listing.nft.contract,
-            currentAddress
+            currentAddress,
+            listing?.hasOpenOrder ?? false,
+            [listing?.openOrderId] ?? []
           );
           if (!result) {
             return ListAllResult.ApiError;

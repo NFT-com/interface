@@ -1,11 +1,12 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
+import { getX2Y2Hex } from 'utils/X2Y2Helpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
 import { PurchaseSummaryModal } from './PurchaseSummaryModal';
@@ -27,7 +28,8 @@ export type StagedPurchase = {
    * purchasers need to give ERC20 approval to the Aggregator contract
    */
   isApproved: boolean;
-  protocolData: SeaportProtocolData | LooksrareProtocolData;
+  orderHash?: string;
+  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData;
 }
 
 interface NFTPurchaseContextType {
@@ -110,6 +112,17 @@ export function NFTPurchaseContextProvider(
     localStorage.setItem('stagedNftPurchases', JSON.stringify(newToBuy));
   }, [toBuy]);
 
+  const fetchX2Y2Hex = useCallback(async (purchase) => {
+    const response = await getX2Y2Hex(
+      aggregator.address,
+      purchase?.protocolData as X2Y2ProtocolData,
+      purchase.currency === NULL_ADDRESS ? BigNumber.from(purchase?.price).toString() : '0',
+      purchase.nft.type === NftType.Erc1155 ? 'erc1155' : 'erc721',
+      purchase.orderHash
+    );
+    return response;
+  },[aggregator.address]);
+
   const buyAll = useCallback(async () => {
     const allDistinctErc20s: string[] = filterDuplicates(
       toBuy?.filter(purchase => purchase.currency !== NULL_ADDRESS)?.map(purchase => purchase?.currency),
@@ -138,6 +151,11 @@ export function NFTPurchaseContextProvider(
           looksrarePurchase.currency === NULL_ADDRESS ? BigNumber.from(looksrarePurchase?.price).toString() : '0'
         );
       }) ?? []),
+      //X2Y2
+      ...(await Promise.all(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.X2Y2)?.map(X2Y2Purchase => {
+        return fetchX2Y2Hex(X2Y2Purchase);
+      })))
+      ,
       // Seaport orders are combined
       toBuy?.find(purchase => purchase.protocol === ExternalProtocol.Seaport) != null ?
         getSeaportHex(
@@ -176,7 +194,7 @@ export function NFTPurchaseContextProvider(
       return await tx.wait(1).then(() => true).catch(() => false);
     }
     return false;
-  }, [aggregator, currentAddress, looksrareExchange, toBuy]);
+  }, [aggregator, currentAddress, fetchX2Y2Hex, looksrareExchange, toBuy]);
 
   return <NFTPurchasesContext.Provider value={{
     removePurchase,
