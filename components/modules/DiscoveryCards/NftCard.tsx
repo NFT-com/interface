@@ -3,7 +3,7 @@ import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseCon
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -174,9 +174,12 @@ export function NftCard(props: NftCardProps) {
                           collectionName: props.collectionName,
                           protocol: bestListing?.order?.protocol as ExternalProtocol,
                           isApproved: BigNumber.from(allowance ?? 0).gt(price),
+                          orderHash: bestListing?.order?.orderHash,
                           protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
                             bestListing?.order?.protocolData as SeaportProtocolData :
-                            bestListing?.order?.protocolData as LooksrareProtocolData
+                            bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
+                              bestListing?.order?.protocolData as X2Y2ProtocolData:
+                              bestListing?.order?.protocolData as LooksrareProtocolData
                         });
                         toggleCartSidebar('Buy');
                       }}
