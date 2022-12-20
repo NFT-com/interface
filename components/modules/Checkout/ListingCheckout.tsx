@@ -20,12 +20,11 @@ import Image from 'next/image';
 import router from 'next/router';
 import LooksrareGray from 'public/looksrare_gray.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
+// import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
 import Slider from 'rc-slider';
-import Tooltip from 'rc-tooltip';
 import { useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -47,7 +46,7 @@ export function ListingCheckout() {
     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
-  const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
+  // const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
 
   const openseaFullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     const hasTarget = nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
@@ -116,30 +115,9 @@ export function ListingCheckout() {
   const ListingCheckoutInfo = () => {
     return <div className="flex flex-col items-center w-full mt-10">
       <div className="flex flex-col items-center w-full">
-        <div className='w-full flex flex-col px-8 items-center'>
+        <div className='w-full flex flex-col items-center'>
           <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace/s</span>
           <div className='flex flex-col minlg:flex-row items-start w-full '>
-            {/* <div className='flex flex-col items-center mt-4  w-1/4'>
-              <div
-                onClick={() => {
-                  setNftcomMarketplaceEnabled(!nftcomMarketplaceEnabled);
-                  setShowSummary(false);
-                }}
-                className={tw(
-                  'border-[#D5D5D5] rounded-xl text-lg',
-                  'px-4 py-3 cursor-pointer w-full mr-2 flex flex-col items-center',
-                  nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border'
-                )}
-              >
-                <NFTLogo className='w-fit h-fit' />
-                <span className='font-semibold text-base'>NFT</span>
-                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
-              </div>
-              <div className='text-xs flex flex-col text-[#6F6F6F] items-center mt-2'>
-                <div><span className='text-[#FAC213]'>0%</span> fee with profile</div>
-                <span className='mt-2'>1.5% fee without profile</span>
-              </div>
-            </div> */}
             <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.Seaport);
@@ -200,7 +178,7 @@ export function ListingCheckout() {
             </div>}
           </div>
         </div>
-        <div className='w-full flex flex-col px-8 mt-8 items-center'>
+        <div className='w-full flex flex-col mt-8 items-center'>
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
           <div className='mt-8 w-full'>
             <Slider
@@ -233,7 +211,7 @@ export function ListingCheckout() {
         </div>
         <div className='my-8 flex flex-col items-start w-full'>
           <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
-          <table className="text-sm mx-8 table-auto w-full">
+          <table className="text-sm table-auto w-full">
             <tbody>
               {filterNulls(toList).map((listing, index) => {
                 return (
