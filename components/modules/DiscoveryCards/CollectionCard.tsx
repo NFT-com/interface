@@ -124,7 +124,7 @@ export function CollectionCard(props: CollectionCardProps) {
                 {
                   props.totalVolume && (
                     <div className='flex flex-col '>
-                      <span className='text-xl text-[#000] font-[500]'>{checkMinPrice(props.totalVolume) ? checkMinPrice(props.totalVolume) : '0 ETH'}</span>
+                      <span className='text-xl text-[#000] font-[500]'>{checkMinPrice(props.totalVolume)}</span>
                       <span>Total Volume</span>
                     </div>
                   )
