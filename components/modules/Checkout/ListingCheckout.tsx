@@ -69,7 +69,7 @@ export function ListingCheckout() {
 
   const ListingOneNFT = () => {
     return(
-      <div className='flex flex-col justify-start items-center bg-gray-200 w-2/5'>
+      <div className='flex flex-col justify-start items-center bg-gray-200 w-2/5 max-w-[48rem] min-h-[100vh]'>
         <div className='w-full ml-44 mt-20'>
           <h1
             className='text-2xl font-semibold font-noi-grotesk cursor-pointer'
@@ -242,7 +242,7 @@ export function ListingCheckout() {
     No NFTs staged for listing
           </div>
         }
-        {!showSummary && toList.length > 0 && <Button
+        {!showSummary && toList.length > 0 && <div className='w-full pb-8'><Button
           label={'Start Listing'}
           disabled={!allListingsConfigured()}
           onClick={async () => {
@@ -251,7 +251,7 @@ export function ListingCheckout() {
           }}
           type={ButtonType.PRIMARY}
           stretch
-        />}
+        /></div>}
       </div>
       <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
     </div>;
