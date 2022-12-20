@@ -69,7 +69,7 @@ export function ListingCheckout() {
 
   const ListingOneNFT = () => {
     return(
-      <div className='flex flex-col justify-start items-center bg-gray-200'>
+      <div className='flex flex-col justify-start items-center bg-gray-200 w-2/5'>
         <div className='w-full ml-44 mt-20'>
           <h1
             className='text-2xl font-semibold font-noi-grotesk cursor-pointer'
@@ -214,7 +214,7 @@ export function ListingCheckout() {
             />
           </div>
         </div>
-        <div className='flex flex-col items-start w-full'>
+        <div className='flex flex-col items-start w-full mb-10'>
           <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
           <table className="text-sm table-auto w-full">
             <tbody>
@@ -372,8 +372,8 @@ export function ListingCheckout() {
       </div>
     ) :
     (
-      <div className={`flex mb-10 w-full justify-${ toList.length === 1 ? 'between': 'start'}`}>
-        {toList.length === 1 && <ListingOneNFT />}
+      <div className={`flex w-full justify-${ toList.length === 1 ? 'between h-screen': 'start'}`}>
+        {toList.length === 1 && ListingOneNFT()}
         {(toList.length === 0 || toList.length > 1) &&<div className='hidden minmd:block w-1/5 mt-20'>
           <h1
             className='text-xl font-semibold font-noi-grotesk cursor-pointer ml-28'
