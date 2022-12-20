@@ -141,7 +141,7 @@ export default function RemoveModal({ visible, setVisible, address, rejected, re
       pure
     >
       <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
-        <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+        <div className='pt-28 font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
           <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
           {!isTxPending && <h2 className='text-4xl tracking-wide font-bold mb-10'>Are you sure?</h2>}

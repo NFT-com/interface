@@ -143,7 +143,7 @@ export function NftCard(props: NftCardProps) {
           props.onClick && props.onClick();
         }}
       >
-        <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} relative object-cover`}>
+        <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} relative object-cover w-full`}>
           <div className={newFiltersEnabled ? `h-[${nftImage}px] object-cover overflow-hidden` : 'sm:h-[171px] relative h-[252px] object-cover overflow-hidden'}>
             <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} group-hover/ntfCard:scale-110 hover:scale-105 transition `}>
               <RoundedCornerMedia
