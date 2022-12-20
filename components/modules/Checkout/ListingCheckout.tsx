@@ -372,7 +372,7 @@ export function ListingCheckout() {
       </div>
     ) :
     (
-      <div className={`flex w-full justify-${ toList.length === 1 ? 'between h-screen': 'start'}`}>
+      <div className={`flex w-full justify-${ toList.length === 1 ? 'between h-full': 'start'}`}>
         {toList.length === 1 && ListingOneNFT()}
         {(toList.length === 0 || toList.length > 1) &&<div className='hidden minmd:block w-1/5 mt-20'>
           <h1

@@ -35,7 +35,7 @@ export default function ListPage() {
     </div> :
     <div className={tw(
       'w-full minmd:pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
-      'bg-white dark:bg-footer-bg-dk font-grotesk'
+      'bg-white dark:bg-footer-bg-dk font-grotesk pb-8'
     )}>
       <ListingCheckout />
     </div>;
