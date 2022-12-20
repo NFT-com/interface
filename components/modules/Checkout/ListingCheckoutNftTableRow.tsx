@@ -613,18 +613,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
               }}
             /></div>}
-            {props.listing?.targets?.length < 3 && props.listing?.targets?.length > 1 &&
-            <div className='h-full py-2'>
-              <DeleteRowIcon
-                className={tw(
-                  'h-9 w-9 relative shrink-0 cursor-pointer',
-                )}
-                alt="Delete market place"
-                layout="fill"
-                onClick={() => {
-                  toggleTargetMarketplace(rowSelectedMarketplaces.current, props.listing);
-                }}
-              /></div>}
           </div>
         </td>
       </tr>
