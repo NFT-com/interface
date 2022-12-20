@@ -23,9 +23,10 @@ import LooksrareIcon from 'public/looksrare-icon.svg';
 // import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
+import X2Y2Gray from 'public/x2y2-gray.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
 import Slider from 'rc-slider';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export function ListingCheckout() {
@@ -43,6 +44,11 @@ export function ListingCheckout() {
       profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
       null
   );
+
+  useEffect(() => {
+    setDuration('30 Days' as SaleDuration);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
@@ -63,7 +69,7 @@ export function ListingCheckout() {
 
   const ListingOneNFT = () => {
     return(
-      <div className='flex flex-col justify-start items-center bg-gray-200 h-screen'>
+      <div className='flex flex-col justify-start items-center bg-gray-200'>
         <div className='w-full ml-44 mt-20'>
           <h1
             className='text-2xl font-semibold font-noi-grotesk cursor-pointer'
@@ -113,11 +119,11 @@ export function ListingCheckout() {
   };
 
   const ListingCheckoutInfo = () => {
-    return <div className="flex flex-col items-center w-full mt-10">
+    return <div className="flex flex-col items-center mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className='w-full flex flex-col items-center'>
           <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace/s</span>
-          <div className='flex flex-col minlg:flex-row items-start w-full '>
+          <div className='flex minmd:flex-col minlg:flex-row items-start w-full '>
             <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.Seaport);
@@ -172,7 +178,7 @@ export function ListingCheckout() {
                 X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />
+              {X2Y2FullyEnabled ? <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' /> : <X2Y2Gray className='relative shrink-0 -mt-[1px] -mb-[3px]' />}
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
             </div>}
@@ -208,7 +214,7 @@ export function ListingCheckout() {
             />
           </div>
         </div>
-        <div className='my-8 flex flex-col items-start w-full'>
+        <div className='flex flex-col items-start w-full'>
           <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
           <table className="text-sm table-auto w-full">
             <tbody>
@@ -366,9 +372,9 @@ export function ListingCheckout() {
       </div>
     ) :
     (
-      <div className={`flex mb-10 justify-${ toList.length < 2 ? 'between': 'start'}`}>
-        {toList.length < 2 && <ListingOneNFT />}
-        {toList.length > 1 &&<div className='w-1/5 mt-20'>
+      <div className={`flex mb-10 w-full justify-${ toList.length === 1 ? 'between': 'start'}`}>
+        {toList.length === 1 && <ListingOneNFT />}
+        {(toList.length === 0 || toList.length > 1) &&<div className='hidden minmd:block w-1/5 mt-20'>
           <h1
             className='text-xl font-semibold font-noi-grotesk cursor-pointer ml-28'
             onClick={() => {
@@ -377,8 +383,8 @@ export function ListingCheckout() {
             Back
           </h1>
         </div>}
-        <div className='w-full flex flex-col justify-start items-center w-3/5 px-28'>
-          <div className='w-full mt-20'>
+        <div className='w-full flex flex-col justify-start items-center w-full minmd:w-3/5 minmd:px-28'>
+          <div className='w-full minmd:mt-20'>
             <h1 className='text-3xl font-semibold font-noi-grotesk'>Create Listings</h1>
           </div>
           {ListingCheckoutInfo()}
