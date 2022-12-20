@@ -158,16 +158,6 @@ async function fetchOrderSign(
   payback: number | undefined,
   tokenId: string
 ): Promise<RunInput | undefined> {
-  console.log('test',
-    caller,
-    op,
-    orderId,
-    currency,
-    price,
-    royalty,
-    payback,
-    tokenId);
-
   try {
     const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
     url.searchParams.set('action', 'fetchOrderSign');
