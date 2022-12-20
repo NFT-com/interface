@@ -1,19 +1,66 @@
 import { NftPortTxByContractTransactions } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useERC20Symbol } from 'hooks/useERC20Symbol';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { shorten, shortenAddress } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { ethers } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
+import DAI from 'public/dai.svg';
+import WETH from 'public/eth.svg';
+import ETH from 'public/eth.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
+import USDC from 'public/usdc.svg';
 import { useCallback } from 'react';
 
 export interface DetailPageTableRowProps {
   tx: NftPortTxByContractTransactions;
   index: number;
   isNftDetailPage?: boolean;
+}
+
+type GetAssetProps = {
+  price: string;
+  asset_type: string;
+  contract_address: string;
+}
+
+const getSymbol = (contract_address: string, symbol: string, price: string) => {
+  switch (symbol) {
+  case 'USDC':
+    return <div><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{price} USDC</div>;
+  case 'DAI':
+    return <div><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{price} DAI</div>;
+  case 'WETH':
+    return <div><WETH className='mr-1.5 h-5 w-5 relative shrink-0' />{price} WETH</div>;
+  default:
+    if (!contract_address) {
+      return <div>{price} {symbol}</div>;
+    }
+    // eslint-disable-next-line @next/next/no-img-element
+    return <div><img
+      className='mr-1.5 h-5 w-5 relative shrink-0'
+      src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract_address)}/logo.png`}
+      alt={symbol}
+    />{price} {symbol}
+    </div>;
+  }
+};
+
+function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
+  const symbol = useERC20Symbol(contract_address);
+
+  switch (asset_type) {
+  case 'ETH':
+    return <div className='flex items-center'><ETH className='mr-1.5 h-6 w-6 relative shrink-0' /> {price} ETH</div>;
+  case 'ERC20':
+    return <div className='flex items-center'>{getSymbol(contract_address, symbol, price)}</div>;
+  default:
+    return <div>{price} {asset_type}</div>;
+  }
 }
 
 export default function DetailPageTableRow({ tx, index, isNftDetailPage }: DetailPageTableRowProps) {
@@ -94,7 +141,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         </>
       );
     }
-    
+
     if(tx.type === 'sale'){
       return (
         <>
@@ -103,7 +150,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         </>
       );
     }
-        
+
     return (
       <>
         {tx_from?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_from?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>}
@@ -111,7 +158,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       </>
     );
   }, [tx, tx_owner, tx_seller, tx_buyer, tx_from, tx_to]);
-  
+
   return (
     <tr key={index} className={tw(
       'font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] overflow-auto'
@@ -125,9 +172,9 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{tx?.token_id?.length > 10 ? shorten(tx?.token_id, true) || '—' : tx?.token_id || '—'}</td>
         : null
       }
-        
+
       {getRowContent()}
-        
+
       <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 capitalize">{
         formatMarketplaceName(tx.marketplace) || '—'
       }
@@ -135,7 +182,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       {tx?.price_details ?
         <>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 whitespace-nowrap">
-            {tx.price_details.price} {tx.price_details.asset_type}
+            <GetAsset price={tx.price_details.price} asset_type={tx.price_details.asset_type} contract_address={tx.price_details.contract_address} />
           </td>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
             {tx.price_details.price_usd?.toFixed(2) ? `$${tx.price_details.price_usd?.toFixed(2)}` : '-'}

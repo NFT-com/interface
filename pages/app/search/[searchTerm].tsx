@@ -18,7 +18,7 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple, SlidersHorizontal, X } from 'phosphor-react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
 function usePrevious(value) {
@@ -31,6 +31,7 @@ function usePrevious(value) {
 
 export default function ResultsPage({ data }: ResultsPageProps) {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
 
   const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const router = useRouter();
@@ -144,25 +145,58 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     return (
       <div className="p-1 mt-7 minmd:p-4 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
-          <div
-            className='block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
-            onClick={() => setSideNavOpen(!sideNavOpen)}>
-            {sideNavOpen ?
-              <div className="flex items-center justify-center bg-[#F2F2F2] text-[#6A6A6A] py-3 px-5 text-lg rounded-[48px]">
-                Filters
-                <X size={22} className="text-[#6A6A6A] ml-2" />
-              </div> :
-              <div className="flex items-center justify-center bg-black text-white py-3 px-5 text-lg rounded-[48px]">
-                <SlidersHorizontal size={22} className="mr-2"/>
-                <p>Filter</p>
-              </div>
-            }
-          </div>
+          {
+            newFiltersEnabled
+              ? (
+                <div className='minmd:my-10 flex items-center'>
+                  <div
+                    className={`hidden minlg:block max-w-[112px] overflow-hidden cursor-pointer ${sideNavOpen ? 'mr-[206px]' : 'mr-4'}`}
+                    onClick={() => setSideNavOpen(!sideNavOpen)}>
+                    {sideNavOpen ?
+                      <div className="flex items-center justify-center bg-[#F2F2F2] text-[#6A6A6A] py-3 px-5 text-lg rounded-[48px]">
+                      Filters
+                        <X size={22} className="text-[#6A6A6A] ml-2" />
+                      </div> :
+                      <div className="flex items-center justify-center bg-black text-white py-3 px-5 text-lg rounded-[48px]">
+                        <SlidersHorizontal size={22} className="mr-2"/>
+                        <p>Filter</p>
+                      </div>
+                    }
+                  </div>
+                  <div className="px-0 flex mt-0 mr-4 justify-between minlg:hidden">
+                    <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
+                      <SlidersHorizontal size={22}/>
+                    </div>
+                    <div className={'hidden relative flex items-center justify-center bg-white border-[#ECECEC] border-[1px] text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer z-5'}>
+
+                    </div>
+                  </div>
+                </div>
+              )
+              : (
+                <div
+                  className='block max-w-[112px] overflow-hidden cursor-pointer mb-10 mt-6'
+                  onClick={() => setSideNavOpen(!sideNavOpen)}>
+                  {sideNavOpen ?
+                    <div
+                      className="flex items-center justify-center bg-[#F2F2F2] text-[#6A6A6A] py-3 px-5 text-lg rounded-[48px]">
+                    Filters
+                      <X size={22} className="text-[#6A6A6A] ml-2"/>
+                    </div> :
+                    <div
+                      className="flex items-center justify-center bg-black text-white py-3 px-5 text-lg rounded-[48px]">
+                      <SlidersHorizontal size={22} className="mr-2"/>
+                      <p>Filter</p>
+                    </div>
+                  }
+                </div>
+              )
+          }
           <div className="flex justify-center minmd:mt-5 minlg:mt-0">
             <div className="hidden minlg:block">
               <SideNav onSideNav={() => null} filtersData={filters}/>
             </div>
-            <div className="flex-auto minmd:px-4 minxl:px-0">
+            <div className="flex-auto minxl:px-0">
               <div className="block minlg:hidden"><CuratedCollectionsFilter onClick={() => null} /></div>
               <div className="mt-5 minlg:mt-0">
                 {!isNullOrEmpty(collectionsSliderData) &&

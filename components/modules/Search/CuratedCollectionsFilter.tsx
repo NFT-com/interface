@@ -15,21 +15,6 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
   if(discoverPageEnv){
     return (
       <div className="pb-[10px] border-b-[1px] border-[#F2F2F2]">
-        <div className="flex justify-between items-center">
-          <span className="text-[#4D4D4D] minlg:text-md font-medium">Curated Collections</span>
-          <div
-            onClick={() => { setIsFilterCollapsed(!isFilterCollapsed); }}
-            className="cursor-pointer font-grotesk font-bold text-link-yellow ">
-            {/*{isFilterCollapsed ? 'Expand' : 'Collapse'}*/}
-            <CaretUp
-              color='#4D4D4D'
-              className={tw('cursor-pointer transition-transform font-bold', isFilterCollapsed ? 'rotate-180' : '')}
-            />
-          </div>
-        </div>
-        {/*<p className="minmd:text-left text-blog-text-reskin font-normal text-lg minlg:text-base w-full minxl:w-4/5">*/}
-        {/*  We’ve hand-picked NFT collections to help you find what you’re looking for.*/}
-        {/*</p>*/}
         <div className="flex flex-col items-center pt-2">
           <motion.div
             animate={{
