@@ -258,7 +258,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             props.onClose();
           }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
           {getSummaryContent()}
-          <div className="my-4 flex">
+          <div className="my-4 mt-8 flex">
             <Button
               stretch
               loading={showProgressBar && !error && !success}
