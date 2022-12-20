@@ -63,13 +63,13 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
     if(item[type]?.protocol === 'Seaport'){
       if(type === 'order'){
-        const sum = item[type]?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0).toString();
-        const ethAmount = ethers.utils.formatEther(sum);
+        const sum = item[type]?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
+        const ethAmount = ethers.utils.formatEther(BigInt(sum).toString());
         const currencyData = getByContractAddress(item[type]?.protocolData?.parameters?.consideration[0].token);
         return (
           <>
             <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
-              {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+              {ethAmount ? <p>{parseFloat(ethAmount)} {currencyData.name}</p> : <p>—</p>}
             </td>
             <td className="text-body leading-body pr-8 minmd:pr-4" >
               {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
@@ -80,8 +80,8 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
       if(type === 'transaction'){
         if(!isNullOrEmpty(item?.transaction?.protocolData?.consideration[0].startAmount)) {
-          const sum = item[type]?.protocolData?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0).toString();
-          const ethAmount = ethers.utils.formatEther(sum);
+          const sum = item[type]?.protocolData?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
+          const ethAmount = ethers.utils.formatEther(BigInt(sum).toString());
           const currencyData = getByContractAddress(item[type]?.protocolData?.consideration[0].token);
           return (
             <>
