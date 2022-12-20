@@ -2340,6 +2340,10 @@ input[type="range"]::-moz-range-thumb {
   bottom: -5px;
 }
 
+.rc-slider-dot {
+  display: none;
+}
+
 @keyframes animDecorLeaderboard {
   0% {
     transform: translateX(-50%);
