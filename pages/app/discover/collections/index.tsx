@@ -76,7 +76,7 @@ export default function CollectionsPage() {
       return (
         <div className={tw(
           'gap-2 minmd:grid minmd:space-x-2 minlg:space-x-0 minlg:gap-4',
-          'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4')}>
+          'minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 w-full')}>
           {collections && collections?.length > 0 && collections?.map((collection, index) => {
             return (
               <CollectionCard
@@ -84,6 +84,8 @@ export default function CollectionsPage() {
                 redirectTo={`/app/collection/${collection.document?.contractAddr}/`}
                 contractAddress={collection.document?.contractAddr}
                 contract={collection.document?.contractAddr}
+                floorPrice={collection.document?.floor}
+                totalVolume={collection.document?.volume}
                 userName={collection.document.contractName}
                 isOfficial={collection.document.isOfficial}
                 description={collection.document.description}

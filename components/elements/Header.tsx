@@ -113,43 +113,24 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'pr-4 py-[2px]'
                 )}
               >
-                {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
+                {getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ?
                   <DropdownPickerModal
                     pointer
                     align='center'
                     constrain
                     selectedIndex={0}
-                    options={filterNulls(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)
-                      ? [
-
-                        {
-                          label: 'Collections',
-                          onSelect: () => router.push(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ? 'app/discover/collections' : 'app/discover?collections'),
-                          icon: null,
-                        },
-                        {
-                          label: 'Profiles',
-                          onSelect: () => router.push(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ? 'app/discover/profiles' : 'app/discover?profiles'),
-                          icon: null,
-                        }
-                      ]
-                      : [
-                        {
-                          label: 'NFTs',
-                          onSelect: () => router.push('/discover'),
-                          icon: null,
-                        },
-                        {
-                          label: 'Collections',
-                          onSelect: () => router.push('/discover'),
-                          icon: null,
-                        },
-                        {
-                          label: 'Profiles',
-                          onSelect: () => router.push('/discover'),
-                          icon: null,
-                        }
-                      ])
+                    options={filterNulls([
+                      {
+                        label: 'Collections',
+                        onSelect: () => router.push('app/discover/collections'),
+                        icon: null,
+                      },
+                      {
+                        label: 'Profiles',
+                        onSelect: () => router.push('app/discover/profiles'),
+                        icon: null,
+                      }
+                    ])
                     }>
                     <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] flex items-center relative'>
                       Discover
@@ -355,43 +336,24 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                 'pr-4 py-[2px]'
               )}
             >
-              {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
+              {getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ?
                 <DropdownPickerModal
                   pointer
                   align='center'
                   constrain
                   selectedIndex={0}
-                  options={filterNulls(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)
-                    ? [
-
-                      {
-                        label: 'Collections',
-                        onSelect: () => router.push(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ? 'app/discover/collections' : 'app/discover?collections'),
-                        icon: null,
-                      },
-                      {
-                        label: 'Profiles',
-                        onSelect: () => router.push(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ? 'app/discover/profiles' : 'app/discover?profiles'),
-                        icon: null,
-                      }
-                    ]
-                    : [
-                      {
-                        label: 'NFTs',
-                        onSelect: () => router.push('/discover'),
-                        icon: null,
-                      },
-                      {
-                        label: 'Collections',
-                        onSelect: () => router.push('/discover'),
-                        icon: null,
-                      },
-                      {
-                        label: 'Profiles',
-                        onSelect: () => router.push('/discover'),
-                        icon: null,
-                      }
-                    ])
+                  options={filterNulls([
+                    {
+                      label: 'Collections',
+                      onSelect: () => router.push('app/discover/collections'),
+                      icon: null,
+                    },
+                    {
+                      label: 'Profiles',
+                      onSelect: () => router.push('app/discover/profiles'),
+                      icon: null,
+                    }
+                  ])
                   }>
                   <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] flex items-center relative'>
                       Discover
