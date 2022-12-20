@@ -34,12 +34,10 @@ export default function ListPage() {
       </div>
     </div> :
     <div className={tw(
-      'w-full pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
+      'w-full minmd:pt-20 flex flex-col items-center text-primary-txt dark:text-primary-txt-dk',
       'bg-white dark:bg-footer-bg-dk font-grotesk'
     )}>
-      <div className='w-full'>
-        <ListingCheckout />
-      </div>
+      <ListingCheckout />
     </div>;
 }
 
