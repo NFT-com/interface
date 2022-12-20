@@ -1,3 +1,5 @@
+import 'rc-slider/assets/index.css';
+
 import { Button, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -22,6 +24,8 @@ import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
+import Slider from 'rc-slider';
+import Tooltip from 'rc-tooltip';
 import { useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -198,24 +202,33 @@ export function ListingCheckout() {
         </div>
         <div className='w-full flex flex-col px-8 mt-8 items-center'>
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
-          <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
-            {
-              ['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
-                return <div
-                  key={duration}
-                  onClick={() => {
-                    setDuration(duration as SaleDuration);
-                  }}
-                  className={tw(
-                    'rounded-full py-2.5 px-2',
-                    toList?.find(l => l?.duration === convertDurationToSec(duration as SaleDuration)) ? 'bg-primary-yellow font-bold' : 'border border-[#D5D5D5] text-black',
-                    'cursor-pointer hover:opacity-80',
-                  )}
-                >
-                  {duration}
-                </div>;
-              })
-            }
+          <div className='mt-16 w-full'>
+            <Slider
+              step={10}
+              min={0}
+              max={60}
+              defaultValue={30}
+              onAfterChange={console.log}
+              marks={{ 0: '1 Hour', 10: '1 Day', 20: '7 Days', 30: '30 Days',40: '60 Days', 50: '90 Days', 60: '180 Days' }}
+              onChange={(value) => {
+                const duration = value === 0 ?
+                  '1 Hour'
+                  : value === 10 ?
+                    '1 Day'
+                    : value === 20 ?
+                      '7 Days'
+                      : value === 30 ?
+                        '30 Days'
+                        : value === 40 ?
+                          '60 Days'
+                          : value === 50 ?
+                            '90 Days'
+                            : '180 Days';
+                setDuration(duration as SaleDuration);
+              }}
+              trackStyle={[{ backgroundColor: '#F9D54C' }]}
+              handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
+            />
           </div>
         </div>
         <div className='my-8 flex flex-col items-start w-full'>
