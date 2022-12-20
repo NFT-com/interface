@@ -447,7 +447,7 @@ export function NFTListingsContextProvider(
             listing.nft.contract,
             currentAddress,
             listing?.hasOpenOrder ?? false,
-            [listing?.openOrderId] ?? []
+            listing?.openOrderId ? [listing?.openOrderId] : []
           );
           if (!result) {
             return ListAllResult.ApiError;
