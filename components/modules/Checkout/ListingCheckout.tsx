@@ -22,7 +22,7 @@ import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export function ListingCheckout() {
@@ -40,8 +40,6 @@ export function ListingCheckout() {
       profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
       null
   );
-
-  const sliderClientX = useRef(null);
     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
@@ -220,14 +218,14 @@ export function ListingCheckout() {
             }
           </div>
         </div>
-        <div className='my-8 overflow-x-scroll flex flex-col items-start w-full'>
+        <div className='my-8 flex flex-col items-start w-full'>
           <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
           <table className="text-sm table-auto w-full">
             <tbody>
               {filterNulls(toList).map((listing, index) => {
                 return (
                   <>
-                    <tr className='text-lg'>
+                    <tr className='text-base'>
                       <td className="font-medium pb-3 text-blog-text-reskin text-left">NFT</td>
                       <td className="font-medium pb-3 text-blog-text-reskin text-left">Marketplace</td>
                       <td className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</td>
@@ -338,7 +336,7 @@ export function ListingCheckout() {
               }
             </div>
           </div>
-          <div className='my-8 w-full overflow-x-scroll flex flex-col'>
+          <div className='my-8 overflow-x-scroll w-full flex flex-col'>
             <div className="border-t border-[#D5D5D5] mx-8">
               <span className='text-2xl w-full flex font-bold mt-10 mb-8 mx-8'>Your Listings</span>
             </div>
@@ -378,7 +376,7 @@ export function ListingCheckout() {
       </div>
     ) :
     (
-      <div className={`flex justify-${ toList.length < 2 ? 'between': 'start'}`}>
+      <div className={`flex mb-10 justify-${ toList.length < 2 ? 'between': 'start'}`}>
         {toList.length < 2 && <ListingOneNFT />}
         {toList.length > 1 &&<div className='w-1/5 mt-20'>
           <h1

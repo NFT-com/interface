@@ -511,7 +511,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           </div>
         </td>
         <td className='align-top w-auto'>
-          <div className='flex flex-col items-start h-full w-28'>
+          <div className='flex flex-col items-start h-full min-w-28 pr-2'>
             {seaportEnabled && rowSelectedMarketplaces.current !== ExternalProtocol.Seaport &&
               <input
                 disabled
@@ -555,7 +555,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           </div>
         </td>
         <td className='align-top w-min'>
-          <div className='h-full w-32 flex flex-col justify-around'>
+          <div className='h-full min-w-32 flex flex-col justify-around'>
             {seaportEnabled && rowSelectedMarketplaces.current !== ExternalProtocol.Seaport && <div className='mb-2'>{OpenseaPriceInput()}</div>}
             
             {looksrareEnabled && rowSelectedMarketplaces.current !== ExternalProtocol.LooksRare && <div className='mb-2'>{LooksRarePriceInput()}</div>}
@@ -583,17 +583,51 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           </div>
         </td>
         <td className='w-auto align-top '>
-          <div className='w-full pl-10 mt-2'>
-            <DeleteRowIcon
+          <div className='w-full pl-10 mt-2 flex flex-col justify-between h-full'>
+            {seaportEnabled && rowSelectedMarketplaces.current !== ExternalProtocol.Seaport && <div className='h-full py-2'><DeleteRowIcon
               className={tw(
                 'h-9 w-9 relative shrink-0 cursor-pointer',
               )}
               alt="Delete market place"
               layout="fill"
               onClick={() => {
-                toggleTargetMarketplace(rowSelectedMarketplaces.current, props.listing);
+                toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
               }}
-            />
+            /></div>}
+            
+            {looksrareEnabled && rowSelectedMarketplaces.current !== ExternalProtocol.LooksRare && <div className='h-full py-2'><DeleteRowIcon
+              className={tw(
+                'h-9 w-9 relative shrink-0 cursor-pointer',
+              )}
+              alt="Delete market place"
+              layout="fill"
+              onClick={() => {
+                toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
+              }}
+            /></div>}
+            
+            {X2Y2Enabled && rowSelectedMarketplaces.current !== ExternalProtocol.X2Y2 && <div className='h-full py-2'><DeleteRowIcon
+              className={tw(
+                'h-9 w-9 relative shrink-0 cursor-pointer',
+              )}
+              alt="Delete market place"
+              layout="fill"
+              onClick={() => {
+                toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
+              }}
+            /></div>}
+            {props.listing?.targets?.length < 3 &&
+            <div className='h-full py-2'>
+              <DeleteRowIcon
+                className={tw(
+                  'h-9 w-9 relative shrink-0 cursor-pointer',
+                )}
+                alt="Delete market place"
+                layout="fill"
+                onClick={() => {
+                  toggleTargetMarketplace(rowSelectedMarketplaces.current, props.listing);
+                }}
+              /></div>}
           </div>
         </td>
       </tr>
