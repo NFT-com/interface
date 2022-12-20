@@ -49,9 +49,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   } = useContext(NFTListingsContext);
 
   const [expanded, setExpanded] = useState(false);
-  const [selectedOpensea, setSelectedOpensea] = useState(false);
-  const [selectedLooksrare, setSelectedLooksrare] = useState(false);
-  const [selectedx2y2, setSelectedx2y2] = useState(false);
   // const [rowSelectedMarketplace, setRowSelectedMarketplace] = useState(null);
   const rowSelectedMarketplaces = useRef(null);
 
@@ -467,8 +464,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 onClick={() => removeListing(props.listing?.nft)} />
             </div>
             <div className='flex flex-col font-noi-grotesk'>
-              <span className='text-sm line-clamp-1'>{collection?.contractMetadata?.name}</span>
-              <span className='font-bold text-base line-clamp-1'>{props.listing?.nft?.metadata?.name}</span>
+              <span className='text-sm line-clamp-1 capitalize'>{collection?.contractMetadata?.name?.toLowerCase()}</span>
+              <span className='font-bold text-base line-clamp-1 capitalize'>{props.listing?.nft?.metadata?.name?.toLowerCase()}</span>
             </ div>
           </ div>
         </td>

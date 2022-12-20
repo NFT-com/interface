@@ -186,7 +186,6 @@ export function ListingCheckout() {
               min={0}
               max={60}
               defaultValue={30}
-              onAfterChange={console.log}
               marks={{ 0: '1 Hour', 10: '1 Day', 20: '7 Days', 30: '30 Days',40: '60 Days', 50: '90 Days', 60: '180 Days' }}
               onChange={(value) => {
                 const duration = value === 0 ?
@@ -378,8 +377,8 @@ export function ListingCheckout() {
             Back
           </h1>
         </div>}
-        <div className='w-full flex flex-col justify-between items-center w-3/5'>
-          <div className='w-full px-8 mt-20'>
+        <div className='w-full flex flex-col justify-start items-center w-3/5 pr-28'>
+          <div className='w-full mt-20'>
             <h1 className='text-3xl font-semibold font-noi-grotesk'>Create Listings</h1>
           </div>
           {ListingCheckoutInfo()}
