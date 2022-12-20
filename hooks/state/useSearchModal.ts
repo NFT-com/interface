@@ -11,6 +11,7 @@ export function useSearchModal() {
     {
       modalType: '',
       searchModalOpen: false,
+      isLeaderBoard: true,
       activePeriod: '7d',
       sideNavOpen: !router.pathname.includes('discover/') && !router.pathname.includes('collection/'),
       searchFilters: [],
@@ -26,6 +27,13 @@ export function useSearchModal() {
       collectionsResultsFilterBy: '',
       nftsPageSortyBy: '',
       checkedArray: [],
+      collectionsFilter: {
+        issuance: null,
+        floor: null,
+        currency: null,
+        nftTypes: null,
+        volume: null
+      },
       dropDownSearchResults: null,
       keyword: ''
     } });
@@ -43,6 +51,12 @@ export function useSearchModal() {
     mutate({
       ...data,
       activePeriod: period
+    });
+  };
+  const useToggleLeaderBoardState = (isLeaderBoard) => {
+    mutate({
+      ...data,
+      isLeaderBoard: isLeaderBoard
     });
   };
 
@@ -171,9 +185,12 @@ export function useSearchModal() {
     checkedArray: data.checkedArray,
     dropDownSearchResults: data.dropDownSearchResults,
     keyword: data.keyword,
+    collectionsFilter: data.collectionsFilter,
+    isLeaderBoard: data.isLeaderBoard,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
     changeTimePeriod: useChangeTimePeriod,
+    toggleLeaderBoardState: useToggleLeaderBoardState,
     setModalType,
     setSideNavOpen,
     setSortBy,

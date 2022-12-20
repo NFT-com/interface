@@ -119,7 +119,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
     }
 
     if(item[type]?.protocol === ExternalProtocol.X2Y2){
-      if(type === 'transaction' || type === 'order'){
+      if((type === 'transaction' || type === 'order') && !isNullOrEmpty(item[type]?.protocolData?.price) && !isNullOrEmpty(item[type]?.protocolData?.currencyAddress)){
         const ethAmount = ethers.utils.formatEther(item[type]?.protocolData?.price);
         const currencyData = getByContractAddress(item[type]?.protocolData?.currencyAddress);
         return (

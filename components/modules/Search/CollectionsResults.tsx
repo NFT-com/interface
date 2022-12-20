@@ -44,6 +44,7 @@ export const CollectionsResults = (props:
             contractAddress={collection.document?.collectionAddress}
             contract={collection.document?.collectionAddress}
             description={collection?.document.description}
+            isOfficial={collection.document.isOfficial}
             images={[collection.document.bannerUrl]}
             contractName={collection.document.contractName}
             maxSymbolsInString={180}

@@ -24,6 +24,7 @@ import { CartSidebarTab, NFTCartSidebar } from './NFTCartSidebar';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 
 import { MakerOrder } from '@looksrare/sdk';
+// eslint-disable-next-line react-hooks/exhaustive-deps
 import { X2Y2Order } from '@x2y2-io/sdk/dist/types';
 import { BigNumber, BigNumberish } from 'ethers';
 import moment from 'moment';
@@ -77,7 +78,7 @@ export interface NFTListingsContextType {
   clear: () => void;
   listAll: () => Promise<ListAllResult>;
   prepareListings: (nonceOverride?: number) => Promise<void>;
-  
+
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>) => void;
@@ -166,7 +167,7 @@ export function NFTListingsContextProvider(
   ) => {
     const filterListings = listings?.filter(a => !toList?.some(b => b.nft.id === a.nft.id));
     setToList([...toList, ...filterListings]);
-    
+
     localStorage.setItem('stagedNftListings', JSON.stringify(filterNulls([...toList, ...listings])));
   }, [toList]);
 
@@ -174,7 +175,7 @@ export function NFTListingsContextProvider(
     setToList([]);
     localStorage.setItem('stagedNftListings', null);
   }, []);
-  
+
   const toggleCartSidebar = useCallback((selectedTab?: 'Buy' | 'Sell') => {
     setSidebarVisible(!sidebarVisible);
     setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'Buy' : 'Sell'));
@@ -446,7 +447,7 @@ export function NFTListingsContextProvider(
             listing.nft.contract,
             currentAddress,
             listing?.hasOpenOrder ?? false,
-            [listing?.openOrderId] ?? []
+            listing?.openOrderId ? [listing?.openOrderId] : []
           );
           if (!result) {
             return ListAllResult.ApiError;

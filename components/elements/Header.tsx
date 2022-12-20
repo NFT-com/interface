@@ -124,12 +124,12 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
 
                         {
                           label: 'Collections',
-                          onSelect: () => router.push('app/discover?collections'),
+                          onSelect: () => router.push(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ? 'app/discover/collections' : 'app/discover?collections'),
                           icon: null,
                         },
                         {
                           label: 'Profiles',
-                          onSelect: () => router.push('app/discover?profiles'),
+                          onSelect: () => router.push(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ? 'app/discover/profiles' : 'app/discover?profiles'),
                           icon: null,
                         }
                       ]
@@ -366,12 +366,12 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
 
                       {
                         label: 'Collections',
-                        onSelect: () => router.push('/app/discover?collections'),
+                        onSelect: () => router.push(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ? 'app/discover/collections' : 'app/discover?collections'),
                         icon: null,
                       },
                       {
                         label: 'Profiles',
-                        onSelect: () => router.push('/app/discover?profiles'),
+                        onSelect: () => router.push(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ? 'app/discover/profiles' : 'app/discover?profiles'),
                         icon: null,
                       }
                     ]

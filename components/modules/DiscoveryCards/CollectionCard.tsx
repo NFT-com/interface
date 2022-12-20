@@ -3,7 +3,7 @@ import { Nft, TxActivity } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { Doppler, getEnv } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import {
   getGenesisKeyThumbnail,
   isNullOrEmpty,
@@ -13,6 +13,7 @@ import {
 } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 
+import VerifiedIcon from 'public/verifiedIcon.svg';
 import { useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -39,9 +40,12 @@ export interface CollectionCardProps {
   nft?: PartialDeep<DetailedNft>;
   tokenId?: string;
   images?: Array<string | null>,
+  isOfficial?: boolean;
 }
 
 export function CollectionCard(props: CollectionCardProps) {
+  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+
   const { chain } = useNetwork();
   const [isStringCut, toggleStringLength] = useState(false);
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), props?.contract);
@@ -51,6 +55,7 @@ export function CollectionCard(props: CollectionCardProps) {
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props?.images?.length > 0 ? props?.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
+
   return (
     <a href={props.redirectTo} className="sm:mb-4 min-h-[100%] block transition-all cursor-pointer rounded-[16px] shadow-lg overflow-hidden">
       <div className="h-44 relative ">
@@ -66,7 +71,20 @@ export function CollectionCard(props: CollectionCardProps) {
       <div className="pt-4 pr-[20px] pb-5 pl-[30px] min-h-51rem">
         <div className="border-b-[1px] border-[#F2F2F2] pb-[11px] mb-[16px]">
           <div className="flex justify-between items-start">
-            <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">{collection?.collection?.name ? collection?.collection?.name : props.contractName}</span>
+            {
+              newFiltersEnabled
+                ? (
+                  <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
+                    {collection?.collection?.name ? collection?.collection?.name : props.contractName}
+                    {props.isOfficial && <VerifiedIcon className='inline ml-3'/>}
+                  </span>
+                )
+                : (
+                  <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
+                    {collection?.collection?.name ? collection?.collection?.name : props.contractName}
+                  </span>
+                )
+            }
           </div>
         </div>
         <div onClick={(event) => event.preventDefault()} className="leading-[23.2px] text-[#959595] font-[400]">

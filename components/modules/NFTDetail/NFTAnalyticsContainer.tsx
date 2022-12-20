@@ -35,22 +35,22 @@ const timeFrames = {
 
 const getTimeFrameString = (input: string) => {
   switch (input) {
-    case '1D':
-      return isMobile ? '1D' : 'Past Day';
-    case '7D':
-      return isMobile ? '7D' : 'Past 7 Days';
-    case '1M':
-      return isMobile ? '1M' : 'Past Month';
-    case '3M':
-      return isMobile ? '3M' : 'Past 3 Months';
-    case '6M':
-      return isMobile ? '6M' : 'Past 6 Months';
-    case '1Y':
-      return isMobile ? '1Y' : 'Past Year';
-    case 'ALL':
-      return isMobile ? 'ALL' : 'All Time';
-    default:
-      return 'All Time';
+  case '1D':
+    return isMobile ? '1D' : 'Past Day';
+  case '7D':
+    return isMobile ? '7D' : 'Past 7 Days';
+  case '1M':
+    return isMobile ? '1M' : 'Past Month';
+  case '3M':
+    return isMobile ? '3M' : 'Past 3 Months';
+  case '6M':
+    return isMobile ? '6M' : 'Past 6 Months';
+  case '1Y':
+    return isMobile ? '1Y' : 'Past Year';
+  case 'ALL':
+    return isMobile ? 'ALL' : 'All Time';
+  default:
+    return 'All Time';
   }
 };
 
@@ -114,7 +114,7 @@ export const NFTAnalyticsContainer = ({ data }: NFTAnalyticsContainerProps) => {
                   <ChevronUpDownIcon className="-mr-1 ml-2 h-7 w-7 text-[#B2B2B2]" aria-hidden="true" />
                 </Menu.Button>
               </div>
-        
+
               <Transition
                 as={Fragment}
                 enter="transition ease-out duration-100"

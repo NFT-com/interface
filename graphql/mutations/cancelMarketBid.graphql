@@ -1,3 +1,0 @@
-mutation CancelMarketBid($input: CancelBidInput!) {
-  cancelMarketBid(input: $input)
-}
