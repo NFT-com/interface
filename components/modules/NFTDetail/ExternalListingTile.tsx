@@ -205,9 +205,12 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             collectionName: props.collectionName,
             protocol: listingProtocol as ExternalProtocol,
             isApproved: BigNumber.from(allowance ?? 0).gt(price),
+            orderHash: listing?.order?.orderHash,
             protocolData: listingProtocol === ExternalProtocol.Seaport ?
               listing?.order?.protocolData as SeaportProtocolData :
-              listing?.order?.protocolData as LooksrareProtocolData
+              listingProtocol === ExternalProtocol.X2Y2 ?
+                listing?.order?.protocolData as X2Y2ProtocolData :
+                listing?.order?.protocolData as LooksrareProtocolData
           });
         }}
         type={ButtonType.PRIMARY}
