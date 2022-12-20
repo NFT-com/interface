@@ -10,6 +10,7 @@ import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
@@ -54,6 +55,8 @@ export interface NftCardProps {
 }
 
 export function NftCard(props: NftCardProps) {
+  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
@@ -85,10 +88,12 @@ export function NftCard(props: NftCardProps) {
       }
     }
   };
+  const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
+
   return (
     <div className={tw(
       'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative',
-      props.nftsDescriptionsVisible != false ? 'h-[442px] sm:h-[auto]' : 'h-max'
+      props.nftsDescriptionsVisible != false ? `${newFiltersEnabled ? '' : 'h-[442px] sm:h-[auto]'}` : 'h-max'
     )}>
       {
         props.visible != null &&
@@ -138,9 +143,9 @@ export function NftCard(props: NftCardProps) {
           props.onClick && props.onClick();
         }}
       >
-        <div className="relative h-[252px] object-cover ">
-          <div className="sm:h-[171px] relative h-[252px] object-cover overflow-hidden">
-            <div className='group-hover/ntfCard:scale-110 hover:scale-105 h-[252px] transition '>
+        <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} relative object-cover`}>
+          <div className={newFiltersEnabled ? `h-[${nftImage}px] object-cover overflow-hidden` : 'sm:h-[171px] relative h-[252px] object-cover overflow-hidden'}>
+            <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} group-hover/ntfCard:scale-110 hover:scale-105 transition `}>
               <RoundedCornerMedia
                 variant={RoundedCornerVariant.None}
                 width={600}

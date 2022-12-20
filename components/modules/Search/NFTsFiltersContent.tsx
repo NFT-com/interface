@@ -338,8 +338,8 @@ const FilterNew = (props: any) => {
       const max = Math.max(...values);
       return (
         <MinMaxFilter
-          max={max}
-          min={min}
+          max={collectionsFilter.floor && collectionsFilter.floor.length ? collectionsFilter.floor[0] : max}
+          min={collectionsFilter.floor && collectionsFilter.floor.length ? collectionsFilter.floor[1] : min}
           isOpen={isOpen}
           currency={collectionsFilter.currency}
           toggleSelect={(value) => toggleCurrencySelect(!value)}
@@ -391,8 +391,8 @@ const FilterNew = (props: any) => {
     if(filter.field_name === 'volume'){
       return (
         <MinMaxFilter
-          min={0}
-          max={1000000000}
+          min={collectionsFilter.volume && collectionsFilter.volume.length ? collectionsFilter.volume[0] : 0}
+          max={collectionsFilter.volume && collectionsFilter.volume.length ? collectionsFilter.volume[1] : 1000000000}
           isOpen={isOpen}
           currency={collectionsFilter.currency}
           changeCurrency={(value) => setCurrency(value)}
@@ -486,7 +486,7 @@ export const NFTsFiltersContent = () => {
         return `issuance:>${epochFilter}`;
       }
       if(item[0] === 'floor' && item[1]){
-        return `floor:${item[1]}`;
+        return `floor:=[${item[1][0]}..${item[1][1]}]`;
       }
       if(item[0] === 'currency' && item[1]){
         return `currency:=[${item[1]}]`;
@@ -495,7 +495,7 @@ export const NFTsFiltersContent = () => {
         return `nftType:=[${item[1]}]`;
       }
       if(item[0] === 'volume' && item[1]){
-        return `volume:=${item[1]}`;
+        return `volume:=[${item[1][0]}..${item[1][1]}]`;
       }
     }).filter(Boolean).join(' && ');
     const collectionsCheckedFiltersString = checkedList.filter(i => i.includes('contractName') || i.includes('nftType')).join(' && ');

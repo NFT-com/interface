@@ -241,6 +241,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                               userName={item.document.contractName}
                               contractAddr={item.document.contractAddr}
                               tokenId={item.document.tokenId}
+                              floorPrice={item.document?.floor}
+                              totalVolume={item.document?.volume}
                               isOfficial={item.document.isOfficial}
                               images={[item.document.bannerUrl]}
                               countOfElements={collectionImages[0]?.actualNumberOfNFTs}

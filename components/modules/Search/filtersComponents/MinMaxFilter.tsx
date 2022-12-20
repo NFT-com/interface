@@ -9,7 +9,7 @@ interface FilterInputOptionProps {
   isOpen?: boolean,
   max?: string | number,
   min?: string | number,
-  setMinMaxValues: (value: string) => void,
+  setMinMaxValues: (value: Array<number | string>) => void,
   toggleSelect?: (value: boolean) => void,
   changeCurrency?: (value: string) => void,
 }
@@ -68,7 +68,7 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
         label={'Apply'}
         type={ButtonType.PRIMARY}
         onClick={() => {
-          props.setMinMaxValues(`[${minVal}..${maxVal}]`);
+          props.setMinMaxValues([minVal,maxVal]);
         }}/>
     </div>
   );
