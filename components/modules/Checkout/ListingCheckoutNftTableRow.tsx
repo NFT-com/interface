@@ -510,22 +510,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               </div>}
           </div>
         </td>
-        <td className='align-top w-auto pr-2'>
-          <div className='flex flex-col items-start h-full w-24'>
-            {/* {props.listing?.targets?.map((target) =>
-              <div key={'toa' + target.protocol} className='mb-2 border border-gray-300 rounded-md w-full'>
-                <DropdownPicker
-                  options={typeOfAuctionOptions}
-                  placeholder={'Select'}
-                />
-              </div>)}
-            {props.listing?.targets?.length < 3 &&
-            <div className='mb-2 border border-gray-300 rounded-md w-full'>
-              <DropdownPicker
-                options={typeOfAuctionOptions}
-                placeholder={'Select'}
-              />
-            </div>} */}
+        <td className='align-top w-auto'>
+          <div className='flex flex-col items-start h-full w-28'>
             {seaportEnabled && rowSelectedMarketplaces.current !== ExternalProtocol.Seaport &&
               <input
                 disabled
@@ -583,7 +569,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 type="text"
                 placeholder='Price'
                 className={tw(
-                  'text-sm min-w-0 border border-gray-300 h-[2.65rem] w-1/3 shrink-0 ',
+                  'text-sm min-w-0 border border-gray-300 h-[2.65rem] w-1/2 shrink-0 ',
                   'text-left p-1 rounded-md mr-2',
                 )}
               />

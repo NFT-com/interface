@@ -256,6 +256,7 @@ export function ListingCheckout() {
             setShowSummary(true);
           }}
           type={ButtonType.PRIMARY}
+          stretch
         />}
       </div>
       <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
