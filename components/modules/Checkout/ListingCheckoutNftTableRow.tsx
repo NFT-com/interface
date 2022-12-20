@@ -193,7 +193,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }}
       error={
         props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
-    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
+      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
       }
     />;
   };
@@ -211,21 +211,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }
     }
   }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
-
-  // useEffect(() => {
-  //   if (getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)) {
-  //     if (seaportEnabled) {
-  //       rowSelectedMarketplaces.current = ExternalProtocol.Seaport;
-  //     }
-  //     if (looksrareEnabled) {
-  //       rowSelectedMarketplaces.current = ExternalProtocol.LooksRare;
-  //     }
-  //     if (X2Y2Enabled) {
-  //       rowSelectedMarketplaces.current = ExternalProtocol.X2Y2;
-  //     }
-  //   }
-  // }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
-
+  
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <tr>
