@@ -17,10 +17,12 @@ import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
 import Image from 'next/image';
 import router from 'next/router';
 import LooksrareGray from 'public/looksrare_gray.svg';
+import LooksrareIcon from 'public/looksrare-icon.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
+import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export function ListingCheckout() {
@@ -38,7 +40,9 @@ export function ListingCheckout() {
       profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
       null
   );
-  
+
+  const sliderClientX = useRef(null);
+    
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
   const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
@@ -145,7 +149,13 @@ export function ListingCheckout() {
                 openseaFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <OpenSeaGray className='w-fit h-fit' />
+              {openseaFullyEnabled
+                ? <OpenseaIcon
+                  className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
+                  alt="Opensea logo"
+                  layout="fill"
+                />
+                : <OpenSeaGray className='w-fit h-fit' />}
               <span className='font-semibold text-base'>Opensea</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(1.5% fee)</span>
             </div>
@@ -160,7 +170,14 @@ export function ListingCheckout() {
                 looksrareFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <LooksrareGray className='w-fit h-fit' />
+              {looksrareFullyEnabled
+                ? <LooksrareIcon
+                  className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
+                  alt="Looksrare logo"
+                  layout="fill"
+                />
+                :
+                <LooksrareGray className='w-fit h-fit' />}
               <span className='font-semibold text-base'>Looksrare</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
@@ -171,11 +188,11 @@ export function ListingCheckout() {
               }}
               className={tw(
                 'border-[#D5D5D5] rounded-xl text-lg w-1/4',
-                'px-4 py-3 cursor-pointer w-full mt-4 flex flex-col items-center',
+                'px-4 pt-3 py-3 cursor-pointer w-full mt-4 flex flex-col items-center',
                 X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <X2Y2Icon className='w-[1.63rem]' />
+              <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
             </div>}
@@ -183,18 +200,7 @@ export function ListingCheckout() {
         </div>
         <div className='w-full flex flex-col px-8 mt-8 items-center'>
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
-          <div className="slider w-full">
-            {['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
-              return (<div key={duration} className='slider-label'></div>);
-            })}
-            <input type="range" min="0" max="6" step="1" className="relative w-[102%] -ml-2 z-20"/>
-            <datalist className="relative ticks flex justify-between -mt-1 z-10">
-              {['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
-                return (<option className="text-gray-400 text-[7px]" key={duration} value={duration}>|</option>);
-              })}
-            </datalist>
-          </div>
-          {/*           <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
+          <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
             {
               ['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
                 return <div
@@ -212,24 +218,27 @@ export function ListingCheckout() {
                 </div>;
               })
             }
-          </div> */}
+          </div>
         </div>
-        <div className='my-8 flex flex-col items-start w-full'>
+        <div className='my-8 overflow-x-scroll flex flex-col items-start w-full'>
           <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
-          <table className=" mx-8 text-sm table-auto">
-            <thead>
-              <tr className='text-lg'>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">NFT</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">Marketplace</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</th>
-              </tr>
-            </thead>
+          <table className="text-sm table-auto w-full">
             <tbody>
               {filterNulls(toList).map((listing, index) => {
-                return <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
-                  setShowSummary(false);
-                }} />;
+                return (
+                  <>
+                    <tr className='text-lg'>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">NFT</td>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Marketplace</td>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</td>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</td>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">{' '}</td>
+                    </tr>
+                    <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
+                      setShowSummary(false);
+                    }} />
+                  </>
+                );
               })}
             </tbody>
           </table>
@@ -342,9 +351,9 @@ export function ListingCheckout() {
               </thead>
               <tbody>
                 {filterNulls(toList).map((listing, index) => {
-                  return <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
+                  return (<ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
                     setShowSummary(false);
-                  }} />;
+                  }} />);
                 })}
               </tbody>
             </table>
@@ -383,7 +392,7 @@ export function ListingCheckout() {
           <div className='w-full px-8 mt-20'>
             <h1 className='text-3xl font-semibold font-noi-grotesk'>Create Listings</h1>
           </div>
-          <ListingCheckoutInfo />
+          {ListingCheckoutInfo()}
         </div>
       </div>
     );

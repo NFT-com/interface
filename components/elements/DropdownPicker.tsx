@@ -12,6 +12,7 @@ export interface PickerOption {
   onSelect: () => void;
   color?: string;
   icon?: string;
+  disabled?: boolean
 }
 
 export interface DropdownPickerProps {
@@ -57,13 +58,12 @@ export function DropdownPicker(props: DropdownPickerProps) {
   );
 
   useEffect(() => {
-    console.log('condition: ', props.options.findIndex((i) => i.label === selected?.label));
     setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : selectedIndex);
     onChangeHandler();
   }, [selected, props, onChangeHandler, selectedIndex]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
-    return (
+    return (!item.disabled ?
       <div
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
@@ -72,13 +72,23 @@ export function DropdownPicker(props: DropdownPickerProps) {
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
-          // item.onSelect();
+          item.onSelect && item.onSelect();
           setSelected(item);
         }}
       >
         {/* {item.icon &&
           <Image className="h-full mr-2" src={item.icon} alt={item.label} />
         } */}
+        {item.label}
+      </div> :
+      <div
+        key={item.label}
+        style={{ height: activeRowRef.current.clientHeight }}
+        className={'flex flex-row w-full pl-2.5 py-3 text-secondary-txt cursor-auto'}
+      >
+        {/* {item.icon &&
+              <Image className="h-full mr-2" src={item.icon} alt={item.label} />
+            } */}
         {item.label}
       </div>
     );
@@ -149,7 +159,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
               activeRowRef.current.clientHeight + 12
           }}
           className={tw(
-            'border-b rounded-xl border-select-brdr',
+            'border rounded-xl border-select-brdr',
             'divide-y',
             'bg-white',
             'w-full absolute z-50',

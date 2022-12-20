@@ -110,7 +110,7 @@ export function PriceInput(props: PriceInputProps) {
           <input
             type="text"
             className={tw(
-              'text-sm min-w-0 border h-[2.65rem] mr-4 w-3/5',
+              'text-sm min-w-0 border h-[2.65rem] w-4/5',
               'text-left p-1 rounded-md pl-2',
               props.error ? 'border-red-500 border-2' : 'border-gray-300  border-2'
             )}
@@ -143,7 +143,7 @@ export function PriceInput(props: PriceInputProps) {
         </div>
         {
           props.onCurrencyChange == null
-            ? <div className='font-medium text-base flex items-center pl-2'>
+            ? <div className='font-medium text-base flex items-center'>
               {currencyData.name}
             </div>
             : <div className='relative items-center flex'>
