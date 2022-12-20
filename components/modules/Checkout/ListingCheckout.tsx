@@ -377,7 +377,7 @@ export function ListingCheckout() {
             Back
           </h1>
         </div>}
-        <div className='w-full flex flex-col justify-start items-center w-3/5 pr-28'>
+        <div className='w-full flex flex-col justify-start items-center w-3/5 px-28'>
           <div className='w-full mt-20'>
             <h1 className='text-3xl font-semibold font-noi-grotesk'>Create Listings</h1>
           </div>
