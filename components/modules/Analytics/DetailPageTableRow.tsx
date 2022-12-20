@@ -9,7 +9,6 @@ import { ethers } from 'ethers';
 import moment from 'moment';
 import Link from 'next/link';
 import DAI from 'public/dai.svg';
-import WETH from 'public/eth.svg';
 import ETH from 'public/eth.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
@@ -31,18 +30,16 @@ type GetAssetProps = {
 const getSymbol = (contract_address: string, symbol: string, price: string) => {
   switch (symbol) {
   case 'USDC':
-    return <div><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{price} USDC</div>;
+    return <div className='flex items-center'><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{price} USDC</div>;
   case 'DAI':
-    return <div><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{price} DAI</div>;
-  case 'WETH':
-    return <div><WETH className='mr-1.5 h-5 w-5 relative shrink-0' />{price} WETH</div>;
+    return <div className='flex items-center'><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{price} DAI</div>;
   default:
     if (!contract_address) {
       return <div>{price} {symbol}</div>;
     }
     // eslint-disable-next-line @next/next/no-img-element
-    return <div><img
-      className='mr-1.5 h-5 w-5 relative shrink-0'
+    return <div className='flex items-center'><img
+      className='mr-1.5 h-6 w-6 relative shrink-0'
       src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract_address)}/logo.png`}
       alt={symbol}
     />{price} {symbol}
@@ -55,7 +52,7 @@ function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
 
   switch (asset_type) {
   case 'ETH':
-    return <div className='flex items-center'><ETH className='mr-1.5 h-6 w-6 relative shrink-0' /> {price} ETH</div>;
+    return <div className='flex items-center'><ETH className='mr-1.5 h-5 w-5 relative shrink-0' /> {price} ETH</div>;
   case 'ERC20':
     return <div className='flex items-center'>{getSymbol(contract_address, symbol, price)}</div>;
   default:
