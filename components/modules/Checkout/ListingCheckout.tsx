@@ -119,7 +119,7 @@ export function ListingCheckout() {
         <div className='w-full flex flex-col px-8 items-center'>
           <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace/s</span>
           <div className='flex flex-col minlg:flex-row items-start w-full '>
-            <div className='flex flex-col items-center mt-4  w-1/4'>
+            {/* <div className='flex flex-col items-center mt-4  w-1/4'>
               <div
                 onClick={() => {
                   setNftcomMarketplaceEnabled(!nftcomMarketplaceEnabled);
@@ -139,14 +139,14 @@ export function ListingCheckout() {
                 <div><span className='text-[#FAC213]'>0%</span> fee with profile</div>
                 <span className='mt-2'>1.5% fee without profile</span>
               </div>
-            </div>
+            </div> */}
             <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.Seaport);
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg  w-1/4',
+                'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
                 openseaFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
@@ -167,7 +167,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg  w-1/4',
+                'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
                 looksrareFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
@@ -189,7 +189,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-1/4',
+                'border-[#D5D5D5] rounded-xl text-lg w-1/3',
                 'px-4 pt-3 py-3 cursor-pointer w-full mt-4 flex flex-col items-center',
                 X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
@@ -202,7 +202,7 @@ export function ListingCheckout() {
         </div>
         <div className='w-full flex flex-col px-8 mt-8 items-center'>
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
-          <div className='mt-16 w-full'>
+          <div className='mt-8 w-full'>
             <Slider
               step={10}
               min={0}
@@ -233,7 +233,7 @@ export function ListingCheckout() {
         </div>
         <div className='my-8 flex flex-col items-start w-full'>
           <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
-          <table className="text-sm table-auto w-full">
+          <table className="text-sm mx-8 table-auto w-full">
             <tbody>
               {filterNulls(toList).map((listing, index) => {
                 return (
