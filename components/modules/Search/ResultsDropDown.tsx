@@ -1,13 +1,11 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { Doppler, getEnvBool } from 'utils/env';
+import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { Image } from 'phosphor-react';
-import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from '../../../utils/helpers';
-import { getAddress } from '../../../utils/httpHooks';
-import { useDefaultChainId } from '../../../hooks/useDefaultChainId';
 
 interface ResultsDropDownProps {
   isHeader?: any;
@@ -123,7 +121,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                               height={600}
                               containerClasses='w-[100%] h-[100%]'
                               extraClasses='hover:scale-105 transition'
-                              src={newFiltersEnabled ? (name && name[0] === 'collections' ? hit.document.logoUrl :  processIPFSURL(hit?.document?.imageURL)) : item?.request_params?.collection_name === 'collections' ? hit.document.logoUrl : hit.document.imageURL}
+                              src={newFiltersEnabled ? (name && name[0] === 'collections' ? hit.document.logoUrl : processIPFSURL(hit?.document?.imageURL)) : item?.request_params?.collection_name === 'collections' ? hit.document.logoUrl : hit.document.imageURL}
                             />
                           </div>
                           : <div className="min-w-[48px] w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image alt="preloader" color={'#B2B2B2'} size={32} /></div>}

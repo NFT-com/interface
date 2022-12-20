@@ -549,6 +549,7 @@ export const NFTsFiltersContent = () => {
     collectionsFilter.issuance = checked;
     collectionsFilter.nftTypes = checkedTypes;
     updateCheckedString();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checked, checkedTypes]);
 
   if(discoverPageEnv){
