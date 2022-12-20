@@ -1,3 +1,5 @@
+import 'rc-slider/assets/index.css';
+
 import { Button, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -17,9 +19,12 @@ import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
 import Image from 'next/image';
 import router from 'next/router';
 import LooksrareGray from 'public/looksrare_gray.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
+import LooksrareIcon from 'public/looksrare-icon.svg';
+// import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
+import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
+import Slider from 'rc-slider';
 import { useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -29,7 +34,7 @@ export function ListingCheckout() {
     setDuration,
     toggleTargetMarketplace,
     prepareListings,
-    allListingsConfigured
+    allListingsConfigured,
   } = useContext(NFTListingsContext);
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
@@ -38,10 +43,10 @@ export function ListingCheckout() {
       profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
       null
   );
-  
+    
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
-  const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
+  // const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
 
   const openseaFullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     const hasTarget = nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
@@ -110,42 +115,27 @@ export function ListingCheckout() {
   const ListingCheckoutInfo = () => {
     return <div className="flex flex-col items-center w-full mt-10">
       <div className="flex flex-col items-center w-full">
-        <div className='w-full flex flex-col px-8 items-center'>
+        <div className='w-full flex flex-col items-center'>
           <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace/s</span>
           <div className='flex flex-col minlg:flex-row items-start w-full '>
-            <div className='flex flex-col items-center mt-4  w-1/4'>
-              <div
-                onClick={() => {
-                  setNftcomMarketplaceEnabled(!nftcomMarketplaceEnabled);
-                  setShowSummary(false);
-                }}
-                className={tw(
-                  'border-[#D5D5D5] rounded-xl text-lg',
-                  'px-4 py-3 cursor-pointer w-full mr-2 flex flex-col items-center',
-                  nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border'
-                )}
-              >
-                <NFTLogo className='w-fit h-fit' />
-                <span className='font-semibold text-base'>NFT</span>
-                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
-              </div>
-              <div className='text-xs flex flex-col text-[#6F6F6F] items-center mt-2'>
-                <div><span className='text-[#FAC213]'>0%</span> fee with profile</div>
-                <span className='mt-2'>1.5% fee without profile</span>
-              </div>
-            </div>
             <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.Seaport);
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg  w-1/4',
+                'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
                 openseaFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <OpenSeaGray className='w-fit h-fit' />
+              {openseaFullyEnabled
+                ? <OpenseaIcon
+                  className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
+                  alt="Opensea logo"
+                  layout="fill"
+                />
+                : <OpenSeaGray className='w-fit h-fit' />}
               <span className='font-semibold text-base'>Opensea</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(1.5% fee)</span>
             </div>
@@ -155,12 +145,19 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg  w-1/4',
+                'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
                 looksrareFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <LooksrareGray className='w-fit h-fit' />
+              {looksrareFullyEnabled
+                ? <LooksrareIcon
+                  className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
+                  alt="Looksrare logo"
+                  layout="fill"
+                />
+                :
+                <LooksrareGray className='w-fit h-fit' />}
               <span className='font-semibold text-base'>Looksrare</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
@@ -170,68 +167,66 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-1/4',
-                'px-4 py-3 cursor-pointer w-full mt-4 flex flex-col items-center',
+                'border-[#D5D5D5] rounded-xl text-lg w-1/3',
+                'px-4 pt-3 py-3 cursor-pointer w-full mt-4 flex flex-col items-center',
                 X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
               )}
             >
-              <X2Y2Icon className='w-[1.63rem]' />
+              <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
             </div>}
           </div>
         </div>
-        <div className='w-full flex flex-col px-8 mt-8 items-center'>
+        <div className='w-full flex flex-col mt-8 items-center'>
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
-          <div className="slider w-full">
-            {['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
-              return (<div key={duration} className='slider-label'></div>);
-            })}
-            <input type="range" min="0" max="6" step="1" className="relative w-[102%] -ml-2 z-20"/>
-            <datalist className="relative ticks flex justify-between -mt-1 z-10">
-              {['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
-                return (<option className="text-gray-400 text-[7px]" key={duration} value={duration}>|</option>);
-              })}
-            </datalist>
+          <div className='mt-8 w-full'>
+            <Slider
+              step={10}
+              min={0}
+              max={60}
+              defaultValue={30}
+              marks={{ 0: '1 Hour', 10: '1 Day', 20: '7 Days', 30: '30 Days',40: '60 Days', 50: '90 Days', 60: '180 Days' }}
+              onChange={(value) => {
+                const duration = value === 0 ?
+                  '1 Hour'
+                  : value === 10 ?
+                    '1 Day'
+                    : value === 20 ?
+                      '7 Days'
+                      : value === 30 ?
+                        '30 Days'
+                        : value === 40 ?
+                          '60 Days'
+                          : value === 50 ?
+                            '90 Days'
+                            : '180 Days';
+                setDuration(duration as SaleDuration);
+              }}
+              trackStyle={[{ backgroundColor: '#F9D54C' }]}
+              handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
+            />
           </div>
-          {/*           <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
-            {
-              ['1 Hour', '1 Day', '7 Days','30 Days', '60 Days', '90 Days', '180 Days'].map(duration => {
-                return <div
-                  key={duration}
-                  onClick={() => {
-                    setDuration(duration as SaleDuration);
-                  }}
-                  className={tw(
-                    'rounded-full py-2.5 px-2',
-                    toList?.find(l => l?.duration === convertDurationToSec(duration as SaleDuration)) ? 'bg-primary-yellow font-bold' : 'border border-[#D5D5D5] text-black',
-                    'cursor-pointer hover:opacity-80',
-                  )}
-                >
-                  {duration}
-                </div>;
-              })
-            }
-          </div> */}
         </div>
         <div className='my-8 flex flex-col items-start w-full'>
-          <div className="border-t border-[#D5D5D5] mx-8">
-            <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
-          </div>
-          <table className=" mx-8 text-sm table-auto">
-            <thead>
-              <tr>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">NFT</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">Marketplaces</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</th>
-                <th className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</th>
-              </tr>
-            </thead>
+          <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
+          <table className="text-sm table-auto w-full">
             <tbody>
               {filterNulls(toList).map((listing, index) => {
-                return <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
-                  setShowSummary(false);
-                }} />;
+                return (
+                  <>
+                    <tr className='text-base'>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">NFT</td>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Marketplace</td>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</td>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</td>
+                      <td className="font-medium pb-3 text-blog-text-reskin text-left">{' '}</td>
+                    </tr>
+                    <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
+                      setShowSummary(false);
+                    }} />
+                  </>
+                );
               })}
             </tbody>
           </table>
@@ -249,6 +244,7 @@ export function ListingCheckout() {
             setShowSummary(true);
           }}
           type={ButtonType.PRIMARY}
+          stretch
         />}
       </div>
       <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
@@ -330,9 +326,9 @@ export function ListingCheckout() {
               }
             </div>
           </div>
-          <div className='my-8 w-full overflow-x-scroll flex flex-col'>
+          <div className='my-8 overflow-x-scroll w-full flex flex-col'>
             <div className="border-t border-[#D5D5D5] mx-8">
-              <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
+              <span className='text-2xl w-full flex font-bold mt-10 mb-8 mx-8'>Your Listings</span>
             </div>
             <table className="w-full mx-8 text-sm table-auto">
               <thead>
@@ -344,9 +340,9 @@ export function ListingCheckout() {
               </thead>
               <tbody>
                 {filterNulls(toList).map((listing, index) => {
-                  return <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
+                  return (<ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
                     setShowSummary(false);
-                  }} />;
+                  }} />);
                 })}
               </tbody>
             </table>
@@ -370,7 +366,7 @@ export function ListingCheckout() {
       </div>
     ) :
     (
-      <div className={`flex justify-${ toList.length < 2 ? 'between': 'start'}`}>
+      <div className={`flex mb-10 justify-${ toList.length < 2 ? 'between': 'start'}`}>
         {toList.length < 2 && <ListingOneNFT />}
         {toList.length > 1 &&<div className='w-1/5 mt-20'>
           <h1
@@ -381,11 +377,11 @@ export function ListingCheckout() {
             Back
           </h1>
         </div>}
-        <div className='w-full flex flex-col justify-between items-center w-3/5'>
-          <div className='w-full px-8 mt-20'>
+        <div className='w-full flex flex-col justify-start items-center w-3/5 px-28'>
+          <div className='w-full mt-20'>
             <h1 className='text-3xl font-semibold font-noi-grotesk'>Create Listings</h1>
           </div>
-          <ListingCheckoutInfo />
+          {ListingCheckoutInfo()}
         </div>
       </div>
     );

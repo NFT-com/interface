@@ -2318,14 +2318,10 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .slider-label {
-  width: 30px;
-  height: 26px;
-  position: absolute;
-  background-color: gray;
+  /* position: absolute; */
   color: white;
-  font-size: 12px;
   text-align: center;
-  top: 10px;
+  top: -27px;
 }
 
 .slider-label:after {
@@ -2338,9 +2334,14 @@ input[type="range"]::-moz-range-thumb {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
   z-index: 8;
-  background-color: gray;
+  background-color: #414141;
   position: relative;
   left: 9px;
+  bottom: -5px;
+}
+
+.rc-slider-dot {
+  display: none;
 }
 
 @keyframes animDecorLeaderboard {
