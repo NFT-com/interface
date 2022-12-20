@@ -92,7 +92,7 @@ export function NftCard(props: NftCardProps) {
 
   return (
     <div className={tw(
-      'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative',
+      'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative w-full',
       props.nftsDescriptionsVisible != false ? `${newFiltersEnabled ? '' : 'h-[442px] sm:h-[auto]'}` : 'h-max'
     )}>
       {
