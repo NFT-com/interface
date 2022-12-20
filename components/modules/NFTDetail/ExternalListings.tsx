@@ -86,15 +86,23 @@ export function ExternalListings(props: ExternalListingsProps) {
     </div>;
   }, []);
 
-  const getIcon = useCallback((currency: string) => {
+  const getIcon = useCallback((contract: string, currency: string) => {
     switch (currency) {
     case 'ETH':
-    case 'WETH':
       return <ETH className='h-6 w-6 relative mr-2 shrink-0' alt="ETH logo redirect" layout="fill"/>;
     case 'USDC':
       return <USDC className='h-6 w-6 relative mr-2 shrink-0' alt="USDC logo redirect" layout="fill"/>;
     default:
-      return null;
+      if (!contract) {
+        return <div>{currency}</div>;
+      }
+      // eslint-disable-next-line @next/next/no-img-element
+      return <div className='flex items-center'><img
+        className='mr-1.5 h-7 w-7 relative shrink-0'
+        src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
+        alt={currency}
+      />
+      </div>;
     }
   }, []);
 
@@ -234,7 +242,10 @@ export function ExternalListings(props: ExternalListingsProps) {
           <div className='flex font-noi-grotesk text-black leading-6 items-center my-8 px-6 justify-between'>
             <div className='flex items-end leading-6'>
               <div className='flex items-end'>
-                {getIcon(getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH')}
+                {getIcon(
+                  getByContractAddress(getListingCurrencyAddress(listing))?.contract,
+                  getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
+                )}
                 <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}</span>
               </div>
               <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
