@@ -262,7 +262,7 @@ export function NFTListingsContextProvider(
     }
   }, [supportedCurrencyData, toList]);
 
-  const setDuration = useCallback((duration: SaleDuration) => {
+  const setDuration = useCallback((duration: SaleDuration = '30 Days') => {
     setToList(toList.slice().map(stagedNft => {
       return {
         ...stagedNft,
