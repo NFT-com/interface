@@ -8,6 +8,7 @@ import { ButtonFilter } from './filtersComponents/ButtonFilter';
 import { MinMaxFilter } from './filtersComponents/MinMaxFilter';
 
 import { motion } from 'framer-motion';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import EllipseX from 'public/ellipse-x.svg';
@@ -333,13 +334,10 @@ const FilterNew = (props: any) => {
       );
     }
     if(filter.field_name === 'floor'){
-      const values = filter.counts.map(item => Number(item.value));
-      const min = Math.min(...values);
-      const max = Math.max(...values);
       return (
         <MinMaxFilter
-          max={collectionsFilter.floor && collectionsFilter.floor.length ? collectionsFilter.floor[0] : max}
-          min={collectionsFilter.floor && collectionsFilter.floor.length ? collectionsFilter.floor[1] : min}
+          min={collectionsFilter.floor && collectionsFilter.floor.length ? collectionsFilter.floor[0] : null}
+          max={collectionsFilter.floor && collectionsFilter.floor.length ? collectionsFilter.floor[1] : null}
           isOpen={isOpen}
           currency={collectionsFilter.currency}
           toggleSelect={(value) => toggleCurrencySelect(!value)}
@@ -391,8 +389,8 @@ const FilterNew = (props: any) => {
     if(filter.field_name === 'volume'){
       return (
         <MinMaxFilter
-          min={collectionsFilter.volume && collectionsFilter.volume.length ? collectionsFilter.volume[0] : 0}
-          max={collectionsFilter.volume && collectionsFilter.volume.length ? collectionsFilter.volume[1] : 1000000000}
+          min={collectionsFilter.volume && collectionsFilter.volume.length ? collectionsFilter.volume[0] : null}
+          max={collectionsFilter.volume && collectionsFilter.volume.length ? collectionsFilter.volume[1] : null}
           isOpen={isOpen}
           currency={collectionsFilter.currency}
           changeCurrency={(value) => setCurrency(value)}
@@ -482,11 +480,20 @@ export const NFTsFiltersContent = () => {
       if(!item[1] || !item[1].length) return;
       if(item[0] === 'issuance' && item[1].length > 0){
         const sum = item[1].reduce((array, value) => array + Number(value), 0);
-        const epochFilter = 1670864533000 - sum;
+        const now = moment().valueOf();
+        const epochFilter = now - (sum ? sum : item[1][0]);
         return `issuance:>${epochFilter}`;
       }
-      if(item[0] === 'floor' && item[1]){
-        return `floor:=[${item[1][0]}..${item[1][1]}]`;
+      if(item[0] === 'floor' && item[1].length){
+        if(item[1][0] && !item[1][1]){
+          return `floor:>${item[1][0]}`;
+        }
+        if(!item[1][0] && item[1][1]){
+          return `floor:<${item[1][1]}`;
+        }
+        if(item[1][0] && item[1][1]){
+          return `floor:=[${item[1][0]}..${item[1][1]}]`;
+        }
       }
       if(item[0] === 'currency' && item[1]){
         return `currency:=[${item[1]}]`;
@@ -494,8 +501,16 @@ export const NFTsFiltersContent = () => {
       if(item[0] === 'nftTypes' && item[1].length){
         return `nftType:=[${item[1]}]`;
       }
-      if(item[0] === 'volume' && item[1]){
-        return `volume:=[${item[1][0]}..${item[1][1]}]`;
+      if(item[0] === 'volume' && item[1].length){
+        if(item[1][0] && !item[1][1]){
+          return `volume:>${item[1][0]}`;
+        }
+        if(!item[1][0] && item[1][1]){
+          return `volume:<${item[1][1]}`;
+        }
+        if(item[1][0] && item[1][1]){
+          return `volume:=[${item[1][0]}..${item[1][1]}]`;
+        }
       }
     }).filter(Boolean).join(' && ');
     const collectionsCheckedFiltersString = checkedList.filter(i => i.includes('contractName') || i.includes('nftType')).join(' && ');
@@ -534,7 +549,7 @@ export const NFTsFiltersContent = () => {
     collectionsFilter.issuance = checked;
     collectionsFilter.nftTypes = checkedTypes;
     updateCheckedString();
-  }, [checked, checkedTypes, collectionsFilter, updateCheckedString]);
+  }, [checked, checkedTypes]);
 
   if(discoverPageEnv){
     return (
