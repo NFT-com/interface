@@ -45,7 +45,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
 
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+  const hasGks = true; //!isNullOrEmpty(ownedGenesisKeyTokens);
 
   const {
     allowedAll: openseaAllowed,
@@ -137,6 +137,7 @@ export function ExternalListings(props: ExternalListingsProps) {
             collectionName: props.collectionName,
             protocol: listing?.order?.protocol as ExternalProtocol,
             isApproved: BigNumber.from(allowance ?? 0).gt(price),
+            orderHash: listing?.order?.orderHash,
             protocolData: listing?.order?.protocol === ExternalProtocol.Seaport ?
               listing?.order?.protocolData as SeaportProtocolData
               : listing?.order?.protocol === ExternalProtocol.LooksRare ?

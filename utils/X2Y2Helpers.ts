@@ -16,6 +16,7 @@ import {
   orderParamType, orderParamTypes, RunInput, runInputParamType } from 'types';
 
 import { Doppler, getEnv } from './env';
+import { isNullOrEmpty } from './helpers';
 import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
 
 import { OP_CANCEL_OFFER } from '@x2y2-io/sdk';
@@ -157,6 +158,16 @@ async function fetchOrderSign(
   payback: number | undefined,
   tokenId: string
 ): Promise<RunInput | undefined> {
+  console.log('test',
+    caller,
+    op,
+    orderId,
+    currency,
+    price,
+    royalty,
+    payback,
+    tokenId);
+
   try {
     const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
     url.searchParams.set('action', 'fetchOrderSign');
@@ -165,8 +176,8 @@ async function fetchOrderSign(
     url.searchParams.set('orderId', orderId.toString());
     url.searchParams.set('currency', currency);
     url.searchParams.set('price', price);
-    url.searchParams.set('royalty', royalty ? royalty.toString() : null);
-    url.searchParams.set('payback', payback ? payback.toString() : null);
+    !isNullOrEmpty(royalty?.toString()) && url.searchParams.set('royalty', royalty.toString());
+    !isNullOrEmpty(payback?.toString()) && url.searchParams.set('payback', payback.toString());
     url.searchParams.set('tokenId', tokenId);
   
     const data = await fetch(url.toString()).then(res => res.json());
