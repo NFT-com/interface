@@ -290,7 +290,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                     props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null
                     }
                   />
-                  <PriceInput
+                  {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && <PriceInput
                     key={expanded + 'X2Y2PriceInput'}
                     initial={
                       getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice == null ?
@@ -312,7 +312,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                     errorMessage={
                       (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice)) && 'Active listing has a greater price, please enter a lower value.'
                     }
-                  />
+                  />}
+                  
                 </> :
                 seaportEnabled && !looksrareEnabled && !X2Y2Enabled ?
                   <PriceInput
@@ -558,7 +559,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             
             {looksrareEnabled && rowSelectedMarketplaces.current !== ExternalProtocol.LooksRare && <div className='mb-2'>{LooksRarePriceInput()}</div>}
             
-            {X2Y2Enabled && rowSelectedMarketplaces.current !== ExternalProtocol.X2Y2 &&
+            {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && rowSelectedMarketplaces.current !== ExternalProtocol.X2Y2 &&
               <div className='mb-2 w-1/2'>
                 <CustomTooltip2
                   orientation='top'
