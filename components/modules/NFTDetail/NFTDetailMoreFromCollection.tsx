@@ -114,6 +114,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                       tokenId={nft.tokenId}
                       name={nft.metadata.name}
                       nft={nft}
+                      listings={nft?.listings?.items || []}
                       images={[nft.metadata.imageURL]}
                       fallbackImage={nft.metadata.imageURL}
                       collectionName={props.collectionName}
