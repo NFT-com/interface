@@ -118,7 +118,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
       </div>
       }
       <ResponsiveContainer height={320} width={'100%'} >
-        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: -5 }} height={320}>
+        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: 0 }} height={320}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'#FAC213'} stopOpacity={0.2}/>
