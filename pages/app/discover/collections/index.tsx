@@ -25,9 +25,11 @@ export default function CollectionsPage() {
   const [filters, setFilters] = useState([]);
   const [collections, setCollectionData] = useState([]);
   const [found, setTotalFound] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if(isLeaderBoard) return;
+    setLoading(true);
     fetchTypesenseSearch({
       facet_by: ',floor,nftType,volume,issuance',
       index: 'collections',
@@ -37,6 +39,7 @@ export default function CollectionsPage() {
       per_page: 20,
       page: page,
     }).then((results) => {
+      setLoading(false);
       filters.length < 1 && setFilters([...results.facet_counts]);
       setTotalFound(results.found);
       page > 1 ? setCollectionData([...collections,...results.hits]) : setCollectionData(results.hits);
@@ -55,7 +58,7 @@ export default function CollectionsPage() {
               ? collectionData?.items.map((collectionLeader, index) => {
                 return (
                   <CollectionLeaderBoardCard
-                    redirectTo={'collection/' + collectionLeader?.contract}
+                    redirectTo={'/app/collection/' + collectionLeader?.contract}
                     index={index}
                     title={collectionLeader.name}
                     timePeriod={activePeriod}
@@ -66,7 +69,7 @@ export default function CollectionsPage() {
                     key={index}/>
                 );
               })
-              : (<div className="flex items-center justify-center min-h-[16rem] w-full">
+              :loading && (<div className="flex items-center justify-center min-h-[16rem] w-full">
                 <Loader />
               </div>)
           }
@@ -87,6 +90,7 @@ export default function CollectionsPage() {
                 floorPrice={collection.document?.floor}
                 totalVolume={collection.document?.volume}
                 userName={collection.document.contractName}
+                contractName={collection.document.contractName}
                 isOfficial={collection.document.isOfficial}
                 description={collection.document.description}
                 countOfElements={collection.document.actualNumberOfNFTs}
@@ -101,8 +105,8 @@ export default function CollectionsPage() {
   if (!newFiltersEnabled) {
     return <NotFoundPage />;
   }else{
+    console.log('collections.length',collections.length);
     return(
-
       <>
         <div className="p-2 minmd:p-4 minlg:p-8 minhd:p-16 minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
           <div className="flex">
@@ -185,7 +189,7 @@ export default function CollectionsPage() {
                       {/*fixed bg-white z-[22] h-[100vh] left-0 top-0 pt-[100px] mt-[30px]*/}
                       {leaderBoardOrCollectionView()}
                     </div>
-                    {(collections && collections.length === 0) &&
+                    {(loading) &&
                       (<div className="flex items-center justify-center min-h-[16rem] w-full">
                         <Loader />
                       </div>)}

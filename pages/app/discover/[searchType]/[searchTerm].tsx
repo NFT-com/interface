@@ -243,6 +243,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                               tokenId={item.document.tokenId}
                               floorPrice={item.document?.floor}
                               totalVolume={item.document?.volume}
+                              contractName={item.document.contractName}
                               isOfficial={item.document.isOfficial}
                               images={[item.document.bannerUrl]}
                               countOfElements={collectionImages[0]?.actualNumberOfNFTs}

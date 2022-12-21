@@ -94,7 +94,7 @@ export function CollectionCard(props: CollectionCardProps) {
               newFiltersEnabled
                 ? (
                   <span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600]">
-                    {collection?.collection?.name ? collection?.collection?.name : props.contractName}
+                    {props?.contractName}
                     {props.isOfficial && <VerifiedIcon className='inline ml-3'/>}
                   </span>
                 )
@@ -111,17 +111,15 @@ export function CollectionCard(props: CollectionCardProps) {
             ? (
               <div onClick={(event) => event.preventDefault()} className="flex flex-row leading-[23.2px] text-[#959595] font-[400 w-full]">
                 {
-                  props.floorPrice
-                    ? (
-                      <div className='flex flex-col '>
-                        <span className='flex items-center justify-center text-xl text-[#000] font-[500] mr-12'>
-                          <VolumeIcon className='mr-2'/>
-                          {checkMinPrice(props.floorPrice)}
-                        </span>
-                        <span>Floor Price</span>
-                      </div>
-                    )
-                    : null
+                  props.totalVolume && (
+                    <div className='flex flex-col '>
+                      <span className='flex items-center justify-center text-xl text-[#000] font-[500] mr-12'>
+                        <VolumeIcon className='mr-2'/>
+                        {checkMinPrice(props.floorPrice)}
+                      </span>
+                      <span>Floor Price</span>
+                    </div>
+                  )
                 }
                 {
                   props.totalVolume && (
