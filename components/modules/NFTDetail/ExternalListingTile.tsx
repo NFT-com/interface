@@ -118,6 +118,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             isApprovedForLooksrare: looksRareAllowed,
             isApprovedForX2Y2: X2Y2Allowed,
             hasOpenOrder: true,
+            nftcomOrderId: listing?.id,
             openOrderId: (listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.X2Y2 ? (listing?.order?.protocolData as X2Y2ProtocolData).id : null,
             targets: [{
               protocol: listing?.order?.protocol as ExternalProtocol,

@@ -3,13 +3,16 @@ import { PropsWithChildren, useState } from 'react';
 type ToolTipProps = {
   orientation: 'top'| 'left'| 'right' | 'bottom';
   tooltipComponent: React.ReactNode;
+  hidden?: boolean;
 };
 
 function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   const [opacity, setOpacity] = useState(0);
 
   function handleMouseEnter() {
-    setOpacity(1);
+    if(!props.hidden){
+      setOpacity(1);
+    }
   }
 
   function handleMouseLeave() {
