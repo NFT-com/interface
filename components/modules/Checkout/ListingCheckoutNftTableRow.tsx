@@ -1,3 +1,4 @@
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
 import { X2Y2ProtocolData } from 'graphql/generated/types';
@@ -557,7 +558,25 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             
             {looksrareEnabled && rowSelectedMarketplaces.current !== ExternalProtocol.LooksRare && <div className='mb-2'>{LooksRarePriceInput()}</div>}
             
-            {X2Y2Enabled && rowSelectedMarketplaces.current !== ExternalProtocol.X2Y2 && <div className='mb-2'>{X2Y2PriceInput()}</div>}
+            {X2Y2Enabled && rowSelectedMarketplaces.current !== ExternalProtocol.X2Y2 &&
+              <div className='mb-2 w-1/2'>
+                <CustomTooltip2
+                  orientation='top'
+                  hidden={
+                    !(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
+                  }
+                  tooltipComponent={
+                    <div
+                      className="rounded-xl max-w-[150px] w-max"
+                    >
+                      <p>An active listing for this marketplace has a lower price. Please enter a lower value than the active listing.</p>
+                    </div>
+                  }
+                >
+                  {X2Y2PriceInput()}
+                </CustomTooltip2>
+              </div>
+            }
             
             {props.listing?.targets?.length < 3 &&
             <div className='flex'>

@@ -1,5 +1,6 @@
-import { Maybe, Nft, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, Maybe, Nft, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
+import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { get721Contract } from 'hooks/contracts/get721Contract';
 import { useLooksrareRoyaltyFeeManagerContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeManagerContract';
@@ -59,6 +60,7 @@ export type StagedListing = {
   // for x2y2 order price adjustments
   hasOpenOrder?: boolean;
   openOrderId?: number;
+  nftcomOrderId?: string;
   // approval-related data
   isApprovedForSeaport: boolean;
   isApprovedForLooksrare: boolean;
@@ -124,7 +126,7 @@ export function NFTListingsContextProvider(
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const { toBuy } = useContext(NFTPurchasesContext);
-
+  const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const { data: supportedCurrencyData } = useSupportedCurrencies();
 
   useEffect(() => {
@@ -452,6 +454,9 @@ export function NFTListingsContextProvider(
           if (!result) {
             return ListAllResult.ApiError;
           }
+          if (result && listing?.hasOpenOrder && listing?.nftcomOrderId) {
+            updateActivityStatus([listing?.nftcomOrderId], ActivityStatus.Cancelled);
+          }
           return ListAllResult.Success;
         } else {
           const signature = await signOrderForSeaport(target.seaportParameters, seaportCounter).catch(() => null);
@@ -477,7 +482,7 @@ export function NFTListingsContextProvider(
       results.includes(ListAllResult.ApiError) ?
         ListAllResult.ApiError :
         ListAllResult.Success;
-  }, [toList, signOrderForLooksrare, listNftLooksrare, signer, listNftX2Y2, currentAddress, signOrderForSeaport, seaportCounter, listNftSeaport]);
+  }, [toList, signOrderForLooksrare, listNftLooksrare, signer, listNftX2Y2, currentAddress, updateActivityStatus, signOrderForSeaport, seaportCounter, listNftSeaport]);
 
   const removeListing = useCallback((nft: PartialDeep<Nft>) => {
     const newToList = toList.slice().filter(l => l.nft?.id !== nft?.id);
