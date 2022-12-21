@@ -437,7 +437,7 @@ export function NFTListingsContextProvider(
             listing.nft.contract,
             listing.nft.tokenId,
             listing.nft.type === NftType.Erc1155 ? 'erc1155' : 'erc721',
-            target.startingPrice.toString() ?? target.startingPrice.toString(),
+            !isNullOrEmpty(listing.startingPrice.toString()) ? listing.startingPrice.toString() : target.startingPrice.toString(),
             moment().unix() + Number(listing.duration) ?? moment().unix() + Number(target.duration)
           );
           if (!order) {
