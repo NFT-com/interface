@@ -3,7 +3,6 @@ import { tw } from 'utils/tw';
 
 import moment from 'moment';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import {
   CartesianGrid,
   Label,
