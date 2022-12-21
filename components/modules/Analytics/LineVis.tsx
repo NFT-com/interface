@@ -3,7 +3,6 @@ import { tw } from 'utils/tw';
 
 import moment from 'moment';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import {
   CartesianGrid,
   Label,
@@ -46,9 +45,21 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
     }
   };
 
+  const abbreviateNumber = (number: number): string => {
+    if (number >= 1000000000) {
+      return (number / 1000000000).toFixed(1) + 'B';
+    } else if (number >= 1000000) {
+      return (number / 1000000).toFixed(1) + 'M';
+    } else if (number >= 1000) {
+      return (number / 1000).toFixed(1) + 'K';
+    } else {
+      return Number(number.toFixed(2)).toLocaleString('en-US');
+    }
+  };
+
   const yAxisFormatter = (item) => {
     if (moment(item).isValid()) {
-      return '$' + Number(item.toFixed(2)).toLocaleString('en-US');
+      return '$' + abbreviateNumber(Number(item));
     } else {
       return item;
     }
@@ -106,8 +117,8 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
         </div>
       </div>
       }
-      <ResponsiveContainer height={isMobile ? 227 : 320} width={'100%'} >
-        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: -5 }} height={isMobile ? 227 : 320}>
+      <ResponsiveContainer height={320} width={'100%'} >
+        <LineChart data={data} margin={{ top: 10, right: 30, bottom: 10, left: -5 }} height={320}>
           <defs>
             <linearGradient id="colorvalue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'#FAC213'} stopOpacity={0.2}/>
