@@ -81,7 +81,7 @@ export function NftGrid(props: NftGridProps) {
   return <div
     className={tw(
       'grid w-full',
-      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'gap-4' : 'gap-8 mt-2' ,
+      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'gap-4 mt-4 minlg:mt-0' : 'gap-8 mt-2' ,
       (draftLayoutType ?? savedLayoutType) === 'Default' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-5 minxxl:grid-cols-6' : 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
       (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : 'grid-cols-1 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
