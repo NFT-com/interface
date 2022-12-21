@@ -122,7 +122,7 @@ export function ListingCheckout() {
     return <div className="flex flex-col items-center mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className='w-full flex flex-col items-center'>
-          <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace/s</span>
+          <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace(s)</span>
           <div className='flex minmd:flex-col minlg:flex-row items-start w-full '>
             <div
               onClick={() => {

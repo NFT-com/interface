@@ -345,12 +345,12 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   options={filterNulls([
                     {
                       label: 'Collections',
-                      onSelect: () => router.push('app/discover/collections'),
+                      onSelect: () => router.push('/app/discover/collections'),
                       icon: null,
                     },
                     {
                       label: 'Profiles',
-                      onSelect: () => router.push('app/discover/profiles'),
+                      onSelect: () => router.push('/app/discover/profiles'),
                       icon: null,
                     }
                   ])
