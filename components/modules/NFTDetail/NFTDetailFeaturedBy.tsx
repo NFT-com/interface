@@ -8,7 +8,7 @@ import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 import Link from 'next/link';
-import GK from 'public/hasGk.svg';
+import GK from 'public/Badge_Key.svg';
 import NoActivityIcon from 'public/no_activity.svg';
 export interface NFTDetailFeaturedByProps {
   contract: string,
