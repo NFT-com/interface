@@ -113,8 +113,8 @@ export function CollectionCard(props: CollectionCardProps) {
                 {
                   props.totalVolume
                     ? (
-                      <div className='flex flex-col '>
-                        <span className='flex items-center justify-center text-xl text-[#000] font-[500] mr-12'>
+                      <div className='flex flex-col min-w-[45%] '>
+                        <span className='flex items-center justify-start text-xl text-[#000] font-[500] mr-12 w-full'>
                           <VolumeIcon className='mr-2'/>
                           {checkMinPrice(props.floorPrice)}
                         </span>
