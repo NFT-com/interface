@@ -316,7 +316,11 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
       toggleLeaderBoardState(false);
     }
   }, [tabView]);
-
+  useEffect(() => {
+    if(newFiltersEnabled){
+      router.push('/app/discover/collections');
+    }
+  }, [newFiltersEnabled, router]);
   if(newFiltersEnabled){
     return <NotFoundPage />;
   }else {

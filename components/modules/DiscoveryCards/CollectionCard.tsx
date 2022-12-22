@@ -111,23 +111,27 @@ export function CollectionCard(props: CollectionCardProps) {
             ? (
               <div onClick={(event) => event.preventDefault()} className="flex flex-row leading-[23.2px] text-[#959595] font-[400 w-full]">
                 {
-                  props.totalVolume && (
-                    <div className='flex flex-col '>
-                      <span className='flex items-center justify-center text-xl text-[#000] font-[500] mr-12'>
-                        <VolumeIcon className='mr-2'/>
-                        {checkMinPrice(props.floorPrice)}
-                      </span>
-                      <span>Floor Price</span>
-                    </div>
-                  )
+                  props.totalVolume
+                    ? (
+                      <div className='flex flex-col '>
+                        <span className='flex items-center justify-center text-xl text-[#000] font-[500] mr-12'>
+                          <VolumeIcon className='mr-2'/>
+                          {checkMinPrice(props.floorPrice)}
+                        </span>
+                        <span>Floor Price</span>
+                      </div>
+                    )
+                    : null
                 }
                 {
-                  props.totalVolume && (
-                    <div className='flex flex-col '>
-                      <span className='text-xl text-[#000] font-[500]'>{checkMinPrice(props.totalVolume)}</span>
-                      <span>Total Volume</span>
-                    </div>
-                  )
+                  props.totalVolume
+                    ? (
+                      <div className='flex flex-col '>
+                        <span className='text-xl text-[#000] font-[500]'>{checkMinPrice(props.totalVolume)}</span>
+                        <span>Total Volume</span>
+                      </div>
+                    )
+                    : null
                 }
               </div>
             )
