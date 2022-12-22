@@ -179,7 +179,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       {tx?.price_details ?
         <>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 whitespace-nowrap">
-            <GetAsset price={tx.price_details.price} asset_type={tx.price_details.asset_type} contract_address={tx.price_details.contract_address} />
+            <GetAsset price={tx.price_details.price} asset_type={tx.price_details.asset_type} contract_address={tx?.price_details?.contract_address} />
           </td>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
             {tx.price_details.price_usd?.toFixed(2) ? `$${tx.price_details.price_usd?.toFixed(2)}` : '-'}
