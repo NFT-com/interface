@@ -11,6 +11,7 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import _ from 'lodash';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import React, { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -61,9 +62,20 @@ export default function ProfilePage() {
     toggleLoadState(true);
     loadMoreProfiles();
   };
-  const filterUniq = (value, index, self) => {
-    return self.indexOf(value) === index;
+
+  const filterUniqProfiles = () => {
+    if(!allLoadedProfiles && !allLoadedProfiles.length) return;
+    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
+    return uniqData.map((profile, index) => {
+      return (
+        <ProfileCard
+          key={index}
+          profile={profile}
+        />
+      );
+    });
   };
+
   const returnProfileBlock = () => {
     if(allLoadedProfiles && allLoadedProfiles.length){
       return (
@@ -73,16 +85,7 @@ export default function ProfilePage() {
             isLeaderBoard ? 'minxl:grid-cols-1' : 'minxl:grid-cols-5 minhd:grid-cols-4 minlg:grid-cols-3 minmd:grid-cols-2')}>
             {
               !isLeaderBoard
-                ? (
-                  allLoadedProfiles.filter(filterUniq).map((profile, index) => {
-                    return (
-                      <ProfileCard
-                        key={index}
-                        profile={profile}
-                      />
-                    );
-                  })
-                )
+                ? filterUniqProfiles()
                 : (
                   leaderboardData && leaderboardData?.leaderboard?.items.map((item, i) => {
                     return (
