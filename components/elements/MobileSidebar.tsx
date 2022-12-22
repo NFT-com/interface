@@ -189,7 +189,7 @@ export const MobileSidebar = () => {
       </motion.div>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [closeSideBarFn, dropDownSearchResults, learnExpanded, toggleMobileSidebar]);
+  }, [discoverExpanded, closeSideBarFn, dropDownSearchResults, learnExpanded, toggleMobileSidebar]);
 
   return (
     <AnimatePresence>
