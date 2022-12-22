@@ -38,18 +38,18 @@ export const NftMemo = (props: NftMemoProps) => {
 
   return (
     <>
-      <div className='flex h-full w-full p-4'>
+      <div className='flex h-full w-full p-4 my-5'>
         <div className='flex h-full w-full'>
           <div className='h-full w-full'>
             <Toast />
-            <div className='font-grotesk text-[#6F6F6F] font-semibold text-base leading-6 relative'>Owner&apos;s Message</div>
+            <div className='font-noi-grotesk text-[#6A6A6A] font-medium text-[16px] leading-5 relative'>Owner&apos;s Message</div>
             <textarea
               className={tw(
                 'text-base w-full resize-none mt-2',
                 'text-left px-3 pb-2 w-full rounded-[10px] font-medium h-32',
                 'leading-5',
                 'bg-[#F8F8F8]',
-                'font-grotesk text-[#1F2127]',
+                'font-noi-grotesk text-[#1F2127]',
                 `${editMemo ? 'border-2' : 'border-none'}`,
               )}
               maxLength={300}

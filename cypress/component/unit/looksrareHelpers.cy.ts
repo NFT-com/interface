@@ -20,6 +20,10 @@ describe('looksrareHelpers', () => {
       const mockFeeRegistry = {
         royaltyFeeInfoCollection: cy.stub().resolves([0, 0, BigNumber.from(1)])
       };
+      // 1bps royalty fee
+      const mockFeeManager = {
+        calculateRoyaltyFeeAndGetRecipient: cy.stub().resolves([0, 0, BigNumber.from(1)])
+      };
 
       const result = await createLooksrareParametersForNFTListing(
         'test_offerer',
@@ -33,7 +37,8 @@ describe('looksrareHelpers', () => {
         99, // nonce
         mockStrategy,
         mockFeeRegistry,
-        convertDurationToSec('7 Days')
+        convertDurationToSec('7 Days'),
+        mockFeeManager
       );
 
       expect(result).to.deep.equal({
@@ -42,7 +47,7 @@ describe('looksrareHelpers', () => {
         currency: WETH.address,
         endTime: '604800',
         isOrderAsk: true,
-        minPercentageToAsk: 9998, // 2 BPS deducted
+        minPercentageToAsk: 9999, // 1 BPS deducted
         nonce: 99,
         params: [],
         price: ethers.utils.parseEther('10').toString(),

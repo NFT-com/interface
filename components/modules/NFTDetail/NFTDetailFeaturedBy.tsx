@@ -1,26 +1,21 @@
-/* eslint-disable import/no-unresolved */
-// Import Swiper styles
-import 'swiper/swiper.min.css';
-import 'swiper/components/pagination/pagination.min.css';
-import 'swiper/components/navigation/navigation.min.css';
-
-import { ProfileCard } from 'components/modules/Profile/ProfileCard';
+import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
+import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import useWindowDimensions from 'hooks/useWindowDimensions';
-import { tw } from 'utils/tw';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { useProfileTokenOwner } from 'hooks/userProfileTokenOwner';
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
-import SwiperCore, { Autoplay, Navigation } from 'swiper/core';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
-SwiperCore.use([Autoplay, Navigation]);
+import Link from 'next/link';
+import GK from 'public/Badge_Key.svg';
+import NoActivityIcon from 'public/no_activity.svg';
 export interface NFTDetailFeaturedByProps {
   contract: string,
   tokenId: string
 }
 
 export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
-  const { width: screenWidth } = useWindowDimensions();
   const defaultChainId = useDefaultChainId();
   const { data: profiles } = useProfilesByDisplayedNft(
     props.contract,
@@ -33,45 +28,88 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     return null;
   }
 
-  return profiles.length > 0 ?
-    <div className='flex flex-col w-full px-[16px]'>
-      <span className="text-2xl font-bold font-grotesk mb-2">
-        Profiles that feature this NFT
-      </span>
-      <div className='flex py-2 h-full items-stretch'>
-        <Swiper
-          slidesPerView={Math.min(profiles?.length ?? 4, screenWidth < 600
-            ? 1
-            : (screenWidth >= 600 && screenWidth < 900)
-              ? (profiles?.length >= 3)
-                ? 3
-                : profiles?.length
-              : (profiles?.length >= 4)
-                ? 4
-                : profiles?.length)}
-          centeredSlides={false}
-          loop={profiles?.length > 4}
-          autoplay={{
-            'delay': 4500,
-            'disableOnInteraction': false
-          }}
-          className="flex drop-shadow-2xl"
-        >
-          {profiles?.map((profile, index) => {
-            return (
-              <SwiperSlide className={tw(
-                'flex flex-col w-72 shrink-0 cursor-pointer self-stretch',
-              )} key={profile?.id ?? index}>
-                <ProfileCard profile={profile} />
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
+  return <div className='flex flex-col w-full px-[16px]'>
+    <span className="md:text-[24px] text-[28px] font-semibold font-noi-grotesk mb-2">
+      Profiles that feature this NFT
+    </span>
+    {profiles?.map((profile, index) => {
+      return (
+        <div key={index} className='py-1 flex items-center justify-between h-[70px] border-b border-gray-200'>
+          <div className='flex items-center w-max'>
+            <RoundedCornerMedia
+              priority={true}
+              containerClasses='w-[44px] h-[44px] w-full aspect-square'
+              variant={RoundedCornerVariant.Full}
+              amount={RoundedCornerAmount.Medium}
+              src={processIPFSURL(profile?.photoURL)}
+            />
+            <div className="flex w-full items-center text-[20px] font-medium md:ml-3 ml-12 font-noi-grotesk my-4">
+              <span className='font-dm-mono text-primary-yellow'>/</span>
+              <span className='ml-1 whitespace-nowrap text-[#4D4D4D] text-ellipsis overflow-hidden'>{profile?.url}</span>
+              <ShowGk profile={profile?.url} />
+            </div>
+          </div>
+
+          <div className='flex items-center'>
+            <PublicProfileNftsCount id={profile?.id} />
+            <Link href={'/' + profile?.url} passHref>
+              <a>
+                <div className='cursor-pointer rounded-[8px] md:px-7 md:py-1.5 px-10 py-2 bg-[#F9D54C] flex items-center text-black font-medium md:text-[14px[ text-[18px] justify-center'>
+                  View
+                </div>
+              </a>
+            </Link>
+          </div>
+        </div>
+      );
+    })}
+    {profiles.length == 0 && <div>
+      <div className='flex items-center justify-center'>
+        <NoActivityIcon className='mt-10' />
       </div>
-    </div> :
-    (
-      <span className="text-2xl font-bold font-grotesk mb-2 w-full px-[16px]">
-        Not Featured on a NFT Profile yet
-      </span>
-    );
+      <span className='md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>Not Featured on a NFT.com Profile yet</span>
+    </div>
+    }
+  </div>;
 }
+
+const ShowGk = ({ profile }: { profile: string }) => {
+  const { profileTokenId } = useProfileTokenQuery(
+    profile,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 0,
+    }
+  );
+  const { profileOwner } = useProfileTokenOwner(
+    profileTokenId,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      refreshInterval: 0,
+    }
+  );
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(profileOwner);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+
+  return hasGks && <GK className='w-[24px] h-[24px] ml-3' />;
+};
+
+const PublicProfileNftsCount = ({ id }: { id: string }) => {
+  const defaultChainId = useDefaultChainId();
+  const {
+    totalItems: publicProfileNftsCount,
+  } = useProfileNFTsQuery(
+    id,
+    defaultChainId,
+    1000
+  );
+
+  return (
+    <div className='lg:hidden flex w-full text-[18px] font-noi-grotesk mr-36'>
+      <span className='font-bold mr-1'>{publicProfileNftsCount}</span>
+      <span className='text-[#6A6A6A]'>NFTs Displayed</span>
+    </div>
+  );
+};

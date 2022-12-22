@@ -1,6 +1,7 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { Doppler, getEnvBool } from 'utils/env';
+import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
@@ -16,6 +17,7 @@ interface ResultsDropDownProps {
 
 export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, itemListOnClick, extraClasses }: ResultsDropDownProps) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const router = useRouter();
   const copy = [...searchResults];
   const nfts = copy.map(item => item);
@@ -89,13 +91,14 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
   const ResultsContent = (searchResults) => {
     if(discoverPageEnv) {
       return newData && newData.length > 0 && newData.filter(Boolean).map((item, index) => {
+        const name = item?.request_params?.collection_name.split('-');
         return (
           <div key={index}>
-            {resultTitle(item.found, item?.request_params?.collection_name)}
+            {resultTitle(item.found, newFiltersEnabled ? name && name[0] : item?.request_params?.collection_name)}
             <div className="flex flex-col items-start" key={index}>
               {item.hits.length === 0 ?
                 <div className={tw('text-sm py-3 text-gray-500 px-9')}>
-                  No {item?.request_params?.collection_name?.toLowerCase()} results
+                  No {newFiltersEnabled ? name && name[0]?.toLowerCase() : item?.request_params?.collection_name?.toLowerCase()} results
                 </div>
                 : (item?.hits?.map((hit, index) => {
                   return (
@@ -118,7 +121,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                               height={600}
                               containerClasses='w-[100%] h-[100%]'
                               extraClasses='hover:scale-105 transition'
-                              src={item?.request_params?.collection_name === 'collections' ? hit.document.logoUrl : hit.document.imageURL}
+                              src={newFiltersEnabled ? (name && name[0] === 'collections' ? hit.document.logoUrl : processIPFSURL(hit?.document?.imageURL)) : item?.request_params?.collection_name === 'collections' ? hit.document.logoUrl : hit.document.imageURL}
                             />
                           </div>
                           : <div className="min-w-[48px] w-[48px] h-[48px] rounded-[50%] mr-2 bg-[#F2F2F2] flex justify-center items-center"><Image alt="preloader" color={'#B2B2B2'} size={32} /></div>}

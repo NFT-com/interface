@@ -1,7 +1,7 @@
 import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity } from 'graphql/generated/types';
+import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 
@@ -21,8 +21,8 @@ export const convertDurationToSec = (d: SaleDuration) => {
     '7 Days': 7,
     '30 Days': 30,
     '60 Days': 60,
-    '90 Days': 7 * 4 * 3,
-    '180 Days': 7 * 4 * 6,
+    '90 Days': 3 * 30,
+    '180 Days': 6 * 30,
     '1 Year': 7 * 4 * 12,
   };
   return 60 * 60 * 24 * durationDays[d];
@@ -126,7 +126,7 @@ export function getMaxMarketplaceFeesUSD(
   getByContractAddress: (contract: string) => NFTSupportedCurrency
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
-    const feesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+    const feesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
       const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
       if (target.protocol === ExternalProtocol.LooksRare) {
         // Looksrare fee is fetched from the smart contract.
@@ -146,7 +146,7 @@ export function getMaxMarketplaceFeesUSD(
         ))) ?? 0;
       }
     });
-    return cartTotal + Math.max(...feesByMarketplace);
+    return cartTotal + Math.max(...feesByMarketplace || []);
   }, 0);
 }
 
@@ -156,7 +156,7 @@ export function getMaxRoyaltyFeesUSD(
   getByContractAddress: (contract: string) => NFTSupportedCurrency
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
-    const royaltiesByMarketplace = stagedListing.targets.map((target: ListingTarget) => {
+    const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
       const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
       if (target.protocol === ExternalProtocol.LooksRare) {
         const minAskAmount = BigNumber.from(target?.looksrareOrder?.minPercentageToAsk ?? 0)
@@ -180,7 +180,7 @@ export function getMaxRoyaltyFeesUSD(
         ))) ?? 0;
       }
     });
-    return cartTotal + Math.max(...royaltiesByMarketplace);
+    return cartTotal + Math.max(...royaltiesByMarketplace || []);
   }, 0);
 }
 
@@ -189,6 +189,7 @@ export function filterValidListings(listings: PartialDeep<TxActivity>[]): Partia
     const seaportValid = (listing.order?.protocolData as SeaportProtocolData)?.parameters &&
       (listing.order?.protocolData as SeaportProtocolData)?.signature != null;
     const looksrareValid = (listing.order?.protocolData as LooksrareProtocolData)?.price != null;
-    return listing.order?.protocolData != null && (looksrareValid || seaportValid);
+    const X2Y2Valid = (listing.order?.protocolData as X2Y2ProtocolData)?.price != null;
+    return listing.order?.protocolData != null && (looksrareValid || seaportValid || X2Y2Valid);
   }) ?? [];
 }

@@ -13,7 +13,7 @@ import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
-import { CheckCircle, SpinnerGap, X, XCircle } from 'phosphor-react';
+import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
@@ -177,6 +177,17 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               <span className='font-semibold'>{'$' + getTotalRoyalties()}</span>
             </div>
           </div>
+          <div className="mx-4 my-4 flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className='font-semibold'>Total Price</span>
+              <span className='font-medium text-[#6F6F6F] text-sm'>
+                Estimated Amount
+              </span>
+            </div>
+            <div className="flex flex-col align-end">
+              <span className='font-semibold'>${Number(getTotalRoyalties()) + Number(getTotalMarketplaceFees()) + Number(getTotalPriceUSD())}</span>
+            </div>
+          </div>
         </div>
       );
     }
@@ -208,10 +219,9 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       fullModal
       pure
     >
-      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
-        <div className='pt-20 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative flex flex-col items-center'>
-          <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
-          <XCircle onClick={() => {
+      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
+        <div className='font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative flex flex-col items-center'>
+          <X onClick={() => {
             setSuccess(false);
             setLoading(false);
             setError(null);

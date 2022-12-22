@@ -18,13 +18,13 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
   
   return (
     <div className='flex flex-row w-full' id="NftChainInfoContainer">
-      <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[10px] w-full py-4 px-4 space-y-2">
-        <div className='flex flex-row w-full items-center font-grotesk justify-between'>
-          <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F]'>
+      <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[24px] font-[18px] text-[#6A6A6A] w-full py-5 md:py-4 md:px-6 px-10 space-y-2">
+        <div className='flex flex-row w-full items-center font-noi-grotesk justify-between md:py-1 py-1.5'>
+          <p className='flex flex-row w-1/2 font-base items-center text-base leading-6'>
             Contract
           </p>
           <span
-            className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127] cursor-pointer'
+            className='flex flex-row w-1/2 justify-end text-base leading-6 cursor-pointer'
             onClick={nft?.contract && (() => router.push(`/app/collection/${nft?.contract}/`))}
           >
             {shortenAddress(nft?.contract)}
@@ -32,14 +32,14 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
         </div>
         {//todo: add volume
         }
-        <div className='flex flex-row w-full items-center font-grotesk justify-between'>
-          <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
+        <div className='flex flex-row w-full items-center font-noi-grotesk md:py-1 py-1.5 justify-between'>
+          <p className='flex flex-row w-1/2 font-base items-center text-base leading-6 whitespace-nowrap'>
             Token ID
           </p>
-          {nft?.tokenId && <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
+          {nft?.tokenId && <span className='flex flex-row w-1/2 justify-end text-base leading-6'>
             {BigNumber.from(nft?.tokenId).toString().length > 11 ?
               (
-                <p className='font-medium text-[#1F2127] flex items-center relative'>
+                <p className='flex items-center relative'>
                   <CustomTooltip
                     rightPostion={-600}
                     mode="hover"
@@ -50,7 +50,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
                         <p>{BigNumber.from(nft?.tokenId).toString()}</p>
                       </div>
                     }>
-                    <Info className='mr-1' />
+                    <Info className='mr-3' />
                   </CustomTooltip>
                   <Copy toCopy={BigNumber.from(props.nft?.tokenId).toString()} after keepContent size={'18'}>
                     {BigNumber.from(nft?.tokenId).toString().slice(0,10) + '...'}
@@ -64,19 +64,19 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
               )}
           </span>}
         </div>
-        <div className='flex flex-row w-full items-center font-grotesk justify-between'>
-          <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
+        <div className='flex flex-row w-full items-center font-noi-grotesk md:py-1 py-1.5 justify-between'>
+          <p className='flex flex-row w-1/2 font-base items-center text-base leading-6 whitespace-nowrap'>
             Token Standard
           </p>
-          <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
+          <span className='flex flex-row w-1/2 justify-end text-base leading-6'>
             {nft?.type}
           </span>
         </div>
-        <div className='flex flex-row w-full items-center font-grotesk justify-between'>
-          <p className='flex flex-row w-1/2 font-base items-center font-medium text-base leading-6 text-[#6F6F6F] whitespace-nowrap'>
+        <div className='flex flex-row w-full items-center font-noi-grotesk md:py-1 py-1.5 justify-between'>
+          <p className='flex flex-row w-1/2 font-base items-center text-base leading-6 whitespace-nowrap'>
             Blockchain
           </p>
-          <span className='flex flex-row w-1/2 justify-end font-medium text-base leading-6 text-[#1F2127]'>
+          <span className='flex flex-row w-1/2 justify-end text-base leading-6'>
             ETH
           </span>
         </div>

@@ -3,14 +3,14 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
+import { isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
@@ -19,9 +19,12 @@ import { EditListingsModal } from './EditListingsModal';
 import { SelectListingModal } from './SelectListingModal';
 
 import { BigNumber, ethers } from 'ethers';
+import ETH from 'public/eth.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import USDC from 'public/usdc.svg';
+import X2Y2Icon from 'public/x2y2-icon.svg';
+import { useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -60,33 +63,56 @@ export function ExternalListings(props: ExternalListingsProps) {
     TransferProxyTarget.LooksRare
   );
 
-  const nftInPurchaseCart = useMemo(() => {
-    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id) != null;
+  const {
+    allowedAll: X2Y2Allowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.X2Y2
+  );
+
+  const nftInPurchaseCart = useCallback((orderHash: string) => {
+    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id && purchase?.orderHash === orderHash) != null;
   }, [props.nft?.id, toBuy]);
 
-  const getListingSummaryTitle = useCallback(() => {
-    const uniqueMarketplaces = filterDuplicates(
-      filterValidListings(props.nft?.listings?.items),
-      (first, second) => first.order?.protocol === second.order?.protocol
-    );
-    if (uniqueMarketplaces?.length > 1) {
-      return 'Starting price at multiple marketplaces';
-    } else if (filterValidListings(props.nft?.listings?.items)?.length > 1) {
-      const protocolName = filterValidListings(props.nft?.listings?.items)?.[0]?.order?.exchange;
-      return 'Starting price on ' + protocolName;
-    } else {
-      const protocolName = filterValidListings(props.nft?.listings?.items)?.[0]?.order?.exchange;
-      return 'Current price on ' + protocolName;
-    }
-  }, [props.nft]);
+  const getListingSummaryTitle = useCallback((listing: any) => {
+    const protocolName = listing?.order?.exchange;
+    return <div className='flex items-center font-normal font-noi-grotesk text-[16px] text-[#6A6A6A]'>
+      <span>Current price on</span>
+      {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+      {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+      {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
+      <span className='text-black'>{protocolName}</span>
+    </div>;
+  }, []);
 
-  const getListingSummaryButtons = useCallback(() => {
+  const getIcon = useCallback((contract: string, currency: string) => {
+    switch (currency) {
+    case 'ETH':
+      return <ETH className='h-6 w-6 relative mr-2 shrink-0' alt="ETH logo redirect" layout="fill"/>;
+    case 'USDC':
+      return <USDC className='h-6 w-6 relative mr-2 shrink-0' alt="USDC logo redirect" layout="fill"/>;
+    default:
+      if (!contract) {
+        return <div>{currency}</div>;
+      }
+      // eslint-disable-next-line @next/next/no-img-element
+      return <div className='flex items-center'><img
+        className='mr-1.5 h-7 w-7 relative shrink-0'
+        src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
+        alt={currency}
+      />
+      </div>;
+    }
+  }, []);
+
+  const getListingSummaryButtons = useCallback((orderHash: string) => {
     if (!hasGks) {
-      return null;
+      return 'You must have a Genesis Key to purchase';
     } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
         stretch
-        label={filterValidListings(props.nft?.listings?.items).length > 1 ? 'Edit Listings' : 'Edit Listing'}
+        label={'Edit Listing'}
         onClick={() => {
           setEditListingsModalOpen(true);
         }}
@@ -95,7 +121,8 @@ export function ExternalListings(props: ExternalListingsProps) {
     } else if (filterValidListings(props.nft?.listings?.items).length > 1) {
       return <Button
         stretch
-        label={'Select Listing'}
+        disabled={nftInPurchaseCart(orderHash)}
+        label={nftInPurchaseCart(orderHash) ? 'In Cart' : 'Select Listing'}
         onClick={() => {
           setSelectListingModalOpen(true);
         }}
@@ -105,8 +132,8 @@ export function ExternalListings(props: ExternalListingsProps) {
       const listing = filterValidListings(props.nft?.listings?.items)[0];
       return <Button
         stretch
-        disabled={nftInPurchaseCart}
-        label={nftInPurchaseCart ? 'In Cart' : 'Add to Cart'}
+        disabled={nftInPurchaseCart(orderHash)}
+        label={nftInPurchaseCart(orderHash) ? 'In Cart' : 'Add to Cart'}
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
@@ -119,9 +146,12 @@ export function ExternalListings(props: ExternalListingsProps) {
             collectionName: props.collectionName,
             protocol: listing?.order?.protocol as ExternalProtocol,
             isApproved: BigNumber.from(allowance ?? 0).gt(price),
+            orderHash: listing?.order?.orderHash,
             protocolData: listing?.order?.protocol === ExternalProtocol.Seaport ?
-              listing?.order?.protocolData as SeaportProtocolData :
-              listing?.order?.protocolData as LooksrareProtocolData
+              listing?.order?.protocolData as SeaportProtocolData
+              : listing?.order?.protocol === ExternalProtocol.LooksRare ?
+                listing?.order?.protocolData as LooksrareProtocolData :
+                listing?.order?.protocolData as X2Y2ProtocolData
           });
           toggleCartSidebar('Buy');
         }}
@@ -144,7 +174,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     return (
       currentAddress === props.nft?.wallet?.address && hasGks &&
         <div className={tw(
-          'w-full flex p-4',
+          'w-full flex mb-5',
         )}>
           <div className="flex flex-col items-center bg-[#F8F8F8] rounded-[10px] w-full px-4 pb-4 pt-12 relative">
             <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
@@ -162,6 +192,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   collectionName: props.collectionName,
                   isApprovedForSeaport: openseaAllowed,
                   isApprovedForLooksrare: looksRareAllowed,
+                  isApprovedForX2Y2: X2Y2Allowed,
                   targets: []
                 });
                 toggleCartSidebar('Sell');
@@ -173,10 +204,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     );
   }
 
-  const bestListing = getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId);
-  const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
-
-  return <div className='w-full flex justify-center p-4'>
+  return <div className='w-full flex justify-center'>
     <EditListingsModal
       nft={props.nft}
       collectionName={props.collectionName}
@@ -188,8 +216,9 @@ export function ExternalListings(props: ExternalListingsProps) {
     <SelectListingModal
       listings={[
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare)
-      ]}
+        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
+        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2)
+      ]?.filter( Boolean )}
       nft={props.nft}
       collectionName={props.collectionName}
       visible={selectListingModalOpen}
@@ -197,47 +226,42 @@ export function ExternalListings(props: ExternalListingsProps) {
         setSelectListingModalOpen(false);
       }}
     />
-    <div className={tw(
-      'flex flex-col bg-[#F8F8F8] rounded-[10px] my-6 w-full max-w-nftcom max-h-52 justify-between relative',
-      'pt-12 font-grotesk'
-    )}>
-      <div className="bg-[#FCF1CD] h-8 w-full absolute top-0 rounded-t-[10px] flex items-center pl-6">
-        <span className='font-bold text-secondary-txt'>
-          Fixed Price
-        </span>
-      </div>
-      <div className='flex font-grotesk font-semibold text-base leading-6 items-center text-[#1F2127] mb-4 px-5'>
-        <div className="flex items-center">
-          {
-            filterDuplicates(
-              filterValidListings(props.nft?.listings?.items),
-              (first, second) => first.order?.protocol === second.order?.protocol
-            )?.map((listing, index) => {
-              return <div key={listing?.id} className={tw(index > 0 && '-ml-4')}>
-                {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-                {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
-              </div>;
-            })
-          }
-        </div>
-        <div className='flex flex-col mx-3'>
-          <span className='text-sm text-secondary-txt'>
-            {getListingSummaryTitle()}
-          </span>
-          <div className='flex items-center w-full justify-between'>
-            <div className='text-xl font-bold flex items-end mt-1'>
-              {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
-              {listingCurrencyData?.name ?? 'WETH'}
-              <span className="text-secondary-txt text-sm ml-4">
-                ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}
+    <div className='flex flex-col max-w-nftcom w-full'>
+      {[
+        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
+        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
+        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2)
+      ]?.filter( Boolean )?.map((listing, index) => {
+        return listing && <div key={index} className={tw(
+          'flex flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
+        )}>
+          <div className="h-8 px-6 pb-6 pt-10 w-full flex items-center">
+            <span className='text-[28px] font-semibold text-black'>
+              Fixed Price
+            </span>
+          </div>
+          <div className='flex font-noi-grotesk text-black leading-6 items-center my-8 px-6 justify-between'>
+            <div className='flex items-end leading-6'>
+              <div className='flex items-end'>
+                {getIcon(
+                  getByContractAddress(getListingCurrencyAddress(listing))?.contract,
+                  getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
+                )}
+                <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}</span>
+              </div>
+              <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
+              <span className="ml-2 text-[15px] uppercase font-medium text-[#6A6A6A]">
+                ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}{' USD'}
               </span>
             </div>
+
+            {getListingSummaryTitle(listing)}
           </div>
-        </div>
-      </div>
-      <div className='flex w-full px-4 mb-4'>
-        {getListingSummaryButtons()}
-      </div>
+          <div className='flex w-full h-full px-6 py-4 rounded-br-[18px] rounded-bl-[18px] bg-[#F2F2F2]'>
+            {getListingSummaryButtons(listing.order.orderHash)}
+          </div>
+        </div>;
+      })}
     </div>
   </div>;
 }

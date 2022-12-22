@@ -2,13 +2,15 @@ import { ethers } from 'ethers';
 
 export enum ExternalExchange {
   Opensea = 'OpenSea',
-  LooksRare ='LooksRare'
+  LooksRare ='LooksRare',
+  X2Y2 = 'X2Y2'
 }
 
 export enum ExternalProtocol {
   Wyvern = 'Wyvern',
   Seaport = 'Seaport',
-  LooksRare ='LooksRare'
+  LooksRare ='LooksRare',
+  X2Y2 = 'X2Y2'
 }
 
 export type AggregatorResponse = {
