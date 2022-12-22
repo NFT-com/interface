@@ -20,7 +20,7 @@ query GetTxByNFT($input: TransactionsByNFTInput) {
       seller_address
       price_details {
         asset_type
-        contract_address
+        # contract_address
         price
         price_usd
       }
