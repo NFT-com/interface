@@ -62,18 +62,32 @@ export default function ProfilePage() {
     toggleLoadState(true);
     loadMoreProfiles();
   };
+  const filterUniq = (value, index, self) => {
+    return self.indexOf(value) === index;
+  };
 
   const filterUniqProfiles = () => {
-    if(!allLoadedProfiles && !allLoadedProfiles.length) return;
-    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
-    return uniqData.map((profile, index) => {
-      return (
-        <ProfileCard
-          key={index}
-          profile={profile}
-        />
-      );
-    });
+    if(newFiltersEnabled) {
+      if(!allLoadedProfiles && !allLoadedProfiles.length) return;
+      const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
+      return uniqData.map((profile, index) => {
+        return (
+          <ProfileCard
+            key={index}
+            profile={profile}
+          />
+        );
+      });
+    }else{
+      allLoadedProfiles.filter(filterUniq).map((profile, index) => {
+        return (
+          <ProfileCard
+            key={index}
+            profile={profile}
+          />
+        );
+      });
+    }
   };
 
   const returnProfileBlock = () => {
