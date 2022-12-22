@@ -102,7 +102,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
           console.log('profile customization click');
           setVisible(false);
         },
-        date: '09/15/2022'
+        date: null
       }
       : null,
     hasUnclaimedProfiles ?
@@ -113,7 +113,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
           setSidebarOpen(false);
           router.push('/app/mint-profiles');
         },
-        date: '09/15/2022'
+        date: null
       }
       : null,
   ];

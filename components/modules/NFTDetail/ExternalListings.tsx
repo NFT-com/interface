@@ -24,7 +24,7 @@ import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import USDC from 'public/usdc.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 
@@ -71,8 +71,8 @@ export function ExternalListings(props: ExternalListingsProps) {
     TransferProxyTarget.X2Y2
   );
 
-  const nftInPurchaseCart = useMemo(() => {
-    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id) != null;
+  const nftInPurchaseCart = useCallback((orderHash: string) => {
+    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id && purchase?.orderHash === orderHash) != null;
   }, [props.nft?.id, toBuy]);
 
   const getListingSummaryTitle = useCallback((listing: any) => {
@@ -106,7 +106,7 @@ export function ExternalListings(props: ExternalListingsProps) {
     }
   }, []);
 
-  const getListingSummaryButtons = useCallback(() => {
+  const getListingSummaryButtons = useCallback((orderHash: string) => {
     if (!hasGks) {
       return 'You must have a Genesis Key to purchase';
     } else if (currentAddress === props.nft?.wallet?.address) {
@@ -121,7 +121,8 @@ export function ExternalListings(props: ExternalListingsProps) {
     } else if (filterValidListings(props.nft?.listings?.items).length > 1) {
       return <Button
         stretch
-        label={'Select Listing'}
+        disabled={nftInPurchaseCart(orderHash)}
+        label={nftInPurchaseCart(orderHash) ? 'In Cart' : 'Select Listing'}
         onClick={() => {
           setSelectListingModalOpen(true);
         }}
@@ -131,8 +132,8 @@ export function ExternalListings(props: ExternalListingsProps) {
       const listing = filterValidListings(props.nft?.listings?.items)[0];
       return <Button
         stretch
-        disabled={nftInPurchaseCart}
-        label={nftInPurchaseCart ? 'In Cart' : 'Add to Cart'}
+        disabled={nftInPurchaseCart(orderHash)}
+        label={nftInPurchaseCart(orderHash) ? 'In Cart' : 'Add to Cart'}
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
@@ -257,7 +258,7 @@ export function ExternalListings(props: ExternalListingsProps) {
             {getListingSummaryTitle(listing)}
           </div>
           <div className='flex w-full h-full px-6 py-4 rounded-br-[18px] rounded-bl-[18px] bg-[#F2F2F2]'>
-            {getListingSummaryButtons()}
+            {getListingSummaryButtons(listing.order.orderHash)}
           </div>
         </div>;
       })}

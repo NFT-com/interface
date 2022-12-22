@@ -93,7 +93,7 @@ export default function AssetTableRow({
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`}>
           <div className='hover:cursor-pointer'>
-            <p className='-mt-1 font-bold text-[#B59007]'>{item.metadata?.name}</p>
+            <p className='-mt-1 font-bold text-[#B59007] truncate ... text-ellipsis'>{item.metadata?.name}</p>
           </div>
         </Link>
       </td>

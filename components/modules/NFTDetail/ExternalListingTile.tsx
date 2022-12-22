@@ -69,8 +69,8 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
 
   const nftInPurchaseCart = useMemo(() => {
-    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id) != null;
-  }, [props.nft?.id, toBuy]);
+    return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id && purchase?.orderHash === props?.listing?.order?.orderHash) != null;
+  }, [props?.listing?.order?.orderHash, props.nft?.id, toBuy]);
 
   const { mutate: mutateNft } = useNftQuery(
     props?.nft?.contract,
