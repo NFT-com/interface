@@ -346,11 +346,13 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     {
                       label: 'Collections',
                       onSelect: () => router.push('/app/discover/collections'),
+                      closeModalOnClick: true,
                       icon: null,
                     },
                     {
                       label: 'Profiles',
                       onSelect: () => router.push('/app/discover/profiles'),
+                      closeModalOnClick: true,
                       icon: null,
                     }
                   ])

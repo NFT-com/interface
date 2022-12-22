@@ -105,7 +105,6 @@ export default function CollectionsPage() {
   if (!newFiltersEnabled) {
     return <NotFoundPage />;
   }else{
-    console.log('collections.length',collections.length);
     return(
       <>
         <div className="p-2 minmd:p-4 minlg:p-8 minhd:p-16 minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
