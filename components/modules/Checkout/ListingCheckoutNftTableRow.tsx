@@ -58,8 +58,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const selectedOptionDropdown1 = useRef(null);
   const selectedOptionDropdown2 = useRef(null);
 
-  console.log('props.listing fdo', props.listing);
-
   const rowHeightClass = expanded ? 'h-48' : 'h-24';
   const seaportEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Seaport) != null, [getTarget, props.listing]);
   const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
@@ -82,8 +80,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }
     }
 
-    console.log('dropDownNumber fdo', dropDownNumber);
-    console.log('selectedOptionForDropdown.current fdo', selectedOptionForDropdown.current);
     return [
       {
         label: 'Opensea',// ExternalProtocol.Seaport,

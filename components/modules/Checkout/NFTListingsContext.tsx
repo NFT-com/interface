@@ -221,7 +221,6 @@ export function NFTListingsContextProvider(
       setToList(toList.slice().map(stagedNft => {
         if (toggleListing?.nft?.id === stagedNft?.nft?.id) {
           if (previousSelectedMarketplace) {// switch to another marketplace
-            console.log('switching previousSelectedMarketplace 1 fdo', previousSelectedMarketplace);
             return {
               ...stagedNft,
               targets: stagedNft.targets.map(target => {
@@ -237,7 +236,6 @@ export function NFTListingsContextProvider(
               })
             };
           } else {
-            console.log('togglelisting 1 previousSelectedMarketplace fdo', previousSelectedMarketplace);
             return {
               ...stagedNft,
               targets: stagedNft.targets.find(target => target.protocol === targetMarketplace) != null ?
@@ -256,7 +254,6 @@ export function NFTListingsContextProvider(
         return stagedNft;
       }));
     } else if (targetFullyEnabled) {
-      console.log('targetFullyEnabled 2 fdo');
       // removing the target marketplace from all nfts
       setToList(toList.slice().map(stagedNft => {
         return {
@@ -265,7 +262,6 @@ export function NFTListingsContextProvider(
         };
       }));
     } else {
-      console.log('no togglelisting no targetFullyEnabled 3 fdo');
       // adding a new marketplace to any nft that doesn't have it.
       setToList(toList.slice().map(stagedNft => {
         return {
