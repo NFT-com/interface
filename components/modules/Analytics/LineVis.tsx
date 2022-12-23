@@ -26,6 +26,16 @@ export type LineChartProps = {
 export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: LineChartProps) => {
   const [selectedMarketplace, setSelectedMarketplace] = useState<ExternalExchange>(ExternalExchange.Opensea);
 
+  const parseTimestamp = (timestampString: string): number => {
+    // Create a Date object from the timestamp string
+    const date = new Date(timestampString);
+    // Convert the Date object to a Unix timestamp
+    const unixTimestamp = date.getTime();
+    return unixTimestamp;
+  };
+
+  data = data.map(i => { return { ...i, date: parseTimestamp(i.date) }; });
+
   const xAxisFormatter = (item) => {
     const xAxisTimeFrames = {
       '1D': { format: 'HH' },
@@ -129,7 +139,7 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
             <Label position='center' className='font-noi-grotesk' style={{ fontSize: '13px', height: '140px' }} value={'No Data Yet'} />
           }
           <CartesianGrid strokeDasharray="3-3" stroke="#E6E6E6" vertical={false} />
-          <XAxis dataKey={'date'} tickCount={7} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} tickFormatter={xAxisFormatter}/>
+          <XAxis dataKey={'date'} tickCount={7} type="number" domain={['dataMin', 'dataMax']} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} tickFormatter={xAxisFormatter}/>
           <YAxis dataKey={'value'} tickCount={6} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
           <Tooltip
             cursor={false}
