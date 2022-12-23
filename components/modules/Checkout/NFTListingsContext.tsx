@@ -83,7 +83,7 @@ export interface NFTListingsContextType {
 
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
-  toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>) => void;
+  toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => void;
   setDuration: (duration: SaleDuration) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol) => void;
   setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
@@ -211,7 +211,7 @@ export function NFTListingsContextProvider(
     return unconfiguredNft == null;
   }, [defaultChainId, ethPriceUSD, toList]);
 
-  const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol, toggleListing?: PartialDeep<StagedListing>) => {
+  const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol, toggleListing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => {
     const targetFullyEnabled = toList.find(nft => {
       const hasTarget = nft.targets?.find(target => target.protocol === targetMarketplace) != null;
       return !hasTarget; // return true if missing the desired target.
@@ -220,23 +220,43 @@ export function NFTListingsContextProvider(
       // toggle the marketplace for a specific listing.
       setToList(toList.slice().map(stagedNft => {
         if (toggleListing?.nft?.id === stagedNft?.nft?.id) {
-          return {
-            ...stagedNft,
-            targets: stagedNft.targets.find(target => target.protocol === targetMarketplace) != null ?
-              stagedNft.targets.filter(target => target.protocol !== targetMarketplace) :
-              [
-                ...stagedNft.targets,
-                {
-                  protocol: targetMarketplace,
-                  duration: stagedNft.duration ,
-                  currency: stagedNft.currency ?? targetMarketplace === ExternalProtocol.X2Y2 ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract
+          if (previousSelectedMarketplace) {// switch to another marketplace
+            console.log('switching previousSelectedMarketplace 1 fdo', previousSelectedMarketplace);
+            return {
+              ...stagedNft,
+              targets: stagedNft.targets.map(target => {
+                if(target.protocol === previousSelectedMarketplace) {
+                  return {
+                    protocol: targetMarketplace,
+                    duration: stagedNft.duration,
+                    currency: stagedNft.currency ?? targetMarketplace === ExternalProtocol.X2Y2 ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract,
+                    startingPrice: target.startingPrice,
+                  };
                 }
-              ]
-          };
+                return target;
+              })
+            };
+          } else {
+            console.log('togglelisting 1 previousSelectedMarketplace fdo', previousSelectedMarketplace);
+            return {
+              ...stagedNft,
+              targets: stagedNft.targets.find(target => target.protocol === targetMarketplace) != null ?
+                stagedNft.targets.filter(target => target.protocol !== targetMarketplace) :
+                [
+                  ...stagedNft.targets,
+                  {
+                    protocol: targetMarketplace,
+                    duration: stagedNft.duration,
+                    currency: stagedNft.currency ?? targetMarketplace === ExternalProtocol.X2Y2 ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract
+                  }
+                ]
+            };
+          }
         }
         return stagedNft;
       }));
     } else if (targetFullyEnabled) {
+      console.log('targetFullyEnabled 2 fdo');
       // removing the target marketplace from all nfts
       setToList(toList.slice().map(stagedNft => {
         return {
@@ -245,6 +265,7 @@ export function NFTListingsContextProvider(
         };
       }));
     } else {
+      console.log('no togglelisting no targetFullyEnabled 3 fdo');
       // adding a new marketplace to any nft that doesn't have it.
       setToList(toList.slice().map(stagedNft => {
         return {
@@ -264,7 +285,7 @@ export function NFTListingsContextProvider(
     }
   }, [supportedCurrencyData, toList]);
 
-  const setDuration = useCallback((duration: SaleDuration = '30 Days') => {
+  const setDuration = useCallback((duration: SaleDuration) => {
     setToList(toList.slice().map(stagedNft => {
       return {
         ...stagedNft,
