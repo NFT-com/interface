@@ -1,12 +1,20 @@
+import { NULL_ADDRESS } from 'constants/addresses';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+import { Nft, Signature } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { SeaportOrderComponents } from 'types';
+import { isNullOrEmpty } from 'utils/helpers';
+import { getMarketplaceAssetInput, onchainAuctionTypeToGqlAuctionType, unhashedMakeAsset, unhashedTakeAsset, UnsignedOrder } from 'utils/nativeMarketplaceHelpers';
+import { getOrderHash } from 'utils/signatureUtils';
 import { encodeOrder } from 'utils/X2Y2Helpers';
 
 import { MakerOrderWithSignature } from '@looksrare/sdk';
 import * as Sentry from '@sentry/nextjs';
 import { X2Y2Order } from '@x2y2-io/sdk/dist/types';
+import { BigNumber } from 'ethers';
 import { useCallback } from 'react';
+import { PartialDeep } from 'type-fest';
 
 export interface ListNftResult {
   listNftSeaport: (
@@ -24,13 +32,20 @@ export interface ListNftResult {
     hasOpenOrder: boolean,
     openOrderId: number[]
   ) => Promise<boolean>,
+  listNftNative: (
+    order: UnsignedOrder,
+    signature: Signature,
+    nft: PartialDeep<Nft>,
+    currency: string
+  ) => Promise<boolean>,
 }
 
 export function useListNFTMutations(): ListNftResult {
   const sdk = useGraphQLSDK();
 
   const defaultChainId = useDefaultChainId();
-
+  const { getByContractAddress } = useSupportedCurrencies();
+  
   const listNftSeaport = useCallback(
     async (
       signature: string,
@@ -88,7 +103,7 @@ export function useListNFTMutations(): ListNftResult {
               isPrivate: false,
               taker: null,
             }),
-            chainId:  defaultChainId,
+            chainId: defaultChainId,
             tokenId,
             contract,
             maker
@@ -104,9 +119,66 @@ export function useListNFTMutations(): ListNftResult {
     [defaultChainId, sdk]
   );
 
+  const listNftNative = useCallback(
+    async (order: UnsignedOrder, signature: Signature, nft: PartialDeep<Nft>, currency: string ) => {
+      try {
+        const unhashedMake = unhashedMakeAsset(nft);
+        const unhashedTake = unhashedTakeAsset(
+          currency,
+          order.start,
+          onchainAuctionTypeToGqlAuctionType(order.auctionType),
+          getByContractAddress(isNullOrEmpty(order.taker) ? NULL_ADDRESS : order.taker).contract);
+        const orderHash = getOrderHash({
+          ...order,
+          makeAssets: [unhashedMake],
+          takeAssets: [unhashedTake]
+        });
+        const result = await sdk.CreateMarketListing({
+          input: {
+            auctionType: onchainAuctionTypeToGqlAuctionType(order.auctionType),
+            chainId: defaultChainId,
+            end: order.end,
+            makeAsset: [
+              getMarketplaceAssetInput(
+                unhashedMake,
+                BigNumber.from(nft.tokenId),
+                nft.contract
+              ),
+            ],
+            makerAddress: order.maker,
+            nonce: order.nonce,
+            salt: order.salt,
+            signature,
+            start: order.start,
+            structHash: orderHash,
+            takeAsset: [
+              getMarketplaceAssetInput(
+                unhashedTake,
+                0,
+                getByContractAddress(isNullOrEmpty(order.taker) ?
+                  NULL_ADDRESS :
+                  order.taker).contract
+              ),
+            ],
+            takerAddress: isNullOrEmpty(order.taker) ?
+              NULL_ADDRESS:
+              order.taker,
+          }
+        });
+        return result?.createMarketListing ? true : false;
+      } catch (err) {
+        Sentry.captureException(err);
+        console.log('err:', err);
+        return false;
+      }
+    },
+    [defaultChainId, getByContractAddress, sdk]
+  );
+
   return {
     listNftSeaport,
     listNftLooksrare,
-    listNftX2Y2
+    listNftX2Y2,
+    listNftNative
   };
 }

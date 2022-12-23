@@ -1,3 +1,4 @@
+import { NULL_ADDRESS } from 'constants/addresses';
 import { ActivityStatus, Maybe, Nft, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
@@ -10,6 +11,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSeaportCounter } from 'hooks/useSeaportCounter';
 import { useSignLooksrareOrder } from 'hooks/useSignLooksrareOrder';
+import { useSignNativeOrder } from 'hooks/useSignNativeOrder';
 import { useSignSeaportOrder } from 'hooks/useSignSeaportOrder';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol, Fee, SeaportOrderParameters } from 'types';
@@ -18,6 +20,7 @@ import { getLowestPriceListing } from 'utils/listingUtils';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
 import { convertDurationToSec, filterValidListings, SaleDuration } from 'utils/marketplaceUtils';
+import { createNativeParametersForNFTListing, onchainAuctionTypeToGqlAuctionType, UnsignedOrder } from 'utils/nativeMarketplaceHelpers';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { createX2Y2ParametersForNFTListing } from 'utils/X2Y2Helpers';
 
@@ -43,6 +46,7 @@ export type ListingTarget = {
   looksrareOrder: MakerOrder; // looksrare
   seaportParameters: SeaportOrderParameters; // seaport
   X2Y2Order: X2Y2Order; // X2Y2
+  nativeOrder: UnsignedOrder; //native marketplace
 }
 
 export type StagedListing = {
@@ -65,6 +69,7 @@ export type StagedListing = {
   isApprovedForSeaport: boolean;
   isApprovedForLooksrare: boolean;
   isApprovedForX2Y2: boolean;
+  isApprovedForNative: boolean;
 }
 
 export enum ListAllResult {
@@ -128,6 +133,7 @@ export function NFTListingsContextProvider(
   const { toBuy } = useContext(NFTPurchasesContext);
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const { data: supportedCurrencyData } = useSupportedCurrencies();
+  // const { marketplace } = useAllContracts();
 
   useEffect(() => {
     if (window != null) {
@@ -151,7 +157,10 @@ export function NFTListingsContextProvider(
 
   const seaportCounter = useSeaportCounter(currentAddress);
   const signOrderForSeaport = useSignSeaportOrder();
-  const { listNftSeaport, listNftLooksrare, listNftX2Y2 } = useListNFTMutations();
+  const { listNftSeaport, listNftLooksrare, listNftX2Y2, listNftNative } = useListNFTMutations();
+
+  const signOrderForNativeMarketPlace = useSignNativeOrder();
+  const { getByContractAddress } = useSupportedCurrencies();
 
   const stageListing = useCallback((
     listing: StagedListing
@@ -383,6 +392,23 @@ export function NFTListingsContextProvider(
           };
         } else if (target.protocol === ExternalProtocol.X2Y2) {
           return target;
+        } else if (target.protocol === ExternalProtocol.Native) {
+          const order = await createNativeParametersForNFTListing(
+            currentAddress,
+            isNullOrEmpty(target.nativeOrder.taker) ? NULL_ADDRESS : target.nativeOrder.taker,
+            Number(target.duration) ?? Number(stagedNft.duration),
+            onchainAuctionTypeToGqlAuctionType(target.nativeOrder.auctionType),
+            stagedNft.nft,
+            BigNumber.from(2), //placeholder for now - use marketplace contract to get nonce once updated
+            getByContractAddress(isNullOrEmpty(target.nativeOrder.taker) ? NULL_ADDRESS : target.nativeOrder.taker).contract,
+            target.startingPrice,
+            stagedNft.currency ?? target.currency,
+          );
+          nonce++;
+          return {
+            ...target,
+            nativeOrder: order,
+          };
         } else {
           const contract = await getOpenseaCollection(stagedNft?.nft?.contract);
           const collectionFee: Fee = contract?.['payout_address'] && contract?.['dev_seller_fee_basis_points']
@@ -414,7 +440,7 @@ export function NFTListingsContextProvider(
       };
     }));
     setToList(preparedListings);
-  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager]);
+  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager, getByContractAddress]);
 
   const listAll: () => Promise<ListAllResult> = useCallback(async () => {
     setSubmitting(true);
@@ -458,6 +484,16 @@ export function NFTListingsContextProvider(
             updateActivityStatus([listing?.nftcomOrderId], ActivityStatus.Cancelled);
           }
           return ListAllResult.Success;
+        } else if (target.protocol === ExternalProtocol.Native) {
+          const signature = await signOrderForNativeMarketPlace(target.nativeOrder).catch(() => null);
+          if (isNullOrEmpty(signature)) {
+            return ListAllResult.SignatureRejected;
+          }
+          const result = await listNftNative(target.nativeOrder, signature, listing.nft, target.currency);
+          if (!result) {
+            return ListAllResult.ApiError;
+          }
+          return ListAllResult.Success;
         } else {
           const signature = await signOrderForSeaport(target.seaportParameters, seaportCounter).catch(() => null);
           if (isNullOrEmpty(signature)) {
@@ -482,7 +518,7 @@ export function NFTListingsContextProvider(
       results.includes(ListAllResult.ApiError) ?
         ListAllResult.ApiError :
         ListAllResult.Success;
-  }, [toList, signOrderForLooksrare, listNftLooksrare, signer, listNftX2Y2, currentAddress, updateActivityStatus, signOrderForSeaport, seaportCounter, listNftSeaport]);
+  }, [toList, signOrderForLooksrare, listNftLooksrare, signer, listNftX2Y2, currentAddress, updateActivityStatus, signOrderForNativeMarketPlace, listNftNative, signOrderForSeaport, seaportCounter, listNftSeaport]);
 
   const removeListing = useCallback((nft: PartialDeep<Nft>) => {
     const newToList = toList.slice().filter(l => l.nft?.id !== nft?.id);
