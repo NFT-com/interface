@@ -2742,6 +2742,13 @@ export type CreateBidMutationVariables = Exact<{
 
 export type CreateBidMutation = { __typename?: 'Mutation', bid: { __typename?: 'Bid', id: string } };
 
+export type CreateMarketListingMutationVariables = Exact<{
+  input: CreateListingInput;
+}>;
+
+
+export type CreateMarketListingMutation = { __typename?: 'Mutation', createMarketListing: { __typename?: 'TxListingOrder', id: string, orderHash: string, nonce: number, makerAddress: any, start: any, end: any, salt: number, acceptedAt?: any | null, chainId: string, auctionType: AuctionType, memo?: string | null, signature: { __typename?: 'Signature', r: any, s: any, v: number }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null } };
+
 export type FileUploadMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3292,6 +3299,41 @@ export const CreateBidDocument = gql`
     mutation CreateBid($input: BidInput!) {
   bid(input: $input) {
     id
+  }
+}
+    `;
+export const CreateMarketListingDocument = gql`
+    mutation CreateMarketListing($input: CreateListingInput!) {
+  createMarketListing(input: $input) {
+    id
+    orderHash
+    nonce
+    signature {
+      r
+      s
+      v
+    }
+    makerAddress
+    start
+    end
+    salt
+    acceptedAt
+    chainId
+    auctionType
+    memo
+    makeAsset {
+      standard {
+        assetClass
+        bytes
+        contractAddress
+        tokenId
+        allowAll
+      }
+      nftId
+      bytes
+      value
+      minimumBid
+    }
   }
 }
     `;
@@ -5108,6 +5150,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     CreateBid(variables: CreateBidMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateBidMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateBidMutation>(CreateBidDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateBid', 'mutation');
+    },
+    CreateMarketListing(variables: CreateMarketListingMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateMarketListingMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateMarketListingMutation>(CreateMarketListingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateMarketListing', 'mutation');
     },
     FileUpload(variables?: FileUploadMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<FileUploadMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<FileUploadMutation>(FileUploadDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'FileUpload', 'mutation');
