@@ -3068,7 +3068,7 @@ export type GetTxByNftQueryVariables = Exact<{
 }>;
 
 
-export type GetTxByNftQuery = { __typename?: 'Query', getTxByNFT?: { __typename?: 'NFTPortTxByNFT', response?: string | null, continuation?: string | null, transactions?: Array<{ __typename?: 'NFTPortTxByNFTTransactions', type?: string | null, lister_address?: string | null, quantity?: number | null, transaction_date?: string | null, marketplace?: string | null, owner_address?: string | null, contract_address?: string | null, token_id?: string | null, transaction_hash?: string | null, block_number?: number | null, block_hash?: string | null, transfer_from?: string | null, transfer_to?: string | null, buyer_address?: string | null, seller_address?: string | null, price_details?: { __typename?: 'NFTPortTxByNFTPriceDetails', asset_type?: string | null, contract_address?: string | null, price?: number | null, price_usd?: number | null } | null, listing_details?: { __typename?: 'NFTPortTxByNFTListingDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByNFTNft', contract_type?: string | null, contract_address?: string | null, token_id?: string | null } | null } | null> | null } | null };
+export type GetTxByNftQuery = { __typename?: 'Query', getTxByNFT?: { __typename?: 'NFTPortTxByNFT', response?: string | null, continuation?: string | null, transactions?: Array<{ __typename?: 'NFTPortTxByNFTTransactions', type?: string | null, lister_address?: string | null, quantity?: number | null, transaction_date?: string | null, marketplace?: string | null, owner_address?: string | null, contract_address?: string | null, token_id?: string | null, transaction_hash?: string | null, block_number?: number | null, block_hash?: string | null, transfer_from?: string | null, transfer_to?: string | null, buyer_address?: string | null, seller_address?: string | null, price_details?: { __typename?: 'NFTPortTxByNFTPriceDetails', asset_type?: string | null, price?: number | null, price_usd?: number | null } | null, listing_details?: { __typename?: 'NFTPortTxByNFTListingDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByNFTNft', contract_type?: string | null, contract_address?: string | null, token_id?: string | null } | null } | null> | null } | null };
 
 export type IgnoredEventsQueryVariables = Exact<{
   input: IgnoredEventsInput;
@@ -4303,7 +4303,6 @@ export const GetTxByNftDocument = gql`
       seller_address
       price_details {
         asset_type
-        contract_address
         price
         price_usd
       }

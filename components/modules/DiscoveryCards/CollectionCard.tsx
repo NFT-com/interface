@@ -35,7 +35,7 @@ export interface CollectionCardProps {
   isVerified?: boolean;
   isLeaderBoard?: boolean;
   redirectTo?: string;
-  floorPrice?: string;
+  floorPrice?: string | number;
   totalVolume?: number;
   maxSymbolsInString?: number;
   contractAddr?: string;
@@ -111,10 +111,10 @@ export function CollectionCard(props: CollectionCardProps) {
             ? (
               <div onClick={(event) => event.preventDefault()} className="flex flex-row leading-[23.2px] text-[#959595] font-[400 w-full]">
                 {
-                  props.totalVolume
+                  props.floorPrice && props.floorPrice !== 0
                     ? (
-                      <div className='flex flex-col '>
-                        <span className='flex items-center justify-center text-xl text-[#000] font-[500] mr-12'>
+                      <div className='flex flex-col min-w-[45%] '>
+                        <span className='flex items-center justify-start text-xl text-[#000] font-[500] mr-12 w-full'>
                           <VolumeIcon className='mr-2'/>
                           {checkMinPrice(props.floorPrice)}
                         </span>
@@ -124,7 +124,7 @@ export function CollectionCard(props: CollectionCardProps) {
                     : null
                 }
                 {
-                  props.totalVolume
+                  props.totalVolume && props.totalVolume !== 0
                     ? (
                       <div className='flex flex-col '>
                         <span className='text-xl text-[#000] font-[500]'>{checkMinPrice(props.totalVolume)}</span>
