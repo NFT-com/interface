@@ -148,7 +148,7 @@ export function ListingCheckout() {
                 nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
               )}
             >
-              {openseaAtLeastOneEnabled
+              {nftcomMarketplaceEnabled
                 ? <NFTLogo
                   className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
                   alt="Opensea logo"
