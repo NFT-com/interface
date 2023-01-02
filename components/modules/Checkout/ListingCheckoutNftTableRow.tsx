@@ -426,9 +426,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       </tr>
     )
     : (
-      <tr className='h-44'>
-        <td className='w-40 mr-10 mt-6'>
-          <div className='flex flex-col items-start w-40'>
+      <div className='h-44'>
+        <div className='mr-10 mt-6 minxl:w-28 align-top'>
+          <div className='flex flex-col items-start'>
             {/*             {
               expanded ?
                 <CaretDown onClick={() => {
@@ -439,8 +439,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                   clearGeneralConfig(props.listing);
                 }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' />
             } */}
-            <div className='relative max-h-28 rounded-md'>
-              <div className='relative max-h-28 aspect-square overflow-y-hidden rounded-md'>
+            <div className='relative rounded-md'>
+              <div className='relative aspect-square overflow-y-hidden rounded-md'>
                 <video
                   autoPlay
                   muted
@@ -462,39 +462,31 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               <span className='font-bold text-base line-clamp-1 capitalize'>{props.listing?.nft?.metadata?.name?.toLowerCase()}</span>
             </ div>
           </ div>
-        </td>
-        <td className='align-top w-[10.5rem]'>
-          <div className='flex flex-col items-start h-full pr-2 w-[10.5rem]'>
-            {/* {props.listing?.targets?.map((target) =>
-
-              <div key={target?.protocol + props?.listing?.nft?.id + 'dropdownpicker'} className='mb-2 border border-gray-300 rounded-md w-full'>
-                <DropdownPicker
-                  options={marketPlacesOptions}
-                  selectedIndex={marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) >= 0 ? marketPlacesOptions?.findIndex((i) => i.label === target?.protocol) : 0}
-                />
-              </div>) } */}
+        </div>
+        <div className='align-top minxl:w-48 align-top'>
+          <div className='flex flex-col h-full pl-2'>
             {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') &&
-            <div className='mb-2 border border-gray-300 rounded-xl w-[10.5rem]'>
+            <div className='mb-2 border border-gray-300 rounded-xl'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(!looksrareEnabled && !X2Y2Enabled ? 1 : 2, true)}
                 selectedIndex={0}
               />
             </div>}
             {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare &&
-            <div className='mb-2 border border-gray-300 rounded-xl w-[10.5rem]'>
+            <div className='mb-2 border border-gray-300 rounded-xl'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(!seaportEnabled && !X2Y2Enabled ? 1 : 2, true)}
                 selectedIndex={1}
               />
             </div>}
             {X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
-            <div className='mb-2 border border-gray-300 rounded-xl w-[10.5rem]'>
+            <div className='mb-2 border border-gray-300 rounded-xl'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(!seaportEnabled && !looksrareEnabled ? 1 : 2, true)}
                 selectedIndex={2}
               />
             </div>}
-            <div className='mb-2 border border-gray-300 rounded-xl w-[10.5rem]'>
+            <div className='mb-2 border border-gray-300 rounded-xl'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(0)}
                 placeholder={'Select Marketplace'}
@@ -502,16 +494,16 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               />
             </div>
           </div>
-        </td>
-        <td className='align-top w-[9.7rem]'>
-          <div className='flex flex-col items-start h-full px-2 w-[9.7rem]'>
+        </div>
+        <div className='align-top'>
+          <div className='flex flex-col items-start h-full px-2'>
             {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') &&
               <input
                 disabled
                 type="text"
                 value='Fixed price'
                 className={tw(
-                  'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-[9.7rem]',
+                  'text-sm border border-gray-200 h-[2.65rem] shrink-0',
                   'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
                 )}
               />}
@@ -521,7 +513,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 type="text"
                 value='Fixed price'
                 className={tw(
-                  'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                  'text-sm border border-gray-200 h-[2.65rem] shrink-0 w-full',
                   'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
                 )}
               />}
@@ -531,7 +523,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 type="text"
                 value='Fixed price'
                 className={tw(
-                  'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                  'text-sm border border-gray-200 h-[2.65rem] shrink-0 w-full',
                   'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
                 )}
               />}
@@ -549,15 +541,15 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 )}
               />}
           </div>
-        </td>
-        <td className='align-top w-full'>
-          <div className='h-full min-w-32 flex flex-col justify-around'>
+        </div>
+        <div className='align-top'>
+          <div className='h-full flex flex-col justify-around'>
             {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && <div className='mb-2'>{OpenseaPriceInput()}</div>}
             
             {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <div className='mb-2'>{LooksRarePriceInput()}</div>}
             
             {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
-              <div className='mb-2 w-1/2'>
+              <div className='mb-2 minxl:w-1/2'>
                 <CustomTooltip2
                   orientation='top'
                   hidden={
@@ -599,9 +591,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             }
 
           </div>
-        </td>
-        <td className='w-auto align-top '>
-          <div className='w-full pl-3 mt-2 flex flex-col justify-between h-full'>
+        </div>
+        <div className='align-top minxl:w-12'>
+          <div className='pl-3 mt-2 flex flex-col justify-between h-full'>
             {seaportEnabled && selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea' && <div className='h-full py-2'><DeleteRowIcon
               className={tw(
                 'h-9 w-9 relative shrink-0 cursor-pointer',
@@ -634,7 +626,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
               }}
             /></div>}
-
 
             {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && <div className='h-full py-2'><DeleteRowIcon
               className={tw(
@@ -671,7 +662,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             /></div>}
             
           </div>
-        </td>
-      </tr>
+        </div>
+      </div>
     );
 }

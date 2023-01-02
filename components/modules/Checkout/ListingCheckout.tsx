@@ -82,7 +82,7 @@ export function ListingCheckout() {
 
   const ListingOneNFT = () => {
     return(
-      <div className='flex flex-col justify-start items-center bg-gray-200 w-2/5 max-w-[48rem] min-h-[100vh]'>
+      <div className='flex flex-col justify-start items-center bg-gray-200 w-2/5 min-h-[100vh]'>
         <div className='w-full ml-44 mt-20'>
           <h1
             className='text-2xl font-semibold font-noi-grotesk cursor-pointer'
@@ -132,7 +132,7 @@ export function ListingCheckout() {
   };
 
   const ListingCheckoutInfo = () => {
-    return <div className="flex flex-col items-center mx-auto minmd:w-full mt-10">
+    return <div className="flex flex-col items-center minxl:mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className='w-full flex flex-col items-center'>
           <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace(s)</span>
@@ -229,26 +229,24 @@ export function ListingCheckout() {
         </div>
         <div className='flex flex-col items-start w-full mb-10'>
           <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
-          <table className="text-sm table-auto w-full">
-            <tbody>
-              {filterNulls(toList).map((listing, index) => {
-                return (
-                  <>
-                    <tr className='text-base'>
-                      <td className="font-medium pb-3 text-blog-text-reskin text-left">NFT</td>
-                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Marketplace</td>
-                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</td>
-                      <td className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</td>
-                      <td className="font-medium pb-3 text-blog-text-reskin text-left">{' '}</td>
-                    </tr>
-                    <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
-                      setShowSummary(false);
-                    }} />
-                  </>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="text-sm table-auto w-full">
+            {filterNulls(toList).map((listing, index) => {
+              return (
+                <>
+                  <div className='text-base flex '>
+                    <span className="font-medium pb-3 text-blog-text-reskin text-left">NFT</span>
+                    <span className="font-medium pb-3 text-blog-text-reskin text-left">Marketplace</span>
+                    <span className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</span>
+                    <span className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</span>
+                    <span className="font-medium pb-3 text-blog-text-reskin text-left">{' '}</span>
+                  </div>
+                  <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
+                    setShowSummary(false);
+                  }} />
+                </>
+              );
+            })}
+          </div>
         </div>
         {
           (isNullOrEmpty(toList) || toList.length === 0) && <div className='flex flex-col items-center justify-center my-12'>
@@ -385,9 +383,9 @@ export function ListingCheckout() {
       </div>
     ) :
     (
-      <div className={`flex w-full justify-${ toList.length === 1 ? 'between h-full': 'start'}`}>
+      <div className='flex w-full justify-between h-full'>
         {toList.length === 1 && ListingOneNFT()}
-        {(toList.length === 0 || toList.length > 1) &&<div className='hidden minmd:block w-1/5 mt-20'>
+        {(toList.length === 0 || toList.length > 1) && <div className='hidden minmd:block w-1/5 mt-20'>
           <h1
             className='text-xl font-semibold font-noi-grotesk cursor-pointer ml-28'
             onClick={() => {
@@ -402,6 +400,7 @@ export function ListingCheckout() {
           </div>
           {ListingCheckoutInfo()}
         </div>
+        {(toList.length === 0 || toList.length > 1) && <div className='hidden minmd:block w-1/5 mt-20'></div>}
       </div>
     );
 }

@@ -59,7 +59,7 @@ export function PriceInput(props: PriceInputProps) {
           <input
             type="text"
             className={tw(
-              'text-lg min-w-0 border',
+              'text-lg border',
               'text-left px-3 py-3 rounded-xl font-medium',
               props.error ? 'border-red-500 border-2' : ''
             )}
@@ -111,7 +111,7 @@ export function PriceInput(props: PriceInputProps) {
           disabled={props.empty}
           type="text"
           className={tw(
-            'text-sm border h-[2.65rem] w-[4.2rem]',
+            'text-sm border h-[2.65rem] w-2/3',
             'text-left p-1 rounded-md pl-2',
             props.error ? 'border-red-500 border-2' : 'border-gray-300  border-2'
           )}
@@ -142,10 +142,10 @@ export function PriceInput(props: PriceInputProps) {
         />
         {
           props.onCurrencyChange == null
-            ? <div className='font-medium text-base flex items-center pl-3 w-[6rem]'>
+            ? <div className='font-medium text-base flex items-center pl-3 w-1/3'>
               {currencyData.name}
             </div>
-            : <div className='relative items-center flex w-[6rem] ml-2'>
+            : <div className='relative items-center flex ml-2 w-1/3'>
               <DropdownPicker
                 options={currencies}
                 selectedIndex={selectedCurrencyIndex}
