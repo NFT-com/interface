@@ -62,6 +62,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
           )}>
             {(defaultChainId === '1') &&
             <div className="w-full md:px-4 pt-4 pb-6">
+              <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
               <NFTAnalyticsContainer data={nft} />
             </div>
             }

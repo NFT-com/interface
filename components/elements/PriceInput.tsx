@@ -20,6 +20,7 @@ export interface PriceInputProps {
   onCurrencyChange?: (currency: SupportedCurrency) => void,
   error: boolean,
   errorMessage?: string
+  empty?: boolean,
 }
 
 export function PriceInput(props: PriceInputProps) {
@@ -42,7 +43,7 @@ export function PriceInput(props: PriceInputProps) {
 
   const [
     selectedCurrencyIndex, setSelectedCurrencyIndex
-  ] = useState(currencies.findIndex((c) => c.label === currencyData.name));
+  ] = useState(props.empty ? null : currencies.findIndex((c) => c.label === currencyData.name));
 
   useEffect(() => {
     setSelectedCurrencyIndex(currencies.findIndex((c) => c.label === currencyData.name));
@@ -107,9 +108,10 @@ export function PriceInput(props: PriceInputProps) {
           'flex flex-row rounded-xl',
         )}>
         <input
+          disabled={props.empty}
           type="text"
           className={tw(
-            'text-sm border h-[2.65rem] max-w-[50%] min-w-[50%]',
+            'text-sm border h-[2.65rem] w-[4.2rem]',
             'text-left p-1 rounded-md pl-2',
             props.error ? 'border-red-500 border-2' : 'border-gray-300  border-2'
           )}
@@ -138,13 +140,12 @@ export function PriceInput(props: PriceInputProps) {
             color: alwaysBlack,
           }}
         />
-        {props.errorMessage && <p className='text-red-500 mt-2'>{props.errorMessage}</p>}
         {
           props.onCurrencyChange == null
-            ? <div className='font-medium text-base flex items-center pl-3'>
+            ? <div className='font-medium text-base flex items-center pl-3 w-[6rem]'>
               {currencyData.name}
             </div>
-            : <div className='relative items-center flex w-full ml-2'>
+            : <div className='relative items-center flex w-[6rem] ml-2'>
               <DropdownPicker
                 options={currencies}
                 selectedIndex={selectedCurrencyIndex}

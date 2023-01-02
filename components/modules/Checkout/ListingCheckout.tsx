@@ -20,7 +20,7 @@ import Image from 'next/image';
 import router from 'next/router';
 import LooksrareGray from 'public/looksrare_gray.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
-// import NFTLogo from 'public/nft_logo_yellow.svg';
+import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Gray from 'public/x2y2-gray.svg';
@@ -46,13 +46,16 @@ export function ListingCheckout() {
   );
 
   useEffect(() => {
-    setDuration('30 Days' as SaleDuration);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    toList.forEach(stagedNft => {
+      if(!stagedNft.duration) {
+        setDuration('30 Days' as SaleDuration);
+      }
+    });
+  },[setDuration, toList]);
     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
-  // const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
+  const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
 
   const openseaFullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     const hasTarget = nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
@@ -66,6 +69,16 @@ export function ListingCheckout() {
     const hasTarget = nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
     return !hasTarget; // return true if missing the desired target.
   }) == null; // target is fully enabled if we didn't find an NFT that was missing it.
+
+  const openseaAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
+    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
+  }) != null;
+  const looksrareAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
+    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.LooksRare) != null;
+  }) != null;
+  const X2Y2AtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
+    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
+  }) != null;
 
   const ListingOneNFT = () => {
     return(
@@ -124,6 +137,27 @@ export function ListingCheckout() {
         <div className='w-full flex flex-col items-center'>
           <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace(s)</span>
           <div className='flex minmd:flex-col minlg:flex-row items-start w-full '>
+            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div
+              onClick={() => {
+                setNftcomMarketplaceEnabled(!nftcomMarketplaceEnabled);
+                setShowSummary(false);
+              }}
+              className={tw(
+                'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
+                'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
+                nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
+              )}
+            >
+              {nftcomMarketplaceEnabled
+                ? <NFTLogo
+                  className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
+                  alt="Opensea logo"
+                  layout="fill"
+                />
+                : <NFTLogo className='w-fit h-fit' />}
+              <span className='font-semibold text-base'>NFT</span>
+              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
+            </div>}
             <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.Seaport);
@@ -132,10 +166,10 @@ export function ListingCheckout() {
               className={tw(
                 'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
-                openseaFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
+                openseaAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
-              {openseaFullyEnabled
+              {openseaAtLeastOneEnabled
                 ? <OpenseaIcon
                   className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
                   alt="Opensea logo"
@@ -153,10 +187,10 @@ export function ListingCheckout() {
               className={tw(
                 'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
-                looksrareFullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
+                looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
-              {looksrareFullyEnabled
+              {looksrareAtLeastOneEnabled
                 ? <LooksrareIcon
                   className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
                   alt="Looksrare logo"
@@ -175,10 +209,10 @@ export function ListingCheckout() {
               className={tw(
                 'border-[#D5D5D5] rounded-xl text-lg w-1/3',
                 'px-4 pt-3 py-3 cursor-pointer w-full mt-4 flex flex-col items-center',
-                X2Y2FullyEnabled ? 'border-2 border-primary-yellow font-bold' : 'border'
+                X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
-              {X2Y2FullyEnabled ? <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' /> : <X2Y2Gray className='relative shrink-0 -mt-[1px] -mb-[3px]' />}
+              {X2Y2AtLeastOneEnabled ? <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' /> : <X2Y2Gray className='relative shrink-0 -mt-[1px] -mb-[3px]' />}
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
             </div>}

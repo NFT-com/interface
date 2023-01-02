@@ -180,7 +180,7 @@ export default function CollectionsPage() {
                     <div className={!isLeaderBoard ? 'flex flex-row justify-between items-start' : ''}>
                       {
                         !isLeaderBoard && sideNavOpen && (
-                          <div className={`${!sideNavOpen ? 'min-w-0' : 'min-w-[304px] -mt-4'}`}>
+                          <div className={`${!sideNavOpen ? 'min-w-0' : 'min-w-[304px] -mt-4'} hidden minlg:block`}>
                             <SideNav onSideNav={() => null} filtersData={filters}/>
                           </div>
                         )
