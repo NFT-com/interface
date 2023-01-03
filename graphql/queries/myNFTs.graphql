@@ -29,6 +29,9 @@ query MyNFTs($input: NFTsInput) {
                 }
                 signature
               }
+              ... on X2Y2ProtocolData {
+                price
+              }
             }
           }
         }

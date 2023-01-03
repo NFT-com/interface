@@ -77,12 +77,14 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const getListingSummaryTitle = useCallback((listing: any) => {
     const protocolName = listing?.order?.exchange;
-    return <div className='flex items-center font-normal font-noi-grotesk text-[16px] text-[#6A6A6A]'>
+    return <div className='md:flex-col flex items-center font-normal font-noi-grotesk text-[16px] text-[#6A6A6A]'>
       <span>Current price on</span>
-      {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-      {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
-      {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
-      <span className='text-black'>{protocolName}</span>
+      <div className='flex items-center'>
+        {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
+        <span className='text-black'>{protocolName}</span>
+      </div>
     </div>;
   }, []);
 
@@ -240,17 +242,19 @@ export function ExternalListings(props: ExternalListingsProps) {
               Fixed Price
             </span>
           </div>
-          <div className='flex font-noi-grotesk text-black leading-6 items-center my-8 px-6 justify-between'>
-            <div className='flex items-end leading-6'>
+          <div className='flex font-noi-grotesk text-black leading-6 items-center my-8 md:my-6 px-6 justify-between'>
+            <div className='flex md:flex-col md:items-start items-end leading-6'>
               <div className='flex items-end'>
-                {getIcon(
-                  getByContractAddress(getListingCurrencyAddress(listing))?.contract,
-                  getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
-                )}
-                <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}</span>
+                <div className='flex items-end'>
+                  {getIcon(
+                    getByContractAddress(getListingCurrencyAddress(listing))?.contract,
+                    getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
+                  )}
+                  <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}</span>
+                </div>
+                <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
               </div>
-              <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
-              <span className="ml-2 text-[15px] uppercase font-medium text-[#6A6A6A]">
+              <span className="md:ml-0 md:mt-2 ml-2 text-[15px] uppercase font-medium text-[#6A6A6A]">
                 ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}{' USD'}
               </span>
             </div>
