@@ -71,6 +71,14 @@ export function ExternalListings(props: ExternalListingsProps) {
     TransferProxyTarget.X2Y2
   );
 
+  const {
+    allowedAll: nativeAllowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.Native
+  );
+
   const nftInPurchaseCart = useCallback((orderHash: string) => {
     return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id && purchase?.orderHash === orderHash) != null;
   }, [props.nft?.id, toBuy]);
@@ -195,6 +203,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   isApprovedForSeaport: openseaAllowed,
                   isApprovedForLooksrare: looksRareAllowed,
                   isApprovedForX2Y2: X2Y2Allowed,
+                  isApprovedForNative: nativeAllowed,
                   targets: []
                 });
                 toggleCartSidebar('Sell');

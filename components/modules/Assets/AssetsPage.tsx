@@ -92,6 +92,7 @@ export default function AssetsPages() {
                 const openseaAllowedByContract = new Map<string, boolean>();
                 const looksrareAllowedByContract = new Map<string, boolean>();
                 const X2Y2AllowedByContract = new Map<string, boolean>();
+                const nativeAllowedByContract = new Map<string, boolean>();
                 for (let i = 0; i < selectedAssets.length; i++) {
                   const nft = selectedAssets[i];
                   if (!openseaAllowedByContract.has(nft.contract)) {
@@ -106,6 +107,10 @@ export default function AssetsPages() {
                     const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.X2Y2);
                     X2Y2AllowedByContract.set(nft.contract, allowed);
                   }
+                  if (!nativeAllowedByContract.has(nft.contract)) {
+                    const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.Native);
+                    nativeAllowedByContract.set(nft.contract, allowed);
+                  }
                 }
                 stageListings(selectedAssets?.map(nft => ({
                   nft: nft,
@@ -113,6 +118,7 @@ export default function AssetsPages() {
                   isApprovedForSeaport: openseaAllowedByContract.get(nft?.contract),
                   isApprovedForLooksrare: looksrareAllowedByContract.get(nft?.contract),
                   isApprovedForX2Y2: X2Y2AllowedByContract.get(nft?.contract),
+                  isApprovedForNative: nativeAllowedByContract.get(nft?.contract),
                   targets: []
                 })));
                 setLoading(false);

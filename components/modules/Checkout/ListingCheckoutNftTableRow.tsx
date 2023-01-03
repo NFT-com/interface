@@ -57,11 +57,13 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const selectedOptionDropdown0 = useRef(null);
   const selectedOptionDropdown1 = useRef(null);
   const selectedOptionDropdown2 = useRef(null);
+  const selectedOptionDropdown3 = useRef(null);
 
   const rowHeightClass = expanded ? 'h-48' : 'h-24';
   const seaportEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Seaport) != null, [getTarget, props.listing]);
   const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
   const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
+  const nativeEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Native) != null, [getTarget, props.listing]);
 
   const generateMarketPlaceOptions = (dropDownNumber: number, hasPredefinedSelectedOption?: boolean) => {
     let selectedOptionForDropdown = dropDownNumber === 0 ? selectedOptionDropdown0 : dropDownNumber === 1 ? selectedOptionDropdown1 : selectedOptionDropdown2;
@@ -78,6 +80,10 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         selectedOptionDropdown2.current = ExternalProtocol.X2Y2;
         selectedOptionForDropdown = selectedOptionDropdown2;
       }
+      if (dropDownNumber === 3) {
+        selectedOptionDropdown3.current = ExternalProtocol.Native;
+        selectedOptionForDropdown = selectedOptionDropdown3;
+      }
     }
 
     return [
@@ -90,6 +96,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           if (dropDownNumber === 0) selectedOptionDropdown0.current = ExternalProtocol.Seaport;
           if (dropDownNumber === 1) selectedOptionDropdown1.current = ExternalProtocol.Seaport;
           if (dropDownNumber === 2) selectedOptionDropdown2.current = ExternalProtocol.Seaport;
+          if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.Seaport;
         },
         disabled: seaportEnabled
       },
@@ -101,6 +108,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           if (dropDownNumber === 0) selectedOptionDropdown0.current = ExternalProtocol.LooksRare;
           if (dropDownNumber === 1) selectedOptionDropdown1.current = ExternalProtocol.LooksRare;
           if (dropDownNumber === 2) selectedOptionDropdown2.current = ExternalProtocol.LooksRare;
+          if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.LooksRare;
         },
         disabled: looksrareEnabled
       },
@@ -112,8 +120,21 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           if (dropDownNumber === 0) selectedOptionDropdown0.current = ExternalProtocol.X2Y2;
           if (dropDownNumber === 1) selectedOptionDropdown1.current = ExternalProtocol.X2Y2;
           if (dropDownNumber === 2) selectedOptionDropdown2.current = ExternalProtocol.X2Y2;
+          if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.X2Y2;
         },
         disabled: X2Y2Enabled
+      },
+      {
+        label: ExternalProtocol.Native,
+        onSelect: () => {
+          rowSelectedMarketplaces.current = ExternalProtocol.Native;
+          toggleTargetMarketplace(ExternalProtocol.Native, props.listing, selectedOptionForDropdown.current);
+          if (dropDownNumber === 0) selectedOptionDropdown0.current = ExternalProtocol.Native;
+          if (dropDownNumber === 1) selectedOptionDropdown1.current = ExternalProtocol.Native;
+          if (dropDownNumber === 2) selectedOptionDropdown2.current = ExternalProtocol.Native;
+          if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.Native;
+        },
+        disabled: nativeEnabled
       },
     ];
   };
@@ -184,6 +205,32 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       error={
         props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
       props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
+      }
+    />;
+  };
+
+  const NativePriceInput = () => {
+    return <PriceInput
+      empty={empty}
+      key={expanded + 'NativePriceInput'}
+      initial={
+        getTarget(props.listing, ExternalProtocol.Native)?.startingPrice == null ?
+          '' :
+          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Native)?.startingPrice ?? 0))
+      }
+      currencyAddress={getTarget(props.listing, ExternalProtocol.Native)?.currency ?? getAddress('weth', defaultChainId)}
+      currencyOptions={['WETH', 'ETH']}
+      onPriceChange={(val: BigNumber) => {
+        setPrice(props.listing, val, ExternalProtocol.Native);
+        props.onPriceChange();
+      }}
+      onCurrencyChange={(currency: SupportedCurrency) => {
+        setCurrency(props.listing, currency, ExternalProtocol.Native);
+        props.onPriceChange();
+      }}
+      error={
+        (props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Native && target.startingPrice == null) != null ||
+  props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Native && BigNumber.from(target.startingPrice).eq(0)) != null)
       }
     />;
   };
@@ -494,6 +541,13 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 selectedIndex={2}
               />
             </div>}
+            {nativeEnabled && selectedOptionDropdown0.current !== ExternalProtocol.Native &&
+            <div className='mb-2 border border-gray-300 rounded-xl w-[10.5rem]'>
+              <DropdownPicker
+                options={generateMarketPlaceOptions(!seaportEnabled && !looksrareEnabled && !X2Y2Enabled ? 1 : 2, true)}
+                selectedIndex={3}
+              />
+            </div>}
             <div className='mb-2 border border-gray-300 rounded-xl w-[10.5rem]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(0)}
@@ -555,7 +609,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && <div className='mb-2'>{OpenseaPriceInput()}</div>}
             
             {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <div className='mb-2'>{LooksRarePriceInput()}</div>}
-            
+            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && nativeEnabled && selectedOptionDropdown0.current !== ExternalProtocol.Native && <div className='mb-2'>{NativePriceInput()}</div>}
             {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
               <div className='mb-2 w-1/2'>
                 <CustomTooltip2
@@ -578,6 +632,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             {selectedOptionDropdown0.current == null && OpenseaPriceInput()}
             {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && OpenseaPriceInput()}
             {looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare && LooksRarePriceInput()}
+            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && nativeEnabled && selectedOptionDropdown0.current === ExternalProtocol.Native && NativePriceInput()}
             {X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
               <div className='mb-2 w-1/2'>
                 <CustomTooltip2
@@ -635,6 +690,16 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               }}
             /></div>}
 
+            {nativeEnabled && selectedOptionDropdown0.current !== ExternalProtocol.Native && <div className='h-full py-2'><DeleteRowIcon
+              className={tw(
+                'h-9 w-9 relative shrink-0 cursor-pointer',
+              )}
+              alt="Delete market place"
+              layout="fill"
+              onClick={() => {
+                toggleTargetMarketplace(ExternalProtocol.Native, props.listing);
+              }}
+            /></div>}
 
             {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && <div className='h-full py-2'><DeleteRowIcon
               className={tw(
@@ -669,7 +734,18 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
               }}
             /></div>}
-            
+
+            {nativeEnabled && selectedOptionDropdown0.current === ExternalProtocol.Native && getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) &&<div className='h-full py-2'><DeleteRowIcon
+              className={tw(
+                'h-9 w-9 relative shrink-0 cursor-pointer',
+              )}
+              alt="Delete market place"
+              layout="fill"
+              onClick={() => {
+                selectedOptionDropdown0.current = null;
+                toggleTargetMarketplace(ExternalProtocol.Native, props.listing);
+              }}
+            /></div>}
           </div>
         </td>
       </tr>

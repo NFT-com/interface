@@ -60,6 +60,14 @@ export function EditListingsModal(props: EditListingsModalProps) {
     TransferProxyTarget.X2Y2
   );
 
+  const {
+    allowedAll: nativeAllowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.Native
+  );
+
   const getModalContent = useCallback(() => {
     return <div className='flex flex-col'>
       <div className="flex items-center">
@@ -101,6 +109,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
                 isApprovedForSeaport: openseaAllowed,
                 isApprovedForLooksrare: looksRareAllowed,
                 isApprovedForX2Y2: X2Y2Allowed,
+                isApprovedForNative: nativeAllowed,
                 targets: []
               });
               router.push('/app/list');

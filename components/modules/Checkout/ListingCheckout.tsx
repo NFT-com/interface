@@ -55,7 +55,6 @@ export function ListingCheckout() {
     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
-  const [nftcomMarketplaceEnabled, setNftcomMarketplaceEnabled] = useState(true);
 
   const openseaFullyEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     const hasTarget = nft?.targets?.find(target => target?.protocol === ExternalProtocol.Seaport) != null;
@@ -78,6 +77,9 @@ export function ListingCheckout() {
   }) != null;
   const X2Y2AtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     return nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
+  }) != null;
+  const nativeAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
+    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.Native) != null;
   }) != null;
 
   const ListingOneNFT = () => {
@@ -139,16 +141,16 @@ export function ListingCheckout() {
           <div className='flex minmd:flex-col minlg:flex-row items-start w-full '>
             {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div
               onClick={() => {
-                setNftcomMarketplaceEnabled(!nftcomMarketplaceEnabled);
+                toggleTargetMarketplace(ExternalProtocol.Native);
                 setShowSummary(false);
               }}
               className={tw(
                 'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
                 'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
-                nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
+                nativeAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
               )}
             >
-              {nftcomMarketplaceEnabled
+              {nativeAtLeastOneEnabled
                 ? <NFTLogo
                   className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
                   alt="Opensea logo"
