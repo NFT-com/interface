@@ -1,11 +1,8 @@
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import Loader from 'components/elements/Loader';
-import TimePeriodToggle from 'components/elements/TimePeriodToggle';
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
-import { CollectionLeaderBoardCard } from 'components/modules/DiscoveryCards/CollectionLeaderBoardCard';
+import { NftCard } from 'components/modules/DiscoveryCards/NftCard';
 import { SideNav } from 'components/modules/Search/SideNav';
-import { useCollectionQueryLeaderBoard } from 'graphql/hooks/useCollectionLeaderBoardQuery';
 import { useFetchTypesenseSearch } from 'graphql/hooks/useFetchTypesenseSearch';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import NotFoundPage from 'pages/404';
@@ -13,16 +10,12 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
-import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import React, { useEffect, useState } from 'react';
-import { NFTCard } from '../../../../components/elements/NFTCard';
-import { NftCard } from '../../../../components/modules/DiscoveryCards/NftCard';
-import { BigNumber } from 'ethers';
 
 export default function CollectionsPage() {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const [page, setPage] = useState(1);
-  const { sideNavOpen, setSideNavOpen, collectionsResultsFilterBy, setSearchModalOpen, nftsResultsFilterBy } = useSearchModal();
+  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy } = useSearchModal();
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [nftSData, setNftsData] = useState([]);
@@ -57,6 +50,7 @@ export default function CollectionsPage() {
         {nftSData && nftSData?.length > 0 && nftSData?.map((item, index) => {
           return (
             <NftCard
+              key={index}
               name={item.document.nftName}
               tokenId={item.document.tokenId}
               contractAddr={item.document.contractAddr}
