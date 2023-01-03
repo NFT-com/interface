@@ -6,6 +6,11 @@ import { useRouter } from 'next/router';
 import React from 'react';
 const DiscoveryTabs = [
   {
+    name: 'NFTs',
+    id: 0,
+    key: 'nfts'
+  },
+  {
     name: 'Collections',
     id: 1,
     key: 'collections'

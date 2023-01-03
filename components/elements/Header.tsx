@@ -121,6 +121,11 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     selectedIndex={0}
                     options={filterNulls([
                       {
+                        label: 'NFTs',
+                        onSelect: () => router.push('app/discover/nfts'),
+                        icon: null,
+                      },
+                      {
                         label: 'Collections',
                         onSelect: () => router.push('app/discover/collections'),
                         icon: null,
@@ -343,6 +348,11 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   constrain
                   selectedIndex={0}
                   options={filterNulls([
+                    {
+                      label: 'NFTs',
+                      onSelect: () => router.push('/app/discover/nfts'),
+                      icon: null,
+                    },
                     {
                       label: 'Collections',
                       onSelect: () => router.push('/app/discover/collections'),
