@@ -201,6 +201,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }
     }
   }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
+
+  useEffect(() => {
+    if (seaportEnabled) {
+      setEmpty(false);
+    }
+  }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
   
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
@@ -426,243 +432,235 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       </tr>
     )
     : (
-      <div className='h-44'>
-        <div className='mr-10 mt-6 minxl:w-28 align-top'>
-          <div className='flex flex-col items-start'>
-            {/*             {
-              expanded ?
-                <CaretDown onClick={() => {
-                  setExpanded(false);
-                }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' /> :
-                <CaretRight onClick={() => {
-                  setExpanded(true);
-                  clearGeneralConfig(props.listing);
-                }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' />
-            } */}
-            <div className='relative rounded-md'>
-              <div className='relative aspect-square overflow-y-hidden rounded-md'>
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  key={props.listing.nft?.metadata?.imageURL}
-                  src={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
-                  poster={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
-                  className={tw(
-                    'flex object-fit w-full justify-center rounded-md',
-                  )}
-                />
-              </div>
-              <RemoveIcon
-                className="absolute left-[4.5rem] top-[-1.5rem] cursor-pointer z-[100]"
-                onClick={() => removeListing(props.listing?.nft)} />
+      <div className='minlg:h-44 flex flex-row mb-8'>
+        <div className='basis-4/12 minlg:basis-2/12 flex flex-col justify-start items-start px-2 w-full'>
+          {/*             {
+            expanded ?
+              <CaretDown onClick={() => {
+                setExpanded(false);
+              }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' /> :
+              <CaretRight onClick={() => {
+                setExpanded(true);
+                clearGeneralConfig(props.listing);
+              }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' />
+          } */}
+          <span className='w-full font-normal flex text-[#A6A6A6] mb-4'>NFT</span>
+          <div className='relative w-full'>
+            <div className='relative aspect-square overflow-y-hidden rounded-md w-full'>
+              <video
+                autoPlay
+                muted
+                loop
+                key={props.listing.nft?.metadata?.imageURL}
+                src={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
+                poster={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
+                className={tw(
+                  'flex object-fit w-full justify-center rounded-md',
+                )}
+              />
             </div>
-            <div className='flex flex-col font-noi-grotesk'>
-              <span className='text-sm line-clamp-1 capitalize'>{collection?.contractMetadata?.name?.toLowerCase()}</span>
-              <span className='font-bold text-base line-clamp-1 capitalize'>{props.listing?.nft?.metadata?.name?.toLowerCase()}</span>
-            </ div>
+            <RemoveIcon
+              className="absolute left-[3.3rem] minmd:left-[11.5rem] minlg:left-[3.5rem] top-[-1.5rem] cursor-pointer z-[100]"
+              onClick={() => removeListing(props.listing?.nft)} />
+          </div>
+          <div className='flex flex-col font-noi-grotesk'>
+            <span className='text-sm line-clamp-1 capitalize'>{collection?.contractMetadata?.name?.toLowerCase()}</span>
+            <span className='font-bold text-base line-clamp-1 capitalize'>{props.listing?.nft?.metadata?.name?.toLowerCase()}</span>
           </ div>
-        </div>
-        <div className='align-top minxl:w-48 align-top'>
-          <div className='flex flex-col h-full pl-2'>
+        </ div>
+        {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-56 self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
+        {(seaportEnabled || looksrareEnabled || X2Y2Enabled) &&
+        <div className='flex flex-col minlg:flex-row basis-7/12 minlg:basis-9/12 justify-between minlg:justify-center items-start border-b border-[#A6A6A6] minlg:border-0 pb-5 minlg:pb-0'>
+          <div className='align-top flex flex-col minlg:h-full minlg:pl-2 w-full minlg:w-5/12'>
+            <span className='w-full font-normal flex text-[#A6A6A6] mb-4'>Marketplace</span>
             {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') &&
-            <div className='mb-2 border border-gray-300 rounded-xl'>
-              <DropdownPicker
-                options={generateMarketPlaceOptions(!looksrareEnabled && !X2Y2Enabled ? 1 : 2, true)}
-                selectedIndex={0}
-              />
-            </div>}
+              <div className='minlg:mb-2 border border-gray-300 rounded-xl w-full'>
+                <DropdownPicker
+                  options={generateMarketPlaceOptions(!looksrareEnabled && !X2Y2Enabled ? 1 : 2, true)}
+                  selectedIndex={0}
+                />
+              </div>}
             {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare &&
-            <div className='mb-2 border border-gray-300 rounded-xl'>
-              <DropdownPicker
-                options={generateMarketPlaceOptions(!seaportEnabled && !X2Y2Enabled ? 1 : 2, true)}
-                selectedIndex={1}
-              />
-            </div>}
+              <div className='minlg:mb-2 border border-gray-300 rounded-xl w-full'>
+                <DropdownPicker
+                  options={generateMarketPlaceOptions(!seaportEnabled && !X2Y2Enabled ? 1 : 2, true)}
+                  selectedIndex={1}
+                />
+              </div>}
             {X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
-            <div className='mb-2 border border-gray-300 rounded-xl'>
-              <DropdownPicker
-                options={generateMarketPlaceOptions(!seaportEnabled && !looksrareEnabled ? 1 : 2, true)}
-                selectedIndex={2}
-              />
-            </div>}
-            <div className='mb-2 border border-gray-300 rounded-xl'>
+              <div className='minlg:mb-2 border border-gray-300 rounded-xl w-full'>
+                <DropdownPicker
+                  options={generateMarketPlaceOptions(!seaportEnabled && !looksrareEnabled ? 1 : 2, true)}
+                  selectedIndex={2}
+                />
+              </div>}
+            {<div className='minlg:mb-2 border border-gray-300 rounded-xl w-full'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(0)}
                 placeholder={'Select Marketplace'}
                 selectedIndex={!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && -1}
               />
+            </div>}
+          </div>
+          <div className='align-top w-full  minlg:w-3/12'>
+            <span className='w-full font-normal flex text-[#A6A6A6] mb-4'>Type of Auction</span>
+            <div className='flex flex-col items-start h-full minlg:px-2'>
+              {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') &&
+                <input
+                  disabled
+                  type="text"
+                  value='Fixed price'
+                  className={tw(
+                    'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                    'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
+                  )}
+                />}
+              {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare &&
+                <input
+                  disabled
+                  type="text"
+                  value='Fixed price'
+                  className={tw(
+                    'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                    'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
+                  )}
+                />}
+              {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
+                <input
+                  disabled
+                  type="text"
+                  value='Fixed price'
+                  className={tw(
+                    'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                    'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
+                  )}
+                />}
+              {(selectedOptionDropdown0.current == null ||
+              (seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea')) ||
+              (looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare) ||
+              (X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED))) &&
+                <input
+                  disabled
+                  type="text"
+                  value='Fixed price'
+                  className={tw(
+                    'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
+                    'text-left p-1 rounded-md bg-gray-200 pl-3',
+                  )}
+                />}
+            </div>
+          </div>
+          <div className='align-top w-full  minlg:w-4/12'>
+            <span className='w-full font-normal flex text-[#A6A6A6] mb-4'>Set Price</span>
+            <div className='h-full flex flex-col justify-start minlg:justify-around'>
+              {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && <div className='mb-2'>{OpenseaPriceInput()}</div>}
+              
+              {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <div className='mb-2'>{LooksRarePriceInput()}</div>}
+              
+              {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
+                <div className='mb-2 minlg:full'>
+                  <CustomTooltip2
+                    orientation='top'
+                    hidden={
+                      !(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
+                    }
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl max-w-[150px] w-max"
+                      >
+                        <p>An active listing for this marketplace has a lower price. Please enter a lower value than the active listing.</p>
+                      </div>
+                    }
+                  >
+                    {X2Y2PriceInput()}
+                  </CustomTooltip2>
+                </div>
+              }
+              {selectedOptionDropdown0.current == null && OpenseaPriceInput()}
+              {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && OpenseaPriceInput()}
+              {looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare && LooksRarePriceInput()}
+              {X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
+                <div className='mb-2 w-full'>
+                  <CustomTooltip2
+                    orientation='top'
+                    hidden={
+                      !(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
+                    }
+                    tooltipComponent={
+                      <div
+                        className="rounded-xl max-w-[150px] w-max"
+                      >
+                        <p>An active listing for this marketplace has a lower price. Please enter a lower value than the active listing.</p>
+                      </div>
+                    }
+                  >
+                    {X2Y2PriceInput()}
+                  </CustomTooltip2>
+                </div>
+              }
+
             </div>
           </div>
         </div>
-        <div className='align-top'>
-          <div className='flex flex-col items-start h-full px-2'>
-            {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') &&
-              <input
-                disabled
-                type="text"
-                value='Fixed price'
-                className={tw(
-                  'text-sm border border-gray-200 h-[2.65rem] shrink-0',
-                  'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
-                )}
-              />}
-            {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare &&
-              <input
-                disabled
-                type="text"
-                value='Fixed price'
-                className={tw(
-                  'text-sm border border-gray-200 h-[2.65rem] shrink-0 w-full',
-                  'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
-                )}
-              />}
-            {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
-              <input
-                disabled
-                type="text"
-                value='Fixed price'
-                className={tw(
-                  'text-sm border border-gray-200 h-[2.65rem] shrink-0 w-full',
-                  'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3',
-                )}
-              />}
-            {(selectedOptionDropdown0.current == null ||
-            (seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea')) ||
-            (looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare) ||
-            (X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED))) &&
-              <input
-                disabled
-                type="text"
-                value='Fixed price'
-                className={tw(
-                  'text-sm min-w-0 border border-gray-200 h-[2.65rem] shrink-0 w-full',
-                  'text-left p-1 rounded-md bg-gray-200 pl-3',
-                )}
-              />}
-          </div>
-        </div>
-        <div className='align-top'>
-          <div className='h-full flex flex-col justify-around'>
-            {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && <div className='mb-2'>{OpenseaPriceInput()}</div>}
-            
-            {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <div className='mb-2'>{LooksRarePriceInput()}</div>}
-            
-            {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
-              <div className='mb-2 minxl:w-1/2'>
-                <CustomTooltip2
-                  orientation='top'
-                  hidden={
-                    !(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
-                  }
-                  tooltipComponent={
-                    <div
-                      className="rounded-xl max-w-[150px] w-max"
-                    >
-                      <p>An active listing for this marketplace has a lower price. Please enter a lower value than the active listing.</p>
-                    </div>
-                  }
-                >
-                  {X2Y2PriceInput()}
-                </CustomTooltip2>
-              </div>
-            }
-            {selectedOptionDropdown0.current == null && OpenseaPriceInput()}
-            {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && OpenseaPriceInput()}
-            {looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare && LooksRarePriceInput()}
-            {X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
-              <div className='mb-2 w-1/2'>
-                <CustomTooltip2
-                  orientation='top'
-                  hidden={
-                    !(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
-                  }
-                  tooltipComponent={
-                    <div
-                      className="rounded-xl max-w-[150px] w-max"
-                    >
-                      <p>An active listing for this marketplace has a lower price. Please enter a lower value than the active listing.</p>
-                    </div>
-                  }
-                >
-                  {X2Y2PriceInput()}
-                </CustomTooltip2>
-              </div>
-            }
+        }
+        {(seaportEnabled || looksrareEnabled || X2Y2Enabled) &&
+        <div className='basis-1/12 minlg:align-top minlg:w-12 pb-7 pt-0 minlg:pt-10 minlg:pb-0 pl-3 minlg:pl-0 minlg:mt-2 flex flex-col items-center justify-end minlg:justify-between border-b border-[#A6A6A6] minlg:border-0 minlg:pb-0'>
+          {seaportEnabled && selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea' && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
+            }}
+          />}
+          
+          {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
+            }}
+          />}
+          
+          {X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
+            }}
+          />}
 
-          </div>
-        </div>
-        <div className='align-top minxl:w-12'>
-          <div className='pl-3 mt-2 flex flex-col justify-between h-full'>
-            {seaportEnabled && selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea' && <div className='h-full py-2'><DeleteRowIcon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-              )}
-              alt="Delete market place"
-              layout="fill"
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
-              }}
-            /></div>}
-            
-            {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <div className='h-full py-2'><DeleteRowIcon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-              )}
-              alt="Delete market place"
-              layout="fill"
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
-              }}
-            /></div>}
-            
-            {X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && <div className='h-full py-2'><DeleteRowIcon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-              )}
-              alt="Delete market place"
-              layout="fill"
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
-              }}
-            /></div>}
-
-            {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && <div className='h-full py-2'><DeleteRowIcon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-              )}
-              alt="Delete market place"
-              layout="fill"
-              onClick={() => {
-                selectedOptionDropdown0.current = null;
-                toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
-              }}
-            /></div>}
-            {looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare && <div className='h-full py-2'><DeleteRowIcon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-              )}
-              alt="Delete market place"
-              layout="fill"
-              onClick={() => {
-                selectedOptionDropdown0.current = null;
-                toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
-              }}
-            /></div>}
-            {X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&<div className='h-full py-2'><DeleteRowIcon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-              )}
-              alt="Delete market place"
-              layout="fill"
-              onClick={() => {
-                selectedOptionDropdown0.current = null;
-                toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
-              }}
-            /></div>}
-            
-          </div>
-        </div>
+          {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              selectedOptionDropdown0.current = null;
+              toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
+            }}
+          />}
+          {looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              selectedOptionDropdown0.current = null;
+              toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
+            }}
+          />}
+          {X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              selectedOptionDropdown0.current = null;
+              toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
+            }}
+          />}
+          
+        </div>}
       </div>
     );
 }

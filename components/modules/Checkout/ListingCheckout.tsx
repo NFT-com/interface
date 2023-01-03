@@ -132,19 +132,19 @@ export function ListingCheckout() {
   };
 
   const ListingCheckoutInfo = () => {
-    return <div className="flex flex-col items-center minxl:mx-auto minmd:w-full mt-10">
+    return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className='w-full flex flex-col items-center'>
-          <span className='text-lg w-full font-semibold flex text-[#6F6F6F]'>Select Marketplace(s)</span>
-          <div className='flex minmd:flex-col minlg:flex-row items-start w-full '>
+          <span className='text-lg w-full font-semibold flex text-[#A6A6A6]'>Select Marketplace(s)</span>
+          <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
             {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div
               onClick={() => {
                 setNftcomMarketplaceEnabled(!nftcomMarketplaceEnabled);
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
-                'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
+                'border-[#D5D5D5] rounded-xl text-lg w-[10.5rem] minlg:w-1/3',
+                'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
               )}
             >
@@ -164,8 +164,8 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
-                'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
+                'border-[#D5D5D5] rounded-xl text-lg w-[10.5rem] minlg:w-1/3',
+                'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 openseaAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
@@ -185,8 +185,8 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg  w-1/3',
-                'px-4 py-3 cursor-pointer w-full mt-4 mr-2 flex flex-col items-center',
+                'border-[#D5D5D5] rounded-xl text-lg w-[10.5rem] minlg:w-1/3',
+                'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
@@ -207,8 +207,8 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-1/3',
-                'px-4 pt-3 py-3 cursor-pointer w-full mt-4 flex flex-col items-center',
+                'border-[#D5D5D5] rounded-xl text-lg w-[10.5rem] minlg:w-1/3',
+                'px-4 pt-3 py-3 cursor-pointer mt-2 flex flex-col items-center',
                 X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
@@ -220,7 +220,7 @@ export function ListingCheckout() {
         </div>
         <div className='w-full flex flex-col mt-8 items-center'>
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
-          <div className='mt-8 w-full'>
+          <div className='mt-8 w-[93%] minlg:w-full'>
             <Slider
               step={10}
               min={0}
@@ -249,22 +249,13 @@ export function ListingCheckout() {
           </div>
         </div>
         <div className='flex flex-col items-start w-full mb-10'>
-          <span className='text-2xl w-full flex font-bold mt-10 mb-8'>Your Listings</span>
-          <div className="text-sm table-auto w-full">
+          <span className='text-2xl w-full flex font-bold mt-20 minlg:mt-10 mb-8'>Your Listings</span>
+          <div className="text-sm w-full">
             {filterNulls(toList).map((listing, index) => {
               return (
-                <>
-                  <div className='text-base flex '>
-                    <span className="font-medium pb-3 text-blog-text-reskin text-left">NFT</span>
-                    <span className="font-medium pb-3 text-blog-text-reskin text-left">Marketplace</span>
-                    <span className="font-medium pb-3 text-blog-text-reskin text-left">Type of auction</span>
-                    <span className="font-medium pb-3 text-blog-text-reskin text-left">Set Price</span>
-                    <span className="font-medium pb-3 text-blog-text-reskin text-left">{' '}</span>
-                  </div>
-                  <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
-                    setShowSummary(false);
-                  }} />
-                </>
+                <ListingCheckoutNftTableRow key={index} listing={listing} onPriceChange={() => {
+                  setShowSummary(false);
+                }} />
               );
             })}
           </div>
@@ -406,7 +397,7 @@ export function ListingCheckout() {
     (
       <div className='flex w-full justify-between h-full'>
         {toList.length === 1 && ListingOneNFT()}
-        {(toList.length === 0 || toList.length > 1) && <div className='hidden minmd:block w-1/5 mt-20'>
+        {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'>
           <h1
             className='text-xl font-semibold font-noi-grotesk cursor-pointer ml-28'
             onClick={() => {
@@ -415,9 +406,16 @@ export function ListingCheckout() {
             Back
           </h1>
         </div>}
-        <div className='w-full flex flex-col justify-start items-center w-full minmd:w-3/5 minmd:px-28'>
-          <div className='w-full minmd:mt-20'>
-            <h1 className='text-3xl font-semibold font-noi-grotesk'>Create Listings</h1>
+        <div className='w-full flex flex-col justify-start items-center w-full minlg:w-3/5 minlg:px-28'>
+          <div className='w-full minlg:mt-20 flex minlg:block justify-start items-end minlg:items-center minlg:mx-auto'>
+            <span
+              className='minlg:hidden text-lg font-semibold font-noi-grotesk cursor-pointer minlg:ml-28'
+              onClick={() => {
+                router.back();
+              }}>
+              Back
+            </span>
+            <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold font-noi-grotesk'>Create Listings</h1>
           </div>
           {ListingCheckoutInfo()}
         </div>
