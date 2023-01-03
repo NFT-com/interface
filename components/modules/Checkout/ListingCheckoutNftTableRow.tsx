@@ -51,7 +51,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const [expanded, setExpanded] = useState(false);
   const [empty, setEmpty] = useState(true);
-  
+
   const rowSelectedMarketplaces = useRef(null);
 
   const selectedOptionDropdown0 = useRef(null);
@@ -207,7 +207,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       setEmpty(false);
     }
   }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
-  
+
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <tr>
@@ -311,7 +311,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                       (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice)) && 'Active listing has a greater price, please enter a lower value.'
                     }
                   />}
-                  
+
                 </> :
                 seaportEnabled && !looksrareEnabled && !X2Y2Enabled ?
                   <PriceInput
@@ -554,9 +554,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             <span className='w-full font-normal flex text-[#A6A6A6] mb-4'>Set Price</span>
             <div className='h-full flex flex-col justify-start minlg:justify-around'>
               {seaportEnabled && (selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && <div className='mb-2'>{OpenseaPriceInput()}</div>}
-              
+
               {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <div className='mb-2'>{LooksRarePriceInput()}</div>}
-              
+
               {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 &&
                 <div className='mb-2 minlg:full'>
                   <CustomTooltip2
@@ -613,7 +613,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
             }}
           />}
-          
+
           {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <DeleteRowIcon
             className='cursor-pointer'
             alt="Delete market place"
@@ -622,7 +622,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
             }}
           />}
-          
+
           {X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && <DeleteRowIcon
             className='cursor-pointer'
             alt="Delete market place"
@@ -659,7 +659,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
             }}
           />}
-          
+
         </div>}
       </div>
     );

@@ -34,6 +34,13 @@ export function useSearchModal() {
         nftTypes: null,
         volume: null
       },
+      nftSFilters: {
+        listedFloor: null,
+        nftTypes: null,
+        marketplace: null,
+        price: null,
+        status: null
+      },
       dropDownSearchResults: null,
       keyword: ''
     } });
@@ -186,6 +193,7 @@ export function useSearchModal() {
     dropDownSearchResults: data.dropDownSearchResults,
     keyword: data.keyword,
     collectionsFilter: data.collectionsFilter,
+    nftSFilters: data.nftSFilters,
     isLeaderBoard: data.isLeaderBoard,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,
