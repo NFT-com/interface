@@ -1,4 +1,4 @@
-import { ActivityStatus, Maybe, Nft, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, LooksrareProtocolData, Maybe, Nft, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
@@ -186,11 +186,13 @@ export function NFTListingsContextProvider(
   const allListingsConfigured = useCallback(() => {
     const unconfiguredNft = toList.find((stagedNft: StagedListing) => {
       const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
+      const lowestLooksrareListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.LooksRare);
       if (stagedNft?.nft == null || isNullOrEmpty(stagedNft?.targets)) {
         return true; // no targets or NFT to list?
       }
       const hasX2Y2LowerListing = (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2) && stagedNft?.startingPrice)) ||(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice));
-      if(hasX2Y2LowerListing) {
+      const hasLooksrareLowerListing = (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare) && stagedNft?.startingPrice)) ||(parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice));
+      if(hasX2Y2LowerListing || hasLooksrareLowerListing) {
         return true;
       }
       const hasGeneralConfig = stagedNft.startingPrice != null &&
@@ -445,6 +447,9 @@ export function NFTListingsContextProvider(
           const result = await listNftLooksrare({ ...target.looksrareOrder, signature });
           if (!result) {
             return ListAllResult.ApiError;
+          }
+          if (result && listing?.hasOpenOrder && listing?.nftcomOrderId) {
+            updateActivityStatus([listing?.nftcomOrderId], ActivityStatus.Cancelled);
           }
           return ListAllResult.Success;
         } else if (target.protocol === ExternalProtocol.X2Y2) {
