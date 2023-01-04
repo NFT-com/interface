@@ -32,9 +32,6 @@ const NEW_NFT_FILTER_VARIABLE = true;
 
 const FilterOption = (props: FilterOptionProps) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-  const router = useRouter();
-  const path = router.pathname.split('/');
-  const pathName = path[path.length - 1];
   const { item, fieldName, onSelectFilter, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [selected, setSelected] = useState(checkedInfo[0]?.selectedCheck?.includes(item.value));
 
@@ -42,7 +39,7 @@ const FilterOption = (props: FilterOptionProps) => {
     clearedFilters && setSelected(false);
   },[clearedFilters]);
   if(discoverPageEnv){
-    if(pathName === 'collections' || pathName === 'nfts'){
+    if(props.fieldName !== 'contractName'){
       return (
         <ButtonFilter
           selectedValues={props.checkedTypes}
@@ -89,8 +86,6 @@ const FilterOption = (props: FilterOptionProps) => {
 };
 
 const ContractNameFilter = (props: any) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-
   const { filterOptions, setCheckedFilters, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [searchVal, setSearchVal] = useState('');
   const [filteredContracts, setFilteredContracts] = useState([]);
@@ -103,51 +98,11 @@ const ContractNameFilter = (props: any) => {
     setFilteredContracts([...filteredContracts]);
   },[filterOptions, searchVal]);
 
-  if(discoverPageEnv){
-    return (
-      <div className="mt-3">
-        {filterOptions.length > 1 && <div className={tw(
-          'relative flex items-center border-2 border-[#fff2b8] rounded-[48px] w-full text-black bg-white mb-3')}>
-          <div className="border-2 border-[#F9D54C] w-full h-full rounded-[46px] flex items-center justify-start px-3">
-            <SearchIcon className='mr-2 shrink-0 aspect-square' />
-            <div className="w-full">
-              <input
-                type="search"
-                placeholder="Search"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
-                autoFocus
-                value={searchVal}
-                required maxLength={512}
-                className="h-[48px] bg-inherit w-full border-none focus:outline-0  focus:outline-amber-500 focus:ring-0 p-0"
-                onChange={(event) => setSearchVal(event.target.value)}/>
-            </div>
-          </div>
-        </div>}
-        <div className="overflow-y-scroll pr-2 max-h-[12.5rem] filter-scrollbar">
-          {filteredContracts.map((item, index) => {
-            return (
-              item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
-                <FilterOption
-                  item={item}
-                  onSelectFilter={setCheckedFilters}
-                  fieldName={'contractName'}
-                  clearedFilters={clearedFilters}
-                  setClearedFilters={setClearedFilters}
-                  checkedInfo={checkedInfo}
-                />
-              </div>);
-          })}
-        </div>
-      </div>
-    );
-  }else {
-    return (
-      <div className="mt-3">
-        {filterOptions.length > 1 && <div className={tw(
-          'relative flex items-center border border-gray-400 rounded-xl p-2 w-full text-black bg-gray-200')}>
+  return (
+    <div className="mt-3">
+      {filterOptions.length > 1 && <div className={tw(
+        'relative flex items-center border-2 border-[#fff2b8] rounded-[48px] w-full text-black bg-white mb-3')}>
+        <div className="border-2 border-[#F9D54C] w-full h-full rounded-[46px] flex items-center justify-start px-3">
           <SearchIcon className='mr-2 shrink-0 aspect-square' />
           <div className="w-full">
             <input
@@ -160,29 +115,28 @@ const ContractNameFilter = (props: any) => {
               autoFocus
               value={searchVal}
               required maxLength={512}
-              className="bg-inherit w-full border-none focus:border-transparent focus:ring-0 p-0"
+              className="h-[48px] bg-inherit w-full border-none focus:outline-0  focus:outline-amber-500 focus:ring-0 p-0"
               onChange={(event) => setSearchVal(event.target.value)}/>
           </div>
-        </div>}
-        <div className="overflow-y-scroll max-h-[12.5rem] filter-scrollbar">
-          {filteredContracts.map((item, index) => {
-            return (
-              item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
-                <FilterOption
-                  item={item}
-                  onSelectFilter={setCheckedFilters}
-                  fieldName={'contractName'}
-                  clearedFilters={clearedFilters}
-                  setClearedFilters={setClearedFilters}
-                  checkedInfo={checkedInfo}
-                />
-              </div>);
-          })}
         </div>
-
+      </div>}
+      <div className="overflow-y-scroll pr-2 max-h-[12.5rem] filter-scrollbar">
+        {filteredContracts.map((item, index) => {
+          return (
+            item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
+              <FilterOption
+                item={item}
+                onSelectFilter={setCheckedFilters}
+                fieldName={'contractName'}
+                clearedFilters={clearedFilters}
+                setClearedFilters={setClearedFilters}
+                checkedInfo={checkedInfo}
+              />
+            </div>);
+        })}
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 const Filter = (props: any) => {
@@ -257,6 +211,13 @@ const Filter = (props: any) => {
                     />
                   </div>);
               })}
+          <ContractNameFilter
+            filterOptions={filter.counts}
+            setCheckedFilters={setCheckedFilters}
+            clearedFilters={clearedFilters}
+            setClearedFilters={setClearedFilters}
+            checkedInfo={checkedInfo}
+          />
         </motion.div>
       </div>
     );
@@ -324,7 +285,8 @@ const FilterNew = (props: any) => {
     'listings.currency': 'Currency',
     'listings.price': 'Price',
     listedFloor: 'Listed Floor',
-    status: 'Status'
+    status: 'Status',
+    contractName: 'Collections'
   };
   const checkedInfo = checkedArray.filter(i => i.fieldName === filter.field_name);
 
@@ -465,14 +427,6 @@ const FilterNew = (props: any) => {
           changeCurrency={(value) => setCurrency(value)}
           setMinMaxValues={(value) => setVolumeValue(value)}
           fieldName={filter.field_name}/>
-        // <div className='pl-[20px] pr-[28px] pb-5 pt-[30px] overflow-hidden'>
-        //   <SliderFilter
-        //     step={1}
-        //     defaultValues={volume && volume.length && [Number(volume[0]), Number(volume[1])]}
-        //     min={0}
-        //     max={1000000000}
-        //     click={(value) => setVolumeValue(value)}/>
-        // </div>
       );
     }
   };
@@ -605,6 +559,9 @@ export const NFTsFiltersContent = () => {
       if(item[0] === 'marketplace' && item[1].length){
         return `listings.marketplace:=[${item[1]}]`;
       }
+      if(item[0] === 'contractName' && item[1] && item[1][0].selectedCheck !== ''){
+        return `contractName: [${item[1][0].selectedCheck}]`;
+      }
       if(item[0] === 'status' && item[1].length){
         const now = moment().valueOf();
         const value = `${now}000`;
@@ -618,7 +575,6 @@ export const NFTsFiltersContent = () => {
         }else {
           return `hasListings:=1 && issuance:>${epochFilter}`;
         }
-        // return `listings.marketplace:=[${item[1]}]`;
       }
       if(item[0] === 'listedFloor' && item[1].length){
         if(item[1][0] && !item[1][1]){
@@ -660,9 +616,9 @@ export const NFTsFiltersContent = () => {
       const removedCheck = (foundItem.selectedCheck.split(',')).filter(i => i !== selectedCheck);
       foundItem.selectedCheck = removedCheck.join(',');
     }
+    nftSFilters.contractName = checkedArray;
     updateCheckedString();
-  }, [checkedArray, updateCheckedString]);
-
+  }, [checkedArray, updateCheckedString, nftSFilters]);
   const handleCheck = (event, array, fn) => {
     let updatedList = [...array];
     if (event.target.checked) {
