@@ -1,6 +1,7 @@
+import { useGetCreatorFee } from 'hooks/useGetCreatorFee';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler,getEnvBool } from 'utils/env';
+import { Doppler, getEnvBool } from 'utils/env';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -37,6 +38,20 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     }
   },[getByContractAddress]);
 
+  const { data: creatorFee, loading } = useGetCreatorFee(nft?.contract, nft?.tokenId);
+
+  const getRoyaltyRange = useCallback(() => {
+    if (loading) {
+      return 'loading...';
+    }
+
+    if (creatorFee?.min == 0 && creatorFee?.max == 0) {
+      return '0%';
+    } else {
+      return `${creatorFee?.min}% - ${creatorFee?.max}%`;
+    }
+  }, [creatorFee, loading]);
+
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <div className='flex items-center w-full h-32 px-8'>
@@ -63,7 +78,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
           <div className='flex flex-col ml-4 font-grotesk'>
             <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
             <span className='text-sm -mt-1 mb-1 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
-            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: %10</span>
+            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {getRoyaltyRange()}</span>
           </div>
         </div>
         {
@@ -106,10 +121,10 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
           <div className='flex flex-col ml-4 font-grotesk'>
             <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
             <span className='text-sm mb-3 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
-            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: %10</span>
+            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {getRoyaltyRange()}</span>
           </div>
         </div>
-        <div className='w-1/3 h-full flex flex-col items-end justify-between mt-1 h-full'>
+        <div className='w-1/3 h-full flex flex-col items-end justify-between mt-1'>
           <div>
             {
             // this is a staged purchase
