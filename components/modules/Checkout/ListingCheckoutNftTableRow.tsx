@@ -52,7 +52,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const [expanded, setExpanded] = useState(false);
   const [empty, setEmpty] = useState(true);
-  
+
   const rowSelectedMarketplaces = useRef(null);
 
   const selectedOptionDropdown0 = useRef(null);
@@ -208,7 +208,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       setEmpty(false);
     }
   }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
-  
+
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <tr>
@@ -312,7 +312,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                       (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice)) && 'Active listing has a greater price, please enter a lower value.'
                     }
                   />}
-                  
+
                 </> :
                 seaportEnabled && !looksrareEnabled && !X2Y2Enabled ?
                   <PriceInput
@@ -590,7 +590,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
             }}
           />}
-          
+
           {looksrareEnabled && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare && <DeleteRowIcon
             className='cursor-pointer'
             alt="Delete market place"
@@ -599,7 +599,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
             }}
           />}
-          
+
           {X2Y2Enabled && selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && <DeleteRowIcon
             className='cursor-pointer'
             alt="Delete market place"
@@ -608,6 +608,35 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
             }}
           />}
+
+          {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              selectedOptionDropdown0.current = null;
+              toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
+            }}
+          />}
+          {looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              selectedOptionDropdown0.current = null;
+              toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
+            }}
+          />}
+          {X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && <DeleteRowIcon
+            className='cursor-pointer'
+            alt="Delete market place"
+            layout="fill"
+            onClick={() => {
+              selectedOptionDropdown0.current = null;
+              toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
+            }}
+          />}
+
         </div>}
       </div>
     );

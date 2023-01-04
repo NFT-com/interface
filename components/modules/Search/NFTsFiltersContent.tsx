@@ -28,6 +28,7 @@ interface FilterOptionProps {
   checkedInfo?: any
   checkedTypes?: any
 }
+const NEW_NFT_FILTER_VARIABLE = true;
 
 const FilterOption = (props: FilterOptionProps) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
@@ -41,7 +42,7 @@ const FilterOption = (props: FilterOptionProps) => {
     clearedFilters && setSelected(false);
   },[clearedFilters]);
   if(discoverPageEnv){
-    if(pathName === 'collections'){
+    if(pathName === 'collections' || pathName === 'nfts'){
       return (
         <ButtonFilter
           selectedValues={props.checkedTypes}
@@ -308,7 +309,7 @@ const Filter = (props: any) => {
 };
 //replace this name after release
 const FilterNew = (props: any) => {
-  const { filter, setCheckedFilters, clearedFilters, setClearedFilters, dateFilterPeriod,checked, handleCheck,setFloor,collectionsFilter, setCurrency, handleCheckTypes, checkedTypes, setVolumeValue } = props;
+  const { filter, setCheckedFilters, clearedFilters, setClearedFilters, dateFilterPeriod,statuses, checkedStatus, checked, checkedMarketPlaces, handleCheck,setFloor,collectionsFilter,nftSFilters, setCurrency, handleCheckTypes, checkedTypes, setVolumeValue, setListedFloor, handleCheckMarketPlace,setPrice,handleCheckStatus } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const [isCollapsing, setIsCollapsing] = useState(false);
   const [isOpen, toggleCurrencySelect] = useState(false);
@@ -318,10 +319,78 @@ const FilterNew = (props: any) => {
     floor: 'Floor Price',
     nftType: 'NFT Type',
     volume: 'Trading Volume',
-    issuance: 'Issuance'
+    issuance: 'Issuance',
+    'listings.marketplace': 'Marketplace',
+    'listings.currency': 'Currency',
+    'listings.price': 'Price',
+    listedFloor: 'Listed Floor',
+    status: 'Status'
   };
   const checkedInfo = checkedArray.filter(i => i.fieldName === filter.field_name);
+
   const renderFiltersByType = () => {
+    if(filter.field_name === 'listedFloor'){
+      return (
+        <MinMaxFilter
+          min={nftSFilters.listedFloor && nftSFilters.listedFloor.length ? nftSFilters.listedFloor[0] : null}
+          max={nftSFilters.listedFloor && nftSFilters.listedFloor.length ? nftSFilters.listedFloor[1] : null}
+          isOpen={isOpen}
+          currency={collectionsFilter.currency}
+          toggleSelect={(value) => toggleCurrencySelect(!value)}
+          changeCurrency={(value) => setCurrency(value)}
+          setMinMaxValues={(value) => setListedFloor(value)}
+          fieldName={filter.field_name}/>
+      );
+    }
+    if(filter.field_name === 'status'){
+      return (
+        <div className='mt-4'>
+          {
+            statuses.map((item, i) => {
+              return (
+                <ButtonFilter
+                  key={i}
+                  selectedValues={checkedStatus}
+                  label={item.label}
+                  value={item.ms}
+                  click={(event) => handleCheckStatus(event)}/>
+              );
+            })
+          }
+        </div>
+      );
+    }
+    if(filter.field_name === 'listings.price'){
+      return (
+        <MinMaxFilter
+          min={nftSFilters.price && nftSFilters.price.length ? nftSFilters.price[0] : null}
+          max={nftSFilters.price && nftSFilters.price.length ? nftSFilters.price[1] : null}
+          isOpen={isOpen}
+          currency={collectionsFilter.currency}
+          toggleSelect={(value) => toggleCurrencySelect(!value)}
+          changeCurrency={(value) => setCurrency(value)}
+          setMinMaxValues={(value) => setPrice(value)}
+          fieldName={filter.field_name}/>
+      );
+    }
+    if(filter.field_name === 'listings.marketplace'){
+      return (
+        <div className='mt-4'>
+          {
+            filter.counts.map((item, i) => {
+              return (
+                <ButtonFilter
+                  key={i}
+                  selectedValues={checkedMarketPlaces}
+                  label={item.value}
+                  value={item.value}
+                  click={(event) => handleCheckMarketPlace(event)}/>
+              );
+            })
+          }
+        </div>
+      );
+    }
     if(filter.field_name === 'contractName'){
       return (
         <ContractNameFilter
@@ -442,10 +511,12 @@ export const NFTsFiltersContent = () => {
   const router = useRouter();
   const path = router.pathname.split('/');
   const pathName = path[path.length - 1];
-  const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray, collectionsFilter } = useSearchModal();
+  const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray, collectionsFilter, nftSFilters } = useSearchModal();
   const [sortBy,] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
   const [checked, setChecked] = useState(collectionsFilter.issuance ? collectionsFilter.issuance : []);
+  const [checkedStatus, setCheckedStatus] = useState(nftSFilters.status ? nftSFilters.status : []);
+  const [checkedMarketPlaces, setCheckedMarketPlaces] = useState(nftSFilters.marketplace ? nftSFilters.marketplace : []);
   const [checkedTypes, setCheckedTypes] = useState(collectionsFilter.nftTypes ? collectionsFilter.nftTypes : []);
   const dateFilterPeriod = [
     {
@@ -469,6 +540,18 @@ export const NFTsFiltersContent = () => {
       checked: false
     }
   ];
+  const statuses = [
+    {
+      label: 'Buy Now',
+      ms: 'buyNow',
+      checked: false
+    },
+    {
+      label: 'New',
+      ms: 'new',
+      checked: false
+    },
+  ];
   const updateCheckedString = useCallback(() => {
     const checkedList =[];
     checkedArray.forEach(item => {
@@ -476,6 +559,7 @@ export const NFTsFiltersContent = () => {
       item.selectedCheck !== '' && checkedList.push(item.fieldName + ': [' + item.selectedCheck.toString()+ ']');
     });
     const filtersObject = Object.entries(collectionsFilter);
+    const nftSFiltersObject = Object.entries(nftSFilters);
     const collectionsFiltersString = filtersObject.filter(Boolean).map(item => {
       if(!item[1] || !item[1].length) return;
       if(item[0] === 'issuance' && item[1].length > 0){
@@ -513,12 +597,56 @@ export const NFTsFiltersContent = () => {
         }
       }
     }).filter(Boolean).join(' && ');
+    const nftFilterString = nftSFiltersObject.filter(Boolean).map(item => {
+      if(!item[1] || !item[1].length) return;
+      if(item[0] === 'nftTypes' && item[1].length){
+        return `nftType:=[${item[1]}]`;
+      }
+      if(item[0] === 'marketplace' && item[1].length){
+        return `listings.marketplace:=[${item[1]}]`;
+      }
+      if(item[0] === 'status' && item[1].length){
+        const now = moment().valueOf();
+        const value = `${now}000`;
+        const epochFilter = Number(value) - 2592000000;
+        if(item[1].length === 1){
+          if(item[1][0] === 'buyNow'){
+            return 'hasListings:=1';
+          }else {
+            return `issuance:>${epochFilter}`;
+          }
+        }else {
+          return `hasListings:=1 && issuance:>${epochFilter}`;
+        }
+        // return `listings.marketplace:=[${item[1]}]`;
+      }
+      if(item[0] === 'listedFloor' && item[1].length){
+        if(item[1][0] && !item[1][1]){
+          return `listedFloor:>${item[1][0]}`;
+        }
+        if(!item[1][0] && item[1][1]){
+          return `listedFloor:<${item[1][1]}`;
+        }
+        if(item[1][0] && item[1][1]){
+          return `listedFloor:=[${item[1][0]}..${item[1][1]}]`;
+        }
+      }
+      if(item[0] === 'price' && item[1].length){
+        if(item[1][0] && !item[1][1]){
+          return `listings.price:>${item[1][0]}`;
+        }
+        if(!item[1][0] && item[1][1]){
+          return `listings.price:<${item[1][1]}`;
+        }
+        if(item[1][0] && item[1][1]){
+          return `listings.price:=[${item[1][0]}..${item[1][1]}]`;
+        }
+      }
+    }).filter(Boolean).join(' && ');
     const collectionsCheckedFiltersString = checkedList.filter(i => i.includes('contractName') || i.includes('nftType')).join(' && ');
     const string = collectionsFiltersString ? `${collectionsFiltersString} && ${collectionsCheckedFiltersString}` : collectionsCheckedFiltersString;
-    const nftsCheckedFiltersString = checkedList.join(' && ');
-
-    setResultsPageAppliedFilters(sortBy, nftsCheckedFiltersString, string, checkedArray);
-  }, [checkedArray, setResultsPageAppliedFilters, sortBy, collectionsFilter]);
+    setResultsPageAppliedFilters(sortBy, nftFilterString, string, checkedArray);
+  }, [checkedArray, collectionsFilter, nftSFilters, setResultsPageAppliedFilters, sortBy]);
 
   const setCheckedFilters = useCallback((fieldName: string, selectedCheck: string, selected: boolean) => {
     const foundItem = checkedArray.find(i => i.fieldName === fieldName);
@@ -548,9 +676,12 @@ export const NFTsFiltersContent = () => {
   useEffect(() => {
     collectionsFilter.issuance = checked;
     collectionsFilter.nftTypes = checkedTypes;
+    nftSFilters.nftTypes = checkedTypes;
+    nftSFilters.marketplace = checkedMarketPlaces;
+    nftSFilters.status = checkedStatus;
     updateCheckedString();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checked, checkedTypes]);
+  }, [checked, checkedTypes, checkedMarketPlaces, checkedStatus]);
 
   if(discoverPageEnv){
     return (
@@ -559,30 +690,31 @@ export const NFTsFiltersContent = () => {
           <div className="minlg:hidden flex justify-between items-center text-[28px] mb-1">Filters <X onClick={() => setSearchModalOpen(false)} size={22} className="text-[#6a6a6a] relative right-[-5px] cursor-pointer"/></div>
           <div>
             {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
-              if(pathName !== 'collections'){
-                if (['contractName', 'nftType'].includes(item.field_name)) {
-                  return (<div key={index}>
-                    <Filter
-                      filter={item}
-                      setCheckedFilters={setCheckedFilters}
-                      clearedFilters={clearedFilters}
-                      setClearedFilters={setClearedFilters}
-                    />
-                  </div>);
-                }
-              }else {
+              if(NEW_NFT_FILTER_VARIABLE){
                 return (<div key={index}>
                   <FilterNew
                     filter={item}
                     setCheckedFilters={setCheckedFilters}
                     dateFilterPeriod={dateFilterPeriod}
+                    statuses={statuses}
                     clearedFilters={clearedFilters}
                     checked={checked}
+                    checkedStatus={checkedStatus}
                     checkedTypes={checkedTypes}
+                    checkedMarketPlaces={checkedMarketPlaces}
                     checkedArray={checkedArray}
                     collectionsFilter={collectionsFilter}
+                    nftSFilters={nftSFilters}
                     setFloor={(val) => {
                       collectionsFilter.floor = val;
+                      updateCheckedString();
+                    }}
+                    setPrice={(val) => {
+                      nftSFilters.price = val;
+                      updateCheckedString();
+                    }}
+                    setListedFloor={(val) => {
+                      nftSFilters.listedFloor = val;
                       updateCheckedString();
                     }}
                     setVolumeValue={(val) => {
@@ -595,9 +727,52 @@ export const NFTsFiltersContent = () => {
                     }}
                     handleCheck={() => handleCheck(event, checked, setChecked)}
                     handleCheckTypes={() => handleCheck(event, checkedTypes, setCheckedTypes)}
+                    handleCheckMarketPlace={() => handleCheck(event, checkedMarketPlaces, setCheckedMarketPlaces)}
+                    handleCheckStatus={() => handleCheck(event, checkedStatus, setCheckedStatus)}
                     setClearedFilters={setClearedFilters}
                   />
                 </div>);
+              }else {
+                if(pathName !== 'collections'){
+                  if (['contractName', 'nftType'].includes(item.field_name)) {
+                    return (<div key={index}>
+                      <Filter
+                        filter={item}
+                        setCheckedFilters={setCheckedFilters}
+                        clearedFilters={clearedFilters}
+                        setClearedFilters={setClearedFilters}
+                      />
+                    </div>);
+                  }
+                }else {
+                  return (<div key={index}>
+                    <FilterNew
+                      filter={item}
+                      setCheckedFilters={setCheckedFilters}
+                      dateFilterPeriod={dateFilterPeriod}
+                      clearedFilters={clearedFilters}
+                      checked={checked}
+                      checkedTypes={checkedTypes}
+                      checkedArray={checkedArray}
+                      collectionsFilter={collectionsFilter}
+                      setFloor={(val) => {
+                        collectionsFilter.floor = val;
+                        updateCheckedString();
+                      }}
+                      setVolumeValue={(val) => {
+                        collectionsFilter.volume = val;
+                        updateCheckedString();
+                      }}
+                      setCurrency={(val) => {
+                        collectionsFilter.currency = val;
+                        updateCheckedString();
+                      }}
+                      handleCheck={() => handleCheck(event, checked, setChecked)}
+                      handleCheckTypes={() => handleCheck(event, checkedTypes, setCheckedTypes)}
+                      setClearedFilters={setClearedFilters}
+                    />
+                  </div>);
+                }
               }
             })}
           </div>

@@ -59,6 +59,26 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
                         r
                         s
                     }
+                    ... on X2Y2ProtocolData {
+                        side
+                        type
+                        erc_type
+                        status
+                        maker
+                        contract
+                        price
+                        X2Y2Amount: amount
+                        tokenId
+                        currencyAddress
+                        id
+                        created_at
+                        updated_at
+                        end_at
+                        royalty_fee
+                        is_collection_offer
+                        is_bundle
+                        is_private
+                    }
                     ... on SeaportProtocolData {
                         signature
                         parameters {
@@ -128,6 +148,19 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
                     v
                     r
                     s
+                }
+                ... on TxX2Y2ProtocolData {
+                    orderHash
+                    currency
+                    amount
+                    maker
+                    taker
+                    orderSalt
+                    settleSalt
+                    intent
+                    delegateType
+                    deadline
+                    data
                 }
                 ... on TxSeaportProtocolData {
                     offer {
