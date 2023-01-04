@@ -165,17 +165,14 @@ query Nft(
                     s
                 }
                 ... on TxX2Y2ProtocolData {
-                  orderHash
-                  currency
-                  amount
-                  maker
-                  taker
-                  orderSalt
-                  settleSalt
-                  intent
-                  delegateType
-                  deadline
-                  data
+                    amount
+                    currency
+                    data
+                    deadline
+                    delegateType
+                    intent
+                    orderSalt
+                    settleSalt
                 }
                 ... on TxSeaportProtocolData {
                     offer {
