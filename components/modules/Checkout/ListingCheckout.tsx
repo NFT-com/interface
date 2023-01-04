@@ -80,9 +80,19 @@ export function ListingCheckout() {
     return nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
   }) != null;
 
+  const buttonsRowWidth = () => {
+    if (getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED)) {
+      return 'w-1/4';
+    } else if (!getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && !getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED)) {
+      return 'w-1/2';
+    } else {
+      return 'w-full';
+    }
+  };
+
   const ListingOneNFT = () => {
     return(
-      <div className='flex flex-col justify-start items-center bg-gray-200 w-2/5 min-h-[100vh]'>
+      <div className='hidden minlg:flex flex-col justify-start items-center bg-gray-200 w-2/5 min-h-[100vh]'>
         <div className='w-full ml-44 mt-20'>
           <h1
             className='text-2xl font-semibold font-noi-grotesk cursor-pointer'
@@ -143,7 +153,8 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-[10.5rem] minlg:w-1/3',
+                `w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
               )}
@@ -164,7 +175,8 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-[10.5rem] minlg:w-1/3',
+                `w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 openseaAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
@@ -185,7 +197,8 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-[10.5rem] minlg:w-1/3',
+                `w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
@@ -207,7 +220,8 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                'border-[#D5D5D5] rounded-xl text-lg w-[10.5rem] minlg:w-1/3',
+                `w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 pt-3 py-3 cursor-pointer mt-2 flex flex-col items-center',
                 X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
