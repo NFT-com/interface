@@ -48,7 +48,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     if (creatorFee?.min == 0 && creatorFee?.max == 0) {
       return '0%';
     } else {
-      return `${creatorFee?.min}% - ${creatorFee?.max}%`;
+      return `${creatorFee?.min?.toFixed(2)}% - ${creatorFee?.max?.toFixed(2)}%`;
     }
   }, [creatorFee, loading]);
 
