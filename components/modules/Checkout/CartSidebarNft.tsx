@@ -38,15 +38,19 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
     }
   },[getByContractAddress]);
 
-  const { data: creatorFee } = useGetCreatorFee(nft?.contract, nft?.tokenId);
+  const { data: creatorFee, loading } = useGetCreatorFee(nft?.contract, nft?.tokenId);
 
   const getRoyaltyRange = useCallback(() => {
-    if (creatorFee.min == 0 && creatorFee.max == 0) {
+    if (loading) {
+      return 'loading...';
+    }
+
+    if (creatorFee?.min == 0 && creatorFee?.max == 0) {
       return '0%';
     } else {
-      return `${creatorFee.min}% - ${creatorFee.max}%`;
+      return `${creatorFee?.min}% - ${creatorFee?.max}%`;
     }
-  }, [creatorFee]);
+  }, [creatorFee, loading]);
 
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
