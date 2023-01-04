@@ -63,7 +63,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
   }, [selected, props, onChangeHandler, selectedIndex]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
-    return (!item.disabled ?
+    return (
       <div
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
@@ -79,16 +79,6 @@ export function DropdownPicker(props: DropdownPickerProps) {
         {/* {item.icon &&
           <Image className="h-full mr-2" src={item.icon} alt={item.label} />
         } */}
-        {item.label}
-      </div> :
-      <div
-        key={item.label}
-        style={{ height: activeRowRef.current.clientHeight }}
-        className={'flex flex-row w-full pl-2.5 py-3 text-secondary-txt cursor-auto hidden'}
-      >
-        {/* {item.icon &&
-              <Image className="h-full mr-2" src={item.icon} alt={item.label} />
-            } */}
         {item.label}
       </div>
     );

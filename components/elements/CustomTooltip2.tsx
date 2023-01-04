@@ -4,6 +4,7 @@ type ToolTipProps = {
   orientation: 'top'| 'left'| 'right' | 'bottom';
   tooltipComponent: React.ReactNode;
   hidden?: boolean;
+  tooltipClick?: () => void;
 };
 
 function Tooltip(props : PropsWithChildren<ToolTipProps>) {
@@ -16,7 +17,11 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   }
 
   function handleMouseLeave() {
-    setOpacity(0);
+    if (props.tooltipClick) {
+      setTimeout(() => setOpacity(0), 10000);
+    } else {
+      setOpacity(0);
+    }
   }
 
   const orientations = {
@@ -83,8 +88,8 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   )} rotate-45 pointer-events-none`;
 
   return (
-    <div className="relative flex items-center w-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      <div className={classContainer} style={{ opacity: opacity }} >
+    <div className="relative flex items-center w-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={() => props.tooltipClick()}>
+      <div className={classContainer} style={{ opacity: opacity }}>
         <div className={pointerClasses} />
         {props.tooltipComponent}
       </div>
