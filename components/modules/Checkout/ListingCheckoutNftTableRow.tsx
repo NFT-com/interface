@@ -607,7 +607,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             onClick={() => {
               toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
             }}
-          />}        
+          />}
         </div>}
       </div>
     );
