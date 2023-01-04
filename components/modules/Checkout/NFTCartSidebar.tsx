@@ -191,7 +191,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           </div>
           <div className={tw(
             'pr-2',
-            !showAll ? 'max-h-[30rem] min-h-[24rem] overflow-y-scroll hideScroll'/* +'filter-scrollbar' */ : 'max-h-[17.3rem] overflow-y-hidden')}>
+            !showAll ? 'max-h-[30rem] min-h-[24rem] overflow-y-scroll hideScroll' : 'max-h-[17.3rem] overflow-y-hidden')}>
             {stagedNFTs.map((stagedItem, index) => {
               return <CartSidebarNft
                 item={stagedItem}
