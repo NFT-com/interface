@@ -501,9 +501,10 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               <span className='font-normal flex text-[#A6A6A6] mb-4 shrink-0'>Type of Auction</span>
               <CustomTooltip2
                 orientation='top'
+                tooltipClick={() => window.open ('https://docs.nft.com/', '_ blank')}
                 tooltipComponent={
                   <div
-                    className="w-max"
+                    className="w-max cursor-pointer"
                   >
                     <p>Learn more</p>
                   </div>
@@ -512,7 +513,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
                 <InfoIcon
                   className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px] ml-3'
-                  alt="Looksrare logo"
+                  alt="Info logo"
                   layout="fill"
                 />
               </CustomTooltip2>
