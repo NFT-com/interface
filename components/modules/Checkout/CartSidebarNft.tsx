@@ -41,10 +41,10 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
   const { data: creatorFee } = useGetCreatorFee(nft?.contract, nft?.tokenId);
 
   const getRoyaltyRange = useCallback(() => {
-    if (creatorFee) {
-      return `${creatorFee.min}% - ${creatorFee.max}%`;
-    } else {
+    if (creatorFee.min == 0 && creatorFee.max == 0) {
       return '0%';
+    } else {
+      return `${creatorFee.min}% - ${creatorFee.max}%`;
     }
   }, [creatorFee]);
 
