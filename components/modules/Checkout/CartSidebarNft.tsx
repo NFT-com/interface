@@ -40,6 +40,14 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
 
   const { data: creatorFee } = useGetCreatorFee(nft?.contract, nft?.tokenId);
 
+  const getRoyaltyRange = useCallback(() => {
+    if (creatorFee) {
+      return `${creatorFee.min}% - ${creatorFee.max}%`;
+    } else {
+      return '0%';
+    }
+  }, [creatorFee]);
+
   return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
     ? (
       <div className='flex items-center w-full h-32 px-8'>
@@ -66,7 +74,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
           <div className='flex flex-col ml-4 font-grotesk'>
             <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
             <span className='text-sm -mt-1 mb-1 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
-            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {creatorFee}%</span>
+            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {getRoyaltyRange()}</span>
           </div>
         </div>
         {
@@ -109,7 +117,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
           <div className='flex flex-col ml-4 font-grotesk'>
             <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
             <span className='text-sm mb-3 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
-            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {creatorFee}%</span>
+            <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {getRoyaltyRange()}</span>
           </div>
         </div>
         <div className='w-1/3 h-full flex flex-col items-end justify-between mt-1'>
