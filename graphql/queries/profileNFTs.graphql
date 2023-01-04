@@ -150,17 +150,14 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
                     s
                 }
                 ... on TxX2Y2ProtocolData {
-                    orderHash
-                    currency
                     amount
-                    maker
-                    taker
+                    currency
+                    data
+                    deadline
+                    delegateType
+                    intent
                     orderSalt
                     settleSalt
-                    intent
-                    delegateType
-                    deadline
-                    data
                 }
                 ... on TxSeaportProtocolData {
                     offer {
