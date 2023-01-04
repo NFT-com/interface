@@ -609,34 +609,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             }}
           />}
 
-          {seaportEnabled && (selectedOptionDropdown0.current === ExternalProtocol.Seaport || selectedOptionDropdown0.current === 'Opensea') && <DeleteRowIcon
-            className='cursor-pointer'
-            alt="Delete market place"
-            layout="fill"
-            onClick={() => {
-              selectedOptionDropdown0.current = null;
-              toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
-            }}
-          />}
-          {looksrareEnabled && selectedOptionDropdown0.current === ExternalProtocol.LooksRare && <DeleteRowIcon
-            className='cursor-pointer'
-            alt="Delete market place"
-            layout="fill"
-            onClick={() => {
-              selectedOptionDropdown0.current = null;
-              toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
-            }}
-          />}
-          {X2Y2Enabled && selectedOptionDropdown0.current === ExternalProtocol.X2Y2 && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && <DeleteRowIcon
-            className='cursor-pointer'
-            alt="Delete market place"
-            layout="fill"
-            onClick={() => {
-              selectedOptionDropdown0.current = null;
-              toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
-            }}
-          />}
-
         </div>}
       </div>
     );

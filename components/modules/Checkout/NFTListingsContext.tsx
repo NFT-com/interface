@@ -279,6 +279,7 @@ export function NFTListingsContextProvider(
         };
       }));
     }
+    console.log('toList afterchange fdo', toList);
   }, [supportedCurrencyData, toList]);
 
   const setDuration = useCallback((duration: SaleDuration) => {
