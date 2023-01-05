@@ -21,7 +21,7 @@ export default function ConfirmEmailPage() {
     try {
       const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/verify/${email}/${token}`);
       if (Number(result.status) == 200) {
-        toast.success('Success! You are now subscribed to NFT.com');
+        toast.success('Success! Your email is successfully verified!');
         
         setTimeout(function() {
           // 2 second delay
