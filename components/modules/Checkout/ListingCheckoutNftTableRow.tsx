@@ -552,7 +552,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
               <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[35%] flex flex-row'>
                 <CustomTooltip2
-                  orientation='top'
+                  orientation='custom'
+                  customLeftPosition='19.5%'
                   hidden={
                     !(parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice))
                   }
@@ -613,9 +614,10 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               )}
             />
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[35%] flex flex-row'>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[35%] flex flex-row relative'>
               <CustomTooltip2
-                orientation='top'
+                orientation='custom'
+                customLeftPosition='19.5%'
                 hidden={
                   !(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
                 }

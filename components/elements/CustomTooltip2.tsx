@@ -1,10 +1,11 @@
 import { PropsWithChildren, useState } from 'react';
 
 type ToolTipProps = {
-  orientation: 'top'| 'left'| 'right' | 'bottom';
+  orientation: 'top'| 'left'| 'right' | 'bottom' | 'custom';
   tooltipComponent: React.ReactNode;
   hidden?: boolean;
   tooltipClick?: () => void;
+  customLeftPosition?: string
 };
 
 function Tooltip(props : PropsWithChildren<ToolTipProps>) {
@@ -29,9 +30,10 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
     top: 'top',
     left: 'left',
     bottom: 'bottom',
+    custom: 'custom',
   };
 
-  const setContainerPosition = (orientation) => {
+  const setContainerPosition = (orientation, customLeftPosition) => {
     let classnames;
 
     switch (orientation) {
@@ -46,6 +48,9 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
       break;
     case orientations.bottom:
       classnames = 'top-full left-[50%] translate-x-[-50%] translate-y-2';
+      break;
+    case orientations.custom:
+      classnames = `bottom-full left-[${customLeftPosition}] translate-x-[-50%] -translate-y-2`;
       break;
 
     default:
@@ -71,6 +76,9 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
     case orientations.bottom:
       classnames = 'bottom-full left-[50%] translate-x-[-50%] translate-y-2';
       break;
+    case orientations.custom:
+      classnames = 'top-full left-[50%] translate-x-[-50%] -translate-y-2';
+      break;
 
     default:
       break;
@@ -80,7 +88,8 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   };
 
   const classContainer = `w-max absolute z-10 ${setContainerPosition(
-    props.orientation
+    props.orientation,
+    props.customLeftPosition
   )} bg-black text-white text-sm p-2 rounded-xl flex items-center transition-all duration-150 pointer-events-none`;
 
   const pointerClasses = `bg-black h-3 w-3 absolute z-10 ${setPointerPosition(
