@@ -39,7 +39,8 @@ export function useSearchModal() {
         nftTypes: null,
         marketplace: null,
         price: null,
-        status: null
+        status: null,
+        contractName: null
       },
       dropDownSearchResults: null,
       keyword: ''

@@ -28,7 +28,7 @@ export default function CollectionsPage() {
       facet_by: ',listings.marketplace,status,listings.price,nftType',
       index: 'nfts',
       q: '*',
-      sort_by: 'listedFloor:desc',
+      sort_by: 'hasListings:desc',
       query_by: '',
       filter_by: nftsResultsFilterBy,
       per_page: 20,
