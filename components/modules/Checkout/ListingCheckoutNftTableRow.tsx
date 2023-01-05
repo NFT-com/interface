@@ -631,7 +631,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               >
                 {X2Y2PriceInput()}
               </CustomTooltip2>
-              <div className='w-full flex minlg:hidden -ml-[10rem]'>
+              <div className='w-full flex minlg:hidden -ml-[10rem] z-10'>
                 <div className='w-full flex items-center justify-end '>
                   <DeleteRowIcon
                     className='cursor-pointer'
