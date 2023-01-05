@@ -424,7 +424,9 @@ export function ListingCheckout() {
             Back
           </h1>
         </div>}
-        <div className='w-full flex flex-col justify-start items-center w-full minlg:w-3/5 minlg:px-2 minxl:px-4 minxxl:px-28'>
+        <div className={tw(
+          toList.length === 1 ? 'minlg:px-[5%]' : 'minlg:px-2 minxl:px-4',
+          'w-full flex flex-col justify-start items-center w-full minlg:w-3/5 minxxl:px-28')}>
           <div className='w-full minlg:mt-20 flex minlg:block justify-start items-end minlg:items-center minlg:mx-auto'>
             <span
               className='minlg:hidden text-lg font-semibold font-noi-grotesk cursor-pointer minlg:ml-28'
