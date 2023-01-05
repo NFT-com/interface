@@ -88,7 +88,7 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   )} rotate-45 pointer-events-none`;
 
   return (
-    <div className="relative flex items-center w-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={() => props.tooltipClick()}>
+    <div className="relative flex items-center w-full h-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={() => props.tooltipClick ? props.tooltipClick() : null}>
       <div className={classContainer} style={{ opacity: opacity }}>
         <div className={pointerClasses} />
         {props.tooltipComponent}
