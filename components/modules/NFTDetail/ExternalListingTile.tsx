@@ -66,7 +66,6 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const seaportExchange = useSeaportContract(signer);
   const X2Y2Exchange = useX2Y2ExchangeContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
-  const { data: supportedCurrencyData } = useSupportedCurrencies();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
 
   const nftInPurchaseCart = useMemo(() => {
@@ -132,7 +131,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               protocol: listing?.order?.protocol as ExternalProtocol,
               startingPrice: 0,
               endingPrice: 0,
-              currency: listedCurrency,//WETH.address,
+              currency: listedCurrency,
               duration: null,
               looksrareOrder: null,
               seaportParameters: null,
