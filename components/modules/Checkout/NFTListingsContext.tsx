@@ -462,7 +462,7 @@ export function NFTListingsContextProvider(
             !isNullOrEmpty(listing?.startingPrice?.toString()) ? listing.startingPrice.toString() : target.startingPrice.toString(),
             moment().unix() + Number(listing.duration) ?? moment().unix() + Number(target.duration)
           );
-          if (!order) {
+          if(isNullOrEmpty(order.r) || isNullOrEmpty(order.s) || isNullOrEmpty(order.v.toString())){
             return ListAllResult.SignatureRejected;
           }
           const result = await listNftX2Y2(
