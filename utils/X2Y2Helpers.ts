@@ -86,12 +86,15 @@ async function signOrder(
   const orderHash = ethers.utils.keccak256(orderData);
 
   // signMessage
-  const orderSig = await signer.signMessage(ethers.utils.arrayify(orderHash));
-  
-  order.r = `0x${orderSig.slice(2, 66)}`;
-  order.s = `0x${orderSig.slice(66, 130)}`;
-  order.v = parseInt(orderSig.slice(130, 132), 16);
-  fixSignature(order);
+  try {
+    const orderSig = await signer.signMessage(ethers.utils.arrayify(orderHash));
+    order.r = `0x${orderSig.slice(2, 66)}`;
+    order.s = `0x${orderSig.slice(66, 130)}`;
+    order.v = parseInt(orderSig.slice(130, 132), 16);
+    fixSignature(order);
+  } catch (err) {
+    return null;
+  }
 }
 
 function randomSalt(): string {
