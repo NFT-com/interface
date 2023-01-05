@@ -503,7 +503,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
             <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[35%] flex flex-row'>
               {OpenseaPriceInput()}
-              <div className='minlg:h-[3rem] w-full minlg:w-[5%] flex minlg:hidden -ml-[10rem]'>
+              <div className='w-full flex minlg:hidden -ml-[10rem]'>
                 <div className='w-full flex items-center justify-end '>
                   <DeleteRowIcon
                     className='cursor-pointer'
@@ -566,7 +566,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 >
                   {LooksRarePriceInput()}
                 </CustomTooltip2>
-                <div className='minlg:h-[3rem] w-full minlg:w-[5%] flex minlg:hidden -ml-[10rem]'>
+                <div className='w-full flex minlg:hidden -ml-[10rem]'>
                   <div className='w-full flex items-center justify-end '>
                     <DeleteRowIcon
                       className='cursor-pointer'
@@ -597,7 +597,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
             <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[35%]'>
               <DropdownPicker
-                options={generateMarketPlaceOptions(1, true)}
+                options={generateMarketPlaceOptions(2, true)}
                 selectedIndex={2}
                 v2
               />
@@ -629,7 +629,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               >
                 {X2Y2PriceInput()}
               </CustomTooltip2>
-              <div className='minlg:h-[3rem] w-full minlg:w-[5%] flex minlg:hidden -ml-[10rem]'>
+              <div className='w-full flex minlg:hidden -ml-[10rem]'>
                 <div className='w-full flex items-center justify-end '>
                   <DeleteRowIcon
                     className='cursor-pointer'
