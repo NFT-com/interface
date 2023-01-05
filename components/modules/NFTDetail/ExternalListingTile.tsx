@@ -69,9 +69,6 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const { data: supportedCurrencyData } = useSupportedCurrencies();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
 
-  console.log('supportedCurrencyData[WETH].contract fdo',supportedCurrencyData['WETH'].contract);
-  console.log('supportedCurrencyData[ETH].contract fdo',supportedCurrencyData['ETH'].contract);
-
   const nftInPurchaseCart = useMemo(() => {
     return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id && purchase?.orderHash === props?.listing?.order?.orderHash) != null;
   }, [props?.listing?.order?.orderHash, props.nft?.id, toBuy]);
