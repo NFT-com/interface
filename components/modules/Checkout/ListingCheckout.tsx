@@ -437,7 +437,7 @@ export function ListingCheckout() {
           </div>
           {ListingCheckoutInfo()}
         </div>
-        {(toList.length === 0 || toList.length > 1) && <div className='hidden minmd:block w-1/5 mt-20'></div>}
+        {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'></div>}
       </div>
     );
 }
