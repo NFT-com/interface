@@ -18,6 +18,8 @@ interface ResultsDropDownProps {
 export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, itemListOnClick, extraClasses }: ResultsDropDownProps) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+  const { setClearedFilters } = useSearchModal();
+
   const router = useRouter();
   const copy = [...searchResults];
   const nfts = copy.map(item => item);
@@ -59,6 +61,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
             className="cursor-pointer hover:font-semibold underline text-black"
             onClick={() => {
               router.push(`/app/discover/${collectionName}/${keyword}`);
+              setClearedFilters();
               setDropDownSearchResults([], '');
               resultTitleOnClick && resultTitleOnClick(collectionName);
             }}
