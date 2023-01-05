@@ -50,7 +50,7 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
       classnames = 'top-full left-[50%] translate-x-[-50%] translate-y-2';
       break;
     case orientations.custom:
-      classnames = `bottom-full left-[${customLeftPosition}] translate-x-[-50%] -translate-y-2`;
+      classnames = `bottom-full left-[${customLeftPosition}%] translate-x-[-50%] -translate-y-2`;
       break;
 
     default:
