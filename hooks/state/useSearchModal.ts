@@ -168,7 +168,22 @@ export function useSearchModal() {
       clearedFilters: true,
       nftsPageSortyBy: '',
       nftsResultsFilterBy: '',
-      collectionsResultsFilterBy: ''
+      collectionsResultsFilterBy: '',
+      collectionsFilter: {
+        issuance: null,
+        floor: null,
+        currency: null,
+        nftTypes: null,
+        volume: null
+      },
+      nftSFilters: {
+        listedFloor: null,
+        nftTypes: null,
+        marketplace: null,
+        price: null,
+        status: null,
+        contractName: null
+      },
     });
   },[data, mutate]);
 
