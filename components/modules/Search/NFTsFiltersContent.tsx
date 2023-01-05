@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Minus,Plus, X } from 'react-feather';
 interface FilterOptionProps {
   fieldName?: string,
@@ -27,6 +27,13 @@ interface FilterOptionProps {
   clearedFilters?: boolean,
   checkedInfo?: any
   checkedTypes?: any
+}
+function usePrevious(value) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }
 const NEW_NFT_FILTER_VARIABLE = true;
 
@@ -468,10 +475,10 @@ export const NFTsFiltersContent = () => {
   const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray, collectionsFilter, nftSFilters } = useSearchModal();
   const [sortBy,] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
-  const [checked, setChecked] = useState(collectionsFilter.issuance ? collectionsFilter.issuance : []);
-  const [checkedStatus, setCheckedStatus] = useState(nftSFilters.status ? nftSFilters.status : []);
-  const [checkedMarketPlaces, setCheckedMarketPlaces] = useState(nftSFilters.marketplace ? nftSFilters.marketplace : []);
-  const [checkedTypes, setCheckedTypes] = useState(collectionsFilter.nftTypes ? collectionsFilter.nftTypes : []);
+  const [checked, setChecked] = useState([]);
+  const [checkedStatus, setCheckedStatus] = useState([]);
+  const [checkedMarketPlaces, setCheckedMarketPlaces] = useState([]);
+  const [checkedTypes, setCheckedTypes] = useState([]);
   const dateFilterPeriod = [
     {
       label: '30 Days',
@@ -628,7 +635,22 @@ export const NFTsFiltersContent = () => {
     }
     fn(updatedList);
   };
+  const { searchTerm } = router.query;
 
+  const prevSearchTerm = usePrevious(searchTerm);
+
+  useEffect(() => {
+    if (prevSearchTerm !== searchTerm){
+      setChecked([]);
+      setCheckedTypes([]);
+      setCheckedMarketPlaces([]);
+      setCheckedStatus([]);
+      setResultsPageAppliedFilters('', '','', []);
+      nftSFilters.nftTypes = [];
+      nftSFilters.marketplace = [];
+      nftSFilters.status = [];
+    }
+  },[nftSFilters, prevSearchTerm, searchTerm, setResultsPageAppliedFilters]);
   useEffect(() => {
     collectionsFilter.issuance = checked;
     collectionsFilter.nftTypes = checkedTypes;
