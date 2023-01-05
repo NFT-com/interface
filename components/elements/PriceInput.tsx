@@ -145,7 +145,7 @@ export function PriceInput(props: PriceInputProps) {
             ? <div className='font-medium flex items-center ml-3 w-1/2 minlg:w-3/5 pl-4 minlg:pl-3'>
               {currencyData.name}
             </div>
-            : <div className='flex items-center ml-3 w-1/2 minlg:w-3/5'>
+            : <div className='flex items-center ml-3 minlg:ml-1 minxl:ml-3 w-1/2 minlg:w-3/5'>
               <DropdownPicker
                 v2
                 options={props.empty ? [] : currencies}
