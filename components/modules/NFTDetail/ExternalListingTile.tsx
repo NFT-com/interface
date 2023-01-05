@@ -66,7 +66,11 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const seaportExchange = useSeaportContract(signer);
   const X2Y2Exchange = useX2Y2ExchangeContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
+  const { data: supportedCurrencyData } = useSupportedCurrencies();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
+
+  console.log('supportedCurrencyData[WETH].contract fdo',supportedCurrencyData['WETH'].contract);
+  console.log('supportedCurrencyData[ETH].contract fdo',supportedCurrencyData['ETH'].contract);
 
   const nftInPurchaseCart = useMemo(() => {
     return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id && purchase?.orderHash === props?.listing?.order?.orderHash) != null;
@@ -104,6 +108,13 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const listingProtocol = props.listing?.order?.protocol;
 
   const getButton = useCallback((type: ListingButtonType) => {
+    let listedCurrency;
+    if ((listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.X2Y2 || (listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.LooksRare) {
+      listedCurrency = (listing?.order?.protocolData as X2Y2ProtocolData).currencyAddress;
+    } else {
+      listedCurrency = (listing?.order?.protocolData as SeaportProtocolData).parameters.consideration[0].token;
+    }
+
     switch (type) {
     case ListingButtonType.Adjust: {
       return <Button
@@ -124,7 +135,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               protocol: listing?.order?.protocol as ExternalProtocol,
               startingPrice: 0,
               endingPrice: 0,
-              currency: WETH.address,
+              currency: listedCurrency,//WETH.address,
               duration: null,
               looksrareOrder: null,
               seaportParameters: null,
