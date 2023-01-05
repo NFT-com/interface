@@ -105,13 +105,14 @@ export function PriceInput(props: PriceInputProps) {
     : (
       <div
         className={tw(
-          'flex flex-row rounded-xl h-full w-full',
+          'flex flex-row rounded-xl h-full w-full z-20',
         )}>
         <input
           disabled={props.empty}
           type="text"
           className={tw(
-            'text-sm border h-full w-1/2 minlg:w-2/5',
+            props.onCurrencyChange == null ?'w-[50%]': 'w-[45%]',
+            'text-sm border h-full minlg:w-2/5',
             'text-left p-1 rounded-md pl-2',
             props.error ? 'border-red-500 border-2' : 'border-gray-300  border-2'
           )}
@@ -145,7 +146,7 @@ export function PriceInput(props: PriceInputProps) {
             ? <div className='font-medium flex items-center ml-3 w-1/2 minlg:w-3/5 pl-4 minlg:pl-3'>
               {currencyData.name}
             </div>
-            : <div className='flex items-center ml-3 minlg:ml-1 minxl:ml-3 w-1/2 minlg:w-3/5'>
+            : <div className='flex items-center ml-3 minlg:ml-1 minxl:ml-3 w-[55%] minlg:w-3/5'>
               <DropdownPicker
                 v2
                 options={props.empty ? [] : currencies}

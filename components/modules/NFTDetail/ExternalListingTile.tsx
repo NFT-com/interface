@@ -104,6 +104,13 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const listingProtocol = props.listing?.order?.protocol;
 
   const getButton = useCallback((type: ListingButtonType) => {
+    let listedCurrency;
+    if ((listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.X2Y2 || (listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.LooksRare) {
+      listedCurrency = (listing?.order?.protocolData as X2Y2ProtocolData).currencyAddress;
+    } else {
+      listedCurrency = (listing?.order?.protocolData as SeaportProtocolData).parameters.consideration[0].token;
+    }
+
     switch (type) {
     case ListingButtonType.Adjust: {
       return <Button
@@ -124,7 +131,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               protocol: listing?.order?.protocol as ExternalProtocol,
               startingPrice: 0,
               endingPrice: 0,
-              currency: WETH.address,
+              currency: listedCurrency,
               duration: null,
               looksrareOrder: null,
               seaportParameters: null,
