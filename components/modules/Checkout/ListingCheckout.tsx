@@ -21,6 +21,7 @@ import router from 'next/router';
 import LooksrareGray from 'public/looksrare_gray.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
+import NoActivityIcon from 'public/no_activity.svg';
 import OpenSeaGray from 'public/opensea_gray.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Gray from 'public/x2y2-gray.svg';
@@ -153,7 +154,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                `max-h-[69px] w-[10.5rem] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
@@ -175,7 +176,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                `max-h-[69px] w-[10.5rem] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 openseaAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
@@ -187,7 +188,7 @@ export function ListingCheckout() {
                   alt="Opensea logo"
                   layout="fill"
                 />
-                : <OpenSeaGray className='w-fit h-fit' />}
+                : <OpenSeaGray className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
               <span className='font-semibold text-base'>Opensea</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(1.5% fee)</span>
             </div>
@@ -197,7 +198,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                `max-h-[69px] w-[10.5rem] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
@@ -210,7 +211,7 @@ export function ListingCheckout() {
                   layout="fill"
                 />
                 :
-                <LooksrareGray className='w-fit h-fit' />}
+                <LooksrareGray className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
               <span className='font-semibold text-base'>Looksrare</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
@@ -220,13 +221,15 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                `max-h-[69px] w-[10.5rem] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 pt-3 py-3 cursor-pointer mt-2 flex flex-col items-center',
                 X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
-              {X2Y2AtLeastOneEnabled ? <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' /> : <X2Y2Gray className='relative shrink-0 -mt-[1px] -mb-[3px]' />}
+              {X2Y2AtLeastOneEnabled
+                ? <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' /> :
+                <X2Y2Gray className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
             </div>}
@@ -275,8 +278,9 @@ export function ListingCheckout() {
           </div>
         </div>
         {
-          (isNullOrEmpty(toList) || toList.length === 0) && <div className='flex flex-col items-center justify-center my-12'>
-    No NFTs staged for listing
+          (isNullOrEmpty(toList) || toList.length === 0) && <div className='flex flex-col items-center justify-center mb-12'>
+            <NoActivityIcon />
+            <span className='text-lg font-medium font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>You haven’t added any listings yet</span>
           </div>
         }
         {!showSummary && toList.length > 0 && <div className='w-full pb-8'><Button
