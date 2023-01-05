@@ -154,7 +154,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `max-h-[93px] w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 nftcomMarketplaceEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
@@ -176,7 +176,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `max-h-[93px] w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 openseaAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
@@ -198,7 +198,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `max-h-[93px] w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
                 looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
@@ -221,7 +221,7 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `max-h-[93px] w-[10.5rem] minlg:${buttonsRowWidth()}`,
+                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 pt-3 py-3 cursor-pointer mt-2 flex flex-col items-center',
                 X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
