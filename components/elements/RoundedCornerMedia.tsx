@@ -107,7 +107,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
             >
               <div className={tw(
                 'animate-pulse bg-gray-300 h-4/5 aspect-square',
-                getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default)
+                'rounded-[18px]'
               )} />
             </div>
           }
