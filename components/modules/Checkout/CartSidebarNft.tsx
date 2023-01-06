@@ -45,6 +45,8 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
       return 'loading...';
     }
 
+    console.log('creatorFee: ', creatorFee);
+
     if (creatorFee?.min == 0 && creatorFee?.max == 0) {
       return '0%';
     } else {
