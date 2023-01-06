@@ -11,6 +11,7 @@ interface RoyaltyObject {
 interface MinMaxRoyalty {
   min: number;
   max: number;
+  royalty?: RoyaltyObject;
 }
 export interface CreatorFeeDetails {
   data: MinMaxRoyalty
@@ -71,7 +72,7 @@ export function useGetCreatorFee(
     const min = Math.min(...Object.values(royalty));
     const max = Math.max(...Object.values(royalty));
 
-    return { min, max };
+    return { min, max, royalty };
   });
 
   return {
