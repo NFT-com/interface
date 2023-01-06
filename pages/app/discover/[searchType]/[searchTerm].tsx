@@ -35,6 +35,7 @@ function usePrevious(value) {
 export default function ResultsPage({ data }: ResultsPageProps) {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
   const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters, collectionsResultsFilterBy } = useSearchModal();
   const router = useRouter();
@@ -112,7 +113,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     }
   },[prevSearchTerm, searchTerm, setClearedFilters, setResultsPageAppliedFilters]);
   const checkFacedBy = () => {
-    if(newFiltersEnabled){
+    if(newFiltersEnabledNew){
       if(searchType?.toString() !== 'collections'){
         return ',listings.marketplace,status,listings.price,nftType,contractName';
       }else {
@@ -135,7 +136,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     }
   };
   const checkFilteredBy = () => {
-    if(newFiltersEnabled){
+    if(newFiltersEnabledNew){
       if(searchType?.toString() === 'collections'){
         return collectionsResultsFilterBy;
       }else {
@@ -150,7 +151,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     }
   };
   const checkQueryBy = () => {
-    if(newFiltersEnabled){
+    if(newFiltersEnabledNew){
       if(searchType?.toString() !== 'collections'){
         return 'nftName,nftType,tokenId,ownerAddr,chain,contractName,contractAddr,status,traits.value,traits.type';
       }else {
@@ -182,7 +183,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       exhaustive_search: true,
     }] })
       .then((resp) => {
-        if(newFiltersEnabled){
+        if(newFiltersEnabledNew){
           if (prevSearchTerm !== searchTerm){
             setFilters([]);
             setClearedFilters();
@@ -195,7 +196,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         }
         results.current = [...resp.results[0].hits];
         found.current = resp.results[0].found;
-        if(newFiltersEnabled) {
+        if(newFiltersEnabledNew) {
           setSearchedData(resp.results[0].hits);
         }
       });
@@ -220,7 +221,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           results.current = [...results.current,...resp.results[0].hits];
           found.current = resp.results[0].found;
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
-          if(newFiltersEnabled){
+          if(newFiltersEnabledNew){
             setSearchedData([...searchedData,...resp.results[0].hits]);
             addressesList.current = searchedData?.map((nft) => {
               return nft.document?.contractAddr;
@@ -233,7 +234,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     }
     // eslint-disable-next-line
   }, [addressesList, fetchTypesenseMultiSearch, filters.length, newFiltersEnabled, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, searchedData, sideNavOpen]);
-  if(newFiltersEnabled){
+  if(newFiltersEnabledNew){
     return (
       <div className="p-1 mt-7 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
         <div className="w-full min-h-disc px-2 minlg:px-0">
