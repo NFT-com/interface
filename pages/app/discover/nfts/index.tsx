@@ -15,7 +15,7 @@ import React, { useEffect, useState } from 'react';
 export default function CollectionsPage() {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const [page, setPage] = useState(1);
-  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy, setClearedFilters, setResultsPageAppliedFilters } = useSearchModal();
+  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [nftSData, setNftsData] = useState([]);
@@ -40,7 +40,7 @@ export default function CollectionsPage() {
       page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
     });
     return () => {
-      setClearedFilters()
+      setClearedFilters();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);

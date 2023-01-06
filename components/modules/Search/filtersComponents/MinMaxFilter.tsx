@@ -1,6 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
-
-import { tw } from '../../../../utils/tw';
+import { tw } from 'utils/tw';
 
 import ArrowDown from 'public/arrow-down-black.svg';
 import React, { useEffect, useRef,useState } from 'react';
