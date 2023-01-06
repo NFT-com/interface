@@ -569,6 +569,9 @@ export const NFTsFiltersContent = () => {
       if(item[0] === 'contractName' && item[1] && item[1][0].selectedCheck !== ''){
         return `contractName: [${item[1][0].selectedCheck}]`;
       }
+      if(item[0] === 'currency' && item[1]){
+        return `listings.currency:=[${item[1]}]`;
+      }
       if(item[0] === 'status' && item[1].length){
         const now = moment().valueOf();
         const value = `${now}000`;
@@ -701,6 +704,7 @@ export const NFTsFiltersContent = () => {
                     }}
                     setCurrency={(val) => {
                       collectionsFilter.currency = val;
+                      nftSFilters.currency = val;
                       updateCheckedString();
                     }}
                     handleCheck={() => handleCheck(event, checked, setChecked)}

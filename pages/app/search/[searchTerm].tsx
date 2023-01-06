@@ -223,10 +223,10 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                       {found.current + ' ' + 'NFT' + `${found.current === 1 ? '' : 's'}`}
                     </div>
                     {<span
-                      className="cursor-pointer hover:font-semibold underline text-black text-lg"
+                      className="cursor-pointer hover:font-semibold underline text-black text-xl font-black minmd:text-base font-grotesk font-[600]"
                       onClick={() => { router.push(`/app/discover/nfts/${searchTerm.toString()}`); }}
                     >
-                  See All
+                  See All NFTs
                     </span>}
                   </div>
                   {<div className={tw(

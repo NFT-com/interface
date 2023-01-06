@@ -200,7 +200,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         }
       });
     // eslint-disable-next-line
-  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, collectionsResultsFilterBy, newFiltersEnabled, prevSearchTerm, setClearedFilters, setResultsPageAppliedFilters]);
+  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, collectionsResultsFilterBy, newFiltersEnabled, prevSearchTerm]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -285,7 +285,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   See All
                   </span>}
                   {searchType?.toString() !== 'allResults' && <span
-                    className="cursor-pointer hover:font-semibold underline text-black text-lg"
+                    className="cursor-pointer hover:font-semibold underline text-black font-black minmd:text-base font-grotesk font-[600]"
                     onClick={() => {
                       if (discoverPageEnv) {
                         router.push(`/app/search/${searchTerm.toString()}`);
