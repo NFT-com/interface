@@ -188,7 +188,7 @@ export function ListingCheckout() {
                   alt="Opensea logo"
                   layout="fill"
                 />
-                : <OpenSeaGray className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
+                : <OpenSeaGray className='relative shrink-0 -mt-[1px]' />}
               <span className='font-semibold text-base'>Opensea</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(1.5% fee)</span>
             </div>
@@ -206,12 +206,12 @@ export function ListingCheckout() {
             >
               {looksrareAtLeastOneEnabled
                 ? <LooksrareIcon
-                  className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
+                  className='h-[1.97rem] relative shrink-0 -my-[4px] -mb-[3px]'
                   alt="Looksrare logo"
                   layout="fill"
                 />
                 :
-                <LooksrareGray className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
+                <LooksrareGray className='h-[1.8rem] relative shrink-0 -mb-[4px]' />}
               <span className='font-semibold text-base'>Looksrare</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
@@ -228,8 +228,8 @@ export function ListingCheckout() {
               )}
             >
               {X2Y2AtLeastOneEnabled
-                ? <X2Y2Icon className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' /> :
-                <X2Y2Gray className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
+                ? <X2Y2Icon className='h-[1.5rem] relative shrink-0 mb-[2px]' /> :
+                <X2Y2Gray className='h-[1.5rem] relative shrink-0 mb-[2px]' />}
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
             </div>}
