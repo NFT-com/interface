@@ -105,7 +105,7 @@ export function PriceInput(props: PriceInputProps) {
     : (
       <div
         className={tw(
-          'flex flex-row rounded-xl h-full w-full z-20',
+          'flex flex-row rounded-xl h-full w-full z-20 minlg:z-auto',
         )}>
         <input
           disabled={props.empty}
