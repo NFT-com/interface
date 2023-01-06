@@ -38,7 +38,7 @@ export function useSearchModal() {
         listedFloor: null,
         nftTypes: null,
         marketplace: null,
-        currency: 'ETH',
+        currency: null,
         price: null,
         status: null,
         contractName: null
@@ -181,7 +181,7 @@ export function useSearchModal() {
         listedFloor: null,
         nftTypes: null,
         marketplace: null,
-        currency: 'ETH',
+        currency: null,
         price: null,
         status: null,
         contractName: null

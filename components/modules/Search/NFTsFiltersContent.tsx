@@ -35,17 +35,16 @@ function usePrevious(value) {
   });
   return ref.current;
 }
-const NEW_NFT_FILTER_VARIABLE = true;
 
 const FilterOption = (props: FilterOptionProps) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
   const { item, fieldName, onSelectFilter, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [selected, setSelected] = useState(checkedInfo[0]?.selectedCheck?.includes(item.value));
 
   useEffect(() => {
     clearedFilters && setSelected(false);
   },[clearedFilters]);
-  if(discoverPageEnv){
+  if(newFiltersEnabledNew){
     if(props.fieldName !== 'contractName'){
       return (
         <ButtonFilter
@@ -148,6 +147,7 @@ const ContractNameFilter = (props: any) => {
 
 const Filter = (props: any) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const NEW_NFT_FILTER_VARIABLE = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
   const { filter, setCheckedFilters, clearedFilters, setClearedFilters } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
@@ -218,13 +218,18 @@ const Filter = (props: any) => {
                     />
                   </div>);
               })}
-          <ContractNameFilter
-            filterOptions={filter.counts}
-            setCheckedFilters={setCheckedFilters}
-            clearedFilters={clearedFilters}
-            setClearedFilters={setClearedFilters}
-            checkedInfo={checkedInfo}
-          />
+          {NEW_NFT_FILTER_VARIABLE
+            ? (
+              <ContractNameFilter
+                filterOptions={filter.counts}
+                setCheckedFilters={setCheckedFilters}
+                clearedFilters={clearedFilters}
+                setClearedFilters={setClearedFilters}
+                checkedInfo={checkedInfo}
+              />
+            )
+            : null}
+
         </motion.div>
       </div>
     );
@@ -315,7 +320,7 @@ const FilterNew = (props: any) => {
       return (
         <div className='mt-4'>
           {
-            statuses.map((item, i) => {
+            statuses && statuses.map((item, i) => {
               return (
                 <ButtonFilter
                   key={i}
@@ -469,6 +474,8 @@ const FilterNew = (props: any) => {
 
 export const NFTsFiltersContent = () => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+
   const router = useRouter();
   const path = router.pathname.split('/');
   const pathName = path[path.length - 1];
@@ -609,10 +616,16 @@ export const NFTsFiltersContent = () => {
         }
       }
     }).filter(Boolean).join(' && ');
+    const nftsCheckedFiltersString = checkedList.join(' && ');
+
     const collectionsCheckedFiltersString = checkedList.filter(i => i.includes('contractName') || i.includes('nftType')).join(' && ');
     const string = collectionsFiltersString ? `${collectionsFiltersString} && ${collectionsCheckedFiltersString}` : collectionsCheckedFiltersString;
-    setResultsPageAppliedFilters(sortBy, nftFilterString, string, checkedArray);
-  }, [checkedArray, collectionsFilter, nftSFilters, setResultsPageAppliedFilters, sortBy]);
+    if(newFiltersEnabledNew){
+      setResultsPageAppliedFilters(sortBy, nftFilterString, string, checkedArray);
+    }else {
+      setResultsPageAppliedFilters(sortBy, nftsCheckedFiltersString, '', checkedArray);
+    }
+  }, [checkedArray, collectionsFilter, newFiltersEnabledNew, nftSFilters, setResultsPageAppliedFilters, sortBy]);
 
   const setCheckedFilters = useCallback((fieldName: string, selectedCheck: string, selected: boolean) => {
     const foundItem = checkedArray.find(i => i.fieldName === fieldName);
@@ -663,6 +676,7 @@ export const NFTsFiltersContent = () => {
     updateCheckedString();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checked, checkedTypes, checkedMarketPlaces, checkedStatus]);
+  const NEW_NFT_FILTER_VARIABLE = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
   if(discoverPageEnv){
     return (

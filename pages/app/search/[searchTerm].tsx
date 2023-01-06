@@ -32,6 +32,7 @@ function usePrevious(value) {
 export default function ResultsPage({ data }: ResultsPageProps) {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
   const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const router = useRouter();
@@ -66,7 +67,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       q: searchTerm?.toString(),
       per_page: 20,
       page: 1,
-      filter_by: '',
+      filter_by: newFiltersEnabledNew ? '' : nftsResultsFilterBy,
       facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : ''),
       exhaustive_search: true,
     }] })
@@ -74,7 +75,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         setNftsForCollections(null);
         setCollectionsSliderData(resp.results[0]);
       });
-  }, [fetchTypesenseMultiSearch, searchTerm]);
+  }, [fetchTypesenseMultiSearch, searchTerm, nftsResultsFilterBy, newFiltersEnabledNew]);
 
   if (collectionsSliderData) {
     addressesList.current = collectionsSliderData.hits?.map((nft) => {
@@ -99,14 +100,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   useEffect(() => {
     const checkFacetType = () => {
-      if(newFiltersEnabled){
+      if(newFiltersEnabledNew){
         return ',listings.marketplace,status,listings.price,nftType,contractName';
       }else {
         return SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency');
       }
     };
     page === 1 && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: newFiltersEnabled ? checkFacetType() : SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
+      facet_by: newFiltersEnabledNew ? checkFacetType() : SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
       max_facet_values: 200,
       collection: 'nfts',
       query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : ',marketplace,listingType,currency'),
@@ -120,12 +121,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       .then((resp) => {
         results.current = [...resp.results[0].hits];
         found.current = resp.results[0].found;
-        if(newFiltersEnabled) {
+        if(newFiltersEnabledNew) {
           setSearchedData(resp.results[0].hits);
         }
         filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
       });
-  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, sideNavOpen, newFiltersEnabled]);
+  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, sideNavOpen, newFiltersEnabledNew]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -145,7 +146,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           results.current = [...results.current,...resp.results[0].hits];
           found.current = resp.results[0].found;
           filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
-          if(newFiltersEnabled){
+          if(newFiltersEnabledNew){
             setSearchedData([...searchedData,...resp.results[0].hits]);
             addressesList.current = searchedData?.map((nft) => {
               return nft.document?.contractAddr;
@@ -156,8 +157,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           });
         });
     }
-  }, [addressesList, fetchTypesenseMultiSearch, filters.length, newFiltersEnabled, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchedData, sideNavOpen]);
-  if(newFiltersEnabled) {
+  }, [addressesList, fetchTypesenseMultiSearch, filters.length, newFiltersEnabledNew, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchedData, sideNavOpen]);
+  if(newFiltersEnabledNew) {
     if (discoverPageEnv) {
       return (
         <div className="p-1 mt-7 minmd:p-4 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
