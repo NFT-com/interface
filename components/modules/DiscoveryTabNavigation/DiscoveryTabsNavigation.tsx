@@ -21,6 +21,18 @@ const DiscoveryTabs = [
     key: 'profiles'
   }
 ];
+const DiscoveryTabsOld = [
+  {
+    name: 'Collections',
+    id: 1,
+    key: 'collections'
+  },
+  {
+    name: 'Profiles',
+    id: 2,
+    key: 'profiles'
+  }
+];
 export interface NavProps {
   active?: string;
   isLeaderBoard?: boolean;
@@ -68,7 +80,7 @@ export function DiscoveryTabNav(props: NavProps) {
       <div className="w-[100%] border-[##ECECEC] border-b-[2px] mb-[20px]">
         <ul className={`${props.isLeaderBoard ? '' : 'justify-center'} relative transition-all flex flex-row items-center text-[22px] leading-[20px] text-[#B2B2B2] font-[500]`}>
           {
-            DiscoveryTabs.map(tab => {
+            DiscoveryTabsOld.map(tab => {
               return (
                 <li key={tab.id}
                   onClick={() => props.callBack(tab.key)}
