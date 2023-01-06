@@ -19,7 +19,7 @@ import React, { useEffect, useState } from 'react';
 export default function CollectionsPage() {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const [page, setPage] = useState(1);
-  const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen } = useSearchModal();
+  const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen, setClearedFilters } = useSearchModal();
   const { data: collectionData } = useCollectionQueryLeaderBoard(activePeriod);
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
@@ -44,6 +44,9 @@ export default function CollectionsPage() {
       setTotalFound(results.found);
       page > 1 ? setCollectionData([...collections,...results.hits]) : setCollectionData(results.hits);
     });
+    return () => {
+      setClearedFilters();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters, isLeaderBoard]);
 

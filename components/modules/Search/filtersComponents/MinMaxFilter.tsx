@@ -1,4 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
+import { tw } from 'utils/tw';
 
 import ArrowDown from 'public/arrow-down-black.svg';
 import React, { useEffect, useRef,useState } from 'react';
@@ -33,13 +34,35 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
   const { min, max } = props;
   const [minVal, setValueMin] = useState(min);
   const [maxVal, setValueMax] = useState(max);
+  const [isError, setError] = useState(false);
   useOutsideCLick(wrapperRef, props);
+  useEffect(() => {
+    if(!maxVal){
+      setError(false);
+    }
+    if(maxVal && maxVal > 0){
+      if(minVal > maxVal){
+        setError(true);
+      }else {
+        setError(false);
+      }
+    }
+  }, [minVal, maxVal]);
 
   return (
     <div ref={wrapperRef}>
       <div className="flex justify-between items-center mb-2.5 mt-4">
         <div className="w-[50%]">
-          <input lang="en_EN" value={minVal} onChange={(val) => setValueMin(val.target.value)} placeholder='Min' className="h-[46px] focus:outline-none focus:ring-0 w-full border-none bg-[#F2F2F2] outline-none rounded-[8px]" type="number"/>
+          <input lang="en_EN"
+            value={minVal}
+            onChange={(val) => setValueMin(val.target.value)}
+            placeholder='Min'
+            className={tw(
+              'h-[46px] focus:outline-none focus:ring-0 w-full border-none bg-[#F2F2F2] outline-none rounded-[8px]',
+              isError ? 'bg-[#ff5d5d]' : ''
+            )}
+            type="number"/>
+          {/*${isError ? 'bg-red' : ''*/}
         </div>
         <div className="px-2">to</div>
         <div className="w-[50%]">
@@ -47,23 +70,23 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
         </div>
       </div>
       <div className='mb-2.5 relative'>
-        <div className={`${props.isOpen ? 'rounded-b-[0]' : ''} text-black w-full border-none bg-[#F2F2F2] h-[46px] flex items-center justify-between pl-2 pr-4 cursor-not-allowed rounded-[8px]`}>
-          {/*{props.currency}*/}
-          ETH
+        <div onClick={() => props.toggleSelect(props.isOpen)} className={`${props.isOpen ? 'rounded-b-[0]' : ''} text-black w-full border-none bg-[#F2F2F2] h-[46px] flex items-center justify-between pl-2 pr-4 rounded-[8px]`}>
+          {props.currency ? props.currency : 'ETH'}
           <ArrowDown/>
         </div>
-        {/*<ul className={`${props.isOpen ? 'h-[96px]' : 'h-0'} bg-[#F2F2F2] relative transition-all relative w-full p-0 h-0 overflow-hidden rounded-b-[8px]`}>*/}
-        {/*  <li onClick={() => {*/}
-        {/*    props.changeCurrency('ETH');*/}
-        {/*    props.toggleSelect(props.isOpen);*/}
-        {/*  }} className='cursor-pointer hover:bg-[#F9D54C] flex items-center text-black h-[46px] px-2 list-none m-0'>ETH</li>*/}
-        {/*  <li onClick={() => {*/}
-        {/*    props.changeCurrency('WETH');*/}
-        {/*    props.toggleSelect(props.isOpen);*/}
-        {/*  }} className='cursor-pointer hover:bg-[#F9D54C] flex items-center text-black h-[46px] px-2 list-none m-0'>WETH</li>*/}
-        {/*</ul>*/}
+        <ul className={`${props.isOpen ? 'h-[96px]' : 'h-0'} bg-[#F2F2F2] relative transition-all relative w-full p-0 h-0 overflow-hidden rounded-b-[8px]`}>
+          <li onClick={() => {
+            props.changeCurrency('ETH');
+            props.toggleSelect(props.isOpen);
+          }} className='cursor-pointer hover:bg-[#F9D54C] flex items-center text-black h-[46px] px-2 list-none m-0'>ETH</li>
+          <li onClick={() => {
+            props.changeCurrency('WETH');
+            props.toggleSelect(props.isOpen);
+          }} className='cursor-pointer hover:bg-[#F9D54C] flex items-center text-black h-[46px] px-2 list-none m-0'>WETH</li>
+        </ul>
       </div>
       <Button
+        disabled={isError}
         stretch
         label={'Apply'}
         type={ButtonType.PRIMARY}
