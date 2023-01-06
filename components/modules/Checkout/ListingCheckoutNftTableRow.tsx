@@ -8,7 +8,7 @@ import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
-import { processIPFSURL } from 'utils/helpers';
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings } from 'utils/marketplaceUtils';
@@ -211,7 +211,6 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const NativePriceInput = () => {
     return <PriceInput
-      empty={empty}
       key={expanded + 'NativePriceInput'}
       initial={
         getTarget(props.listing, ExternalProtocol.Native)?.startingPrice == null ?
@@ -230,7 +229,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }}
       error={
         (props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Native && target.startingPrice == null) != null ||
-  props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Native && BigNumber.from(target.startingPrice).eq(0)) != null)
+      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Native && BigNumber.from(target.startingPrice).eq(0)) != null)
       }
     />;
   };

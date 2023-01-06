@@ -4,6 +4,7 @@ import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { get721Contract } from 'hooks/contracts/get721Contract';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareRoyaltyFeeManagerContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeManagerContract';
 import { useLooksrareRoyaltyFeeRegistryContractContract } from 'hooks/contracts/useLooksrareRoyaltyFeeRegistryContract';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
@@ -133,7 +134,7 @@ export function NFTListingsContextProvider(
   const { toBuy } = useContext(NFTPurchasesContext);
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const { data: supportedCurrencyData } = useSupportedCurrencies();
-  // const { marketplace } = useAllContracts();
+  const { marketplace } = useAllContracts();
 
   useEffect(() => {
     if (window != null) {
@@ -410,15 +411,17 @@ export function NFTListingsContextProvider(
         } else if (target.protocol === ExternalProtocol.X2Y2) {
           return target;
         } else if (target.protocol === ExternalProtocol.Native) {
+          // const nonce = await marketplace.nonces(currentAddress);
           const order = await createNativeParametersForNFTListing(
             currentAddress,
-            isNullOrEmpty(target.nativeOrder.taker) ? NULL_ADDRESS : target.nativeOrder.taker,
+            isNullOrEmpty(target?.nativeOrder?.taker) ? NULL_ADDRESS : target.nativeOrder.taker,
             Number(target.duration) ?? Number(stagedNft.duration),
-            onchainAuctionTypeToGqlAuctionType(target.nativeOrder.auctionType),
+            // onchainAuctionTypeToGqlAuctionType(target.nativeOrder.auctionType), Need to add in auction type
+            onchainAuctionTypeToGqlAuctionType(0),
             stagedNft.nft,
-            BigNumber.from(2), //placeholder for now - use marketplace contract to get nonce once updated
-            getByContractAddress(isNullOrEmpty(target.nativeOrder.taker) ? NULL_ADDRESS : target.nativeOrder.taker).contract,
-            target.startingPrice,
+            nonce,
+            getByContractAddress(isNullOrEmpty(target?.nativeOrder?.taker) ? NULL_ADDRESS : target.nativeOrder.taker).contract,
+            target.startingPrice as BigNumber,
             stagedNft.currency ?? target.currency,
           );
           nonce++;
@@ -506,7 +509,8 @@ export function NFTListingsContextProvider(
           if (isNullOrEmpty(signature)) {
             return ListAllResult.SignatureRejected;
           }
-          const result = await listNftNative(target.nativeOrder, signature, listing.nft, target.currency);
+          const result = await listNftNative(target.nativeOrder, signature, listing.nft, target.currency, target.startingPrice as BigNumber);
+          console.log('🚀 ~ file: NFTListingsContext.tsx:513 ~ results ~ result', result);
           if (!result) {
             return ListAllResult.ApiError;
           }
@@ -560,6 +564,7 @@ export function NFTListingsContextProvider(
               ...(target === ExternalProtocol.LooksRare ? { isApprovedForLooksrare: true } : {}),
               ...(target === ExternalProtocol.Seaport ? { isApprovedForSeaport: true } : {}),
               ...(target === ExternalProtocol.X2Y2 ? { isApprovedForX2Y2: true } : {}),
+              ...(target === ExternalProtocol.Native ? { isApprovedForNative: true } : {}),
             };
           }
           return l;

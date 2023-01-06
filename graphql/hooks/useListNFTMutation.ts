@@ -36,7 +36,8 @@ export interface ListNftResult {
     order: UnsignedOrder,
     signature: Signature,
     nft: PartialDeep<Nft>,
-    currency: string
+    currency: string,
+    startingPrice: BigNumber
   ) => Promise<boolean>,
 }
 
@@ -120,14 +121,14 @@ export function useListNFTMutations(): ListNftResult {
   );
 
   const listNftNative = useCallback(
-    async (order: UnsignedOrder, signature: Signature, nft: PartialDeep<Nft>, currency: string ) => {
+    async (order: UnsignedOrder, signature: Signature, nft: PartialDeep<Nft>, currency: string, startingPrice: BigNumber ) => {
       try {
         const unhashedMake = unhashedMakeAsset(nft);
         const unhashedTake = unhashedTakeAsset(
           currency,
-          order.start,
+          startingPrice,
           onchainAuctionTypeToGqlAuctionType(order.auctionType),
-          getByContractAddress(isNullOrEmpty(order.taker) ? NULL_ADDRESS : order.taker).contract);
+          getByContractAddress(isNullOrEmpty(order?.taker) ? NULL_ADDRESS : order.taker).contract);
         const orderHash = getOrderHash({
           ...order,
           makeAssets: [unhashedMake],
@@ -148,7 +149,11 @@ export function useListNFTMutations(): ListNftResult {
             makerAddress: order.maker,
             nonce: order.nonce,
             salt: order.salt,
-            signature,
+            signature : {
+              r: signature.r,
+              s: signature.s,
+              v: signature.v
+            },
             start: order.start,
             structHash: orderHash,
             takeAsset: [
@@ -165,6 +170,7 @@ export function useListNFTMutations(): ListNftResult {
               order.taker,
           }
         });
+        console.log('🚀 ~ file: useListNFTMutation.ts:209 ~ result', result);
         return result?.createMarketListing ? true : false;
       } catch (err) {
         Sentry.captureException(err);

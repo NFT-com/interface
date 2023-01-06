@@ -7,7 +7,8 @@ import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 export enum TransferProxyTarget {
   LooksRare = '0xf42aa99F011A1fA7CDA90E5E98b277E306BcA83e',
   Opensea = '0x1e0049783f008a0085193e00003d00cd54003c71',
-  X2Y2 = '0xF849de01B080aDC3A814FaBE1E2087475cF2E354'
+  X2Y2 = '0xF849de01B080aDC3A814FaBE1E2087475cF2E354',
+  Native = '0x7AFAF0D3dd4aC87D21C326A7e07D0345f6071DAD'
 }
 
 export function useNftCollectionAllowance(

@@ -285,12 +285,6 @@ export const getMarketAskSignatureData = (
 ): SignTypedDataArgs => {
   return {
     types: {
-      EIP712Domain: [
-        { name: 'name', type: 'string' },
-        { name: 'version', type: 'string' },
-        { name: 'chainId', type: 'uint256' },
-        { name: 'verifyingContract', type: 'address' },
-      ],
       Order: [
         { name: 'maker', type: 'address' },
         { name: 'makeAssets', type: 'Asset[]' },
@@ -379,7 +373,6 @@ export const getMarketBidSignatureData = (
       chainId,
       verifyingContract: verifyingContract,
     },
-    // primaryType: 'Order',
     value: unsignedOrder
   };
 };
@@ -402,7 +395,7 @@ export function unhashedMakeAsset(nft: PartialDeep<Nft>): UnhashedAsset {
 
 export function unhashedTakeAsset(
   saleCurrency : string,
-  startingPrice: number,
+  startingPrice: BigNumber,
   auctionType: AuctionType,
   takeAssetContractAddress: string,
   endingPrice?: number,
@@ -410,15 +403,15 @@ export function unhashedTakeAsset(
   buyNowPrice?: number | null,
 ): UnhashedAsset {
   const takeAssetValue = auctionType === AuctionType.FixedPrice ?
-    BigNumber.from(startingPrice) :
+    startingPrice :
     auctionType === AuctionType.Decreasing ?
-      BigNumber.from(startingPrice) :
+      startingPrice :
       !isNullOrEmpty(buyNowPrice.toString()) ?
         MAX_UINT_256 :
         BigNumber.from(buyNowPrice);
 
   const takeAssetMinimumBid = auctionType === AuctionType.FixedPrice ?
-    BigNumber.from(startingPrice) :
+    startingPrice :
     auctionType === AuctionType.Decreasing ? BigNumber.from(endingPrice) : BigNumber.from(reservePrice);
   return {
     class: saleCurrency === 'ETH' ? AssetClass.Eth : AssetClass.Erc20,
@@ -437,9 +430,9 @@ export async function createNativeParametersForNFTListing(
   duration: number,
   auctionType: AuctionType,
   nft: PartialDeep<Nft>,
-  nonce: BigNumber,
+  nonce: number,
   takeAssetContractAddress: string,
-  startingPrice: BigNumberish,
+  startingPrice: BigNumber,
   currency: string
 ): Promise<UnsignedOrder> {
   const salt = moment.utc().unix();
@@ -453,10 +446,10 @@ export async function createNativeParametersForNFTListing(
     salt,
     start,
     end,
-    nonce.toNumber(),
+    nonce,
     auctionType,
     [unhashedMakeAsset(nft)], // makeAssets
-    [unhashedTakeAsset(currency, Number(startingPrice), auctionType, takeAssetContractAddress)], // takeAssets
+    [unhashedTakeAsset(currency, startingPrice, auctionType, takeAssetContractAddress)], // takeAssets
   );
   
   return unsignedOrder;
