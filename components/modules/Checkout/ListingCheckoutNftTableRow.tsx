@@ -19,7 +19,6 @@ import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { BigNumber, ethers } from 'ethers';
 import { CaretDown, CaretRight } from 'phosphor-react';
 import RemoveIcon from 'public/close-circle-icon-gray.svg';
-import InfoIcon from 'public/gray-info-icon.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import DeleteRowIcon from 'public/trash-icon.svg';

@@ -15,7 +15,7 @@ import React, { useEffect, useState } from 'react';
 export default function CollectionsPage() {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const [page, setPage] = useState(1);
-  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy } = useSearchModal();
+  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [nftSData, setNftsData] = useState([]);
@@ -28,9 +28,9 @@ export default function CollectionsPage() {
       facet_by: ',listings.marketplace,status,listings.price,nftType',
       index: 'nfts',
       q: '*',
-      sort_by: 'hasListings:desc',
+      sort_by: 'score:desc',
       query_by: '',
-      filter_by: nftsResultsFilterBy,
+      filter_by: nftsResultsFilterBy ? nftsResultsFilterBy : 'listings.currency:=[ETH]',
       per_page: 20,
       page: page,
     }).then((results) => {
@@ -39,6 +39,9 @@ export default function CollectionsPage() {
       setTotalFound(results.found);
       page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
     });
+    return () => {
+      setClearedFilters();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
 
