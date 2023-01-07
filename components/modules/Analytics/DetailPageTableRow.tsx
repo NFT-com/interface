@@ -193,10 +193,15 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
         {moment.utc(tx.transaction_date).format('lll').toString() || '—'}
       </td>
-      <td className="font-noi-grotesk text-[16px] leading-6 underline text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37] p-4">
+      <td className="font-noi-grotesk text-[16px] leading-6 text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37] p-4">
         <a
           target="_blank"
-          rel="noreferrer" href={`https://etherscan.io/tx/${tx.transaction_hash}`} className='tracking-wide underline'>
+          rel="noreferrer" href={`https://etherscan.io/tx/${tx.transaction_hash}`}
+          className={tw(
+            'tracking-wide',
+            shorten(tx?.transaction_hash, true) && 'underline decoration-[#FAC213] underline-offset-2'
+          )}
+        >
           {shorten(tx?.transaction_hash, true) || '—'}
         </a>
       </td>
