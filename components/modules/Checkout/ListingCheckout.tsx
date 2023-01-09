@@ -4,6 +4,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
+import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { ExternalProtocol } from 'types';
@@ -15,6 +16,7 @@ import { tw } from 'utils/tw';
 
 import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
 import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
+import { handleRender } from './TooltipSlider';
 
 import Image from 'next/image';
 import router from 'next/router';
@@ -38,6 +40,9 @@ export function ListingCheckout() {
     prepareListings,
     allListingsConfigured,
   } = useContext(NFTListingsContext);
+  const [sliderDuration, setSliderDuration] = useState<number | number[]>(null);
+  const { usePrevious } = usePreviousValue();
+  const prevSliderDuration = usePrevious(sliderDuration);
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
@@ -46,13 +51,35 @@ export function ListingCheckout() {
       null
   );
 
+  // useEffect(() => {
+  //   toList.forEach(stagedNft => {
+  //     if(!stagedNft.duration) {
+  //       setDuration('30 Days' as SaleDuration);
+  //     }
+  //   });
+  // },[setDuration, toList]);
+
   useEffect(() => {
-    toList.forEach(stagedNft => {
-      if(!stagedNft.duration) {
-        setDuration('30 Days' as SaleDuration);
-      }
-    });
-  },[setDuration, toList]);
+    if (sliderDuration && [0,10,20,30,40,50,60].includes(sliderDuration as number) && prevSliderDuration !== sliderDuration) {
+      const durationValue = sliderDuration === 0 ?
+        '1 Hour'
+        : sliderDuration === 10 ?
+          '1 Day'
+          : sliderDuration === 20 ?
+            '7 Days'
+            : sliderDuration === 30 ?
+              '30 Days'
+              : sliderDuration === 40 ?
+                '60 Days'
+                : sliderDuration === 50 ?
+                  '90 Days'
+                  : '180 Days';
+      console.log('sliderDuration fdo', sliderDuration);
+      console.log('duration fdo', durationValue);
+
+      setDuration(durationValue as SaleDuration);
+    }
+  },[prevSliderDuration, setDuration, sliderDuration]);
     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
@@ -239,27 +266,11 @@ export function ListingCheckout() {
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
           <div className='mt-8 w-[93%] minlg:w-full'>
             <Slider
-              step={10}
               min={0}
               max={60}
               defaultValue={30}
               marks={{ 0: '1 Hour', 10: '1 Day', 20: '7 Days', 30: '30 Days',40: '60 Days', 50: '90 Days', 60: '180 Days' }}
-              onChange={(value) => {
-                const duration = value === 0 ?
-                  '1 Hour'
-                  : value === 10 ?
-                    '1 Day'
-                    : value === 20 ?
-                      '7 Days'
-                      : value === 30 ?
-                        '30 Days'
-                        : value === 40 ?
-                          '60 Days'
-                          : value === 50 ?
-                            '90 Days'
-                            : '180 Days';
-                setDuration(duration as SaleDuration);
-              }}
+              onChange={(value) => setSliderDuration(value)}
               trackStyle={[{ backgroundColor: '#F9D54C' }]}
               handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
             />
