@@ -105,6 +105,8 @@ const moduleExports = withTM({
     setHeaders(res, path) {
       if (path.endsWith('.json')) {
         res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET');
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
       }
     }
   },
