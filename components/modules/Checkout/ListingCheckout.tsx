@@ -74,8 +74,6 @@ export function ListingCheckout() {
                 : sliderDuration === 50 ?
                   '90 Days'
                   : '180 Days';
-      console.log('sliderDuration fdo', sliderDuration);
-      console.log('duration fdo', durationValue);
 
       setDuration(durationValue as SaleDuration);
     }
@@ -265,6 +263,18 @@ export function ListingCheckout() {
         <div className='w-full flex flex-col mt-8 items-center'>
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
           <div className='mt-8 w-[93%] minlg:w-full'>
+            <Slider
+              trackStyle={[{ backgroundColor: '#F9D54C' }]}
+              handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
+              marks={{ 0: '1 Hour', 10: '|', 20: '|', 30: '|',40: '|', 50: '|', 60: '180 Days' }}
+              min={0}
+              max={60}
+              defaultValue={30}
+              handleRender={handleRender}
+              onChange={(value) => setSliderDuration(value)}
+            />
+            <br />
+            <br />
             <Slider
               min={0}
               max={60}
