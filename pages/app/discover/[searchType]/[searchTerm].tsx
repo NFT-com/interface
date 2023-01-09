@@ -289,13 +289,16 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     className="cursor-pointer hover:font-semibold underline text-black font-black minmd:text-base font-grotesk font-[600]"
                     onClick={() => {
                       if (discoverPageEnv) {
+                        if(newFiltersEnabledNew){
+                          setClearedFilters();
+                        }
                         router.push(`/app/search/${searchTerm.toString()}`);
                       } else {
                         router.push(`/app/discover/allResults/${searchTerm.toString()}`);
                       }
                     }}
                   >
-                  SEE ALL COLLECTIONS AND NFTS RESULTS
+                  Return to Search Results
                   </span>}
                 </div>
                 <div className={tw(

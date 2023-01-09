@@ -170,6 +170,7 @@ export function useSearchModal() {
       nftsPageSortyBy: '',
       nftsResultsFilterBy: '',
       collectionsResultsFilterBy: '',
+      checkedArray: [],
       collectionsFilter: {
         issuance: null,
         floor: null,
