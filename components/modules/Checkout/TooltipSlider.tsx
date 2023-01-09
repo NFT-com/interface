@@ -52,7 +52,7 @@ const HandleTooltip = (props: {
 };
 
 export const handleRender: SliderProps['handleRender'] = (node, props) => {
-  return (<HandleTooltip value={props.value} visible={props.dragging}>
+  return (<HandleTooltip value={props.value} visible={true/* props.dragging */}>
     {node}
   </HandleTooltip>
   );
