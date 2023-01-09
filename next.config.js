@@ -62,10 +62,6 @@ const moduleExports = withTM({
   async headers() {
     const securityHeaders = [
       {
-        key: 'X-Frame-Options',
-        value: 'DENY'
-      },
-      {
         key: 'X-XSS-Protection',
         value: '1; mode=block'
       },
@@ -104,6 +100,13 @@ const moduleExports = withTM({
         headers: securityHeaders
       }
     ];
+  },
+  server: {
+    setHeaders(res, path) {
+      if (path.endsWith('.json')) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+      }
+    }
   },
   async redirects() {
     return [
