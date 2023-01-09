@@ -82,6 +82,24 @@ const moduleExports = withTM({
         value: 'max-age=31536000; includeSubDomains'
       }
     ];
+    const manifestHeaders = [
+      {
+        key: 'Access-Control-Allow-Origin',
+        value: '*'
+      },
+      {
+        key: 'Access-Control-Allow-Methods',
+        value: 'GET'
+      },
+      {
+        key: 'Access-Control-Allow-Headers',
+        value: 'X-Requested-With, content-type, Authorization'
+      },
+      {
+        key: 'Referrer-Policy',
+        value: 'strict-origin-when-cross-origin'
+      }
+    ];
     return [
       {
         source: '/',
@@ -98,18 +116,14 @@ const moduleExports = withTM({
       {
         source: '/articles/:path',
         headers: securityHeaders
+      },
+      {
+        source: '/manifest.json',
+        headers: manifestHeaders
       }
     ];
   },
-  server: {
-    setHeaders(res, path) {
-      if (path.endsWith('.json')) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET');
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
-      }
-    }
-  },
+
   async redirects() {
     return [
       {
