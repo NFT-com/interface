@@ -43,7 +43,7 @@ const HandleTooltip = (props: {
       overlay={tipFormatter(value)}
       overlayInnerStyle={{ minHeight: 'auto' }}
       ref={tooltipRef}
-      visible={visible}
+      visible={value !== '' && visible}
       {...restProps}
     >
       {children}
