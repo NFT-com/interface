@@ -84,7 +84,7 @@ export interface NFTListingsContextType {
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => void;
-  setDuration: (duration: SaleDuration) => void;
+  setDuration: (duration: number) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol) => void;
   setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
@@ -283,7 +283,7 @@ export function NFTListingsContextProvider(
     }
   }, [supportedCurrencyData, toList]);
 
-  const setDuration = useCallback((duration: SaleDuration) => {
+  const setDuration = useCallback((duration: number) => {
     setToList(toList.slice().map(stagedNft => {
       return {
         ...stagedNft,

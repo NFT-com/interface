@@ -14,18 +14,8 @@ import { PartialDeep } from 'type-fest';
 export const MAX_UINT_256 = BigNumber.from(2).pow(256).sub(1);
 export type SaleDuration = '1 Hour' | '1 Day' | '7 Days' | '30 Days' | '60 Days' | '90 Days' | '180 Days' | '1 Year';
 
-export const convertDurationToSec = (d: SaleDuration) => {
-  const durationDays: {[s in SaleDuration]: number} = {
-    '1 Hour': 1 / 24,
-    '1 Day' : 1,
-    '7 Days': 7,
-    '30 Days': 30,
-    '60 Days': 60,
-    '90 Days': 3 * 30,
-    '180 Days': 6 * 30,
-    '1 Year': 7 * 4 * 12,
-  };
-  return 60 * 60 * 24 * durationDays[d];
+export const convertDurationToSec = (d: number) => {
+  return 60 * 60 * 24 * d;
 };
 
 export function needsApprovals(stagedPurchases: StagedPurchase[]): boolean {

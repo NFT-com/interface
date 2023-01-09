@@ -4,14 +4,12 @@ import { Button, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
-import { usePreviousValue } from 'graphql/hooks/usePreviousValue';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { processIPFSURL } from 'utils/helpers';
-import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
@@ -40,9 +38,6 @@ export function ListingCheckout() {
     prepareListings,
     allListingsConfigured,
   } = useContext(NFTListingsContext);
-  const [sliderDuration, setSliderDuration] = useState<number | number[]>(null);
-  const { usePrevious } = usePreviousValue();
-  const prevSliderDuration = usePrevious(sliderDuration);
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
@@ -54,30 +49,10 @@ export function ListingCheckout() {
   useEffect(() => {
     toList.forEach(stagedNft => {
       if(!stagedNft.duration) {
-        setDuration('30 Days' as SaleDuration);
+        setDuration(30);
       }
     });
   },[setDuration, toList]);
-
-  useEffect(() => {
-    if (sliderDuration && [0,10,20,30,40,50,60].includes(sliderDuration as number) && prevSliderDuration !== sliderDuration) {
-      const durationValue = sliderDuration === 0 ?
-        '1 Hour'
-        : sliderDuration === 10 ?
-          '1 Day'
-          : sliderDuration === 20 ?
-            '7 Days'
-            : sliderDuration === 30 ?
-              '30 Days'
-              : sliderDuration === 40 ?
-                '60 Days'
-                : sliderDuration === 50 ?
-                  '90 Days'
-                  : '180 Days';
-
-      setDuration(durationValue as SaleDuration);
-    }
-  },[prevSliderDuration, setDuration, sliderDuration]);
     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
@@ -266,12 +241,12 @@ export function ListingCheckout() {
             <Slider
               trackStyle={[{ backgroundColor: '#F9D54C' }]}
               handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
-              marks={{ 0: '1 Hour', 10: '|', 20: '|', 30: '|',40: '|', 50: '|', 60: '180 Days' }}
+              marks={{ 1: '1 Day', 30: '|', 60: '|', 90: '|',120: '|', 150: '|', 180: '180 Days' }}
               min={0}
-              max={60}
+              max={180}
               defaultValue={30}
               handleRender={handleRender}
-              onChange={(value) => setSliderDuration(value)}
+              onChange={(value) => setDuration(value as number)}
             />
           </div>
         </div>
@@ -361,7 +336,7 @@ export function ListingCheckout() {
               }
             </div>
           </div>
-          <div className='w-full flex flex-col px-8 mt-8 items-center'>
+          {/* <div className='w-full flex flex-col px-8 mt-8 items-center'>
             <span className='text-2xl w-full flex font-bold'>Set Duration</span>
             <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
               {
@@ -373,7 +348,7 @@ export function ListingCheckout() {
                     }}
                     className={tw(
                       'rounded-full py-2.5 px-2',
-                      toList?.find(l => l?.duration === convertDurationToSec(duration as SaleDuration)) ? 'bg-primary-yellow font-bold' : 'border border-[#D5D5D5] text-black',
+                      'border border-[#D5D5D5] text-black',
                       'cursor-pointer hover:opacity-80',
                     )}
                   >
@@ -382,7 +357,7 @@ export function ListingCheckout() {
                 })
               }
             </div>
-          </div>
+          </div> */}
           <div className='my-8 overflow-x-scroll w-full flex flex-col'>
             <div className="border-t border-[#D5D5D5] mx-8">
               <span className='text-2xl w-full flex font-bold mt-10 mb-8 mx-8'>Your Listings</span>

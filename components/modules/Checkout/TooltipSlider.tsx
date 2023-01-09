@@ -12,7 +12,7 @@ const HandleTooltip = (props: {
   visible: boolean;
   tipFormatter?: (value: number | string) => React.ReactNode;
 }) => {
-  const { value, children, visible, tipFormatter = (val) => `${val}`, ...restProps } = props;
+  const { value, children, visible, tipFormatter = (val) => `${val} ${val === 1 ? 'Day' : 'Days'}`, ...restProps } = props;
 
   const tooltipRef = React.useRef<any>();
   const rafRef = React.useRef<number | null>(null);
@@ -52,22 +52,7 @@ const HandleTooltip = (props: {
 };
 
 export const handleRender: SliderProps['handleRender'] = (node, props) => {
-  const tooltipValue = props.value === 0 ?
-    '1 Hour'
-    : props.value === 10 ?
-      '1 Day'
-      : props.value === 20 ?
-        '7 Days'
-        : props.value === 30 ?
-          '30 Days'
-          : props.value === 40 ?
-            '60 Days'
-            : props.value === 50 ?
-              '90 Days'
-              : props.value === 60 ?
-                '180 Days'
-                : '';
-  return (<HandleTooltip value={tooltipValue} visible={props.dragging}>
+  return (<HandleTooltip value={props.value} visible={props.dragging}>
     {node}
   </HandleTooltip>
   );
