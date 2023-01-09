@@ -2,7 +2,6 @@ import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
-import { safeWallet } from 'components/elements/SafeWallet';
 import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
@@ -35,8 +34,10 @@ import { isMobile } from 'react-device-detect';
 import ReactGA from 'react-ga';
 import { rainbowLight } from 'styles/RainbowKitThemes';
 import { v4 as uuid } from 'uuid';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { goerli, mainnet } from 'wagmi/chains';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
+import { safeWallet } from 'wallets/SafeWallet';
 
 const GOOGLE_ANALYTICS_ID: string | undefined = getEnv(Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
 if (GOOGLE_ANALYTICS_ID != null) {
@@ -75,8 +76,8 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
   const { chains, provider } = useMemo(() => {
     return configureChains(
       getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
-        [chain.mainnet, chain.goerli] :
-        [chain.mainnet],
+        [mainnet, goerli] :
+        [mainnet],
       [
         jsonRpcProvider({
           rpc: (chain) => {
@@ -162,7 +163,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           }}
           theme={rainbowLight}
           chains={chains}
-          initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
+          initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? goerli : mainnet}
           avatar={CustomAvatar}
         >
           <AnimatePresence exitBeforeEnter>
