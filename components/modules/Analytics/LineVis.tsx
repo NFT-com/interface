@@ -139,8 +139,8 @@ export const LineVis = ({ data, showMarketplaceOptions, selectedTimeFrame }: Lin
             <Label position='center' className='font-noi-grotesk' style={{ fontSize: '13px', height: '140px' }} value={'No Data Yet'} />
           }
           <CartesianGrid strokeDasharray="3-3" stroke="#E6E6E6" vertical={false} />
-          <XAxis dataKey={'date'} tickCount={7} type="number" domain={['dataMin', 'dataMax']} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} tickFormatter={xAxisFormatter}/>
-          <YAxis dataKey={'value'} tickCount={6} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
+          <XAxis axisLine={false} tickLine={false} dataKey={'date'} tickCount={7} type="number" domain={['dataMin', 'dataMax']} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} tickFormatter={xAxisFormatter}/>
+          <YAxis axisLine={false} tickLine={false} dataKey={'value'} tickCount={6} className='font-noi-grotesk' style={{ color: '#4D4D4D', fontSize: '13px' }} orientation={'left'} tickFormatter={yAxisFormatter} />
           <Tooltip
             cursor={false}
             content={<CustomTooltip dataLength={data.length}/>}
