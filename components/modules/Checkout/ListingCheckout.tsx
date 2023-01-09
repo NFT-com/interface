@@ -273,17 +273,6 @@ export function ListingCheckout() {
               handleRender={handleRender}
               onChange={(value) => setSliderDuration(value)}
             />
-            <br />
-            <br />
-            <Slider
-              min={0}
-              max={60}
-              defaultValue={30}
-              marks={{ 0: '1 Hour', 10: '1 Day', 20: '7 Days', 30: '30 Days',40: '60 Days', 50: '90 Days', 60: '180 Days' }}
-              onChange={(value) => setSliderDuration(value)}
-              trackStyle={[{ backgroundColor: '#F9D54C' }]}
-              handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
-            />
           </div>
         </div>
         <div className='flex flex-col items-start w-full mb-10'>

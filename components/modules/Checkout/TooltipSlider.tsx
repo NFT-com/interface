@@ -68,8 +68,8 @@ export const handleRender: SliderProps['handleRender'] = (node, props) => {
                 '180 Days'
                 : '';
   return (<HandleTooltip value={tooltipValue} visible={props.dragging}>
-        {node}
-      </HandleTooltip>
+    {node}
+  </HandleTooltip>
   );
 };
 
