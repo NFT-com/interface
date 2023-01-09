@@ -2,6 +2,7 @@ import 'styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
+import { safeWallet } from 'components/elements/SafeWallet';
 import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
@@ -13,8 +14,16 @@ import {
   AvatarComponent,
   connectorsForWallets,
   RainbowKitProvider,
-  wallet
 } from '@rainbow-me/rainbowkit';
+import {
+  argentWallet,
+  coinbaseWallet,
+  ledgerWallet,
+  metaMaskWallet,
+  rainbowWallet,
+  trustWallet,
+  walletConnectWallet
+} from '@rainbow-me/rainbowkit/wallets';
 import { AnimatePresence } from 'framer-motion';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
@@ -81,24 +90,25 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
       ]
     );
   }, []);
-  
+
   const connectors = useMemo(() => {
     return connectorsForWallets([
       {
         groupName: 'Recommended',
         wallets: [
-          wallet.metaMask({ chains, shimDisconnect: true }),
-          wallet.rainbow({ chains }),
+          metaMaskWallet({ chains, shimDisconnect: true }),
+          safeWallet({ chains }),
+          rainbowWallet({ chains }),
         ],
       },
       {
         groupName: 'Others',
         wallets: [
-          wallet.walletConnect({ chains }),
-          wallet.coinbase({ chains, appName: 'NFT.com' }),
-          wallet.trust({ chains }),
-          wallet.ledger({ chains }),
-          wallet.argent({ chains })
+          walletConnectWallet({ chains }),
+          coinbaseWallet({ chains, appName: 'NFT.com' }),
+          trustWallet({ chains }),
+          ledgerWallet({ chains }),
+          argentWallet({ chains })
         ],
       },
     ]);
