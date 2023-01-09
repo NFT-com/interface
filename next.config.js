@@ -123,7 +123,6 @@ const moduleExports = withTM({
       }
     ];
   },
-
   async redirects() {
     return [
       {

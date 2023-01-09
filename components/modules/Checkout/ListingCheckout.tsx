@@ -51,13 +51,13 @@ export function ListingCheckout() {
       null
   );
 
-  // useEffect(() => {
-  //   toList.forEach(stagedNft => {
-  //     if(!stagedNft.duration) {
-  //       setDuration('30 Days' as SaleDuration);
-  //     }
-  //   });
-  // },[setDuration, toList]);
+  useEffect(() => {
+    toList.forEach(stagedNft => {
+      if(!stagedNft.duration) {
+        setDuration('30 Days' as SaleDuration);
+      }
+    });
+  },[setDuration, toList]);
 
   useEffect(() => {
     if (sliderDuration && [0,10,20,30,40,50,60].includes(sliderDuration as number) && prevSliderDuration !== sliderDuration) {
