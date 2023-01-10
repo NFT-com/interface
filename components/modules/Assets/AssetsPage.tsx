@@ -150,10 +150,10 @@ export default function AssetsPages() {
           <table className="border-collapse table-fixed w-full">
             <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
               <tr className='p-4 pt-0 pb-3 text-left ...'>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px] text-center'>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[80px] text-center'>
                   <input checked={selectedAssets.length === assetData.length} onChange={() => selectAllHandler()} className='border-2 border-[#6F6F6F] text-[#6F6F6F] form-checkbox focus:ring-[#F9D963]' type='checkbox' />
                 </th>
-                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[300px]'>NFT Name</th>
+                <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[200px]'>NFT Name</th>
                 <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[200px]'>Collection</th>
                 <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Status</th>
                 <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Purchased Price</th>

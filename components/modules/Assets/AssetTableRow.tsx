@@ -81,7 +81,7 @@ export default function AssetTableRow({
   
   return (
     <tr
-      className={tw('min-w-[5.5rem] h-20 font-noi-grotesk border-t border-[#D6D6D6]')}
+      className={tw('min-w-[5.5rem] h-20 font-medium font-noi-grotesk border-t border-[#D6D6D6]')}
     >
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <div className='flex justify-center'>
@@ -91,21 +91,19 @@ export default function AssetTableRow({
             className='border-2 border-[#6F6F6F] text-[#6F6F6F] form-checkbox focus:ring-[#F9D963]' type='checkbox' />
         </div>
       </td>
-      <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
-        <div className='flex items-center h-full -mt-1'>
+      <td className="text-body leading-body pr-8 minmd:pr-4" >
+        <div className='flex items-center h-full -mt-1 truncate ... text-ellipsis'>
           <RoundedCornerMedia
             containerClasses='w-[32px] h-[32px] mr-2'
             src={processedImageURLs[0]}
             variant={RoundedCornerVariant.Asset}
           />
           <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`}>
-            <div className='hover:cursor-pointer'>
-              <p className='text-black truncate ... text-ellipsis'>{item.metadata?.name}</p>
-            </div>
+            <p className='hover:cursor-pointer text-black truncate ... text-ellipsis'>{item.metadata?.name}</p>
           </Link>
         </div>
       </td>
-      <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
+      <td className="text-body leading-body pr-8 minmd:pr-4" >
         <Link href={`/app/collection/${item?.contract}`}>
           <div className='hover:cursor-pointer'>
             <p className='-mt-1 text-black'>{collectionName}</p>
