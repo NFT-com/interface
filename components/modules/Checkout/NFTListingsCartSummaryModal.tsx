@@ -189,7 +189,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       // fee summary, default state.
       return (
         <>
-          <p className="text-3xl mx-4">
+          <p className="text-3xl font-noi-grotesk mx-4">
             Listing Fees
           </p>
           <p className='text-2xl text-[#6F6F6F] mx-4 font-bold'>
@@ -261,7 +261,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       pure
     >
       <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
-        <div className='pt-10 font-noi-grotesk mx-3 lg:max-w-md max-w-lg m-auto minlg:relative'>
+        <div className='pt-3 font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <X onClick={() => {
             if (success) {
               clear();

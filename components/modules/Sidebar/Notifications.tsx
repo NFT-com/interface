@@ -120,7 +120,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
 
   return (
     <>
-      <div className='w-full text-4xl font-bold mb-12'>
+      <div className='w-full text-3xl font-noi-grotesk mb-12'>
         Notifications
       </div>
 
