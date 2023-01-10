@@ -38,7 +38,7 @@ export function getSigners() {
 }
 
 export function getProvider({ chainId }: { chainId?: number } = {}) {
-  const chain = allChains.find((x) => x.id === chainId) ?? hardhat;
+  const chain = Object.values(allChains).find((x) => x.id === chainId) ?? hardhat;
   const network = getNetwork(chain);
   const url = hardhat.rpcUrls.default.toString();
   return new EthersProviderWrapper(url, network);
@@ -67,7 +67,7 @@ class EthersWebSocketProviderWrapper extends providers.WebSocketProvider {
 }
 
 export function getWebSocketProvider({ chainId }: { chainId?: number } = {}) {
-  const chain = allChains.find((x) => x.id === chainId) ?? hardhat;
+  const chain = Object.values(allChains).find((x) => x.id === chainId) ?? hardhat;
   const network = getNetwork(chain);
   const url = hardhat.rpcUrls.default.toString().replace('http', 'ws');
   return new EthersWebSocketProviderWrapper(url, network);
