@@ -28,6 +28,10 @@ export const convertDurationToSec = (d: SaleDuration) => {
   return 60 * 60 * 24 * durationDays[d];
 };
 
+export const convertDurationToSecForNumbersOnly = (d: number) => {
+  return 60 * 60 * 24 * d;
+};
+
 export function needsApprovals(stagedPurchases: StagedPurchase[]): boolean {
   return filterDuplicates(
     stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
