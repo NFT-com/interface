@@ -1,6 +1,6 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
-import { RoundedCornerMedia, RoundedCornerVariant, RoundedCornerAmount } from 'components/elements/RoundedCornerMedia';
+import { RoundedCornerAmount,RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
@@ -183,8 +183,12 @@ export default function AssetTableRow({
               icon: null,
             },
           ])
-          }>
-          <DotsThreeVertical data-cy="RowDropdown" size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
+          }
+        >
+          <div className='flex items-center justify-between w-full'>
+            <span/>
+            <DotsThreeVertical data-cy="RowDropdown" size={25} weight='fill' className='ml-2 hover:cursor-pointer text-black' />
+          </div>
         </DropdownPickerModal>
       </td>
     </tr>
