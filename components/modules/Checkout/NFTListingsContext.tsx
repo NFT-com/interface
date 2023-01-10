@@ -411,7 +411,7 @@ export function NFTListingsContextProvider(
         } else if (target.protocol === ExternalProtocol.X2Y2) {
           return target;
         } else if (target.protocol === ExternalProtocol.Native) {
-          // const nonce = await marketplace.nonces(currentAddress);
+          const nonce = await marketplace.nonces(currentAddress);
           const order = await createNativeParametersForNFTListing(
             currentAddress,
             isNullOrEmpty(target?.nativeOrder?.taker) ? NULL_ADDRESS : target.nativeOrder.taker,
@@ -419,12 +419,12 @@ export function NFTListingsContextProvider(
             // onchainAuctionTypeToGqlAuctionType(target.nativeOrder.auctionType), Need to add in auction type
             onchainAuctionTypeToGqlAuctionType(0),
             stagedNft.nft,
-            nonce,
+            Number(nonce),
             getByContractAddress(isNullOrEmpty(target?.nativeOrder?.taker) ? NULL_ADDRESS : target.nativeOrder.taker).contract,
             target.startingPrice as BigNumber,
             stagedNft.currency ?? target.currency,
           );
-          nonce++;
+          // await marketplace.incrementNonce(); need to increment nonce
           return {
             ...target,
             nativeOrder: order,
@@ -460,7 +460,7 @@ export function NFTListingsContextProvider(
       };
     }));
     setToList(preparedListings);
-  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager, getByContractAddress]);
+  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager, marketplace, getByContractAddress]);
 
   const listAll: () => Promise<ListAllResult> = useCallback(async () => {
     setSubmitting(true);
@@ -510,7 +510,6 @@ export function NFTListingsContextProvider(
             return ListAllResult.SignatureRejected;
           }
           const result = await listNftNative(target.nativeOrder, signature, listing.nft, target.currency, target.startingPrice as BigNumber);
-          console.log('🚀 ~ file: NFTListingsContext.tsx:513 ~ results ~ result', result);
           if (!result) {
             return ListAllResult.ApiError;
           }

@@ -64,7 +64,7 @@ export const nftAggregator: DeployedContract = {
 };
 
 export const marketplace: DeployedContract = {
-  goerli: '0x1fD9Bc58C7FfdB18D19a8A8d791B6ae9fa2BD097',
+  goerli: '0xa75F995f252ba5F7C17f834b314201271d32eC35',
   mainnet: '0x1fD9Bc58C7FfdB18D19a8A8d791B6ae9fa2BD097',
 };
 
