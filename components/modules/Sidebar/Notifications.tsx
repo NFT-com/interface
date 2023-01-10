@@ -7,6 +7,7 @@ import { NotificationButton } from './NotificationButton';
 
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import NoActivityIcon from 'public/no_activity.svg';
 import { useContext } from 'react';
 
 type NotificationsProps = {
@@ -120,23 +121,31 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
 
   return (
     <>
-      <div className='w-full text-4xl font-bold mb-12'>
+      <div className='w-full text-3xl font-noi-grotesk mb-5'>
         Notifications
       </div>
 
       {!count ?
-        <p>
-          No new notifications
-        </p>
+        <div className='flex flex-col items-center justify-center'>
+          <NoActivityIcon className='mx-auto' />
+          <div className='text-[#4D4D4D] font-semibold text-[22px] my-5'>No activity so far</div>
+          <div className='text-center text-[#4D4D4D] text-[14px] font-medium'>
+            You’ll see here the offers to your listed NFTs and when other owners accept of decline your made offers.
+          </div>
+          <div className='w-[100px] border-b border-[#ECECEC] my-8' />
+          <div className='text-center text-black text-[16px] font-semi-bold'>Start your collection by buying your first NFT</div>
+          <button onClick={() => router.push('/app/discover/nfts')} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[12px] focus:outline-none w-full mt-6" type="button">
+            Start your collection
+          </button>
+        </div>
         :
-        <div className='flex flex-col w-full items-center space-y-4'>
+        <div className='flex flex-col w-full items-center'>
           {filterNulls(notificationData).sort((a, b) => moment(b.date, 'MM-DD-YYYY').diff(moment(a.date, 'MM-DD-YYYY'))).map((item, index) => (
             <NotificationButton
               key={index}
               buttonText={item.text}
               date={item.date}
               onClick={item.onClick}
-              bgColor={index % 2 === 0 ? 'grey' : 'white' }
             />
           ))}
         </div>
