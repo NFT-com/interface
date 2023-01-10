@@ -14,6 +14,7 @@ import { tw } from 'utils/tw';
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
+import Offers from 'public/images/offers.svg';
 import { useCallback } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -128,6 +129,13 @@ export default function AssetTableRow({
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div>
           {getDisplayedProfiles()}
+        </div>
+      </td>
+      <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
+        <div onClick={() => alert('redirect todo')} className='flex items-center -mt-1 cursor-pointer hover:underline'>
+          <Offers className='mr-2' />
+          {/* TODO: NATIVE */}
+          <div>2 Offers</div>
         </div>
       </td>
       <td className='pr-8 minmd:pr-4'>
