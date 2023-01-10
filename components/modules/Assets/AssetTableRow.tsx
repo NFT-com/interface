@@ -1,6 +1,6 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
-import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { RoundedCornerMedia, RoundedCornerVariant, RoundedCornerAmount } from 'components/elements/RoundedCornerMedia';
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
@@ -55,7 +55,21 @@ export default function AssetTableRow({
       return <p className='text-[#B6B6B6]'>hidden</p>;
     }
     if (profiles?.length === 1){
-      return <Link href={`/${profiles[0].url}`}><p className='text-[#B59007] font-bold hover:cursor-pointer'><span className='text-black'>/ </span>{profiles[0].url}</p></Link>;
+      return <div className='flex items-center'>
+        <RoundedCornerMedia
+          priority={true}
+          containerClasses='w-[32px] h-[32px] w-full aspect-square mr-3'
+          variant={RoundedCornerVariant.Full}
+          amount={RoundedCornerAmount.Medium}
+          src={processIPFSURL(profiles[0].photoURL)}
+        />
+        <Link href={`/${profiles[0].url}`}>
+          <p className='font-bold hover:cursor-pointer'>
+            <span className='font-dm-mono text-primary-yellow mr-1'>/</span>
+            {profiles[0].url}
+          </p>
+        </Link>
+      </div>;
     }
     return (
       <div className='font-medium flex items-center relative underline text-[#1F2127] decoration-[#B59007] underline-offset-2'>
@@ -66,11 +80,22 @@ export default function AssetTableRow({
             <div
               className="rounded-xl p-3 bg-white text-black w-[200px] flex flex-col space-y-3"
             >
-              {profiles.map((profile) => (
-                <Link key={profile.url} href={`/${profile.url}`}>
-                  <p className='text-[#B59007] font-bold hover:cursor-pointer'>
-                    <span className='text-black'>/ </span>{profile.url}</p>
-                </Link>
+              {profiles.map((profile, i) => (
+                <div key={i} className='flex items-center'>
+                  <RoundedCornerMedia
+                    priority={true}
+                    containerClasses='w-[32px] h-[32px] w-full aspect-square mr-3'
+                    variant={RoundedCornerVariant.Full}
+                    amount={RoundedCornerAmount.Medium}
+                    src={processIPFSURL(profile.photoURL)}
+                  />
+                  <Link href={`/${profile.url}`}>
+                    <p className='font-bold hover:cursor-pointer'>
+                      <span className='font-dm-mono text-primary-yellow mr-1'>/</span>
+                      {profile.url}
+                    </p>
+                  </Link>
+                </div>
               ))}
             </div>
           }>
@@ -126,7 +151,7 @@ export default function AssetTableRow({
           {nftSaleHistory?.data?.transactions[0]?.price_details?.price_usd ? <p>${nftSaleHistory?.data?.transactions[0]?.price_details?.price_usd?.toFixed(2)}</p> : <p>—</p>}
         </div>
       </td>
-      <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
+      <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4 -mt-1" >
         <div>
           {getDisplayedProfiles()}
         </div>
