@@ -101,6 +101,14 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     TransferProxyTarget.X2Y2
   );
 
+  const {
+    allowedAll: nativeAllowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.Native
+  );
+
   const listingProtocol = props.listing?.order?.protocol;
 
   const getButton = useCallback((type: ListingButtonType) => {
@@ -124,6 +132,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             isApprovedForSeaport: openseaAllowed,
             isApprovedForLooksrare: looksRareAllowed,
             isApprovedForX2Y2: X2Y2Allowed,
+            isApprovedForNative: nativeAllowed,
             hasOpenOrder: true,
             nftcomOrderId: listing?.id,
             openOrderId: (listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.X2Y2 ? (listing?.order?.protocolData as X2Y2ProtocolData).id : null,
@@ -225,7 +234,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       />;
     }
     }
-  }, [stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, X2Y2Allowed, listing, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
+  }, [stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, X2Y2Allowed, nativeAllowed, listing, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
