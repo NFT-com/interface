@@ -21,7 +21,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   const { disconnect } = useDisconnect();
   const { setSignOutDialogOpen } = useSignOutDialog();
   const { setChangeWallet } = useChangeWallet();
-  const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
+  const { data: balanceData } = useBalance({ address: currentAddress, watch: true });
   const router = useRouter();
 
   const [notificationsModalVisible, setNotificationModalVisible] = useState(false);
