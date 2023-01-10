@@ -2,12 +2,12 @@ import { NotificationContext } from 'components/modules/Notifications/Notificati
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
 import { filterNulls } from 'utils/helpers';
-import NoActivityIcon from 'public/no_activity.svg';
 
 import { NotificationButton } from './NotificationButton';
 
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import NoActivityIcon from 'public/no_activity.svg';
 import { useContext } from 'react';
 
 type NotificationsProps = {
