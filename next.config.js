@@ -62,10 +62,6 @@ const moduleExports = withTM({
   async headers() {
     const securityHeaders = [
       {
-        key: 'X-Frame-Options',
-        value: 'DENY'
-      },
-      {
         key: 'X-XSS-Protection',
         value: '1; mode=block'
       },
@@ -86,6 +82,24 @@ const moduleExports = withTM({
         value: 'max-age=31536000; includeSubDomains'
       }
     ];
+    const manifestHeaders = [
+      {
+        key: 'Access-Control-Allow-Origin',
+        value: '*'
+      },
+      {
+        key: 'Access-Control-Allow-Methods',
+        value: 'GET'
+      },
+      {
+        key: 'Access-Control-Allow-Headers',
+        value: 'X-Requested-With, content-type, Authorization'
+      },
+      {
+        key: 'Referrer-Policy',
+        value: 'strict-origin-when-cross-origin'
+      }
+    ];
     return [
       {
         source: '/',
@@ -102,6 +116,10 @@ const moduleExports = withTM({
       {
         source: '/articles/:path',
         headers: securityHeaders
+      },
+      {
+        source: '/manifest.json',
+        headers: manifestHeaders
       }
     ];
   },

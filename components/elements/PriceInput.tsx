@@ -59,7 +59,7 @@ export function PriceInput(props: PriceInputProps) {
           <input
             type="text"
             className={tw(
-              'text-lg min-w-0 border',
+              'text-lg border',
               'text-left px-3 py-3 rounded-xl font-medium',
               props.error ? 'border-red-500 border-2' : ''
             )}
@@ -105,13 +105,14 @@ export function PriceInput(props: PriceInputProps) {
     : (
       <div
         className={tw(
-          'flex flex-row rounded-xl',
+          'flex flex-row rounded-xl h-full w-full z-20 minlg:z-auto',
         )}>
         <input
           disabled={props.empty}
           type="text"
           className={tw(
-            'text-sm border h-[2.65rem] w-[4.2rem]',
+            props.onCurrencyChange == null ?'w-[50%]': 'w-[45%]',
+            'text-sm border h-full minlg:w-2/5',
             'text-left p-1 rounded-md pl-2',
             props.error ? 'border-red-500 border-2' : 'border-gray-300  border-2'
           )}
@@ -142,12 +143,13 @@ export function PriceInput(props: PriceInputProps) {
         />
         {
           props.onCurrencyChange == null
-            ? <div className='font-medium text-base flex items-center pl-3 w-[6rem]'>
+            ? <div className='font-medium flex items-center ml-3 w-1/2 minlg:w-3/5 pl-4 minlg:pl-3'>
               {currencyData.name}
             </div>
-            : <div className='relative items-center flex w-[6rem] ml-2'>
+            : <div className='flex items-center ml-3 minlg:ml-1 minxl:ml-3 w-[55%] minlg:w-3/5'>
               <DropdownPicker
-                options={currencies}
+                v2
+                options={props.empty ? [] : currencies}
                 selectedIndex={selectedCurrencyIndex}
                 placeholder={'Currency'}
               />

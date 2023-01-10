@@ -2,6 +2,7 @@ import CollectionsSlider from 'components/elements/CollectionsSlider';
 import Loader from 'components/elements/Loader';
 import PreloaderImage from 'components/elements/PreloaderImage';
 import { CollectionCard } from 'components/modules/DiscoveryCards/CollectionCard';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
 import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
@@ -17,7 +18,10 @@ export const CollectionsResults = (props:
   sideNavOpen?: boolean
 }) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
+
   const { width: screenWidth } = useWindowDimensions();
+  const { setClearedFilters } = useSearchModal();
 
   const { searchTerm, found, nftsForCollections, sideNavOpen, typesenseCollections } = props;
 
@@ -80,10 +84,15 @@ export const CollectionsResults = (props:
         <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin mb-7">
           <span className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium"> {found + ' ' + 'Collection' + `${found === 1 ? '' : 's'}`} </span>
           <span
-            className="cursor-pointer hover:font-semibold underline text-black text-lg"
-            onClick={() => { router.push(`/app/discover/collections/${searchTerm}`); }}
+            className="cursor-pointer hover:font-semibold underline text-black font-black minmd:text-base font-grotesk font-[600]"
+            onClick={() => {
+              if(newFiltersEnabledNew){
+                setClearedFilters();
+              }
+              router.push(`/app/discover/collections/${searchTerm}`);
+            }}
           >
-          See All
+          See All Collections
           </span>
         </div>
         <div className={tw(

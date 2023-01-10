@@ -132,10 +132,10 @@ export function EditListingsModal(props: EditListingsModalProps) {
       fullModal
       pure
     >
-      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
+      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] minlg:h-[80vh] overflow-y-scroll hideScroll bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
         <div className='font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-          <X onClick={onClose} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
-          {<h2 className='text-4xl tracking-wide font-medium mb-10'>Edit Listings</h2>}
+          <X onClick={onClose} className='absolute right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
+          {<h2 className='text-4xl tracking-wide font-medium mb-10 mt-6'>Edit Listings</h2>}
           {getModalContent()}
         </div>
       </div>

@@ -66,8 +66,10 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       return feeData;
     });
   const { data } = usePrepareContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: maxProfilesABI,
+    // addressOrName: contractAddress,
+    // contractInterface: maxProfilesABI,
+    address: contractAddress as `0x${string}`,
+    abi: maxProfilesABI,
     functionName: type === 'mint' ? 'publicMint' : 'extendLicense',
     args: [type === 'mint' ? input[0]?.profileURI : profile, yearValue * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000', input[0]?.hash, input[0]?.signature],
     onError(err){

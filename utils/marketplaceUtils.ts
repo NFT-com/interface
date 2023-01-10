@@ -28,6 +28,10 @@ export const convertDurationToSec = (d: SaleDuration) => {
   return 60 * 60 * 24 * durationDays[d];
 };
 
+export const convertDurationToSecForNumbersOnly = (d: number) => {
+  return 60 * 60 * 24 * d;
+};
+
 export function needsApprovals(stagedPurchases: StagedPurchase[]): boolean {
   return filterDuplicates(
     stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
@@ -170,7 +174,7 @@ export function getMaxRoyaltyFeesUSD(
           royalty,
           currencyData.decimals ?? 18
         ))) ?? 0;
-      } else {
+      } else if (target.protocol === ExternalProtocol.Seaport) {
         const royalty = BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
           target?.seaportParameters?.consideration[2].startAmount :
           0);
@@ -178,6 +182,15 @@ export function getMaxRoyaltyFeesUSD(
           royalty,
           currencyData.decimals ?? 18
         ))) ?? 0;
+      } else if (target.protocol === ExternalProtocol.X2Y2) {
+        // TODO: lucas -> maybe re-use existing x2y2 order data, listingTarget -> x2y2 doesn't have royalty however
+        const royalty = 0; // BigNumber.from(target?.X2Y2Order?.royalty_fee || 0);
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          royalty,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
+      } else {
+        // TODO: handle
       }
     });
     return cartTotal + Math.max(...royaltiesByMarketplace || []);

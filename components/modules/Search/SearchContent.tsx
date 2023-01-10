@@ -24,12 +24,14 @@ interface SearchContentProps {
 
 export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoardSearch }: SearchContentProps) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
+
   const [showHits, setShowHits] = useState(false);
   const [keyword, setKeyword] = useState('0');
   const [inputFocus, setInputFocus] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [transitionWidth, setTransitionWidth] = useState('minlg:w-[4.65rem] focus:w-[18.4rem]  transition-[width]');
-  const { setSearchModalOpen, setDropDownSearchResults } = useSearchModal();
+  const { setSearchModalOpen, setDropDownSearchResults, setClearedFilters } = useSearchModal();
   const { fetchTypesenseMultiSearch } = useFetchTypesenseSearch();
   const router = useRouter();
   const resultsRef = useRef();
@@ -63,6 +65,9 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
   };
 
   const search = (event) => {
+    if(newFiltersEnabledNew){
+      setClearedFilters();
+    }
     const target = event.target as HTMLInputElement;
     setKeyword(target.value);
 

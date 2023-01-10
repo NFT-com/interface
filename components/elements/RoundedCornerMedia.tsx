@@ -68,6 +68,7 @@ const DynamicRoundedCornerMediaImage = dynamic<React.ComponentProps<typeof Stati
 
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   const [imageSrc, setImageSrc] = useState(null);
+  const [loading, setLoading] = useState(true);
   const url = props?.src?.split('?')[0];
   const ext = url?.split('.').pop();
   useEffect(() => {
@@ -83,7 +84,9 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   }, [props?.src, ext, url]);
 
   const imageUrl = imageSrc || props?.src;
-  const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) || imageUrl?.indexOf('ens.domains') >= 0;
+  const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) ||
+    imageUrl?.indexOf('ens.domains') >= 0 ||
+    (imageUrl?.indexOf('storage.googleapis.com') >= 0 && imageUrl?.indexOf('.svg') >= 0);
 
   return (
     <div className={tw(
@@ -94,20 +97,38 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     onClick={props?.onClick}
     >
       {(props.videoOverride || imageUrl?.indexOf('data:') >= 0) ?
-        <video
-          autoPlay
-          muted={!props.videoOverride}
-          loop
-          key={props?.src}
-          src={props?.src}
-          poster={props?.src}
-          className={tw(
-            props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-            'absolute w-full h-full justify-center',
-            getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-            props.extraClasses
-          )}
-        />
+        <div>
+          {loading &&
+            <div
+              className={tw(
+                props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
+                'absolute w-full h-full flex justify-center items-center',
+                getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+                props.extraClasses
+              )}
+            >
+              <div className={tw(
+                'animate-pulse bg-gray-300 h-11/12 aspect-square',
+                'rounded-md'
+              )} />
+            </div>
+          }
+          <video
+            autoPlay
+            muted={!props.videoOverride}
+            loop
+            key={props?.src}
+            src={props?.src}
+            poster={props?.src}
+            onLoadedData={() => setLoading(false)}
+            className={tw(
+              props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
+              'absolute w-full h-full justify-center',
+              getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+              props.extraClasses
+            )}
+          />
+        </div>
         : rawImageBool ?
         // SVG has hard time displaying on Next Image
         // eslint-disable-next-line @next/next/no-img-element

@@ -34,6 +34,15 @@ export function useSearchModal() {
         nftTypes: null,
         volume: null
       },
+      nftSFilters: {
+        listedFloor: null,
+        nftTypes: null,
+        marketplace: null,
+        currency: null,
+        price: null,
+        status: null,
+        contractName: null
+      },
       dropDownSearchResults: null,
       keyword: ''
     } });
@@ -160,7 +169,24 @@ export function useSearchModal() {
       clearedFilters: true,
       nftsPageSortyBy: '',
       nftsResultsFilterBy: '',
-      collectionsResultsFilterBy: ''
+      collectionsResultsFilterBy: '',
+      checkedArray: [],
+      collectionsFilter: {
+        issuance: null,
+        floor: null,
+        currency: null,
+        nftTypes: null,
+        volume: null
+      },
+      nftSFilters: {
+        listedFloor: null,
+        nftTypes: null,
+        marketplace: null,
+        currency: null,
+        price: null,
+        status: null,
+        contractName: null
+      },
     });
   },[data, mutate]);
 
@@ -186,6 +212,7 @@ export function useSearchModal() {
     dropDownSearchResults: data.dropDownSearchResults,
     keyword: data.keyword,
     collectionsFilter: data.collectionsFilter,
+    nftSFilters: data.nftSFilters,
     isLeaderBoard: data.isLeaderBoard,
     toggleSearchModal: useToggleSearchModal,
     setSearchModalOpen,

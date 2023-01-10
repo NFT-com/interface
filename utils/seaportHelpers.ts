@@ -30,7 +30,7 @@ export function getTypedDataDomain(chainId: string | number) {
     name: SEAPORT_CONTRACT_NAME,
     version: SEAPORT_CONTRACT_VERSION,
     chainId,
-    verifyingContract: CROSS_CHAIN_SEAPORT_ADDRESS,
+    verifyingContract: CROSS_CHAIN_SEAPORT_ADDRESS as `0x${string}`,
   };
 }
 

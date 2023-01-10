@@ -23,6 +23,7 @@ export interface DropdownPickerProps {
   placeholder?: string;
   onChange?: (label: string) => void;
   showKeyIcon?: boolean;
+  v2?: boolean;
 }
 
 /**
@@ -63,7 +64,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
   }, [selected, props, onChangeHandler, selectedIndex]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
-    return (!item.disabled ?
+    return (
       <div
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
@@ -79,16 +80,6 @@ export function DropdownPicker(props: DropdownPickerProps) {
         {/* {item.icon &&
           <Image className="h-full mr-2" src={item.icon} alt={item.label} />
         } */}
-        {item.label}
-      </div> :
-      <div
-        key={item.label}
-        style={{ height: activeRowRef.current.clientHeight }}
-        className={'flex flex-row w-full pl-2.5 py-3 text-secondary-txt cursor-auto hidden'}
-      >
-        {/* {item.icon &&
-              <Image className="h-full mr-2" src={item.icon} alt={item.label} />
-            } */}
         {item.label}
       </div>
     );
@@ -106,7 +97,8 @@ export function DropdownPicker(props: DropdownPickerProps) {
     <div
       ref={wrapperRef}
       className={tw(
-        'cursor-pointer flex flex-col items-center rounded-xl',
+        props.v2 ? 'rounded-md' : 'rounded-xl',
+        'cursor-pointer flex flex-col items-center',
         'text-sm',
         props.constrain ? '' : 'w-full h-full shrink-0',
         'text-primary-txt',
@@ -119,9 +111,10 @@ export function DropdownPicker(props: DropdownPickerProps) {
       <div
         ref={activeRowRef}
         className={tw('flex flex-row items-center px-2.5',
-          'border py-2 h-full',
+          'py-2 h-full',
           'bg-white',
-          'justify-between rounded-xl shadow-lg border-0 w-full')}
+          props.v2 ? 'rounded-md border-2 border-gray-300' : 'border rounded-xl shadow-lg border-0 ',
+          'justify-between w-full')}
         key={props?.options[selectedIndex]?.label}
       >
         {props.showKeyIcon &&
@@ -159,7 +152,8 @@ export function DropdownPicker(props: DropdownPickerProps) {
               activeRowRef.current.clientHeight + 12
           }}
           className={tw(
-            'border rounded-xl border-select-brdr',
+            props.v2 ? 'rounded-md' : 'rounded-xl',
+            'border border-select-brdr',
             'divide-y',
             'bg-white',
             'w-full absolute z-50',

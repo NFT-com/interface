@@ -255,6 +255,10 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
         <div className='pt-10 font-noi-grotesk mx-3 lg:max-w-md max-w-lg m-auto minlg:relative'>
           <X onClick={() => {
+            if (success) {
+              clear();
+              toggleCartSidebar();
+            }
             setSuccess(false);
             setShowProgressBar(false);
             setError(null);
