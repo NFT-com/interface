@@ -242,7 +242,7 @@ export function ListingCheckout() {
               trackStyle={[{ backgroundColor: '#F9D54C' }]}
               handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
               marks={{ 1: '1 Day', 30: '|', 60: '|', 90: '|',120: '|', 150: '|', 180: '180 Days' }}
-              min={0}
+              min={1}
               max={180}
               defaultValue={30}
               handleRender={handleRender}
