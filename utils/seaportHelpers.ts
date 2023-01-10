@@ -147,8 +147,7 @@ export function createSeaportParametersForNFTListing(
     offerer: offerer ?? NULL_ADDRESS,
     zone: chainId === '4' ? SEAPORT_ZONE_RINKEBY : SEAPORT_ZONE,
     offer: [{
-      // itemType: nft?.type == NftType.Erc721 ? ItemType.ERC721 : ItemType.ERC1155,
-      itemType: ItemType.ERC1155,
+      itemType: nft?.type == NftType.Erc721 ? ItemType.ERC721 : ItemType.ERC1155,
       token: nft?.contract,
       identifierOrCriteria: BigNumber.from(nft?.tokenId).toString(),
       startAmount: BigNumber.from(1).toString(),
