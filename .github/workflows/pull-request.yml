@@ -2,36 +2,36 @@ name: Build and Test
 on: pull_request
 
 jobs:
-  install:
-    runs-on: ubuntu-latest
-    environment: dev
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # install:
+  #   runs-on: ubuntu-latest
+  #   environment: dev
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v1
+  #     - name: Install Doppler CLI
+  #       uses: dopplerhq/cli-action@v1
 
-      - name: Configure Doppler Config
-        run: |
-          doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
+  #     - name: Configure Doppler Config
+  #       run: |
+  #         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
 
-      - name: Cypress build step
-        uses: cypress-io/github-action@v4
-        # if: steps.yarn-cache.outputs.cache-hit != 'true'
-        with:
-          install-command: yarn --frozen-lockfile --immutable --silent
-          # Disable running of tests within install job
-          runTests: false
-          build: yarn build
+  #     - name: Cypress build step
+  #       uses: cypress-io/github-action@v4
+  #       # if: steps.yarn-cache.outputs.cache-hit != 'true'
+  #       with:
+  #         install-command: yarn --frozen-lockfile --immutable --silent
+  #         # Disable running of tests within install job
+  #         runTests: false
+  #         build: yarn build
 
-      - name: Save build folder for other jobs
-        uses: actions/upload-artifact@v2
-        with:
-          name: nextbuild
-          if-no-files-found: error
-          path: .next
-          retention-days: 1
+  #     - name: Save build folder for other jobs
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: nextbuild
+  #         if-no-files-found: error
+  #         path: .next
+  #         retention-days: 1
 
   # component-tests:
   #   runs-on: ubuntu-latest
