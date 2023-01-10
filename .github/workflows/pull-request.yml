@@ -16,6 +16,11 @@ jobs:
         run: |
           doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
 
+      - uses: trstringer/manual-approval@v1.8.0
+        with:
+          secret: ${{ github.TOKEN }}
+          approvers: gmaijoe, robitaille1
+
       - name: Cypress build step
         uses: cypress-io/github-action@v4
         # if: steps.yarn-cache.outputs.cache-hit != 'true'
@@ -46,11 +51,6 @@ jobs:
       matrix:
         container: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
     steps:
-    - uses: trstringer/manual-approval@v1.8.0
-      with:
-        secret: ${{ github.TOKEN }}
-        approvers: gmaijoe, robitaille1
-
     - name: Checkout
       uses: actions/checkout@v2.4.2
 
