@@ -1,7 +1,7 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Seaport } from 'constants/typechain';
 import { OrderComponentsStruct } from 'constants/typechain/Seaport';
-import { Maybe, Nft, SeaportConsideration, SeaportProtocolData, SeaportProtocolDataParams } from 'graphql/generated/types';
+import { Maybe, Nft, NftType, SeaportConsideration, SeaportProtocolData, SeaportProtocolDataParams } from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
 import {
   CROSS_CHAIN_SEAPORT_ADDRESS,
@@ -142,11 +142,12 @@ export function createSeaportParametersForNFTListing(
       })
       : null
   ]);
+
   return {
     offerer: offerer ?? NULL_ADDRESS,
     zone: chainId === '4' ? SEAPORT_ZONE_RINKEBY : SEAPORT_ZONE,
     offer: [{
-      itemType: ItemType.ERC721,
+      itemType: nft?.type == NftType.Erc721 ? ItemType.ERC721 : ItemType.ERC1155,
       token: nft?.contract,
       identifierOrCriteria: BigNumber.from(nft?.tokenId).toString(),
       startAmount: BigNumber.from(1).toString(),

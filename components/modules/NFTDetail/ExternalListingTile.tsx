@@ -86,11 +86,27 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   );
 
   const {
+    allowedAll: looksRareAllowed1155,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.LooksRare1155
+  );
+
+  const {
     allowedAll: looksRareAllowed,
   } = useNftCollectionAllowance(
     props.nft?.contract,
     currentAddress,
     TransferProxyTarget.LooksRare
+  );
+
+  const {
+    allowedAll: X2Y2Allowed1155,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.X2Y21155
   );
 
   const {
@@ -131,7 +147,9 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             collectionName: props.collectionName,
             isApprovedForSeaport: openseaAllowed,
             isApprovedForLooksrare: looksRareAllowed,
+            isApprovedForLooksrare1155: looksRareAllowed1155,
             isApprovedForX2Y2: X2Y2Allowed,
+            isApprovedForX2Y21155: X2Y2Allowed1155,
             isApprovedForNative: nativeAllowed,
             hasOpenOrder: true,
             nftcomOrderId: listing?.id,

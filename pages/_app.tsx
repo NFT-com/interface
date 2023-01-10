@@ -6,7 +6,7 @@ import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListi
 import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
-import { Doppler,getEnv, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { getChainIdString } from 'utils/helpers';
 
 import {

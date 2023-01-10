@@ -69,7 +69,9 @@ export type StagedListing = {
   // approval-related data
   isApprovedForSeaport: boolean;
   isApprovedForLooksrare: boolean;
+  isApprovedForLooksrare1155: boolean;
   isApprovedForX2Y2: boolean;
+  isApprovedForX2Y21155: boolean;
   isApprovedForNative: boolean;
 }
 
@@ -558,16 +560,33 @@ export function NFTListingsContextProvider(
     }
     const tx = await collection
       .connect(signer)
-      .setApprovalForAll(target === ExternalProtocol.LooksRare ? TransferProxyTarget.LooksRare : target === ExternalProtocol.X2Y2 ? TransferProxyTarget.X2Y2 : TransferProxyTarget.Opensea, true);
+      .setApprovalForAll(target === ExternalProtocol.LooksRare ?
+        listing?.nft?.type == NftType.Erc721 ?
+          TransferProxyTarget.LooksRare :
+          TransferProxyTarget.LooksRare1155 :
+        target === ExternalProtocol.X2Y2 ?
+          listing?.nft?.type == NftType.Erc721 ?
+            TransferProxyTarget.X2Y2 :
+            TransferProxyTarget.X2Y21155 :
+          TransferProxyTarget.Opensea,
+      true);
     if (tx) {
       return await tx.wait(1).then(() => {
         const newToList = toList.slice().map(l => {
           if (listing?.nft?.id === l.nft?.id) {
             return {
               ...listing,
-              ...(target === ExternalProtocol.LooksRare ? { isApprovedForLooksrare: true } : {}),
+              ...(target === ExternalProtocol.LooksRare ?
+                listing?.nft?.type == NftType.Erc721 ?
+                  { isApprovedForLooksrare: true } :
+                  { isApprovedForLooksrare1155: true } :
+                {}),
               ...(target === ExternalProtocol.Seaport ? { isApprovedForSeaport: true } : {}),
-              ...(target === ExternalProtocol.X2Y2 ? { isApprovedForX2Y2: true } : {}),
+              ...(target === ExternalProtocol.X2Y2 ?
+                listing?.nft?.type == NftType.Erc721 ?
+                  { isApprovedForX2Y2: true } :
+                  { isApprovedForX2Y21155: true } :
+                {}),
               ...(target === ExternalProtocol.Native ? { isApprovedForNative: true } : {}),
             };
           }
