@@ -41,13 +41,13 @@ export interface NavProps {
 
 export function DiscoveryTabNav(props: NavProps) {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
-  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
   const router = useRouter();
   const { activePeriod, changeTimePeriod, isLeaderBoard, toggleLeaderBoardState } = useSearchModal();
   const routerName = router.pathname.split('/');
 
   if(newFiltersEnabled){
-    const checkTabs = newFiltersEnabledNew ? DiscoveryTabsOld : DiscoveryTabs;
+    const checkTabs = !newFiltersEnabledNew ? DiscoveryTabsOld : DiscoveryTabs;
     return (
       <div className="w-[100%] border-[##ECECEC] border-b-[2px] flex justify-between items-center">
         <ul className={'relative transition-all flex flex-row items-center text-[22px] leading-[20px] text-[#B2B2B2] font-[500] -ml-4'}>

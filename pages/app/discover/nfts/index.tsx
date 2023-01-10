@@ -25,7 +25,7 @@ export default function CollectionsPage() {
   useEffect(() => {
     setLoading(true);
     fetchTypesenseSearch({
-      facet_by: ',listings.marketplace,status,listings.price,nftType',
+      facet_by: ',listings.marketplace,status,listings.price,nftType,contractName',
       index: 'nfts',
       q: '*',
       sort_by: 'score:desc',
