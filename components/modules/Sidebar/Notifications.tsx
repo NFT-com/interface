@@ -136,7 +136,6 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
               buttonText={item.text}
               date={item.date}
               onClick={item.onClick}
-              bgColor={index % 2 === 0 ? 'grey' : 'white' }
             />
           ))}
         </div>

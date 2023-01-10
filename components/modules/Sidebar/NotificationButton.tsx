@@ -6,19 +6,18 @@ import moment from 'moment';
 type NotificationButtonProps = {
   buttonText: string;
   onClick: () => void;
-  bgColor: 'grey' | 'white';
   date: string
 }
 
-export const NotificationButton = ({ buttonText, onClick, bgColor, date }: NotificationButtonProps) => {
+export const NotificationButton = ({ buttonText, onClick, date }: NotificationButtonProps) => {
   return (
-    <div className='flex flex-row w-full rounded-2xl'>
+    <div className='flex flex-row w-full'>
       <button className={tw(
         'w-full h-full flex flex-col',
-        'text-md text-[#B59007] font-bold',
+        'text-md text-black border-b-1 border-[#EFEFEF]',
         'leading-6',
-        bgColor === 'grey' ? 'bg-[#F8F8F8]' : 'bg-white',
-        'p-4'
+        'bg-white font-semibold',
+        'py-3'
       )}
       onClick={onClick}
       >
