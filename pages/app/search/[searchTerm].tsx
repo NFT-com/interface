@@ -225,7 +225,12 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     </div>
                     {<span
                       className="cursor-pointer hover:font-semibold underline text-black text-xl font-black minmd:text-base font-grotesk font-[600]"
-                      onClick={() => { router.push(`/app/discover/nfts/${searchTerm.toString()}`); }}
+                      onClick={() => {
+                        if(newFiltersEnabledNew){
+                          setClearedFilters();
+                        }
+                        router.push(`/app/discover/nfts/${searchTerm.toString()}`);
+                      }}
                     >
                   See All NFTs
                     </span>}
