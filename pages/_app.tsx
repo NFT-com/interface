@@ -37,7 +37,7 @@ import { v4 as uuid } from 'uuid';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { goerli, mainnet } from 'wagmi/chains';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { safeWallet } from 'wallets/SafeWallet';
+// import { safeWallet } from 'wallets/SafeWallet';
 
 const GOOGLE_ANALYTICS_ID: string | undefined = getEnv(Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
 if (GOOGLE_ANALYTICS_ID != null) {
@@ -98,7 +98,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
         groupName: 'Recommended',
         wallets: [
           metaMaskWallet({ chains, shimDisconnect: true }),
-          safeWallet({ chains }),
+          // safeWallet({ chains }),
           rainbowWallet({ chains }),
         ],
       },
