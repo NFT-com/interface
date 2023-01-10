@@ -2340,8 +2340,8 @@ input[type="range"]::-moz-range-thumb {
   bottom: -5px;
 }
 
-.rc-slider-dot {
-  display: none;
+.rc-tooltip {
+  z-index: 299 !important;
 }
 
 @keyframes animDecorLeaderboard {

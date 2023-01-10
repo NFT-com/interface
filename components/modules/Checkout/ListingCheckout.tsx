@@ -166,7 +166,7 @@ export function ListingCheckout() {
                   alt="Opensea logo"
                   layout="fill"
                 />
-                : <NFTLogo className='w-fit h-fit' />}
+                : <NFTLogo className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
               <span className='font-semibold text-base'>NFT</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
             </div>}

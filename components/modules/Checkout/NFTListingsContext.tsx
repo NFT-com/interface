@@ -17,7 +17,7 @@ import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getLowestPriceListing } from 'utils/listingUtils';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
-import { convertDurationToSec, filterValidListings, SaleDuration } from 'utils/marketplaceUtils';
+import { convertDurationToSecForNumbersOnly, filterValidListings } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { createX2Y2ParametersForNFTListing } from 'utils/X2Y2Helpers';
 
@@ -287,11 +287,11 @@ export function NFTListingsContextProvider(
     setToList(toList.slice().map(stagedNft => {
       return {
         ...stagedNft,
-        duration: convertDurationToSec(duration),
+        duration: convertDurationToSecForNumbersOnly(duration),
         targets: stagedNft.targets.slice().map(target => {
           return {
             ...target,
-            duration: convertDurationToSec(duration),
+            duration: convertDurationToSecForNumbersOnly(duration),
           };
         })
       };
