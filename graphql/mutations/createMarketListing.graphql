@@ -1,0 +1,33 @@
+mutation CreateMarketListing($input: CreateListingInput!) {
+  createMarketListing(input: $input) {
+    id
+    orderHash
+    nonce
+    signature {
+      r
+      s
+      v
+    }
+    makerAddress
+    start
+    end
+    salt
+    acceptedAt
+    chainId
+    auctionType
+    memo
+    makeAsset {
+      standard {
+        assetClass
+        bytes
+        contractAddress
+        tokenId
+        allowAll
+      }
+      nftId
+      bytes
+      value
+      minimumBid
+    }
+  }
+}

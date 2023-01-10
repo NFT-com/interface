@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Nft } from 'graphql/generated/types';
+import { ActivityStatus, Nft } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
 import { getChainIdString, isNullOrEmpty } from 'utils/helpers';
 
@@ -34,6 +34,7 @@ export function useNftQuery(contract: string, id: BigNumberish): NftData {
       contract,
       id: BigNumber.from(id).toHexString() ,
       chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
+      status: ActivityStatus.Valid,
     });
     return result?.nft;
   });
