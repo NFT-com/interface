@@ -91,7 +91,9 @@ export default function AssetsPages() {
                 setLoading(true);
                 const openseaAllowedByContract = new Map<string, boolean>();
                 const looksrareAllowedByContract = new Map<string, boolean>();
+                const looksrareAllowedByContract1155 = new Map<string, boolean>();
                 const X2Y2AllowedByContract = new Map<string, boolean>();
+                const X2Y2AllowedByContract1155 = new Map<string, boolean>();
                 for (let i = 0; i < selectedAssets.length; i++) {
                   const nft = selectedAssets[i];
                   if (!openseaAllowedByContract.has(nft.contract)) {
@@ -102,17 +104,27 @@ export default function AssetsPages() {
                     const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.LooksRare);
                     looksrareAllowedByContract.set(nft.contract, allowed);
                   }
+                  if (!looksrareAllowedByContract1155.has(nft.contract)) {
+                    const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.LooksRare1155);
+                    looksrareAllowedByContract1155.set(nft.contract, allowed);
+                  }
                   if (!X2Y2AllowedByContract.has(nft.contract)) {
                     const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.X2Y2);
                     X2Y2AllowedByContract.set(nft.contract, allowed);
+                  }
+                  if (!X2Y2AllowedByContract1155.has(nft.contract)) {
+                    const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.X2Y21155);
+                    X2Y2AllowedByContract1155.set(nft.contract, allowed);
                   }
                 }
                 stageListings(selectedAssets?.map(nft => ({
                   nft: nft,
                   collectionName: nft?.collection?.name,
                   isApprovedForSeaport: openseaAllowedByContract.get(nft?.contract),
-                  isApprovedForLooksrare: looksrareAllowedByContract.get(nft?.contract),
+                  isApprovedForLooksrare: looksrareAllowedByContract1155.get(nft?.contract),
                   isApprovedForX2Y2: X2Y2AllowedByContract.get(nft?.contract),
+                  isApprovedForLooksrare1155: looksrareAllowedByContract.get(nft?.contract),
+                  isApprovedForX2Y21155: X2Y2AllowedByContract1155.get(nft?.contract),
                   targets: []
                 })));
                 setLoading(false);

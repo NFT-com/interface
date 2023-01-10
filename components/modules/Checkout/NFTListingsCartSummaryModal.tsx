@@ -1,6 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
-import { Maybe } from 'graphql/generated/types';
+import { Maybe, NftType } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
@@ -86,9 +86,15 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null && !stagedListing?.isApprovedForLooksrare) ||
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null &&
+        (stagedListing?.nft?.type == NftType.Erc721 ?
+          !stagedListing?.isApprovedForLooksrare :
+          !stagedListing?.isApprovedForLooksrare1155)) ||
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport) ||
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.X2Y2) != null && !stagedListing?.isApprovedForX2Y2)
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.X2Y2) != null &&
+        (stagedListing?.nft?.type == NftType.Erc721 ?
+          !stagedListing?.isApprovedForX2Y2 :
+          !stagedListing?.isApprovedForX2Y21155))
     );
   }, [toList]);
   
@@ -133,10 +139,15 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                 )?.map((stagedListing) => {
                   return stagedListing.targets.map((target: ListingTarget) => {
                     const approved = target.protocol === ExternalProtocol.LooksRare ?
-                      stagedListing?.isApprovedForLooksrare :
-                      target.protocol === ExternalProtocol.X2Y2
-                        ? stagedListing?.isApprovedForX2Y2 :
+                      stagedListing?.nft?.type == NftType.Erc721 ?
+                        stagedListing?.isApprovedForLooksrare :
+                        stagedListing?.isApprovedForLooksrare1155 :
+                      target.protocol === ExternalProtocol.X2Y2 ?
+                        stagedListing?.nft?.type == NftType.Erc721 ?
+                          stagedListing?.isApprovedForX2Y2 :
+                          stagedListing?.isApprovedForX2Y21155 :
                         stagedListing?.isApprovedForSeaport;
+                    console.log('------- approved : ', approved);
                     return {
                       label: 'Approve ' + stagedListing?.collectionName + ' for ' + target.protocol,
                       startIcon: target.protocol === ExternalProtocol.Seaport ?
@@ -301,9 +312,13 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                     for (let j = 0; j < uniqueCollections[i].targets.length; j++) {
                       const protocol = uniqueCollections[i].targets[j].protocol;
                       const approved = protocol === ExternalProtocol.LooksRare ?
-                        stagedListing?.isApprovedForLooksrare :
+                        stagedListing?.nft.type === NftType.Erc721 ?
+                          stagedListing?.isApprovedForLooksrare :
+                          stagedListing?.isApprovedForLooksrare1155 :
                         protocol === ExternalProtocol.X2Y2 ?
-                          stagedListing?.isApprovedForX2Y2 :
+                          stagedListing?.nft?.type === NftType.Erc721 ?
+                            stagedListing?.isApprovedForX2Y2 :
+                            stagedListing?.isApprovedForX2Y21155 :
                           stagedListing?.isApprovedForSeaport;
                       if (!approved && protocol === ExternalProtocol.LooksRare) {
                         const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
