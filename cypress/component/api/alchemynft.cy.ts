@@ -2,7 +2,7 @@ import { genesisKey } from '../../../constants/contracts';
 import { CHAIN_ID_TO_NETWORK } from '../../../constants/misc';
 import { Doppler, getEnv } from '../../../utils/env';
 
-import { BigNumber, utils } from 'ethers';
+import { BigNumber } from 'ethers';
 
 describe('alchemy nft API', () => {
   it('should fail on missing action', () => {
@@ -33,8 +33,8 @@ describe('alchemy nft API', () => {
       url.searchParams.set('chainId', String(chainId));
       cy.request({ url: url.toString(), failOnStatusCode: false }).then((response) => {
         expect(response.status).to.eq(200);
-        expect(response.body).to.have.deep.property('contract', {
-          address: utils.getAddress(genesisKey[CHAIN_ID_TO_NETWORK[Number(chainId)].toLowerCase()].toLowerCase()),
+        expect(response.body).to.have.property('contract', {
+          address: genesisKey[CHAIN_ID_TO_NETWORK[Number(chainId)].toLowerCase()].toLowerCase(),
         });
         expect(response.body).to.have.property('title', 'NFT.com Genesis Key #00001');
         expect(response.body).to.have.deep.property('id', {
