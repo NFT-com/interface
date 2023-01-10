@@ -10,11 +10,11 @@ import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { processIPFSURL } from 'utils/helpers';
-import { convertDurationToSec, SaleDuration } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
 import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
+import { handleRender } from './TooltipSlider';
 
 import Image from 'next/image';
 import router from 'next/router';
@@ -49,7 +49,7 @@ export function ListingCheckout() {
   useEffect(() => {
     toList.forEach(stagedNft => {
       if(!stagedNft.duration) {
-        setDuration('30 Days' as SaleDuration);
+        setDuration(30);
       }
     });
   },[setDuration, toList]);
@@ -166,7 +166,7 @@ export function ListingCheckout() {
                   alt="Opensea logo"
                   layout="fill"
                 />
-                : <NFTLogo className='w-fit h-fit' />}
+                : <NFTLogo className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
               <span className='font-semibold text-base'>NFT</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
             </div>}
@@ -239,29 +239,14 @@ export function ListingCheckout() {
           <span className='text-lg w-full flex font-semibold'>Set Duration</span>
           <div className='mt-8 w-[93%] minlg:w-full'>
             <Slider
-              step={10}
-              min={0}
-              max={60}
-              defaultValue={30}
-              marks={{ 0: '1 Hour', 10: '1 Day', 20: '7 Days', 30: '30 Days',40: '60 Days', 50: '90 Days', 60: '180 Days' }}
-              onChange={(value) => {
-                const duration = value === 0 ?
-                  '1 Hour'
-                  : value === 10 ?
-                    '1 Day'
-                    : value === 20 ?
-                      '7 Days'
-                      : value === 30 ?
-                        '30 Days'
-                        : value === 40 ?
-                          '60 Days'
-                          : value === 50 ?
-                            '90 Days'
-                            : '180 Days';
-                setDuration(duration as SaleDuration);
-              }}
               trackStyle={[{ backgroundColor: '#F9D54C' }]}
               handleStyle={[{ backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }, { backgroundColor: 'black', border: 'none', width: '15px', height: '15px' }]}
+              marks={{ 1: '1 Day', 30: '|', 60: '|', 90: '|',120: '|', 150: '|', 180: '180 Days' }}
+              min={1}
+              max={180}
+              defaultValue={30}
+              handleRender={handleRender}
+              onChange={(value) => setDuration(value as number)}
             />
           </div>
         </div>
@@ -351,7 +336,7 @@ export function ListingCheckout() {
               }
             </div>
           </div>
-          <div className='w-full flex flex-col px-8 mt-8 items-center'>
+          {/* <div className='w-full flex flex-col px-8 mt-8 items-center'>
             <span className='text-2xl w-full flex font-bold'>Set Duration</span>
             <div className='flex flex-row items-center justify-around mt-4 w-full max-w-lg'>
               {
@@ -363,7 +348,7 @@ export function ListingCheckout() {
                     }}
                     className={tw(
                       'rounded-full py-2.5 px-2',
-                      toList?.find(l => l?.duration === convertDurationToSec(duration as SaleDuration)) ? 'bg-primary-yellow font-bold' : 'border border-[#D5D5D5] text-black',
+                      'border border-[#D5D5D5] text-black',
                       'cursor-pointer hover:opacity-80',
                     )}
                   >
@@ -372,7 +357,7 @@ export function ListingCheckout() {
                 })
               }
             </div>
-          </div>
+          </div> */}
           <div className='my-8 overflow-x-scroll w-full flex flex-col'>
             <div className="border-t border-[#D5D5D5] mx-8">
               <span className='text-2xl w-full flex font-bold mt-10 mb-8 mx-8'>Your Listings</span>
