@@ -63,13 +63,17 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
     if(item[type]?.protocol === 'Seaport'){
       if(type === 'order'){
-        const sum = item[type]?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
+        const sum = item[type]?.orderType === 'Bid' ?
+          item[type]?.protocolData?.parameters.offer?.reduce((acc, o) => acc + parseInt(o.startAmount), 0):
+          item[type]?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
         const ethAmount = !isNullOrEmpty(sum) ? ethers.utils.formatEther(BigInt(sum).toString()) : 0;
-        const currencyData = getByContractAddress(item[type]?.protocolData?.parameters?.consideration[0].token);
+        const currencyData = item[type]?.orderType === 'Bid' ?
+          getByContractAddress(item[type]?.protocolData?.parameters?.offer[0].token):
+          getByContractAddress(item[type]?.protocolData?.parameters?.consideration[0].token);
         return (
           <>
             <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
-              {ethAmount ? <p>{parseFloat(ethAmount)} {currencyData.name}</p> : <p>—</p>}
+              {ethAmount && currencyData ? <p>{parseFloat(ethAmount)} {currencyData.name}</p> : <p>—</p>}
             </td>
             <td className="text-body leading-body pr-8 minmd:pr-4" >
               {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
@@ -86,7 +90,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
           return (
             <>
               <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
-                {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+                {ethAmount && currencyData ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
               </td>
               <td className="text-body leading-body pr-8 minmd:pr-4" >
                 {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
@@ -125,7 +129,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
         return (
           <>
             <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
-              {ethAmount ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+              {ethAmount && currencyData ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
             </td>
             <td className="text-body leading-body pr-8 minmd:pr-4" >
               {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
