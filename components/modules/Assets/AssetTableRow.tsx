@@ -1,11 +1,13 @@
 import { CustomTooltip } from 'components/elements/CustomTooltip';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { filterNulls, getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -19,14 +21,12 @@ import { useAccount } from 'wagmi';
 
 export interface AssetTableRowProps {
   item: PartialDeep<Nft>;
-  index: number;
   onChange: (listing: PartialDeep<Nft>) => void;
   isChecked: boolean;
 }
 
 export default function AssetTableRow({
   item,
-  index,
   onChange,
   isChecked,
 }: AssetTableRowProps) {
@@ -44,6 +44,10 @@ export default function AssetTableRow({
     true
   );
   const nftSaleHistory = useGetTxByNFTQuery(item?.contract, parseInt(item?.tokenId, 16).toString(), 'sale');
+
+  const processedImageURLs = sameAddress(item.contract, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(item.tokenId) ?
+    [getGenesisKeyThumbnail(item.tokenId)]
+    : [item?.metadata?.imageURL].map(processIPFSURL);
 
   const getDisplayedProfiles = useCallback(() => {
     if(!profiles?.length){
@@ -77,10 +81,7 @@ export default function AssetTableRow({
   
   return (
     <tr
-      className={tw('min-w-[5.5rem] h-20',
-        index > 0 && '',
-        index % 2 === 0 && 'bg-[#F8F8F8]'
-      )}
+      className={tw('min-w-[5.5rem] h-20 font-noi-grotesk border-t border-[#D6D6D6]')}
     >
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <div className='flex justify-center'>
@@ -91,16 +92,23 @@ export default function AssetTableRow({
         </div>
       </td>
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
-        <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`}>
-          <div className='hover:cursor-pointer'>
-            <p className='-mt-1 font-bold text-[#B59007] truncate ... text-ellipsis'>{item.metadata?.name}</p>
-          </div>
-        </Link>
+        <div className='flex items-center h-full -mt-1'>
+          <RoundedCornerMedia
+            containerClasses='w-[32px] h-[32px] mr-2'
+            src={processedImageURLs[0]}
+            variant={RoundedCornerVariant.Asset}
+          />
+          <Link href={`/app/nft/${item?.contract}/${BigNumber.from(item?.tokenId).toString()}`}>
+            <div className='hover:cursor-pointer'>
+              <p className='text-black truncate ... text-ellipsis'>{item.metadata?.name}</p>
+            </div>
+          </Link>
+        </div>
       </td>
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <Link href={`/app/collection/${item?.contract}`}>
           <div className='hover:cursor-pointer'>
-            <p className='-mt-1 font-bold text-[#B59007]'>{collectionName}</p>
+            <p className='-mt-1 text-black'>{collectionName}</p>
           </div>
         </Link>
       </td>

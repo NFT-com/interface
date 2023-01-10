@@ -78,7 +78,7 @@ export default function AssetsPages() {
     <div className='flex flex-col justify-between minlg:pt-28 px-4 font-grotesk'>
       <div className='w-full max-w-nftcom mx-auto relative'>
         <h2 className='font-bold text-black text-[40px] mb-6'>
-          <span className='text-[#F9D963]'>/</span>
+          <span className='text-[#F9D963] mr-1'>/</span>
             My Assets
         </h2>
         <div className='flex'>
@@ -163,8 +163,8 @@ export default function AssetsPages() {
               </tr>
             </thead>
             <tbody className='p-4'>
-              {assetData?.map((item, i) => (
-                <AssetTableRow isChecked={selectedAssets.some((nft) => nft.tokenId === item.tokenId)} onChange={onChangeHandler} key={item.id} item={item} index={i} />
+              {assetData?.map((item) => (
+                <AssetTableRow isChecked={selectedAssets.some((nft) => nft.tokenId === item.tokenId)} onChange={onChangeHandler} key={item.id} item={item} />
               ))}
             </tbody>
           </table>
