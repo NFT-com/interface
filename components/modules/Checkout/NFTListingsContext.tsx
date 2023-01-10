@@ -17,7 +17,7 @@ import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 import { getLowestPriceListing } from 'utils/listingUtils';
 import { createLooksrareParametersForNFTListing } from 'utils/looksrareHelpers';
 import { getLooksrareNonce, getOpenseaCollection } from 'utils/marketplaceHelpers';
-import { convertDurationToSecForNumbersOnly, filterValidListings } from 'utils/marketplaceUtils';
+import { convertDurationToSec, convertDurationToSecForNumbersOnly, filterValidListings, SaleDuration } from 'utils/marketplaceUtils';
 import { createSeaportParametersForNFTListing } from 'utils/seaportHelpers';
 import { createX2Y2ParametersForNFTListing } from 'utils/X2Y2Helpers';
 
@@ -84,7 +84,7 @@ export interface NFTListingsContextType {
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => void;
-  setDuration: (duration: number) => void;
+  setDuration: (duration: SaleDuration | number) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol) => void;
   setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
@@ -283,15 +283,15 @@ export function NFTListingsContextProvider(
     }
   }, [supportedCurrencyData, toList]);
 
-  const setDuration = useCallback((duration: number) => {
+  const setDuration = useCallback((duration: SaleDuration | number) => {
     setToList(toList.slice().map(stagedNft => {
       return {
         ...stagedNft,
-        duration: convertDurationToSecForNumbersOnly(duration),
+        duration: typeof(duration) === 'number' ? convertDurationToSecForNumbersOnly(duration) : convertDurationToSec(duration),
         targets: stagedNft.targets.slice().map(target => {
           return {
             ...target,
-            duration: convertDurationToSecForNumbersOnly(duration),
+            duration: typeof(duration) === 'number' ? convertDurationToSecForNumbersOnly(duration) : convertDurationToSec(duration),
           };
         })
       };
