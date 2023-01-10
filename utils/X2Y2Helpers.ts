@@ -68,7 +68,6 @@ async function signOrder(
   signer: ethers.Signer,
   order: X2Y2Order
 ): Promise<void> {
-  console.log('order: ', order);
   const orderData: string = ethers.utils.defaultAbiCoder.encode(
     orderParamTypes,
     [

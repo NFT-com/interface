@@ -147,10 +147,10 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                         stagedListing?.nft?.type == NftType.Erc721 ?
                           stagedListing?.isApprovedForX2Y2 :
                           stagedListing?.isApprovedForX2Y21155 :
+                        stagedListing?.isApprovedForSeaport;
                         target.protocol === ExternalProtocol.Native
                           ? stagedListing?.isApprovedForNative :
                           stagedListing?.isApprovedForSeaport;
-                          
                     return {
                       label: 'Approve ' + stagedListing?.collectionName + ' for ' + target.protocol,
                       startIcon: target.protocol === ExternalProtocol.Seaport ?

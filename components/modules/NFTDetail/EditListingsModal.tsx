@@ -75,7 +75,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
     currentAddress,
     TransferProxyTarget.X2Y21155
   );
-  
+
   const {
     allowedAll: nativeAllowed,
   } = useNftCollectionAllowance(
