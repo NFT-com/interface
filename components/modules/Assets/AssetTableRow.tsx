@@ -157,13 +157,13 @@ export default function AssetTableRow({
           {getDisplayedProfiles()}
         </div>
       </td>
-      {getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) && <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
+      <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div onClick={() => alert('redirect todo')} className='flex items-center -mt-1 cursor-pointer hover:underline'>
           <Offers className='mr-2' />
           {/* TODO: NATIVE */}
           <div>2 Offers</div>
         </div>
-      </td>}
+      </td>
       <td className='pr-8 minmd:pr-4'>
         <DropdownPickerModal
           constrain
