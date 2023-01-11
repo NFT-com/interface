@@ -41,7 +41,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { getByContractAddress } = useSupportedCurrencies();
   
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(true);
   const [error, setError] = useState<Maybe<
   'ApprovalError' | 'ListingSignatureRejected' | 'ListingUnknownError' | 'ConnectionError'
   >>(null);
@@ -102,9 +102,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   
   const getSummaryContent = useCallback(() => {
     if (success) {
-      return <div className='my-8'>
-        <CheckoutSuccessView userAddress={currentAddress} />
-      </div>;
+      return <CheckoutSuccessView userAddress={currentAddress} />
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">
@@ -236,6 +234,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       );
     }
   }, [
+    currentAddress,
     error,
     getMaxMarketplaceFees,
     getMaxRoyaltyFees,
@@ -246,6 +245,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     success,
     toList
   ]);
+
+  console.log('success: ', success);
 
   return (
     <Modal
@@ -263,8 +264,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       fullModal
       pure
     >
-      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
-        <div className='pt-3 font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+      <div className={`max-w-full overflow-hidden minlg:max-w-[${success ? '700px' : '458px px-4 pb-5'}] h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
+        <div className={`font-noi-grotesk ${success ? 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg '} m-auto minlg:relative`}>
           <X onClick={() => {
             if (success) {
               clear();
@@ -276,11 +277,11 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             props.onClose();
           }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
           {getSummaryContent()}
-          <div className="my-4 mt-8 flex">
+          {!success && <div className="my-4 mt-8 flex">
             <Button
               stretch
               loading={showProgressBar && !error && !success}
-              disabled={!allListingsConfigured() || (showProgressBar && !error && !success)}
+              disabled={!allListingsConfigured() || (showProgressBar && !error && !success) || success}
               label={success ? 'Finish' : error ? 'Try Again' : 'Proceed to list'}
               onClick={async () => {
                 if (success) {
@@ -412,7 +413,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               }}
               type={ButtonType.PRIMARY}
             />
-          </div>
+          </div>}
           {
             !isNullOrEmpty(error) &&
             <div className='w-full mt-4'>
