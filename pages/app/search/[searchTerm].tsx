@@ -67,7 +67,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       q: searchTerm?.toString(),
       per_page: 20,
       page: 1,
-      filter_by: newFiltersEnabledNew ? '' : nftsResultsFilterBy,
+      filter_by: '',
       facet_by: SearchableFields.FACET_COLLECTIONS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',issuance,isOfficial,isCurated' : ''),
       exhaustive_search: true,
     }] })
@@ -75,7 +75,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         setNftsForCollections(null);
         setCollectionsSliderData(resp.results[0]);
       });
-  }, [fetchTypesenseMultiSearch, searchTerm, nftsResultsFilterBy, newFiltersEnabledNew]);
+  }, [fetchTypesenseMultiSearch, searchTerm, newFiltersEnabledNew]);
 
   if (collectionsSliderData) {
     addressesList.current = collectionsSliderData.hits?.map((nft) => {
@@ -224,7 +224,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                       {found.current + ' ' + 'NFT' + `${found.current === 1 ? '' : 's'}`}
                     </div>
                     {<span
-                      className="cursor-pointer hover:font-semibold underline text-black text-xl font-black minmd:text-base font-grotesk font-[600]"
+                      className="cursor-pointer hover:font-semibold underline text-[#000] text-lg font-medium"
                       onClick={() => {
                         if(newFiltersEnabledNew){
                           setClearedFilters();
@@ -235,20 +235,22 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   See All NFTs
                     </span>}
                   </div>
-                  {<div className={tw(
-                    'cursor-pointer my-6 mb-4 flex minlg:hidden',
-                    'justify-center bg-white text-[#1F2127]',
-                    'font-grotesk font-bold p-1 rounded-xl',
-                    'text-lg minlg:text-2xl border border-[#D5D5D5]')}>
-                    <div
-                      className="flex flex-row items-center"
-                      onClick={() => {
-                        setSearchModalOpen(true, 'filters', filters );
-                      }}>
-                      <FunnelSimple className="h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7" />
+                  {newFiltersEnabledNew
+                    ? null
+                    : <div className={tw(
+                      'cursor-pointer my-6 mb-4 flex minlg:hidden',
+                      'justify-center bg-white text-[#1F2127]',
+                      'font-grotesk font-bold p-1 rounded-xl',
+                      'text-lg minlg:text-2xl border border-[#D5D5D5]')}>
+                      <div
+                        className="flex flex-row items-center"
+                        onClick={() => {
+                          setSearchModalOpen(true, 'filters', filters );
+                        }}>
+                        <FunnelSimple className="h-5 w-4 mr-2 minlg:mr-0 minlg:h-7 minlg:w-7" />
                       Filter
-                    </div>
-                  </div>}
+                      </div>
+                    </div>}
                   <div className={tw(`grid grid-cols-2 mt-4 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2  minmd:grid-cols-2 grid-cols-1' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1'} `)}>
                     {/*'gap-5'*/}
                     {searchedData && searchedData.map((item, index) => {

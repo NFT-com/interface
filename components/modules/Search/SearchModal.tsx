@@ -28,7 +28,7 @@ export const SearchModal = () => {
       loading={false}
       onClose={function (): void {
         setSearchModalOpen(false);
-      } }
+      }}
     >
       <div className={tw(
         'absolute top-0 left-0 min-h-screen overflow-scroll w-screen',

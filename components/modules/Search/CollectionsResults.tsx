@@ -84,7 +84,7 @@ export const CollectionsResults = (props:
         <div className="flex justify-between items-center font-grotesk font-black text-sm text-blog-text-reskin mb-7">
           <span className="text-[#B2B2B2] text-lg text-blog-text-reskin font-medium"> {found + ' ' + 'Collection' + `${found === 1 ? '' : 's'}`} </span>
           <span
-            className="cursor-pointer hover:font-semibold underline text-black font-black minmd:text-base font-grotesk font-[600]"
+            className="cursor-pointer hover:font-semibold underline text-black text-[#000] text-lg font-medium"
             onClick={() => {
               if(newFiltersEnabledNew){
                 setClearedFilters();

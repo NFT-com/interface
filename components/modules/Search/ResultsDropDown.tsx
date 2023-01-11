@@ -6,6 +6,7 @@ import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { Image } from 'phosphor-react';
+import VerifiedIcon from 'public/verifiedIcon.svg';
 
 interface ResultsDropDownProps {
   isHeader?: any;
@@ -18,6 +19,7 @@ interface ResultsDropDownProps {
 export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, itemListOnClick, extraClasses }: ResultsDropDownProps) => {
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
   const { setClearedFilters } = useSearchModal();
 
   const router = useRouter();
@@ -104,6 +106,7 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                   No {newFiltersEnabled ? name && name[0]?.toLowerCase() : item?.request_params?.collection_name?.toLowerCase()} results
                 </div>
                 : (item?.hits?.map((hit, index) => {
+                  console.log('hit',hit);
                   return (
                     <div
                       className="hover:cursor-pointer hover:bg-gray-100 w-full"
@@ -133,6 +136,13 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                             hit.document.isProfile ? <span className="text-[#F9D54C] text-xl font-bold">/ </span> : null
                           }
                           {hit.document.nftName ?? hit.document.contractName}
+                          {
+                            newFiltersEnabledNew
+                              ? (
+                                hit.document?.isOfficial && <VerifiedIcon className='inline ml-3'/>
+                              )
+                              : null
+                          }
                         </span>
                       </div>
                     </div>

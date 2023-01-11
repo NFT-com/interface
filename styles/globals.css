@@ -1867,6 +1867,30 @@ input[type="search"]::-webkit-search-cancel-button {
   background: #B2B2B2;
 }
 
+.filterNewScrollbar::-webkit-scrollbar {
+  width: 6px;
+  position: absolute;
+  bottom: 20px;
+  left: 0px;
+  background: transparent;
+}
+
+.filterNewScrollbar::-web10it-scrollbar-track {
+  background: #B2B2B2;
+}
+.filterNewScrollbar::-webkit-scrollbar-thumb {
+  border-radius: 100vh;
+  cursor: pointer;
+  border: 8px solid #B2B2B2;
+}
+.filterNewScrollbar:hover::-webkit-scrollbar-thumb {
+  border: 8px solid #6A6A6A;
+}
+
+.filterNewScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #B2B2B2;
+}
+
 .filter-scrollbar::-webkit-scrollbar {
   width: 10px;
   height: 10px;
