@@ -28,7 +28,6 @@ export default function CollectionsPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if(isLeaderBoard) return;
     setLoading(true);
     fetchTypesenseSearch({
       facet_by: ',floor,nftType,volume,issuance',
@@ -48,7 +47,7 @@ export default function CollectionsPage() {
       setClearedFilters();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters, isLeaderBoard]);
+  }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
 
   const leaderBoardOrCollectionView = () => {
     if(isLeaderBoard){
@@ -149,7 +148,6 @@ export default function CollectionsPage() {
                       <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
                         {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
                         {!isLeaderBoard ? 'Show leaderboard' : 'View Collections' }
-                        {/*{!isLeaderBoard ? 'Show leaderboard' : tabView === 'profiles' ? 'View Profiles' : 'View Collections' }*/}
                       </button>
                     </div>
                   </div>

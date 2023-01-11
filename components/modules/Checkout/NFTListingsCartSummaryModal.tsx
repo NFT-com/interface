@@ -38,7 +38,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
   const { getByContractAddress } = useSupportedCurrencies();
-  
+
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<
@@ -58,7 +58,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const getMaxMarketplaceFees: () => number = useCallback(() => {
     return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
   }, [toList, getByContractAddress, looksrareProtocolFeeBps]);
- 
+
   const getMaxRoyaltyFees: () => number = useCallback(() => {
     return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
   }, [looksrareProtocolFeeBps, toList, getByContractAddress]);
@@ -98,7 +98,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Native) != null && !stagedListing?.isApprovedForNative)
     );
   }, [toList]);
-  
+
   const getSummaryContent = useCallback(() => {
     if (success) {
       return <div className='my-8'>
@@ -298,7 +298,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                 setShowProgressBar(true);
                 setError(null);
                 setSuccess(false);
-            
+
                 if (signer == null) {
                   setError('ConnectionError');
                   return;
@@ -324,7 +324,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                           protocol === ExternalProtocol.Native
                             ? stagedListing?.isApprovedForNative :
                             stagedListing?.isApprovedForSeaport;
-                            
+
                       if (!approved && protocol === ExternalProtocol.LooksRare) {
                         const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
                           .then(result => {

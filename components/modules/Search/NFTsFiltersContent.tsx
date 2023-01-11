@@ -118,7 +118,6 @@ const ContractNameFilter = (props: any) => {
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              autoFocus
               value={searchVal}
               required maxLength={512}
               className="h-[48px] bg-inherit w-full border-none focus:outline-0  focus:outline-amber-500 focus:ring-0 p-0"
@@ -126,10 +125,10 @@ const ContractNameFilter = (props: any) => {
           </div>
         </div>
       </div>}
-      <div className="overflow-y-scroll pr-2 max-h-[12.5rem] filter-scrollbar">
+      <div className="overflow-y-scroll pr-2 max-h-[12.5rem] filterNewScrollbar">
         {filteredContracts.map((item, index) => {
           return (
-            item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
+            item.value !== '' && <div key={index} className="mb-3 overflow-y-hidden">
               <FilterOption
                 item={item}
                 onSelectFilter={setCheckedFilters}
@@ -483,8 +482,6 @@ export const NFTsFiltersContent = () => {
   const [sortBy,] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
   const [checked, setChecked] = useState([]);
-  const [checkedStatus, setCheckedStatus] = useState([]);
-  const [checkedMarketPlaces, setCheckedMarketPlaces] = useState([]);
   const [checkedTypes, setCheckedTypes] = useState([]);
   const dateFilterPeriod = [
     {
@@ -581,7 +578,7 @@ export const NFTsFiltersContent = () => {
       }
       if(item[0] === 'status' && item[1].length){
         const now = moment().valueOf();
-        const value = `${now}000`;
+        const value = `${now}`;
         const epochFilter = Number(value) - 2592000000;
         if(item[1].length === 1){
           if(item[1][0] === 'buyNow'){
@@ -642,15 +639,29 @@ export const NFTsFiltersContent = () => {
     nftSFilters.contractName = checkedArray;
     updateCheckedString();
   }, [checkedArray, updateCheckedString, nftSFilters]);
-  const handleCheck = (event, array, fn) => {
+  const handleCheck = useCallback((event: any, array: any, fn: any, type: string) => {
     let updatedList = [...array];
-    if (event.target.checked) {
+    if (event.target.checked ) {
       updatedList = [...array, event.target.value];
     } else {
       updatedList.splice(array.indexOf(event.target.value), 1);
     }
-    fn(updatedList);
-  };
+    if(type === 'issuance'){
+      collectionsFilter.issuance = updatedList;
+    }
+    if(type === 'nftTypes'){
+      collectionsFilter.nftTypes = updatedList;
+      nftSFilters.nftTypes = updatedList;
+    }
+    if(type === 'marketplace'){
+      nftSFilters.marketplace = updatedList;
+    }
+    if(type === 'status'){
+      nftSFilters.status = updatedList;
+    }
+    updateCheckedString();
+  }, [updateCheckedString, collectionsFilter, nftSFilters]);
+
   const { searchTerm } = router.query;
 
   const prevSearchTerm = usePrevious(searchTerm);
@@ -659,25 +670,14 @@ export const NFTsFiltersContent = () => {
     if (prevSearchTerm !== searchTerm){
       setChecked([]);
       setCheckedTypes([]);
-      setCheckedMarketPlaces([]);
-      setCheckedStatus([]);
       setResultsPageAppliedFilters('', '','', []);
       nftSFilters.nftTypes = [];
       nftSFilters.marketplace = [];
       nftSFilters.status = [];
     }
   },[nftSFilters, prevSearchTerm, searchTerm, setResultsPageAppliedFilters]);
-  useEffect(() => {
-    collectionsFilter.issuance = checked;
-    collectionsFilter.nftTypes = checkedTypes;
-    nftSFilters.nftTypes = checkedTypes;
-    nftSFilters.marketplace = checkedMarketPlaces;
-    nftSFilters.status = checkedStatus;
-    updateCheckedString();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checked, checkedTypes, checkedMarketPlaces, checkedStatus]);
-  const NEW_NFT_FILTER_VARIABLE = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
+  const NEW_NFT_FILTER_VARIABLE = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
   if(discoverPageEnv){
     return (
       <>
@@ -693,10 +693,10 @@ export const NFTsFiltersContent = () => {
                     dateFilterPeriod={dateFilterPeriod}
                     statuses={statuses}
                     clearedFilters={clearedFilters}
-                    checked={checked}
-                    checkedStatus={checkedStatus}
-                    checkedTypes={checkedTypes}
-                    checkedMarketPlaces={checkedMarketPlaces}
+                    checked={collectionsFilter.issuance}
+                    checkedStatus={nftSFilters.status}
+                    checkedTypes={nftSFilters.nftTypes}
+                    checkedMarketPlaces={nftSFilters.marketplace}
                     checkedArray={checkedArray}
                     collectionsFilter={collectionsFilter}
                     nftSFilters={nftSFilters}
@@ -721,10 +721,10 @@ export const NFTsFiltersContent = () => {
                       nftSFilters.currency = val;
                       updateCheckedString();
                     }}
-                    handleCheck={() => handleCheck(event, checked, setChecked)}
-                    handleCheckTypes={() => handleCheck(event, checkedTypes, setCheckedTypes)}
-                    handleCheckMarketPlace={() => handleCheck(event, checkedMarketPlaces, setCheckedMarketPlaces)}
-                    handleCheckStatus={() => handleCheck(event, checkedStatus, setCheckedStatus)}
+                    handleCheck={() => handleCheck(event, collectionsFilter.issuance ? collectionsFilter.issuance : [], setChecked, 'issuance')}
+                    handleCheckTypes={() => handleCheck(event, nftSFilters.nftTypes ? nftSFilters.nftTypes : [], setCheckedTypes, 'nftTypes')}
+                    handleCheckMarketPlace={() => handleCheck(event, nftSFilters.marketplace ? nftSFilters.marketplace : [], null, 'marketplace')}
+                    handleCheckStatus={() => handleCheck(event, nftSFilters.status ? nftSFilters.status : [], null, 'status')}
                     setClearedFilters={setClearedFilters}
                   />
                 </div>);
@@ -763,8 +763,8 @@ export const NFTsFiltersContent = () => {
                         collectionsFilter.currency = val;
                         updateCheckedString();
                       }}
-                      handleCheck={() => handleCheck(event, checked, setChecked)}
-                      handleCheckTypes={() => handleCheck(event, checkedTypes, setCheckedTypes)}
+                      handleCheck={() => handleCheck(event, checked, setChecked, 'issuance')}
+                      handleCheckTypes={() => handleCheck(event, checkedTypes, setCheckedTypes, 'status')}
                       setClearedFilters={setClearedFilters}
                     />
                   </div>);

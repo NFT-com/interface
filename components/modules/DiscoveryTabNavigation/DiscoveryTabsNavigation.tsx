@@ -43,7 +43,7 @@ export function DiscoveryTabNav(props: NavProps) {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
   const router = useRouter();
-  const { activePeriod, changeTimePeriod, isLeaderBoard, toggleLeaderBoardState } = useSearchModal();
+  const { activePeriod, changeTimePeriod, isLeaderBoard, toggleLeaderBoardState, setClearedFilters } = useSearchModal();
   const routerName = router.pathname.split('/');
 
   if(newFiltersEnabled){
@@ -56,8 +56,11 @@ export function DiscoveryTabNav(props: NavProps) {
               return (
                 <li key={tab.id}
                   onClick={() => {
-                    toggleLeaderBoardState(true);
-                    router.push(`/app/discover/${tab.key}`);
+                    setClearedFilters();
+                    setTimeout(() => {
+                      toggleLeaderBoardState(true);
+                      router.push(`/app/discover/${tab.key}`);
+                    }, 1);
                   }}
                   className={`${routerName[routerName.length - 1] === tab.key ? 'border-[#F9D54C] text-[#000000]' : 'border-[transparent]'} hover:border-[#F9D54C] border-b-[2px] transition-all list-none m-0 py-[24px] mx-[16px]`}>
                   <button>{tab.name}</button>
