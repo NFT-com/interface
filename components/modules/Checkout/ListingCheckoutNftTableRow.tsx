@@ -48,7 +48,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     clearGeneralConfig,
     getTarget,
     removeListing
-  } = useContext(NFTListingsContext);
+  } = useContext(NFTListingsContext);//
 
   const [expanded, setExpanded] = useState(false);
   const [empty, setEmpty] = useState(true);
