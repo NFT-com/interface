@@ -62,6 +62,12 @@ export type StagedListing = {
   endingPrice: BigNumberish;
   currency: string;
   duration: BigNumberish;
+
+  //Native only listing fields
+  auctionType?: number;
+  buyNowPrice?: BigNumberish;
+  reservePrice?: BigNumberish;
+
   // for x2y2 order price adjustments
   hasOpenOrder?: boolean;
   openOrderId?: number;
@@ -420,12 +426,15 @@ export function NFTListingsContextProvider(
             currentAddress,
             isNullOrEmpty(target?.nativeOrder?.taker) ? NULL_ADDRESS : target.nativeOrder.taker,
             Number(target.duration) ?? Number(stagedNft.duration),
-            // onchainAuctionTypeToGqlAuctionType(target.nativeOrder.auctionType), Need to add in auction type
+            // onchainAuctionTypeToGqlAuctionType(stagedNft.auctionType), Need to add in auction type
             onchainAuctionTypeToGqlAuctionType(0),
             stagedNft.nft,
             Number(nonce),
             getByContractAddress(isNullOrEmpty(target?.nativeOrder?.taker) ? NULL_ADDRESS : target.nativeOrder.taker).contract,
             target.startingPrice as BigNumber,
+            target.endingPrice as BigNumber,
+            stagedNft.buyNowPrice as BigNumber || null,
+            stagedNft.reservePrice as BigNumber || null,
             stagedNft.currency ?? target.currency,
           );
           // await marketplace.incrementNonce(); need to increment nonce
