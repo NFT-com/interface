@@ -4,6 +4,7 @@ import { Maybe, NftType } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD } from 'utils/marketplaceUtils';
 
@@ -41,7 +42,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { getByContractAddress } = useSupportedCurrencies();
   
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const [success, setSuccess] = useState(true);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<
   'ApprovalError' | 'ListingSignatureRejected' | 'ListingUnknownError' | 'ConnectionError'
   >>(null);
@@ -102,7 +103,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   
   const getSummaryContent = useCallback(() => {
     if (success) {
-      return <CheckoutSuccessView userAddress={currentAddress} />
+      return <CheckoutSuccessView userAddress={currentAddress} subtitle="You have successfully listed your items!" />;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">
@@ -246,8 +247,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     toList
   ]);
 
-  console.log('success: ', success);
-
   return (
     <Modal
       visible={props.visible}
@@ -264,8 +263,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       fullModal
       pure
     >
-      <div className={`max-w-full overflow-hidden minlg:max-w-[${success ? '700px' : '458px px-4 pb-5'}] h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
-        <div className={`font-noi-grotesk ${success ? 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg '} m-auto minlg:relative`}>
+      <div className={`max-w-full overflow-hidden minlg:max-w-[${success && getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) ? '700px' : '458px px-4 pb-5'}] h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
+        <div className={`font-noi-grotesk ${success && getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) ? 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg '} m-auto minlg:relative`}>
           <X onClick={() => {
             if (success) {
               clear();

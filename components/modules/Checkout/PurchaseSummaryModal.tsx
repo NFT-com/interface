@@ -79,6 +79,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       return <div className="my-8">
         <CheckoutSuccessView
           userAddress={currentAddress}
+          subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}
         />
       </div>;
     } else if (!isNullOrEmpty(error)) {
