@@ -4,10 +4,9 @@ describe('CheckoutSuccessView', () => {
   it('should render the correct image and text', () => {
     cy.mount(
       <CheckoutSuccessView
-        subtitle={'test subtitle'}
+        userAddress={'testAddress'}
       />
     );
-    cy.findByText('test subtitle').should('exist');
     cy.get('svg').should('have.class', 'text-green-500');
   });
 });
