@@ -105,7 +105,7 @@ export default function CollectionsPage() {
                   <div className="flex-auto">
                     <div className='flex'>
                       <div className={`${!sideNavOpen ? 'min-w-0' : 'min-w-[304px] -mt-4'} hidden minlg:block`}>
-                        <SideNav onSideNav={() => console.log('222')} filtersData={filters}/>
+                        <SideNav onSideNav={() => null} filtersData={filters}/>
                       </div>
                       {showNftView()}
                     </div>

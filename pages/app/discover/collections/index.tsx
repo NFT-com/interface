@@ -45,7 +45,6 @@ export default function CollectionsPage() {
     });
     return () => {
       setClearedFilters();
-      // toggleLeaderBoardState(isLeaderBoard ? false : true)
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
