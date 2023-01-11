@@ -14,7 +14,7 @@ export interface CheckoutSuccessViewProps {
 export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
 
-  if (getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED)) {
+  if (!getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED)) {
     return <div className="flex flex-col items-center my-8">
       <CheckCircle size={60} className="text-green-500 mb-4" />
       <span className="text-lg">{props?.subtitle || ''}</span>
