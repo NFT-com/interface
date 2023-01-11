@@ -195,6 +195,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       );
     }
   }, [
+    currentAddress,
     error,
     getByContractAddress,
     getNeedsApprovals,
