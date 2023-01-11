@@ -6,6 +6,7 @@ import { NFTListingsContext } from './NFTListingsContext';
 
 import { useRouter } from 'next/router';
 import { Check } from 'phosphor-react';
+import DesktopNoProfile from 'public/images/desktop_no_profile.svg';
 import DesktopSuccessProfile from 'public/images/desktop_success_profile.svg';
 import NullProfile from 'public/images/null_profile.svg';
 import { useContext } from 'react';
@@ -83,7 +84,29 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
         </div>
       </div>
     </div> :
-    <div>
-      nope
+    <div className="flex flex-col items-center h-[596px] font-noi-grotesk">
+      <div className="relative bg-gradient-to-br from-[#FAC213] to-[#FF9B37] w-full h-2/5 top-0">
+        <DesktopNoProfile className="h-full w-full object-cover" />
+      </div>
+      <div className="relative w-full h-3/5 bottom-0">
+        <div className='flex flex-col items-center justify-center h-full w-full px-10'>
+          <div className='text-[30px] font-medium text-center w-[400px] mt-10'>
+            Get access to lower fees by creating an NFT Profile
+          </div>
+          <div className='w-[277px] flex flex-col text-[16px] mt-6'>
+            <div className='flex item-center py-3 justify-between'>
+              <div className='text-[#6A6A6A]'>With an NFT Profile</div>
+              <div className='font-medium text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37]'>0% fee</div>
+            </div>
+            <div className='flex item-center py-3 justify-between border-t border-[#ECECEC]'>
+              <div className='text-[#6A6A6A]'>Without an NFT Profile</div>
+              <div className='font-medium line-through'>2.5% fee</div>
+            </div>
+          </div>
+          <button onClick={() => router.push('/app/mint-profiles')} className="bg-[#F9D963] w-[277px] mt-8 mb-14 font-medium hover:bg-[#fcd034] text-base text-black text-[16px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
+            Create a Profile
+          </button>
+        </div>
+      </div>
     </div>;
 }

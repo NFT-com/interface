@@ -2,6 +2,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { Maybe, NftType } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
@@ -41,7 +42,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { getByContractAddress } = useSupportedCurrencies();
 
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const [success, setSuccess] = useState(true);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<
   'ApprovalError' | 'ListingSignatureRejected' | 'ListingUnknownError' | 'ConnectionError'
   >>(null);
@@ -84,6 +85,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
     return total - getMaxMarketplaceFees() - getMaxRoyaltyFees();
   } , [getByContractAddress, getMaxMarketplaceFees, getMaxRoyaltyFees, toList]);
+
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
@@ -262,8 +265,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       fullModal
       pure
     >
-      <div className={`max-w-full overflow-hidden ${success ? 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 pb-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
-        <div className={`font-noi-grotesk ${success ? 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
+      <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 pb-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
+        <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
             if (success) {
               clear();
