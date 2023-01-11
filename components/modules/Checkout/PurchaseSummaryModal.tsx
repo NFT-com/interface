@@ -9,7 +9,7 @@ import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from 'utils/marketplaceUtils';
 
-import { CheckoutSuccessView } from './CheckoutSuccessView';
+import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
@@ -79,6 +79,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       return <div className="my-8">
         <CheckoutSuccessView
           userAddress={currentAddress}
+          type={SuccessType.Purchase}
           subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}
         />
       </div>;

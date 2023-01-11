@@ -8,7 +8,7 @@ import { ExternalProtocol } from 'types';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD } from 'utils/marketplaceUtils';
 
-import { CheckoutSuccessView } from './CheckoutSuccessView';
+import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { ListAllResult, ListingTarget, NFTListingsContext } from './NFTListingsContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
@@ -105,7 +105,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
   const getSummaryContent = useCallback(() => {
     if (success) {
-      return <CheckoutSuccessView userAddress={currentAddress} subtitle="You have successfully listed your items!" />;
+      return <CheckoutSuccessView userAddress={currentAddress} type={SuccessType.Listing} subtitle="You have successfully listed your items!" />;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">

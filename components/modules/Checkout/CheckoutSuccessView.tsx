@@ -3,6 +3,7 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { processIPFSURL } from 'utils/helpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
+import { NFTPurchasesContext } from './NFTPurchaseContext';
 
 import { useRouter } from 'next/router';
 import { Check } from 'phosphor-react';
@@ -11,8 +12,13 @@ import DesktopSuccessProfile from 'public/images/desktop_success_profile.svg';
 import NullProfile from 'public/images/null_profile.svg';
 import { useContext } from 'react';
 
+export enum SuccessType {
+  Purchase = 'Purchase',
+  Listing = 'Listing'
+}
 export interface CheckoutSuccessViewProps {
   userAddress: string;
+  type: SuccessType;
   subtitle?: string;
 }
 
@@ -25,42 +31,49 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
     toList,
   } = useContext(NFTListingsContext);
 
+  const {
+    toBuy,
+  } = useContext(NFTPurchasesContext);
+
+  const list = props.type === SuccessType.Listing ? toList : toBuy;
+
   const images = () => {
-    if (toList.length == 1) {
+    if (list.length == 1) {
       return <div className='relative'>
         <RoundedCornerMedia
           containerClasses='w-[130px] h-[130px] mb-10 z-10'
-          src={processIPFSURL(toList[0]?.nft?.metadata?.imageURL)}
+          src={processIPFSURL(list[0]?.nft?.metadata?.imageURL)}
           variant={RoundedCornerVariant.Success}
         />
         <Check className={'absolute top-[-12px] right-[-12px] z-20 h-7 w-7 p-1 text-white font-medium aspect-square shrink-0 rounded-full -ml-4 bg-[#26AA73]'} />
       </div>;
-    } else if (toList.length > 1) {
+    } else if (list.length > 1) {
       return <div className='relative'>
         <div className='flex flex-row justify-center items-center ml-16 mb-5'>
-          {toList.filter((_, index) => index < 3).map((listing, i) =>
+          {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+          {list?.filter((_, index) => index < 3).map((item, i) =>
             <RoundedCornerMedia
               key={i}
               containerClasses={`w-[${130 - (i * 10)}px] h-[${130 - (i * 10)}px] z-${50 - i * 10} -ml-16 shadow-xl`}
-              src={processIPFSURL(listing?.nft?.metadata?.imageURL)}
+              src={processIPFSURL(item?.nft?.metadata?.imageURL)}
               variant={RoundedCornerVariant.Success}
             />
           )}
-          {toList.length > 3 &&
+          {list.length > 3 &&
             <div className='flex items-center justify-end w-[90px] h-[90px] z-10 -ml-16 pr-2 bg-[#F9D54C] rounded-[18px]'>
-              +{toList.length - 3}
+              +{list.length - 3}
             </div>
           }
         </div>
-        <Check className={`absolute ${toList.length >= 3 ? 'top-0' : 'top-[-10px]'} right-[-13px] z-[100] h-7 w-7 p-1 text-white font-medium aspect-square shrink-0 rounded-full -ml-4 bg-[#26AA73]`} />
+        <Check className={`absolute ${list.length >= 3 ? 'top-0' : 'top-[-10px]'} right-[-13px] z-[100] h-7 w-7 p-1 text-white font-medium aspect-square shrink-0 rounded-full -ml-4 bg-[#26AA73]`} />
       </div>;
     }
   };
 
-  const listingMessage = () => {
-    return toList.length > 1 ?
-      `You have successfully listed ${toList.length} NFTs` :
-      'You have successfully listed your NFT';
+  const message = () => {
+    return list.length > 1 ?
+      `You have successfully ${props.type == SuccessType.Listing ? 'listed' : 'purchased'} ${list.length} NFTs` :
+      `You have successfully ${props.type == SuccessType.Listing ? 'listed your' : 'purchased a'} NFT`;
   };
 
   return myOwnedProfileTokens?.length > 0 ?
@@ -75,7 +88,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
         <div className='flex flex-col items-center justify-center h-full w-full px-10'>
           {images()}
           <div className='text-[34px] font-medium'>Congratulations!</div>
-          <div className='text-[18px] font-medium mt-4'>{listingMessage()}</div>
+          <div className='text-[18px] font-medium mt-4'>{message()}</div>
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
           <button onClick={() => alert('ok')} className="bg-[#F9D963] w-[277px] my-8 font-medium hover:bg-[#fcd034] text-base text-black text-[14px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
             Share your Listing
