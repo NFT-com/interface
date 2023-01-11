@@ -77,7 +77,10 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const getSummaryContent = useCallback(() => {
     if (success) {
       return <div className="my-8">
-        <CheckoutSuccessView subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}/>
+        <CheckoutSuccessView
+          userAddress={currentAddress}
+          subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}
+        />
       </div>;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
@@ -192,6 +195,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       );
     }
   }, [
+    currentAddress,
     error,
     getByContractAddress,
     getNeedsApprovals,
