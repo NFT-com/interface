@@ -147,7 +147,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                         stagedListing?.nft?.type == NftType.Erc721 ?
                           stagedListing?.isApprovedForX2Y2 :
                           stagedListing?.isApprovedForX2Y21155 :
-                        stagedListing?.isApprovedForSeaport;
                         target.protocol === ExternalProtocol.Native
                           ? stagedListing?.isApprovedForNative :
                           stagedListing?.isApprovedForSeaport;
@@ -322,9 +321,9 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                           stagedListing?.nft?.type === NftType.Erc721 ?
                             stagedListing?.isApprovedForX2Y2 :
                             stagedListing?.isApprovedForX2Y21155 :
-                            protocol === ExternalProtocol.Native
-                              ? stagedListing?.isApprovedForNative :
-                              stagedListing?.isApprovedForSeaport;
+                          protocol === ExternalProtocol.Native
+                            ? stagedListing?.isApprovedForNative :
+                            stagedListing?.isApprovedForSeaport;
                             
                       if (!approved && protocol === ExternalProtocol.LooksRare) {
                         const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)

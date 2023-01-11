@@ -252,7 +252,32 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       />;
     }
     }
-  }, [stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, X2Y2Allowed, nativeAllowed, listing, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
+  }, [
+    stageListing,
+    props.nft,
+    props.collectionName,
+    openseaAllowed,
+    looksRareAllowed,
+    X2Y2Allowed,
+    nativeAllowed,
+    listing,
+    router,
+    cancelling,
+    listingProtocol,
+    looksrareExchange,
+    updateActivityStatus,
+    signer,
+    X2Y2Exchange,
+    seaportExchange,
+    mutateNft,
+    nftInPurchaseCart,
+    getByContractAddress,
+    currentAddress,
+    defaultChainId,
+    X2Y2Allowed1155,
+    looksRareAllowed1155,
+    stagePurchase
+  ]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
