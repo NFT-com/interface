@@ -16,12 +16,11 @@ export const ButtonFilter = (props: ButtonFilterType) => {
       activeElements[item] = item;
     });
   }
-
   return (
     <>
-      <input className='hidden' id={props.value} onChange={(event) => props.click(event)} value={props.value} type="checkbox"/>
+      <input checked={activeElements[props.value]} className='hidden' id={props.value} onChange={(event) => props.click(event)} value={props.value} type="checkbox"/>
       <label
-        className={`${activeElements[props.value] ? 'bg-[#000] text-[#fff]' : ''} inline-block cursor-pointer px-4 py-1 border-[2px] border-[#000000] rounded-[20px] text-[#000] mr-2 mb-2 hover:bg-[#000] hover:text-[#fff]`}
+        className={`${activeElements[props.value] ? 'bg-[#000] text-[#fff]' : ''} inline-block cursor-pointer px-4 py-1 border-[2px] border-[#000000] rounded-[20px] text-[#000] mr-2 mb-2 minlg:hover:bg-[#000] minlg:hover:text-[#fff]`}
         htmlFor={props.value}>{props.label}</label>
     </>
   );

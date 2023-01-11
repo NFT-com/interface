@@ -35,16 +35,15 @@ export default function CollectionsPage() {
       page: page,
     }).then((results) => {
       setLoading(false);
-      filters.length < 1 && setFilters([...results.facet_counts]);
       setTotalFound(results.found);
       page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
+      filters.length < 1 && setFilters([...results.facet_counts]);
     });
     return () => {
       setClearedFilters();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
-
   const showNftView = () => {
     return (
       <div className={tw(
@@ -97,9 +96,6 @@ export default function CollectionsPage() {
                       <div className="px-0 flex mt-0 mr-4 justify-between minlg:hidden">
                         <div onClick={() => setSearchModalOpen(true, 'filters', filters )} className={'flex items-center justify-center bg-black text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer'}>
                           <SlidersHorizontal size={22}/>
-                        </div>
-                        <div className={'hidden relative flex items-center justify-center bg-white border-[#ECECEC] border-[1px] text-white w-10 h-10 rounded-[50%] text-lg rounded-[48px] cursor-pointer z-5'}>
-
                         </div>
                       </div>
                     </div>
