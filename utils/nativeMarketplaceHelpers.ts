@@ -309,7 +309,7 @@ export const getMarketAskSignatureData = (
       name: 'NFT.com Marketplace',
       version: '1',
       chainId,
-      verifyingContract: verifyingContract,
+      verifyingContract: verifyingContract as `0x${string}`,
     },
     value: unsignedOrder
   };
