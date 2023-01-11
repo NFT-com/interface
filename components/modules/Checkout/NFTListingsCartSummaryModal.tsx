@@ -1,6 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
-import { Maybe } from 'graphql/generated/types';
+import { Maybe, NftType } from 'graphql/generated/types';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
@@ -86,9 +86,16 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null && !stagedListing?.isApprovedForLooksrare) ||
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null &&
+        (stagedListing?.nft?.type == NftType.Erc721 ?
+          !stagedListing?.isApprovedForLooksrare :
+          !stagedListing?.isApprovedForLooksrare1155)) ||
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Seaport) != null && !stagedListing?.isApprovedForSeaport) ||
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.X2Y2) != null && !stagedListing?.isApprovedForX2Y2)
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.X2Y2) != null &&
+        (stagedListing?.nft?.type == NftType.Erc721 ?
+          !stagedListing?.isApprovedForX2Y2 :
+          !stagedListing?.isApprovedForX2Y21155)) ||
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Native) != null && !stagedListing?.isApprovedForNative)
     );
   }, [toList]);
   
@@ -133,10 +140,16 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                 )?.map((stagedListing) => {
                   return stagedListing.targets.map((target: ListingTarget) => {
                     const approved = target.protocol === ExternalProtocol.LooksRare ?
-                      stagedListing?.isApprovedForLooksrare :
-                      target.protocol === ExternalProtocol.X2Y2
-                        ? stagedListing?.isApprovedForX2Y2 :
-                        stagedListing?.isApprovedForSeaport;
+                      stagedListing?.nft?.type == NftType.Erc721 ?
+                        stagedListing?.isApprovedForLooksrare :
+                        stagedListing?.isApprovedForLooksrare1155 :
+                      target.protocol === ExternalProtocol.X2Y2 ?
+                        stagedListing?.nft?.type == NftType.Erc721 ?
+                          stagedListing?.isApprovedForX2Y2 :
+                          stagedListing?.isApprovedForX2Y21155 :
+                        target.protocol === ExternalProtocol.Native
+                          ? stagedListing?.isApprovedForNative :
+                          stagedListing?.isApprovedForSeaport;
                     return {
                       label: 'Approve ' + stagedListing?.collectionName + ' for ' + target.protocol,
                       startIcon: target.protocol === ExternalProtocol.Seaport ?
@@ -178,7 +191,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       // fee summary, default state.
       return (
         <>
-          <p className="text-3xl mx-4">
+          <p className="text-3xl font-noi-grotesk mx-4">
             Listing Fees
           </p>
           <p className='text-2xl text-[#6F6F6F] mx-4 font-bold'>
@@ -250,7 +263,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       pure
     >
       <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
-        <div className='pt-10 font-noi-grotesk mx-3 lg:max-w-md max-w-lg m-auto minlg:relative'>
+        <div className='pt-3 font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
           <X onClick={() => {
             if (success) {
               clear();
@@ -301,10 +314,17 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                     for (let j = 0; j < uniqueCollections[i].targets.length; j++) {
                       const protocol = uniqueCollections[i].targets[j].protocol;
                       const approved = protocol === ExternalProtocol.LooksRare ?
-                        stagedListing?.isApprovedForLooksrare :
+                        stagedListing?.nft.type === NftType.Erc721 ?
+                          stagedListing?.isApprovedForLooksrare :
+                          stagedListing?.isApprovedForLooksrare1155 :
                         protocol === ExternalProtocol.X2Y2 ?
-                          stagedListing?.isApprovedForX2Y2 :
-                          stagedListing?.isApprovedForSeaport;
+                          stagedListing?.nft?.type === NftType.Erc721 ?
+                            stagedListing?.isApprovedForX2Y2 :
+                            stagedListing?.isApprovedForX2Y21155 :
+                          protocol === ExternalProtocol.Native
+                            ? stagedListing?.isApprovedForNative :
+                            stagedListing?.isApprovedForSeaport;
+                            
                       if (!approved && protocol === ExternalProtocol.LooksRare) {
                         const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
                           .then(result => {
@@ -353,6 +373,23 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                             return false;
                           });
                         stagedListing.isApprovedForX2Y2 = result;
+                        if (!result) {
+                          return;
+                        }
+                      } else if (!approved && protocol === ExternalProtocol.Native) {
+                        const result = await approveCollection(stagedListing, ExternalProtocol.Native)
+                          .then(result => {
+                            if (!result) {
+                              setError('ApprovalError');
+                              return false;
+                            }
+                            return true;
+                          })
+                          .catch(() => {
+                            setError('ApprovalError');
+                            return false;
+                          });
+                        stagedListing.isApprovedForNative = result;
                         if (!result) {
                           return;
                         }
