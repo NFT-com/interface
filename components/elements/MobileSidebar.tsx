@@ -19,6 +19,7 @@ const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof StaticResults
 
 export const MobileSidebar = () => {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
   const { mobileSidebarOpen, setMobileSidebarOpen, toggleMobileSidebar } = useMobileSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
@@ -62,6 +63,18 @@ export const MobileSidebar = () => {
             className={tw('overflow-hidden')}
           >
             <div className="flex flex-col">
+              {
+                newFiltersEnabledNew
+                  ? (
+                    <Link href='/app/discover/nfts'>
+                      <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
+                        NFTs
+                        <CaretRight width={25} weight='bold' color='black' />
+                      </p>
+                    </Link>
+                  )
+                  : null
+              }
               <Link href='/app/discover/collections'>
                 <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
                   Collections

@@ -92,7 +92,7 @@ export function NftCard(props: NftCardProps) {
 
   return (
     <div className={tw(
-      'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative w-full',
+      'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative w-full mb-3',
       props.nftsDescriptionsVisible != false ? `${newFiltersEnabled ? '' : 'h-[442px] sm:h-[auto]'}` : 'h-max'
     )}>
       {
@@ -148,16 +148,12 @@ export function NftCard(props: NftCardProps) {
             <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} group-hover/ntfCard:scale-110 hover:scale-105 transition `}>
               <RoundedCornerMedia
                 variant={RoundedCornerVariant.None}
-                width={600}
-                height={600}
                 containerClasses='w-full h-full overflow-hidden'
                 src={processedImageURLs[0]}
                 extraClasses='hover:scale-105 transition'
               />
-            </div>
-            <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
-              <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && hasGks ?
+              <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
+                <div className="absolute bottom-[40px] flex flex-row justify-center w-[100%]">
                   <>
                     <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
                     <button
@@ -187,7 +183,7 @@ export function NftCard(props: NftCardProps) {
                       <ShopIcon/>
                     </button>
                   </>
-                  : null}
+                </div>
               </div>
             </div>
           </div>
@@ -196,9 +192,9 @@ export function NftCard(props: NftCardProps) {
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white">
               <ul
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
-                <li className="sm:text-[13px]	 list-none p-0 m-[0] sm:whitespace-nowrap sm:text-ellipsis sm:overflow-hidden">{props.name}</li>
+                <li className="sm:text-[13px]	max-w-[200px] list-none p-0 m-[0] sm:whitespace-nowrap sm:text-ellipsis sm:overflow-hidden">{props.name}</li>
                 <li
-                  className="sm:text-sm text-[16px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
+                  className="sm:text-sm text-[16px] [200px]  leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
               </ul>
               {
                 (props?.listings?.length || nft?.listings?.items?.length) && bestListing

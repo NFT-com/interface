@@ -280,13 +280,13 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     {found.current + ' ' + (searchType?.toString() !== 'collections' ? 'NFT' : 'Collection') + `${found.current === 1 ? '' : 's'}`}
                   </div>
                   {searchType?.toString() === 'allResults' && <span
-                    className="cursor-pointer hover:font-semibold underline text-black text-lg"
+                    className="cursor-pointer hover:font-semibold underline text-[#000] text-lg font-medium"
                     onClick={() => { router.push(`/app/discover/nfts/${searchTerm.toString()}`); }}
                   >
                   See All
                   </span>}
                   {searchType?.toString() !== 'allResults' && <span
-                    className="cursor-pointer hover:font-semibold underline text-black font-black minmd:text-base font-grotesk font-[600]"
+                    className="cursor-pointer hover:font-semibold underline text-black font-black minmd:text-base font-grotesk text-[#000] text-lg font-medium"
                     onClick={() => {
                       if (discoverPageEnv) {
                         if(newFiltersEnabledNew){

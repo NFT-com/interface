@@ -63,6 +63,7 @@ export function useSearchModal() {
     });
   };
   const useToggleLeaderBoardState = (isLeaderBoard) => {
+    console.log('isLeaderBoard',isLeaderBoard)
     mutate({
       ...data,
       isLeaderBoard: isLeaderBoard
