@@ -30,7 +30,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <button onClick={() => alert('ok')} className="bg-[#F9D963] w-[277px] my-8 font-medium hover:bg-[#fcd034] text-base text-black text-[16px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
             Share your Listing
           </button>
-          <div onClick={() => router.push('/app/list')} className='text-[#E4BA18] font-medium underline text-[16px] cursor-pointer'>List another NFT</div>
+          <div onClick={() => router.push('/app/assets')} className='text-[#E4BA18] font-medium underline text-[16px] cursor-pointer'>List another NFT</div>
         </div>
       </div>
     </div> :
