@@ -137,7 +137,21 @@ export function EditListingsModal(props: EditListingsModalProps) {
         </div>
       </div>
     </div>;
-  }, [nft, collectionName, listings, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, router]);
+  }, [
+    nft,
+    collectionName,
+    listings,
+    stageListing,
+    props.nft,
+    props.collectionName,
+    openseaAllowed,
+    looksRareAllowed,
+    looksRareAllowed1155,
+    X2Y2Allowed,
+    X2Y2Allowed1155,
+    nativeAllowed,
+    router
+  ]);
 
   return (
     <Modal
