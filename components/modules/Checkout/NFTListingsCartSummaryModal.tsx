@@ -18,7 +18,7 @@ import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
-import { useProvider, useSigner } from 'wagmi';
+import { useAccount, useProvider, useSigner } from 'wagmi';
 
 export interface NFTListingsCartSummaryModalProps {
   visible: boolean;
@@ -37,6 +37,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
+  const { address: currentAddress } = useAccount();
   const { getByContractAddress } = useSupportedCurrencies();
   
   const [showProgressBar, setShowProgressBar] = useState(false);
@@ -102,7 +103,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const getSummaryContent = useCallback(() => {
     if (success) {
       return <div className='my-8'>
-        <CheckoutSuccessView subtitle="You have successfully listed your items!" />
+        <CheckoutSuccessView userAddress={currentAddress} />
       </div>;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
