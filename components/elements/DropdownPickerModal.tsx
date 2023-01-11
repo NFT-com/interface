@@ -82,7 +82,7 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
       <div
         ref={wrapperRef}
         className={tw(
-          'relative',
+          'relative font-noi-grotesk',
           'cursor-pointer flex flex-col items-end rounded-xl',
           'text-base',
           props.constrain ? '' : 'w-full h-full shrink-0',
