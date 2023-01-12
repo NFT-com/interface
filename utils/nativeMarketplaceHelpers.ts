@@ -398,9 +398,9 @@ export function unhashedTakeAsset(
   startingPrice: BigNumber,
   auctionType: AuctionType,
   takeAssetContractAddress: string,
-  endingPrice?: number,
-  reservePrice?: number,
-  buyNowPrice?: number | null,
+  endingPrice?: BigNumber,
+  reservePrice?: BigNumber,
+  buyNowPrice?: BigNumber | null,
 ): UnhashedAsset {
   const takeAssetValue = auctionType === AuctionType.FixedPrice ?
     startingPrice :
@@ -408,11 +408,11 @@ export function unhashedTakeAsset(
       startingPrice :
       !isNullOrEmpty(buyNowPrice.toString()) ?
         MAX_UINT_256 :
-        BigNumber.from(buyNowPrice);
+        buyNowPrice;
 
   const takeAssetMinimumBid = auctionType === AuctionType.FixedPrice ?
     startingPrice :
-    auctionType === AuctionType.Decreasing ? BigNumber.from(endingPrice) : BigNumber.from(reservePrice);
+    auctionType === AuctionType.Decreasing ? endingPrice : reservePrice;
   return {
     class: saleCurrency === 'ETH' ? AssetClass.Eth : AssetClass.Erc20,
     types: ['address'],
@@ -433,6 +433,9 @@ export async function createNativeParametersForNFTListing(
   nonce: number,
   takeAssetContractAddress: string,
   startingPrice: BigNumber,
+  endingPrice: BigNumber,
+  buyNowPrice: BigNumber,
+  reservePrice: BigNumber,
   currency: string
 ): Promise<UnsignedOrder> {
   const salt = moment.utc().unix();
@@ -449,7 +452,7 @@ export async function createNativeParametersForNFTListing(
     nonce,
     auctionType,
     [unhashedMakeAsset(nft)], // makeAssets
-    [unhashedTakeAsset(currency, startingPrice, auctionType, takeAssetContractAddress)], // takeAssets
+    [unhashedTakeAsset(currency, startingPrice, auctionType, takeAssetContractAddress, endingPrice, reservePrice, buyNowPrice)], // takeAssets
   );
   
   return unsignedOrder;
