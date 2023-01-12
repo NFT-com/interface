@@ -1,4 +1,5 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { BidContainer } from 'components/modules/NFTDetail/BidContainer';
 import { NFTAnalyticsContainer } from 'components/modules/NFTDetail/NFTAnalyticsContainer';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useRefreshNftOrdersMutation } from 'graphql/hooks/useRefreshNftOrdersMutation';
@@ -63,6 +64,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             {(defaultChainId === '1') &&
             <div className="w-full md:px-4 pt-4 pb-6">
               <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
+              <BidContainer data={nft} />
               <NFTAnalyticsContainer data={nft} />
             </div>
             }
@@ -146,12 +148,18 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
               <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
             </div>
             <div className="w-full hidden minxl:flex minxl:items-end">
+              <BidContainer data={nft} />
+            </div>
+            <div className="w-full hidden minxl:flex minxl:items-end">
               <NFTAnalyticsContainer data={nft} />
             </div>
           </div>
           :
           (defaultChainId === '1') &&
           <div className='md:hidden flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4 minxl:pt-12'>
+            <div className="w-full hidden minxl:flex minxl:items-end">
+              <BidContainer data={nft} />
+            </div>
             <div className="w-full hidden minxl:flex minxl:items-end">
               <NFTAnalyticsContainer data={nft} />
             </div>
