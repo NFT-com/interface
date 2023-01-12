@@ -50,7 +50,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
     } else if (list.length > 1) {
       return <div className='relative'>
         <div className='flex flex-row justify-center items-center ml-16 mb-5'>
-          {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+          {/* @ts-ignore */}
           {list?.filter((_, index) => index < 3).map((item, i) =>
             <RoundedCornerMedia
               key={i}
