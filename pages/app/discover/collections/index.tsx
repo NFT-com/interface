@@ -14,7 +14,15 @@ import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
-import React, { useEffect, useState } from 'react';
+import NoActivityIcon from 'public/no_activity.svg';
+import React, { useEffect, useRef, useState } from 'react';
+function usePrevious(value) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
 export default function CollectionsPage() {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
@@ -26,23 +34,29 @@ export default function CollectionsPage() {
   const [collections, setCollectionData] = useState([]);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
+  const prevFilters = usePrevious(collectionsResultsFilterBy);
 
   useEffect(() => {
-    setLoading(true);
-    fetchTypesenseSearch({
-      facet_by: ',floor,nftType,volume,issuance',
-      index: 'collections',
-      q: '*',
-      query_by: 'contractAddr,contractName',
-      filter_by: collectionsResultsFilterBy ? `isOfficial:true && ${collectionsResultsFilterBy}` : 'isOfficial:true',
-      per_page: 20,
-      page: page,
-    }).then((results) => {
-      setLoading(false);
-      filters.length < 1 && setFilters([...results.facet_counts]);
-      setTotalFound(results.found);
-      page > 1 ? setCollectionData([...collections,...results.hits]) : setCollectionData(results.hits);
-    });
+    if (page > 1 && collectionsResultsFilterBy !== prevFilters){
+      setPage(1);
+      return;
+    }else {
+      setLoading(true);
+      fetchTypesenseSearch({
+        facet_by: ',floor,nftType,volume,issuance',
+        index: 'collections',
+        q: '*',
+        query_by: 'contractAddr,contractName',
+        filter_by: collectionsResultsFilterBy ? `isOfficial:true && ${collectionsResultsFilterBy}` : 'isOfficial:true',
+        per_page: 20,
+        page: page,
+      }).then((results) => {
+        setLoading(false);
+        filters.length < 1 && setFilters([...results.facet_counts]);
+        setTotalFound(results.found);
+        page > 1 ? setCollectionData([...collections,...results.hits]) : setCollectionData(results.hits);
+      });
+    }
     return () => {
       setClearedFilters();
     };
@@ -181,13 +195,22 @@ export default function CollectionsPage() {
                     <div className={!isLeaderBoard ? 'flex flex-row justify-between items-start' : ''}>
                       {
                         !isLeaderBoard && sideNavOpen && (
-                          <div className={`${!sideNavOpen ? 'min-w-0' : 'min-w-[304px] -mt-4'} hidden minlg:block`}>
+                          <div className='hidden minlg:block'>
                             <SideNav onSideNav={() => null} filtersData={filters}/>
                           </div>
                         )
                       }
-                      {/*fixed bg-white z-[22] h-[100vh] left-0 top-0 pt-[100px] mt-[30px]*/}
-                      {leaderBoardOrCollectionView()}
+                      {
+                        !loading && (collections?.length === 0)
+                          ? (
+                            <div className='grid-cols-1 w-full'>
+                              <NoActivityIcon className='m-auto mt-10' />
+                              <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
+                            </div>
+                          )
+                          : null
+                      }
+                      {collections && collections?.length > 0 && leaderBoardOrCollectionView()}
                     </div>
                     {(loading) &&
                       (<div className="flex items-center justify-center min-h-[16rem] w-full">

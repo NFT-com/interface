@@ -22,7 +22,7 @@ import RemoveIcon from 'public/close-circle-icon-gray.svg';
 // import OpenseaIcon from 'public/opensea-icon.svg';
 import DeleteRowIcon from 'public/trash-icon.svg';
 // import X2Y2Icon from 'public/x2y2-icon.svg';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useMemo, useRef } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -62,7 +62,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const seaportEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Seaport) != null, [getTarget, props.listing]);
   const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
   const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
-  const nativeEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Native) != null, [getTarget, props.listing]);
+  const NFTCOMEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.NFTCOM) != null, [getTarget, props.listing]);
 
   const generateMarketPlaceOptions = (dropDownNumber: number, hasPredefinedSelectedOption?: boolean) => {
     let selectedOptionForDropdown = dropDownNumber === 0 ? selectedOptionDropdown0 : dropDownNumber === 1 ? selectedOptionDropdown1 : selectedOptionDropdown2;
@@ -80,7 +80,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         selectedOptionForDropdown = selectedOptionDropdown2;
       }
       if (dropDownNumber === 3) {
-        selectedOptionDropdown3.current = ExternalProtocol.Native;
+        selectedOptionDropdown3.current = ExternalProtocol.NFTCOM;
         selectedOptionForDropdown = selectedOptionDropdown3;
       }
     }
@@ -123,16 +123,16 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         disabled: X2Y2Enabled
       },
       {
-        label: ExternalProtocol.Native,
+        label: ExternalProtocol.NFTCOM,
         onSelect: () => {
-          rowSelectedMarketplaces.current = ExternalProtocol.Native;
-          toggleTargetMarketplace(ExternalProtocol.Native, props.listing, selectedOptionForDropdown.current);
-          if (dropDownNumber === 0) selectedOptionDropdown0.current = ExternalProtocol.Native;
-          if (dropDownNumber === 1) selectedOptionDropdown1.current = ExternalProtocol.Native;
-          if (dropDownNumber === 2) selectedOptionDropdown2.current = ExternalProtocol.Native;
-          if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.Native;
+          rowSelectedMarketplaces.current = ExternalProtocol.NFTCOM;
+          toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing, selectedOptionForDropdown.current);
+          if (dropDownNumber === 0) selectedOptionDropdown0.current = ExternalProtocol.NFTCOM;
+          if (dropDownNumber === 1) selectedOptionDropdown1.current = ExternalProtocol.NFTCOM;
+          if (dropDownNumber === 2) selectedOptionDropdown2.current = ExternalProtocol.NFTCOM;
+          if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.NFTCOM;
         },
-        disabled: nativeEnabled
+        disabled: NFTCOMEnabled
       },
     ];
   };
@@ -142,7 +142,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       {
         label: 'Fixed Price',
         onSelect: () => {
-          setTypeOfAuction(props.listing, 0, ExternalProtocol.Native);
+          setTypeOfAuction(props.listing, 0, ExternalProtocol.NFTCOM);
           auctionTypeForPrice.current = 0;
         },
         disabled: seaportEnabled
@@ -150,7 +150,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       {
         label: 'English Auction',
         onSelect: () => {
-          setTypeOfAuction(props.listing, 1, ExternalProtocol.Native);
+          setTypeOfAuction(props.listing, 1, ExternalProtocol.NFTCOM);
           auctionTypeForPrice.current = 1;
         },
         disabled: seaportEnabled
@@ -158,7 +158,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       {
         label: 'Decreasing Price',
         onSelect: () => {
-          setTypeOfAuction(props.listing, 2, ExternalProtocol.Native);
+          setTypeOfAuction(props.listing, 2, ExternalProtocol.NFTCOM);
           auctionTypeForPrice.current = 2;
         },
         disabled: seaportEnabled
@@ -235,29 +235,29 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     />;
   };
 
-  const NativePriceInput = (auctionTypeForPrice: number) => {
+  const NFTCOMPriceInput = () => {
     return <PriceInput
-      key={'NativePriceInput'}
+      key={'NFTCOMPriceInput'}
       initial={
-        getTarget(props.listing, ExternalProtocol.Native)?.startingPrice == null ?
+        getTarget(props.listing, ExternalProtocol.NFTCOM)?.startingPrice == null ?
           '' :
-          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Native)?.startingPrice ?? 0))
+          ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.NFTCOM)?.startingPrice ?? 0))
       }
-      currencyAddress={getTarget(props.listing, ExternalProtocol.Native)?.currency ?? getAddress('weth', defaultChainId)}
+      currencyAddress={getTarget(props.listing, ExternalProtocol.NFTCOM)?.currency ?? getAddress('weth', defaultChainId)}
       currencyOptions={['WETH', 'ETH']}
       onPriceChange={(val: BigNumber) => {
-        setPrice(props.listing, val, ExternalProtocol.Native);
+        setPrice(props.listing, val, ExternalProtocol.NFTCOM);
         props.onPriceChange();
       }}
       onCurrencyChange={(currency: SupportedCurrency) => {
-        setCurrency(props.listing, currency, ExternalProtocol.Native);
+        setCurrency(props.listing, currency, ExternalProtocol.NFTCOM);
         props.onPriceChange();
       }}
       error={
-        (props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Native && target.startingPrice == null) != null ||
-      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Native && BigNumber.from(target.startingPrice).eq(0)) != null)
+        (props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && target.startingPrice == null) != null ||
+      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && BigNumber.from(target.startingPrice).eq(0)) != null)
       }
-      auctionTypeForPrice={auctionTypeForPrice}
+      auctionTypeForPrice={auctionTypeForPrice.current}
     />;
   };
   
@@ -298,8 +298,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           <span className='text-sm line-clamp-1 capitalize'>{collection?.contractMetadata?.name?.toLowerCase()}</span>
         </ div>
       </ div>
-      {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !nativeEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
-      {(seaportEnabled || looksrareEnabled || X2Y2Enabled || nativeEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-5 minlg:pl-0'>
+      {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
+      {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-5 minlg:pl-0'>
         {(seaportEnabled || looksrareEnabled || X2Y2Enabled) && <div className='hidden minlg:flex text-base font-normal flex text-[#A6A6A6] mb-4'>
           <div className='w-[26%]'>Marketplace</div>
           <div className='w-[25%]'>Type of Auction</div>
@@ -483,7 +483,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               </div>
             </div>
           </div>}
-        {nativeEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
+        {NFTCOMEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
             <div className='mb-2 rounded-md h-12 w-[89%] minlg:w-[22%]'>
@@ -505,7 +505,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               Set Price
             </div>
             <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
-              {NativePriceInput(auctionTypeForPrice.current)}
+              {NFTCOMPriceInput()}
               <div className='w-full flex minlg:hidden -ml-[10rem] z-10 minlg:z-auto'>
                 <div className='w-full flex items-center justify-end '>
                   <DeleteRowIcon
@@ -513,7 +513,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                     alt="Delete market place"
                     layout="fill"
                     onClick={() => {
-                      toggleTargetMarketplace(ExternalProtocol.Native, props.listing);
+                      toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing);
                     }}
                   />
                 </div>
@@ -529,7 +529,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                     alt="Delete market place"
                     layout="fill"
                     onClick={() => {
-                      toggleTargetMarketplace(ExternalProtocol.Native, props.listing);
+                      toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing);
                     }}
                   />
                 </div>

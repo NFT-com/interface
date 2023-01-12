@@ -10,7 +10,15 @@ import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
-import React, { useEffect, useState } from 'react';
+import NoActivityIcon from 'public/no_activity.svg';
+import React, { useEffect, useRef, useState } from 'react';
+function usePrevious(value) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
 export default function CollectionsPage() {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
@@ -21,24 +29,32 @@ export default function CollectionsPage() {
   const [nftSData, setNftsData] = useState([]);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
+  const prevVal = usePrevious(page);
+  const prevFilters = usePrevious(nftsResultsFilterBy);
 
   useEffect(() => {
-    setLoading(true);
-    fetchTypesenseSearch({
-      facet_by: ',listings.marketplace,status,listings.price,nftType,contractName',
-      index: 'nfts',
-      q: '*',
-      sort_by: 'score:desc',
-      query_by: '',
-      filter_by: nftsResultsFilterBy ? nftsResultsFilterBy : 'listings.currency:=[ETH]',
-      per_page: 20,
-      page: page,
-    }).then((results) => {
-      setLoading(false);
-      setTotalFound(results.found);
-      page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
-      filters.length < 1 && setFilters([...results.facet_counts]);
-    });
+    if (page > 1 && nftsResultsFilterBy !== prevFilters){
+      setPage(1);
+      return;
+    }else {
+      setLoading(true);
+      fetchTypesenseSearch({
+        facet_by: ',listings.marketplace,status,listings.price,nftType,contractName',
+        index: 'nfts',
+        q: '*',
+        sort_by: 'score:desc',
+        query_by: '',
+        filter_by: nftsResultsFilterBy ? nftsResultsFilterBy : 'listings.currency:=[ETH]',
+        per_page: 20,
+        page: page,
+      }).then((results) => {
+        setLoading(false);
+        setTotalFound(results.found);
+        page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
+        filters.length < 1 && setFilters([...results.facet_counts]);
+      });
+    }
+
     return () => {
       setClearedFilters();
     };
@@ -103,11 +119,21 @@ export default function CollectionsPage() {
                 </div>
                 <div className="flex">
                   <div className="flex-auto">
-                    <div className='flex'>
-                      <div className={`${!sideNavOpen ? 'min-w-0' : 'min-w-[304px] -mt-4'} hidden minlg:block`}>
+                    <div className='flex items-start justify-center'>
+                      <div className={'hidden minlg:block'}>
                         <SideNav onSideNav={() => null} filtersData={filters}/>
                       </div>
-                      {showNftView()}
+                      {
+                        !loading && nftSData?.length === 0
+                          ? (
+                            <div className='grid-cols-1 w-full'>
+                              <NoActivityIcon className='m-auto mt-10' />
+                              <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
+                            </div>
+                          )
+                          : null
+                      }
+                      {nftSData?.length > 0 && showNftView()}
                     </div>
                     {(loading) &&
                       (<div className="flex items-center justify-center min-h-[16rem] w-full">

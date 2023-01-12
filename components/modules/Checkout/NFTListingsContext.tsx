@@ -51,7 +51,7 @@ export type ListingTarget = {
   looksrareOrder: MakerOrder; // looksrare
   seaportParameters: SeaportOrderParameters; // seaport
   X2Y2Order: X2Y2Order; // X2Y2
-  nativeOrder: UnsignedOrder; //native marketplace
+  NFTCOMOrder: UnsignedOrder; //native marketplace
 }
 
 export type StagedListing = {
@@ -67,7 +67,7 @@ export type StagedListing = {
   currency: string;
   duration: BigNumberish;
 
-  //Native only listing fields
+  //NFTCOM only listing fields
   auctionType?: number;
   buyNowPrice?: BigNumberish;
   reservePrice?: BigNumberish;
@@ -82,7 +82,7 @@ export type StagedListing = {
   isApprovedForLooksrare1155: boolean;
   isApprovedForX2Y2: boolean;
   isApprovedForX2Y21155: boolean;
-  isApprovedForNative: boolean;
+  isApprovedForNFTCOM: boolean;
 }
 
 export enum ListAllResult {
@@ -229,7 +229,7 @@ export function NFTListingsContextProvider(
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
-          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.Native && target.auctionType == null);
+          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null);
       });
       // At this point, we need all targets to have valid individual configurations.
       return unconfiguredTarget != null;
@@ -456,17 +456,17 @@ export function NFTListingsContextProvider(
           };
         } else if (target.protocol === ExternalProtocol.X2Y2) {
           return target;
-        } else if (target.protocol === ExternalProtocol.Native) {
+        } else if (target.protocol === ExternalProtocol.NFTCOM) {
           const nonce = await marketplace.nonces(currentAddress);
           const order = await createNativeParametersForNFTListing(
             currentAddress,
-            isNullOrEmpty(target?.nativeOrder?.taker) ? NULL_ADDRESS : target.nativeOrder.taker,
+            isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker,
             Number(target.duration) ?? Number(stagedNft.duration),
             // onchainAuctionTypeToGqlAuctionType(stagedNft.auctionType), Need to add in auction type
             onchainAuctionTypeToGqlAuctionType(0),
             stagedNft.nft,
             Number(nonce),
-            getByContractAddress(isNullOrEmpty(target?.nativeOrder?.taker) ? NULL_ADDRESS : target.nativeOrder.taker).contract,
+            getByContractAddress(isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker).contract,
             target.startingPrice as BigNumber,
             target.endingPrice as BigNumber,
             stagedNft.buyNowPrice as BigNumber || null,
@@ -476,7 +476,7 @@ export function NFTListingsContextProvider(
           // await marketplace.incrementNonce(); need to increment nonce
           return {
             ...target,
-            nativeOrder: order,
+            NFTCOMOrder: order,
           };
         } else {
           const contract = await getOpenseaCollection(stagedNft?.nft?.contract);
@@ -556,12 +556,12 @@ export function NFTListingsContextProvider(
             updateActivityStatus([listing?.nftcomOrderId], ActivityStatus.Cancelled);
           }
           return ListAllResult.Success;
-        } else if (target.protocol === ExternalProtocol.Native) {
-          const signature = await signOrderForNativeMarketPlace(target.nativeOrder).catch(() => null);
+        } else if (target.protocol === ExternalProtocol.NFTCOM) {
+          const signature = await signOrderForNativeMarketPlace(target.NFTCOMOrder).catch(() => null);
           if (isNullOrEmpty(signature)) {
             return ListAllResult.SignatureRejected;
           }
-          const result = await listNftNative(target.nativeOrder, signature, listing.nft, target.currency, target.startingPrice as BigNumber);
+          const result = await listNftNative(target.NFTCOMOrder, signature, listing.nft, target.currency, target.startingPrice as BigNumber);
           if (!result) {
             return ListAllResult.ApiError;
           }
@@ -632,7 +632,7 @@ export function NFTListingsContextProvider(
                   { isApprovedForX2Y2: true } :
                   { isApprovedForX2Y21155: true } :
                 {}),
-              ...(target === ExternalProtocol.Native ? { isApprovedForNative: true } : {}),
+              ...(target === ExternalProtocol.NFTCOM ? { isApprovedForNFTCOM: true } : {}),
             };
           }
           return l;
