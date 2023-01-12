@@ -148,44 +148,49 @@ export function NftCard(props: NftCardProps) {
             <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} group-hover/ntfCard:scale-110 hover:scale-105 transition `}>
               <RoundedCornerMedia
                 variant={RoundedCornerVariant.None}
+                width={600}
+                height={600}
                 containerClasses='w-full h-full overflow-hidden'
                 src={processedImageURLs[0]}
                 extraClasses='hover:scale-105 transition'
               />
               <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
-                <div className="absolute bottom-[40px] flex flex-row justify-center w-[100%]">
-                  <>
-                    <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
-                    <button
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
-                        const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
-                        const price = getListingPrice(bestListing);
-                        stagePurchase({
-                          nft: props?.nft || nft,
-                          activityId: bestListing?.id,
-                          currency: getListingCurrencyAddress(bestListing) ?? WETH.address,
-                          price: price,
-                          collectionName: props.collectionName,
-                          protocol: bestListing?.order?.protocol as ExternalProtocol,
-                          isApproved: BigNumber.from(allowance ?? 0).gt(price),
-                          orderHash: bestListing?.order?.orderHash,
-                          protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
-                            bestListing?.order?.protocolData as SeaportProtocolData :
-                            bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
-                              bestListing?.order?.protocolData as X2Y2ProtocolData:
-                              bestListing?.order?.protocolData as LooksrareProtocolData
-                        });
-                        toggleCartSidebar('Buy');
-                      }}
-                      className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]">
-                      <ShopIcon/>
-                    </button>
-                  </>
+                <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
+                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && hasGks ?
+                    <>
+                      <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
+                      <button
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
+                          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                          const price = getListingPrice(bestListing);
+                          stagePurchase({
+                            nft: props?.nft || nft,
+                            activityId: bestListing?.id,
+                            currency: getListingCurrencyAddress(bestListing) ?? WETH.address,
+                            price: price,
+                            collectionName: props.collectionName,
+                            protocol: bestListing?.order?.protocol as ExternalProtocol,
+                            isApproved: BigNumber.from(allowance ?? 0).gt(price),
+                            orderHash: bestListing?.order?.orderHash,
+                            protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
+                              bestListing?.order?.protocolData as SeaportProtocolData :
+                              bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
+                                bestListing?.order?.protocolData as X2Y2ProtocolData:
+                                bestListing?.order?.protocolData as LooksrareProtocolData
+                          });
+                          toggleCartSidebar('Buy');
+                        }}
+                        className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#ffffff] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-[#F9D54C]">
+                        <ShopIcon/>
+                      </button>
+                    </>
+                    : null}
                 </div>
               </div>
             </div>
+
           </div>
 
           {props.nftsDescriptionsVisible != false &&
