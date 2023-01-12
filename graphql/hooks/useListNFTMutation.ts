@@ -170,7 +170,6 @@ export function useListNFTMutations(): ListNftResult {
               order.taker,
           }
         });
-        console.log('🚀 ~ file: useListNFTMutation.ts:209 ~ result', result);
         return result?.createMarketListing ? true : false;
       } catch (err) {
         Sentry.captureException(err);

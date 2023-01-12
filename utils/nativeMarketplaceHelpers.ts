@@ -5,6 +5,7 @@ import {
   MarketplaceAssetInput,
   Nft }
   from 'graphql/generated/types';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 
 import { isNullOrEmpty } from './helpers';
 import { encodeAssetClass, getAssetBytes, getAssetTypeBytes } from './signatureUtils';
@@ -13,7 +14,9 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { SignTypedDataArgs } from '@wagmi/core';
 import { ethers } from 'ethers';
 import moment from 'moment';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
+import { Address } from 'wagmi';
 
 export const MAX_UINT_256 = BigNumber.from(2).pow(256).sub(1);
 export const DEPLOYER = '0x59495589849423692778a8c5aaCA62CA80f875a4';
@@ -457,4 +460,3 @@ export async function createNativeParametersForNFTListing(
   
   return unsignedOrder;
 }
-
