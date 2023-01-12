@@ -144,7 +144,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       }
     };
     if (page > 1 && page !== prevVal) {
-      console.log('alkklaklsaklas', nftsResultsFilterBy);
       screenWidth && fetchTypesenseMultiSearch({ searches: [{
         facet_by: newFiltersEnabledNew ? checkFacetType() : SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
         max_facet_values: 200,

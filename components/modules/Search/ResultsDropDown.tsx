@@ -106,7 +106,6 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                   No {newFiltersEnabled ? name && name[0]?.toLowerCase() : item?.request_params?.collection_name?.toLowerCase()} results
                 </div>
                 : (item?.hits?.map((hit, index) => {
-                  console.log('hit',hit);
                   return (
                     <div
                       className="hover:cursor-pointer hover:bg-gray-100 w-full"
