@@ -19,8 +19,9 @@ export interface PriceInputProps {
   // Omit this to just display the currency, without a dropdown picker.
   onCurrencyChange?: (currency: SupportedCurrency) => void,
   error: boolean,
-  errorMessage?: string
+  errorMessage?: string,
   empty?: boolean,
+  auctionTypeForPrice?: number,
 }
 
 export function PriceInput(props: PriceInputProps) {
@@ -49,72 +50,20 @@ export function PriceInput(props: PriceInputProps) {
     setSelectedCurrencyIndex(currencies.findIndex((c) => c.label === currencyData.name));
   }, [currencies, currencyData.name]);
 
-  return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
-    ? (
-      <div
-        className={tw(
-          'flex flex-row rounded-xl',
-        )}>
-        <div className='flex'>
-          <input
-            type="text"
-            className={tw(
-              'text-lg border',
-              'text-left px-3 py-3 rounded-xl font-medium',
-              props.error ? 'border-red-500 border-2' : ''
-            )}
-            placeholder={'e.g. 1 ' + currencyData.name}
-            value={formattedPrice ?? ''}
-            onChange={e => {
-              const validReg = /^[0-9.]*$/;
-              if (e.target.value.split('').filter(char => char === '.').length > 1) {
-                e.preventDefault();
-              } else if (isNullOrEmpty(e.target.value)) {
-                props.onPriceChange(null);
-                setFormattedPrice('');
-              } else if (
-                validReg.test(e.target.value.toLowerCase()) && e.target.value.length <= 6
-              ) {
-                const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
-                setFormattedPrice(paddedValue);
-              
-                props.onPriceChange(ethers.utils.parseEther(paddedValue));
-              } else {
-                e.preventDefault();
-              }
-            }}
-            style={{
-              color: alwaysBlack,
-            }}
-          />
-        </div>
-        {
-          props.onCurrencyChange == null
-            ? <div className='font-bold text-lg flex items-center ml-4'>
-              {currencyData.name}
-            </div>
-            : <div className='relative items-center flex ml-4'>
-              <DropdownPicker
-                options={currencies}
-                selectedIndex={selectedCurrencyIndex}
-              />
-            </div>
-        }
-      </div>
-    )
-    : (
-      <div
-        className={tw(
-          'flex flex-row rounded-xl h-full w-full z-20 minlg:z-auto',
-        )}>
-        <input
+  return (
+    <div
+      className={tw(
+        'flex flex-row rounded-xl h-full w-full z-20 minlg:z-auto',
+      )}>
+      {!props.auctionTypeForPrice
+        ? <input
           disabled={props.empty}
           type="text"
           className={tw(
             props.onCurrencyChange == null ?'w-[50%]': 'w-[45%]',
-            'text-sm border h-full minlg:w-2/5',
-            'text-left p-1 rounded-md pl-2',
-            props.error ? 'border-red-500 border-2' : 'border-gray-300  border-2'
+            'text-sm border h-full minlg:w-1/2',
+            'text-left p-1 rounded-md pl-2 border-2',
+            props.error ? 'border-red-500' : 'border-gray-300'
           )}
           placeholder={'Price'}
           autoFocus={true}
@@ -141,20 +90,92 @@ export function PriceInput(props: PriceInputProps) {
             color: alwaysBlack,
           }}
         />
-        {
-          props.onCurrencyChange == null
-            ? <div className='font-medium flex items-center ml-3 w-1/2 minlg:w-3/5 pl-4 minlg:pl-3'>
-              {currencyData.name}
-            </div>
-            : <div className='flex items-center ml-3 minlg:ml-1 minxl:ml-3 w-[55%] minlg:w-3/5'>
-              <DropdownPicker
-                v2
-                options={props.empty ? [] : currencies}
-                selectedIndex={selectedCurrencyIndex}
-                placeholder={'Currency'}
-              />
-            </div>
-        }
-      </div>
-    );
+        : props.auctionTypeForPrice == 2 ?
+          <div className='w-full flex'>
+            <input
+              disabled={props.empty}
+              type="text"
+              className={tw(
+                props.onCurrencyChange == null ?'w-[50%]': 'w-[45%]',
+                'text-sm border h-full minlg:w-1/2',
+                'text-left p-1 rounded-tl-md rounded-bl-md pl-2 border-2',
+                props.error ? 'border-red-500' : 'border-gray-300'
+              )}
+              placeholder={'Price'}
+              autoFocus={true}
+              value={formattedPrice ?? ''}
+              onChange={e => {
+                const validReg = /^[0-9.]*$/;
+                if (e.target.value.split('').filter(char => char === '.').length > 1) {
+                  e.preventDefault();
+                } else if (isNullOrEmpty(e.target.value)) {
+                  props.onPriceChange(null);
+                  setFormattedPrice('');
+                } else if (
+                  validReg.test(e.target.value.toLowerCase()) && e.target.value.length <= 6
+                ) {
+                  const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
+                  setFormattedPrice(paddedValue);
+            
+                  props.onPriceChange(ethers.utils.parseEther(paddedValue));
+                } else {
+                  e.preventDefault();
+                }
+              }}
+              style={{
+                color: alwaysBlack,
+              }}
+            />
+            <input
+              disabled={props.empty}
+              type="text"
+              className={tw(
+                props.onCurrencyChange == null ?'w-[50%]': 'w-[45%]',
+                'text-sm border h-full minlg:w-1/2',
+                'text-left p-1 rounded-tr-md rounded-br-md pl-2 border-2',
+                props.error ? 'border-red-500' : 'border-gray-300'
+              )}
+              placeholder={'Price'}
+              autoFocus={true}
+              value={formattedPrice ?? ''}
+              onChange={e => {
+                const validReg = /^[0-9.]*$/;
+                if (e.target.value.split('').filter(char => char === '.').length > 1) {
+                  e.preventDefault();
+                } else if (isNullOrEmpty(e.target.value)) {
+                  props.onPriceChange(null);
+                  setFormattedPrice('');
+                } else if (
+                  validReg.test(e.target.value.toLowerCase()) && e.target.value.length <= 6
+                ) {
+                  const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
+                  setFormattedPrice(paddedValue);
+            
+                  props.onPriceChange(ethers.utils.parseEther(paddedValue));
+                } else {
+                  e.preventDefault();
+                }
+              }}
+              style={{
+                color: alwaysBlack,
+              }}
+            />
+          </div>
+          : null}
+      {
+        props.onCurrencyChange == null
+          ? <div className='font-medium flex items-center ml-1 w-1/2 minlg:w-1/2 pl-4 minlg:pl-3'>
+            {currencyData.name}
+          </div>
+          : <div className='flex items-center ml-3 minlg:ml-1 minxl:ml-1 w-[55%] minlg:w-1/2'>
+            <DropdownPicker
+              v2
+              options={props.empty ? [] : currencies}
+              selectedIndex={selectedCurrencyIndex}
+              placeholder={'Currency'}
+            />
+          </div>
+      }
+    </div>
+  );
 }

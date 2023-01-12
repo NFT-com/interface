@@ -43,6 +43,10 @@ export type ListingTarget = {
   endingPrice: BigNumberish;
   currency: string;
   duration: BigNumberish;
+  //Native only listing fields
+  auctionType: number;
+  buyNowPrice: BigNumberish;
+  reservePrice: BigNumberish;
   // these are set when finalizing, before triggering the wallet requests
   looksrareOrder: MakerOrder; // looksrare
   seaportParameters: SeaportOrderParameters; // seaport
@@ -101,6 +105,7 @@ export interface NFTListingsContextType {
   setDuration: (duration: SaleDuration | number) => void;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol) => void;
   setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
+  setTypeOfAuction: (listing: PartialDeep<StagedListing>, auctionType: number, targetProtocol?: ExternalProtocol) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
   approveCollection: (listing: PartialDeep<StagedListing>, target: ExternalProtocol) => Promise<boolean>;
   allListingsConfigured: () => boolean;
@@ -122,6 +127,7 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   setDuration: () => null,
   setPrice: () => null,
   setCurrency: () => null,
+  setTypeOfAuction: () => null,
   removeListing: () => null,
   approveCollection: () => null,
   allListingsConfigured: () => false,
@@ -223,7 +229,7 @@ export function NFTListingsContextProvider(
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
-          isNullOrEmpty(target.currency);
+          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.Native && target.auctionType == null);
       });
       // At this point, we need all targets to have valid individual configurations.
       return unconfiguredTarget != null;
@@ -372,6 +378,36 @@ export function NFTListingsContextProvider(
       return stagedNft;
     }));
   }, [supportedCurrencyData, toList]);
+
+  const setTypeOfAuction = useCallback((
+    listing: PartialDeep<StagedListing>,
+    auctionType: number,
+    targetProtocol?: ExternalProtocol
+  ) => {
+    console.log('auctionType fdo fn', auctionType);
+    setToList(toList.slice().map(stagedNft => {
+      if (listing?.nft?.id === stagedNft.nft?.id) {
+        return {
+          ...stagedNft,
+          auctionType,
+          targets: stagedNft.targets.slice().map(target => {
+            if (targetProtocol === target.protocol) {
+              return {
+                ...target,
+                auctionType,
+              };
+            } else {
+              return {
+                ...target,
+                auctionType: target.auctionType
+              };
+            }
+          })
+        };
+      }
+      return stagedNft;
+    }));
+  }, [toList]);
 
   const clearGeneralConfig = useCallback((
     listing: PartialDeep<StagedListing>,
@@ -609,6 +645,8 @@ export function NFTListingsContextProvider(
     return false;
   }, [provider, signer, toList]);
 
+  console.log('toList fdo', toList);
+
   return <NFTListingsContext.Provider value={{
     approveCollection,
     removeListing,
@@ -624,6 +662,7 @@ export function NFTListingsContextProvider(
     setDuration,
     setPrice,
     setCurrency,
+    setTypeOfAuction,
     allListingsConfigured,
     clearGeneralConfig,
     getTarget
