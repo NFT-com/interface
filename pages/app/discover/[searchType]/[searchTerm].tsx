@@ -21,6 +21,7 @@ import { SearchableFields } from 'utils/typeSenseAdapters';
 import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple, SlidersHorizontal, X } from 'phosphor-react';
+import NoActivityIcon from 'public/no_activity.svg';
 import { useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
@@ -53,6 +54,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const prevVal = usePrevious(page);
   const prevSearchTerm = usePrevious(searchTerm);
   const addressesList = useRef([]);
+  const prevFilters = usePrevious(searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy);
 
   useSWR(collectionsSliderData, async () => {
     searchType?.toString() === 'allResults' && isNullOrEmpty(nftsForCollections) && await fetchNFTsForCollections({
@@ -170,36 +172,42 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     }
   };
   useEffect(() => {
-    page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-      facet_by: checkFacedBy(),
-      max_facet_values: 200,
-      collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
-      query_by: checkQueryBy(),
-      q: searchTerm?.toString(),
-      per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
-      page: page,
-      filter_by: checkFilteredBy(),
-      sort_by: nftsPageSortyBy,
-      exhaustive_search: true,
-    }] })
-      .then((resp) => {
-        if(newFiltersEnabledNew){
-          if (prevSearchTerm !== searchTerm){
-            setFilters([]);
-            setClearedFilters();
-            setResultsPageAppliedFilters('', '','', []);
+    if (page > 1 && ((searchType?.toString() !== 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy ) !== prevFilters)){
+      setPage(1);
+      return;
+    }else {
+      page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
+        facet_by: checkFacedBy(),
+        max_facet_values: 200,
+        collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
+        query_by: checkQueryBy(),
+        q: searchTerm?.toString(),
+        per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
+        page: page,
+        filter_by: checkFilteredBy(),
+        sort_by: nftsPageSortyBy,
+        exhaustive_search: true,
+      }] })
+        .then((resp) => {
+          if(newFiltersEnabledNew){
+            if (prevSearchTerm !== searchTerm){
+              setFilters([]);
+              setClearedFilters();
+              setResultsPageAppliedFilters('', '','', []);
+            }else {
+              filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+            }
           }else {
             filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
           }
-        }else {
-          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
-        }
-        results.current = [...resp.results[0].hits];
-        found.current = resp.results[0].found;
-        if(newFiltersEnabledNew) {
-          setSearchedData(resp.results[0].hits);
-        }
-      });
+          results.current = [...resp.results[0].hits];
+          found.current = resp.results[0].found;
+          if(newFiltersEnabledNew) {
+            setSearchedData(resp.results[0].hits);
+          }
+        });
+    }
+
     // eslint-disable-next-line
   },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, collectionsResultsFilterBy, newFiltersEnabled, prevSearchTerm]);
 
@@ -301,6 +309,16 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   Return to Search Results
                   </span>}
                 </div>
+                {
+                  !searchedData?.length
+                    ? (
+                      <div className='flex items-center justify-center full-width flex-col my-10'>
+                        <NoActivityIcon className='mt-10' />
+                        <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
+                      </div>
+                    )
+                    : null
+                }
                 <div className={tw(
                   'mt-4',
                   searchType?.toString() === 'collections' ? `minmd:grid gap-3 minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : ''}` : `grid grid-cols-2 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3  minlg:grid-cols-2  minmd:grid-cols-2' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 '} `,

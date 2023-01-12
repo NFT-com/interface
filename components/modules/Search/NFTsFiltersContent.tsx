@@ -719,7 +719,7 @@ export const NFTsFiltersContent = () => {
                     setCurrency={(val) => {
                       collectionsFilter.currency = val;
                       nftSFilters.currency = val;
-                      updateCheckedString();
+                      // updateCheckedString();
                     }}
                     handleCheck={() => handleCheck(event, collectionsFilter.issuance ? collectionsFilter.issuance : [], setChecked, 'issuance')}
                     handleCheckTypes={() => handleCheck(event, nftSFilters.nftTypes ? nftSFilters.nftTypes : [], setCheckedTypes, 'nftTypes')}
