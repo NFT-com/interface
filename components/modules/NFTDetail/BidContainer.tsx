@@ -2,6 +2,7 @@ import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/Ro
 import { Nft } from 'graphql/generated/types';
 import { tw } from 'utils/tw';
 
+import OpenseaIcon from 'public/opensea-icon.svg';
 import ShopIcon from 'public/shop-icon.svg';
 import { useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
@@ -46,14 +47,14 @@ export const BidContainer = ({ data }: BidContainerProps) => {
         <div className={tw(
           'flex flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
         )}>
-          <div className='w-full flex items-center'>
+          <div className='w-full flex items-start'>
             <div className="relative h-full w-1/2 my-6 left-0 border-r border-[#ECECEC]">
               <div className="h-8 px-6 w-full flex items-center">
                 <span className='text-[28px] font-semibold text-black'>
                   Current Bid
                 </span>
               </div>
-              <div className='flex font-noi-grotesk text-black leading-6 items-center mt-8 md:my-6 px-6 justify-between'>
+              <div className='flex font-noi-grotesk text-black leading-6 items-center my-5 md:my-6 px-6 justify-between'>
                 <div className='flex md:flex-col md:items-start items-end leading-6'>
                   <div className='flex items-end'>
                     <div className='flex items-end'>
@@ -67,6 +68,13 @@ export const BidContainer = ({ data }: BidContainerProps) => {
                   </span>
                 </div>
               </div>
+              <div className='md:flex-col px-6 flex items-center font-normal font-noi-grotesk text-[14px] text-[#6A6A6A]'>
+                <span>Current price on</span>
+                <div className='flex items-center'>
+                  <OpenseaIcon className='mx-1.5 h-6 w-6 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>
+                  <span className='text-black'>Opensea</span>
+                </div>
+              </div>
             </div>
             <div className="relative h-full w-1/2 my-6 right-0">
               <div className="h-8 px-6 w-full flex items-center">
@@ -74,7 +82,7 @@ export const BidContainer = ({ data }: BidContainerProps) => {
                   Highest Bid
                 </span>
               </div>
-              <div className='flex font-noi-grotesk text-black leading-6 items-center mt-8 md:my-6 px-6 justify-between'>
+              <div className='flex font-noi-grotesk text-black leading-6 items-center my-5 md:my-6 px-6 justify-between'>
                 <div className='flex md:flex-col md:items-start items-end leading-6'>
                   <div className='flex items-end'>
                     <div className='flex items-end'>
@@ -90,7 +98,7 @@ export const BidContainer = ({ data }: BidContainerProps) => {
               </div>
             </div>
           </div>
-          <div className='flex w-full h-full px-6 py-4 rounded-br-[18px] rounded-bl-[18px] bg-[#F2F2F2]'>
+          <div className='flex w-full font-medium h-full px-6 py-4 rounded-br-[18px] rounded-bl-[18px] bg-[#F2F2F2]'>
             <button onClick={() => alert('ok')} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-3 px-4 rounded-[12px] focus:outline-none focus:shadow-outline w-full" type="button">
               Buy Now
             </button>
