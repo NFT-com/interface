@@ -127,7 +127,8 @@ export function getTotalRoyaltiesUSD(
 export function getMaxMarketplaceFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  NFTCOMFee: number,
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const feesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
@@ -141,6 +142,13 @@ export function getMaxMarketplaceFeesUSD(
           fee,
           currencyData.decimals ?? 18
         ))) ?? 0;
+      } else if (target.protocol === ExternalProtocol.NFTCOM) {
+        const fee = NFTCOMFee / 100;
+        const units = currencyData?.usd(Number(ethers.utils.formatUnits(
+          BigNumber.from(1),
+          1
+        ))) ?? 0;
+        return units * fee;
       } else {
         // Seaport fee is hard-coded in our codebase and not expected to change.
         const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, 250));
@@ -157,7 +165,8 @@ export function getMaxMarketplaceFeesUSD(
 export function getMaxRoyaltyFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  NFTCOMRoyaltyFees: [string, BigNumber] & { owner: string; percent: BigNumber; }
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
@@ -178,6 +187,12 @@ export function getMaxRoyaltyFeesUSD(
         const royalty = BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
           target?.seaportParameters?.consideration[2].startAmount :
           0);
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          royalty,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
+      } else if (target.protocol === ExternalProtocol.NFTCOM) {
+        const royalty = Number(NFTCOMRoyaltyFees[1]);
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,
           currencyData.decimals ?? 18

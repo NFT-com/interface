@@ -1,7 +1,9 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { Maybe, NftType } from 'graphql/generated/types';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -41,7 +43,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { data: signer } = useSigner();
   const { address: currentAddress } = useAccount();
   const { getByContractAddress } = useSupportedCurrencies();
-
+  const { marketplace } = useAllContracts();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<
@@ -58,13 +61,43 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       revalidateOnFocus: false,
     });
 
+  const { data: NFTCOMRoyaltyFee } = useSWR(
+    'NFTCOMRoyaltyFee' + currentAddress,
+    async () => {
+      return await marketplace.royaltyInfo(currentAddress);
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
+  const { data: NFTCOMProtocolFee } = useSWR(
+    'NFTCOMProtocolFee' + currentAddress,
+    async () => {
+      return await marketplace.protocolFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
+  const { data: NFTCOMProfileFee } = useSWR(
+    'NFTCOMProfileFee' + currentAddress,
+    async () => {
+      return await marketplace.profileFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
   const getMaxMarketplaceFees: () => number = useCallback(() => {
-    return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
-  }, [toList, getByContractAddress, looksrareProtocolFeeBps]);
+    return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length ? NFTCOMProfileFee : Number(NFTCOMProtocolFee));
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee]);
 
   const getMaxRoyaltyFees: () => number = useCallback(() => {
-    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
-  }, [looksrareProtocolFeeBps, toList, getByContractAddress]);
+    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, NFTCOMRoyaltyFee);
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress, NFTCOMRoyaltyFee]);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
