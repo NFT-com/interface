@@ -98,7 +98,7 @@ export default function AssetsPages() {
                 const looksrareAllowedByContract1155 = new Map<string, boolean>();
                 const X2Y2AllowedByContract = new Map<string, boolean>();
                 const X2Y2AllowedByContract1155 = new Map<string, boolean>();
-                const nativeAllowedByContract = new Map<string, boolean>();
+                const NFTCOMAllowedByContract = new Map<string, boolean>();
                 for (let i = 0; i < selectedAssets.length; i++) {
                   const nft = selectedAssets[i];
                   if (!openseaAllowedByContract.has(nft.contract)) {
@@ -121,9 +121,9 @@ export default function AssetsPages() {
                     const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.X2Y21155);
                     X2Y2AllowedByContract1155.set(nft.contract, allowed);
                   }
-                  if (!nativeAllowedByContract.has(nft.contract)) {
-                    const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.Native);
-                    nativeAllowedByContract.set(nft.contract, allowed);
+                  if (!NFTCOMAllowedByContract.has(nft.contract)) {
+                    const allowed = await fetchAllowance(nft.contract, TransferProxyTarget.NFTCOM);
+                    NFTCOMAllowedByContract.set(nft.contract, allowed);
                   }
                 }
                 stageListings(selectedAssets?.map(nft => ({
@@ -134,7 +134,7 @@ export default function AssetsPages() {
                   isApprovedForX2Y2: X2Y2AllowedByContract.get(nft?.contract),
                   isApprovedForLooksrare1155: looksrareAllowedByContract.get(nft?.contract),
                   isApprovedForX2Y21155: X2Y2AllowedByContract1155.get(nft?.contract),
-                  isApprovedForNative: nativeAllowedByContract.get(nft?.contract),
+                  isApprovedForNFTCOM: NFTCOMAllowedByContract.get(nft?.contract),
                   targets: []
                 })));
                 setLoading(false);

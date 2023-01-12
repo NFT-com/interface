@@ -4,7 +4,7 @@ export enum ExternalExchange {
   Opensea = 'OpenSea',
   LooksRare ='LooksRare',
   X2Y2 = 'X2Y2',
-  Native = 'Native'
+  NFTCOM = 'NFTCOM'
 }
 
 export enum ExternalProtocol {
@@ -12,7 +12,7 @@ export enum ExternalProtocol {
   Seaport = 'Seaport',
   LooksRare ='LooksRare',
   X2Y2 = 'X2Y2',
-  Native = 'Native'
+  NFTCOM = 'NFTCOM'
 }
 
 export type AggregatorResponse = {

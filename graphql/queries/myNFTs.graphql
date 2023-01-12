@@ -32,6 +32,11 @@ query MyNFTs($input: NFTsInput) {
               ... on X2Y2ProtocolData {
                 price
               }
+              ... on NFTCOMProtocolData {
+                takeAsset {
+                  value
+                }
+              }
             }
           }
         }
