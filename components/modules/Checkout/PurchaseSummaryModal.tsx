@@ -42,7 +42,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
   const { getByContractAddress, getBalanceMap } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(true);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
   
   const { data: looksrareProtocolFeeBps } = useSWR(
