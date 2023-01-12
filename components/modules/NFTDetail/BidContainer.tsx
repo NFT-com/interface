@@ -48,27 +48,42 @@ export const BidContainer = ({ data }: BidContainerProps) => {
           'flex flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
         )}>
           <div className='w-full flex items-start'>
-            <div className="relative h-full w-1/2 my-6 left-0 border-r border-[#ECECEC]">
+            <div className="relative h-full md:w-full w-1/2 my-6 left-0 border-r border-[#ECECEC]">
               <div className="h-8 px-6 w-full flex items-center">
-                <span className='text-[28px] font-semibold text-black'>
+                <span className='md:text-[20px] text-[28px] font-semibold text-black'>
                   Current Bid
                 </span>
               </div>
-              <div className='flex font-noi-grotesk text-black leading-6 items-center my-5 md:my-6 px-6 justify-between'>
-                <div className='flex md:flex-col md:items-start items-end leading-6'>
-                  <div className='flex items-end'>
+              <div className='flex font-noi-grotesk text-black leading-6 items-center md:mt-5 my-5 px-6 justify-between'>
+                <div className='flex md:flex-col md:items-start items-end leading-6 md:w-full'>
+                  <div className='md:flex md:items-center md:justify-between md:w-full'>
                     <div className='flex items-end'>
-                      Icon
-                      <span className='text-[37px] font-semibold'>1.5</span>
+                      <div className='flex items-end'>
+                        Icon
+                        <span className='text-[37px] font-semibold'>1.5</span>
+                      </div>
+                      <span className='mx-1.5 text-[15px] uppercase font-semibold'>WETH</span>
                     </div>
-                    <span className='mx-1.5 text-[15px] uppercase font-semibold'>WETH</span>
+                    <div className='hidden md:flex items-center'>
+                      <span className='mr-1.5'>by</span>
+                      <RoundedCornerMedia
+                        variant={RoundedCornerVariant.None}
+                        containerClasses='w-[36px] h-[36px]'
+                        src={'https://cdn2.nft.com/AaUUFf8lHoAVhmM5kTU7wt18ohoBNIZoMxKoKJdufPg/rs:fit:1000:1000:0/g:no/aHR0cHM6Ly9jZG4uZ2VuLmFydC8xMDAwMTAwODE1XzE2MzM4MzgxOTQucG5nP3dpZHRoPTYwMA.webp'}
+                        extraClasses='aspect-square rounded-full'
+                      />
+                      <div className="hover:font-bold ml-1.5 w-full items-center text-[16px] font-medium cursor-pointer font-noi-grotesk my-4">
+                        <span className='font-dm-mono text-primary-yellow'>/</span>
+                        <span className='ml-1 whitespace-nowrap text-black text-ellipsis overflow-hidden'>{profileUrl}</span>
+                      </div>
+                    </div>
                   </div>
                   <span className="md:ml-0 md:mt-2 ml-2 text-[15px] uppercase font-medium text-[#6A6A6A]">
                     $123.11 USD
                   </span>
                 </div>
               </div>
-              <div className='md:flex-col px-6 flex items-center font-normal font-noi-grotesk text-[14px] text-[#6A6A6A]'>
+              <div className='md:hidden px-6 flex items-center font-normal font-noi-grotesk text-[14px] text-[#6A6A6A]'>
                 <span>Current price on</span>
                 <div className='flex items-center'>
                   <OpenseaIcon className='mx-1.5 h-6 w-6 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>
@@ -76,13 +91,13 @@ export const BidContainer = ({ data }: BidContainerProps) => {
                 </div>
               </div>
             </div>
-            <div className="relative h-full w-1/2 my-6 right-0">
+            <div className="md:hidden relative h-full w-1/2 my-6 right-0">
               <div className="h-8 px-6 w-full flex items-center">
                 <span className='text-[28px] font-semibold text-black'>
                   Highest Bid
                 </span>
               </div>
-              <div className='flex font-noi-grotesk text-black leading-6 items-center my-5 md:my-6 px-6 justify-between'>
+              <div className='flex font-noi-grotesk text-black leading-6 items-center my-5 px-6 justify-between'>
                 <div className='flex md:flex-col md:items-start items-end leading-6'>
                   <div className='flex items-end'>
                     <div className='flex items-end'>
@@ -99,17 +114,28 @@ export const BidContainer = ({ data }: BidContainerProps) => {
             </div>
           </div>
           <div className='flex w-full font-medium h-full px-6 py-4 rounded-br-[18px] rounded-bl-[18px] bg-[#F2F2F2]'>
-            <button onClick={() => alert('ok')} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-3 px-4 rounded-[12px] focus:outline-none focus:shadow-outline w-full" type="button">
+            <button onClick={() => alert('ok')} className="md:hidden bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-3 px-4 rounded-[12px] focus:outline-none focus:shadow-outline w-full" type="button">
               Buy Now
             </button>
-            <button onClick={() => alert('ok')} className="bg-[#FFFFFF] flex whitespace-nowrap items-center ml-4 justify-center text-base border border-[#B2B2B2] text-black py-3 px-8 rounded-[12px] focus:outline-none focus:shadow-outline w-fit" type="button">
+            <button onClick={() => alert('ok')} className="md:hidden flex bg-[#FFFFFF] whitespace-nowrap items-center ml-4 justify-center text-base border border-[#B2B2B2] text-black py-3 px-8 rounded-[12px] focus:outline-none focus:shadow-outline w-fit" type="button">
               <ShopIcon />&nbsp;Add to Cart
             </button>
+            <div className='hidden w-full md:flex flex-col'>
+              <div className='flex items-center'>
+                <span className='text-[#6A6A6A] text-[16px]'>Auction ends in</span>
+                <span className='font-medium text-[18px] ml-1.5'>{countdownText}</span>
+              </div>
+              <div onClick={() => {
+                alert('something');
+              }} className='cursor-pointer mt-3 rounded-[12px] font-medium text-center w-full px-10 py-3 text-[17px] text-black bg-[#F9D54C]'>
+                Place Bid
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className='p-4'>
+      <div className='md:hidden flex p-4'>
         <div className='w-full flex items-center justify-between'>
           <div className='flex items-center'>
             <span className='text-[#6A6A6A] text-[16px]'>Auction ends in</span>
