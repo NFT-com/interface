@@ -94,7 +94,7 @@ export const BidContainer = ({ data }: BidContainerProps) => {
             <button onClick={() => alert('ok')} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-3 px-4 rounded-[12px] focus:outline-none focus:shadow-outline w-full" type="button">
               Buy Now
             </button>
-            <button onClick={() => alert('ok')} className="bg-[#FFFFFF] flex whitespace-nowrap items-center ml-4 justify-center text-base border border-[#B2B2B2] text-black py-3 px-7 rounded-[12px] focus:outline-none focus:shadow-outline w-fit" type="button">
+            <button onClick={() => alert('ok')} className="bg-[#FFFFFF] flex whitespace-nowrap items-center ml-4 justify-center text-base border border-[#B2B2B2] text-black py-3 px-8 rounded-[12px] focus:outline-none focus:shadow-outline w-fit" type="button">
               <ShopIcon />&nbsp;Add to Cart
             </button>
           </div>
