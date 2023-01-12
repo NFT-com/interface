@@ -38,7 +38,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
-  const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters, collectionsResultsFilterBy } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters, collectionsResultsFilterBy, nftSFilters } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -171,8 +171,9 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       }
     }
   };
+
   useEffect(() => {
-    if (page > 1 && ((searchType?.toString() !== 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy ) !== prevFilters)){
+    if (page > 1 && ((searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy ) !== prevFilters)){
       setPage(1);
       return;
     }else {
