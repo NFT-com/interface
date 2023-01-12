@@ -30,7 +30,7 @@ import Slider from 'rc-slider';
 import { useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
-export function ListingCheckout() {
+export function OfferCheckout() {
   const {
     toList,
     setDuration,

@@ -119,8 +119,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     return total - getMaxMarketplaceFees() - getMaxRoyaltyFees();
   } , [getByContractAddress, getMaxMarketplaceFees, getMaxRoyaltyFees, toList]);
 
-  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-
   const getNeedsApprovals = useCallback(() => {
     return toList?.some(stagedListing =>
       (stagedListing.targets.find(target => target.protocol === ExternalProtocol.LooksRare) != null &&
