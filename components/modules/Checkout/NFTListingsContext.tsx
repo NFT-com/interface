@@ -645,8 +645,6 @@ export function NFTListingsContextProvider(
     return false;
   }, [provider, signer, toList]);
 
-  console.log('toList fdo', toList);
-
   return <NFTListingsContext.Provider value={{
     approveCollection,
     removeListing,
