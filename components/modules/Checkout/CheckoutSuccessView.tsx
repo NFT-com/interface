@@ -90,10 +90,10 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <div className='text-[34px] font-medium'>Congratulations!</div>
           <div className='text-[18px] font-medium mt-4'>{message()}</div>
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
-          <button onClick={() => alert('ok')} className="bg-[#F9D963] w-[277px] my-8 font-medium hover:bg-[#fcd034] text-base text-black text-[14px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
-            Share your Listing
+          <button onClick={() => props.type == SuccessType.Listing ? alert('share listing') : alert('share purchase')} className="bg-[#F9D963] w-[277px] my-8 font-medium hover:bg-[#fcd034] text-base text-black text-[14px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
+            Share your {props.type == SuccessType.Listing ? 'Listing' : 'Purchase'}
           </button>
-          <div onClick={() => router.push('/app/assets')} className='text-[#E4BA18] font-medium underline text-[14px] cursor-pointer'>List another NFT</div>
+          <div onClick={() => props.type == SuccessType.Listing ? router.push('/app/assets') : router.push('/app/discover/collections')} className='text-[#E4BA18] font-medium underline text-[14px] cursor-pointer'>{props.type == SuccessType.Listing ? 'List' : 'Purchase'} another NFT</div>
         </div>
       </div>
     </div> :
@@ -103,9 +103,10 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
       </div>
       <div className="relative w-full h-3/5 bottom-0">
         <div className='flex flex-col items-center justify-center h-full w-full px-10'>
-          <div className='text-[30px] font-medium text-center w-[400px] mt-10'>
+          <div className='text-[30px] font-medium text-center w-[380px] mt-10'>
             Get access to lower fees by creating an NFT Profile
           </div>
+          <div className='text-[18px] font-medium mt-4'>{message()}</div>
           <div className='w-[277px] flex flex-col text-[16px] mt-6'>
             <div className='flex item-center py-3 justify-between'>
               <div className='text-[#6A6A6A]'>With an NFT Profile</div>

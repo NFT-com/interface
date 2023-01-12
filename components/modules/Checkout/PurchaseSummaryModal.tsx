@@ -231,7 +231,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             setLoading(false);
             setError(null);
             props.onClose();
-          }} className='absolute top-3 right-3 z-50 hover:cursor-pointer closeButton' size={20} color="black" weight="fill" />
+          }} className='absolute top-5 right-5 z-50 hover:cursor-pointer closeButton' size={20} color="black" weight="fill" />
           {getSummaryContent()}
           {!success && <Button
             stretch
