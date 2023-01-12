@@ -3,9 +3,7 @@ query Nft(
   $id: String!, 
   $chainId: String,
   $listingsPageInput: PageInput, 
-  $listingsExpirationType: ActivityExpiration,
-  $owner: Address,
-  $status: ActivityStatus
+  $listingsExpirationType: ActivityExpiration
 ) {
   nft(contract: $contract, id: $id, chainId: $chainId) {
     id
@@ -31,51 +29,6 @@ query Nft(
       traits {
         type
         value
-      }
-    }
-    nativeListings(owner: $owner, status: $status, pageInput: $listingsPageInput) {
-      items {
-        takerAddress
-        protocol
-        orderType
-        orderHash
-        memo
-        makerAddress
-        id
-        exchange
-        chainId
-        protocolData {
-          ... on NFTCOMProtocolData {
-            auctionType
-            end
-          }
-        }
-        makeAsset {
-          value
-          nftId
-          minimumBid
-          bytes
-          standard {
-            assetClass
-            bytes
-            contractAddress
-            tokenId
-            allowAll
-          }
-        }
-        takeAsset {
-          standard {
-            assetClass
-            bytes
-            contractAddress
-            tokenId
-            allowAll
-          }
-          nftId
-          bytes
-          value
-          minimumBid
-        }
       }
     }
     listings(listingsPageInput: $listingsPageInput, listingsExpirationType: $listingsExpirationType) {
