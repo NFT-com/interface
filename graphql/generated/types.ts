@@ -1094,11 +1094,18 @@ export type NftNativeListingsArgs = {
 
 export type NftcomProtocolData = {
   __typename?: 'NFTCOMProtocolData';
+  acceptedAt?: Maybe<Scalars['Int']>;
   auctionType?: Maybe<AuctionType>;
+  buyNowTaker?: Maybe<Scalars['String']>;
   end?: Maybe<Scalars['Int']>;
+  listingId?: Maybe<Scalars['String']>;
+  makeAsset?: Maybe<Array<Maybe<MarketplaceAsset>>>;
+  rejectedAt?: Maybe<Scalars['Int']>;
   salt?: Maybe<Scalars['Int']>;
   signature?: Maybe<Signature>;
   start?: Maybe<Scalars['Int']>;
+  swapTransactionId?: Maybe<Scalars['String']>;
+  takeAsset?: Maybe<Array<Maybe<MarketplaceAsset>>>;
 };
 
 export type NftDetail = {
@@ -1629,7 +1636,6 @@ export type Query = {
   /** AUTHENTICATED */
   getMyPendingAssociations: Array<Maybe<PendingAssociationOutput>>;
   getNFTDetails?: Maybe<NftDetail>;
-  getNFTListings: Array<TxListingOrder>;
   /** AUTHENTICATED */
   getProfileActions: Array<Maybe<ProfileActionOutput>>;
   /** AUTHENTICATED */
@@ -1788,11 +1794,6 @@ export type QueryGetListingsArgs = {
 
 export type QueryGetNftDetailsArgs = {
   input?: InputMaybe<NftDetailInput>;
-};
-
-
-export type QueryGetNftListingsArgs = {
-  input: NftListingsInput;
 };
 
 
@@ -2280,21 +2281,17 @@ export type TxActivity = {
 
 export type TxBidOrder = {
   __typename?: 'TxBidOrder';
-  acceptedAt?: Maybe<Scalars['DateTime']>;
   auctionType: AuctionType;
   chainId: Scalars['String'];
   end: Scalars['DateTime'];
   id: Scalars['ID'];
-  makeAsset?: Maybe<Array<MarketplaceAsset>>;
   makerAddress: Scalars['Address'];
   memo?: Maybe<Scalars['String']>;
   nonce: Scalars['Int'];
   orderHash: Scalars['String'];
-  rejectedAt?: Maybe<Scalars['DateTime']>;
   salt: Scalars['Int'];
   signature: Signature;
   start: Scalars['DateTime'];
-  takeAsset?: Maybe<Array<MarketplaceAsset>>;
   takerAddress: Scalars['Address'];
 };
 
@@ -2319,12 +2316,10 @@ export type TxConsideration = {
 
 export type TxListingOrder = {
   __typename?: 'TxListingOrder';
-  acceptedAt?: Maybe<Scalars['DateTime']>;
   auctionType: AuctionType;
   chainId: Scalars['String'];
   end: Scalars['DateTime'];
   id: Scalars['ID'];
-  makeAsset?: Maybe<Array<MarketplaceAsset>>;
   makerAddress: Scalars['Address'];
   memo?: Maybe<Scalars['String']>;
   nonce: Scalars['Int'];
@@ -2367,14 +2362,12 @@ export type TxOrder = {
   chainId?: Maybe<Scalars['String']>;
   exchange: Scalars['String'];
   id: Scalars['ID'];
-  makeAsset?: Maybe<Array<Maybe<MarketplaceAsset>>>;
   makerAddress: Scalars['String'];
   memo?: Maybe<Scalars['String']>;
   orderHash: Scalars['String'];
   orderType: Scalars['String'];
   protocol: Scalars['String'];
   protocolData?: Maybe<ProtocolData>;
-  takeAsset?: Maybe<Array<Maybe<MarketplaceAsset>>>;
   takerAddress?: Maybe<Scalars['String']>;
 };
 
@@ -2753,7 +2746,7 @@ export type CreateMarketListingMutationVariables = Exact<{
 }>;
 
 
-export type CreateMarketListingMutation = { __typename?: 'Mutation', createMarketListing: { __typename?: 'TxListingOrder', id: string, orderHash: string, nonce: number, makerAddress: any, start: any, end: any, salt: number, acceptedAt?: any | null, chainId: string, auctionType: AuctionType, memo?: string | null, signature: { __typename?: 'Signature', r: any, s: any, v: number }, makeAsset?: Array<{ __typename?: 'MarketplaceAsset', nftId?: string | null, bytes: string, value: any, minimumBid: any, standard: { __typename?: 'AssetType', assetClass: AssetClass, bytes: string, contractAddress: any, tokenId: any, allowAll: boolean } }> | null } };
+export type CreateMarketListingMutation = { __typename?: 'Mutation', createMarketListing: { __typename?: 'TxListingOrder', id: string, orderHash: string, nonce: number, makerAddress: any, start: any, end: any, salt: number, chainId: string, auctionType: AuctionType, memo?: string | null, signature: { __typename?: 'Signature', v: number, r: any, s: any } } };
 
 export type FileUploadMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -3315,31 +3308,17 @@ export const CreateMarketListingDocument = gql`
     orderHash
     nonce
     signature {
+      v
       r
       s
-      v
     }
     makerAddress
     start
     end
     salt
-    acceptedAt
     chainId
     auctionType
     memo
-    makeAsset {
-      standard {
-        assetClass
-        bytes
-        contractAddress
-        tokenId
-        allowAll
-      }
-      nftId
-      bytes
-      value
-      minimumBid
-    }
   }
 }
     `;
