@@ -118,11 +118,11 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   );
 
   const {
-    allowedAll: nativeAllowed,
+    allowedAll: NFTCOMAllowed,
   } = useNftCollectionAllowance(
     props.nft?.contract,
     currentAddress,
-    TransferProxyTarget.Native
+    TransferProxyTarget.NFTCOM
   );
 
   const listingProtocol = props.listing?.order?.protocol;
@@ -150,7 +150,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             isApprovedForLooksrare1155: looksRareAllowed1155,
             isApprovedForX2Y2: X2Y2Allowed,
             isApprovedForX2Y21155: X2Y2Allowed1155,
-            isApprovedForNative: nativeAllowed,
+            isApprovedForNFTCOM: NFTCOMAllowed,
             hasOpenOrder: true,
             nftcomOrderId: listing?.id,
             openOrderId: (listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.X2Y2 ? (listing?.order?.protocolData as X2Y2ProtocolData).id : null,
@@ -252,32 +252,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       />;
     }
     }
-  }, [
-    stageListing,
-    props.nft,
-    props.collectionName,
-    openseaAllowed,
-    looksRareAllowed,
-    X2Y2Allowed,
-    nativeAllowed,
-    listing,
-    router,
-    cancelling,
-    listingProtocol,
-    looksrareExchange,
-    updateActivityStatus,
-    signer,
-    X2Y2Exchange,
-    seaportExchange,
-    mutateNft,
-    nftInPurchaseCart,
-    getByContractAddress,
-    currentAddress,
-    defaultChainId,
-    X2Y2Allowed1155,
-    looksRareAllowed1155,
-    stagePurchase
-  ]);
+  }, [listing, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.

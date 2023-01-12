@@ -97,7 +97,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         (stagedListing?.nft?.type == NftType.Erc721 ?
           !stagedListing?.isApprovedForX2Y2 :
           !stagedListing?.isApprovedForX2Y21155)) ||
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Native) != null && !stagedListing?.isApprovedForNative)
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.NFTCOM) != null && !stagedListing?.isApprovedForNFTCOM)
     );
   }, [toList]);
 
@@ -147,8 +147,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                         stagedListing?.nft?.type == NftType.Erc721 ?
                           stagedListing?.isApprovedForX2Y2 :
                           stagedListing?.isApprovedForX2Y21155 :
-                        target.protocol === ExternalProtocol.Native
-                          ? stagedListing?.isApprovedForNative :
+                        target.protocol === ExternalProtocol.NFTCOM
+                          ? stagedListing?.isApprovedForNFTCOM :
                           stagedListing?.isApprovedForSeaport;
                     return {
                       label: 'Approve ' + stagedListing?.collectionName + ' for ' + target.protocol,
@@ -322,8 +322,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                           stagedListing?.nft?.type === NftType.Erc721 ?
                             stagedListing?.isApprovedForX2Y2 :
                             stagedListing?.isApprovedForX2Y21155 :
-                          protocol === ExternalProtocol.Native
-                            ? stagedListing?.isApprovedForNative :
+                          protocol === ExternalProtocol.NFTCOM
+                            ? stagedListing?.isApprovedForNFTCOM :
                             stagedListing?.isApprovedForSeaport;
 
                       if (!approved && protocol === ExternalProtocol.LooksRare) {
@@ -377,8 +377,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                         if (!result) {
                           return;
                         }
-                      } else if (!approved && protocol === ExternalProtocol.Native) {
-                        const result = await approveCollection(stagedListing, ExternalProtocol.Native)
+                      } else if (!approved && protocol === ExternalProtocol.NFTCOM) {
+                        const result = await approveCollection(stagedListing, ExternalProtocol.NFTCOM)
                           .then(result => {
                             if (!result) {
                               setError('ApprovalError');
@@ -390,7 +390,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                             setError('ApprovalError');
                             return false;
                           });
-                        stagedListing.isApprovedForNative = result;
+                        stagedListing.isApprovedForNFTCOM = result;
                         if (!result) {
                           return;
                         }
