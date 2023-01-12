@@ -110,7 +110,7 @@ export const BidContainer = ({ data }: BidContainerProps) => {
       </div>
 
       <div className='p-4'>
-        <div className='w-full flex items-center justify-between py-4'>
+        <div className='w-full flex items-center justify-between'>
           <div className='flex items-center'>
             <span className='text-[#6A6A6A] text-[16px]'>Auction ends in</span>
             <span className='font-medium text-[18px] ml-1.5'>{countdownText}</span>
