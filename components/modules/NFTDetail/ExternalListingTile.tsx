@@ -3,7 +3,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { ActivityStatus, LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
@@ -15,6 +15,7 @@ import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
+import { getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 import { cancelX2Y2Listing } from 'utils/X2Y2Helpers';
@@ -22,6 +23,7 @@ import { cancelX2Y2Listing } from 'utils/X2Y2Helpers';
 import { BigNumber, ethers } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import NFTLogo from 'public/nft_logo_yellow.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import React from 'react';
@@ -131,7 +133,9 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     let listedCurrency;
     if ((listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.X2Y2 || (listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.LooksRare) {
       listedCurrency = (listing?.order?.protocolData as X2Y2ProtocolData).currencyAddress;
-    } else {
+    } else if ((listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.NFTCOM) {
+      listedCurrency = (listing?.order?.protocolData as NftcomProtocolData).takeAsset[0]?.standard?.contractAddress;
+    }else {
       listedCurrency = (listing?.order?.protocolData as SeaportProtocolData).parameters.consideration[0].token;
     }
 
@@ -254,7 +258,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     }
   }, [listing, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
 
-  if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2].includes(listingProtocol as ExternalProtocol)) {
+  if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2, ExternalProtocol.NFTCOM].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
     return null;
   }
@@ -276,15 +280,18 @@ function ExternalListingTile(props: ExternalListingTileProps) {
         {listing?.order?.exchange === ExternalExchange.X2Y2 ?
           <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo" layout="fill"/>
           :
-          <div className='relative h-6 w-6 shrink-0 flex'>
-            <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
-          </div>
+          listing?.order?.exchange === ExternalExchange.NFTCOM ?
+            <NFTLogo className='mx-1.5 h-9 w-9 relative shrink-0' alt="NFT.com logo" layout="fill"/>
+            :
+            <div className='relative h-6 w-6 shrink-0 flex'>
+              <Image src={Icons[listing?.order?.exchange]} alt="exchange logo" layout="fill" objectFit='cover'/>
+            </div>
         }
         
       </div>
       <div className="flex flex-col text-primary-txt dark:text-primary-txt-dk ml-3">
         <span className='text-sm text-secondary-txt'>
-          Current price on <span className="font-bold">{listing?.order?.exchange}</span>
+          Current price on <span className="font-bold">{getProtocolDisplayName(listing?.order?.exchange as ExternalProtocol)}</span>
         </span>
         <div className='flex items-center'>
           <span className='text-xl font-medium'>
