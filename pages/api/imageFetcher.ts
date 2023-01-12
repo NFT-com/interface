@@ -5,7 +5,6 @@ import fetch from 'node-fetch';
 
 const imageFetcher = async (req: NextApiRequest, res: NextApiResponse) => {
   const gcp_enabled = process.env.GCP_IMG_PROXY_ENABLED;
-
   const r = await axios.get(`https://5hi24d3w2gny6zrfhekqk6mv4e0cfois.lambda-url.us-east-1.on.aws?gcp=${gcp_enabled}&url=${encodeURIComponent(`${req.query.url}`)}&width=${Number(req.query.width) || 1000}&height=${Number(req.query.height) || 1000}`);
   const optimizedUrl = r.data.data;
   const result = await fetch(optimizedUrl);
