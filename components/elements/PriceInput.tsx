@@ -161,7 +161,40 @@ export function PriceInput(props: PriceInputProps) {
               }}
             />
           </div>
-          : null}
+          : <input
+            disabled={props.empty}
+            type="text"
+            className={tw(
+              props.onCurrencyChange == null ?'w-[50%]': 'w-[45%]',
+              'text-sm border h-full minlg:w-1/2',
+              'text-left p-1 rounded-md pl-2 border-2',
+              props.error ? 'border-red-500' : 'border-gray-300'
+            )}
+            placeholder={'Price'}
+            autoFocus={true}
+            value={formattedPrice ?? ''}
+            onChange={e => {
+              const validReg = /^[0-9.]*$/;
+              if (e.target.value.split('').filter(char => char === '.').length > 1) {
+                e.preventDefault();
+              } else if (isNullOrEmpty(e.target.value)) {
+                props.onPriceChange(null);
+                setFormattedPrice('');
+              } else if (
+                validReg.test(e.target.value.toLowerCase()) && e.target.value.length <= 6
+              ) {
+                const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
+                setFormattedPrice(paddedValue);
+            
+                props.onPriceChange(ethers.utils.parseEther(paddedValue));
+              } else {
+                e.preventDefault();
+              }
+            }}
+            style={{
+              color: alwaysBlack,
+            }}
+          />}
       {
         props.onCurrencyChange == null
           ? <div className='font-medium flex items-center ml-1 w-1/2 minlg:w-1/2 pl-4 minlg:pl-3'>
