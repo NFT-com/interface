@@ -5,11 +5,11 @@ import { useMyAssetsQuery } from 'graphql/hooks/useMyAssetsQuery';
 import { useFetchNftCollectionAllowance } from 'hooks/balances/useFetchNftCollectionAllowance';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { usePaginator } from 'hooks/usePaginator';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import AssetTableRow from './AssetTableRow';
+import { OffersModal } from './OffersModal';
 
 import Offers from 'public/images/offers.svg';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -21,6 +21,7 @@ const ASSET_LOAD_COUNT = 25;
 export default function AssetsPages() {
   const { address: currentAddress } = useAccount();
   const [lastAddedPage, setLastAddedPage] = useState('');
+  const [showOffers, setShowAllOffers] = useState(false);
   const [assetData, setAssetData] = useState([]);
   const {
     nextPage,
@@ -83,6 +84,7 @@ export default function AssetsPages() {
           <span className='text-[#F9D963] mr-1'>/</span>
             My Assets
         </h2>
+        <OffersModal visible={showOffers} onClose={() => setShowAllOffers(false)} />
         <div className='flex'>
           {selectedAssets.length ?
             <div
@@ -169,7 +171,7 @@ export default function AssetsPages() {
                 <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[140px]'>Profile</th>
                 <th className='text-[#6F6F6F] text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[100px]'>Offers</th>
                 <th className='text-black cursor-pointer text-sm font-medium leading-6 pb-4 pr-8 minmd:pr-4 w-[130px]'>
-                  <div onClick={() => alert('open view all offers modal')} className='flex items-center hover:underline'>
+                  <div onClick={() => setShowAllOffers(true)} className='flex items-center hover:underline'>
                     <Offers className='mr-2' />
                     <div>View all offers</div>
                   </div>

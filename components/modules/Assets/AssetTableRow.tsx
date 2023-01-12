@@ -6,17 +6,18 @@ import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { getContractMetadata } from 'utils/alchemyNFT';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
+import { OffersModal } from './OffersModal';
+
 import { BigNumber } from 'ethers';
 import Link from 'next/link';
 import { DotsThreeVertical } from 'phosphor-react';
 import Offers from 'public/images/offers.svg';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
@@ -34,6 +35,7 @@ export default function AssetTableRow({
 }: AssetTableRowProps) {
   const defaultChainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
+  const [showOffers, setShowOffers] = useState(false);
   const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.contract, async () => {
     return await getContractMetadata(item?.contract, defaultChainId);
   });
@@ -110,6 +112,7 @@ export default function AssetTableRow({
     <tr
       className={tw('min-w-[5.5rem] h-20 font-medium font-noi-grotesk border-t border-[#D6D6D6]')}
     >
+      <OffersModal visible={showOffers} onClose={() => setShowOffers(false)} />
       <td className="font-bold text-body leading-body pr-8 minmd:pr-4" >
         <div className='flex justify-center'>
           <input
@@ -158,9 +161,8 @@ export default function AssetTableRow({
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
-        <div onClick={() => alert('redirect todo')} className='flex items-center -mt-1 cursor-pointer hover:underline'>
+        <div onClick={() => setShowOffers(true)} className='flex items-center -mt-1 cursor-pointer hover:underline'>
           <Offers className='mr-2' />
-          {/* TODO: NATIVE */}
           <div>2 Offers</div>
         </div>
       </td>
