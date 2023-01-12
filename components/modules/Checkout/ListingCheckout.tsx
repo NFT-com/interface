@@ -79,8 +79,8 @@ export function ListingCheckout() {
   const X2Y2AtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     return nft?.targets?.find(target => target?.protocol === ExternalProtocol.X2Y2) != null;
   }) != null;
-  const nativeAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
-    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.Native) != null;
+  const NFTCOMAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
+    return nft?.targets?.find(target => target?.protocol === ExternalProtocol.NFTCOM) != null;
   }) != null;
 
   const buttonsRowWidth = () => {
@@ -152,24 +152,24 @@ export function ListingCheckout() {
           <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
             {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div
               onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.Native);
+                toggleTargetMarketplace(ExternalProtocol.NFTCOM);
                 setShowSummary(false);
               }}
               className={tw(
                 `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
                 'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
-                nativeAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
+                NFTCOMAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
               )}
             >
-              {nativeAtLeastOneEnabled
+              {NFTCOMAtLeastOneEnabled
                 ? <NFTLogo
                   className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
                   alt="Opensea logo"
                   layout="fill"
                 />
                 : <NFTLogo className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
-              <span className='font-semibold text-base'>NFT</span>
+              <span className='font-semibold text-base'>NFT.com</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
             </div>}
             <div

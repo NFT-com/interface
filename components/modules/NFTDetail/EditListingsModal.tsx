@@ -77,11 +77,11 @@ export function EditListingsModal(props: EditListingsModalProps) {
   );
 
   const {
-    allowedAll: nativeAllowed,
+    allowedAll: NFTCOMAllowed,
   } = useNftCollectionAllowance(
     props.nft?.contract,
     currentAddress,
-    TransferProxyTarget.Native
+    TransferProxyTarget.NFTCOM
   );
 
   const getModalContent = useCallback(() => {
@@ -127,7 +127,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
                 isApprovedForLooksrare1155: looksRareAllowed1155,
                 isApprovedForX2Y2: X2Y2Allowed,
                 isApprovedForX2Y21155: X2Y2Allowed1155,
-                isApprovedForNative: nativeAllowed,
+                isApprovedForNFTCOM: NFTCOMAllowed,
                 targets: []
               });
               router.push('/app/list');
@@ -137,21 +137,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
         </div>
       </div>
     </div>;
-  }, [
-    nft,
-    collectionName,
-    listings,
-    stageListing,
-    props.nft,
-    props.collectionName,
-    openseaAllowed,
-    looksRareAllowed,
-    looksRareAllowed1155,
-    X2Y2Allowed,
-    X2Y2Allowed1155,
-    nativeAllowed,
-    router
-  ]);
+  }, [nft, collectionName, listings, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router]);
 
   return (
     <Modal

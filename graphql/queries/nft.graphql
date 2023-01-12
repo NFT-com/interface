@@ -74,6 +74,43 @@ query Nft(
                         r
                         s
                     }
+                    ... on NFTCOMProtocolData {
+                      makeAsset {
+                        standard {
+                          assetClass
+                          bytes
+                          contractAddress
+                          tokenId
+                          allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                      }
+                      takeAsset {
+                        standard {
+                          assetClass
+                          bytes
+                          contractAddress
+                          tokenId
+                          allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                      }
+                      swapTransactionId
+                      acceptedAt
+                      rejectedAt
+                      listingId
+                      buyNowTaker
+                      auctionType
+                      salt
+                      start
+                      end
+                    }
                     ... on X2Y2ProtocolData {
                       side
                       type
