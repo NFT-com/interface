@@ -509,7 +509,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               <div className='w-full text-base font-normal flex text-[#A6A6A6] mb-3'>
                 {auctionTypeForPrice.current === 0 ? 'Set Price' : auctionTypeForPrice.current === 1 ? 'Minimum Bid' : 'Set/End Price' }
               </div>
-              <div className='mb-2 minlg:mx-1 h-12 w-fullflex flex-row'>
+              <div className='mb-2 minlg:mx-1 h-12 w-full flex flex-row'>
                 {NativePriceInput(auctionTypeForPrice.current)}
                 <div className='w-full flex minlg:hidden -ml-[10rem] z-10 minlg:z-auto'>
                   <div className='w-full flex items-center justify-end '>
