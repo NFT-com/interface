@@ -1,3 +1,4 @@
+import { Doppler, getEnvBool } from 'utils/env';
 import { getImageFetcherBaseURL, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -148,7 +149,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           /> :
           (imageUrl != 'null?width=600') && <DynamicRoundedCornerMediaImage
             priority={props?.priority}
-            src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
+            src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?gcp=${getEnvBool(Doppler.NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED)}&url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
             onError={() => {
               setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
             }}
