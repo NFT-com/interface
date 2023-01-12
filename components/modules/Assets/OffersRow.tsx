@@ -1,27 +1,5 @@
-import { Button, ButtonType } from 'components/elements/Button';
-import { Modal } from 'components/elements/Modal';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { Maybe, NftType } from 'graphql/generated/types';
-import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
-import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { ExternalProtocol } from 'types';
-import { filterDuplicates, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
-import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD } from 'utils/marketplaceUtils';
-
-import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
-import { ListAllResult, ListingTarget, NFTListingsContext } from './NFTListingsContext';
-import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
-
-import { BigNumber, ethers } from 'ethers';
-import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
-import { useCallback, useContext, useState } from 'react';
-import useSWR from 'swr';
-import { useAccount, useProvider, useSigner } from 'wagmi';
-
+import { NftType } from 'graphql/generated/types';
 export interface OffersRowProps {
   nft?: NftType;
 }

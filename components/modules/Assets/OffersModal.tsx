@@ -1,22 +1,12 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
-import { Maybe, NftType } from 'graphql/generated/types';
-import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { ExternalProtocol } from 'types';
-import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
-import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD } from 'utils/marketplaceUtils';
 
 import { OffersRow } from './OffersRow';
 
-import { BigNumber, ethers } from 'ethers';
-import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
-import { useCallback, useContext, useState } from 'react';
-import useSWR from 'swr';
+import { X } from 'phosphor-react';
+import { useState } from 'react';
 import { useAccount, useProvider, useSigner } from 'wagmi';
 
 export interface OffersModalProps {
