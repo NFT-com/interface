@@ -309,7 +309,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         {seaportEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[27%]'>
+            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[22%]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(0, true)}
                 selectedIndex={0}
@@ -322,12 +322,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               type="text"
               value='Fixed price'
               className={tw(
-                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[25%]',
+                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[28%]',
                 'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
               )}
             />
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[43%] flex flex-row'>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
               {OpenseaPriceInput()}
               <div className='w-full flex minlg:hidden -ml-[10rem] z-10 minlg:z-auto'>
                 <div className='w-full flex items-center justify-end '>
@@ -358,7 +358,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         {looksrareEnabled && /* && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare &&*/
             <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
               <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-              <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[27%]'>
+              <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[22%]'>
                 <DropdownPicker
                   options={generateMarketPlaceOptions(1, true)}
                   selectedIndex={1}
@@ -371,12 +371,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 type="text"
                 value='Fixed price'
                 className={tw(
-                  'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[25%]',
+                  'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[28%]',
                   'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
                 )}
               />
               <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-              <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[43%] flex flex-row'>
+              <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
                 <CustomTooltip2
                   orientation='custom'
                   customLeftPosition='19'
@@ -422,7 +422,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && /* selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[27%]'>
+            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[22%]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(2, true)}
                 selectedIndex={2}
@@ -435,12 +435,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               type="text"
               value='Fixed price'
               className={tw(
-                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[25%]',
+                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[28%]',
                 'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
               )}
             />
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[43%] flex flex-row relative'>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row relative'>
               <CustomTooltip2
                 orientation='custom'
                 customLeftPosition='19'
@@ -485,48 +485,42 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           </div>}
         {nativeEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
-            <div className='w-[89%] minlg:w-[27%] flex flex-col'>
-              <div className='w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-              <div className='mb-2 rounded-md h-12 w-full'>
-                <DropdownPicker
-                  options={generateMarketPlaceOptions(3, true)}
-                  selectedIndex={3}
-                  v2
-                />
-              </div>
+            <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
+            <div className='mb-2 rounded-md h-12 w-[89%] minlg:w-[22%]'>
+              <DropdownPicker
+                options={generateMarketPlaceOptions(3, true)}
+                selectedIndex={3}
+                v2
+              />
             </div>
-            <div className='w-[89%] minlg:w-[24%] flex flex-col minlg:mx-1'>
-              <div className='w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Type of Auction</div>
-              <div className='mb-2 rounded-md h-12 w-full'>
-                <DropdownPicker
-                  options={generateTypeOfAuctionOptions()}
-                  placeholder={'Select'}
-                  v2
-                />
-              </div>
+            <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Type of Auction</div>
+            <div className='mb-2 rounded-md h-12 w-[89%] minlg:w-[28%] minlg:ml-1'>
+              <DropdownPicker
+                options={generateTypeOfAuctionOptions()}
+                placeholder={'Select'}
+                v2
+              />
             </div>
-            <div className='minlg:w-[43%] flex flex-col'>
-              <div className='w-full text-base font-normal flex text-[#A6A6A6] mb-3'>
-                {auctionTypeForPrice.current === 0 ? 'Set Price' : auctionTypeForPrice.current === 1 ? 'Minimum Bid' : 'Set/End Price' }
-              </div>
-              <div className='mb-2 minlg:mx-1 h-12 w-full flex flex-row'>
-                {NativePriceInput(auctionTypeForPrice.current)}
-                <div className='w-full flex minlg:hidden -ml-[10rem] z-10 minlg:z-auto'>
-                  <div className='w-full flex items-center justify-end '>
-                    <DeleteRowIcon
-                      className='cursor-pointer'
-                      alt="Delete market place"
-                      layout="fill"
-                      onClick={() => {
-                        toggleTargetMarketplace(ExternalProtocol.Native, props.listing);
-                      }}
-                    />
-                  </div>
+            <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>
+              Set Price
+            </div>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
+              {NativePriceInput(auctionTypeForPrice.current)}
+              <div className='w-full flex minlg:hidden -ml-[10rem] z-10 minlg:z-auto'>
+                <div className='w-full flex items-center justify-end '>
+                  <DeleteRowIcon
+                    className='cursor-pointer'
+                    alt="Delete market place"
+                    layout="fill"
+                    onClick={() => {
+                      toggleTargetMarketplace(ExternalProtocol.Native, props.listing);
+                    }}
+                  />
                 </div>
               </div>
             </div>
 
-            <div className='minlg:w-[5%] hidden minlg:flex flex-col'>
+            <div className='minlg:h-[3rem] minlg:w-[5%] hidden minlg:flex'>
               <div className='w-full text-base font-normal flex text-[#A6A6A6] mb-3'>&nbsp;</div>
               <div className='minlg:h-[3rem] w-full minlg:flex'>
                 <div className='w-full flex items-center justify-end '>

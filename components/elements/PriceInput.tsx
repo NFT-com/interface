@@ -90,18 +90,18 @@ export function PriceInput(props: PriceInputProps) {
             color: alwaysBlack,
           }}
         />
-        : props.auctionTypeForPrice == 2 ?
-          <div className='w-full flex'>
+        : props.auctionTypeForPrice != 0 ?
+          <div className='w-1/2 flex'>
             <input
               disabled={props.empty}
               type="text"
               className={tw(
                 props.onCurrencyChange == null ?'w-[50%]': 'w-[45%]',
-                'text-sm border h-full minlg:w-1/2',
+                'placeholder:text-[10px] border h-full minlg:w-1/2',
                 'text-left p-1 rounded-tl-md rounded-bl-md pl-2 border-2',
                 props.error ? 'border-red-500' : 'border-gray-300'
               )}
-              placeholder={'Price'}
+              placeholder={'Start Price'}
               autoFocus={true}
               value={formattedPrice ?? ''}
               onChange={e => {
@@ -131,12 +131,11 @@ export function PriceInput(props: PriceInputProps) {
               type="text"
               className={tw(
                 props.onCurrencyChange == null ?'w-[50%]': 'w-[45%]',
-                'text-sm border h-full minlg:w-1/2',
+                'placeholder:text-[10px]  border h-full minlg:w-1/2',
                 'text-left p-1 rounded-tr-md rounded-br-md pl-2 border-2',
                 props.error ? 'border-red-500' : 'border-gray-300'
               )}
-              placeholder={'Price'}
-              autoFocus={true}
+              placeholder={'End Price'}
               value={formattedPrice ?? ''}
               onChange={e => {
                 const validReg = /^[0-9.]*$/;
@@ -170,7 +169,7 @@ export function PriceInput(props: PriceInputProps) {
               'text-left p-1 rounded-md pl-2 border-2',
               props.error ? 'border-red-500' : 'border-gray-300'
             )}
-            placeholder={'Price'}
+            placeholder={'Minimum Bid'}
             autoFocus={true}
             value={formattedPrice ?? ''}
             onChange={e => {
