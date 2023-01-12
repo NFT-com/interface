@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { processIPFSURL } from 'utils/helpers';
