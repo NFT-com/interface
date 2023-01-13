@@ -483,7 +483,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               </div>
             </div>
           </div>}
-        {NFTCOMEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
+        {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && NFTCOMEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
             <div className='mb-2 rounded-md h-12 w-[89%] minlg:w-[22%]'>
