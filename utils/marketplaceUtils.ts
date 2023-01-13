@@ -1,7 +1,7 @@
 import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 
@@ -127,7 +127,8 @@ export function getTotalRoyaltiesUSD(
 export function getMaxMarketplaceFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  NFTCOMFee: number,
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const feesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
@@ -141,6 +142,13 @@ export function getMaxMarketplaceFeesUSD(
           fee,
           currencyData.decimals ?? 18
         ))) ?? 0;
+      } else if (target.protocol === ExternalProtocol.NFTCOM) {
+        const fee = NFTCOMFee / 100;
+        const units = currencyData?.usd(Number(ethers.utils.formatUnits(
+          BigNumber.from(1),
+          1
+        ))) ?? 0;
+        return units * fee;
       } else {
         // Seaport fee is hard-coded in our codebase and not expected to change.
         const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, 250));
@@ -157,7 +165,8 @@ export function getMaxMarketplaceFeesUSD(
 export function getMaxRoyaltyFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  NFTCOMRoyaltyFees: [string, BigNumber] & { owner: string; percent: BigNumber; }
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
@@ -178,6 +187,12 @@ export function getMaxRoyaltyFeesUSD(
         const royalty = BigNumber.from(target?.seaportParameters?.consideration.length === 3 ?
           target?.seaportParameters?.consideration[2].startAmount :
           0);
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          royalty,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
+      } else if (target.protocol === ExternalProtocol.NFTCOM) {
+        const royalty = Number(NFTCOMRoyaltyFees[1]);
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,
           currencyData.decimals ?? 18
@@ -203,6 +218,15 @@ export function filterValidListings(listings: PartialDeep<TxActivity>[]): Partia
       (listing.order?.protocolData as SeaportProtocolData)?.signature != null;
     const looksrareValid = (listing.order?.protocolData as LooksrareProtocolData)?.price != null;
     const X2Y2Valid = (listing.order?.protocolData as X2Y2ProtocolData)?.price != null;
-    return listing.order?.protocolData != null && (looksrareValid || seaportValid || X2Y2Valid);
+    const NFTCOMValid = (listing.order?.protocolData as NftcomProtocolData)?.takeAsset &&
+    (listing.order?.protocolData as NftcomProtocolData)?.takeAsset[0]?.value != null;
+    return listing.order?.protocolData != null && (looksrareValid || seaportValid || X2Y2Valid || NFTCOMValid);
   }) ?? [];
+}
+
+export function getProtocolDisplayName(protocolName: ExternalProtocol): string {
+  if(protocolName === ExternalProtocol.NFTCOM){
+    return 'NFT.com';
+  }
+  return protocolName;
 }

@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
 
 import { isNullOrEmpty, sameAddress } from './helpers';
@@ -22,6 +22,10 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
   case (ExternalProtocol.X2Y2): {
     const order = listing?.order?.protocolData as X2Y2ProtocolData;
     return BigNumber.from(order?.price ?? 0);
+  }
+  case (ExternalProtocol.NFTCOM): {
+    const order = listing?.order?.protocolData as NftcomProtocolData;
+    return BigNumber.from(order?.takeAsset[0]?.value ?? 0);
   }
   }
 };
@@ -57,6 +61,10 @@ export const getListingCurrencyAddress = (listing: PartialDeep<TxActivity>) => {
   case (ExternalProtocol.X2Y2): {
     const order = listing?.order?.protocolData as X2Y2ProtocolData;
     return order?.currencyAddress ?? order?.['currency'];
+  }
+  case (ExternalProtocol.NFTCOM): {
+    const order = listing?.order?.protocolData as NftcomProtocolData;
+    return order?.takeAsset[0]?.standard?.contractAddress ?? order?.['currency'];
   }
   }
 };

@@ -1,12 +1,14 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { Maybe, NftType } from 'graphql/generated/types';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
-import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD } from 'utils/marketplaceUtils';
+import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, getProtocolDisplayName } from 'utils/marketplaceUtils';
 
 import { CheckoutSuccessView } from './CheckoutSuccessView';
 import { ListAllResult, ListingTarget, NFTListingsContext } from './NFTListingsContext';
@@ -15,6 +17,7 @@ import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 import { BigNumber, ethers } from 'ethers';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import LooksrareIcon from 'public/looksrare-icon.svg';
+import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useCallback, useContext, useState } from 'react';
@@ -40,7 +43,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { data: signer } = useSigner();
   const { address: currentAddress } = useAccount();
   const { getByContractAddress } = useSupportedCurrencies();
-
+  const { marketplace } = useAllContracts();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<
@@ -57,13 +61,43 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       revalidateOnFocus: false,
     });
 
+  const { data: NFTCOMRoyaltyFee } = useSWR(
+    'NFTCOMRoyaltyFee' + currentAddress,
+    async () => {
+      return await marketplace.royaltyInfo(currentAddress);
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
+  const { data: NFTCOMProtocolFee } = useSWR(
+    'NFTCOMProtocolFee' + currentAddress,
+    async () => {
+      return await marketplace.protocolFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
+  const { data: NFTCOMProfileFee } = useSWR(
+    'NFTCOMProfileFee' + currentAddress,
+    async () => {
+      return await marketplace.profileFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
   const getMaxMarketplaceFees: () => number = useCallback(() => {
-    return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
-  }, [toList, getByContractAddress, looksrareProtocolFeeBps]);
+    return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length ? NFTCOMProfileFee : Number(NFTCOMProtocolFee));
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee]);
 
   const getMaxRoyaltyFees: () => number = useCallback(() => {
-    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
-  }, [looksrareProtocolFeeBps, toList, getByContractAddress]);
+    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, NFTCOMRoyaltyFee);
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress, NFTCOMRoyaltyFee]);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
@@ -97,7 +131,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         (stagedListing?.nft?.type == NftType.Erc721 ?
           !stagedListing?.isApprovedForX2Y2 :
           !stagedListing?.isApprovedForX2Y21155)) ||
-      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.Native) != null && !stagedListing?.isApprovedForNative)
+      (stagedListing.targets.find(target => target.protocol === ExternalProtocol.NFTCOM) != null && !stagedListing?.isApprovedForNFTCOM)
     );
   }, [toList]);
 
@@ -147,11 +181,11 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                         stagedListing?.nft?.type == NftType.Erc721 ?
                           stagedListing?.isApprovedForX2Y2 :
                           stagedListing?.isApprovedForX2Y21155 :
-                        target.protocol === ExternalProtocol.Native
-                          ? stagedListing?.isApprovedForNative :
+                        target.protocol === ExternalProtocol.NFTCOM
+                          ? stagedListing?.isApprovedForNFTCOM :
                           stagedListing?.isApprovedForSeaport;
                     return {
-                      label: 'Approve ' + stagedListing?.collectionName + ' for ' + target.protocol,
+                      label: 'Approve ' + stagedListing?.collectionName + ' for ' + getProtocolDisplayName(target.protocol),
                       startIcon: target.protocol === ExternalProtocol.Seaport ?
                         <OpenseaIcon
                           className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
@@ -164,11 +198,18 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                             alt="Looksrare logo"
                             layout="fill"
                           /> :
-                          <X2Y2Icon
-                            className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
-                            alt="Looksrare logo"
-                            layout="fill"
-                          />
+
+                          target.protocol === ExternalProtocol.NFTCOM ?
+                            <NFTLogo
+                              className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
+                              alt="NFT.com logo"
+                              layout="fill"
+                            /> :
+                            <X2Y2Icon
+                              className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
+                              alt="Looksrare logo"
+                              layout="fill"
+                            />
                       ,
                       endIcon: approved ?
                         <CheckCircle size={16} className="text-green-500 ml-2" /> :
@@ -322,8 +363,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                           stagedListing?.nft?.type === NftType.Erc721 ?
                             stagedListing?.isApprovedForX2Y2 :
                             stagedListing?.isApprovedForX2Y21155 :
-                          protocol === ExternalProtocol.Native
-                            ? stagedListing?.isApprovedForNative :
+                          protocol === ExternalProtocol.NFTCOM
+                            ? stagedListing?.isApprovedForNFTCOM :
                             stagedListing?.isApprovedForSeaport;
 
                       if (!approved && protocol === ExternalProtocol.LooksRare) {
@@ -377,8 +418,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                         if (!result) {
                           return;
                         }
-                      } else if (!approved && protocol === ExternalProtocol.Native) {
-                        const result = await approveCollection(stagedListing, ExternalProtocol.Native)
+                      } else if (!approved && protocol === ExternalProtocol.NFTCOM) {
+                        const result = await approveCollection(stagedListing, ExternalProtocol.NFTCOM)
                           .then(result => {
                             if (!result) {
                               setError('ApprovalError');
@@ -390,7 +431,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                             setError('ApprovalError');
                             return false;
                           });
-                        stagedListing.isApprovedForNative = result;
+                        stagedListing.isApprovedForNFTCOM = result;
                         if (!result) {
                           return;
                         }

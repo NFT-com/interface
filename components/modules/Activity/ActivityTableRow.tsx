@@ -4,6 +4,7 @@ import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata, getNftMetadata } from 'utils/alchemyNFT';
 import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { BigNumber, ethers } from 'ethers';
@@ -201,7 +202,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
         {item.activityType || <p>—</p>}
       </td>
       <td className="text-body leading-body pr-8 minmd:pr-4" >
-        {item[type]?.exchange || <p>—</p>}
+        {getProtocolDisplayName(item[type]?.exchange) || <p>—</p>}
       </td>
 
       {getPriceColumns()}
