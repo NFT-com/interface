@@ -177,6 +177,7 @@ export function ExternalListings(props: ExternalListingsProps) {
             orderHash: listing?.order?.orderHash,
             makerAddress: listing?.order?.makerAddress,
             takerAddress: listing?.order?.takerAddress,
+            nonce: listing?.order?.nonce,
             protocolData: listing?.order?.protocol === ExternalProtocol.Seaport ?
               listing?.order?.protocolData as SeaportProtocolData
               : listing?.order?.protocol === ExternalProtocol.LooksRare ?

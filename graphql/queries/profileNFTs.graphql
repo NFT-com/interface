@@ -40,6 +40,7 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
                 makerAddress
                 takerAddress
                 protocol
+                nonce
                 protocolData {
                     ... on LooksrareProtocolData {
                         isOrderAsk

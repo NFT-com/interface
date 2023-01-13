@@ -18,7 +18,7 @@ import { encodeAssetClass, getAssetBytes, getAssetTypeBytes } from './signatureU
 
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { SignTypedDataArgs } from '@wagmi/core';
-import { ethers } from 'ethers';
+import { ethers, Signature } from 'ethers';
 import moment from 'moment';
 import { PartialDeep } from 'type-fest';
 
@@ -153,13 +153,14 @@ export const marketAskToOrderStruct = (
 // };
 
 export const getNftcomHex = async (
-  protocolData: NftcomProtocolData,
+  protocolData: NftcomProtocolData & { orderSignature: Signature },
   ethValue: string,
   orderHash: string,
   makerAddress: string,
   takerAddress: string,
   id: string,
-  chainId: string
+  chainId: string,
+  nonce: number
 ): Promise<AggregatorResponse> => {
   try {
     const {
@@ -181,7 +182,7 @@ export const getNftcomHex = async (
       id,
       makeAsset ,
       makerAddress,
-      nonce: 0, //replace
+      nonce,
       salt,
       signature: {
         r: signature.r,
