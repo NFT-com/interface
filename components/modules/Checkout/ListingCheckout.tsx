@@ -104,7 +104,7 @@ export function ListingCheckout() {
               router.back();
             }}
           >
-            <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
+            <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
             Back
           </h1>
         </div>
@@ -412,7 +412,7 @@ export function ListingCheckout() {
               router.back();
             }}
           >
-            <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
+            <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
             Back
           </h1>
         </div>}
@@ -425,7 +425,7 @@ export function ListingCheckout() {
               onClick={() => {
                 router.back();
               }}>
-              <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
+              <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
               Back
             </span>
             <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold font-noi-grotesk'>Create Listings</h1>

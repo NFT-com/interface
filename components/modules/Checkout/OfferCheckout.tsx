@@ -91,7 +91,7 @@ export function OfferCheckout() {
               router.back();
             }}
           >
-            <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
+            <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
             Back
           </h1>
         </div>
@@ -283,7 +283,7 @@ export function OfferCheckout() {
         onClick={() => {
           router.back();
         }}>
-        <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
+        <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
         Back
       </h1>
     </div>}
@@ -296,7 +296,7 @@ export function OfferCheckout() {
           onClick={() => {
             router.back();
           }}>
-          <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
+          <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
           Back
         </span>
         <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold font-noi-grotesk'>Your Offers</h1>
