@@ -220,7 +220,8 @@ export function NftCard(props: NftCardProps) {
                                 {listingCurrencyData?.name ?? 'WETH'}
                               </span>
                               <span className='text-base text-[#747474]'>
-                                ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}
+                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0)}<br/>
+                                {/*${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}*/}
                               </span>
                             </div>
                           </div>

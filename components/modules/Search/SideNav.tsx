@@ -27,6 +27,7 @@ export const SideNav = (props: {
 }) => {
   const { sideNavOpen, setSearchFilters } = useSearchModal();
   const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
   useEffect(() => {
     setSearchFilters(props.filtersData);
@@ -39,7 +40,7 @@ export const SideNav = (props: {
       transition={{ duration: 0.2 }}
       className={tw(
         'w-[19rem]',
-        sideNavOpen ? 'pr-4' : '-ml-[19rem]')}
+        sideNavOpen ? newFiltersEnabledNew ?'pr-6' : 'pr-4' : '-ml-[19rem]')}
     >
       {!props.isCollectionView
         ? (
