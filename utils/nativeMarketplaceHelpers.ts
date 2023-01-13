@@ -8,9 +8,9 @@ import {
   MarketplaceAsset,
   MarketplaceAssetInput,
   Nft,
-  NftcomProtocolData
+  NftcomProtocolData,
   TxActivity
-  }
+}
   from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
 import { AssetStruct, AssetTypeStruct, MarketAsk, OrderStruct } from 'types/nativeMarketplace';
@@ -548,7 +548,6 @@ export async function cancelNftcomListing(
     nonce: listing?.order.nonce,
     auctionType: gqlAuctionTypeToOnchainAuctionType(order.auctionType)
   };
-  console.log('🚀 ~ file: nativeMarketplaceHelpers.ts:489 ~ cancelOrder', cancelOrder);
 
   return nftcomExchange.cancel(cancelOrder).then(tx => {
     return tx.wait(1).then(() => true).catch(() => false);
