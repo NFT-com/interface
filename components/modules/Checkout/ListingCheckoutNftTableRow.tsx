@@ -17,13 +17,12 @@ import { tw } from 'utils/tw';
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 
 import { BigNumber, ethers } from 'ethers';
-import { CaretDown, CaretRight } from 'phosphor-react';
 import RemoveIcon from 'public/close-circle-icon-gray.svg';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
+// import LooksrareIcon from 'public/looksrare-icon.svg';
+// import OpenseaIcon from 'public/opensea-icon.svg';
 import DeleteRowIcon from 'public/trash-icon.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+// import X2Y2Icon from 'public/x2y2-icon.svg';
+import { useContext, useMemo, useRef } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -44,22 +43,22 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const {
     setPrice,
     setCurrency,
+    setTypeOfAuction,
     toggleTargetMarketplace,
-    clearGeneralConfig,
+    // clearGeneralConfig,
     getTarget,
     removeListing
   } = useContext(NFTListingsContext);
 
-  const [expanded, setExpanded] = useState(false);
-  
   const rowSelectedMarketplaces = useRef(null);
 
   const selectedOptionDropdown0 = useRef(null);
   const selectedOptionDropdown1 = useRef(null);
   const selectedOptionDropdown2 = useRef(null);
   const selectedOptionDropdown3 = useRef(null);
+  const auctionTypeForPrice = useRef(null);
 
-  const rowHeightClass = expanded ? 'h-48' : 'h-24';
+  // const rowHeightClass = expanded ? 'h-48' : 'h-24';
   const seaportEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.Seaport) != null, [getTarget, props.listing]);
   const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
   const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
@@ -138,9 +137,38 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     ];
   };
 
+  const generateTypeOfAuctionOptions = () => {
+    return [
+      {
+        label: 'Fixed Price',
+        onSelect: () => {
+          setTypeOfAuction(props.listing, 0, ExternalProtocol.NFTCOM);
+          auctionTypeForPrice.current = 0;
+        },
+        disabled: seaportEnabled
+      },
+      {
+        label: 'English Auction',
+        onSelect: () => {
+          setTypeOfAuction(props.listing, 1, ExternalProtocol.NFTCOM);
+          auctionTypeForPrice.current = 1;
+        },
+        disabled: seaportEnabled
+      },
+      {
+        label: 'Decreasing Price',
+        onSelect: () => {
+          setTypeOfAuction(props.listing, 2, ExternalProtocol.NFTCOM);
+          auctionTypeForPrice.current = 2;
+        },
+        disabled: seaportEnabled
+      },
+    ];
+  };
+
   const OpenseaPriceInput = () => {
     return <PriceInput
-      key={expanded + 'OpenseaPriceInput'}
+      key={'OpenseaPriceInput'}
       initial={
         getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
           '' :
@@ -165,7 +193,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const LooksRarePriceInput = () => {
     return <PriceInput
-      key={expanded + 'LooksrarePriceInput'}
+      key={'LooksrarePriceInput'}
       initial={
         getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice == null ?
           '' :
@@ -187,7 +215,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const X2Y2PriceInput = () => {
     return <PriceInput
-      key={expanded + 'X2Y2PriceInput'}
+      key={'X2Y2PriceInput'}
       initial={
         getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice == null ?
           '' :
@@ -209,7 +237,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
   const NFTCOMPriceInput = () => {
     return <PriceInput
-      key={expanded + 'NFTCOMPriceInput'}
+      key={'NFTCOMPriceInput'}
       initial={
         getTarget(props.listing, ExternalProtocol.NFTCOM)?.startingPrice == null ?
           '' :
@@ -229,250 +257,14 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         (props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && target.startingPrice == null) != null ||
       props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && BigNumber.from(target.startingPrice).eq(0)) != null)
       }
+      auctionTypeForPrice={auctionTypeForPrice.current}
     />;
   };
-
-  useEffect(() => {
-    if (expanded) {
-      if (!looksrareEnabled) {
-        toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
-      }
-      if (!seaportEnabled) {
-        toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
-      }
-      if (!X2Y2Enabled) {
-        toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
-      }
-    }
-  }, [X2Y2Enabled, expanded, looksrareEnabled, props.listing, seaportEnabled, toggleTargetMarketplace]);
   
-  return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
-    ? (
-      <tr>
-        <td className={rowHeightClass}>
-          <div className='h-full w-full flex py-8 pr-8'>
-            {
-              expanded ?
-                <CaretDown onClick={() => {
-                  setExpanded(false);
-                }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' /> :
-                <CaretRight onClick={() => {
-                  setExpanded(true);
-                  clearGeneralConfig(props.listing);
-                }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' />
-            }
-            <div className='relative h-10 aspect-square'>
-              <video
-                autoPlay
-                muted
-                loop
-                key={props.listing.nft?.metadata?.imageURL}
-                src={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
-                poster={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
-                className={tw(
-                  'flex object-fit w-full justify-center rounded-md',
-                )}
-              />
-            </div>
-            <div className='flex flex-col ml-10 font-grotesk'>
-              <span className='text-sm line-clamp-1'>{collection?.contractMetadata?.name}</span>
-              <span className='font-bold text-base line-clamp-1'>{props.listing?.nft?.metadata?.name}</span>
-            </div>
-          </div>
-        </td>
-        <td className={tw('flex', rowHeightClass)}>
-          <div className='h-full w-full py-4 flex flex-col justify-around'>
-            {
-              expanded ?
-                <>
-                  <PriceInput
-                    key={expanded + 'OpenseaPriceInput'}
-                    initial={
-                      getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
-                        '' :
-                        ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice ?? 0))
-                    }
-                    currencyAddress={getTarget(props.listing, ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
-                    currencyOptions={['WETH', 'ETH']}
-                    onPriceChange={(val: BigNumber) => {
-                      setPrice(props.listing, val, ExternalProtocol.Seaport);
-                      props.onPriceChange();
-                    }}
-                    onCurrencyChange={(currency: SupportedCurrency) => {
-                      setCurrency(props.listing, currency, ExternalProtocol.Seaport);
-                      props.onPriceChange();
-                    }}
-                    error={
-                      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && target.startingPrice == null) != null ||
-                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && BigNumber.from(target.startingPrice).eq(0)) != null
-                    }
-                  />
-                  <PriceInput
-                    key={expanded + 'LooksrarePriceInput'}
-                    initial={
-                      getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice == null ?
-                        '' :
-                        ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.LooksRare)?.startingPrice ?? 0))
-                    }
-                    currencyAddress={getAddress('weth', defaultChainId)}
-                    currencyOptions={['WETH']}
-                    onCurrencyChange={null}
-                    onPriceChange={(val: BigNumber) => {
-                      setPrice(props.listing, val, ExternalProtocol.LooksRare);
-                      props.onPriceChange();
-                    }}
-                    error={
-                      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && target.startingPrice == null) != null ||
-                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null
-                    }
-                  />
-                  {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && <PriceInput
-                    key={expanded + 'X2Y2PriceInput'}
-                    initial={
-                      getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice == null ?
-                        '' :
-                        ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.X2Y2)?.startingPrice ?? 0))
-                    }
-                    currencyAddress={'0x0000000000000000000000000000000000000000'}
-                    currencyOptions={['ETH']}
-                    onCurrencyChange={null}
-                    onPriceChange={(val: BigNumber) => {
-                      setPrice(props.listing, val, ExternalProtocol.X2Y2);
-                      props.onPriceChange();
-                    }}
-                    error={
-                      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
-                    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null ||
-                    (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
-                    }
-                    errorMessage={
-                      (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice)) && 'Active listing has a greater price, please enter a lower value.'
-                    }
-                  />}
-                  
-                </> :
-                seaportEnabled && !looksrareEnabled && !X2Y2Enabled ?
-                  <PriceInput
-                    initial={
-                      getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice == null ?
-                        '' :
-                        ethers.utils.formatEther(BigNumber.from(getTarget(props.listing, ExternalProtocol.Seaport)?.startingPrice ?? 0))
-                    }
-                    currencyAddress={getTarget(props.listing, ExternalProtocol.Seaport)?.currency ?? getAddress('weth', defaultChainId)}
-                    currencyOptions={['WETH', 'ETH']}
-                    onPriceChange={(val: BigNumber) => {
-                      setPrice(props.listing, val, ExternalProtocol.Seaport);
-                      props.onPriceChange();
-                    }}
-                    onCurrencyChange={(currency: SupportedCurrency) => {
-                      setCurrency(props.listing, currency, ExternalProtocol.Seaport);
-                      props.onPriceChange();
-                    }}
-                    error={
-                      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && target.startingPrice == null) != null ||
-                props.listing?.targets?.find(target => target.protocol === ExternalProtocol.Seaport && BigNumber.from(target.startingPrice).eq(0)) != null
-                    }
-                  />
-                  :
-                  X2Y2Enabled && !looksrareEnabled && !seaportEnabled ?
-                    <PriceInput
-                      initial={
-                        props.listing?.startingPrice == null ?
-                          '' :
-                          ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
-                      }
-                      currencyAddress={'0x0000000000000000000000000000000000000000'}
-                      currencyOptions={['ETH']}
-                      onCurrencyChange={null}
-                      onPriceChange={(val: BigNumber) => {
-                        setPrice(props.listing, val);
-                        props.onPriceChange();
-                      }}
-                      error={
-                        (props.listing.startingPrice == null) ||
-                  (BigNumber.from(props.listing.startingPrice ?? 0).eq(0)) ||
-                  (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing.startingPrice))
-                      }
-                      errorMessage={
-                        (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing.startingPrice)) && 'Active listing has a greater price, please enter a lower value.'
-                      }
-                    />
-                    :
-                    <PriceInput
-                      initial={
-                        props.listing?.startingPrice == null ?
-                          '' :
-                          ethers.utils.formatEther(BigNumber.from(props.listing.startingPrice))
-                      }
-                      currencyAddress={getAddress('weth', defaultChainId)}
-                      currencyOptions={['WETH']}
-                      onCurrencyChange={null}
-                      onPriceChange={(val: BigNumber) => {
-                        setPrice(props.listing, val);
-                        props.onPriceChange();
-                      }}
-                      error={
-                        (props.listing.startingPrice == null) ||
-                  (BigNumber.from(props.listing.startingPrice ?? 0).eq(0))
-                      }
-                    />
-            }
-          </div>
-        </td>
-        <td className={rowHeightClass}>
-          <div className={tw('flex flex-col p-4 justify-around', rowHeightClass)}>
-            <OpenseaIcon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-                !seaportEnabled && 'opacity-40'
-              )}
-              alt="Opensea logo redirect"
-              layout="fill"
-              onClick={() => {
-                if (expanded) {
-                  return;
-                }
-                toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing);
-              }}
-            />
-            <LooksrareIcon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-                !looksrareEnabled && 'opacity-40'
-              )}
-              alt="Looksrare logo redirect"
-              layout="fill"
-              onClick={() => {
-                if (expanded) {
-                  return;
-                }
-                toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing);
-              }}
-            />
-            {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
-            <X2Y2Icon
-              className={tw(
-                'h-9 w-9 relative shrink-0 cursor-pointer',
-                !X2Y2Enabled && 'opacity-40'
-              )}
-              alt="X2Y2 logo redirect"
-              layout="fill"
-              onClick={() => {
-                if (expanded) {
-                  return;
-                }
-                toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing);
-              }}
-            />
-            }
-          </div>
-        </td>
-      </tr>
-    )
-    : (
-      <div className='minlg:h-44 flex flex-row mb-8'>
-        <div className='basis-4/12 minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:px-8 w-full'>
-          {/*             {
+  return (
+    <div className='minlg:h-44 flex flex-row mb-8'>
+      <div className='basis-4/12 minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:pl-0 minxl:pr-8 w-full'>
+        {/*             {
             expanded ?
               <CaretDown onClick={() => {
                 setExpanded(false);
@@ -482,42 +274,42 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 clearGeneralConfig(props.listing);
               }} size={24} color="black" className='mr-4 mt-2 cursor-pointer caretToggle' />
           } */}
-          <span className='w-full text-base font-normal flex text-[#A6A6A6] mb-4'>NFT</span>
-          <div className='relative w-full'>
-            <div className='relative aspect-square overflow-y-hidden rounded-md w-full'>
-              <video
-                autoPlay
-                muted
-                loop
-                key={props.listing.nft?.metadata?.imageURL}
-                src={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
-                poster={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
-                className={tw(
-                  'flex object-fit w-full justify-center rounded-md',
-                )}
-              />
-            </div>
-            <RemoveIcon
-              className="h-20 minhd:h-28 absolute -right-[50%] top-[-1.5rem] minhd:top-[-2rem] cursor-pointer z-[100]"
-              onClick={() => removeListing(props.listing?.nft)} />
+        <span className='w-full text-base font-normal flex text-[#A6A6A6] mb-4'>NFT</span>
+        <div className='relative w-full'>
+          <div className='relative aspect-square overflow-y-hidden rounded-md w-full'>
+            <video
+              autoPlay
+              muted
+              loop
+              key={props.listing.nft?.metadata?.imageURL}
+              src={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
+              poster={processIPFSURL(props.listing.nft?.metadata?.imageURL)}
+              className={tw(
+                'flex object-fit w-full justify-center rounded-md',
+              )}
+            />
           </div>
-          <div className='flex flex-col font-noi-grotesk'>
-            <span className='font-bold text-base line-clamp-1 capitalize'>{props.listing?.nft?.metadata?.name?.toLowerCase()}</span>
-            <span className='text-sm line-clamp-1 capitalize'>{collection?.contractMetadata?.name?.toLowerCase()}</span>
-          </ div>
+          <RemoveIcon
+            className="h-20 minhd:h-28 absolute -right-[50%] top-[-1.5rem] minhd:top-[-2rem] cursor-pointer z-[100]"
+            onClick={() => removeListing(props.listing?.nft)} />
+        </div>
+        <div className='flex flex-col font-noi-grotesk'>
+          <span className='font-bold text-base line-clamp-1 capitalize'>{props.listing?.nft?.metadata?.name?.toLowerCase()}</span>
+          <span className='text-sm line-clamp-1 capitalize'>{collection?.contractMetadata?.name?.toLowerCase()}</span>
         </ div>
-        {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
-        {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-5 minlg:pl-0'>
-          <div className='hidden minlg:flex text-base font-normal flex text-[#A6A6A6] mb-4'>
-            <div className='w-[35%]'>Marketplace</div>
-            <div className='w-[25%]'>Type of Auction</div>
-            <div className='w-[35%]'>Set Price</div>
-            <div className='w-[5%]'>&nbsp;</div>
-          </div>
-          {seaportEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
+      </ div>
+      {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
+      {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-5 minlg:pl-0'>
+        {(seaportEnabled || looksrareEnabled || X2Y2Enabled) && <div className='hidden minlg:flex text-base font-normal flex text-[#A6A6A6] mb-4'>
+          <div className='w-[26%]'>Marketplace</div>
+          <div className='w-[25%]'>Type of Auction</div>
+          <div className='w-[43%]'>Set Price</div>
+          <div className='w-[5%]'>&nbsp;</div>
+        </div>}
+        {seaportEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[35%]'>
+            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[22%]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(0, true)}
                 selectedIndex={0}
@@ -530,12 +322,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               type="text"
               value='Fixed price'
               className={tw(
-                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[25%]',
-                'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3 minlg:ml-2 minlg:mr-1',
+                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[28%]',
+                'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
               )}
             />
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[35%] flex flex-row'>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
               {OpenseaPriceInput()}
               <div className='w-full flex minlg:hidden -ml-[10rem] z-10 minlg:z-auto'>
                 <div className='w-full flex items-center justify-end '>
@@ -563,10 +355,10 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               </div>
             </div>
           </div>}
-          {looksrareEnabled && /* && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare &&*/
+        {looksrareEnabled && /* && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare &&*/
             <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
               <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-              <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[35%]'>
+              <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[22%]'>
                 <DropdownPicker
                   options={generateMarketPlaceOptions(1, true)}
                   selectedIndex={1}
@@ -579,12 +371,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 type="text"
                 value='Fixed price'
                 className={tw(
-                  'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[25%]',
-                  'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3 minlg:ml-2 minlg:mr-1',
+                  'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[28%]',
+                  'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
                 )}
               />
               <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-              <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[35%] flex flex-row'>
+              <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
                 <CustomTooltip2
                   orientation='custom'
                   customLeftPosition='19'
@@ -627,10 +419,10 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 </div>
               </div>
             </div>}
-          {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && /* selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && */
+        {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && /* selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[35%]'>
+            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[22%]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(2, true)}
                 selectedIndex={2}
@@ -643,12 +435,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               type="text"
               value='Fixed price'
               className={tw(
-                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[25%]',
-                'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3 minlg:ml-2 minlg:mr-1',
+                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[28%]',
+                'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
               )}
             />
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[35%] flex flex-row relative'>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row relative'>
               <CustomTooltip2
                 orientation='custom'
                 customLeftPosition='19'
@@ -691,10 +483,10 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               </div>
             </div>
           </div>}
-          {NFTCOMEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
+        {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && NFTCOMEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-            <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[35%]'>
+            <div className='mb-2 rounded-md h-12 w-[89%] minlg:w-[22%]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(3, true)}
                 selectedIndex={3}
@@ -702,17 +494,17 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               />
             </div>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Type of Auction</div>
-            <input
-              disabled
-              type="text"
-              value='Fixed price'
-              className={tw(
-                'text-sm border border-gray-200 h-12 w-full w-[89%] minlg:w-[25%]',
-                'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3 minlg:ml-2 minlg:mr-1',
-              )}
-            />
-            <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[35%] flex flex-row'>
+            <div className='mb-2 rounded-md h-12 w-[89%] minlg:w-[28%] minlg:ml-1'>
+              <DropdownPicker
+                options={generateTypeOfAuctionOptions()}
+                placeholder={'Select'}
+                v2
+              />
+            </div>
+            <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>
+              Set Price
+            </div>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
               {NFTCOMPriceInput()}
               <div className='w-full flex minlg:hidden -ml-[10rem] z-10 minlg:z-auto'>
                 <div className='w-full flex items-center justify-end '>
@@ -727,20 +519,25 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 </div>
               </div>
             </div>
-            <div className='minlg:h-[3rem] w-full minlg:w-[5%] hidden minlg:flex'>
-              <div className='w-full flex items-center justify-end '>
-                <DeleteRowIcon
-                  className='cursor-pointer'
-                  alt="Delete market place"
-                  layout="fill"
-                  onClick={() => {
-                    toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing);
-                  }}
-                />
+
+            <div className='minlg:h-[3rem] minlg:w-[5%] hidden minlg:flex'>
+              <div className='w-full text-base font-normal flex text-[#A6A6A6] mb-3'>&nbsp;</div>
+              <div className='minlg:h-[3rem] w-full minlg:flex'>
+                <div className='w-full flex items-center justify-end '>
+                  <DeleteRowIcon
+                    className='cursor-pointer'
+                    alt="Delete market place"
+                    layout="fill"
+                    onClick={() => {
+                      toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing);
+                    }}
+                  />
+                </div>
               </div>
             </div>
+
           </div>}
-        </div>}
-      </div>
-    );
+      </div>}
+    </div>
+  );
 }
