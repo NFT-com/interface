@@ -3,7 +3,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, Nft, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
@@ -46,7 +46,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
 
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+  const hasGks = true; //!isNullOrEmpty(ownedGenesisKeyTokens);
 
   const {
     allowedAll: openseaAllowed,
@@ -175,13 +175,15 @@ export function ExternalListings(props: ExternalListingsProps) {
             protocol: listing?.order?.protocol as ExternalProtocol,
             isApproved: BigNumber.from(allowance ?? 0).gt(price),
             orderHash: listing?.order?.orderHash,
+            makerAddress: listing?.order?.makerAddress,
+            takerAddress: listing?.order?.takerAddress,
             protocolData: listing?.order?.protocol === ExternalProtocol.Seaport ?
               listing?.order?.protocolData as SeaportProtocolData
               : listing?.order?.protocol === ExternalProtocol.LooksRare ?
                 listing?.order?.protocolData as LooksrareProtocolData :
-                listing?.order?.protocolData as X2Y2ProtocolData
-
-            //here
+                listing?.order?.protocol === ExternalProtocol.NFTCOM ?
+                  listing?.order?.protocolData as NftcomProtocolData :
+                  listing?.order?.protocolData as X2Y2ProtocolData
           });
           toggleCartSidebar('Buy');
         }}

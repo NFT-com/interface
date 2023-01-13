@@ -413,7 +413,6 @@ export function NFTListingsContextProvider(
             looksrareRoyaltyFeeManager
             // listing.takerAddress
           );
-          nonce++;
           return {
             ...target,
             looksrareOrder: order,
@@ -437,7 +436,6 @@ export function NFTListingsContextProvider(
             stagedNft.reservePrice as BigNumber || null,
             stagedNft.currency ?? target.currency,
           );
-          // await marketplace.incrementNonce(); need to increment nonce
           return {
             ...target,
             NFTCOMOrder: order,
@@ -577,7 +575,9 @@ export function NFTListingsContextProvider(
           listing?.nft?.type == NftType.Erc721 ?
             TransferProxyTarget.X2Y2 :
             TransferProxyTarget.X2Y21155 :
-          TransferProxyTarget.Opensea,
+          target === ExternalProtocol.NFTCOM?
+            TransferProxyTarget.NFTCOM :
+            TransferProxyTarget.Opensea,
       true);
     if (tx) {
       return await tx.wait(1).then(() => {

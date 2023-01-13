@@ -42,6 +42,8 @@ export const NFTCardAddToCartButton = ( props: {
         protocol: listing?.order?.protocol as ExternalProtocol,
         isApproved: BigNumber.from(allowance ?? 0).gt(price),
         orderHash: listing?.order?.orderHash,
+        makerAddress: listing?.order.makerAddress,
+        takerAddress: listing?.order.takerAddress,
         protocolData: listing?.order?.protocol === ExternalProtocol.Seaport ?
           listing?.order?.protocolData as SeaportProtocolData :
           listing?.order?.protocol === ExternalProtocol.X2Y2 ?

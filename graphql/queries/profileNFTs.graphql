@@ -79,6 +79,48 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
                         is_bundle
                         is_private
                     }
+                    ... on NFTCOMProtocolData {
+                        makeAsset {
+                        standard {
+                            assetClass
+                            bytes
+                            contractAddress
+                            tokenId
+                            allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                        }
+                        takeAsset {
+                        standard {
+                            assetClass
+                            bytes
+                            contractAddress
+                            tokenId
+                            allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                        }
+                        swapTransactionId
+                        acceptedAt
+                        rejectedAt
+                        listingId
+                        buyNowTaker
+                        orderSignature: signature {
+                            v
+                            r
+                            s
+                        }
+                        auctionType
+                        salt
+                        start
+                        end
+                    }
                     ... on SeaportProtocolData {
                         signature
                         parameters {

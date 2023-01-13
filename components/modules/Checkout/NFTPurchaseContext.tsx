@@ -1,10 +1,11 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, Nft, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, NftcomProtocolData, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
+import { getNftcomHex } from 'utils/nativeMarketplaceHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
 import { getX2Y2Hex } from 'utils/X2Y2Helpers';
 
@@ -29,7 +30,9 @@ export type StagedPurchase = {
    */
   isApproved: boolean;
   orderHash?: string;
-  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData;
+  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData | NftcomProtocolData;
+  takerAddress: string;
+  makerAddress: string;
 }
 
 interface NFTPurchaseContextType {
@@ -156,6 +159,18 @@ export function NFTPurchaseContextProvider(
         return fetchX2Y2Hex(X2Y2Purchase);
       })))
       ,
+      //NFTCOM
+      ...(await Promise.all(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.NFTCOM)?.map(NftcomPurchase => {
+        return getNftcomHex(
+          NftcomPurchase.protocolData as NftcomProtocolData,
+          NftcomPurchase.currency === NULL_ADDRESS ? BigNumber.from(NftcomPurchase?.price).toString() : '0',
+          NftcomPurchase.orderHash,
+          NftcomPurchase.makerAddress,
+          NftcomPurchase.takerAddress,
+          NftcomPurchase.activityId,
+        );
+      })))
+      ,
       // Seaport orders are combined
       toBuy?.find(purchase => purchase.protocol === ExternalProtocol.Seaport) != null ?
         getSeaportHex(
@@ -169,7 +184,6 @@ export function NFTPurchaseContextProvider(
         ) :
         null
     ]);
-
     const tx = await aggregator.batchTrade(
       erc20Details,
       tradeDetails,

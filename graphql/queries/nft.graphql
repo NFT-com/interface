@@ -55,6 +55,7 @@ query Nft(
                 makerAddress
                 takerAddress
                 protocol
+                id
                 protocolData {
                     ... on LooksrareProtocolData {
                         isOrderAsk
@@ -107,6 +108,11 @@ query Nft(
                       listingId
                       buyNowTaker
                       auctionType
+                      orderSignature: signature {
+                        v
+                        r
+                        s
+                      }
                       salt
                       start
                       end
