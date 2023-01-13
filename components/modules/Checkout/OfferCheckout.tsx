@@ -2,6 +2,7 @@ import 'rc-slider/assets/index.css';
 
 import { Button, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
+import { PriceInput } from 'components/elements/PriceInput';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
