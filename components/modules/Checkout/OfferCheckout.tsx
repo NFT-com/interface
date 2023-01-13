@@ -18,6 +18,7 @@ import { handleRender } from './TooltipSlider';
 
 import Image from 'next/image';
 import router from 'next/router';
+import { ArrowLeft } from 'phosphor-react';
 import LooksrareGray from 'public/looksrare_gray.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
@@ -85,11 +86,13 @@ export function OfferCheckout() {
       <div className='hidden minlg:flex flex-col justify-start items-center bg-gray-200 w-2/5 min-h-[100vh]'>
         <div className='w-full ml-44 mt-20'>
           <h1
-            className='text-2xl font-semibold font-noi-grotesk cursor-pointer'
+            className='text-2xl font-semibold font-noi-grotesk cursor-pointer flex items-center'
             onClick={() => {
               router.back();
-            }}>
-          Back
+            }}
+          >
+            <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
+            Back
           </h1>
         </div>
         <div className='mt-20 w-1/2'>
@@ -276,10 +279,11 @@ export function OfferCheckout() {
     {toList.length === 1 && ListingOneNFT()}
     {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'>
       <h1
-        className='text-xl font-semibold font-noi-grotesk cursor-pointer ml-28'
+        className='text-xl font-semibold font-noi-grotesk cursor-pointer ml-28 flex items-center'
         onClick={() => {
           router.back();
         }}>
+        <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
         Back
       </h1>
     </div>}
@@ -288,10 +292,11 @@ export function OfferCheckout() {
       'w-full flex flex-col justify-start items-center minlg:w-3/5 minxxl:px-28')}>
       <div className='w-full minlg:mt-20 flex minlg:block justify-start items-end minlg:items-center minlg:mx-auto'>
         <span
-          className='minlg:hidden text-lg font-semibold font-noi-grotesk cursor-pointer minlg:ml-28'
+          className='minlg:hidden text-lg font-semibold font-noi-grotesk cursor-pointer flex items-center minlg:ml-28'
           onClick={() => {
             router.back();
           }}>
+          <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-1' />
           Back
         </span>
         <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold font-noi-grotesk'>Your Offers</h1>
