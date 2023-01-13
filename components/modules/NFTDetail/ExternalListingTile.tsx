@@ -8,6 +8,7 @@ import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
+import { useNftcomExchangeContract } from 'hooks/contracts/useNftcomExchangeContract';
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useX2Y2ExchangeContract } from 'hooks/contracts/useX2Y2ExchangeContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -16,6 +17,7 @@ import { ExternalExchange, ExternalProtocol } from 'types';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
 import { cancelLooksrareListing } from 'utils/looksrareHelpers';
 import { getProtocolDisplayName } from 'utils/marketplaceUtils';
+import { cancelNftcomListing } from 'utils/nativeMarketplaceHelpers';
 import { cancelSeaportListing } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
 import { cancelX2Y2Listing } from 'utils/X2Y2Helpers';
@@ -67,6 +69,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
   const X2Y2Exchange = useX2Y2ExchangeContract(signer);
+  const NftcomExchange = useNftcomExchangeContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
 
@@ -223,6 +226,21 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               mutateNft();
             }
             setCancelling(false);
+          } else if (listingProtocol === ExternalProtocol.NFTCOM) {
+            const order = listing?.order?.protocolData as NftcomProtocolData;
+            if (order == null) {
+              setCancelling(false);
+              return;
+            }
+            const result = await cancelNftcomListing(
+              listing,
+              NftcomExchange
+            );
+            if (result) {
+              updateActivityStatus([listing?.id], ActivityStatus.Cancelled);
+              mutateNft();
+            }
+            setCancelling(false);
           }
         }}
       />;
@@ -256,7 +274,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       />;
     }
     }
-  }, [listing, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
+  }, [listing, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2, ExternalProtocol.NFTCOM].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
