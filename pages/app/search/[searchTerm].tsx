@@ -114,17 +114,17 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         return;
       }else {
         page === 1 && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-            facet_by: newFiltersEnabledNew ? checkFacetType() : SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
-            max_facet_values: 200,
-            collection: 'nfts',
-            query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : ',marketplace,listingType,currency'),
-            q: searchTerm?.toString(),
-            per_page: getPerPage('', screenWidth, sideNavOpen),
-            page: page,
-            filter_by: nftsResultsFilterBy,
-            sort_by: nftsPageSortyBy,
-            exhaustive_search: true,
-          }] })
+          facet_by: newFiltersEnabledNew ? checkFacetType() : SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
+          max_facet_values: 200,
+          collection: 'nfts',
+          query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : ',marketplace,listingType,currency'),
+          q: searchTerm?.toString(),
+          per_page: getPerPage('', screenWidth, sideNavOpen),
+          page: page,
+          filter_by: nftsResultsFilterBy,
+          sort_by: nftsPageSortyBy,
+          exhaustive_search: true,
+        }] })
           .then((resp) => {
             results.current = [...resp.results[0].hits];
             found.current = resp.results[0].found;
