@@ -1,3 +1,4 @@
+import { NULL_ADDRESS } from 'constants/addresses';
 import { NFT_TYPE_TO_ASSET_CLASS } from 'constants/misc';
 import { Marketplace } from 'constants/typechain';
 import {
@@ -7,17 +8,20 @@ import {
   MarketplaceAsset,
   MarketplaceAssetInput,
   Nft,
-  NftcomProtocolData,
-  TxActivity }
+  NftcomProtocolData
+  TxActivity
+  }
   from 'graphql/generated/types';
-import { AssetStruct, AssetTypeStruct } from 'types/nativeMarketplace';
+import { AggregatorResponse } from 'types';
+import { AssetStruct, AssetTypeStruct, MarketAsk, OrderStruct } from 'types/nativeMarketplace';
 
 import { isNullOrEmpty } from './helpers';
+import { libraryCall, NFTCOMLib } from './marketplaceHelpers';
 import { encodeAssetClass, getAssetBytes, getAssetTypeBytes } from './signatureUtils';
 
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { SignTypedDataArgs } from '@wagmi/core';
-import { ethers } from 'ethers';
+import { ethers, Signature } from 'ethers';
 import moment from 'moment';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
@@ -57,36 +61,36 @@ const marketplaceAssetToAssetStruct = (
   };
 };
 
-// export const marketAskToOrderStruct = (
-//   ask: PartialDeep<MarketAsk>
-// ): OrderStruct | null => {
-//   const makeAssetStructs = ask.makeAsset?.map(marketplaceAssetToAssetStruct);
-//   const takeAssetStructs = ask.takeAsset?.map(marketplaceAssetToAssetStruct);
-//   if (
-//     ask.auctionType == null ||
-//     ask.nonce == null ||
-//     ask.start == null ||
-//     ask.end == null ||
-//     ask.salt == null ||
-//     ask.makeAsset == null ||
-//     ask.takeAsset == null ||
-//     makeAssetStructs == null ||
-//     takeAssetStructs == null
-//   ) {
-//     return null;
-//   }
-//   return {
-//     auctionType: gqlAuctionTypeToOnchainAuctionType(ask.auctionType),
-//     nonce: ask.nonce,
-//     end: ask.end,
-//     start: ask.start,
-//     salt: ask.salt,
-//     maker: ask.makerAddress,
-//     taker: ask.takerAddress,
-//     makeAssets: makeAssetStructs,
-//     takeAssets: takeAssetStructs
-//   };
-// };
+export const marketAskToOrderStruct = (
+  ask: PartialDeep<MarketAsk>
+): OrderStruct | null => {
+  const makeAssetStructs = ask.makeAsset?.map(marketplaceAssetToAssetStruct);
+  const takeAssetStructs = ask.takeAsset?.map(marketplaceAssetToAssetStruct);
+  if (
+    ask.auctionType == null ||
+    ask.nonce == null ||
+    ask.start == null ||
+    ask.end == null ||
+    ask.salt == null ||
+    ask.makeAsset == null ||
+    ask.takeAsset == null ||
+    makeAssetStructs == null ||
+    takeAssetStructs == null
+  ) {
+    return null;
+  }
+  return {
+    auctionType: gqlAuctionTypeToOnchainAuctionType(ask.auctionType),
+    nonce: ask.nonce,
+    end: ask.end,
+    start: ask.start,
+    salt: ask.salt,
+    maker: ask.makerAddress,
+    taker: ask.takerAddress,
+    makeAssets: makeAssetStructs,
+    takeAssets: takeAssetStructs
+  };
+};
 
 // export const marketBidToOrderStruct = (
 //   bid: PartialDeep<MarketBid>
@@ -151,6 +155,64 @@ const marketplaceAssetToAssetStruct = (
 //     (ask.auctionType === AuctionType.English &&
 //       MAX_UINT_256.gt(ask.takeAsset?.[0]?.value));
 // };
+
+export const getNftcomHex = async (
+  protocolData: NftcomProtocolData & { orderSignature: Signature },
+  ethValue: string,
+  orderHash: string,
+  makerAddress: string,
+  takerAddress: string,
+  id: string,
+  chainId: string,
+  nonce: number
+): Promise<AggregatorResponse> => {
+  try {
+    const {
+      salt,
+      makeAsset,
+      takeAsset,
+      start,
+      end,
+      auctionType,
+      orderSignature: signature,
+      buyNowTaker,
+    } = protocolData;
+    
+    const order = {
+      auctionType,
+      buyNowTaker,
+      chainId,
+      end,
+      id,
+      makeAsset ,
+      makerAddress,
+      nonce,
+      salt,
+      signature: {
+        r: signature.r,
+        s: signature.s,
+        v: signature.v
+      } ,
+      start,
+      structHash: orderHash,
+      takeAsset ,
+      takerAddress
+    };
+    const sellOrder = marketAskToOrderStruct(order);
+    const failIfRevert = true;
+    const inputData = [[sellOrder, signature.v, signature.r, signature.s], BigNumber.from(ethValue), failIfRevert];
+    const wholeHex = await NFTCOMLib.encodeFunctionData('_buySwap', inputData);
+    const genHex = libraryCall('_buySwap(BuyNowParams,uint256,bool)', wholeHex.slice(10));
+    
+    return {
+      tradeData: genHex,
+      value: BigNumber.from(ethValue),
+      marketId: '4',
+    };
+  } catch (err) {
+    throw `error in getNFTCOMHex: ${err}`;
+  }
+};
 
 export const gqlAuctionTypeToOnchainAuctionType = (
   auctionType: AuctionType
@@ -421,7 +483,7 @@ export function unhashedTakeAsset(
     startingPrice :
     auctionType === AuctionType.Decreasing ? endingPrice : reservePrice;
   return {
-    class: saleCurrency === 'ETH' ? AssetClass.Eth : AssetClass.Erc20,
+    class: saleCurrency === NULL_ADDRESS ? AssetClass.Eth : AssetClass.Erc20,
     types: ['address'],
     values: [takeAssetContractAddress],
     data: [

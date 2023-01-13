@@ -263,6 +263,9 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             protocol: listingProtocol as ExternalProtocol,
             isApproved: BigNumber.from(allowance ?? 0).gt(price),
             orderHash: listing?.order?.orderHash,
+            makerAddress: listing?.order?.makerAddress,
+            takerAddress: listing?.order?.takerAddress,
+            nonce: listing?.order?.nonce,
             protocolData: listingProtocol === ExternalProtocol.Seaport ?
               listing?.order?.protocolData as SeaportProtocolData :
               listingProtocol === ExternalProtocol.X2Y2 ?
