@@ -159,6 +159,7 @@ export const getNftcomHex = async (
   makerAddress: string,
   takerAddress: string,
   id: string,
+  chainId: string
 ): Promise<AggregatorResponse> => {
   try {
     const {
@@ -175,7 +176,7 @@ export const getNftcomHex = async (
     const order = {
       auctionType,
       buyNowTaker,
-      chainId: '1', //replace
+      chainId,
       end,
       id,
       makeAsset ,

@@ -2,6 +2,7 @@ import { NULL_ADDRESS } from 'constants/addresses';
 import { LooksrareProtocolData, Nft, NftcomProtocolData, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
@@ -68,6 +69,7 @@ export function NFTPurchaseContextProvider(
   const { data: signer } = useSigner();
   const { aggregator } = useAllContracts();
   const looksrareExchange = useLooksrareExchangeContract(signer);
+  const defaultChainId = useDefaultChainId();
 
   useEffect(() => {
     if (window != null) {
@@ -168,6 +170,7 @@ export function NFTPurchaseContextProvider(
           NftcomPurchase.makerAddress,
           NftcomPurchase.takerAddress,
           NftcomPurchase.activityId,
+          defaultChainId
         );
       })))
       ,
