@@ -46,7 +46,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
 
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = true; //!isNullOrEmpty(ownedGenesisKeyTokens);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
   const {
     allowedAll: openseaAllowed,
