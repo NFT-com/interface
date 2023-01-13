@@ -1,5 +1,6 @@
 import { NULL_ADDRESS } from 'constants/addresses';
 import { NFT_TYPE_TO_ASSET_CLASS } from 'constants/misc';
+import { Marketplace } from 'constants/typechain';
 import {
   AssetClass,
   AssetType,
@@ -7,7 +8,9 @@ import {
   MarketplaceAsset,
   MarketplaceAssetInput,
   Nft,
-  NftcomProtocolData }
+  NftcomProtocolData,
+  TxActivity
+}
   from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
 import { AssetStruct, AssetTypeStruct, MarketAsk, OrderStruct } from 'types/nativeMarketplace';
@@ -21,6 +24,7 @@ import { SignTypedDataArgs } from '@wagmi/core';
 import { ethers, Signature } from 'ethers';
 import moment from 'moment';
 import { PartialDeep } from 'type-fest';
+import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 
 export const MAX_UINT_256 = BigNumber.from(2).pow(256).sub(1);
 export const DEPLOYER = '0x59495589849423692778a8c5aaCA62CA80f875a4';
@@ -521,4 +525,31 @@ export async function createNativeParametersForNFTListing(
   );
   
   return unsignedOrder;
+}
+
+export async function cancelNftcomListing(
+  listing: PartialObjectDeep<TxActivity, unknown>,
+  nftcomExchange: Marketplace
+): Promise<boolean> {
+  if (listing == null) {
+    return;
+  }
+
+  const order = listing?.order?.protocolData as NftcomProtocolData;
+
+  const cancelOrder = {
+    maker: listing.order.makerAddress,
+    makeAssets: [marketplaceAssetToAssetStruct(order.makeAsset[0])],
+    taker: listing.order.takerAddress,
+    takeAssets: [marketplaceAssetToAssetStruct(order.takeAsset[0])],
+    salt: order.salt,
+    start: order.start,
+    end: order.end,
+    nonce: listing?.order.nonce,
+    auctionType: gqlAuctionTypeToOnchainAuctionType(order.auctionType)
+  };
+
+  return nftcomExchange.cancel(cancelOrder).then(tx => {
+    return tx.wait(1).then(() => true).catch(() => false);
+  }).catch(() => false);
 }
