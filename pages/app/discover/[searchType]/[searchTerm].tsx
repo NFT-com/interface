@@ -173,22 +173,55 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   };
 
   useEffect(() => {
-    if (page > 1 && ((searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy ) !== prevFilters)){
-      setPage(1);
-      return;
+    if(newFiltersEnabledNew){
+      if (page > 1 && ((searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy ) !== prevFilters)){
+        setPage(1);
+        return;
+      }else {
+        page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
+            facet_by: checkFacedBy(),
+            max_facet_values: 200,
+            collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
+            query_by: checkQueryBy(),
+            q: searchTerm?.toString(),
+            per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
+            page: page,
+            filter_by: checkFilteredBy(),
+            sort_by: nftsPageSortyBy,
+            exhaustive_search: true,
+          }] })
+          .then((resp) => {
+            if(newFiltersEnabledNew){
+              if (prevSearchTerm !== searchTerm){
+                setFilters([]);
+                setClearedFilters();
+                setResultsPageAppliedFilters('', '','', []);
+              }else {
+                filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+              }
+            }else {
+              filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+            }
+            results.current = [...resp.results[0].hits];
+            found.current = resp.results[0].found;
+            if(newFiltersEnabledNew) {
+              setSearchedData(resp.results[0].hits);
+            }
+          });
+      }
     }else {
       page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
-        facet_by: checkFacedBy(),
-        max_facet_values: 200,
-        collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
-        query_by: checkQueryBy(),
-        q: searchTerm?.toString(),
-        per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
-        page: page,
-        filter_by: checkFilteredBy(),
-        sort_by: nftsPageSortyBy,
-        exhaustive_search: true,
-      }] })
+          facet_by: checkFacedBy(),
+          max_facet_values: 200,
+          collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
+          query_by: checkQueryBy(),
+          q: searchTerm?.toString(),
+          per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
+          page: page,
+          filter_by: checkFilteredBy(),
+          sort_by: nftsPageSortyBy,
+          exhaustive_search: true,
+        }] })
         .then((resp) => {
           if(newFiltersEnabledNew){
             if (prevSearchTerm !== searchTerm){
@@ -208,7 +241,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           }
         });
     }
-
     // eslint-disable-next-line
   },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, collectionsResultsFilterBy, newFiltersEnabled, prevSearchTerm]);
 
