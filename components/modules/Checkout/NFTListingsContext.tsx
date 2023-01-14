@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { ActivityStatus, LooksrareProtocolData, Maybe, Nft, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, LooksrareProtocolData, Maybe, Nft, NftcomProtocolData, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
@@ -213,12 +213,15 @@ export function NFTListingsContextProvider(
     const unconfiguredNft = toList.find((stagedNft: StagedListing) => {
       const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
       const lowestLooksrareListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.LooksRare);
+      const lowestNftcomListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.NFTCOM);
       if (stagedNft?.nft == null || isNullOrEmpty(stagedNft?.targets)) {
         return true; // no targets or NFT to list?
       }
       const hasX2Y2LowerListing = (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2) && stagedNft?.startingPrice)) ||(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice));
       const hasLooksrareLowerListing = (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare) && stagedNft?.startingPrice)) ||(parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice));
-      if(hasX2Y2LowerListing || hasLooksrareLowerListing) {
+      const hasNftcomLowerListing = (parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM) && stagedNft?.startingPrice)) ||(parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM)?.startingPrice));
+
+      if(hasX2Y2LowerListing || hasLooksrareLowerListing || hasNftcomLowerListing) {
         return true;
       }
       const hasGeneralConfig = stagedNft.startingPrice != null &&
@@ -466,7 +469,6 @@ export function NFTListingsContextProvider(
     auctionType: number,
     targetProtocol?: ExternalProtocol
   ) => {
-    console.log('auctionType fdo fn', auctionType);
     setToList(toList.slice().map(stagedNft => {
       if (listing?.nft?.id === stagedNft.nft?.id) {
         return {
@@ -644,6 +646,9 @@ export function NFTListingsContextProvider(
           const result = await listNftNative(target.NFTCOMOrder, signature, listing.nft, target.currency, target.startingPrice as BigNumber);
           if (!result) {
             return ListAllResult.ApiError;
+          }
+          if (result && listing?.hasOpenOrder && listing?.nftcomOrderId) {
+            updateActivityStatus([listing?.nftcomOrderId], ActivityStatus.Cancelled);
           }
           return ListAllResult.Success;
         } else {
