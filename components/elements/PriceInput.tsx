@@ -1,6 +1,5 @@
 import { Maybe } from 'graphql/generated/types';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
-import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 

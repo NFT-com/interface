@@ -1,7 +1,7 @@
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { PriceInput } from 'components/elements/PriceInput';
-import { LooksrareProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, NftcomProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
@@ -36,6 +36,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const ethPriceUSD = useEthPriceUSD();
   const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(props?.listing?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
   const lowestLooksrareListing = getLowestPriceListing(filterValidListings(props?.listing?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.LooksRare);
+  const lowestNftcomListing = getLowestPriceListing(filterValidListings(props?.listing?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.NFTCOM);
   const { chain } = useNetwork();
   const { data: collection } = useSWR('ContractMetadata' + props.listing?.nft?.contract, async () => {
     return await getContractMetadata(props.listing?.nft?.contract, chain?.id);
@@ -208,7 +209,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }}
       error={
         props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && target.startingPrice == null) != null ||
-    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null
+    props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare && BigNumber.from(target.startingPrice).eq(0)) != null ||
+    (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice))
       }
     />;
   };
@@ -230,7 +232,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }}
       error={
         props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && target.startingPrice == null) != null ||
-      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null
+      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2 && BigNumber.from(target.startingPrice).eq(0)) != null ||
+      (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice))
       }
     />;
   };
@@ -255,7 +258,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       }}
       error={
         (props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && target.startingPrice == null) != null ||
-      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && BigNumber.from(target.startingPrice).eq(0)) != null)
+      props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && BigNumber.from(target.startingPrice).eq(0)) != null) ||
+      (parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM)?.startingPrice))
       }
       auctionTypeForPrice={auctionTypeForPrice.current}
     />;
@@ -505,7 +509,22 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               Set Price
             </div>
             <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
-              {NFTCOMPriceInput()}
+              <CustomTooltip2
+                orientation='custom'
+                customLeftPosition='19'
+                hidden={
+                  !(parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM)?.startingPrice))
+                }
+                tooltipComponent={
+                  <div
+                    className="rounded-xl max-w-[200px] w-max"
+                  >
+                    <p>Nft.com only allows adjusting the price to a lower value. Please lower the value, or cancel the previous listing in order to create a new listing at a higher price.</p>
+                  </div>
+                }
+              >
+                {NFTCOMPriceInput()}
+              </CustomTooltip2>
               <div className='w-full flex minlg:hidden -ml-[10rem] z-10 minlg:z-auto'>
                 <div className='w-full flex items-center justify-end '>
                   <DeleteRowIcon
