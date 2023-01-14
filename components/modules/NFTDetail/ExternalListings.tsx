@@ -12,7 +12,7 @@ import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
-import { filterValidListings, getProtocolDisplayName } from 'utils/marketplaceUtils';
+import { filterValidListings, getAuctionTypeDisplayName, getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
 import { EditListingsModal } from './EditListingsModal';
@@ -275,7 +275,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         )}>
           <div className="h-8 px-6 pb-6 pt-10 w-full flex items-center">
             <span className='text-[28px] font-semibold text-black'>
-              Fixed Price
+              {listing?.order?.protocol === ExternalProtocol.NFTCOM ? `${getAuctionTypeDisplayName((listing?.order?.protocolData as NftcomProtocolData).auctionType)}` : 'Fixed Price'}
             </span>
           </div>
           <div className='flex font-noi-grotesk text-black leading-6 items-center my-8 md:my-6 px-6 justify-between'>

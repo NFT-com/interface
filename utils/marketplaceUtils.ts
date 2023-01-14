@@ -1,7 +1,7 @@
 import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 
@@ -229,4 +229,15 @@ export function getProtocolDisplayName(protocolName: ExternalProtocol): string {
     return 'NFT.com';
   }
   return protocolName;
+}
+
+export function getAuctionTypeDisplayName(auctionType: AuctionType): string {
+  switch(auctionType) {
+  case AuctionType.FixedPrice:
+    return 'Fixed Price';
+  case AuctionType.Decreasing:
+    return 'Decreasing Price';
+  case AuctionType.English:
+    return 'English Auction';
+  }
 }

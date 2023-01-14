@@ -124,7 +124,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         disabled: X2Y2Enabled
       },
       {
-        label: ExternalProtocol.NFTCOM,
+        label: 'NFT.com',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.NFTCOM;
           toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing, selectedOptionForDropdown.current);
