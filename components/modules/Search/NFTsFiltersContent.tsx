@@ -305,8 +305,8 @@ const FilterNew = (props: any) => {
     if(filter.field_name === 'listedFloor'){
       return (
         <MinMaxFilter
-          min={nftSFilters.listedFloor && nftSFilters.listedFloor.length ? nftSFilters.listedFloor[0] : null}
-          max={nftSFilters.listedFloor && nftSFilters.listedFloor.length ? nftSFilters.listedFloor[1] : null}
+          min={nftSFilters?.listedFloor && nftSFilters?.listedFloor.length ? nftSFilters?.listedFloor[0] : null}
+          max={nftSFilters?.listedFloor && nftSFilters?.listedFloor.length ? nftSFilters?.listedFloor[1] : null}
           isOpen={isOpen}
           currency={collectionsFilter.currency}
           toggleSelect={(value) => toggleCurrencySelect(!value)}
@@ -434,6 +434,7 @@ const FilterNew = (props: any) => {
           min={collectionsFilter.volume && collectionsFilter.volume.length ? collectionsFilter.volume[0] : null}
           max={collectionsFilter.volume && collectionsFilter.volume.length ? collectionsFilter.volume[1] : null}
           isOpen={isOpen}
+          toggleSelect={() => null}
           currency={collectionsFilter.currency}
           changeCurrency={(value) => setCurrency(value)}
           setMinMaxValues={(value) => setVolumeValue(value)}
@@ -615,10 +616,8 @@ export const NFTsFiltersContent = () => {
     }).filter(Boolean).join(' && ');
     const nftsCheckedFiltersString = checkedList.join(' && ');
 
-    const collectionsCheckedFiltersString = checkedList.filter(i => i.includes('contractName') || i.includes('nftType')).join(' && ');
-    const string = collectionsFiltersString ? `${collectionsFiltersString} && ${collectionsCheckedFiltersString}` : collectionsCheckedFiltersString;
     if(newFiltersEnabledNew){
-      setResultsPageAppliedFilters(sortBy, nftFilterString, string, checkedArray);
+      setResultsPageAppliedFilters(sortBy, nftFilterString, collectionsFiltersString, checkedArray);
     }else {
       setResultsPageAppliedFilters(sortBy, nftsCheckedFiltersString, '', checkedArray);
     }

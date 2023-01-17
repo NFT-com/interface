@@ -108,9 +108,32 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         return SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency');
       }
     };
-    if (page > 1 && nftsResultsFilterBy !== prevFilters){
-      setPage(1);
-      return;
+    if(newFiltersEnabledNew){
+      if (page > 1 && nftsResultsFilterBy !== prevFilters){
+        setPage(1);
+        return;
+      }else {
+        page === 1 && screenWidth && fetchTypesenseMultiSearch({ searches: [{
+          facet_by: newFiltersEnabledNew ? checkFacetType() : SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
+          max_facet_values: 200,
+          collection: 'nfts',
+          query_by: SearchableFields.NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listings.type,listings.currency,listings.marketplace' : ',marketplace,listingType,currency'),
+          q: searchTerm?.toString(),
+          per_page: getPerPage('', screenWidth, sideNavOpen),
+          page: page,
+          filter_by: nftsResultsFilterBy,
+          sort_by: nftsPageSortyBy,
+          exhaustive_search: true,
+        }] })
+          .then((resp) => {
+            results.current = [...resp.results[0].hits];
+            found.current = resp.results[0].found;
+            if(newFiltersEnabledNew) {
+              setSearchedData(resp.results[0].hits);
+            }
+            filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+          });
+      }
     }else {
       page === 1 && screenWidth && fetchTypesenseMultiSearch({ searches: [{
         facet_by: newFiltersEnabledNew ? checkFacetType() : SearchableFields.FACET_NFTS_INDEX_FIELDS + (getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? ',listedFloor,listings.type,listings.currency,traits.rarity' : ',listedPx,listingType,currency'),
@@ -240,9 +263,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     {<span
                       className="cursor-pointer hover:font-semibold underline text-[#000] text-lg font-medium"
                       onClick={() => {
-                        if(newFiltersEnabledNew){
-                          setClearedFilters();
-                        }
                         router.push(`/app/discover/nfts/${searchTerm.toString()}`);
                       }}
                     >

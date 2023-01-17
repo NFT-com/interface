@@ -26,6 +26,8 @@ function usePrevious(value) {
 
 export default function CollectionsPage() {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
+
   const [page, setPage] = useState(1);
   const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen, setClearedFilters } = useSearchModal();
   const { data: collectionData } = useCollectionQueryLeaderBoard(activePeriod);
@@ -201,7 +203,7 @@ export default function CollectionsPage() {
                         )
                       }
                       {
-                        !loading && (collections?.length === 0)
+                        newFiltersEnabledNew && !loading && (collections?.length === 0)
                           ? (
                             <div className='grid-cols-1 w-full'>
                               <NoActivityIcon className='m-auto mt-10' />
