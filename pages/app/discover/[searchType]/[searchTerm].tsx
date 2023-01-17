@@ -171,20 +171,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       }
     }
   };
-  useEffect(() => {
-    return () => {
-      setResultsPageAppliedFilters('', '', '', '');
-      nftSFilters.listedFloor = null;
-      nftSFilters.nftTypes = null;
-      nftSFilters.marketplace = null;
-      nftSFilters.currency = null;
-      nftSFilters.price = null;
-      nftSFilters.status = null;
-      nftSFilters.contractName = null;
-      setClearedFilters();
-    };
-    // eslint-disable-next-line
-  }, [searchType, router]);
 
   useEffect(() => {
     if(newFiltersEnabledNew){
