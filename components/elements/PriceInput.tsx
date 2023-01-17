@@ -20,6 +20,7 @@ export interface PriceInputProps {
   // Omit this to just display the currency, without a dropdown picker.
   onCurrencyChange?: (currency: SupportedCurrency) => void,
   error: boolean,
+  offer?: boolean,
   errorMessage?: string,
   empty?: boolean,
   auctionTypeForPrice?: number,
@@ -63,7 +64,7 @@ export function PriceInput(props: PriceInputProps) {
           disabled={props.empty}
           type="text"
           className={tw(
-            'text-sm border h-full [55%]',
+            `text-sm border h-full ${props.offer ? 'w-full' : 'w-[55%]'}`,
             'text-left p-1 rounded-md pl-2 border-2',
             props.error ? 'border-red-500' : 'border-gray-300'
           )}
@@ -194,12 +195,13 @@ export function PriceInput(props: PriceInputProps) {
           />}
       {
         props.onCurrencyChange == null
-          ? <div className='font-medium flex items-center ml-1 w-[45%] pl-4 minlg:pl-3'>
+          ? <div className={`font-medium flex items-center ml-1 w-[${props.offer ? 30 : 45}%] pl-4 minlg:pl-3`}>
             {currencyData.name}
           </div>
-          : <div className='flex items-centerminlg:ml-1 minxl:ml-1 w-[45%] ml-3'>
+          : <div className={`flex items-centerminlg:ml-1 minxl:ml-1 w-[${props.offer ? 30 : 45}%] ml-3`}>
             <DropdownPicker
               v2
+              offer={props?.offer}
               options={props.empty ? [] : currencies}
               selectedIndex={selectedCurrencyIndex}
               placeholder={'Currency'}

@@ -24,6 +24,7 @@ export interface DropdownPickerProps {
   onChange?: (label: string) => void;
   showKeyIcon?: boolean;
   v2?: boolean;
+  offer?: boolean;
 }
 
 /**
@@ -113,7 +114,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         className={tw('flex flex-row items-center px-2.5',
           'py-2 h-full',
           'bg-white',
-          props.v2 ? 'rounded-md border-2 border-gray-300' : 'border rounded-xl shadow-lg border-0 ',
+          props.v2 ? `rounded-md ${props?.offer ? 'border' : 'border-2'} border-gray-300` : 'border rounded-xl shadow-lg',
           'justify-between w-full')}
         key={props?.options[selectedIndex]?.label}
       >
@@ -156,6 +157,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
             'border border-select-brdr',
             'divide-y',
             'bg-white',
+            'hideScroll',
             'w-full absolute z-50',
             'shadow-lg',
             'max-h-[200px] overflow-auto'

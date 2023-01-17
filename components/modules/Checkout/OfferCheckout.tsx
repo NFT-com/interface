@@ -146,48 +146,53 @@ export function OfferCheckout() {
   const OfferCheckoutInfo = () => {
     return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-6">
       <div className="flex flex-col items-center w-full">
-        <div className='w-full flex flex-col items-center mb-3'>
+        <div className='w-full flex flex-col items-center mb-4'>
           <span className='text-[18px] w-full flex text-black'>Once your bid is placed, you will be the highest bidder in the auction.</span>
           <div className='w-full text-[16px] font-medium flex text-[#6A6A6A] mb-1 mt-3'>Bid</div>
-          <PriceInput
-            key={'BidInput'}
-            currencyAddress={getAddress('weth', defaultChainId)}
-            currencyOptions={['WETH', 'ETH']}
-            onPriceChange={(val: BigNumber) => {
-              console.log('val', val);
-            }}
-            onCurrencyChange={(currency: SupportedCurrency) => {
-              console.log('currency', currency);
-            }}
-            error={false}
-          />
+          <div className='font-bold w-full'>
+            <PriceInput
+              key={'BidInput'}
+              offer={true}
+              currencyAddress={getAddress('weth', defaultChainId)}
+              currencyOptions={['ETH', 'WETH']}
+              onPriceChange={(val: BigNumber) => {
+                console.log('val', val);
+              }}
+              onCurrencyChange={(currency: SupportedCurrency) => {
+                console.log('currency', currency);
+              }}
+              error={false}
+            />
+          </div>
+
           <div className='flex items-center justify-between w-full'>
             <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>Your Balance</div>
             <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>1 ETH</div>
           </div>
 
-          <div className='w-full text-[16px] font-medium flex text-[#6A6A6A] mb-1 mt-3'>Set Bid Expiration</div>
-          <div className='mb-2 rounded-md h-12 w-full hideScroll'>
+          <div className='w-full text-[16px] font-medium flex text-[#6A6A6A] mb-1 mt-5'>Set Bid Expiration</div>
+          <div className='mb-2 rounded-md h-12 w-full font-bold'>
             <DropdownPicker
               v2
+              offer={true}
               options={expirationOptions}
               selectedIndex={selectedExpirationOption}
               placeholder={'Select Expiration'}
             />
           </div>
 
-          <div className='border-b border-dashed border-[#ECECEC] w-full my-2' />
+          <div className='border-b-[1px] border-dashed border-[#ECECEC] w-full my-3' />
 
           <div className='flex items-center justify-between w-full'>
-            <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>Subtotal</div>
-            <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>1 ETH</div>
+            <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>Subtotal</div>
+            <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>1 ETH</div>
           </div>
 
-          <div className='border-b border-dashed border-[#ECECEC] w-full my-2' />
+          <div className='border-b-[1px] border-dashed border-[#ECECEC] w-full my-3' />
 
           <div className='flex items-center justify-between w-full'>
-            <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>Total</div>
-            <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>1 ETH</div>
+            <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>Total</div>
+            <div className='text-[16px] flex text-[#4D4D4D] font-medium mb-1 mt-3'>1 ETH</div>
           </div>
 
         </div>
@@ -228,10 +233,10 @@ export function OfferCheckout() {
           <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
           Back
         </span>
-        <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold'>Your Offers</h1>
+        <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold'>Your Offer</h1>
       </div>
       {OfferCheckoutInfo()}
     </div>
     {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'></div>}
-  </div>
+  </div>;
 }
