@@ -171,6 +171,20 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       }
     }
   };
+  useEffect(() => {
+    return () => {
+      setResultsPageAppliedFilters('', '', '', '');
+      nftSFilters.listedFloor = null;
+      nftSFilters.nftTypes = null;
+      nftSFilters.marketplace = null;
+      nftSFilters.currency = null;
+      nftSFilters.price = null;
+      nftSFilters.status = null;
+      nftSFilters.contractName = null;
+      setClearedFilters();
+    };
+    // eslint-disable-next-line
+  }, [searchType, router]);
 
   useEffect(() => {
     if (page > 1 && ((searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy ) !== prevFilters)){
@@ -208,7 +222,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           }
         });
     }
-
     // eslint-disable-next-line
   },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, collectionsResultsFilterBy, newFiltersEnabled, prevSearchTerm]);
 
