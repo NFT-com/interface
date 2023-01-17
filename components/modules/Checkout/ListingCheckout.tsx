@@ -35,10 +35,13 @@ export function ListingCheckout() {
   const {
     toList,
     setDuration,
+    noExpirationNFTCOM,
+    setNoExpirationNFTCOM,
     toggleTargetMarketplace,
     prepareListings,
     allListingsConfigured,
   } = useContext(NFTListingsContext);
+  // const [noExpiration, setNoExpiration] = useState(false);
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
@@ -240,14 +243,22 @@ export function ListingCheckout() {
         </div>
         <div className='w-full flex flex-col mt-8 items-center'>
           <div className='w-full flex justify-between'>
-            <span className='text-lg w-full flex font-semibold'>Set Duration</span>
-            <Switch
-              left=""
-              right="No Expiration"
-              enabled={ false }
-              setEnabled={(enabled: boolean) => {return;
-              }}
-            />
+            <span className={tw(
+              NFTCOMAtLeastOneEnabled && getEnvBool(Doppler.NEXT_PUBLIC_NFTCOM_NO_EXPIRATION_LISTING_ENABLED) ?'' : 'w-full',
+              'text-lg flex font-semibold')}>Set Duration</span>
+            {NFTCOMAtLeastOneEnabled && getEnvBool(Doppler.NEXT_PUBLIC_NFTCOM_NO_EXPIRATION_LISTING_ENABLED) ?
+              <div className='flex'>
+                <Switch
+                  left=""
+                  right="No Expiration on "
+                  enabled={noExpirationNFTCOM}
+                  setEnabled={() => {
+                    setNoExpirationNFTCOM(!noExpirationNFTCOM);
+                  }}
+                />
+                <NFTLogo className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px] ml-2' />
+              </div>
+              : null}
           </div>
           <div className='mt-8 w-[93%] minlg:w-full'>
             <Slider
