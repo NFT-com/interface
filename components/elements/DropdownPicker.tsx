@@ -64,7 +64,6 @@ export function DropdownPicker(props: DropdownPickerProps) {
   }, [selected, props, onChangeHandler, selectedIndex]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
-    console.log('item fdo', item);
     return (
       item && <div
         key={item.label}

@@ -592,8 +592,6 @@ export function NFTListingsContextProvider(
           };
         }
       }));
-      console.log('prpared stagedNft fdo', stagedNft);
-      console.log('prpared preparedListings fdo', preparedListings);
       return {
         ...stagedNft,
         targets: preparedTargets
