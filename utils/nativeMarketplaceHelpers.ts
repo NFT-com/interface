@@ -439,13 +439,14 @@ export async function createNativeParametersForNFTListing(
   endingPrice: BigNumber,
   buyNowPrice: BigNumber,
   reservePrice: BigNumber,
-  currency: string
+  currency: string,
+  noExpirationNFTCOM: boolean,
 ): Promise<UnsignedOrder> {
   const salt = moment.utc().unix();
   const now = Date.now();
-  const start = Math.floor((now / 1000) - (60 * 10));
-  const end = Math.floor((now + duration * 1000) / 1000); // need to add 'forever'
-
+  const start = noExpirationNFTCOM ? 0 : Math.floor((now / 1000) - (60 * 10));
+  const end = noExpirationNFTCOM ? 0 : Math.floor((now + duration * 1000) / 1000); // need to add 'forever'
+  
   const unsignedOrder: UnsignedOrder = await getUnsignedOrder(
     ethers.utils.getAddress(address), // maker
     takerAddress, //taker
@@ -457,6 +458,6 @@ export async function createNativeParametersForNFTListing(
     [unhashedMakeAsset(nft)], // makeAssets
     [unhashedTakeAsset(currency, startingPrice, auctionType, takeAssetContractAddress, endingPrice, reservePrice, buyNowPrice)], // takeAssets
   );
-  
+
   return unsignedOrder;
 }

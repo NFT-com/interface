@@ -147,7 +147,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         },
         disabled: seaportEnabled
       },
-      {
+      getEnvBool(Doppler.NEXT_PUBLIC_ENGLISH_AUCTION_ENABLED) && {
         label: 'English Auction',
         onSelect: () => {
           setTypeOfAuction(props.listing, 1, ExternalProtocol.NFTCOM);

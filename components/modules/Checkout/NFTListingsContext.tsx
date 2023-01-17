@@ -103,6 +103,8 @@ export interface NFTListingsContextType {
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => void;
   setDuration: (duration: SaleDuration | number) => void;
+  setNoExpirationNFTCOM: (noExpiration: boolean) => void;
+  noExpirationNFTCOM: boolean,
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol, auctionType?: number) => void;
   setEndingPrice: (listing: PartialDeep<StagedListing>, endingPrice: BigNumberish, targetProtocol?: ExternalProtocol, auctionType?: number) => void;
   setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
@@ -126,6 +128,8 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   toggleCartSidebar: () => null,
   toggleTargetMarketplace: () => null,
   setDuration: () => null,
+  setNoExpirationNFTCOM: () => null,
+  noExpirationNFTCOM: false,
   setPrice: () => null,
   setEndingPrice: () => null,
   setCurrency: () => null,
@@ -166,6 +170,7 @@ export function NFTListingsContextProvider(
   const { data: signer } = useSigner();
 
   const [selectedTab, setSelectedTab] = useState<CartSidebarTab>('Buy');
+  const [noExpirationNFTCOM, setNoExpirationNFTCOM] = useState(false);
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -466,7 +471,6 @@ export function NFTListingsContextProvider(
     auctionType: number,
     targetProtocol?: ExternalProtocol
   ) => {
-    console.log('auctionType fdo fn', auctionType);
     setToList(toList.slice().map(stagedNft => {
       if (listing?.nft?.id === stagedNft.nft?.id) {
         return {
@@ -539,11 +543,12 @@ export function NFTListingsContextProvider(
         } else if (target.protocol === ExternalProtocol.X2Y2) {
           return target;
         } else if (target.protocol === ExternalProtocol.NFTCOM) {
+          target.duration = noExpirationNFTCOM ? 0 : target.duration;
           const nonce = await marketplace.nonces(currentAddress);
           const order = await createNativeParametersForNFTListing(
             currentAddress,
             isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker,
-            Number(target.duration) ?? Number(stagedNft.duration),
+            noExpirationNFTCOM ? 0 : (Number(target.duration) ?? Number(stagedNft.duration)),
             // onchainAuctionTypeToGqlAuctionType(stagedNft.auctionType), Need to add in auction type
             onchainAuctionTypeToGqlAuctionType(0),
             stagedNft.nft,
@@ -554,7 +559,9 @@ export function NFTListingsContextProvider(
             stagedNft.buyNowPrice as BigNumber || null,
             stagedNft.reservePrice as BigNumber || null,
             stagedNft.currency ?? target.currency,
+            noExpirationNFTCOM
           );
+          
           // await marketplace.incrementNonce(); need to increment nonce
           return {
             ...target,
@@ -585,13 +592,15 @@ export function NFTListingsContextProvider(
           };
         }
       }));
+      console.log('prpared stagedNft fdo', stagedNft);
+      console.log('prpared preparedListings fdo', preparedListings);
       return {
         ...stagedNft,
         targets: preparedTargets
       };
     }));
     setToList(preparedListings);
-  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager, marketplace, getByContractAddress]);
+  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager, noExpirationNFTCOM, marketplace, getByContractAddress]);
 
   const listAll: () => Promise<ListAllResult> = useCallback(async () => {
     setSubmitting(true);
@@ -740,6 +749,8 @@ export function NFTListingsContextProvider(
     toggleCartSidebar,
     toggleTargetMarketplace,
     setDuration,
+    setNoExpirationNFTCOM,
+    noExpirationNFTCOM,
     setPrice,
     setEndingPrice,
     setCurrency,

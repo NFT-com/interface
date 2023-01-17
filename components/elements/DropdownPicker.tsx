@@ -64,8 +64,9 @@ export function DropdownPicker(props: DropdownPickerProps) {
   }, [selected, props, onChangeHandler, selectedIndex]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
+    console.log('item fdo', item);
     return (
-      <div
+      item && <div
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
         className={`flex flex-row w-full pl-2.5 py-3
