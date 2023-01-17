@@ -61,18 +61,12 @@ export const MobileSidebar = () => {
           className={tw('overflow-hidden')}
         >
           <div className="flex flex-col">
-            {
-              newFiltersEnabledNew
-                ? (
-                  <Link href='/app/discover/nfts'>
-                    <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
-                      NFTs
-                      <CaretRight width={25} weight='bold' color='black' />
-                    </p>
-                  </Link>
-                )
-                : null
-            }
+            <Link href='/app/discover/nfts'>
+              <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
+                NFTs
+                <CaretRight width={25} weight='bold' color='black' />
+              </p>
+            </Link>
             <Link href='/app/discover/collections'>
               <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
                 Collections
@@ -123,7 +117,7 @@ export const MobileSidebar = () => {
           />}
         </div>
         <div className='border-b border-[#ECECEC]'>
-          {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
+          {newFiltersEnabledNew ?
             checkHeaderContent()
             :
             <div>
