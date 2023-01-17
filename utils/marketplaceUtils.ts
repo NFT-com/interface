@@ -1,7 +1,7 @@
 import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 
@@ -143,12 +143,11 @@ export function getMaxMarketplaceFeesUSD(
           currencyData.decimals ?? 18
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.NFTCOM) {
-        const fee = NFTCOMFee / 100;
-        const units = currencyData?.usd(Number(ethers.utils.formatUnits(
-          BigNumber.from(1),
-          1
+        const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, NFTCOMFee));
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          fee,
+          currencyData.decimals ?? 18
         ))) ?? 0;
-        return units * fee;
       } else {
         // Seaport fee is hard-coded in our codebase and not expected to change.
         const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, 250));
@@ -229,4 +228,15 @@ export function getProtocolDisplayName(protocolName: ExternalProtocol): string {
     return 'NFT.com';
   }
   return protocolName;
+}
+
+export function getAuctionTypeDisplayName(auctionType: AuctionType): string {
+  switch(auctionType) {
+  case AuctionType.FixedPrice:
+    return 'Fixed Price';
+  case AuctionType.Decreasing:
+    return 'Decreasing Price';
+  case AuctionType.English:
+    return 'English Auction';
+  }
 }

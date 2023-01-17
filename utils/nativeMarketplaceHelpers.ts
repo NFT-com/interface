@@ -469,13 +469,13 @@ export function unhashedTakeAsset(
   takeAssetContractAddress: string,
   endingPrice?: BigNumber,
   reservePrice?: BigNumber,
-  buyNowPrice?: BigNumber | null,
+  buyNowPrice?: BigNumber,
 ): UnhashedAsset {
   const takeAssetValue = auctionType === AuctionType.FixedPrice ?
     startingPrice :
     auctionType === AuctionType.Decreasing ?
       startingPrice :
-      !isNullOrEmpty(buyNowPrice.toString()) ?
+      !isNullOrEmpty(buyNowPrice?.toString()) ?
         MAX_UINT_256 :
         buyNowPrice;
 

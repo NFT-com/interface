@@ -563,15 +563,14 @@ export function NFTListingsContextProvider(
             currentAddress,
             isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker,
             noExpirationNFTCOM ? 0 : (Number(target.duration) ?? Number(stagedNft.duration)),
-            // onchainAuctionTypeToGqlAuctionType(stagedNft.auctionType), Need to add in auction type
-            onchainAuctionTypeToGqlAuctionType(0),
+            onchainAuctionTypeToGqlAuctionType(stagedNft.auctionType),
             stagedNft.nft,
             Number(nonce),
             getByContractAddress(isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker).contract,
             target.startingPrice as BigNumber,
-            target.endingPrice as BigNumber,
-            stagedNft.buyNowPrice as BigNumber || null,
-            stagedNft.reservePrice as BigNumber || null,
+            target.endingPrice as BigNumber || null,
+            target.buyNowPrice as BigNumber || null,
+            target.reservePrice as BigNumber || null,
             stagedNft.currency ?? target.currency,
             noExpirationNFTCOM
           );
@@ -663,7 +662,7 @@ export function NFTListingsContextProvider(
           if (isNullOrEmpty(signature)) {
             return ListAllResult.SignatureRejected;
           }
-          const result = await listNftNative(target.NFTCOMOrder, signature, listing.nft, target.currency, target.startingPrice as BigNumber);
+          const result = await listNftNative(target, signature, listing.nft);
           if (!result) {
             return ListAllResult.ApiError;
           }
