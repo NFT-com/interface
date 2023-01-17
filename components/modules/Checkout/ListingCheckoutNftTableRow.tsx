@@ -157,7 +157,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         },
         disabled: seaportEnabled
       },
-      getEnvBool(Doppler.NEXT_PUBLIC_ENGLISH_AUCTION_ENABLED) && {
+      {
         label: 'Decreasing Price',
         onSelect: () => {
           setTypeOfAuction(props.listing, 2, ExternalProtocol.NFTCOM);
@@ -454,7 +454,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 </div>
               </div>
             </div>}
-        {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && X2Y2Enabled && /* selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && */
+        {X2Y2Enabled && /* selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
             <div className='mb-2 rounded-md h-12 w-full w-[89%] minlg:w-[22%]'>

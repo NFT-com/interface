@@ -237,7 +237,10 @@ export function NFTListingsContextProvider(
         return false; // this listing is valid.
       }
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
-        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 && (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice));
+        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
+        ((target.endingPrice == null || BigNumber.from(target.endingPrice).eq(0)) ||
+        (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice)));
+        
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
           isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || invalidInputsNTFCOM;
