@@ -184,7 +184,7 @@ export const getNftcomHex = async (
       chainId,
       end,
       id,
-      makeAsset ,
+      makeAsset,
       makerAddress,
       nonce,
       salt,
@@ -200,14 +200,14 @@ export const getNftcomHex = async (
     };
     const sellOrder = marketAskToOrderStruct(order);
     const failIfRevert = true;
-    const inputData = [[sellOrder, signature.v, signature.r, signature.s], BigNumber.from(ethValue), failIfRevert];
+    const inputData = [[sellOrder, takerAddress, signature.v, signature.r, signature.s], BigNumber.from(ethValue), failIfRevert];
     const wholeHex = await NFTCOMLib.encodeFunctionData('_buySwap', inputData);
     const genHex = libraryCall('_buySwap(BuyNowParams,uint256,bool)', wholeHex.slice(10));
     
     return {
       tradeData: genHex,
       value: BigNumber.from(ethValue),
-      marketId: '4',
+      marketId: '5',
     };
   } catch (err) {
     throw `error in getNFTCOMHex: ${err}`;
@@ -511,7 +511,7 @@ export async function createNativeParametersForNFTListing(
   const salt = moment.utc().unix();
   const now = Date.now();
   const start = noExpirationNFTCOM ? 0 : Math.floor((now / 1000) - (60 * 10));
-  const end = noExpirationNFTCOM ? 0 : Math.floor((now + duration * 1000) / 1000); // need to add 'forever'
+  const end = noExpirationNFTCOM ? 0 : Math.floor((now + duration * 1000) / 1000);
   
   const unsignedOrder: UnsignedOrder = await getUnsignedOrder(
     ethers.utils.getAddress(address), // maker
