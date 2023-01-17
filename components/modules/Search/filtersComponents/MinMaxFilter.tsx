@@ -40,8 +40,8 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
     if(!maxVal){
       setError(false);
     }
-    if(Number(maxVal) && Number(maxVal) > 0){
-      if(Number(minVal) > Number(maxVal)){
+    if(maxVal && maxVal > 0){
+      if(minVal > maxVal){
         setError(true);
       }else {
         setError(false);

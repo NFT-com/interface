@@ -263,6 +263,9 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     {<span
                       className="cursor-pointer hover:font-semibold underline text-[#000] text-lg font-medium"
                       onClick={() => {
+                        if(newFiltersEnabledNew){
+                          setClearedFilters();
+                        }
                         router.push(`/app/discover/nfts/${searchTerm.toString()}`);
                       }}
                     >
