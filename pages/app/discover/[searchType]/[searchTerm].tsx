@@ -38,7 +38,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
-  const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters, collectionsResultsFilterBy, nftSFilters } = useSearchModal();
+  const { setSearchModalOpen, sideNavOpen, setSideNavOpen, setResultsPageAppliedFilters, nftsPageSortyBy, setCuratedCollections, curatedCollections, nftsResultsFilterBy, setClearedFilters, collectionsResultsFilterBy } = useSearchModal();
   const router = useRouter();
   const { searchTerm, searchType } = router.query;
   const { fetchNFTsForCollections } = useFetchNFTsForCollections();
@@ -187,9 +187,42 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }, [searchType, router]);
 
   useEffect(() => {
-    if (page > 1 && ((searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy ) !== prevFilters)){
-      setPage(1);
-      return;
+    if(newFiltersEnabledNew){
+      if (page > 1 && ((searchType?.toString() === 'collections' ? collectionsResultsFilterBy : nftsResultsFilterBy ) !== prevFilters)){
+        setPage(1);
+        return;
+      }else {
+        page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
+          facet_by: checkFacedBy(),
+          max_facet_values: 200,
+          collection: searchType?.toString() !== 'collections' ? 'nfts' : 'collections',
+          query_by: checkQueryBy(),
+          q: searchTerm?.toString(),
+          per_page: getPerPage(searchType?.toString(), screenWidth, sideNavOpen),
+          page: page,
+          filter_by: checkFilteredBy(),
+          sort_by: nftsPageSortyBy,
+          exhaustive_search: true,
+        }] })
+          .then((resp) => {
+            if(newFiltersEnabledNew){
+              if (prevSearchTerm !== searchTerm){
+                setFilters([]);
+                setClearedFilters();
+                setResultsPageAppliedFilters('', '','', []);
+              }else {
+                filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+              }
+            }else {
+              filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
+            }
+            results.current = [...resp.results[0].hits];
+            found.current = resp.results[0].found;
+            if(newFiltersEnabledNew) {
+              setSearchedData(resp.results[0].hits);
+            }
+          });
+      }
     }else {
       page === 1 && !isNullOrEmpty(searchType) && screenWidth && fetchTypesenseMultiSearch({ searches: [{
         facet_by: checkFacedBy(),

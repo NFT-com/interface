@@ -305,8 +305,8 @@ const FilterNew = (props: any) => {
     if(filter.field_name === 'listedFloor'){
       return (
         <MinMaxFilter
-          min={nftSFilters.listedFloor && nftSFilters.listedFloor.length ? nftSFilters.listedFloor[0] : null}
-          max={nftSFilters.listedFloor && nftSFilters.listedFloor.length ? nftSFilters.listedFloor[1] : null}
+          min={nftSFilters?.listedFloor && nftSFilters?.listedFloor.length ? nftSFilters?.listedFloor[0] : null}
+          max={nftSFilters?.listedFloor && nftSFilters?.listedFloor.length ? nftSFilters?.listedFloor[1] : null}
           isOpen={isOpen}
           currency={collectionsFilter.currency}
           toggleSelect={(value) => toggleCurrencySelect(!value)}
