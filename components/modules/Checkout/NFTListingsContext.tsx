@@ -103,11 +103,8 @@ export interface NFTListingsContextType {
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => void;
   setDuration: (duration: SaleDuration | number) => void;
-<<<<<<< HEAD
   setNoExpirationNFTCOM: (noExpiration: boolean) => void;
   noExpirationNFTCOM: boolean,
-=======
->>>>>>> main
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol, auctionType?: number) => void;
   setEndingPrice: (listing: PartialDeep<StagedListing>, endingPrice: BigNumberish, targetProtocol?: ExternalProtocol, auctionType?: number) => void;
   setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
