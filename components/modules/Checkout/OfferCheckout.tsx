@@ -153,9 +153,7 @@ export function OfferCheckout() {
         Back
       </h1>
     </div>}
-    <div className={tw(
-      toList.length === 1 ? 'minlg:px-[5%]' : 'minlg:px-2 minxl:px-4',
-      'w-full flex flex-col justify-start items-center mx-auto minlg:w-[900px] minxxl:px-28')}>
+    <div className={tw('w-full flex flex-col justify-start items-center mx-auto minlg:w-[500px]')}>
       <div className='w-full minlg:mt-20 flex minlg:block justify-start items-end minlg:items-center minlg:mx-auto'>
         <span
           className='minlg:hidden text-lg font-semibold cursor-pointer flex items-center minlg:ml-28'
