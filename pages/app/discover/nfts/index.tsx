@@ -53,6 +53,7 @@ export default function CollectionsPage() {
         filters.length < 1 && setFilters([...results.facet_counts]);
       });
     }
+
     return () => {
       setClearedFilters();
     };
