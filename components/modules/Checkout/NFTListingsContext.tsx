@@ -237,7 +237,10 @@ export function NFTListingsContextProvider(
         return false; // this listing is valid.
       }
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
-        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 && (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice));
+        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
+        ((target.endingPrice == null || BigNumber.from(target.endingPrice).eq(0)) ||
+        (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice)));
+
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
           isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || invalidInputsNTFCOM;
@@ -413,23 +416,31 @@ export function NFTListingsContextProvider(
           currency: targetProtocol == null ? (stagedNft.currency ?? supportedCurrencyData['WETH'].contract) : null,
           targets: stagedNft.targets.slice().map(target => {
             if (targetProtocol === target.protocol) {
-              if (auctionType == 1) {
+              if (!auctionType) {
                 return {
                   ...target,
-                  endingPrice: null,
-                  buyNowPrice: price,
                   currency: target.
                     currency ?? supportedCurrencyData['WETH'].contract
                 };
-              }
-              if (auctionType == 2) {
-                return {
-                  ...target,
-                  endingPrice: price,
-                  buyNowPrice: null,
-                  currency: target.
-                    currency ?? supportedCurrencyData['WETH'].contract
-                };
+              } else {
+                if (auctionType == 1) {
+                  return {
+                    ...target,
+                    endingPrice: null,
+                    buyNowPrice: price,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
+                if (auctionType == 2) {
+                  return {
+                    ...target,
+                    endingPrice: price,
+                    buyNowPrice: null,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
               }
             } else {
               return target;
