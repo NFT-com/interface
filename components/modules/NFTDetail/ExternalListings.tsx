@@ -286,7 +286,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                     getByContractAddress(getListingCurrencyAddress(listing))?.contract,
                     getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
                   )}
-                  <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)}</span>
+                  <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}</span>
                 </div>
                 <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
               </div>

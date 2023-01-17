@@ -1,11 +1,12 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
 
 import { isNullOrEmpty, sameAddress } from './helpers';
 import { getAddress } from './httpHooks';
 
 import { BigNumber, ethers } from 'ethers';
+import moment from 'moment';
 import { PartialDeep } from 'type-fest';
 
 export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
@@ -25,6 +26,14 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
   }
   case (ExternalProtocol.NFTCOM): {
     const order = listing?.order?.protocolData as NftcomProtocolData;
+    if(order.auctionType === AuctionType.Decreasing) {
+      const startPrice = Number(order.takeAsset[0].value);
+      const endPrice = Number(ethers.utils.parseUnits(order.takeAsset[0].minimumBid, 'ether'));
+      const a = moment();
+      const b = moment.unix(order?.start);
+      const secondsElapsed = a.diff(b, 'seconds');
+      return BigNumber.from((startPrice - (secondsElapsed / (order?.end - order?.start)) * (startPrice - endPrice)).toString());
+    }
     return BigNumber.from(order?.takeAsset[0]?.value ?? 0);
   }
   }
