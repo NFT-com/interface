@@ -43,6 +43,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   });
   const {
     setPrice,
+    setEndingPrice,
     setCurrency,
     setTypeOfAuction,
     toggleTargetMarketplace,
@@ -156,7 +157,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         },
         disabled: seaportEnabled
       },
-      {
+      getEnvBool(Doppler.NEXT_PUBLIC_ENGLISH_AUCTION_ENABLED) && {
         label: 'Decreasing Price',
         onSelect: () => {
           setTypeOfAuction(props.listing, 2, ExternalProtocol.NFTCOM);
@@ -279,7 +280,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         props.onPriceChange();
       }}
       onEndingPriceChange={(val: BigNumber, auctionType?: number) => {
-        setPrice(props.listing, val, ExternalProtocol.NFTCOM, auctionType);
+        setEndingPrice(props.listing, val, ExternalProtocol.NFTCOM, auctionType);
         props.onPriceChange();
       }}
       onCurrencyChange={(currency: SupportedCurrency) => {
