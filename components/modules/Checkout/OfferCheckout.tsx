@@ -6,29 +6,19 @@ import { PriceInput } from 'components/elements/PriceInput';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { ExternalProtocol } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
+import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { processIPFSURL } from 'utils/helpers';
+import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
-import { ListingCheckoutNftTableRow } from './ListingCheckoutNftTableRow';
 import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
-import { handleRender } from './TooltipSlider';
 
+import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import router from 'next/router';
 import { ArrowLeft } from 'phosphor-react';
-import LooksrareGray from 'public/looksrare_gray.svg';
-import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
-import NoActivityIcon from 'public/no_activity.svg';
-import OpenSeaGray from 'public/opensea_gray.svg';
-import OpenseaIcon from 'public/opensea-icon.svg';
-import X2Y2Gray from 'public/x2y2-gray.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
-import Slider from 'rc-slider';
 import { useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -36,10 +26,11 @@ export function OfferCheckout() {
   const {
     toList,
     setDuration,
-    toggleTargetMarketplace,
     prepareListings,
     allListingsConfigured,
   } = useContext(NFTListingsContext);
+
+  const defaultChainId = useDefaultChainId();
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
@@ -118,13 +109,16 @@ export function OfferCheckout() {
         <div className='w-full flex flex-col items-center'>
           <span className='text-[18px] w-full flex text-black'>Once your bid is placed, you will be the highest bidder in the auction.</span>
           <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Bid</div>
-          <input
-            type="text"
-            placeholder="bid"
-            className={tw(
-              'text-sm border border-gray-200 h-12 w-full minlg:w-[25%]',
-              'text-left p-1 rounded-md mb-2 bg-gray-200 pl-3 minlg:ml-2 minlg:mr-1',
-            )}
+          <PriceInput
+            key={'BidInput'}
+            currencyAddress={getAddress('weth', defaultChainId)}
+            currencyOptions={['WETH', 'ETH']}
+            onPriceChange={(val: BigNumber) => {
+              console.log('val', val);
+            }}
+            onCurrencyChange={(currency: SupportedCurrency) => {
+              console.log('currency', currency);
+            }}
           />
         </div>
         {!showSummary && toList.length > 0 && <div className='w-full pb-8'><Button
