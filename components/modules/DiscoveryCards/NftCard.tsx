@@ -174,6 +174,9 @@ export function NftCard(props: NftCardProps) {
                             protocol: bestListing?.order?.protocol as ExternalProtocol,
                             isApproved: BigNumber.from(allowance ?? 0).gt(price),
                             orderHash: bestListing?.order?.orderHash,
+                            makerAddress: bestListing?.order?.makerAddress,
+                            takerAddress: bestListing?.order?.takerAddress,
+                            nonce: bestListing?.order?.nonce,
                             protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
                               bestListing?.order?.protocolData as SeaportProtocolData :
                               bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?

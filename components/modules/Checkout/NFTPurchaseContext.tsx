@@ -1,10 +1,12 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, Nft, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, NftcomProtocolData, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
+import { getNftcomHex } from 'utils/nativeMarketplaceHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
 import { getX2Y2Hex } from 'utils/X2Y2Helpers';
 
@@ -12,7 +14,7 @@ import { NFTListingsContext } from './NFTListingsContext';
 import { PurchaseSummaryModal } from './PurchaseSummaryModal';
 
 import { BigNumber } from '@ethersproject/bignumber';
-import { ethers } from 'ethers';
+import { ethers, Signature } from 'ethers';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useSigner } from 'wagmi';
@@ -29,7 +31,10 @@ export type StagedPurchase = {
    */
   isApproved: boolean;
   orderHash?: string;
-  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData;
+  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData | NftcomProtocolData;
+  takerAddress: string;
+  makerAddress: string;
+  nonce: number;
 }
 
 interface NFTPurchaseContextType {
@@ -65,6 +70,7 @@ export function NFTPurchaseContextProvider(
   const { data: signer } = useSigner();
   const { aggregator } = useAllContracts();
   const looksrareExchange = useLooksrareExchangeContract(signer);
+  const defaultChainId = useDefaultChainId();
 
   useEffect(() => {
     if (window != null) {
@@ -156,6 +162,20 @@ export function NFTPurchaseContextProvider(
         return fetchX2Y2Hex(X2Y2Purchase);
       })))
       ,
+      //NFTCOM
+      ...(await Promise.all(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.NFTCOM)?.map(NftcomPurchase => {
+        return getNftcomHex(
+          NftcomPurchase.protocolData as NftcomProtocolData & { orderSignature: Signature },
+          NftcomPurchase.currency === NULL_ADDRESS ? BigNumber.from(NftcomPurchase?.price).toString() : '0',
+          NftcomPurchase.orderHash,
+          NftcomPurchase.makerAddress,
+          NftcomPurchase.takerAddress,
+          NftcomPurchase.activityId,
+          defaultChainId,
+          NftcomPurchase.nonce
+        );
+      })))
+      ,
       // Seaport orders are combined
       toBuy?.find(purchase => purchase.protocol === ExternalProtocol.Seaport) != null ?
         getSeaportHex(
@@ -169,7 +189,6 @@ export function NFTPurchaseContextProvider(
         ) :
         null
     ]);
-
     const tx = await aggregator.batchTrade(
       erc20Details,
       tradeDetails,
@@ -194,7 +213,7 @@ export function NFTPurchaseContextProvider(
       return await tx.wait(1).then(() => true).catch(() => false);
     }
     return false;
-  }, [aggregator, currentAddress, fetchX2Y2Hex, looksrareExchange, toBuy]);
+  }, [aggregator, currentAddress, defaultChainId, fetchX2Y2Hex, looksrareExchange, toBuy]);
 
   return <NFTPurchasesContext.Provider value={{
     removePurchase,
