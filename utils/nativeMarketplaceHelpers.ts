@@ -25,6 +25,7 @@ import { ethers, Signature } from 'ethers';
 import moment from 'moment';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
+import { Address } from 'wagmi';
 
 export const MAX_UINT_256 = BigNumber.from(2).pow(256).sub(1);
 export const DEPLOYER = '0x59495589849423692778a8c5aaCA62CA80f875a4';
@@ -164,7 +165,8 @@ export const getNftcomHex = async (
   takerAddress: string,
   id: string,
   chainId: string,
-  nonce: number
+  nonce: number,
+  recipient: Address
 ): Promise<AggregatorResponse> => {
   try {
     const {
@@ -200,7 +202,7 @@ export const getNftcomHex = async (
     };
     const sellOrder = marketAskToOrderStruct(order);
     const failIfRevert = true;
-    const inputData = [[sellOrder, takerAddress, signature.v, signature.r, signature.s], BigNumber.from(ethValue), failIfRevert];
+    const inputData = [[sellOrder, recipient, signature.v, signature.r, signature.s], BigNumber.from(ethValue), failIfRevert];
     const wholeHex = await NFTCOMLib.encodeFunctionData('_buySwap', inputData);
     const genHex = libraryCall('_buySwap(BuyNowParams,uint256,bool)', wholeHex.slice(10));
     
