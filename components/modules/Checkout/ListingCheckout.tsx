@@ -2,6 +2,7 @@ import 'rc-slider/assets/index.css';
 
 import { Button, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
+import { Switch } from 'components/elements/Switch';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -241,7 +242,16 @@ export function ListingCheckout() {
           </div>
         </div>
         <div className='w-full flex flex-col mt-8 items-center'>
-          <span className='text-lg w-full flex font-semibold'>Set Duration</span>
+          <div className='w-full flex justify-between'>
+            <span className='text-lg w-full flex font-semibold'>Set Duration</span>
+            <Switch
+              left=""
+              right="No Expiration"
+              enabled={ false }
+              setEnabled={(enabled: boolean) => {return;
+              }}
+            />
+          </div>
           <div className='mt-8 w-[93%] minlg:w-full'>
             <Slider
               trackStyle={[{ backgroundColor: '#F9D54C' }]}
