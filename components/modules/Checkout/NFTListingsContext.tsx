@@ -419,6 +419,7 @@ export function NFTListingsContextProvider(
               if (!auctionType) {
                 return {
                   ...target,
+                  endingPrice: price,
                   currency: target.
                     currency ?? supportedCurrencyData['WETH'].contract
                 };
