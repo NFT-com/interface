@@ -108,7 +108,7 @@ export function OfferCheckout() {
       <div className="flex flex-col items-center w-full">
         <div className='w-full flex flex-col items-center'>
           <span className='text-[18px] w-full flex text-black'>Once your bid is placed, you will be the highest bidder in the auction.</span>
-          <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Bid</div>
+          <div className='w-full text-[16px] font-medium flex text-[#6A6A6A] mb-1 mt-3'>Bid</div>
           <PriceInput
             key={'BidInput'}
             currencyAddress={getAddress('weth', defaultChainId)}
@@ -119,10 +119,15 @@ export function OfferCheckout() {
             onCurrencyChange={(currency: SupportedCurrency) => {
               console.log('currency', currency);
             }}
+            error={false}
           />
+          <div className='flex items-center justify-between w-full'>
+            <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>Your Balance</div>
+            <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>1 ETH</div>
+          </div>
         </div>
         {!showSummary && toList.length > 0 && <div className='w-full pb-8'><Button
-          label={'Start Listing'}
+          label={'Place Bid'}
           disabled={!allListingsConfigured()}
           onClick={async () => {
             await prepareListings();
@@ -150,7 +155,7 @@ export function OfferCheckout() {
     </div>}
     <div className={tw(
       toList.length === 1 ? 'minlg:px-[5%]' : 'minlg:px-2 minxl:px-4',
-      'w-full flex flex-col justify-start items-center minlg:w-3/5 minxxl:px-28')}>
+      'w-full flex flex-col justify-start items-center mx-auto minlg:w-[900px] minxxl:px-28')}>
       <div className='w-full minlg:mt-20 flex minlg:block justify-start items-end minlg:items-center minlg:mx-auto'>
         <span
           className='minlg:hidden text-lg font-semibold cursor-pointer flex items-center minlg:ml-28'
