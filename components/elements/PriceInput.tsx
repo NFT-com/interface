@@ -118,14 +118,7 @@ export function PriceInput(props: PriceInputProps) {
                 ) {
                   const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
                   setFormattedPrice(paddedValue);
-                  if (isNullOrEmpty(formattedPrice2)) {
-                    props.onPriceChange(ethers.utils.parseEther(paddedValue), props.auctionTypeForPrice);
-                  } else if (!isNullOrEmpty(formattedPrice2) && Number(paddedValue) < Number(formattedPrice2)) {
-                    props.onPriceChange(ethers.utils.parseEther(paddedValue), props.auctionTypeForPrice);
-                  } else {
-                    setFormattedPrice('');
-                    setFormattedPrice2('');
-                  }
+                  props.onPriceChange(ethers.utils.parseEther(paddedValue), props.auctionTypeForPrice);
                 } else {
                   e.preventDefault();
                 }
@@ -156,15 +149,7 @@ export function PriceInput(props: PriceInputProps) {
                 ) {
                   const paddedValue = e.target.value === '.' ? '0.' : e.target.value;
                   setFormattedPrice2(paddedValue);
-            
-                  if (isNullOrEmpty(formattedPrice)) {
-                    props.onPriceChange(ethers.utils.parseEther(paddedValue), props.auctionTypeForPrice);
-                  } else if (!isNullOrEmpty(formattedPrice) && Number(paddedValue) < Number(formattedPrice)) {
-                    props.onEndingPriceChange(ethers.utils.parseEther(paddedValue), props.auctionTypeForPrice);
-                  } {
-                    setFormattedPrice('');
-                    setFormattedPrice2('');
-                  }
+                  props.onEndingPriceChange(ethers.utils.parseEther(paddedValue), props.auctionTypeForPrice);
                 } else {
                   e.preventDefault();
                 }
