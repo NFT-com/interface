@@ -1,6 +1,7 @@
 import 'rc-slider/assets/index.css';
 
 import { Button, ButtonType } from 'components/elements/Button';
+import { DropdownPicker } from 'components/elements/DropdownPicker';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { PriceInput } from 'components/elements/PriceInput';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -49,6 +50,7 @@ export function OfferCheckout() {
     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
+  const [selectedExpirationOption, setSelectedExpirationOption] = useState(2);
 
   const ListingOneNFT = () => {
     return(
@@ -103,6 +105,44 @@ export function OfferCheckout() {
     );
   };
 
+  // color?: string;
+  // icon?: string;
+  // disabled?: boolean
+  const expirationOptions = [
+    {
+      label: '1 Day',
+      onSelect: () => setSelectedExpirationOption(0)
+    },
+    {
+      label: '3 Days',
+      onSelect: () => setSelectedExpirationOption(1)
+    },
+    {
+      label: '7 Days',
+      onSelect: () => setSelectedExpirationOption(2)
+    },
+    {
+      label: '14 Days',
+      onSelect: () => setSelectedExpirationOption(3)
+    },
+    {
+      label: '30 Days',
+      onSelect: () => setSelectedExpirationOption(4)
+    },
+    {
+      label: '60 Days',
+      onSelect: () => setSelectedExpirationOption(5)
+    },
+    {
+      label: '90 Days',
+      onSelect: () => setSelectedExpirationOption(6)
+    },
+    {
+      label: '180 Days',
+      onSelect: () => setSelectedExpirationOption(7)
+    },
+  ];
+
   const OfferCheckoutInfo = () => {
     return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-6">
       <div className="flex flex-col items-center w-full">
@@ -125,6 +165,17 @@ export function OfferCheckout() {
             <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>Your Balance</div>
             <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>1 ETH</div>
           </div>
+
+          <div className='w-full text-[16px] font-medium flex text-[#6A6A6A] mb-1 mt-3'>Set Bid Expiration</div>
+          <div className='mb-2 rounded-md h-12 w-full hideScroll minlg:w-[22%]'>
+            <DropdownPicker
+              v2
+              options={expirationOptions}
+              selectedIndex={selectedExpirationOption}
+              placeholder={'Select Expiration'}
+            />
+          </div>
+
         </div>
         {!showSummary && toList.length > 0 && <div className='w-full pb-8'><Button
           label={'Place Bid'}
