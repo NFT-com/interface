@@ -18,6 +18,7 @@ import { isMobile } from 'react-device-detect';
 const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof StaticResultsDropDown>>(() => import('components/modules/Search/ResultsDropDown').then(mod => mod.ResultsDropDown));
 
 export const MobileSidebar = () => {
+  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
   const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
 
   const { mobileSidebarOpen, setMobileSidebarOpen, toggleMobileSidebar } = useMobileSidebar();
@@ -40,8 +41,58 @@ export const MobileSidebar = () => {
     };
   }, [promoteZIndex, mobileSidebarOpen, restoreZIndex]);
   const checkHeaderContent = () => {
-    return (
-      <div>
+    if(newFiltersEnabled){
+      return (
+        <div>
+          <div className='flex items-center justify-between' onClick={() => setDiscoverExpanded(!discoverExpanded)}>
+            <h2 className={tw(
+              'w-full py-6 text-2xl font-medium font-noi-grotesk'
+            )}>
+              Discover
+            </h2>
+            {discoverExpanded ?
+              <CaretUp width={28} color='black' weight='bold' />
+              :
+              <CaretDown width={28} color='black' weight='bold' />
+            }
+          </div>
+          <motion.div
+            animate={{
+              height: !discoverExpanded ? 0 : 'auto' }}
+            transition={{ duration: 0.2 }}
+            className={tw('overflow-hidden')}
+          >
+            <div className="flex flex-col">
+              {
+                newFiltersEnabledNew
+                  ? (
+                    <Link href='/app/discover/nfts'>
+                      <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
+                        NFTs
+                        <CaretRight width={25} weight='bold' color='black' />
+                      </p>
+                    </Link>
+                  )
+                  : null
+              }
+              <Link href='/app/discover/collections'>
+                <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
+                  Collections
+                  <CaretRight width={25} weight='bold' color='black' />
+                </p>
+              </Link>
+              <Link href='/app/discover/profiles'>
+                <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
+                  Profiles
+                  <CaretRight width={25} weight='bold' color='black' />
+                </p>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      );
+    }else {
+      return (
         <div className='flex items-center justify-between' onClick={() => setDiscoverExpanded(!discoverExpanded)}>
           <h2 className={tw(
             'w-full py-6 text-2xl font-medium font-noi-grotesk'
@@ -54,41 +105,8 @@ export const MobileSidebar = () => {
             <CaretDown width={28} color='black' weight='bold' />
           }
         </div>
-        <motion.div
-          animate={{
-            height: !discoverExpanded ? 0 : 'auto' }}
-          transition={{ duration: 0.2 }}
-          className={tw('overflow-hidden')}
-        >
-          <div className="flex flex-col">
-            {
-              newFiltersEnabledNew
-                ? (
-                  <Link href='/app/discover/nfts'>
-                    <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
-                      NFTs
-                      <CaretRight width={25} weight='bold' color='black' />
-                    </p>
-                  </Link>
-                )
-                : null
-            }
-            <Link href='/app/discover/collections'>
-              <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
-                Collections
-                <CaretRight width={25} weight='bold' color='black' />
-              </p>
-            </Link>
-            <Link href='/app/discover/profiles'>
-              <p onClick={() => toggleMobileSidebar()} className='font-medium text-lg pb-3 w-full flex justify-between items-center'>
-                Profiles
-                <CaretRight width={25} weight='bold' color='black' />
-              </p>
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    );
+      );
+    }
   };
   const getSidebarPanel = useCallback(() => {
     return (
