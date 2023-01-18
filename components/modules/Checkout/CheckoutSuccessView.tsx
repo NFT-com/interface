@@ -78,14 +78,21 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   };
 
   return myOwnedProfileTokens?.length > 0 ?
-    <div className="flex items-center h-[596px] font-noi-grotesk">
-      <div onClick={() => router.push('/app/mint-profiles')} className='absolute bottom-5 left-7 hover:cursor-pointer underline text-[16px] z-50 font-medium flex items-center'>
+    <div className="flex md:flex-col items-center md:h-screen h-[596px] font-noi-grotesk">
+      <div onClick={() => router.push('/app/mint-profiles')} className='md:hidden absolute bottom-5 left-7 hover:cursor-pointer underline text-[16px] z-50 font-medium flex items-center'>
         <NullProfile className='mr-2' />Create a NFT Profile
       </div>
-      <div className="relative bg-gradient-to-br from-[#FAC213] to-[#FF9B37] h-full w-2/5 left-0">
-        <DesktopSuccessProfile className="h-full w-full object-cover" />
+      <div className="relative bg-gradient-to-br from-[#FAC213] to-[#FF9B37] md:w-full h-full md:h-2/5 w-2/5 left-0">
+        <div className='w-full flex items-center justify-center'>
+          <DesktopSuccessProfile className="md:h-auto md:w-2/5 h-full w-full shrink-0 object-cover" layout="fill" />
+        </div>
+        <div className='hidden relative md:flex items-center justify-center'>
+          <div onClick={() => router.push('/app/mint-profiles')} className='flex absolute bottom-2 hover:cursor-pointer underline text-[16px] z-50 font-medium items-center'>
+            <NullProfile className='mr-2' />Create a NFT Profile
+          </div>
+        </div>
       </div>
-      <div className="relative h-full w-3/5 right-0">
+      <div className="relative md:w-full h-full md:h-3/5 w-3/5 right-0">
         <div className='flex flex-col items-center justify-center h-full w-full px-10'>
           {images()}
           <div className='text-[34px] font-medium'>Congratulations!</div>

@@ -51,7 +51,7 @@ export function OffersModal(props: OffersModalProps) {
             <p className="text-[26px] font-semibold text-center font-noi-grotesk mb-5">
                 Offers
             </p>
-            <div className='max-h-[60vh] overflow-y-scroll hideScroll'>
+            <div className='md:max-h-[80vh] max-h-[60vh] overflow-y-scroll hideScroll'>
               {[1,2,3,4].map((item, index) => {
                 return <div key={index}>
                   <OffersRow />
