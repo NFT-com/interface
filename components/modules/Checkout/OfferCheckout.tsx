@@ -6,10 +6,13 @@ import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { PriceInput } from 'components/elements/PriceInput';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
+import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
+import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
+import { Doppler, getEnv } from 'utils/env';
 import { processIPFSURL } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
@@ -18,41 +21,38 @@ import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
 
 import { BigNumber } from 'ethers';
 import Image from 'next/image';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import { ArrowLeft } from 'phosphor-react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { PartialDeep } from 'type-fest';
+import { useNetwork } from 'wagmi';
 
 export function OfferCheckout() {
   const {
-    toList,
-    setDuration,
     prepareListings,
     allListingsConfigured,
   } = useContext(NFTListingsContext);
 
+  const router = useRouter();
+  const { chain } = useNetwork();
   const defaultChainId = useDefaultChainId();
 
-  const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
+  const { contractAddress, tokenId } = router.query;
+  const { data: nft } = useNftQuery(contractAddress as `0x${string}`, BigNumber.from(tokenId));
+  const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddress as `0x${string}`);
+
+  const { profileTokens } = useNftProfileTokens(nft?.wallet?.address);
   const { profileData } = useProfileQuery(
-    toList[0]?.nft?.wallet?.preferredProfile == null ?
+    nft?.wallet?.preferredProfile == null ?
       profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
       null
   );
-
-  useEffect(() => {
-    toList.forEach(stagedNft => {
-      if(!stagedNft.duration) {
-        setDuration(30);
-      }
-    });
-  },[setDuration, toList]);
     
-  const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
+  const profileOwnerToShow: PartialDeep<Profile> = nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
   const [selectedExpirationOption, setSelectedExpirationOption] = useState(2);
 
-  const ListingOneNFT = () => {
+  const BiddingOneNFT = () => {
     return(
       <div className='hidden minlg:flex flex-col justify-start items-center bg-gray-200 w-2/5 min-h-[100vh]'>
         <div className='w-full ml-44 mt-20'>
@@ -71,17 +71,17 @@ export function OfferCheckout() {
             autoPlay
             muted
             loop
-            key={toList[0]?.nft?.metadata?.imageURL}
-            src={processIPFSURL(toList[0]?.nft?.metadata?.imageURL)}
-            poster={processIPFSURL(toList[0]?.nft?.metadata?.imageURL)}
+            key={nft?.metadata?.imageURL}
+            src={processIPFSURL(nft?.metadata?.imageURL)}
+            poster={processIPFSURL(nft?.metadata?.imageURL)}
             className={tw(
               'rounded-md w-full',
             )}
           />
           <div className='flex font-noi-grotesk mt-6'>
             <div className='flex flex-col justify-between w-3/5'>
-              <span className='font-semibold text-ellipsis overflow-hidden'>{toList[0]?.nft?.metadata?.name}</span>
-              <span className='text-[#6F6F6F] whitespace-nowrap text-ellipsis overflow-hidden'>{toList[0]?.collectionName}</span>
+              <span className='font-semibold text-ellipsis overflow-hidden'>{nft?.metadata?.name}</span>
+              <span className='text-[#6F6F6F] whitespace-nowrap text-ellipsis overflow-hidden'>{collection?.collection?.name || '-'}</span>
             </div>
             <div className='flex justify-start h-full w-2/5'>
               <div className='flex flex-col h-[42px] w-[42px] '>
@@ -196,33 +196,28 @@ export function OfferCheckout() {
           </div>
 
         </div>
-        {!showSummary && toList.length > 0 && <div className='w-full pb-8'><Button
-          label={'Place Bid'}
-          disabled={!allListingsConfigured()}
-          onClick={async () => {
-            await prepareListings();
-            setShowSummary(true);
-          }}
-          type={ButtonType.PRIMARY}
-          stretch
-        /></div>}
+        {!showSummary && nft && collection ?
+          <div className='w-full pb-8'>
+            <Button
+              label={'Place Bid'}
+              disabled={!allListingsConfigured()}
+              onClick={async () => {
+                await prepareListings();
+                setShowSummary(true);
+              }}
+              type={ButtonType.PRIMARY}
+              stretch
+            />
+          </div> :
+          ''
+        }
       </div>
-      <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
+      <NFTListingsCartSummaryModal visible={showSummary && nft != undefined && collection != undefined} onClose={() => setShowSummary(false)} />
     </div>;
   };
   
   return <div className='font-noi-grotesk flex w-full justify-between h-full'>
-    {toList.length === 1 && ListingOneNFT()}
-    {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'>
-      <h1
-        className='text-xl font-semibold cursor-pointer ml-28 flex items-center'
-        onClick={() => {
-          router.back();
-        }}>
-        <ArrowLeft size={24} color="black" className='ListingPageBackButton mr-3' />
-        Back
-      </h1>
-    </div>}
+    {BiddingOneNFT()}
     <div className={tw('w-full flex flex-col justify-start items-center mx-auto minlg:w-[500px]')}>
       <div className='w-full minlg:mt-20 flex minlg:block justify-start items-end minlg:items-center minlg:mx-auto'>
         <span
@@ -237,6 +232,5 @@ export function OfferCheckout() {
       </div>
       {OfferCheckoutInfo()}
     </div>
-    {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'></div>}
   </div>;
 }
