@@ -172,7 +172,8 @@ export function NFTPurchaseContextProvider(
           NftcomPurchase.takerAddress,
           NftcomPurchase.activityId,
           defaultChainId,
-          NftcomPurchase.nonce
+          NftcomPurchase.nonce,
+          ethers.utils.getAddress(currentAddress)
         );
       })))
       ,

@@ -564,7 +564,7 @@ export function NFTListingsContextProvider(
             currentAddress,
             isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker,
             noExpirationNFTCOM ? 0 : (Number(target.duration) ?? Number(stagedNft.duration)),
-            onchainAuctionTypeToGqlAuctionType(stagedNft.auctionType),
+            onchainAuctionTypeToGqlAuctionType(target.auctionType),
             stagedNft.nft,
             Number(nonce),
             getByContractAddress(isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker).contract,
