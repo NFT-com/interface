@@ -189,7 +189,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>${Number(getTotalRoyalties()) + Number(getTotalMarketplaceFees()) + Number(getTotalPriceUSD())}</span>
+              <span className='font-semibold'>${(Number(getTotalRoyalties()) + Number(getTotalMarketplaceFees()) + Number(getTotalPriceUSD())).toLocaleString('en-US', { maximumSignificantDigits: 5 })}</span>
             </div>
           </div>
         </div>
