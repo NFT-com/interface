@@ -93,14 +93,16 @@ export function OfferCheckout() {
         </div>
         {nft?.metadata?.imageURL ?
           <div className='mt-20 w-1/2'>
-            <RoundedCornerMedia
-              variant={RoundedCornerVariant.None}
-              width={504}
-              height={504}
-              containerClasses='w-full h-full overflow-hidden'
-              src={processIPFSURL(nft?.metadata?.imageURL)}
-              extraClasses='hover:scale-105 transition'
-            />
+            <div className="flex w-full max-h-[600px] h-full max-w-nftcom object-contain drop-shadow-lg rounded aspect-square">
+              <RoundedCornerMedia
+                key={nft?.id}
+                src={processIPFSURL(nft?.metadata?.imageURL)}
+                videoOverride={true}
+                variant={RoundedCornerVariant.None}
+                objectFit='contain'
+                extraClasses='rounded'
+                containerClasses='h-full w-full' />
+            </div>
             <div className='flex font-noi-grotesk mt-6'>
               <div className='flex flex-col justify-between w-3/5'>
                 <span className='font-semibold text-ellipsis overflow-hidden'>{nft?.metadata?.name}</span>
