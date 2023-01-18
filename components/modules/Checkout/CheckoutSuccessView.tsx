@@ -114,13 +114,15 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
         </div>
       </div>
     </div> :
-    <div className="flex flex-col items-center h-[596px] font-noi-grotesk">
-      <div className="relative bg-gradient-to-br from-[#FAC213] to-[#FF9B37] w-full h-2/5 top-0">
-        <DesktopNoProfile className="h-full w-full object-cover" />
+    <div className="flex flex-col items-center h-[596px] md:h-screen font-noi-grotesk">
+      <div className="relative z-10 bg-gradient-to-br from-[#FAC213] to-[#FF9B37] w-full h-2/5 top-0">
+        <div className='w-full flex items-center justify-center'>
+          <DesktopNoProfile className="h-full w-full shrink-0 object-cover" layout="fill" />
+        </div>
       </div>
-      <div className="relative w-full h-3/5 bottom-0">
-        <div className='flex flex-col items-center justify-center h-full w-full px-10'>
-          <div className='text-[30px] font-medium text-center w-[380px] mt-10'>
+      <div className="relative w-full h-3/5 bottom-0 z-20 bg-white">
+        <div className='flex flex-col items-center justify-center md:justify-start md:pt-10 h-full w-full px-10'>
+          <div className='text-[30px] font-medium text-center w-[380px] mt-10 md:mt-0 md:w-full md:text-[26px]'>
             Get access to lower fees by creating an NFT Profile
           </div>
           <div className='text-[18px] font-medium mt-4'>{message()}</div>
@@ -130,7 +132,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
               <div className='font-medium text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37]'>0% fee</div>
             </div>
             <div className='flex item-center py-3 justify-between border-t border-[#ECECEC]'>
-              <div className='text-[#6A6A6A]'>Without an NFT Profile</div>
+              <div className='text-[#111010]'>Without an NFT Profile</div>
               <div className='font-medium line-through'>2.5% fee</div>
             </div>
           </div>
