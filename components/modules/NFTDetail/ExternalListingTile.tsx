@@ -3,7 +3,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { ActivityStatus, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, AuctionType, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
@@ -12,6 +12,7 @@ import { useNftcomExchangeContract } from 'hooks/contracts/useNftcomExchangeCont
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useX2Y2ExchangeContract } from 'hooks/contracts/useX2Y2ExchangeContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
@@ -61,6 +62,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const [cancelling, setCancelling] = useState(false);
 
   const router = useRouter();
+  const currentDate = useGetCurrentDate();
   const { address: currentAddress } = useAccount();
   const { data: signer } = useSigner();
   const defaultChainId = useDefaultChainId();
@@ -253,7 +255,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
-          const price = getListingPrice(listing);
+          const price = getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
           stagePurchase({
             nft: props.nft,
             activityId: listing?.id,
@@ -277,7 +279,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       />;
     }
     }
-  }, [listing, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, stagePurchase]);
+  }, [listing, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, currentDate, stagePurchase]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2, ExternalProtocol.NFTCOM].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
@@ -316,10 +318,10 @@ function ExternalListingTile(props: ExternalListingTileProps) {
         </span>
         <div className='flex items-center'>
           <span className='text-xl font-medium'>
-            {Number(ethers.utils.formatUnits(getListingPrice(listing), listingCurrencyData?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false, minimumFractionDigits: 1, maximumFractionDigits: 4 })}{' '}
+            {Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), listingCurrencyData?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false, minimumFractionDigits: 1, maximumFractionDigits: 4 })}{' '}
             {listingCurrencyData?.name ?? 'ETH'}
             <span className="text-secondary-txt text-sm ml-4">
-              ${listingCurrencyData.usd(Number(ethers.utils.formatUnits(getListingPrice(listing), listingCurrencyData?.decimals ?? 18)))}
+              ${listingCurrencyData.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), listingCurrencyData?.decimals ?? 18)))}
             </span>
           </span>
         </div>
