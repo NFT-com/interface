@@ -237,13 +237,13 @@ export function NFTListingsContextProvider(
         return false; // this listing is valid.
       }
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
-        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
+        const decresingPriceinvalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
         ((target.endingPrice == null || BigNumber.from(target.endingPrice).eq(0)) ||
-        (target.endingPrice && target.startingPrice && (Number(target.startingPrice) < Number(target.endingPrice))));
+        (target.endingPrice && target.startingPrice && (Number(target.startingPrice) <= Number(target.endingPrice))));
         
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
-          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || invalidInputsNTFCOM;
+          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || decresingPriceinvalidInputsNTFCOM;
       });
       // At this point, we need all targets to have valid individual configurations.
       return unconfiguredTarget != null;
