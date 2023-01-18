@@ -125,7 +125,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     ];
 
     return getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) ?
-      base.push({
+      base.concat({
         label: 'NFT.com',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.NFTCOM;
