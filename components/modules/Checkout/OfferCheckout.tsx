@@ -5,7 +5,6 @@ import { DropdownPicker } from 'components/elements/DropdownPicker';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { PriceInput } from 'components/elements/PriceInput';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
@@ -27,17 +26,12 @@ import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { ArrowLeft } from 'phosphor-react';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useNetwork } from 'wagmi'
 
 export function OfferCheckout() {
-  const {
-    prepareListings,
-    allListingsConfigured,
-  } = useContext(NFTListingsContext);
-
   const router = useRouter();
   const { chain } = useNetwork();
   const defaultChainId = useDefaultChainId();
@@ -69,6 +63,18 @@ export function OfferCheckout() {
     } else if (selectedCurrency === 'WETH') {
       return Number(BigNumber.from(userWethBalance?.balance)) / 10 ** 18 + ` ${selectedCurrency}`;
     }
+  };
+
+  const offerConfigured = () => {
+    if (BigNumber.from(selectedPrice)?.eq(0)) {
+      return false;
+    } else if (selectedCurrency === 'ETH' && BigNumber.from(userEthBalance?.balance?.balance)?.lt(selectedPrice)) {
+      return false;
+    } else if (selectedCurrency === 'WETH' && BigNumber.from(userWethBalance?.balance)?.lt(selectedPrice)) {
+      return false;
+    }
+
+    return true;
   };
 
   const BiddingOneNFT = () => {
@@ -208,7 +214,7 @@ export function OfferCheckout() {
                 }
                 currencyOptions={['ETH', 'WETH']}
                 onPriceChange={(val: BigNumber) => {
-                  setSelectedPrice(val);
+                  setSelectedPrice(val || BigNumber.from(0));
                 }}
                 onCurrencyChange={(currency: SupportedCurrency) => {
                   setSelectedCurrency(currency);
@@ -246,14 +252,14 @@ export function OfferCheckout() {
 
           <div className='flex items-center justify-between w-full'>
             <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>Subtotal</div>
-            <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>1 ETH</div>
+            <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>{Number(selectedPrice) / 10 ** 18 || '-'} {selectedCurrency}</div>
           </div>
 
           <div className='border-b-[1px] border-dashed border-[#ECECEC] w-full my-3' />
 
           <div className='flex items-center justify-between w-full'>
             <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>Total</div>
-            <div className='text-[16px] flex text-[#4D4D4D] font-medium mb-1 mt-3'>1 ETH</div>
+            <div className='text-[16px] flex text-[#4D4D4D] font-medium mb-1 mt-3'>{Number(selectedPrice) / 10 ** 18 || '-'} {selectedCurrency}</div>
           </div>
 
         </div>
@@ -261,9 +267,9 @@ export function OfferCheckout() {
           <div className='w-full pb-8'>
             <Button
               label={'Place Bid'}
-              disabled={!allListingsConfigured()}
+              disabled={!offerConfigured()}
               onClick={async () => {
-                await prepareListings();
+                alert('submit bid')
                 setShowSummary(true);
               }}
               type={ButtonType.PRIMARY}
