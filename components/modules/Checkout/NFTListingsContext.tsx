@@ -104,7 +104,7 @@ export interface NFTListingsContextType {
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => void;
   setDuration: (duration: SaleDuration | number) => void;
   setNoExpirationNFTCOM: (noExpiration: boolean) => void;
-  noExpirationNFTCOM: boolean,
+  noExpirationNFTCOM: boolean;
   setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol, auctionType?: number) => void;
   setEndingPrice: (listing: PartialDeep<StagedListing>, endingPrice: BigNumberish, targetProtocol?: ExternalProtocol, auctionType?: number) => void;
   setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
@@ -114,6 +114,8 @@ export interface NFTListingsContextType {
   allListingsConfigured: () => boolean;
   clearGeneralConfig: (listing: PartialDeep<StagedListing>) => void;
   getTarget: (listing: PartialDeep<StagedListing>, protocol: ExternalProtocol) => Maybe<PartialDeep<ListingTarget>>;
+  setDecreasingPriceError:(value: boolean) => void;
+  decreasingPriceError: boolean;
 }
 
 // initialize with default values
@@ -138,7 +140,9 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   approveCollection: () => null,
   allListingsConfigured: () => false,
   clearGeneralConfig: () => null,
-  getTarget: () => null
+  getTarget: () => null,
+  setDecreasingPriceError: () => null,
+  decreasingPriceError: false,
 });
 
 /**
@@ -171,6 +175,7 @@ export function NFTListingsContextProvider(
 
   const [selectedTab, setSelectedTab] = useState<CartSidebarTab>('Buy');
   const [noExpirationNFTCOM, setNoExpirationNFTCOM] = useState(false);
+  const [decreasingPriceError, setDecreasingPriceError] = useState(false);
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -237,13 +242,14 @@ export function NFTListingsContextProvider(
         return false; // this listing is valid.
       }
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
-        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
+        const decresingPriceinvalidInputs = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
         ((target.endingPrice == null || BigNumber.from(target.endingPrice).eq(0)) ||
-        (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice)));
+        (target.endingPrice && target.startingPrice && (Number(target.startingPrice) <= Number(target.endingPrice))));
+        setDecreasingPriceError(decresingPriceinvalidInputs);
 
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
-          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || invalidInputsNTFCOM;
+          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || decresingPriceinvalidInputs;
       });
       // At this point, we need all targets to have valid individual configurations.
       return unconfiguredTarget != null;
@@ -313,7 +319,7 @@ export function NFTListingsContextProvider(
               {
                 protocol: targetMarketplace,
                 duration: stagedNft.duration ,
-                currency: stagedNft.currency ?? targetMarketplace === ExternalProtocol.X2Y2 ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract
+                currency: stagedNft.currency ?? (targetMarketplace === ExternalProtocol.X2Y2 || targetMarketplace === ExternalProtocol.NFTCOM) ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract
               }
             ],
         };
@@ -773,7 +779,9 @@ export function NFTListingsContextProvider(
     setTypeOfAuction,
     allListingsConfigured,
     clearGeneralConfig,
-    getTarget
+    getTarget,
+    setDecreasingPriceError,
+    decreasingPriceError,
   }}>
 
     {
