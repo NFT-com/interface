@@ -309,7 +309,7 @@ const FilterNew = (props: any) => {
           max={nftSFilters?.listedFloor && nftSFilters?.listedFloor.length ? nftSFilters?.listedFloor[1] : null}
           isOpen={isOpen}
           currency={collectionsFilter.currency}
-          toggleSelect={(value) => toggleCurrencySelect(!value)}
+          toggleSelect={() => null}
           changeCurrency={(value) => setCurrency(value)}
           setMinMaxValues={(value) => setListedFloor(value)}
           fieldName={filter.field_name}/>
@@ -382,7 +382,7 @@ const FilterNew = (props: any) => {
           max={collectionsFilter.floor && collectionsFilter.floor.length ? collectionsFilter.floor[1] : null}
           isOpen={isOpen}
           currency={collectionsFilter.currency}
-          toggleSelect={(value) => toggleCurrencySelect(!value)}
+          toggleSelect={() => null}
           changeCurrency={(value) => setCurrency(value)}
           setMinMaxValues={(value) => setFloor(value)}
           fieldName={filter.field_name}/>

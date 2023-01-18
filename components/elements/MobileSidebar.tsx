@@ -39,7 +39,7 @@ export const MobileSidebar = () => {
       restoreZIndex();
     };
   }, [promoteZIndex, mobileSidebarOpen, restoreZIndex]);
-  const checkHeaderContent = () => {
+  const checkHeaderContent = useCallback(() => {
     return (
       <div>
         <div className='flex items-center justify-between' onClick={() => setDiscoverExpanded(!discoverExpanded)}>
@@ -83,7 +83,7 @@ export const MobileSidebar = () => {
         </motion.div>
       </div>
     );
-  };
+  }, [discoverExpanded, toggleMobileSidebar]);
   const getSidebarPanel = useCallback(() => {
     return (
       <motion.div
@@ -177,8 +177,7 @@ export const MobileSidebar = () => {
         </div>
       </motion.div>
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [discoverExpanded, closeSideBarFn, dropDownSearchResults, learnExpanded, toggleMobileSidebar]);
+  }, [dropDownSearchResults, closeSideBarFn, newFiltersEnabledNew, checkHeaderContent, learnExpanded, toggleMobileSidebar]);
 
   return (
     <AnimatePresence>

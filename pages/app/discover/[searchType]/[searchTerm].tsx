@@ -22,7 +22,7 @@ import { getCollection } from 'lib/contentful/api';
 import { useRouter } from 'next/router';
 import { FunnelSimple, SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
 function usePrevious(value) {
@@ -114,7 +114,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       setResultsPageAppliedFilters('', '','', []);
     }
   },[prevSearchTerm, searchTerm, setClearedFilters, setResultsPageAppliedFilters]);
-  const checkFacedBy = () => {
+  const checkFacedBy = useCallback(() => {
     if(newFiltersEnabledNew){
       if(searchType?.toString() !== 'collections'){
         return ',listings.marketplace,status,listings.price,nftType,contractName';
@@ -136,8 +136,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         }
       }
     }
-  };
-  const checkFilteredBy = () => {
+  },[newFiltersEnabledNew, searchType]);
+  const checkFilteredBy = useCallback(() => {
     if(newFiltersEnabledNew){
       if(searchType?.toString() === 'collections'){
         return collectionsResultsFilterBy;
@@ -151,8 +151,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         return nftsResultsFilterBy;
       }
     }
-  };
-  const checkQueryBy = () => {
+  }, [collectionsResultsFilterBy, newFiltersEnabledNew, nftsResultsFilterBy, searchType]);
+  const checkQueryBy = useCallback(() => {
     if(newFiltersEnabledNew){
       if(searchType?.toString() !== 'collections'){
         return 'nftName,nftType,tokenId,ownerAddr,chain,contractName,contractAddr,status,traits.value,traits.type';
@@ -170,8 +170,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         return SearchableFields.COLLECTIONS_INDEX_FIELDS;
       }
     }
-  };
-  useEffect(() => {
+  }, [newFiltersEnabledNew, searchType]);
+  const clearAllFilters = useCallback(() => {
     return () => {
       setResultsPageAppliedFilters('', '', '', '');
       nftSFilters.listedFloor = null;
@@ -183,8 +183,17 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       nftSFilters.contractName = null;
       setClearedFilters();
     };
-    // eslint-disable-next-line
-  }, [searchType, router]);
+  }, [setResultsPageAppliedFilters, nftSFilters, setClearedFilters]);
+  useEffect(() => {
+    if (prevSearchTerm !== searchTerm){
+      setFilters([]);
+      setClearedFilters();
+      setResultsPageAppliedFilters('', '','', []);
+    }
+    return () => {
+      clearAllFilters();
+    };
+  }, [searchType, router, clearAllFilters, prevSearchTerm, searchTerm, setClearedFilters, setResultsPageAppliedFilters]);
 
   useEffect(() => {
     if(newFiltersEnabledNew){
@@ -206,13 +215,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         }] })
           .then((resp) => {
             if(newFiltersEnabledNew){
-              if (prevSearchTerm !== searchTerm){
-                setFilters([]);
-                setClearedFilters();
-                setResultsPageAppliedFilters('', '','', []);
-              }else {
-                filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
-              }
+              filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
             }else {
               filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
             }
@@ -237,17 +240,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         exhaustive_search: true,
       }] })
         .then((resp) => {
-          if(newFiltersEnabledNew){
-            if (prevSearchTerm !== searchTerm){
-              setFilters([]);
-              setClearedFilters();
-              setResultsPageAppliedFilters('', '','', []);
-            }else {
-              filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
-            }
-          }else {
-            filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
-          }
+          filters.length < 1 && setFilters([...resp.results[0].facet_counts]);
           results.current = [...resp.results[0].hits];
           found.current = resp.results[0].found;
           if(newFiltersEnabledNew) {
@@ -255,8 +248,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           }
         });
     }
-    // eslint-disable-next-line
-  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, collectionsResultsFilterBy, newFiltersEnabled, prevSearchTerm]);
+  },[fetchTypesenseMultiSearch, filters.length, nftsResultsFilterBy, nftsPageSortyBy, page, screenWidth, searchTerm, searchType, sideNavOpen, collectionsResultsFilterBy, newFiltersEnabled, prevSearchTerm, newFiltersEnabledNew, prevFilters, checkFacedBy, checkQueryBy, checkFilteredBy]);
 
   useEffect(() => {
     if (page > 1 && page !== prevVal) {
@@ -287,8 +279,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           });
         });
     }
-    // eslint-disable-next-line
-  }, [addressesList, fetchTypesenseMultiSearch, filters.length, newFiltersEnabled, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, searchedData, sideNavOpen]);
+  }, [addressesList, checkFacedBy, checkFilteredBy, checkQueryBy, fetchTypesenseMultiSearch, filters.length, newFiltersEnabled, newFiltersEnabledNew, nftsPageSortyBy, nftsResultsFilterBy, page, prevVal, results, screenWidth, searchTerm, searchType, searchedData, sideNavOpen]);
   if(newFiltersEnabledNew){
     return (
       <div className="p-1 mt-7 minlg:p-16 mb-10 minxl:overflow-x-hidden min-h-screen overflow-hidden">
