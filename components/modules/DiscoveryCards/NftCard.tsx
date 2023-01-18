@@ -197,7 +197,7 @@ export function NftCard(props: NftCardProps) {
           </div>
 
           {props.nftsDescriptionsVisible != false &&
-            <div className="sm:h-[auto] h-[190px] p-[18px] bg-white">
+            <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
               <ul
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
                 <li className="sm:text-[13px]	max-w-[200px] list-none p-0 m-[0] sm:whitespace-nowrap sm:text-ellipsis sm:overflow-hidden">{props.name}</li>
@@ -207,10 +207,10 @@ export function NftCard(props: NftCardProps) {
               {
                 (props?.listings?.length || nft?.listings?.items?.length) && bestListing
                   ? (
-                    <ul className="flex flex-row justify-between mt-[14px]">
+                    <ul className="flex flex-row justify-between mt-[14px] font-noi-grotesk">
                       <li className="p-0 m-[0] flex flex-col">
                         <div>
-                          <div className="noi-grotesk font-[500] text-[#000000] text-[18px] flex items-center">
+                          <div className="font-noi-grotesk font-[500] text-[#000000] text-[18px] flex items-center">
                             <div className="pr-1">
                             </div>
                             <div className='flex flex-col'>
@@ -227,7 +227,7 @@ export function NftCard(props: NftCardProps) {
                           </div>
                         </div>
                       </li>
-                      <li className="text-[16px] p-0 m-[0] flex flex-col items-end">
+                      <li className="text-[16px] p-0 m-[0] flex flex-col items-end font-noi-grotesk">
                         <span className="text-[16px] text-[#B2B2B2] font-[400]">Ends in</span>
                         <span className="text-[16px] text-[#6A6A6A] font-[500]">{checkEndDate()}</span>
                       </li>
