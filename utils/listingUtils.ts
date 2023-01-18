@@ -27,8 +27,8 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
   case (ExternalProtocol.NFTCOM): {
     const order = listing?.order?.protocolData as NftcomProtocolData;
     if(order.auctionType === AuctionType.Decreasing) {
-      const startPrice = Number(order.takeAsset[0].value);
-      const endPrice = Number(ethers.utils.parseUnits(order.takeAsset[0].minimumBid, 'ether'));
+      const startPrice = order.takeAsset[0].value;
+      const endPrice = order.takeAsset[0].minimumBid;
       const a = moment();
       const b = moment.unix(order?.start);
       const secondsElapsed = a.diff(b, 'seconds');
