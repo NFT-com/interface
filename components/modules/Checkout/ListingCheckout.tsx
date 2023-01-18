@@ -292,8 +292,6 @@ export function ListingCheckout() {
       <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
     </div>;
   };
-
-  console.log('decreasingPriceError fdo', decreasingPriceError);
   
   return (
     <div className='flex w-full justify-between h-full'>
