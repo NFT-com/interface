@@ -20,7 +20,7 @@ import { getEtherscanLink, processIPFSURL, shortenAddress } from 'utils/helpers'
 import { getAddress, SupportedTokenContract } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
-import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
+import { OfferSummaryModal } from './OfferSummaryModal';
 
 import { BigNumber } from 'ethers';
 import Image from 'next/image';
@@ -29,7 +29,7 @@ import { ArrowLeft } from 'phosphor-react';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { PartialDeep } from 'type-fest';
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi';
 
 export function OfferCheckout() {
   const router = useRouter();
@@ -271,7 +271,6 @@ export function OfferCheckout() {
               label={'Place Bid'}
               disabled={!offerConfigured()}
               onClick={async () => {
-                alert('submit bid')
                 setShowSummary(true);
               }}
               type={ButtonType.PRIMARY}
@@ -281,7 +280,14 @@ export function OfferCheckout() {
           ''
         }
       </div>
-      <NFTListingsCartSummaryModal visible={showSummary && nft != undefined && collection != undefined} onClose={() => setShowSummary(false)} />
+      <OfferSummaryModal
+        visible={showSummary && nft != undefined && collection != undefined}
+        onClose={() => setShowSummary(false)}
+        expirationOptions={expirationOptions.map(i => i.label)}
+        selectedCurrency={selectedCurrency}
+        selectedPrice={selectedPrice}
+        selectedExpirationOption={selectedExpirationOption}
+      />
     </div>;
   };
   
