@@ -281,6 +281,7 @@ export function OfferCheckout() {
         }
       </div>
       <OfferSummaryModal
+        nft={nft}
         visible={showSummary && nft != undefined && collection != undefined}
         onClose={() => setShowSummary(false)}
         expirationOptions={expirationOptions.map(i => i.label)}

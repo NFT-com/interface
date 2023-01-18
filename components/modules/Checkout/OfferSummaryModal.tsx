@@ -1,28 +1,20 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
-import { NULL_ADDRESS } from 'constants/addresses';
-import { getAddressForChain, nftAggregator } from 'constants/contracts';
-import { ActivityStatus, Maybe } from 'graphql/generated/types';
-import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
-import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
-import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
-import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
+import { Maybe } from 'graphql/generated/types';
+import { Nft } from 'graphql/generated/types';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
-import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
-import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from 'utils/marketplaceUtils';
-
-import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
-import { NFTPurchasesContext } from './NFTPurchaseContext';
-import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
+import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 import { BigNumber } from 'ethers';
-import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
-import { useCallback, useContext, useState } from 'react';
-import useSWR from 'swr';
-import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
+import { useRouter } from 'next/router';
+import { Check, X } from 'phosphor-react';
+import { useCallback, useState } from 'react';
+import { PartialDeep } from 'type-fest';
 
 export interface OfferSummaryModalProps {
   visible: boolean;
+  nft: PartialDeep<Nft>;
   selectedCurrency: SupportedCurrency;
   selectedPrice: BigNumber;
   selectedExpirationOption: number;
@@ -31,62 +23,52 @@ export interface OfferSummaryModalProps {
 }
 
 export function OfferSummaryModal(props: OfferSummaryModalProps) {
-  const {
-    toBuy,
-    buyAll,
-    updateCurrencyApproval,
-    clear
-  } = useContext(NFTPurchasesContext);
+  const router = useRouter();
 
-  const { address: currentAddress } = useAccount();
-  const { chain } = useNetwork();
-  const { data: signer } = useSigner();
-  const { updateActivityStatus } = useUpdateActivityStatusMutation();
-  const provider = useProvider();
-  const looksrareStrategy = useLooksrareStrategyContract(provider);
-  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-
-  const { getByContractAddress, getBalanceMap } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
-  
-  const { data: looksrareProtocolFeeBps } = useSWR(
-    'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
-    async () => {
-      return await looksrareStrategy.viewProtocolFee();
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-    });
-
-  const getNeedsApprovals = useCallback(() => {
-    return needsApprovals(toBuy);
-  }, [toBuy]);
-
-  const getHasSufficientBalance = useCallback(async () => {
-    const balances = await getBalanceMap(currentAddress, ['WETH', 'ETH', 'USDC', 'DAI']);
-    return hasSufficientBalances(toBuy, balances);
-  }, [currentAddress, getBalanceMap, toBuy]);
+  const [error, setError] = useState<Maybe<'ConnectionError'>>(null);
     
   const getSummaryContent = useCallback(() => {
     if (success) {
-      return <CheckoutSuccessView
-        userAddress={currentAddress}
-        type={SuccessType.Purchase}
-        subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}
-      />;
+      return <div className="flex flex-col w-full py-5">
+        <p className="text-[24px] mx-4 text-center font-semibold">
+          Approved
+        </p>
+        
+        <div className='flex items-center justify-center w-full'>
+          <div className="flex max-w-[200px] w-full max-h-[200px] my-10 h-full object-contain drop-shadow-lg aspect-square">
+            <RoundedCornerMedia
+              key={props.nft?.id}
+              src={processIPFSURL(props.nft?.metadata?.imageURL)}
+              videoOverride={true}
+              variant={RoundedCornerVariant.Success}
+              objectFit='contain'
+              extraClasses='rounded'
+              containerClasses='h-full w-full' />
+            <Check className={'absolute bottom-[-7px] right-[-7px] z-20 h-7 w-7 p-1 text-white font-medium aspect-square shrink-0 rounded-full -ml-4 bg-[#26AA73]'} />
+          </div>
+        </div>
+        
+        <div className='border-b-[1px] border-dashed border-[#ECECEC] w-full my-3' />
+
+        <div className='px-4 flex items-center justify-between w-full'>
+          <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>Offer Submitted</div>
+          <div className='text-[16px] flex text-[#4D4D4D] mb-1 mt-3'>{Number(props.selectedPrice) / 10 ** 18 || '-'} {props.selectedCurrency}</div>
+        </div>
+
+        <div className='px-4 flex items-center text-center justify-between w-full text-[#B2B2B2]'>
+          You will be notified on response.
+        </div>
+        
+      </div>;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">
-          {error === 'ApprovalError' ? 'Approval' : 'Transaction'} Failed
+          Offer Failed
           <div className='w-full my-8'>
             <span className='font-medium text-[#6F6F6F] text-base'>
               {error === 'ConnectionError' && 'Your wallet is not connected. Please connect your wallet and try again.'}
-              {error === 'ApprovalError' && 'The approval was not accepted in your wallet. If you would like to continue your purchase, please try again.'}
-              {error === 'PurchaseBalanceError' && 'The purchase failed because your token balance is too low.'}
-              {error === 'PurchaseUnknownError' && 'The transaction failed for an unknown reason. Please verify that your cart is valid and try again.'}
             </span>
           </div>
         </div>
@@ -129,7 +111,7 @@ export function OfferSummaryModal(props: OfferSummaryModalProps) {
         <div className='text-[16px] flex text-[#4D4D4D] font-medium mb-1 mt-3'>{Number(props.selectedPrice) / 10 ** 18 || '-'} {props.selectedCurrency}</div>
       </div>
     </div>;
-  }, [currentAddress, error, props.expirationOptions, props.selectedCurrency, props.selectedExpirationOption, props.selectedPrice, success, toBuy.length]);
+  }, [error, props.expirationOptions, props.nft?.id, props.nft?.metadata?.imageURL, props.selectedCurrency, props.selectedExpirationOption, props.selectedPrice, success]);
 
   return (
     <Modal
@@ -156,65 +138,29 @@ export function OfferSummaryModal(props: OfferSummaryModalProps) {
             props.onClose();
           }} className='absolute top-5 right-5 z-50 hover:cursor-pointer closeButton' size={24} color="#B2B2B2" weight="fill" />
           {getSummaryContent()}
-          {!success && <Button
+          <Button
             stretch
             disabled={loading && !error && !success}
             loading={loading && !error && !success}
-            label={success ? 'Finish' : error ? 'Try Again' : 'Approve'}
+            label={success ? 'Check Offers' : error ? 'Try Again' : 'Approve'}
             onClick={async () => {
               if (success) {
                 clear();
                 setSuccess(false);
                 props.onClose();
-                return;
+                router.push('/app/assets');
               }
 
               setError(null);
               setSuccess(false);
               setLoading(true);
 
-              if (signer == null) {
-                setError('ConnectionError');
-                return;
-              }
-
-              if (getNeedsApprovals()) {
-                const missingApprovals = filterDuplicates(
-                  toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
-                  (first, second) => first?.currency === second?.currency
-                ).filter(purchase => !purchase?.isApproved);
-                for (let i = 0; i < missingApprovals.length; i++) {
-                  const purchase = missingApprovals[i];
-                  const currencyData = getByContractAddress(purchase?.currency);
-                  await currencyData?.setAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id))
-                    .then((result: boolean) => {
-                      if (!result) {
-                        setError('ApprovalError');
-                        return;
-                      }
-                      updateCurrencyApproval(purchase?.currency, true);
-                    })
-                    .catch(() => {
-                      setError('ApprovalError');
-                    });
-                }
-              }
-
-              const result = await buyAll();
-              if (result) {
-                setSuccess(true);
-                updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
-              } else {
-                const hasSuffictientBalance = await getHasSufficientBalance();
-                if (!hasSuffictientBalance) {
-                  setError('PurchaseBalanceError');
-                } else {
-                  setError('PurchaseUnknownError');
-                }
-              }
+              // TODO: submit private offer
+              setSuccess(true);
+              setLoading(false);
             }}
-            type={ButtonType.PRIMARY} />}
-          <div className='w-full mt-4'>
+            type={ButtonType.PRIMARY} />
+          {!success && <div className='w-full mt-4'>
             <Button
               stretch
               label={'Cancel'}
@@ -226,7 +172,7 @@ export function OfferSummaryModal(props: OfferSummaryModalProps) {
               }}
               type={ButtonType.SECONDARY}
             />
-          </div>
+          </div>}
         </div>
       </div>
     </Modal>
