@@ -39,6 +39,7 @@ query CollectionNFTs($input: CollectionNFTsInput!) {
                 makerAddress
                 takerAddress
                 protocol
+                nonce
                 protocolData {
                     ... on LooksrareProtocolData {
                         isOrderAsk

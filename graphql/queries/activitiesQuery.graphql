@@ -23,6 +23,7 @@ query Activities($input: TxActivitiesInput) {
                 makerAddress
                 takerAddress
                 protocol
+                nonce
                 protocolData {
                     ... on LooksrareProtocolData {
                         isOrderAsk

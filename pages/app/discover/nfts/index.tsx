@@ -29,7 +29,6 @@ export default function CollectionsPage() {
   const [nftSData, setNftsData] = useState([]);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
-  const prevVal = usePrevious(page);
   const prevFilters = usePrevious(nftsResultsFilterBy);
 
   useEffect(() => {

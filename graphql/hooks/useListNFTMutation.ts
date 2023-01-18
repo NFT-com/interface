@@ -1,3 +1,4 @@
+import { ListingTarget } from 'components/modules/Checkout/NFTListingsContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { Nft, Signature } from 'graphql/generated/types';
@@ -5,7 +6,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { SeaportOrderComponents } from 'types';
 import { isNullOrEmpty } from 'utils/helpers';
-import { getMarketplaceAssetInput, onchainAuctionTypeToGqlAuctionType, unhashedMakeAsset, unhashedTakeAsset, UnsignedOrder } from 'utils/nativeMarketplaceHelpers';
+import { getMarketplaceAssetInput, onchainAuctionTypeToGqlAuctionType, unhashedMakeAsset, unhashedTakeAsset } from 'utils/nativeMarketplaceHelpers';
 import { getOrderHash } from 'utils/signatureUtils';
 import { encodeOrder } from 'utils/X2Y2Helpers';
 
@@ -33,11 +34,9 @@ export interface ListNftResult {
     openOrderId: number[]
   ) => Promise<boolean>,
   listNftNative: (
-    order: UnsignedOrder,
+    target: ListingTarget,
     signature: Signature,
     nft: PartialDeep<Nft>,
-    currency: string,
-    startingPrice: BigNumber
   ) => Promise<boolean>,
 }
 
@@ -121,24 +120,28 @@ export function useListNFTMutations(): ListNftResult {
   );
 
   const listNftNative = useCallback(
-    async (order: UnsignedOrder, signature: Signature, nft: PartialDeep<Nft>, currency: string, startingPrice: BigNumber ) => {
+    async (target: ListingTarget, signature: Signature, nft: PartialDeep<Nft>) => {
       try {
         const unhashedMake = unhashedMakeAsset(nft);
         const unhashedTake = unhashedTakeAsset(
-          currency,
-          startingPrice,
-          onchainAuctionTypeToGqlAuctionType(order.auctionType),
-          getByContractAddress(isNullOrEmpty(order?.taker) ? NULL_ADDRESS : order.taker).contract);
+          target.currency,
+          target.startingPrice as BigNumber,
+          onchainAuctionTypeToGqlAuctionType(target.NFTCOMOrder.auctionType),
+          getByContractAddress(isNullOrEmpty(target.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker).contract,
+          target.endingPrice as BigNumber,
+          target.reservePrice as BigNumber,
+          target.buyNowPrice as BigNumber,
+        );
         const orderHash = getOrderHash({
-          ...order,
+          ...target.NFTCOMOrder,
           makeAssets: [unhashedMake],
           takeAssets: [unhashedTake]
         });
         const result = await sdk.CreateMarketListing({
           input: {
-            auctionType: onchainAuctionTypeToGqlAuctionType(order.auctionType),
+            auctionType: onchainAuctionTypeToGqlAuctionType(target.NFTCOMOrder.auctionType),
             chainId: defaultChainId,
-            end: order.end,
+            end: target.NFTCOMOrder.end,
             makeAsset: [
               getMarketplaceAssetInput(
                 unhashedMake,
@@ -146,28 +149,28 @@ export function useListNFTMutations(): ListNftResult {
                 nft.contract
               ),
             ],
-            makerAddress: order.maker,
-            nonce: order.nonce,
-            salt: order.salt,
+            makerAddress: target.NFTCOMOrder.maker,
+            nonce: target.NFTCOMOrder.nonce,
+            salt: target.NFTCOMOrder.salt,
             signature : {
               r: signature.r,
               s: signature.s,
               v: signature.v
             },
-            start: order.start,
+            start: target.NFTCOMOrder.start,
             structHash: orderHash,
             takeAsset: [
               getMarketplaceAssetInput(
                 unhashedTake,
                 0,
-                getByContractAddress(isNullOrEmpty(order.taker) ?
+                getByContractAddress(isNullOrEmpty(target.NFTCOMOrder.taker) ?
                   NULL_ADDRESS :
-                  order.taker).contract
+                  target.NFTCOMOrder.taker).contract
               ),
             ],
-            takerAddress: isNullOrEmpty(order.taker) ?
+            takerAddress: isNullOrEmpty(target.NFTCOMOrder.taker) ?
               NULL_ADDRESS:
-              order.taker,
+              target.NFTCOMOrder.taker,
           }
         });
         return result?.createMarketListing ? true : false;

@@ -2,6 +2,7 @@ import 'rc-slider/assets/index.css';
 
 import { Button, ButtonType } from 'components/elements/Button';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
+import { Switch } from 'components/elements/Switch';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
@@ -34,10 +35,13 @@ export function ListingCheckout() {
   const {
     toList,
     setDuration,
+    noExpirationNFTCOM,
+    setNoExpirationNFTCOM,
     toggleTargetMarketplace,
     prepareListings,
     allListingsConfigured,
   } = useContext(NFTListingsContext);
+  // const [noExpiration, setNoExpiration] = useState(false);
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
@@ -84,10 +88,8 @@ export function ListingCheckout() {
   }) != null;
 
   const buttonsRowWidth = () => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED)) {
+    if (getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST)) {
       return 'w-1/4';
-    } else if (!getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && !getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED)) {
-      return 'w-1/2';
     } else {
       return 'w-full';
     }
@@ -217,7 +219,7 @@ export function ListingCheckout() {
               <span className='font-semibold text-base'>Looksrare</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
             </div>
-            {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) && <div
+            <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.X2Y2);
                 setShowSummary(false);
@@ -234,11 +236,28 @@ export function ListingCheckout() {
                 <X2Y2Gray className='h-[1.5rem] relative shrink-0 mb-[2px]' />}
               <span className='font-semibold text-base'>X2Y2</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
-            </div>}
+            </div>
           </div>
         </div>
         <div className='w-full flex flex-col mt-8 items-center'>
-          <span className='text-lg w-full flex font-semibold'>Set Duration</span>
+          <div className='w-full flex justify-between'>
+            <span className={tw(
+              NFTCOMAtLeastOneEnabled && getEnvBool(Doppler.NEXT_PUBLIC_NFTCOM_NO_EXPIRATION_LISTING_ENABLED) ?'' : 'w-full',
+              'text-lg flex font-semibold')}>Set Duration</span>
+            {NFTCOMAtLeastOneEnabled && getEnvBool(Doppler.NEXT_PUBLIC_NFTCOM_NO_EXPIRATION_LISTING_ENABLED) ?
+              <div className='flex'>
+                <Switch
+                  left=""
+                  right="No Expiration on "
+                  enabled={noExpirationNFTCOM}
+                  setEnabled={() => {
+                    setNoExpirationNFTCOM(!noExpirationNFTCOM);
+                  }}
+                />
+                <NFTLogo className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px] ml-2' />
+              </div>
+              : null}
+          </div>
           <div className='mt-8 w-[93%] minlg:w-full'>
             <Slider
               trackStyle={[{ backgroundColor: '#F9D54C' }]}
@@ -320,7 +339,6 @@ export function ListingCheckout() {
                 <span>Looksrare</span>
                 <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2% fee)</span>
               </div>
-              {getEnvBool(Doppler.NEXT_PUBLIC_X2Y2_ENABLED) &&
               <div
                 onClick={() => {
                   toggleTargetMarketplace(ExternalProtocol.X2Y2);
@@ -335,7 +353,6 @@ export function ListingCheckout() {
                 <span>X2Y2</span>
                 <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0.5% fee)</span>
               </div>
-              }
             </div>
           </div>
           {/* <div className='w-full flex flex-col px-8 mt-8 items-center'>
