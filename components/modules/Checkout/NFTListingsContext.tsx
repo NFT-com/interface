@@ -237,7 +237,10 @@ export function NFTListingsContextProvider(
         return false; // this listing is valid.
       }
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
-        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 && (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice));
+        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
+        ((target.endingPrice == null || BigNumber.from(target.endingPrice).eq(0)) ||
+        (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice)));
+
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
           isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || invalidInputsNTFCOM;
@@ -413,23 +416,32 @@ export function NFTListingsContextProvider(
           currency: targetProtocol == null ? (stagedNft.currency ?? supportedCurrencyData['WETH'].contract) : null,
           targets: stagedNft.targets.slice().map(target => {
             if (targetProtocol === target.protocol) {
-              if (auctionType == 1) {
-                return {
-                  ...target,
-                  endingPrice: null,
-                  buyNowPrice: price,
-                  currency: target.
-                    currency ?? supportedCurrencyData['WETH'].contract
-                };
-              }
-              if (auctionType == 2) {
+              if (!auctionType) {
                 return {
                   ...target,
                   endingPrice: price,
-                  buyNowPrice: null,
                   currency: target.
                     currency ?? supportedCurrencyData['WETH'].contract
                 };
+              } else {
+                if (auctionType == 1) {
+                  return {
+                    ...target,
+                    endingPrice: null,
+                    buyNowPrice: price,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
+                if (auctionType == 2) {
+                  return {
+                    ...target,
+                    endingPrice: price,
+                    buyNowPrice: null,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
               }
             } else {
               return target;
@@ -552,15 +564,14 @@ export function NFTListingsContextProvider(
             currentAddress,
             isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker,
             noExpirationNFTCOM ? 0 : (Number(target.duration) ?? Number(stagedNft.duration)),
-            // onchainAuctionTypeToGqlAuctionType(stagedNft.auctionType), Need to add in auction type
-            onchainAuctionTypeToGqlAuctionType(0),
+            onchainAuctionTypeToGqlAuctionType(target.auctionType),
             stagedNft.nft,
             Number(nonce),
             getByContractAddress(isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker).contract,
             target.startingPrice as BigNumber,
-            target.endingPrice as BigNumber,
-            stagedNft.buyNowPrice as BigNumber || null,
-            stagedNft.reservePrice as BigNumber || null,
+            target.endingPrice as BigNumber || null,
+            target.buyNowPrice as BigNumber || null,
+            target.reservePrice as BigNumber || null,
             stagedNft.currency ?? target.currency,
             noExpirationNFTCOM
           );
@@ -652,7 +663,7 @@ export function NFTListingsContextProvider(
           if (isNullOrEmpty(signature)) {
             return ListAllResult.SignatureRejected;
           }
-          const result = await listNftNative(target.NFTCOMOrder, signature, listing.nft, target.currency, target.startingPrice as BigNumber);
+          const result = await listNftNative(target, signature, listing.nft);
           if (!result) {
             return ListAllResult.ApiError;
           }

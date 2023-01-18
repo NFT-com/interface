@@ -25,6 +25,7 @@ import { ethers, Signature } from 'ethers';
 import moment from 'moment';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
+import { Address } from 'wagmi';
 
 export const MAX_UINT_256 = BigNumber.from(2).pow(256).sub(1);
 export const DEPLOYER = '0x59495589849423692778a8c5aaCA62CA80f875a4';
@@ -164,7 +165,8 @@ export const getNftcomHex = async (
   takerAddress: string,
   id: string,
   chainId: string,
-  nonce: number
+  nonce: number,
+  recipient: Address
 ): Promise<AggregatorResponse> => {
   try {
     const {
@@ -184,7 +186,7 @@ export const getNftcomHex = async (
       chainId,
       end,
       id,
-      makeAsset ,
+      makeAsset,
       makerAddress,
       nonce,
       salt,
@@ -200,14 +202,14 @@ export const getNftcomHex = async (
     };
     const sellOrder = marketAskToOrderStruct(order);
     const failIfRevert = true;
-    const inputData = [[sellOrder, signature.v, signature.r, signature.s], BigNumber.from(ethValue), failIfRevert];
+    const inputData = [[sellOrder, recipient, signature.v, signature.r, signature.s], BigNumber.from(ethValue), failIfRevert];
     const wholeHex = await NFTCOMLib.encodeFunctionData('_buySwap', inputData);
     const genHex = libraryCall('_buySwap(BuyNowParams,uint256,bool)', wholeHex.slice(10));
     
     return {
       tradeData: genHex,
       value: BigNumber.from(ethValue),
-      marketId: '4',
+      marketId: '5',
     };
   } catch (err) {
     throw `error in getNFTCOMHex: ${err}`;
@@ -469,13 +471,13 @@ export function unhashedTakeAsset(
   takeAssetContractAddress: string,
   endingPrice?: BigNumber,
   reservePrice?: BigNumber,
-  buyNowPrice?: BigNumber | null,
+  buyNowPrice?: BigNumber,
 ): UnhashedAsset {
   const takeAssetValue = auctionType === AuctionType.FixedPrice ?
     startingPrice :
     auctionType === AuctionType.Decreasing ?
       startingPrice :
-      !isNullOrEmpty(buyNowPrice.toString()) ?
+      !isNullOrEmpty(buyNowPrice?.toString()) ?
         MAX_UINT_256 :
         buyNowPrice;
 
@@ -511,7 +513,7 @@ export async function createNativeParametersForNFTListing(
   const salt = moment.utc().unix();
   const now = Date.now();
   const start = noExpirationNFTCOM ? 0 : Math.floor((now / 1000) - (60 * 10));
-  const end = noExpirationNFTCOM ? 0 : Math.floor((now + duration * 1000) / 1000); // need to add 'forever'
+  const end = noExpirationNFTCOM ? 0 : Math.floor((now + duration * 1000) / 1000);
   
   const unsignedOrder: UnsignedOrder = await getUnsignedOrder(
     ethers.utils.getAddress(address), // maker
