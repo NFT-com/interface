@@ -145,7 +145,6 @@ export function OfferSummaryModal(props: OfferSummaryModalProps) {
             label={success ? 'Check Offers' : error ? 'Try Again' : 'Approve'}
             onClick={async () => {
               if (success) {
-                clear();
                 setSuccess(false);
                 props.onClose();
                 router.push('/app/assets');
