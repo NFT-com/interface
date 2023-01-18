@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { ActivityStatus, LooksrareProtocolData, Maybe, Nft, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
+import { ActivityStatus, LooksrareProtocolData, Maybe, Nft, NftcomProtocolData, NftType, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useListNFTMutations } from 'graphql/hooks/useListNFTMutation';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
@@ -103,7 +103,10 @@ export interface NFTListingsContextType {
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => void;
   setDuration: (duration: SaleDuration | number) => void;
-  setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol) => void;
+  setNoExpirationNFTCOM: (noExpiration: boolean) => void;
+  noExpirationNFTCOM: boolean,
+  setPrice: (listing: PartialDeep<StagedListing>, price: BigNumberish, targetProtocol?: ExternalProtocol, auctionType?: number) => void;
+  setEndingPrice: (listing: PartialDeep<StagedListing>, endingPrice: BigNumberish, targetProtocol?: ExternalProtocol, auctionType?: number) => void;
   setCurrency: (listing: PartialDeep<StagedListing>, currency: SupportedCurrency, targetProtocol?: ExternalProtocol) => void;
   setTypeOfAuction: (listing: PartialDeep<StagedListing>, auctionType: number, targetProtocol?: ExternalProtocol) => void;
   removeListing: (nft: PartialDeep<Nft>) => void;
@@ -125,7 +128,10 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   toggleCartSidebar: () => null,
   toggleTargetMarketplace: () => null,
   setDuration: () => null,
+  setNoExpirationNFTCOM: () => null,
+  noExpirationNFTCOM: false,
   setPrice: () => null,
+  setEndingPrice: () => null,
   setCurrency: () => null,
   setTypeOfAuction: () => null,
   removeListing: () => null,
@@ -164,6 +170,7 @@ export function NFTListingsContextProvider(
   const { data: signer } = useSigner();
 
   const [selectedTab, setSelectedTab] = useState<CartSidebarTab>('Buy');
+  const [noExpirationNFTCOM, setNoExpirationNFTCOM] = useState(false);
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -211,12 +218,15 @@ export function NFTListingsContextProvider(
     const unconfiguredNft = toList.find((stagedNft: StagedListing) => {
       const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
       const lowestLooksrareListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.LooksRare);
+      const lowestNftcomListing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.NFTCOM);
       if (stagedNft?.nft == null || isNullOrEmpty(stagedNft?.targets)) {
         return true; // no targets or NFT to list?
       }
       const hasX2Y2LowerListing = (parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2) && stagedNft?.startingPrice)) ||(parseInt((lowestX2Y2Listing?.order?.protocolData as X2Y2ProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.X2Y2)?.startingPrice));
       const hasLooksrareLowerListing = (parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare) && stagedNft?.startingPrice)) ||(parseInt((lowestLooksrareListing?.order?.protocolData as LooksrareProtocolData)?.price) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.LooksRare)?.startingPrice));
-      if(hasX2Y2LowerListing || hasLooksrareLowerListing) {
+      const hasNftcomLowerListing = (parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM) && stagedNft?.startingPrice)) ||(parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(stagedNft?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM)?.startingPrice));
+
+      if(hasX2Y2LowerListing || hasLooksrareLowerListing || hasNftcomLowerListing) {
         return true;
       }
       const hasGeneralConfig = stagedNft.startingPrice != null &&
@@ -227,9 +237,13 @@ export function NFTListingsContextProvider(
         return false; // this listing is valid.
       }
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
+        const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
+        ((target.endingPrice == null || BigNumber.from(target.endingPrice).eq(0)) ||
+        (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice)));
+
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
-          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null);
+          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || invalidInputsNTFCOM;
       });
       // At this point, we need all targets to have valid individual configurations.
       return unconfiguredTarget != null;
@@ -325,21 +339,110 @@ export function NFTListingsContextProvider(
   const setPrice = useCallback((
     listing: PartialDeep<StagedListing>,
     price: Maybe<BigNumberish>,
-    targetProtocol?: ExternalProtocol
+    targetProtocol?: ExternalProtocol,
+    auctionType?: number,
   ) => {
     setToList(toList.slice().map(stagedNft => {
       if (listing?.nft?.id === stagedNft.nft?.id) {
         return {
           ...stagedNft,
           startingPrice: targetProtocol == null ? price : stagedNft.startingPrice,
+          auctionType: auctionType == null ? null : targetProtocol == null ? auctionType : stagedNft.auctionType,
+          reservePrice: auctionType == null ? null : targetProtocol == null ? price : stagedNft.reservePrice,
           currency: targetProtocol == null ? (stagedNft.currency ?? supportedCurrencyData['WETH'].contract) : null,
           targets: stagedNft.targets.slice().map(target => {
             if (targetProtocol === target.protocol) {
-              return {
-                ...target,
-                startingPrice: price,
-                currency: target.currency ?? supportedCurrencyData['WETH'].contract
-              };
+              if (!auctionType) {
+                return {
+                  ...target,
+                  startingPrice: price,
+                  currency: target.
+                    currency ?? supportedCurrencyData['WETH'].contract
+                };
+              } else {
+                if (auctionType == 0) {
+                  return {
+                    ...target,
+                    startingPrice: price,
+                    endingPrice: null,
+                    buyNowPrice: null,
+                    reservePrice: null,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
+                if (auctionType == 1) {
+                  return {
+                    ...target,
+                    startingPrice: null,
+                    reservePrice: price,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
+                if (auctionType == 2) {
+                  return {
+                    ...target,
+                    startingPrice: price,
+                    reservePrice: null,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
+              }
+            } else {
+              return target;
+            }
+          })
+        };
+      }
+      return stagedNft;
+    }));
+  }, [supportedCurrencyData, toList]);
+
+  const setEndingPrice = useCallback((
+    listing: PartialDeep<StagedListing>,
+    price: Maybe<BigNumberish>,
+    targetProtocol?: ExternalProtocol,
+    auctionType?: number,
+  ) => {
+    setToList(toList.slice().map(stagedNft => {
+      if (listing?.nft?.id === stagedNft.nft?.id) {
+        return {
+          ...stagedNft,
+          endPrice: targetProtocol == null ? price : stagedNft.endingPrice,
+          auctionType: auctionType == null ? null : targetProtocol == null ? auctionType : stagedNft.auctionType,
+          buyNowPrice: auctionType == null ? null : targetProtocol == null ? price : stagedNft.buyNowPrice,
+          currency: targetProtocol == null ? (stagedNft.currency ?? supportedCurrencyData['WETH'].contract) : null,
+          targets: stagedNft.targets.slice().map(target => {
+            if (targetProtocol === target.protocol) {
+              if (!auctionType) {
+                return {
+                  ...target,
+                  endingPrice: price,
+                  currency: target.
+                    currency ?? supportedCurrencyData['WETH'].contract
+                };
+              } else {
+                if (auctionType == 1) {
+                  return {
+                    ...target,
+                    endingPrice: null,
+                    buyNowPrice: price,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
+                if (auctionType == 2) {
+                  return {
+                    ...target,
+                    endingPrice: price,
+                    buyNowPrice: null,
+                    currency: target.
+                      currency ?? supportedCurrencyData['WETH'].contract
+                  };
+                }
+              }
             } else {
               return target;
             }
@@ -384,7 +487,6 @@ export function NFTListingsContextProvider(
     auctionType: number,
     targetProtocol?: ExternalProtocol
   ) => {
-    console.log('auctionType fdo fn', auctionType);
     setToList(toList.slice().map(stagedNft => {
       if (listing?.nft?.id === stagedNft.nft?.id) {
         return {
@@ -449,7 +551,6 @@ export function NFTListingsContextProvider(
             looksrareRoyaltyFeeManager
             // listing.takerAddress
           );
-          nonce++;
           return {
             ...target,
             looksrareOrder: order,
@@ -457,23 +558,23 @@ export function NFTListingsContextProvider(
         } else if (target.protocol === ExternalProtocol.X2Y2) {
           return target;
         } else if (target.protocol === ExternalProtocol.NFTCOM) {
+          target.duration = noExpirationNFTCOM ? 0 : target.duration;
           const nonce = await marketplace.nonces(currentAddress);
           const order = await createNativeParametersForNFTListing(
             currentAddress,
             isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker,
-            Number(target.duration) ?? Number(stagedNft.duration),
-            // onchainAuctionTypeToGqlAuctionType(stagedNft.auctionType), Need to add in auction type
-            onchainAuctionTypeToGqlAuctionType(0),
+            noExpirationNFTCOM ? 0 : (Number(target.duration) ?? Number(stagedNft.duration)),
+            onchainAuctionTypeToGqlAuctionType(target.auctionType),
             stagedNft.nft,
             Number(nonce),
             getByContractAddress(isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker).contract,
             target.startingPrice as BigNumber,
-            target.endingPrice as BigNumber,
-            stagedNft.buyNowPrice as BigNumber || null,
-            stagedNft.reservePrice as BigNumber || null,
+            target.endingPrice as BigNumber || null,
+            target.buyNowPrice as BigNumber || null,
+            target.reservePrice as BigNumber || null,
             stagedNft.currency ?? target.currency,
+            noExpirationNFTCOM
           );
-          // await marketplace.incrementNonce(); need to increment nonce
           return {
             ...target,
             NFTCOMOrder: order,
@@ -503,13 +604,14 @@ export function NFTListingsContextProvider(
           };
         }
       }));
+      
       return {
         ...stagedNft,
         targets: preparedTargets
       };
     }));
     setToList(preparedListings);
-  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager, marketplace, getByContractAddress]);
+  }, [toList, currentAddress, supportedCurrencyData, defaultChainId, looksrareStrategy, looksrareRoyaltyFeeRegistry, looksrareRoyaltyFeeManager, noExpirationNFTCOM, marketplace, getByContractAddress]);
 
   const listAll: () => Promise<ListAllResult> = useCallback(async () => {
     setSubmitting(true);
@@ -561,9 +663,12 @@ export function NFTListingsContextProvider(
           if (isNullOrEmpty(signature)) {
             return ListAllResult.SignatureRejected;
           }
-          const result = await listNftNative(target.NFTCOMOrder, signature, listing.nft, target.currency, target.startingPrice as BigNumber);
+          const result = await listNftNative(target, signature, listing.nft);
           if (!result) {
             return ListAllResult.ApiError;
+          }
+          if (result && listing?.hasOpenOrder && listing?.nftcomOrderId) {
+            updateActivityStatus([listing?.nftcomOrderId], ActivityStatus.Cancelled);
           }
           return ListAllResult.Success;
         } else {
@@ -613,7 +718,9 @@ export function NFTListingsContextProvider(
           listing?.nft?.type == NftType.Erc721 ?
             TransferProxyTarget.X2Y2 :
             TransferProxyTarget.X2Y21155 :
-          TransferProxyTarget.Opensea,
+          target === ExternalProtocol.NFTCOM?
+            TransferProxyTarget.NFTCOM :
+            TransferProxyTarget.Opensea,
       true);
     if (tx) {
       return await tx.wait(1).then(() => {
@@ -658,7 +765,10 @@ export function NFTListingsContextProvider(
     toggleCartSidebar,
     toggleTargetMarketplace,
     setDuration,
+    setNoExpirationNFTCOM,
+    noExpirationNFTCOM,
     setPrice,
+    setEndingPrice,
     setCurrency,
     setTypeOfAuction,
     allListingsConfigured,
