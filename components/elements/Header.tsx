@@ -5,6 +5,7 @@ import { NotificationBadge as StaticNotificationBadge } from 'components/modules
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useScrollPosition } from 'graphql/hooks/useScrollPosition';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -42,6 +43,7 @@ type HeaderProps = {
 gsap.registerPlugin(ScrollTrigger);
 
 export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
+  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { primaryIcon } = useThemeColors();
@@ -50,6 +52,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   const { toBuy } = useContext(NFTPurchasesContext);
   const { toggleMobileSidebar, mobileSidebarOpen } = useMobileSidebar();
   const { currentScrollPosition } = useScrollPosition();
+  const { setClearedFilters } = useSearchModal();
   const { user } = useUser();
 
   useMaybeCreateUser();
@@ -123,12 +126,18 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                       ? [
                         {
                           label: 'NFTs',
-                          onSelect: () => router.push('app/discover/nfts'),
+                          onSelect: () => {
+                            setClearedFilters();
+                            router.push('app/discover/nfts');
+                          },
                           icon: null,
                         },
                         {
                           label: 'Collections',
-                          onSelect: () => router.push('app/discover/collections'),
+                          onSelect: () => {
+                            setClearedFilters();
+                            router.push('/app/discover/collections');
+                          },
                           icon: null,
                         },
                         {
@@ -364,12 +373,18 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     ? [
                       {
                         label: 'NFTs',
-                        onSelect: () => router.push('/app/discover/nfts'),
+                        onSelect: () => {
+                          setClearedFilters();
+                          router.push('/app/discover/nfts');
+                        },
                         icon: null,
                       },
                       {
                         label: 'Collections',
-                        onSelect: () => router.push('/app/discover/collections'),
+                        onSelect: () => {
+                          setClearedFilters();
+                          router.push('/app/discover/collections');
+                        },
                         closeModalOnClick: true,
                         icon: null,
                       },
@@ -446,7 +461,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
             </div>
 
             {currentScrollPosition !== 0 ?
-              <ScrollLink to='mobile-search' spy={true} smooth={true} duration={500} offset={-100} >
+              <ScrollLink to='mobile-search' spy={true} smooth={true} duration={500} offset={newFiltersEnabledNew ? -currentScrollPosition : -100} >
                 <button
                   className='block minlg:hidden cursor-pointer -mr-1 minlg:mr-0 h-full w-7'
                 >
