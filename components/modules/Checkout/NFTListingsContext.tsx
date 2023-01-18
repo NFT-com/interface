@@ -239,8 +239,8 @@ export function NFTListingsContextProvider(
       const unconfiguredTarget = stagedNft.targets.find((target: ListingTarget) => {
         const invalidInputsNTFCOM = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
         ((target.endingPrice == null || BigNumber.from(target.endingPrice).eq(0)) ||
-        (target.endingPrice && target.startingPrice && BigNumber.from(target.startingPrice) > BigNumber.from(target.endingPrice)));
-
+        (target.endingPrice && target.startingPrice && (Number(target.startingPrice) < Number(target.endingPrice))));
+        
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
           isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || invalidInputsNTFCOM;
@@ -313,7 +313,7 @@ export function NFTListingsContextProvider(
               {
                 protocol: targetMarketplace,
                 duration: stagedNft.duration ,
-                currency: stagedNft.currency ?? targetMarketplace === ExternalProtocol.X2Y2 ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract
+                currency: stagedNft.currency ?? (targetMarketplace === ExternalProtocol.X2Y2 || targetMarketplace === ExternalProtocol.NFTCOM) ? supportedCurrencyData['ETH'].contract : supportedCurrencyData['WETH'].contract
               }
             ],
         };

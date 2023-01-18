@@ -4,7 +4,7 @@ import { PriceInput } from 'components/elements/PriceInput';
 import { LooksrareProtocolData, NftcomProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
-import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
+import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata } from 'utils/alchemyNFT';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -34,6 +34,7 @@ export interface ListingCheckoutNftTableRowProps {
 export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProps) {
   const defaultChainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
+  const { data: supportedCurrencyData } = useSupportedCurrencies();
   const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(props?.listing?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
   const lowestLooksrareListing = getLowestPriceListing(filterValidListings(props?.listing?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.LooksRare);
   const lowestNftcomListing = getLowestPriceListing(filterValidListings(props?.listing?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.NFTCOM);
@@ -273,8 +274,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       ending={
         NFTCOMPriceInputEndingValue()
       }
-      currencyAddress={getTarget(props.listing, ExternalProtocol.NFTCOM)?.currency ?? getAddress('weth', defaultChainId)}
-      currencyOptions={['WETH', 'ETH']}
+      currencyAddress={getTarget(props.listing, ExternalProtocol.NFTCOM)?.currency ?? supportedCurrencyData['ETH'].contract}
+      currencyOptions={['ETH', 'WETH']}
       onPriceChange={(val: BigNumber, auctionType?: number) => {
         setPrice(props.listing, val, ExternalProtocol.NFTCOM, auctionType);
         props.onPriceChange();
