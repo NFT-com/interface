@@ -4,17 +4,21 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { PriceInput } from 'components/elements/PriceInput';
+import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NULL_ADDRESS } from 'constants/addresses';
 import { Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
-import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery'
+import { useEthBalance } from 'hooks/balances/useEthBalance';
+import { useWethBalance } from 'hooks/balances/useWethBalance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { Doppler, getEnv } from 'utils/env';
 import { getEtherscanLink, processIPFSURL, shortenAddress } from 'utils/helpers';
-import { getAddress } from 'utils/httpHooks';
+import { getAddress, SupportedTokenContract } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
 import { NFTListingsCartSummaryModal } from './NFTListingsCartSummaryModal';
@@ -26,7 +30,7 @@ import { ArrowLeft } from 'phosphor-react';
 import { useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { PartialDeep } from 'type-fest';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi'
 
 export function OfferCheckout() {
   const {
@@ -37,6 +41,10 @@ export function OfferCheckout() {
   const router = useRouter();
   const { chain } = useNetwork();
   const defaultChainId = useDefaultChainId();
+  const { address: currentAddress } = useAccount();
+
+  const userEthBalance = useEthBalance(currentAddress);
+  const userWethBalance = useWethBalance(currentAddress);
 
   const { contractAddress, tokenId } = router.query;
   const { data: nft } = useNftQuery(contractAddress as `0x${string}`, tokenId ? BigNumber.from(tokenId) : BigNumber.from(0));
@@ -51,7 +59,17 @@ export function OfferCheckout() {
     
   const profileOwnerToShow: PartialDeep<Profile> = nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState<SupportedCurrency>('ETH');
+  const [selectedPrice, setSelectedPrice] = useState<BigNumber>(BigNumber.from(0));
   const [selectedExpirationOption, setSelectedExpirationOption] = useState(2);
+
+  const getBalance = () => {
+    if (selectedCurrency === 'ETH') {
+      return Number(BigNumber.from(userEthBalance?.balance?.balance || 0)) / 10 ** 18 + ` ${selectedCurrency}`;
+    } else if (selectedCurrency === 'WETH') {
+      return Number(BigNumber.from(userWethBalance?.balance)) / 10 ** 18 + ` ${selectedCurrency}`;
+    }
+  };
 
   const BiddingOneNFT = () => {
     return(
@@ -69,16 +87,13 @@ export function OfferCheckout() {
         </div>
         {nft?.metadata?.imageURL ?
           <div className='mt-20 w-1/2'>
-            <video
-              autoPlay
-              muted
-              loop
-              key={nft?.metadata?.imageURL}
+            <RoundedCornerMedia
+              variant={RoundedCornerVariant.None}
+              width={504}
+              height={504}
+              containerClasses='w-full h-full overflow-hidden'
               src={processIPFSURL(nft?.metadata?.imageURL)}
-              poster={processIPFSURL(nft?.metadata?.imageURL)}
-              className={tw(
-                'rounded-md w-full',
-              )}
+              extraClasses='hover:scale-105 transition'
             />
             <div className='flex font-noi-grotesk mt-6'>
               <div className='flex flex-col justify-between w-3/5'>
@@ -187,13 +202,16 @@ export function OfferCheckout() {
               <PriceInput
                 key={'BidInput'}
                 offer={true}
-                currencyAddress={getAddress('weth', defaultChainId)}
+                currencyAddress={selectedCurrency?.toLowerCase() === 'eth' ?
+                  NULL_ADDRESS :
+                  getAddress(selectedCurrency?.toLowerCase() as SupportedTokenContract, defaultChainId)
+                }
                 currencyOptions={['ETH', 'WETH']}
                 onPriceChange={(val: BigNumber) => {
-                  console.log('val', val);
+                  setSelectedPrice(val);
                 }}
                 onCurrencyChange={(currency: SupportedCurrency) => {
-                  console.log('currency', currency);
+                  setSelectedCurrency(currency);
                 }}
                 error={false}
               />
@@ -205,7 +223,7 @@ export function OfferCheckout() {
 
           <div className='flex items-center justify-between w-full'>
             <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>Your Balance</div>
-            <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>1 ETH</div>
+            <div className='text-[16px] flex text-[#B2B2B2] mb-1 mt-3'>{getBalance()}</div>
           </div>
 
           <div className='w-full text-[16px] font-medium flex text-[#6A6A6A] mb-1 mt-5'>Set Bid Expiration</div>
