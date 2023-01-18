@@ -79,13 +79,13 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         selectedOptionDropdown2.current = ExternalProtocol.X2Y2;
         selectedOptionForDropdown = selectedOptionDropdown2;
       }
-      if (dropDownNumber === 3) {
+      if (dropDownNumber === 3 && getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST)) {
         selectedOptionDropdown3.current = ExternalProtocol.NFTCOM;
         selectedOptionForDropdown = selectedOptionDropdown3;
       }
     }
 
-    return [
+    const base = [
       {
         label: 'Opensea',// ExternalProtocol.Seaport,
         onSelect: () => {
@@ -122,8 +122,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         },
         disabled: X2Y2Enabled
       },
-      {
-        label: ExternalProtocol.NFTCOM,
+    ];
+
+    return getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) ?
+      base.push({
+        label: 'NFT.com',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.NFTCOM;
           toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing, selectedOptionForDropdown.current);
@@ -133,8 +136,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           if (dropDownNumber === 3) selectedOptionDropdown3.current = ExternalProtocol.NFTCOM;
         },
         disabled: NFTCOMEnabled
-      },
-    ];
+      }) :
+      base;
   };
 
   const generateTypeOfAuctionOptions = () => {
