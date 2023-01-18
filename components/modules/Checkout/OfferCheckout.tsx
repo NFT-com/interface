@@ -13,7 +13,7 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { SupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { Doppler, getEnv } from 'utils/env';
-import { processIPFSURL } from 'utils/helpers';
+import { getEtherscanLink, processIPFSURL, shortenAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
 import { tw } from 'utils/tw';
 
@@ -24,6 +24,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { ArrowLeft } from 'phosphor-react';
 import { useContext, useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
@@ -38,7 +39,7 @@ export function OfferCheckout() {
   const defaultChainId = useDefaultChainId();
 
   const { contractAddress, tokenId } = router.query;
-  const { data: nft } = useNftQuery(contractAddress as `0x${string}`, BigNumber.from(tokenId));
+  const { data: nft } = useNftQuery(contractAddress as `0x${string}`, tokenId ? BigNumber.from(tokenId) : BigNumber.from(0));
   const { data: collection } = useCollectionQuery(String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)), contractAddress as `0x${string}`);
 
   const { profileTokens } = useNftProfileTokens(nft?.wallet?.address);
@@ -51,6 +52,9 @@ export function OfferCheckout() {
   const profileOwnerToShow: PartialDeep<Profile> = nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
   const [selectedExpirationOption, setSelectedExpirationOption] = useState(2);
+
+  console.log('profileOwnerToShow: ', profileOwnerToShow);
+  console.log('nft: ', nft);
 
   const BiddingOneNFT = () => {
     return(
@@ -97,7 +101,26 @@ export function OfferCheckout() {
                   <LoggedInIdenticon round border />
                 }
               </div>
-              <span className='whitespace-nowrap text-ellipsis overflow-hidden ml-2'>@{profileOwnerToShow?.url}</span>
+              <div
+                className={tw(
+                  'flex px-3 items-center',
+                  profileOwnerToShow?.url && 'cursor-pointer'
+                )}
+                onClick={() => {
+                  if (profileOwnerToShow?.url) {
+                    router.push('/' + profileOwnerToShow?.url);
+                  } else {
+                    window.open(getEtherscanLink(Number(defaultChainId), nft?.wallet?.address, 'address'), '_blank');
+                  }
+                }}
+              >
+                <span className="text-base whitespace-nowrap text-ellipsis overflow-hidden ml-2leading-5 font-noi-grotesk">
+                  {profileOwnerToShow?.url ?
+                    `@${profileOwnerToShow?.url}` :
+                    shortenAddress(nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown'
+                  }
+                </span>
+              </div>
             </div>
           </div>
         </div>
