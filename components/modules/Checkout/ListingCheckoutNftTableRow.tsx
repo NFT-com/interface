@@ -50,7 +50,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     toggleTargetMarketplace,
     // clearGeneralConfig,
     getTarget,
-    removeListing
+    removeListing,
+    decreasingPriceError
   } = useContext(NFTListingsContext);
 
   const rowSelectedMarketplaces = useRef(null);
@@ -292,7 +293,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         props.onPriceChange();
       }}
       error={
-        (props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && target.startingPrice == null) != null ||
+        (decreasingPriceError||
+        props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && target.startingPrice == null) != null ||
       props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && BigNumber.from(target.startingPrice).eq(0)) != null) ||
       (parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM)?.startingPrice))
       }
