@@ -130,7 +130,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
             // this is a staged purchase
               props.item?.['price'] ?
                 <div className='font-medium text-base line-clamp-1'>
-                  {formatCurrency(props.item as StagedPurchase)}
+                  {Number(formatCurrency(props.item as StagedPurchase)).toLocaleString('en-US', { maximumSignificantDigits: 3 })}
                   {' '}
                   <span className='text-[#6F6F6F]'>
                     {getByContractAddress((props.item as StagedPurchase).currency)?.name ?? ''}
