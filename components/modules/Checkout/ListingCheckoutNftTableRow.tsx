@@ -87,7 +87,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
 
     const base = [
       {
-        label: 'Opensea',// ExternalProtocol.Seaport,
+        label: 'Opensea', // ExternalProtocol.Seaport,
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.Seaport;
           toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing, selectedOptionForDropdown.current);
