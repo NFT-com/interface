@@ -17,7 +17,9 @@ import { tw } from 'utils/tw';
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 
 import { BigNumber, ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import RemoveIcon from 'public/close-circle-icon-gray.svg';
+import InfoIcon from 'public/gray-info-icon.svg';
 // import LooksrareIcon from 'public/looksrare-icon.svg';
 // import OpenseaIcon from 'public/opensea-icon.svg';
 import DeleteRowIcon from 'public/trash-icon.svg';
@@ -53,6 +55,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     removeListing,
     decreasingPriceError
   } = useContext(NFTListingsContext);
+  const router = useRouter();
 
   const rowSelectedMarketplaces = useRef(null);
 
@@ -341,10 +344,27 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       </ div>
       {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
       {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-2 minlg:pl-0'>
-        {(seaportEnabled || looksrareEnabled || X2Y2Enabled) && <div className='hidden minlg:flex text-base font-normal flex text-[#A6A6A6] mb-4'>
-          <div className='w-[26%]'>Marketplace</div>
-          <div className='w-[25%]'>Type of Auction</div>
-          <div className='w-[43%]'>Set Price</div>
+        {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='hidden minlg:flex text-base minlg:text-[0.85rem] minxl:text-base font-normal flex text-[#A6A6A6] mb-4'>
+          <div className='w-[22%]'>Marketplace</div>
+          <div className='w-[28%] flex flex-row justify-between'>
+            <span className='shrink-0'>Type of Auction</span>
+            <CustomTooltip2
+              tooltipClick={() => router.push('https://docs.nft.com/')}
+              orientation='custom'
+              customLeftPosition='50'
+              hidden={false}
+              tooltipComponent={
+                <div
+                  className="rounded-xl max-w-[200px] w-max cursor-pointer"
+                >
+                  <p>Learn more</p>
+                </div>
+              }
+            >
+              <InfoIcon className='ml-2' />
+            </CustomTooltip2>
+          </div>
+          <div className='w-[45%]'>Set Price</div>
           <div className='w-[5%]'>&nbsp;</div>
         </div>}
         {seaportEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
