@@ -6,10 +6,10 @@ import { isNullOrEmpty, sameAddress } from './helpers';
 import { getAddress } from './httpHooks';
 
 import { BigNumber, ethers } from 'ethers';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { PartialDeep } from 'type-fest';
 
-export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
+export const getListingPrice = (listing: PartialDeep<TxActivity>, currentTimestamp?: Moment) => {
   switch(listing?.order?.protocol) {
   case (ExternalProtocol.LooksRare): {
     const order = listing?.order?.protocolData as LooksrareProtocolData;
@@ -29,9 +29,8 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
     if(order.auctionType === AuctionType.Decreasing) {
       const startPrice = order.takeAsset[0].value;
       const endPrice = order.takeAsset[0].minimumBid;
-      const a = moment();
       const b = moment.unix(order?.start);
-      const secondsElapsed = a.diff(b, 'seconds');
+      const secondsElapsed = currentTimestamp ? currentTimestamp.diff(b, 'seconds') : 0;
       return BigNumber.from((startPrice - (secondsElapsed / (order?.end - order?.start)) * (startPrice - endPrice)).toString());
     }
     return BigNumber.from(order?.takeAsset[0]?.value ?? 0);
