@@ -4,7 +4,7 @@ import { useNftcomExchangeContract } from 'hooks/contracts/useNftcomExchangeCont
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useX2Y2ExchangeContract } from 'hooks/contracts/useX2Y2ExchangeContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { ExternalExchange, ExternalProtocol } from 'types';
+import { ExternalProtocol } from 'types';
 import { nftcomBuyNow } from 'utils/nativeMarketplaceHelpers';
 
 import { Doppler, getEnv } from './env';
