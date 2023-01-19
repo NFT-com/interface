@@ -1,6 +1,7 @@
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { nftAggregator } from 'constants/contracts';
 import { X2y2_exchange } from 'constants/typechain/X2y2_exchange';
-import { X2Y2ProtocolData } from 'graphql/generated/types';
+import { NftType, X2Y2ProtocolData } from 'graphql/generated/types';
 import {
   AggregatorResponse,
   cancelInputParamType,
@@ -21,7 +22,7 @@ import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
 
 import { OP_CANCEL_OFFER } from '@x2y2-io/sdk';
 import { CancelInput, TokenPair, TokenStandard, X2Y2Order } from '@x2y2-io/sdk/dist/types';
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ContractTransaction, ethers } from 'ethers';
 export const getNetworkMeta = (network: Network): NetworkMeta => {
   switch (network) {
   case 'mainnet':
@@ -391,4 +392,60 @@ export async function cancelX2Y2Listing(
 
   const cancel = await X2Y2Exchange.cancel(input.itemHashes, input.deadline, input.v, input.r, input.s);
   return cancel;
+}
+
+export const X2Y2BuyNow = async (
+  order: StagedPurchase,
+  X2Y2Exchange: X2y2_exchange,
+  executorAddress: string
+): Promise<ContractTransaction> => {
+  try {
+    const {
+      contract,
+      created_at,
+      currencyAddress,
+      end_at,
+      id,
+      maker,
+      price,
+      side,
+      status,
+      tokenId,
+      type,
+    } = order.protocolData as X2Y2ProtocolData;
+
+    const tokenStandard: TokenStandard = order.nft.type === NftType.Erc1155 ? 'erc1155' : 'erc721';
+    const x2y2Order = {
+      item_hash: order.orderHash,
+      maker,
+      type,
+      side,
+      status,
+      currency: currencyAddress,
+      end_at: end_at.toString(),
+      created_at: created_at.toString(),
+      token: {
+        contract,
+        token_id: Number(tokenId),
+        erc_type: tokenStandard,
+      },
+      id,
+      price,
+      taker: executorAddress,
+    };
+    const runInput = await buyOrder('mainnet', executorAddress, x2y2Order);
+    const tx = X2Y2Exchange.run(
+      runInput,
+      {
+        value: order?.price
+      }
+    );
+    return tx;
+  } catch (err) {
+    throw `error in X2Y2BuyNow: ${err}`;
+  }
+};
+
+export function getX2Y2AssetPageUrl(contractAddress: string, tokenId: string) {
+  return `https://x2y2.io/eth/${contractAddress}/${tokenId}`;
 }
