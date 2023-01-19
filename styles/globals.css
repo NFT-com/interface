@@ -2365,7 +2365,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .rc-tooltip {
-  z-index: 299 !important;
+  z-index: 99 !important;
 }
 
 @keyframes animDecorLeaderboard {
