@@ -1,7 +1,20 @@
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
+import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
+import { useNftcomExchangeContract } from 'hooks/contracts/useNftcomExchangeContract';
+import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
+import { useX2Y2ExchangeContract } from 'hooks/contracts/useX2Y2ExchangeContract';
+import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { ExternalExchange, ExternalProtocol } from 'types';
+import { nftcomBuyNow } from 'utils/nativeMarketplaceHelpers';
+
 import { Doppler, getEnv } from './env';
 import { isNullOrEmpty } from './helpers';
+import { looksrareBuyNow } from './looksrareHelpers';
+import { seaportBuyNow } from './seaportHelpers';
+import { X2Y2BuyNow } from './X2Y2Helpers';
 
-import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ContractTransaction, ethers, Signer } from 'ethers';
+import { useCallback } from 'react';
 
 export async function getOpenseaCollection(
   contract: string,
@@ -71,3 +84,41 @@ export const libraryCall = (fnSig: string, entireHex: string): string => {
       .substring(0, 10)}` + entireHex
   );
 };
+
+export type BuyNowInterface = {
+  buyNow: (executorAddress: string, order: StagedPurchase) => Promise<ContractTransaction>
+};
+
+export function useBuyNow(signer: Signer): BuyNowInterface {
+  const looksrareExchange = useLooksrareExchangeContract(signer);
+  const NftcomExchange = useNftcomExchangeContract(signer);
+  const X2Y2Exchange = useX2Y2ExchangeContract(signer);
+  const seaportExchange = useSeaportContract(signer);
+  const defaultChainId = useDefaultChainId();
+  
+  const buyNow = useCallback(async (
+    executorAddress: string,
+    order: StagedPurchase,
+  ) => {
+    try {
+      switch(order.protocol){
+      case ExternalProtocol.LooksRare:
+        return await looksrareBuyNow(order, looksrareExchange, executorAddress);
+      case ExternalProtocol.NFTCOM:
+        return await nftcomBuyNow(order, NftcomExchange, executorAddress, defaultChainId);
+      case ExternalProtocol.X2Y2:
+        return await X2Y2BuyNow(order, X2Y2Exchange, executorAddress);
+      case ExternalProtocol.Seaport:
+        return await seaportBuyNow(order, seaportExchange, executorAddress);
+      default:
+        break;
+      }
+    } catch (err) {
+      throw `error in buyNow: ${err}`;
+    }
+  }, [NftcomExchange, X2Y2Exchange, defaultChainId, looksrareExchange, seaportExchange]);
+
+  return {
+    buyNow
+  };
+}
