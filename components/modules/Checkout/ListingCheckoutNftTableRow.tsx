@@ -351,7 +351,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             <CustomTooltip2
               tooltipClick={() => router.push('https://docs.nft.com/')}
               orientation='custom'
-              customLeftPosition='19'
+              customLeftPosition='50'
               hidden={false}
               tooltipComponent={
                 <div
