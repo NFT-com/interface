@@ -445,3 +445,7 @@ export const X2Y2BuyNow = async (
     throw `error in X2Y2BuyNow: ${err}`;
   }
 };
+
+export function getX2Y2AssetPageUrl(contractAddress: string, tokenId: string) {
+  return `https://x2y2.io/eth/${contractAddress}/${tokenId}`;
+}
