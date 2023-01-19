@@ -19,11 +19,7 @@ import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { BigNumber, ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import RemoveIcon from 'public/close-circle-icon-gray.svg';
-import InfoIcon from 'public/gray-info-icon.svg';
-// import LooksrareIcon from 'public/looksrare-icon.svg';
-// import OpenseaIcon from 'public/opensea-icon.svg';
 import DeleteRowIcon from 'public/trash-icon.svg';
-// import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useContext, useMemo, useRef } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -71,6 +67,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
   const NFTCOMEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.NFTCOM) != null, [getTarget, props.listing]);
 
+  const LooksRareIcon = '/looksrare-icon.svg';
+  const NFTCOMIcon = '/nft_logo_yellow.svg';
+  const OpenseaIcon = '/opensea-icon.svg';
+  const X2Y2Icon = '/x2y2-icon.svg';
+
   const generateMarketPlaceOptions = (dropDownNumber: number, hasPredefinedSelectedOption?: boolean) => {
     let selectedOptionForDropdown = dropDownNumber === 0 ? selectedOptionDropdown0 : dropDownNumber === 1 ? selectedOptionDropdown1 : selectedOptionDropdown2;
     if (hasPredefinedSelectedOption) {
@@ -95,6 +96,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     const base = [
       {
         label: 'Opensea', // ExternalProtocol.Seaport,
+        icon: OpenseaIcon,
+        imageSize: 32,
+        customIconClass: '-ml-[2px]',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.Seaport;
           toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing, selectedOptionForDropdown.current);
@@ -107,6 +111,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       },
       {
         label: ExternalProtocol.LooksRare,
+        icon: LooksRareIcon,
+        imageSize: 32,
+        customIconClass: '-ml-[2px]',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.LooksRare;
           toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing, selectedOptionForDropdown.current);
@@ -119,6 +126,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       },
       {
         label: ExternalProtocol.X2Y2,
+        icon: X2Y2Icon,
+        imageSize: 26,
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.X2Y2;
           toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing, selectedOptionForDropdown.current);
@@ -132,8 +141,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     ];
 
     return getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) ?
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       base.concat({
         label: 'NFT.com',
+        icon: NFTCOMIcon,
+        imageSize: 26,
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.NFTCOM;
           toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing, selectedOptionForDropdown.current);
