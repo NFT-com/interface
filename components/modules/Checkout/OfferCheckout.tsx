@@ -9,7 +9,7 @@ import { NULL_ADDRESS } from 'constants/addresses';
 import { Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
-import { useProfileQuery } from 'graphql/hooks/useProfileQuery'
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useEthBalance } from 'hooks/balances/useEthBalance';
 import { useWethBalance } from 'hooks/balances/useWethBalance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
