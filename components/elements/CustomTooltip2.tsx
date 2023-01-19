@@ -89,20 +89,20 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
 
   const classContainer = `w-max absolute z-10 ${setContainerPosition(
     props.orientation,
-    props.customLeftPosition
-  )} bg-black text-white text-sm p-2 rounded-xl flex items-center transition-all duration-150 pointer-events-none cursor-pointer`;
+    props.customLeftPosition,
+  )} bg-black text-white text-sm p-2 rounded-xl flex items-center transition-all duration-150 ${props.tooltipClick ? 'cursor-pointer' : 'pointer-events-none'}`;
 
   const pointerClasses = `bg-black h-3 w-3 absolute z-10 ${setPointerPosition(
-    props.orientation
-  )} rotate-45 pointer-events-none`;
+    props.orientation,
+  )} rotate-45 ${props.tooltipClick ? 'cursor-pointer' : 'pointer-events-none'}`;
 
   return (
     <div
       className={`relative flex items-center w-full h-full ${props.tooltipClick && 'cursor-pointer'}`}
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
-      onClick={() => props.tooltipClick()}
     >
       <div
+        onClick={() => props.tooltipClick()}
         className={classContainer} style={{ opacity: opacity }}>
         <div className={pointerClasses} />
         {props.tooltipComponent}
