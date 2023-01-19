@@ -63,7 +63,7 @@ export function PriceInput(props: PriceInputProps) {
           disabled={props.empty}
           type="text"
           className={tw(
-            'text-sm border h-full [55%]',
+            'text-sm border h-full w-[55%]',
             'text-left p-1 rounded-md pl-2 border-2',
             props.error ? 'border-red-500' : 'border-gray-300'
           )}
@@ -197,7 +197,7 @@ export function PriceInput(props: PriceInputProps) {
           ? <div className='font-medium flex items-center ml-1 w-[45%] pl-4 minlg:pl-3'>
             {currencyData.name}
           </div>
-          : <div className='flex items-centerminlg:ml-1 minxl:ml-1 w-[45%] ml-3'>
+          : <div className='flex items-center minlg:ml-1 minxl:ml-1 w-[45%] ml-3'>
             <DropdownPicker
               v2
               options={props.empty ? [] : currencies}
