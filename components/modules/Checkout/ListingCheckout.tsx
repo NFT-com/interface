@@ -158,11 +158,11 @@ export function ListingCheckout() {
             >
               {NFTCOMAtLeastOneEnabled
                 ? <NFTLogo
-                  className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]'
-                  alt="Opensea logo"
+                  className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]'
+                  alt="NFT.com logo"
                   layout="fill"
                 />
-                : <NFTLogo className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px]' />}
+                : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
               <span className='font-semibold text-base'>NFT.com</span>
               <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
             </div>}
@@ -246,7 +246,7 @@ export function ListingCheckout() {
                     setNoExpirationNFTCOM(!noExpirationNFTCOM);
                   }}
                 />
-                <NFTLogo className='h-[1.95rem] relative shrink-0 -my-[4px] -mb-[3px] ml-2' />
+                <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] -mb-[3px] ml-2' />
               </div>
               : null}
           </div>

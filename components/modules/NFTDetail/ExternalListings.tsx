@@ -3,10 +3,11 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
@@ -21,7 +22,7 @@ import { SelectListingModal } from './SelectListingModal';
 import { BigNumber, ethers } from 'ethers';
 import ETH from 'public/eth.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
+import NFTLogo from 'public/nft_logo_yellow.webp';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import USDC from 'public/usdc.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
@@ -41,7 +42,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   const chainId = useDefaultChainId();
   const { address: currentAddress } = useAccount();
   const ethPriceUsd: number = useEthPriceUSD();
-
+  const currentDate = useGetCurrentDate();
   const [editListingsModalOpen, setEditListingsModalOpen] = useState(false);
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
 
@@ -108,7 +109,8 @@ export function ExternalListings(props: ExternalListingsProps) {
         {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
         {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
         {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
-        {listing?.order?.protocol === ExternalProtocol.NFTCOM && <NFTLogo className='mx-1.5 h-9 w-9 relative shrink-0' alt="NFT.com logo redirect" layout="fill"/>}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {listing?.order?.protocol === ExternalProtocol.NFTCOM && <img src={NFTLogo.src} className='mx-1.5 h-8 w-8 relative shrink-0' alt="NFT.com logo redirect" />}
         <span className='text-black'>{getProtocolDisplayName(protocolName)}</span>
       </div>
     </div>;
@@ -165,7 +167,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
-          const price = getListingPrice(listing);
+          const price = getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
           stagePurchase({
             nft: props.nft,
             activityId: listing?.id,
@@ -191,17 +193,7 @@ export function ExternalListings(props: ExternalListingsProps) {
         type={ButtonType.PRIMARY}
       />;
     }
-  }, [
-    hasGks,
-    chainId,
-    nftInPurchaseCart,
-    currentAddress,
-    getByContractAddress,
-    props.collectionName,
-    props.nft,
-    stagePurchase,
-    toggleCartSidebar
-  ]);
+  }, [hasGks, currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, currentDate, stagePurchase, toggleCartSidebar]);
 
   if (isNullOrEmpty(filterValidListings(props.nft?.listings?.items))) {
     return (
@@ -286,12 +278,12 @@ export function ExternalListings(props: ExternalListingsProps) {
                     getByContractAddress(getListingCurrencyAddress(listing))?.contract,
                     getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
                   )}
-                  <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}</span>
+                  <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}</span>
                 </div>
                 <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
               </div>
               <span className="md:ml-0 md:mt-2 ml-2 text-[15px] uppercase font-medium text-[#6A6A6A]">
-                ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}{' USD'}
+                ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}{' USD'}
               </span>
             </div>
 
