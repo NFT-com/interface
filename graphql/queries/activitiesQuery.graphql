@@ -63,6 +63,48 @@ query Activities($input: TxActivitiesInput) {
                         is_bundle
                         is_private
                     }
+                    ... on NFTCOMProtocolData {
+                      makeAsset {
+                        standard {
+                          assetClass
+                          bytes
+                          contractAddress
+                          tokenId
+                          allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                      }
+                      takeAsset {
+                        standard {
+                          assetClass
+                          bytes
+                          contractAddress
+                          tokenId
+                          allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                      }
+                      swapTransactionId
+                      acceptedAt
+                      rejectedAt
+                      listingId
+                      buyNowTaker
+                      auctionType
+                      orderSignature: signature {
+                        v
+                        r
+                        s
+                      }
+                      salt
+                      start
+                      end
+                    }
                     ... on SeaportProtocolData {
                         signature
                         parameters {
