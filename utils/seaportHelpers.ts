@@ -50,8 +50,8 @@ export const generateRandomSalt: () => string = () => {
 };
 
 export const multiplyBasisPoints = (amount: BigNumberish, basisPoints: BigNumberish) =>
-  BigNumber.from(amount)
-    .mul(BigNumber.from(basisPoints))
+  BigNumber.from(amount || 0)
+    .mul(BigNumber.from(basisPoints || 0))
     .div(ONE_HUNDRED_PERCENT_BP);
 
 export const isCurrencyItem = ({ itemType }: SeaportConsiderationItem) =>
