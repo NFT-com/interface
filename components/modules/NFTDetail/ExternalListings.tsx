@@ -22,7 +22,7 @@ import { SelectListingModal } from './SelectListingModal';
 import { BigNumber, ethers } from 'ethers';
 import ETH from 'public/eth.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
+import NFTLogo from 'public/nft_logo_yellow.webp';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import USDC from 'public/usdc.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
@@ -109,7 +109,8 @@ export function ExternalListings(props: ExternalListingsProps) {
         {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
         {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
         {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
-        {listing?.order?.protocol === ExternalProtocol.NFTCOM && <NFTLogo className='mx-1.5 h-9 w-9 relative shrink-0' alt="NFT.com logo redirect" layout="fill"/>}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {listing?.order?.protocol === ExternalProtocol.NFTCOM && <img src={NFTLogo.src} className='mx-1.5 h-8 w-8 relative shrink-0' alt="NFT.com logo redirect" />}
         <span className='text-black'>{getProtocolDisplayName(protocolName)}</span>
       </div>
     </div>;

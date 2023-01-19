@@ -12,6 +12,8 @@ export interface PickerOption {
   onSelect: () => void;
   color?: string;
   icon?: string;
+  imageSize?: number;
+  customIconClass?: string;
   disabled?: boolean
 }
 
@@ -122,17 +124,22 @@ export function DropdownPicker(props: DropdownPickerProps) {
           <KeyIcon className='inline mr-1' stroke="black" />
         </div>
         }
-        {props?.options[selectedIndex]?.icon &&
-          <Image
-            className="h-4 mr-2"
-            src={props?.options[selectedIndex]?.icon}
-            alt={props?.options[selectedIndex]?.label} />
-        }
-        <div className='mr-2'>
-          {(props.placeholder && !selected) ?
-            <span style={{ color: secondaryText }}>{props.placeholder}</span>
-            : props.options[selectedIndex]?.label
+        <div className='flex items-center w-full'>
+          {props?.options[selectedIndex]?.icon &&
+            <div className={`mr-2 flex items-center justify-center ${props?.options[selectedIndex]?.customIconClass || ''}`}>
+              <Image
+                height={props?.options[selectedIndex]?.imageSize || 26}
+                width={props?.options[selectedIndex]?.imageSize || 26}
+                src={props?.options[selectedIndex]?.icon}
+                alt={props?.options[selectedIndex]?.label} />
+            </div>
           }
+          <div className='mr-2'>
+            {(props.placeholder && !selected) ?
+              <span style={{ color: secondaryText }}>{props.placeholder}</span>
+              : props.options[selectedIndex]?.label
+            }
+          </div>
         </div>
         {expanded
           ? (

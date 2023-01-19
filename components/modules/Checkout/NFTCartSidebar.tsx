@@ -214,7 +214,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           >
             {showAll ? 'Show all' : 'Show less'}
           </span>}
-          {props.selectedTab === 'Buy' ? <PurchaseSummary /> : null}
+          {stagedNFTs.length > 0 && props.selectedTab === 'Buy' ? <PurchaseSummary /> : null}
           {(stagedNFTs.length > 0 && props.selectedTab === 'Sell' &&
         !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell')
           ) && <div className="mx-7 my-4 flex">

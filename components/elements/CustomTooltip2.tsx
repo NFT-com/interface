@@ -19,7 +19,7 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
 
   function handleMouseLeave() {
     if (props.tooltipClick) {
-      setTimeout(() => setOpacity(0), 10000);
+      setTimeout(() => setOpacity(0), 3000);
     } else {
       setOpacity(0);
     }
@@ -89,16 +89,21 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
 
   const classContainer = `w-max absolute z-10 ${setContainerPosition(
     props.orientation,
-    props.customLeftPosition
-  )} bg-black text-white text-sm p-2 rounded-xl flex items-center transition-all duration-150 pointer-events-none`;
+    props.customLeftPosition,
+  )} bg-black text-white text-sm p-2 rounded-xl flex items-center transition-all duration-150 ${props.tooltipClick ? 'cursor-pointer' : 'pointer-events-none'}`;
 
   const pointerClasses = `bg-black h-3 w-3 absolute z-10 ${setPointerPosition(
-    props.orientation
-  )} rotate-45 pointer-events-none`;
+    props.orientation,
+  )} rotate-45 ${props.tooltipClick ? 'cursor-pointer' : 'pointer-events-none'}`;
 
   return (
-    <div className="relative flex items-center w-full h-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onClick={() => props.tooltipClick ? props.tooltipClick() : null}>
-      <div className={classContainer} style={{ opacity: opacity }}>
+    <div
+      className={`relative flex items-center w-full h-full ${props.tooltipClick && 'cursor-pointer'}`}
+      onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
+    >
+      <div
+        onClick={() => props.tooltipClick()}
+        className={classContainer} style={{ opacity: opacity }}>
         <div className={pointerClasses} />
         {props.tooltipComponent}
       </div>

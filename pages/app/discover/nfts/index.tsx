@@ -38,12 +38,12 @@ export default function CollectionsPage() {
     }else {
       setLoading(true);
       fetchTypesenseSearch({
-        facet_by: ',listings.marketplace,status,listings.price,nftType,contractName',
+        facet_by: ',listings.marketplace,status,listings.price,nftType',
         index: 'nfts',
         q: '*',
         sort_by: 'score:desc',
         query_by: '',
-        filter_by: nftsResultsFilterBy ? nftsResultsFilterBy : 'listings.currency:=[ETH]',
+        filter_by: nftsResultsFilterBy,
         per_page: 20,
         page: page,
       }).then((results) => {
@@ -121,17 +121,20 @@ export default function CollectionsPage() {
                       <div className={'hidden minlg:block'}>
                         <SideNav onSideNav={() => null} filtersData={filters}/>
                       </div>
-                      {
-                        !loading && nftSData?.length === 0
-                          ? (
-                            <div className='grid-cols-1 w-full'>
-                              <NoActivityIcon className='m-auto mt-10' />
-                              <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
-                            </div>
-                          )
-                          : null
-                      }
-                      {nftSData?.length > 0 && showNftView()}
+                      <div className='grid-cols-1 w-full'>
+                        {
+                          !loading && nftSData?.length === 0
+                            ? (
+                              <div>
+                                <NoActivityIcon className='m-auto mt-10' />
+                                <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
+                              </div>
+                            )
+                            : null
+                        }
+                        {nftSData?.length > 0 && showNftView()}
+                      </div>
+
                     </div>
                     {(loading) &&
                       (<div className="flex items-center justify-center min-h-[16rem] w-full">

@@ -17,11 +17,10 @@ import { tw } from 'utils/tw';
 import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 
 import { BigNumber, ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import RemoveIcon from 'public/close-circle-icon-gray.svg';
-// import LooksrareIcon from 'public/looksrare-icon.svg';
-// import OpenseaIcon from 'public/opensea-icon.svg';
+import InfoIcon from 'public/gray-info-icon.svg';
 import DeleteRowIcon from 'public/trash-icon.svg';
-// import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useContext, useMemo, useRef } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -53,6 +52,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     removeListing,
     decreasingPriceError
   } = useContext(NFTListingsContext);
+  const router = useRouter();
 
   const rowSelectedMarketplaces = useRef(null);
 
@@ -67,6 +67,11 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   const looksrareEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.LooksRare) != null, [getTarget, props.listing]);
   const X2Y2Enabled = useMemo(() => getTarget(props.listing, ExternalProtocol.X2Y2) != null, [getTarget, props.listing]);
   const NFTCOMEnabled = useMemo(() => getTarget(props.listing, ExternalProtocol.NFTCOM) != null, [getTarget, props.listing]);
+
+  const LooksRareIcon = '/looksrare-icon.svg';
+  const NFTCOMIcon = '/nft_logo_yellow.svg';
+  const OpenseaIcon = '/opensea-icon.svg';
+  const X2Y2Icon = '/x2y2-icon.svg';
 
   const generateMarketPlaceOptions = (dropDownNumber: number, hasPredefinedSelectedOption?: boolean) => {
     let selectedOptionForDropdown = dropDownNumber === 0 ? selectedOptionDropdown0 : dropDownNumber === 1 ? selectedOptionDropdown1 : selectedOptionDropdown2;
@@ -92,6 +97,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     const base = [
       {
         label: 'Opensea', // ExternalProtocol.Seaport,
+        icon: OpenseaIcon,
+        imageSize: 32,
+        customIconClass: '-ml-[2px]',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.Seaport;
           toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing, selectedOptionForDropdown.current);
@@ -104,6 +112,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       },
       {
         label: ExternalProtocol.LooksRare,
+        icon: LooksRareIcon,
+        imageSize: 32,
+        customIconClass: '-ml-[2px]',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.LooksRare;
           toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing, selectedOptionForDropdown.current);
@@ -116,6 +127,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       },
       {
         label: ExternalProtocol.X2Y2,
+        icon: X2Y2Icon,
+        imageSize: 26,
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.X2Y2;
           toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing, selectedOptionForDropdown.current);
@@ -129,8 +142,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     ];
 
     return getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) ?
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       base.concat({
         label: 'NFT.com',
+        icon: NFTCOMIcon,
+        imageSize: 26,
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.NFTCOM;
           toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing, selectedOptionForDropdown.current);
@@ -341,10 +358,27 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       </ div>
       {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
       {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-2 minlg:pl-0'>
-        {(seaportEnabled || looksrareEnabled || X2Y2Enabled) && <div className='hidden minlg:flex text-base font-normal flex text-[#A6A6A6] mb-4'>
-          <div className='w-[26%]'>Marketplace</div>
-          <div className='w-[25%]'>Type of Auction</div>
-          <div className='w-[43%]'>Set Price</div>
+        {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='hidden minlg:flex text-base minlg:text-[0.85rem] minxl:text-base font-normal flex text-[#A6A6A6] mb-4'>
+          <div className='w-[22%]'>Marketplace</div>
+          <div className='w-[28%] flex flex-row justify-between'>
+            <span className='shrink-0'>Type of Auction</span>
+            <CustomTooltip2
+              tooltipClick={() => router.push('https://docs.nft.com/')}
+              orientation='custom'
+              customLeftPosition='50'
+              hidden={false}
+              tooltipComponent={
+                <div
+                  className="rounded-xl max-w-[200px] w-max cursor-pointer"
+                >
+                  <p>Learn more</p>
+                </div>
+              }
+            >
+              <InfoIcon className='ml-2' />
+            </CustomTooltip2>
+          </div>
+          <div className='w-[45%]'>Set Price</div>
           <div className='w-[5%]'>&nbsp;</div>
         </div>}
         {seaportEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
