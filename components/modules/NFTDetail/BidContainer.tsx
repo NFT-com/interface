@@ -44,6 +44,16 @@ export const BidContainer = ({ data }: BidContainerProps) => {
   return (
     <div className="font-noi-grotesk pb-4 md:pb-0 minxl:py-5 minxl:pb-0 w-full mb-5">
       <div className='flex flex-col max-w-nftcom w-full'>
+        <div className='flex mb-5'>
+          <div className='w-full'>
+            <div onClick={() => {
+              alert('something');
+            }} className='cursor-pointer rounded-[12px] font-medium text-center px-10 py-3 text-[17px] text-white bg-gradient-to-r from-[#F6BE54] to-[#F9D963] animate-pulse'>
+              Make Offer
+            </div>
+          </div>
+        </div>
+
         <div className={tw(
           'flex flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
         )}>
