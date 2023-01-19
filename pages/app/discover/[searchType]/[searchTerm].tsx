@@ -332,7 +332,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   See All
                   </span>}
                   {searchType?.toString() !== 'allResults' && <span
-                    className="cursor-pointer hover:font-semibold underline text-black font-black minmd:text-base font-grotesk text-[#000] text-lg font-medium"
+                    className="cursor-pointer hover:font-semibold underline text-[#000] text-lg font-medium"
                     onClick={() => {
                       if (discoverPageEnv) {
                         if(newFiltersEnabledNew){
