@@ -19,6 +19,7 @@ import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { BigNumber, ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import RemoveIcon from 'public/close-circle-icon-gray.svg';
+import InfoIcon from 'public/gray-info-icon.svg';
 import DeleteRowIcon from 'public/trash-icon.svg';
 import { useContext, useMemo, useRef } from 'react';
 import useSWR from 'swr';
