@@ -95,6 +95,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       {
         label: 'Opensea', // ExternalProtocol.Seaport,
         icon: OpenseaIcon,
+        imageSize: 32,
+        customIconClass: '-ml-[2px]',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.Seaport;
           toggleTargetMarketplace(ExternalProtocol.Seaport, props.listing, selectedOptionForDropdown.current);
@@ -108,6 +110,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       {
         label: ExternalProtocol.LooksRare,
         icon: LooksRareIcon,
+        imageSize: 32,
+        customIconClass: '-ml-[2px]',
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.LooksRare;
           toggleTargetMarketplace(ExternalProtocol.LooksRare, props.listing, selectedOptionForDropdown.current);
@@ -121,6 +125,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       {
         label: ExternalProtocol.X2Y2,
         icon: X2Y2Icon,
+        imageSize: 26,
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.X2Y2;
           toggleTargetMarketplace(ExternalProtocol.X2Y2, props.listing, selectedOptionForDropdown.current);
@@ -134,9 +139,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     ];
 
     return getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) ?
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       base.concat({
         label: 'NFT.com',
         icon: NFTCOMIcon,
+        imageSize: 26,
         onSelect: () => {
           rowSelectedMarketplaces.current = ExternalProtocol.NFTCOM;
           toggleTargetMarketplace(ExternalProtocol.NFTCOM, props.listing, selectedOptionForDropdown.current);

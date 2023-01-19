@@ -12,6 +12,8 @@ export interface PickerOption {
   onSelect: () => void;
   color?: string;
   icon?: string;
+  imageSize?: number;
+  customIconClass?: string;
   disabled?: boolean
 }
 
@@ -124,10 +126,10 @@ export function DropdownPicker(props: DropdownPickerProps) {
         }
         <div className='flex items-center w-full'>
           {props?.options[selectedIndex]?.icon &&
-            <div className='mr-2 flex items-center justify-center'>
+            <div className={`mr-2 flex items-center justify-center ${props?.options[selectedIndex]?.customIconClass || ''}`}>
               <Image
-                height={26}
-                width={26}
+                height={props?.options[selectedIndex]?.imageSize || 26}
+                width={props?.options[selectedIndex]?.imageSize || 26}
                 src={props?.options[selectedIndex]?.icon}
                 alt={props?.options[selectedIndex]?.label} />
             </div>
