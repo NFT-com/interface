@@ -1,3 +1,4 @@
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { IExecutionStrategy, LooksRareExchange, RoyaltyFeeManager, RoyaltyFeeRegistry } from 'constants/typechain/looksrare';
 import { LooksrareProtocolData, Nft } from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
@@ -5,7 +6,7 @@ import { AggregatorResponse } from 'types';
 import { libraryCall, looksrareLib } from './marketplaceHelpers';
 
 import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
-import { BigNumber, BigNumberish, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ContractTransaction, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
 
 export async function createLooksrareParametersForNFTListing(
@@ -136,6 +137,68 @@ export const getLooksrareHex = (
     };
   } catch (err) {
     throw `error in getLooksrareHex: ${err}`;
+  }
+};
+
+export const looksrareBuyNow = async (
+  order: StagedPurchase,
+  looksrareExchange: LooksRareExchange,
+  executorAddress: string
+): Promise<ContractTransaction> => {
+  try {
+    const {
+      collectionAddress,
+      tokenId,
+      isOrderAsk,
+      signer,
+      strategy,
+      currencyAddress,
+      amount,
+      price,
+      nonce,
+      startTime,
+      endTime,
+      minPercentageToAsk,
+      params,
+      v,
+      r,
+      s,
+    } = order.protocolData as LooksrareProtocolData;
+
+    const tx = await looksrareExchange.matchAskWithTakerBidUsingETHAndWETH(
+      {
+        isOrderAsk: false,
+        taker: executorAddress,
+        price,
+        tokenId,
+        minPercentageToAsk,
+        params: params || '0x',
+      },
+      {
+        isOrderAsk,
+        signer,
+        collection: collectionAddress,
+        price,
+        tokenId,
+        amount,
+        strategy,
+        currency: currencyAddress,
+        nonce,
+        startTime,
+        endTime,
+        minPercentageToAsk,
+        params: params || '0x',
+        v,
+        r,
+        s,
+      },
+      {
+        value: order?.price
+      }
+    );
+    return tx;
+  } catch (err) {
+    throw `error in looksrareBuyNow: ${err}`;
   }
 };
 
