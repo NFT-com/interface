@@ -5,6 +5,7 @@ import { useMyAssetsQuery } from 'graphql/hooks/useMyAssetsQuery';
 import { useFetchNftCollectionAllowance } from 'hooks/balances/useFetchNftCollectionAllowance';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { usePaginator } from 'hooks/usePaginator';
+import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -133,7 +134,11 @@ export default function AssetsPages() {
                   isApprovedForLooksrare1155: looksrareAllowedByContract.get(nft?.contract),
                   isApprovedForX2Y21155: X2Y2AllowedByContract1155.get(nft?.contract),
                   isApprovedForNFTCOM: NFTCOMAllowedByContract.get(nft?.contract),
-                  targets: []
+                  targets: [
+                    {
+                      protocol: ExternalProtocol.NFTCOM,
+                    }
+                  ]
                 })));
                 setLoading(false);
                 toggleCartSidebar();

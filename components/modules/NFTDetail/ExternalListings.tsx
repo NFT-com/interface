@@ -221,7 +221,11 @@ export function ExternalListings(props: ExternalListingsProps) {
                   isApprovedForX2Y2: X2Y2Allowed,
                   isApprovedForX2Y21155: X2Y2Allowed1155,
                   isApprovedForNFTCOM: NFTCOMAllowed,
-                  targets: []
+                  targets: [
+                    {
+                      protocol: ExternalProtocol.NFTCOM,
+                    }
+                  ]
                 });
                 toggleCartSidebar('Sell');
               }}

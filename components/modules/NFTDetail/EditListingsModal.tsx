@@ -5,6 +5,7 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
+import { ExternalProtocol } from 'types';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 import { ListingButtonType } from './ExternalListingTile';
@@ -128,7 +129,11 @@ export function EditListingsModal(props: EditListingsModalProps) {
                 isApprovedForX2Y2: X2Y2Allowed,
                 isApprovedForX2Y21155: X2Y2Allowed1155,
                 isApprovedForNFTCOM: NFTCOMAllowed,
-                targets: []
+                targets: [
+                  {
+                    protocol: ExternalProtocol.NFTCOM,
+                  }
+                ]
               });
               router.push('/app/list');
             }}
