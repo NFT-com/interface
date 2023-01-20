@@ -81,7 +81,7 @@ export function NftCard(props: NftCardProps) {
       const endDate = moment.unix(bestListing.order?.protocol === ExternalProtocol.LooksRare ? endDateParams?.endTime : bestListing.order?.protocol === ExternalProtocol.X2Y2 ? endDateParams?.end_at : bestListing.order?.protocol === ExternalProtocol.NFTCOM ? endDateParams?.end : endDateParams?.parameters?.endTime);
       const date = moment(endDate).fromNow();
 
-      if(date.includes('minute')){
+      if(date.includes('minute') || date.includes('second')){
         return 'less than 1 hour';
       } else return date;
     }
