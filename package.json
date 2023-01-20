@@ -141,7 +141,7 @@
     "eslint-plugin-react-hooks": "^4.5.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "^28.1.0",
-    "netlify-cli": "^10.6.3",
+    "netlify-cli": "^12.7.2",
     "nyc": "^15.1.0",
     "postcss": "^8.4.13",
     "postcss-import": "^14.1.0",
