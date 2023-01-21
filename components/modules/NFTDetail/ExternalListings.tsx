@@ -12,10 +12,11 @@ import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { isNullOrEmpty } from 'utils/helpers';
-import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
+import { getListingCurrencyAddress, getListingEndDate, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings, getAuctionTypeDisplayName, getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
+import Countdown from './Countdown';
 import { EditListingsModal } from './EditListingsModal';
 import { SelectListingModal } from './SelectListingModal';
 
@@ -45,7 +46,6 @@ export function ExternalListings(props: ExternalListingsProps) {
   const currentDate = useGetCurrentDate();
   const [editListingsModalOpen, setEditListingsModalOpen] = useState(false);
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
-
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
@@ -103,14 +103,14 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   const getListingSummaryTitle = useCallback((listing: any) => {
     const protocolName = listing?.order?.exchange;
-    return <div className='md:flex-col flex items-center font-normal font-noi-grotesk text-[16px] text-[#6A6A6A]'>
+    return <div className='flex flex-col minmd:flex-row items-start minlg:items-center font-normal font-noi-grotesk text-[16px] text-[#6A6A6A] mt-2'>
       <span>Current price on</span>
       <div className='flex items-center'>
-        {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-        {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='mx-1.5 h-9 w-9 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
-        {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='mx-1.5 h-9 w-9 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='mx-1.5 h-7 w-7 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='mx-1.5 h-7 w-7 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='mx-1.5 h-7 w-7 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        {listing?.order?.protocol === ExternalProtocol.NFTCOM && <img src={NFTLogo.src} className='mx-1.5 h-8 w-8 relative shrink-0' alt="NFT.com logo redirect" />}
+        {listing?.order?.protocol === ExternalProtocol.NFTCOM && <img src={NFTLogo.src} className='mx-1.5 h-6 w-6 relative shrink-0' alt="NFT.com logo redirect" />}
         <span className='text-black'>{getProtocolDisplayName(protocolName)}</span>
       </div>
     </div>;
@@ -267,33 +267,36 @@ export function ExternalListings(props: ExternalListingsProps) {
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM)
       ]?.filter( Boolean )?.map((listing, index) => {
         return listing && <div key={index} className={tw(
-          'flex flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit justify-between relative font-noi-grotesk',
+          'grid grid-cols-2 gap-5 justify-between flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit  relative font-noi-grotesk',
         )}>
-          <div className="h-8 px-6 pb-6 pt-10 w-full flex items-center">
+          <div className="pl-6 pb-2 mt-6 w-full flex flex-col items-top border-r border-r-[#F2F2F2]">
             <span className='text-[28px] font-semibold text-black'>
               {listing?.order?.protocol === ExternalProtocol.NFTCOM ? `${getAuctionTypeDisplayName((listing?.order?.protocolData as NftcomProtocolData).auctionType)}` : 'Fixed Price'}
             </span>
-          </div>
-          <div className='flex font-noi-grotesk text-black leading-6 items-center my-8 md:my-6 px-6 justify-between'>
-            <div className='flex md:flex-col md:items-start items-end leading-6'>
-              <div className='flex items-end'>
+            <div className='flex font-noi-grotesk text-black leading-6 items-center justify-between mt-6'>
+              <div className='flex md:flex-col md:items-start items-end leading-6 flex-wrap'>
                 <div className='flex items-end'>
-                  {getIcon(
-                    getByContractAddress(getListingCurrencyAddress(listing))?.contract,
-                    getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
-                  )}
-                  <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}</span>
+                  <div className='flex items-end'>
+                    {getIcon(
+                      getByContractAddress(getListingCurrencyAddress(listing))?.contract,
+                      getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
+                    )}
+                    <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}</span>
+                  </div>
+                  <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
                 </div>
-                <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
-              </div>
-              <span className="md:ml-0 md:mt-2 ml-2 text-[15px] uppercase font-medium text-[#6A6A6A]">
+                <span className="md:ml-0 md:mt-2 ml-2 text-[15px] uppercase font-medium text-[#6A6A6A] flex flex-nowrap">
                 ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}{' USD'}
-              </span>
+                </span>
+              </div>
             </div>
-
+          </div>
+          <div className='flex flex-col pt-7'>
+            <Countdown eventTime={getListingEndDate(listing, listing?.order?.protocol as ExternalProtocol)} interval={1000} />
             {getListingSummaryTitle(listing)}
           </div>
-          <div className='flex w-full h-full px-6 py-4 rounded-br-[18px] rounded-bl-[18px] bg-[#F2F2F2]'>
+          
+          <div className='col-span-2 flex w-full h-full px-6 py-4 rounded-br-[18px] rounded-bl-[18px] bg-[#F2F2F2]'>
             {getListingSummaryButtons(listing.order.orderHash)}
           </div>
         </div>;
