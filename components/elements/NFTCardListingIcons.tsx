@@ -30,7 +30,7 @@ export const NFTCardListingIcons = (props: {
       <div className='flex flex-col pr-2'>
         <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>
         <p className='font-medium'>
-          {lowestPrice && ethers.utils.formatEther(lowestPrice)}
+          {lowestPrice && Number(ethers.utils.formatEther(lowestPrice)).toLocaleString(undefined, { maximumSignificantDigits: 3 })}
           {' '}
           {props.lowestListing && getByContractAddress(getListingCurrencyAddress(props.lowestListing) ?? WETH.address)?.name}
         </p>
