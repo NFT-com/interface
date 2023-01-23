@@ -6,11 +6,10 @@ import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrate
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, getProtocolDisplayName } from 'utils/marketplaceUtils';
 
-import { CheckoutSuccessView } from './CheckoutSuccessView';
+import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { ListAllResult, ListingTarget, NFTListingsContext } from './NFTListingsContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
@@ -137,7 +136,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
   const getSummaryContent = useCallback(() => {
     if (success) {
-      return <CheckoutSuccessView userAddress={currentAddress} subtitle="You have successfully listed your items!" />;
+      return <CheckoutSuccessView userAddress={currentAddress} type={SuccessType.Listing} subtitle="You have successfully listed your items!" />;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">
@@ -304,8 +303,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       fullModal
       pure
     >
-      <div className={`max-w-full overflow-hidden ${success && getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) ? 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 py-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
-        <div className={`font-noi-grotesk ${success && getEnvBool(Doppler.NEXT_PUBLIC_NFT_OFFER_RESKIN_ENABLED) ? 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
+      <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 py-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
+        <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
             if (success) {
               clear();
@@ -315,9 +314,9 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             setShowProgressBar(false);
             setError(null);
             props.onClose();
-          }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
+          }} className='absolute top-3 z-50 right-3 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
           {getSummaryContent()}
-          <div className="my-4 mt-8 flex">
+          {!success && <div className="my-4 mt-8 flex">
             <Button
               stretch
               loading={showProgressBar && !error && !success}
@@ -453,7 +452,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               }}
               type={ButtonType.PRIMARY}
             />
-          </div>
+          </div>}
           {
             !isNullOrEmpty(error) &&
             <div className='w-full mt-4'>
