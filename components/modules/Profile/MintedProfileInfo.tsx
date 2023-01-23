@@ -44,7 +44,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
 
   const getProfileButton = useCallback(() => {
-    if (!userIsAdmin || !hasGks || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)) {
+    if (!userIsAdmin || (!hasGks && !getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)) {
       return null;
     }
     

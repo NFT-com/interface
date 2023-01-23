@@ -138,7 +138,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   }, []);
 
   const getListingSummaryButtons = useCallback((orderHash: string) => {
-    if (!hasGks && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) {
+    if (!hasGks && !getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) {
       return 'You must have a Genesis Key to purchase';
     } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
