@@ -93,7 +93,7 @@ export function ListingCheckout() {
     });
 
   const { data: NFTCOMGKFee } = useSWR(
-    'NFTCOMProfileFee' + currentAddress,
+    'NFTCOMGKFee' + currentAddress,
     async () => {
       return await marketplace.gkFee();
     },
