@@ -114,7 +114,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
         </div>
       </div>
     </div> :
-    <div className="flex flex-col items-center h-[596px] md:h-screen font-noi-grotesk">
+    <div className="flex flex-col items-center h-[646px] md:h-screen font-noi-grotesk">
       <div className="relative z-10 bg-gradient-to-br from-[#FAC213] to-[#FF9B37] w-full h-2/5 top-0">
         <div className='w-full flex items-center justify-center'>
           <DesktopNoProfile className="h-full w-full shrink-0 object-cover" layout="fill" />
