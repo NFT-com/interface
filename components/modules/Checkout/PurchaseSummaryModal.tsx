@@ -141,7 +141,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     } else {
       // Cost Summary, Default view
       return (
-        <div className="flex flex-col w-full pt-10">
+        <div className="flex flex-col w-full">
           <p className="text-3xl mx-4 font-bold">
             Fee Summary
           </p>
@@ -224,7 +224,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       fullModal
       pure
     >
-      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
+      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4  py-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
         <div className='font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative flex flex-col items-center'>
           <X onClick={() => {
             setSuccess(false);
