@@ -17,6 +17,7 @@ export enum RoundedCornerVariant {
   All = 'all',
   Full = 'full',
   Asset = 'asset',
+  Success = 'success',
   None = 'none',
 }
 
@@ -60,6 +61,8 @@ export const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCo
     return `${amount === RoundedCornerAmount.Medium ? 'rounded-md' : 'rounded-3xl'} object-cover`;
   case RoundedCornerVariant.Asset:
     return 'rounded-[6px]';
+  case RoundedCornerVariant.Success:
+    return 'rounded-[18px]';
   case RoundedCornerVariant.Full:
     return 'rounded-full object-cover';
   case RoundedCornerVariant.None:
