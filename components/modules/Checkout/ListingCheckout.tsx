@@ -116,12 +116,12 @@ export function ListingCheckout() {
             <div className='flex justify-start h-full w-2/5'>
               <div className='flex flex-col h-[42px] w-[42px] '>
                 {profileOwnerToShow?.photoURL ?
-                  <div className="relative object-cover aspect-square rounded-md object-cover w-full aspect-square">
+                  <div className="relative object-cover aspect-square rounded-md w-full">
                     <Image
                       layout='fill'
                       alt="NFT Profile Image"
                       src={processIPFSURL(profileOwnerToShow?.photoURL)}
-                      className="object-cover absolute w-full h-full justify-center rounded-[50%] object-cover" />
+                      className="object-cover absolute w-full h-full justify-center rounded-[50%]" />
                   </div>
                   :
                   <LoggedInIdenticon round border />
