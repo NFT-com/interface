@@ -91,6 +91,16 @@ export function ListingCheckout() {
       refreshInterval: 0,
       revalidateOnFocus: false,
     });
+
+  const { data: NFTCOMGKFee } = useSWR(
+    'NFTCOMProfileFee' + currentAddress,
+    async () => {
+      return await marketplace.gkFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
      
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
@@ -204,7 +214,9 @@ export function ListingCheckout() {
   const ListingCheckoutInfo = () => {
     return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
-        <div className='w-full flex flex-col items-center mb-4'>
+        <div className={tw(
+          getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && 'mb-16',
+          'w-full flex flex-col items-center')}>
           <span className='text-lg w-full font-semibold flex text-[#A6A6A6]'>Select Marketplace(s)</span>
           <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
             {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div className={`max-h-[93px] w-[49%] minlg:${buttonsRowWidth()} minlg:mr-2 flex flex-col items-center`}>
@@ -228,11 +240,13 @@ export function ListingCheckout() {
                   />
                   : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
                 <span className='font-semibold text-base'>NFT.com</span>
-                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ myOwnedProfileTokens?.length ? NFTCOMProfileFee/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
+                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ myOwnedProfileTokens?.length ? NFTCOMGKFee < NFTCOMProfileFee/100 ? NFTCOMGKFee : NFTCOMProfileFee/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
               </div>
+              <div className='text-[0.75rem] py-1'><span className='text-primary-yellow'>{NFTCOMGKFee/100}%</span> fee with GK</div>
+              <div className='border-b w-4/5'></div>
               <div className='text-[0.75rem] py-1'><span className='text-primary-yellow'>{NFTCOMProfileFee/100}%</span> fee with profile</div>
               <div className='border-b w-4/5'></div>
-              <span className='text-[0.75rem] py-1'>{Number(NFTCOMProtocolFee)/100}& fee without profile</span>
+              <span className='text-[0.75rem] py-1'>{Number(NFTCOMProtocolFee)/100}% fee without profile</span>
             </div>}
             <div
               onClick={() => {
