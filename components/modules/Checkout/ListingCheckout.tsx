@@ -46,7 +46,9 @@ export function ListingCheckout() {
     prepareListings,
     allListingsConfigured,
     decreasingPriceError,
-    englishAuctionError
+    englishAuctionError,
+    setDecreasingPriceError,
+    setEnglishAuctionError
   } = useContext(NFTListingsContext);
   // const [noExpiration, setNoExpiration] = useState(false);
   const { address: currentAddress } = useAccount();
@@ -103,6 +105,13 @@ export function ListingCheckout() {
   const NFTCOMAtLeastOneEnabled = !isNullOrEmpty(toList) && toList.find(nft => {
     return nft?.targets?.find(target => target?.protocol === ExternalProtocol.NFTCOM) != null;
   }) != null;
+
+  useEffect(() => {
+    if (!NFTCOMAtLeastOneEnabled) {
+      setDecreasingPriceError(false);
+      setEnglishAuctionError(false);
+    }
+  },[NFTCOMAtLeastOneEnabled, setDecreasingPriceError, setEnglishAuctionError]);
 
   const buttonsRowWidth = () => {
     if (getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST)) {
