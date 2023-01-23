@@ -128,17 +128,17 @@ export const NFTDetail = (props: NFTDetailProps) => {
           </span>
 
           <div className='flex items-center'>
-            <div className='flex flex-col h-full aspect-square'>
+            <div className='flex flex-col w-[42px] h-[42px] aspect-square'>
               {collectionOwnerToShow?.photoURL ?
                 <RoundedCornerMedia
-                  containerClasses='w-full aspect-square'
-                  variant={RoundedCornerVariant.All}
+                  containerClasses='shadow-xl border-2 border-white aspect-square'
+                  variant={RoundedCornerVariant.Full}
                   amount={RoundedCornerAmount.Medium}
                   src={collectionOwnerToShow?.photoURL}
                 />
                 :
                 <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
-                  <LoggedInIdenticon customString={collection?.collection?.contract} round border />
+                  <LoggedInIdenticon customSize={36} customString={collection?.collection?.contract} round border />
                 </div>
               }
             </div>
@@ -181,16 +181,14 @@ export const NFTDetail = (props: NFTDetailProps) => {
           <div className='flex items-center'>
             {profileOwnerToShow?.photoURL ?
               <RoundedCornerMedia
-                containerClasses='w-[34px] height-[34px] aspect-square'
-                variant={RoundedCornerVariant.All}
+                containerClasses='w-[42px] shadow-xl border-2 border-white h-[42px] aspect-square'
+                variant={RoundedCornerVariant.Full}
                 amount={RoundedCornerAmount.Medium}
                 src={profileOwnerToShow?.photoURL}
               />
               :
-              <div className='flex flex-col h-full aspect-square'>
-                <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
-                  <LoggedInIdenticon round border />
-                </div>
+              <div className='rounded-full overflow-hidden shadow-xl border-2 border-white'>
+                <LoggedInIdenticon customSize={36} round border />
               </div>
             }
 
