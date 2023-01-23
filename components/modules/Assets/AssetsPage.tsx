@@ -5,6 +5,7 @@ import { useMyAssetsQuery } from 'graphql/hooks/useMyAssetsQuery';
 import { useFetchNftCollectionAllowance } from 'hooks/balances/useFetchNftCollectionAllowance';
 import { TransferProxyTarget } from 'hooks/balances/useNftCollectionAllowance';
 import { usePaginator } from 'hooks/usePaginator';
+import { ExternalProtocol } from 'types';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
