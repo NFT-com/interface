@@ -141,7 +141,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     } else {
       // Cost Summary, Default view
       return (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full pt-10">
           <p className="text-3xl mx-4 font-bold">
             Fee Summary
           </p>
