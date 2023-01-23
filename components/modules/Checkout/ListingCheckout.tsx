@@ -6,6 +6,8 @@ import { Switch } from 'components/elements/Switch';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -30,7 +32,9 @@ import X2Y2Gray from 'public/x2y2-gray.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
 import Slider from 'rc-slider';
 import { useContext, useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
+import { useAccount } from 'wagmi';
 
 export function ListingCheckout() {
   const {
@@ -42,8 +46,12 @@ export function ListingCheckout() {
     prepareListings,
     allListingsConfigured,
     decreasingPriceError,
+    englishAuctionError
   } = useContext(NFTListingsContext);
   // const [noExpiration, setNoExpiration] = useState(false);
+  const { address: currentAddress } = useAccount();
+  const { marketplace } = useAllContracts();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
 
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
   const { profileData } = useProfileQuery(
@@ -59,7 +67,27 @@ export function ListingCheckout() {
       }
     });
   },[setDuration, toList]);
-    
+
+  const { data: NFTCOMProtocolFee } = useSWR(
+    'NFTCOMProtocolFee' + currentAddress,
+    async () => {
+      return await marketplace.protocolFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
+  const { data: NFTCOMProfileFee } = useSWR(
+    'NFTCOMProfileFee' + currentAddress,
+    async () => {
+      return await marketplace.profileFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
 
@@ -161,7 +189,7 @@ export function ListingCheckout() {
                 />
                 : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
               <span className='font-semibold text-base'>NFT.com</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
+              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ myOwnedProfileTokens?.length ? NFTCOMProfileFee/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
             </div>}
             <div
               onClick={() => {
@@ -319,10 +347,16 @@ export function ListingCheckout() {
           <h1 className='text-2xl minlg:text-3xl pl-12 minlg:pl-0 font-semibold font-noi-grotesk'>Create Listings</h1>
         </div>
         {ListingCheckoutInfo()}
-        {decreasingPriceError ?
-          <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4 minlg:mb-0'>
+        {NFTCOMAtLeastOneEnabled && decreasingPriceError ?
+          <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
             <ErrorIcon className='relative shrink-0 mr-2' />
             Start Price should be higher than End Price
+          </div>
+          : null}
+        {NFTCOMAtLeastOneEnabled && englishAuctionError ?
+          <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
+            <ErrorIcon className='relative shrink-0 mr-2' />
+            Reserve Price Price should be higher than Buy Now Price
           </div>
           : null}
       </div>
