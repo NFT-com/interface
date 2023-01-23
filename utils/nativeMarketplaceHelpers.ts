@@ -1,3 +1,4 @@
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { NFT_TYPE_TO_ASSET_CLASS } from 'constants/misc';
 import { Marketplace } from 'constants/typechain';
@@ -21,7 +22,7 @@ import { encodeAssetClass, getAssetBytes, getAssetTypeBytes } from './signatureU
 
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { SignTypedDataArgs } from '@wagmi/core';
-import { ethers, Signature } from 'ethers';
+import { ContractTransaction, ethers, Signature } from 'ethers';
 import moment from 'moment';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
@@ -556,3 +557,61 @@ export async function cancelNftcomListing(
     return tx.wait(1).then(() => true).catch(() => false);
   }).catch(() => false);
 }
+
+export const nftcomBuyNow = async (
+  order: StagedPurchase,
+  nftcomExchange: Marketplace,
+  executorAddress: string,
+  chainId: string
+): Promise<ContractTransaction> => {
+  try {
+    const {
+      salt,
+      makeAsset,
+      takeAsset,
+      start,
+      end,
+      auctionType,
+      orderSignature: signature,
+      buyNowTaker,
+    } = order.protocolData as NftcomProtocolData & {
+      orderSignature: Signature;
+    };
+    
+    const nftcomOrder = {
+      auctionType,
+      buyNowTaker,
+      chainId,
+      end,
+      id: order.activityId,
+      makeAsset,
+      makerAddress: order.makerAddress,
+      nonce: order.nonce,
+      salt,
+      signature: {
+        r: signature.r,
+        s: signature.s,
+        v: signature.v
+      },
+      start,
+      structHash: order.orderHash,
+      takeAsset,
+      takerAddress: order?.takerAddress
+    };
+    const sellOrder = marketAskToOrderStruct(nftcomOrder);
+
+    const tx = await nftcomExchange.buyNow(
+      sellOrder,
+      executorAddress,
+      signature.v,
+      signature.r,
+      signature.s,
+      {
+        value: order?.price
+      }
+    );
+    return tx;
+  } catch (err) {
+    throw `error in nftcomBuyNow: ${err}`;
+  }
+};

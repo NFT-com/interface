@@ -8,6 +8,7 @@ import { getAddress } from './httpHooks';
 import { BigNumber, ethers } from 'ethers';
 import moment, { Moment } from 'moment';
 import { PartialDeep } from 'type-fest';
+import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 
 export const getListingPrice = (listing: PartialDeep<TxActivity>, currentTimestamp?: Moment) => {
   switch(listing?.order?.protocol) {
@@ -95,4 +96,23 @@ export const getLowestPriceListing = (
     }
   }
   return lowestPriceListing;
+};
+
+export const getListingEndDate = (
+  listing: PartialObjectDeep<TxActivity, unknown>,
+  protocolFilter?: ExternalProtocol
+) => {
+  const protocolData = listing.order?.protocolData;
+  switch(protocolFilter){
+  case(ExternalProtocol.NFTCOM):
+    return (protocolData as NftcomProtocolData)?.end;
+  case(ExternalProtocol.LooksRare):
+    return Number((protocolData as LooksrareProtocolData)?.endTime);
+  case(ExternalProtocol.Seaport):
+    return Number((protocolData as SeaportProtocolData)?.parameters?.endTime);
+  case(ExternalProtocol.X2Y2):
+    return (protocolData as X2Y2ProtocolData)?.end_at;
+  default:
+    return null;
+  }
 };

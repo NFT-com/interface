@@ -13,7 +13,7 @@ import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { getGenesisKeyThumbnail, isNullOrEmpty, processIPFSURL, sameAddress } from 'utils/helpers';
 import { getAddress } from 'utils/httpHooks';
-import { getListingCurrencyAddress, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
+import { getListingCurrencyAddress, getListingEndDate, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -77,15 +77,12 @@ export function NftCard(props: NftCardProps) {
 
   const checkEndDate = () => {
     if(bestListing){
-      const endDateParams:any = bestListing?.order?.protocolData;
-      const startDate = new Date();
-      const endDate = moment.unix(bestListing.order?.protocol === ExternalProtocol.LooksRare ? endDateParams?.endTime : bestListing.order?.protocol === ExternalProtocol.X2Y2 ? endDateParams?.end_at : bestListing.order?.protocol === ExternalProtocol.NFTCOM ? endDateParams?.end : endDateParams?.parameters?.endTime);
-      const date = moment(endDate).diff(startDate, 'days', false);
-      if(date > 1){
-        return `${date} days`;
-      }else{
-        return `${date} day`;
-      }
+      const endDate = moment.unix(getListingEndDate(bestListing, bestListing.order.protocol as ExternalProtocol));
+      const date = moment(endDate).fromNow();
+
+      if(date.includes('minute') || date.includes('second')){
+        return 'less than 1 hour';
+      } else return date;
     }
   };
   const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;

@@ -135,7 +135,11 @@ export default function AssetsPages() {
                   isApprovedForLooksrare1155: looksrareAllowedByContract.get(nft?.contract),
                   isApprovedForX2Y21155: X2Y2AllowedByContract1155.get(nft?.contract),
                   isApprovedForNFTCOM: NFTCOMAllowedByContract.get(nft?.contract),
-                  targets: []
+                  targets: [
+                    {
+                      protocol: ExternalProtocol.NFTCOM,
+                    }
+                  ]
                 })));
                 setLoading(false);
                 toggleCartSidebar();

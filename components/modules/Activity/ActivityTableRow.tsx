@@ -1,3 +1,5 @@
+import { NULL_ADDRESS } from 'constants/addresses';
+import { NftcomProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -151,6 +153,35 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
       );
     }
 
+    if(item[type]?.protocol === ExternalProtocol.NFTCOM){
+      const protocolData = item[type]?.protocolData as NftcomProtocolData;
+      if((type === 'transaction' || type === 'order') && !isNullOrEmpty(protocolData?.takeAsset[0]?.value) && !isNullOrEmpty(protocolData?.takeAsset[0]?.standard?.contractAddress)){
+        const ethAmount = ethers.utils.formatEther(protocolData?.takeAsset[0]?.value);
+        const currencyData = getByContractAddress(protocolData?.takeAsset[0]?.standard?.contractAddress);
+        return (
+          <>
+            <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
+              {ethAmount && currencyData ? <p>{ethAmount} {currencyData.name}</p> : <p>—</p>}
+            </td>
+            <td className="text-body leading-body pr-8 minmd:pr-4" >
+              {ethAmount && ethPriceUSD ? <p>${(ethPriceUSD * Number(ethAmount)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
+            </td>
+          </>
+        );
+      }
+      
+      return (
+        <>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            <p>—</p>
+          </td>
+          <td className="text-body leading-body pr-8 minmd:pr-4" >
+            <p>—</p>
+          </td>
+        </>
+      );
+    }
+
     return (
       <>
         <td className="text-body leading-body pr-8 minmd:pr-4" >
@@ -228,7 +259,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
           {shortenAddress(item?.order?.makerAddress, 4) || <p>—</p>}
         </td>
         <td className="text-body leading-body pr-8 minmd:pr-4" >
-          {shortenAddress(item?.order?.takerAddress, 4) || <p>—</p>}
+          {item?.order?.takerAddress !== NULL_ADDRESS && shortenAddress(item?.order?.takerAddress, 4) || <p>—</p>}
         </td>
       </>
       }
