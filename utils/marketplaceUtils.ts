@@ -191,7 +191,7 @@ export function getMaxRoyaltyFeesUSD(
           currencyData.decimals ?? 18
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.NFTCOM) {
-        const royalty = Number(NFTCOMRoyaltyFees[1]);
+        const royalty = NFTCOMRoyaltyFees && Number(NFTCOMRoyaltyFees[1]);
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,
           currencyData.decimals ?? 18
