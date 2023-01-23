@@ -2,7 +2,7 @@ import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Seaport } from 'constants/typechain';
 import { OrderComponentsStruct } from 'constants/typechain/Seaport';
-import { Maybe, Nft, NftType, OpenseaContract, SeaportConsideration, SeaportProtocolData, SeaportProtocolDataParams } from 'graphql/generated/types';
+import { Maybe, Nft, NftType, SeaportConsideration, SeaportProtocolData, SeaportProtocolDataParams } from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
 import {
   CROSS_CHAIN_SEAPORT_ADDRESS,

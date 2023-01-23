@@ -50,7 +50,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
     // clearGeneralConfig,
     getTarget,
     removeListing,
-    decreasingPriceError
+    decreasingPriceError,
+    englishAuctionError
   } = useContext(NFTListingsContext);
   const router = useRouter();
 
@@ -310,7 +311,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         props.onPriceChange();
       }}
       error={
-        (decreasingPriceError||
+        (decreasingPriceError|| englishAuctionError ||
         props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && target.startingPrice == null) != null ||
       props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM && BigNumber.from(target.startingPrice).eq(0)) != null) ||
       (parseInt((lowestNftcomListing?.order?.protocolData as NftcomProtocolData)?.takeAsset[0].value) < Number(props.listing?.targets?.find(target => target.protocol === ExternalProtocol.NFTCOM)?.startingPrice))

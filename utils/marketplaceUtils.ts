@@ -191,7 +191,7 @@ export function getMaxRoyaltyFeesUSD(
           currencyData.decimals ?? 18
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.NFTCOM) {
-        const royalty = Number(NFTCOMRoyaltyFees[1]);
+        const royalty = Number(NFTCOMRoyaltyFees ? NFTCOMRoyaltyFees[1] : 0);
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,
           currencyData.decimals ?? 18
@@ -226,6 +226,9 @@ export function filterValidListings(listings: PartialDeep<TxActivity>[]): Partia
 export function getProtocolDisplayName(protocolName: ExternalProtocol): string {
   if(protocolName === ExternalProtocol.NFTCOM){
     return 'NFT.com';
+  }
+  if(protocolName === ExternalProtocol.Seaport){
+    return 'Opensea';
   }
   return protocolName;
 }

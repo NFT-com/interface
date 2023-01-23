@@ -116,6 +116,8 @@ export interface NFTListingsContextType {
   getTarget: (listing: PartialDeep<StagedListing>, protocol: ExternalProtocol) => Maybe<PartialDeep<ListingTarget>>;
   setDecreasingPriceError:(value: boolean) => void;
   decreasingPriceError: boolean;
+  setEnglishAuctionError:(value: boolean) => void;
+  englishAuctionError: boolean;
 }
 
 // initialize with default values
@@ -143,6 +145,8 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   getTarget: () => null,
   setDecreasingPriceError: () => null,
   decreasingPriceError: false,
+  setEnglishAuctionError: () => null,
+  englishAuctionError: false,
 });
 
 /**
@@ -176,6 +180,7 @@ export function NFTListingsContextProvider(
   const [selectedTab, setSelectedTab] = useState<CartSidebarTab>('Buy');
   const [noExpirationNFTCOM, setNoExpirationNFTCOM] = useState(false);
   const [decreasingPriceError, setDecreasingPriceError] = useState(false);
+  const [englishAuctionError, setEnglishAuctionError] = useState(false);
 
   const signOrderForLooksrare = useSignLooksrareOrder();
   const looksrareRoyaltyFeeRegistry = useLooksrareRoyaltyFeeRegistryContractContract(provider);
@@ -247,9 +252,14 @@ export function NFTListingsContextProvider(
         (target.endingPrice && target.startingPrice && (Number(target.startingPrice) <= Number(target.endingPrice))));
         setDecreasingPriceError(decresingPriceinvalidInputs);
 
+        const englishAuctionPriceinvalidInputs = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 1 &&
+        ((target.buyNowPrice == null || BigNumber.from(target.buyNowPrice).eq(0)) ||
+        (target.buyNowPrice && target.reservePrice && (Number(target.reservePrice) > Number(target.buyNowPrice))));
+        setEnglishAuctionError(englishAuctionPriceinvalidInputs);
+
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
-          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || decresingPriceinvalidInputs;
+          isNullOrEmpty(target.currency) || (target.protocol === ExternalProtocol.NFTCOM && target.auctionType == null) || decresingPriceinvalidInputs || englishAuctionPriceinvalidInputs;
       });
       // At this point, we need all targets to have valid individual configurations.
       return unconfiguredTarget != null;
@@ -782,6 +792,8 @@ export function NFTListingsContextProvider(
     getTarget,
     setDecreasingPriceError,
     decreasingPriceError,
+    setEnglishAuctionError,
+    englishAuctionError,
   }}>
 
     {
