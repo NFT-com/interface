@@ -227,6 +227,9 @@ export function getProtocolDisplayName(protocolName: ExternalProtocol): string {
   if(protocolName === ExternalProtocol.NFTCOM){
     return 'NFT.com';
   }
+  if(protocolName === ExternalProtocol.Seaport){
+    return 'Opensea';
+  }
   return protocolName;
 }
 
