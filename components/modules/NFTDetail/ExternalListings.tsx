@@ -11,6 +11,7 @@ import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { getListingCurrencyAddress, getListingEndDate, getListingPrice, getLowestPriceListing } from 'utils/listingUtils';
 import { filterValidListings, getAuctionTypeDisplayName, getProtocolDisplayName } from 'utils/marketplaceUtils';
@@ -137,7 +138,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   }, []);
 
   const getListingSummaryButtons = useCallback((orderHash: string) => {
-    if (!hasGks) {
+    if (!hasGks && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) {
       return 'You must have a Genesis Key to purchase';
     } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
