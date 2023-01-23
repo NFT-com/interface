@@ -50,8 +50,6 @@ export function ListingCheckout() {
     allListingsConfigured,
     decreasingPriceError,
     englishAuctionError,
-    setDecreasingPriceError,
-    setEnglishAuctionError
   } = useContext(NFTListingsContext);
   // const [noExpiration, setNoExpiration] = useState(false);
   const { address: currentAddress } = useAccount();
@@ -206,30 +204,35 @@ export function ListingCheckout() {
   const ListingCheckoutInfo = () => {
     return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
-        <div className='w-full flex flex-col items-center'>
+        <div className='w-full flex flex-col items-center mb-4'>
           <span className='text-lg w-full font-semibold flex text-[#A6A6A6]'>Select Marketplace(s)</span>
           <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
-            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.NFTCOM);
-                setShowSummary(false);
-              }}
-              className={tw(
-                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
-                'border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
-                NFTCOMAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
-              )}
-            >
-              {NFTCOMAtLeastOneEnabled
-                ? <NFTLogo
-                  className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]'
-                  alt="NFT.com logo"
-                  layout="fill"
-                />
-                : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
-              <span className='font-semibold text-base'>NFT.com</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ myOwnedProfileTokens?.length ? NFTCOMProfileFee/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
+            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div className={`max-h-[93px] w-[49%] minlg:${buttonsRowWidth()} minlg:mr-2 flex flex-col items-center`}>
+              <div
+                onClick={() => {
+                  toggleTargetMarketplace(ExternalProtocol.NFTCOM);
+                  setShowSummary(false);
+                }}
+                className={tw(
+                  'max-h-[93px] w-full',
+                  'border-[#D5D5D5] rounded-xl text-lg',
+                  'px-4 py-3 cursor-pointer mt-2 flex flex-col items-center',
+                  NFTCOMAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
+                )}
+              >
+                {NFTCOMAtLeastOneEnabled
+                  ? <NFTLogo
+                    className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]'
+                    alt="NFT.com logo"
+                    layout="fill"
+                  />
+                  : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
+                <span className='font-semibold text-base'>NFT.com</span>
+                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ myOwnedProfileTokens?.length ? NFTCOMProfileFee/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
+              </div>
+              <div className='text-[0.75rem] py-1'><span className='text-primary-yellow'>{NFTCOMProfileFee/100}%</span> fee with profile</div>
+              <div className='border-b w-4/5'></div>
+              <span className='text-[0.75rem] py-1'>{Number(NFTCOMProtocolFee)/100}& fee without profile</span>
             </div>}
             <div
               onClick={() => {
