@@ -68,10 +68,10 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
             'rounded-xl',
             'bg-white dark:bg-secondary-dk',
             'absolute z-50 px-4 pb-6',
-            'min-w-[14rem] drop-shadow-md left-[-150%] minlg:left-[-100%]',
+            'min-w-[12rem] drop-shadow-md left-[-150%] minlg:left-[-100%]',
           )}
         >
-          <CaretUp size={32} color="white" weight="fill" className='absolute -top-[18px] left-[43%]'/>
+          <CaretUp size={32} color="white" weight="fill" className='absolute -top-[18px] left-[50%]'/>
           <div
             style={{ height: '10%' }}
             className={'flex flex-row w-full py-2 items-center justify-between hover:cursor-pointer text-primary-txt font-medium'}

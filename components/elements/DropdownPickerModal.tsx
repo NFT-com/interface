@@ -28,6 +28,7 @@ export interface DropdownPickerModalProps {
   disablePadding?: boolean;
   blackBorder?: boolean;
   align?: 'right' | 'left' | 'center'
+  closeModalOnClick?: boolean
 }
 
 /**
@@ -68,14 +69,14 @@ export function DropdownPickerModal(props: PropsWithChildren<DropdownPickerModal
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
           item.onSelect();
-          item?.closeModalOnClick && setExpanded(false);
+          (props.closeModalOnClick || item?.closeModalOnClick) && setExpanded(false);
         }}
       >
         {item.icon}&nbsp;
         {item.label}
       </div>
     );
-  }, [optionHoverIndex]);
+  }, [optionHoverIndex, props.closeModalOnClick]);
 
   return (
     <>
