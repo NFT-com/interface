@@ -5,12 +5,12 @@ import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
-import { useBuyNow } from 'utils/marketplaceHelpers';
 import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from 'utils/marketplaceUtils';
 
-import { CheckoutSuccessView } from './CheckoutSuccessView';
+import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
@@ -38,7 +38,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
-  const { buyNow } = useBuyNow(signer);
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+
   const { getByContractAddress, getBalanceMap } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -77,12 +78,11 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
   const getSummaryContent = useCallback(() => {
     if (success) {
-      return <div className="my-8">
-        <CheckoutSuccessView
-          userAddress={currentAddress}
-          subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}
-        />
-      </div>;
+      return <CheckoutSuccessView
+        userAddress={currentAddress}
+        type={SuccessType.Purchase}
+        subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}
+      />;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">
@@ -102,7 +102,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
         (first, second) => first?.currency === second?.currency
       );
-      return (<div className='flex flex-col w-full'>
+      return (<div className='flex flex-col w-full pt-3'>
         <p className="text-3xl mx-4 font-bold">
             Purchase Progress
         </p>
@@ -141,7 +141,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     } else {
       // Cost Summary, Default view
       return (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full pt-3">
           <p className="text-3xl mx-4 font-bold">
             Fee Summary
           </p>
@@ -224,16 +224,16 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       fullModal
       pure
     >
-      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
-        <div className='font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative flex flex-col items-center'>
+      <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 pb-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
+        <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
             setSuccess(false);
             setLoading(false);
             setError(null);
             props.onClose();
-          }} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
+          }} className='absolute top-5 right-5 z-50 hover:cursor-pointer closeButton' size={20} color="black" weight="fill" />
           {getSummaryContent()}
-          <Button
+          {!success && <Button
             stretch
             disabled={loading && !error && !success}
             loading={loading && !error && !success}
@@ -276,7 +276,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                     });
                 }
               }
-              const result = toBuy.length > 1 ? await buyAll() : await buyNow(currentAddress, toBuy[0]);
+
+              const result = await buyAll();
               if (result) {
                 setSuccess(true);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
@@ -289,7 +290,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 }
               }
             }}
-            type={ButtonType.PRIMARY} />
+            type={ButtonType.PRIMARY} />}
           {
             !isNullOrEmpty(error) &&
             <div className='w-full mt-4'>
