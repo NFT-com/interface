@@ -106,13 +106,6 @@ export function ListingCheckout() {
     return nft?.targets?.find(target => target?.protocol === ExternalProtocol.NFTCOM) != null;
   }) != null;
 
-  useEffect(() => {
-    if (!NFTCOMAtLeastOneEnabled) {
-      setDecreasingPriceError(false);
-      setEnglishAuctionError(false);
-    }
-  },[NFTCOMAtLeastOneEnabled, setDecreasingPriceError, setEnglishAuctionError]);
-
   const buttonsRowWidth = () => {
     if (getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST)) {
       return 'w-1/4';
