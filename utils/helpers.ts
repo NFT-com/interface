@@ -19,7 +19,11 @@ export function isAddress(value: any): string | false {
 }
 
 export function isChromeBrowser() {
-  return window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
+  let isChromeBrowser = false;
+  if (typeof window !== 'undefined') {
+    isChromeBrowser = window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
+  }
+  return isChromeBrowser;
 }
 
 export const profileSaveCounter = atom(0);
