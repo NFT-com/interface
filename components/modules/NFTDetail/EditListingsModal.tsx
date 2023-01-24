@@ -2,6 +2,7 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NULL_ADDRESS } from 'constants/addresses';
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
@@ -132,6 +133,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
                 targets: [
                   {
                     protocol: ExternalProtocol.NFTCOM,
+                    currency: NULL_ADDRESS
                   }
                 ]
               });
