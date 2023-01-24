@@ -30,7 +30,10 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     toBuy,
     buyAll,
     updateCurrencyApproval,
-    clear
+    clear,
+    clearBuyNow,
+    toBuyNow,
+    buyNowActive
   } = useContext(NFTPurchasesContext);
 
   const { address: currentAddress } = useAccount();
@@ -57,33 +60,35 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       revalidateOnFocus: false,
     });
 
+  const nftsToBuy = buyNowActive ? toBuyNow : toBuy;
+
   const getNeedsApprovals = useCallback(() => {
-    return needsApprovals(toBuy);
-  }, [toBuy]);
+    return needsApprovals(nftsToBuy);
+  }, [nftsToBuy]);
 
   const getHasSufficientBalance = useCallback(async () => {
     const balances = await getBalanceMap(currentAddress, ['WETH', 'ETH', 'USDC', 'DAI']);
-    return hasSufficientBalances(toBuy, balances);
-  }, [currentAddress, getBalanceMap, toBuy]);
+    return hasSufficientBalances(nftsToBuy, balances);
+  }, [currentAddress, getBalanceMap, nftsToBuy]);
     
   const getTotalPriceUSD = useCallback(() => {
-    return getTotalFormattedPriceUSD(toBuy, getByContractAddress);
-  }, [toBuy, getByContractAddress]);
+    return getTotalFormattedPriceUSD(nftsToBuy, getByContractAddress);
+  }, [nftsToBuy, getByContractAddress]);
 
   const getTotalMarketplaceFees = useCallback(() => {
-    return getTotalMarketplaceFeesUSD(toBuy, looksrareProtocolFeeBps, getByContractAddress);
-  }, [toBuy, looksrareProtocolFeeBps, getByContractAddress]);
+    return getTotalMarketplaceFeesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress);
+  }, [nftsToBuy, looksrareProtocolFeeBps, getByContractAddress]);
  
   const getTotalRoyalties = useCallback(() => {
-    return getTotalRoyaltiesUSD(toBuy, looksrareProtocolFeeBps, getByContractAddress);
-  }, [getByContractAddress, looksrareProtocolFeeBps, toBuy]);
+    return getTotalRoyaltiesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress);
+  }, [getByContractAddress, looksrareProtocolFeeBps, nftsToBuy]);
 
   const getSummaryContent = useCallback(() => {
     if (success) {
       return <CheckoutSuccessView
         userAddress={currentAddress}
         type={SuccessType.Purchase}
-        subtitle={`Congratulations! You have successfully purchased ${toBuy?.length } NFT${toBuy.length > 1 ? 's' : ''}`}
+        subtitle={`Congratulations! You have successfully purchased ${nftsToBuy?.length} NFT${nftsToBuy.length > 1 ? 's' : ''}`}
       />;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
@@ -148,7 +153,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             Fee Summary
           </p>
           <p className='text-2xl text-[#6F6F6F] mx-4 font-bold'>
-            {toBuy?.length ?? 0} NFT{toBuy?.length > 1 && 's'}
+            {nftsToBuy ?.length ?? 0} NFT{nftsToBuy ?.length > 1 && 's'}
           </p>
           <div className="mx-4 my-4 flex items-center justify-between">
             <div className="flex flex-col">
@@ -197,18 +202,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [
-    currentAddress,
-    error,
-    getByContractAddress,
-    getNeedsApprovals,
-    getTotalMarketplaceFees,
-    getTotalPriceUSD,
-    getTotalRoyalties,
-    loading,
-    success,
-    toBuy
-  ]);
+  }, [currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, success, toBuy]);
 
   return (
     <Modal
@@ -219,6 +213,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         setSuccess(false);
         setLoading(false);
         setError(null);
+        clearBuyNow();
         props.onClose();
       }}
       bgColor='white'
@@ -232,6 +227,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             setSuccess(false);
             setLoading(false);
             setError(null);
+            clearBuyNow();
             props.onClose();
           }} className='absolute top-5 right-5 z-50 hover:cursor-pointer closeButton' size={20} color="black" weight="fill" />
           {getSummaryContent()}
@@ -244,6 +240,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               if (success) {
                 clear();
                 setSuccess(false);
+                clearBuyNow();
                 props.onClose();
                 return;
               }
@@ -279,7 +276,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 }
               }
 
-              const result = toBuy.length > 1 ? await buyAll() : await buyNow(currentAddress, toBuy[0]);
+              const result = buyNowActive ? await buyNow(currentAddress, toBuyNow[0]) : toBuy.length > 1 ? await buyAll() : await buyNow(currentAddress, toBuy[0]);
               if (result) {
                 setSuccess(true);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
