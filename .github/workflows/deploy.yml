@@ -115,7 +115,11 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --immutable
 
-      - name: Deploy Site
+      - uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Deploy Site to Netlify
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
@@ -142,7 +146,11 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --immutable
         
-      - name: Deploy Site
+      - uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Deploy Site to Netlify
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
@@ -162,6 +170,10 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --immutable
       
+      - uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
       - name: Deploy Site to Netlify
         env:
           NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE_ID }}
