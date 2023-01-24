@@ -22,6 +22,10 @@ jobs:
     - name: Configure Doppler Config
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
+        
+    - uses: actions/checkout@v2
+    - name: Install Vercel CLI
+      run: npm install --global vercel@latest
     
     - run: yarn
     - run: yarn typechain:gen
