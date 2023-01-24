@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
+import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { AuctionType, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
@@ -225,6 +226,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   targets: [
                     {
                       protocol: ExternalProtocol.NFTCOM,
+                      currency: NULL_ADDRESS
                     }
                   ]
                 });
