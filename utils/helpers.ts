@@ -18,7 +18,9 @@ export function isAddress(value: any): string | false {
   }
 }
 
-export const isChromeBrowser = () => window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
+export function isChromeBrowser() {
+  return window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
+}
 
 export const profileSaveCounter = atom(0);
 
