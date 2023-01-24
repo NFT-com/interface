@@ -17,6 +17,10 @@ jobs:
     - name: Configure Doppler Config
       run: |
         doppler setup -t ${{ secrets.DOPPLER_TOKEN }} -p interface -c dev_gh-actions --no-interactive
+        
+    - uses: actions/checkout@v2
+    - name: Install Vercel CLI
+      run: npm install --global vercel@latest
     
     - run: yarn
     - run: yarn typechain:gen
@@ -37,6 +41,8 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     
     - name: Cypress run - component 🧪
       uses: cypress-io/github-action@v4
@@ -114,6 +120,13 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
         run: netlify deploy --build --prod --message "main@${{ github.sha }}"
+
+      - name: TEST!!!! Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: TEST!!!! Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: TEST!!!! Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
   
   deploy-staging:
     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'staging') }}
@@ -149,8 +162,15 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile --immutable
       
-      - name: Deploy Site
+      - name: Deploy Site to Netlify
         env:
           NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
-        run: netlify deploy --build --prod --message "prod@${{ github.sha }}"
+        run: netlify deploy --build --prod --message "prod@${{ github.sha }}" && vercel --prod
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
