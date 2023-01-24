@@ -118,6 +118,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               >
                 {getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ?
                   <DropdownPickerModal
+                    closeModalOnClick
                     pointer
                     align='center'
                     constrain
@@ -175,6 +176,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                 </Link>
 
                 <DropdownPickerModal
+                  closeModalOnClick
                   pointer
                   align='center'
                   constrain
@@ -365,6 +367,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
             >
               {getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED) ?
                 <DropdownPickerModal
+                  closeModalOnClick
                   pointer
                   align='center'
                   constrain
@@ -426,6 +429,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
               </Link>
 
               <DropdownPickerModal
+                closeModalOnClick
                 pointer
                 align='center'
                 constrain
