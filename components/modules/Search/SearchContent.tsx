@@ -198,6 +198,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
     );
   }
   if(discoverPageEnv){
+    const isChromeBrowser = window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
     return (
       <>
         <div className={`${leaderBoardSearch ? 'max-w-[1018px] mx-auto' : ''} flex flex-col font-noi-grotesk relative`}>
@@ -221,6 +222,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
                   maxLength={512}
                   className={tw(
                     'focus:ring-0 text-black text-lg border-none p-0 focus:outline-none',
+                    !isChromeBrowser && 'pr-4',
                     `${leaderBoardSearch ? 'bg-[#F8F8F8] placeholder:text-[#6A6A6A] w-full' : 'placeholder:text-black bg-inherit focus:border-transparent focus:ring-0 focus:placeholder:text-[#B2B2B2]'}`,
                     leaderBoardSearch ? 'w-full' : transitionWidth
                   )}
