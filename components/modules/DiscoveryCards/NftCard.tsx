@@ -57,7 +57,7 @@ export interface NftCardProps {
 export function NftCard(props: NftCardProps) {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
 
-  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const { stagePurchase, stageBuyNow, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
@@ -155,7 +155,36 @@ export function NftCard(props: NftCardProps) {
                 <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
                   {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && (hasGks || getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) ?
                     <>
-                      <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
+                      <button
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
+                          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                          const price = getListingPrice(bestListing);
+                          stageBuyNow({
+                            nft: props?.nft || nft,
+                            activityId: bestListing?.id,
+                            currency: getListingCurrencyAddress(bestListing) ?? WETH.address,
+                            price: price,
+                            collectionName: props.collectionName,
+                            protocol: bestListing?.order?.protocol as ExternalProtocol,
+                            isApproved: BigNumber.from(allowance ?? 0).gt(price),
+                            orderHash: bestListing?.order?.orderHash,
+                            makerAddress: bestListing?.order?.makerAddress,
+                            takerAddress: bestListing?.order?.takerAddress,
+                            nonce: bestListing?.order?.nonce,
+                            protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
+                              bestListing?.order?.protocolData as SeaportProtocolData :
+                              bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
+                                bestListing?.order?.protocolData as X2Y2ProtocolData:
+                                bestListing?.order?.protocolData as LooksrareProtocolData
+                          });
+                          togglePurchaseSummaryModal();
+                        }}
+                        className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] "
+                      >
+                        Buy Now
+                      </button>
                       <button
                         onClick={async (e) => {
                           e.preventDefault();

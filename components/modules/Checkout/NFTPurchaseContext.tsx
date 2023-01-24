@@ -39,29 +39,39 @@ export type StagedPurchase = {
 
 interface NFTPurchaseContextType {
   toBuy: StagedPurchase[];
+  toBuyNow: StagedPurchase[];
   stagePurchase: (listing: PartialDeep<StagedPurchase>) => void;
+  stageBuyNow: (listing: PartialDeep<StagedPurchase>) => void;
   clear: () => void;
+  clearBuyNow: () => void;
   buyAll: () => Promise<boolean>;
   updateCurrencyApproval: (currency: string, approved: boolean) => void;
   removePurchase: (nft: PartialDeep<Nft>) => void;
   togglePurchaseSummaryModal: () => void;
+  buyNowActive: boolean
 }
 
 // initialize with default values
 export const NFTPurchasesContext = React.createContext<NFTPurchaseContextType>({
   toBuy: [],
+  toBuyNow: [],
   stagePurchase: () => null,
+  stageBuyNow: () => null,
   clear: () => null,
+  clearBuyNow: () => null,
   buyAll: () => null,
   updateCurrencyApproval: () => null,
   removePurchase: () => null,
-  togglePurchaseSummaryModal: () => null
+  togglePurchaseSummaryModal: () => null,
+  buyNowActive: false
 });
 
 export function NFTPurchaseContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
+  const [buyNowActive, setBuyNowActive] = useState<boolean>(false);
+  const [toBuyNow, setToBuyNow] = useState<Array<StagedPurchase>>([]);
   const [showPurchaseSummaryModal, setShowPurchaseSummaryModal] = useState(false);
   
   const { toggleCartSidebar } = useContext(NFTListingsContext);
@@ -93,6 +103,18 @@ export function NFTPurchaseContextProvider(
     localStorage.setItem('stagedNftPurchases', JSON.stringify(filterNulls([...toBuy, purchase])));
   }, [toBuy, toggleCartSidebar]);
 
+  const stageBuyNow = useCallback((
+    purchase: StagedPurchase
+  ) => {
+    setBuyNowActive(true);
+    setToBuyNow([purchase]);
+  }, []);
+
+  const clearBuyNow = useCallback(() => {
+    setBuyNowActive(false);
+    setToBuyNow([]);
+  }, []);
+
   const removePurchase = useCallback((nft: PartialDeep<Nft>) => {
     const newToBuy = toBuy.slice().filter(l => l.nft?.id !== nft?.id);
     setToBuy(newToBuy);
@@ -105,7 +127,8 @@ export function NFTPurchaseContextProvider(
   }, []);
 
   const updateCurrencyApproval = useCallback((currency: string, approved: boolean) => {
-    const newToBuy = toBuy.slice().map(item => {
+    const nftsToApprove = buyNowActive ? toBuyNow : toBuy;
+    const newToBuy = nftsToApprove.slice().map(item => {
       if (item?.currency === currency) {
         return {
           ...item,
@@ -114,9 +137,13 @@ export function NFTPurchaseContextProvider(
       }
       return item;
     });
-    setToBuy(newToBuy);
-    localStorage.setItem('stagedNftPurchases', JSON.stringify(newToBuy));
-  }, [toBuy]);
+    if(buyNowActive){
+      setToBuyNow(newToBuy);
+    } else {
+      setToBuy(newToBuy);
+      localStorage.setItem('stagedNftPurchases', JSON.stringify(newToBuy));
+    }
+  }, [buyNowActive, toBuy, toBuyNow]);
 
   const fetchX2Y2Hex = useCallback(async (purchase) => {
     const response = await getX2Y2Hex(
@@ -219,11 +246,15 @@ export function NFTPurchaseContextProvider(
   return <NFTPurchasesContext.Provider value={{
     removePurchase,
     toBuy,
+    toBuyNow,
     stagePurchase,
+    stageBuyNow,
+    clearBuyNow,
     clear,
     buyAll,
     updateCurrencyApproval,
-    togglePurchaseSummaryModal
+    togglePurchaseSummaryModal,
+    buyNowActive
   }}>
     <PurchaseSummaryModal visible={showPurchaseSummaryModal} onClose={() => setShowPurchaseSummaryModal(false)} />
     {props.children}
