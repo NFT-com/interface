@@ -184,7 +184,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                           ? stagedListing?.isApprovedForNFTCOM :
                           stagedListing?.isApprovedForSeaport;
                     return {
-                      label: 'Approve ' + stagedListing?.collectionName + ' for ' + getProtocolDisplayName(target.protocol),
+                      label: 'Approve ' + (!isNullOrEmpty(stagedListing?.collectionName) ? stagedListing?.collectionName : 'Collection') + ' for ' + getProtocolDisplayName(target.protocol),
                       startIcon: target.protocol === ExternalProtocol.Seaport ?
                         <OpenseaIcon
                           className={'h-8 w-8 shrink-0 grow-0 aspect-square'}
