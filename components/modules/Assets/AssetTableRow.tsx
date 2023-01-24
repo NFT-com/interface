@@ -117,7 +117,7 @@ export default function AssetTableRow({
         <div className='flex justify-center'>
           <input
             checked={isChecked}
-            onChange={() => onChange(item)}
+            onChange={() => onChange({ ...item, collection: { name: collectionName } })}
             className='border-2 border-[#6F6F6F] text-[#6F6F6F] form-checkbox focus:ring-[#F9D963]' type='checkbox' />
         </div>
       </td>
@@ -175,7 +175,7 @@ export default function AssetTableRow({
               ? {
                 label: 'List NFT',
                 onSelect: () => {
-                  onChange(item);
+                  onChange({ ...item, collection: { name: collectionName } });
                 },
                 icon: null,
               }

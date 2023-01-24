@@ -8,6 +8,7 @@ import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrate
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
+import { useBuyNow } from 'utils/marketplaceHelpers';
 import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from 'utils/marketplaceUtils';
 
 import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
@@ -38,6 +39,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
+  const { buyNow } = useBuyNow(signer);
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
 
   const { getByContractAddress, getBalanceMap } = useSupportedCurrencies();
@@ -224,7 +226,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       fullModal
       pure
     >
-      <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 pb-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
+      <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 py-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
         <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
             setSuccess(false);
@@ -277,7 +279,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 }
               }
 
-              const result = await buyAll();
+              const result = toBuy.length > 1 ? await buyAll() : await buyNow(currentAddress, toBuy[0]);
               if (result) {
                 setSuccess(true);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);

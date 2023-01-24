@@ -7,8 +7,11 @@ import { Switch } from 'components/elements/Switch';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { Profile } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
@@ -33,7 +36,9 @@ import X2Y2Icon from 'public/x2y2-icon.svg';
 import Slider from 'rc-slider';
 import { useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
+import { useAccount } from 'wagmi';
 
 export function ListingCheckout() {
   const {
@@ -45,8 +50,14 @@ export function ListingCheckout() {
     prepareListings,
     allListingsConfigured,
     decreasingPriceError,
+    englishAuctionError,
   } = useContext(NFTListingsContext);
   // const [noExpiration, setNoExpiration] = useState(false);
+  const { address: currentAddress } = useAccount();
+  const { marketplace } = useAllContracts();
+  const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
 
   const defaultChainId = useDefaultChainId();
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
@@ -63,7 +74,37 @@ export function ListingCheckout() {
       }
     });
   },[setDuration, toList]);
-    
+
+  const { data: NFTCOMProtocolFee } = useSWR(
+    'NFTCOMProtocolFee' + currentAddress,
+    async () => {
+      return await marketplace.protocolFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
+  const { data: NFTCOMProfileFee } = useSWR(
+    'NFTCOMProfileFee' + currentAddress,
+    async () => {
+      return await marketplace.profileFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+
+  const { data: NFTCOMGKFee } = useSWR(
+    'NFTCOMGKFee' + currentAddress,
+    async () => {
+      return await marketplace.gkFee();
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
+     
   const profileOwnerToShow: PartialDeep<Profile> = toList[0]?.nft?.wallet?.preferredProfile ?? profileData?.profile;
   const [showSummary, setShowSummary] = useState(false);
 
@@ -176,30 +217,39 @@ export function ListingCheckout() {
   const ListingCheckoutInfo = () => {
     return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
-        <div className='w-full flex flex-col items-center'>
+        <div className={tw(
+          getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && 'mb-16',
+          'w-full flex flex-col items-center')}>
           <span className='text-lg w-full font-semibold flex text-[#A6A6A6]'>Select Marketplace(s)</span>
           <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
-            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div
-              onClick={() => {
-                toggleTargetMarketplace(ExternalProtocol.NFTCOM);
-                setShowSummary(false);
-              }}
-              className={tw(
-                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
-                'border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
-                NFTCOMAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
-              )}
-            >
-              {NFTCOMAtLeastOneEnabled
-                ? <NFTLogo
-                  className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]'
-                  alt="NFT.com logo"
-                  layout="fill"
-                />
-                : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
-              <span className='font-semibold text-base'>NFT.com</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(0% fee)</span>
+            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div className={`max-h-[93px] w-[49%] minlg:${buttonsRowWidth()} minlg:mr-2 flex flex-col items-center`}>
+              <div
+                onClick={() => {
+                  toggleTargetMarketplace(ExternalProtocol.NFTCOM);
+                  setShowSummary(false);
+                }}
+                className={tw(
+                  'max-h-[93px] w-full',
+                  'border-[#D5D5D5] rounded-xl text-lg',
+                  'px-4 py-3 cursor-pointer mt-2 flex flex-col items-center',
+                  NFTCOMAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold bg-[#FFF0CB]' : 'border-2'
+                )}
+              >
+                {NFTCOMAtLeastOneEnabled
+                  ? <NFTLogo
+                    className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]'
+                    alt="NFT.com logo"
+                    layout="fill"
+                  />
+                  : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
+                <span className='font-semibold text-base'>NFT.com</span>
+                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ hasGks ? Number(NFTCOMGKFee)/100 : myOwnedProfileTokens?.length ? Number(NFTCOMProfileFee)/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
+              </div>
+              <div className='text-[0.75rem] py-1'><span className='text-primary-yellow'>{NFTCOMGKFee/100}%</span> fee with GK</div>
+              <div className='border-b w-4/5'></div>
+              <div className='text-[0.75rem] py-1'><span className='text-primary-yellow'>{NFTCOMProfileFee/100}%</span> fee with profile</div>
+              <div className='border-b w-4/5'></div>
+              <span className='text-[0.75rem] py-1'>{Number(NFTCOMProtocolFee)/100}% fee without profile</span>
             </div>}
             <div
               onClick={() => {
@@ -358,10 +408,16 @@ export function ListingCheckout() {
           </span>
         </div>
         {ListingCheckoutInfo()}
-        {decreasingPriceError ?
-          <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4 minlg:mb-0'>
+        {NFTCOMAtLeastOneEnabled && decreasingPriceError ?
+          <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
             <ErrorIcon className='relative shrink-0 mr-2' />
             Start Price should be higher than End Price
+          </div>
+          : null}
+        {NFTCOMAtLeastOneEnabled && englishAuctionError ?
+          <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
+            <ErrorIcon className='relative shrink-0 mr-2' />
+            Reserve Price Price should be higher than Buy Now Price
           </div>
           : null}
       </div>
