@@ -1,4 +1,9 @@
 name: Deploy NFT.com Frontend
+env:
+  NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE_ID }}
+  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on: push
 
 jobs:
@@ -41,8 +46,6 @@ jobs:
         CYPRESS_BASE_URL: ${{ secrets.CYPRESS_BASE_URL }}
         CYPRESS_NETWORK: ${{ secrets.CYPRESS_NETWORK }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     
     - name: Cypress run - component 🧪
       uses: cypress-io/github-action@v4
@@ -63,9 +66,6 @@ jobs:
         NEXT_PUBLIC_CHAIN_ID: ${{ secrets.NEXT_PUBLIC_CHAIN_ID }}
         NEXT_PUBLIC_COLLECTION_PAGE_ENABLED: ${{ secrets.NEXT_PUBLIC_COLLECTION_PAGE_ENABLED }}
         NEXT_PUBLIC_DEBUG_LOGGING: ${{ secrets.NEXT_PUBLIC_DEBUG_LOGGING }}
-        NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED: ${{ secrets.NEXT_PUBLIC_DEPLOYED_COLLECTIONS_ENABLED }}
-        NEXT_PUBLIC_DISCORD_COUNT: ${{ secrets.NEXT_PUBLIC_DISCORD_COUNT }}
-        NEXT_PUBLIC_EMAIL_COUNT: ${{ secrets.NEXT_PUBLIC_EMAIL_COUNT }}
         NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED: ${{ secrets.NEXT_PUBLIC_ENGAGEMENT_LOGGING_ENABLED }}
         NEXT_PUBLIC_ENV: ${{ secrets.NEXT_PUBLIC_ENV }}
         NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED: ${{ secrets.NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED }}
@@ -115,17 +115,7 @@ jobs:
         run: yarn install --frozen-lockfile --immutable
 
       - name: Deploy Site to Netlify
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
         run: netlify deploy --build --prod --message "main@${{ github.sha }}"
-
-      - name: TEST!!!! Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-      - name: TEST!!!! Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-      - name: TEST!!!! Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
   
   deploy-staging:
     if: ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'staging') }}
@@ -142,9 +132,6 @@ jobs:
         run: yarn install --frozen-lockfile --immutable
 
       - name: Deploy Site to Netlify
-        env:
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
         run: netlify deploy --build --prod --message "staging@${{ github.sha }}"
         
   deploy-prod:
@@ -162,9 +149,6 @@ jobs:
         run: yarn install --frozen-lockfile --immutable
 
       - name: Deploy Site to Netlify
-        env:
-          NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE_ID }}
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_GH_TOKEN }}
         run: netlify deploy --build --prod --message "prod@${{ github.sha }}" && vercel --prod
 
       - name: Pull Vercel Environment Information
