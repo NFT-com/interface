@@ -133,7 +133,6 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
     }
   };
   const isDiscoverPage = router.asPath.split('/').some((w) => w === 'discover');
-  const isChromeBrowser = window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
 
   if(mobileSearch){
     return (
@@ -199,6 +198,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
     );
   }
   if(discoverPageEnv){
+    const isChromeBrowser = window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
     return (
       <>
         <div className={`${leaderBoardSearch ? 'max-w-[1018px] mx-auto' : ''} flex flex-col font-noi-grotesk relative`}>
