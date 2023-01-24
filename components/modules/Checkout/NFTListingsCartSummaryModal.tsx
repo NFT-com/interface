@@ -262,7 +262,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
           <div className='px-8 border-t border-[#D5D5D5] w-full'/>
           <div className="mx-4 my-4 flex items-center justify-between">
             <div className='flex flex-col'>
-              <span className='font-semibold'>Minimum Profit1</span>
+              <span className='font-semibold'>Minimum Profit</span>
               <span className='font-medium text-[#6F6F6F] text-sm'>
               Estimated Value
               </span>

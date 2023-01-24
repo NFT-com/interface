@@ -133,6 +133,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
     }
   };
   const isDiscoverPage = router.asPath.split('/').some((w) => w === 'discover');
+  const isChromeBrowser = window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
 
   if(mobileSearch){
     return (
@@ -221,6 +222,7 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
                   maxLength={512}
                   className={tw(
                     'focus:ring-0 text-black text-lg border-none p-0 focus:outline-none',
+                    !isChromeBrowser && 'pr-4',
                     `${leaderBoardSearch ? 'bg-[#F8F8F8] placeholder:text-[#6A6A6A] w-full' : 'placeholder:text-black bg-inherit focus:border-transparent focus:ring-0 focus:placeholder:text-[#B2B2B2]'}`,
                     leaderBoardSearch ? 'w-full' : transitionWidth
                   )}
