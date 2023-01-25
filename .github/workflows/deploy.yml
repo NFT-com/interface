@@ -149,7 +149,7 @@ jobs:
         run: yarn install --frozen-lockfile --immutable
 
       - name: Deploy Site to Netlify
-        run: netlify deploy --build --prod --message "prod@${{ github.sha }}" && vercel --prod
+        run: netlify deploy --build --prod --message "prod@${{ github.sha }}"
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
