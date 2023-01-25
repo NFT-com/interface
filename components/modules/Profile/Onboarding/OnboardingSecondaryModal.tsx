@@ -80,10 +80,10 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
             >
               <Dialog.Panel className="w-[463px] max-w-full transform overflow-hidden rounded-[20px] bg-white align-middle shadow-xl transition-all text-center">
                 <div className='flex flex-col font-medium relative text-center'>
-                  <X className='absolute right-2 top-2 hover:cursor-pointer' size={20} onClick={() => setModalOpen(false)} />
+                  <X className='absolute right-4 top-4 hover:cursor-pointer' size={24} onClick={() => setModalOpen(false)} />
                   <Dialog.Title
                     as="h3"
-                    className="text-[24px] leading-6 text-gray-900 mt-9"
+                    className="text-[24px] leading-6 text-gray-900 mt-5"
                   >
                     {selectedItem?.name}
                   </Dialog.Title>
