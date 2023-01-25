@@ -264,7 +264,7 @@ export function NftCard(props: NftCardProps) {
                                   listingCurrencyData?.contract,
                                   listingCurrencyData?.name ?? 'WETH',
                                 )}
-                                {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}
+                                {listingCurrencyData?.decimals ? Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)).toLocaleString(undefined, { maximumSignificantDigits: 3 }) : '-'}
                                 &nbsp;
                                 {listingCurrencyData?.name ?? 'WETH'}
                               </div>
