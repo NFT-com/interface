@@ -20,7 +20,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
       return;
     } else {
       if(nftTransactionHistory) {
-        setNftdata(nftTransactionHistory?.data?.transactions);
+        setNftdata(nftTransactionHistory?.data?.items);
       }
     }
   }, [defaultChainId, nftData, nftTransactionHistory]);
