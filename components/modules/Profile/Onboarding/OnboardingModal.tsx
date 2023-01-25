@@ -107,13 +107,6 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                           coins: 5,
                           description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase on NFT.com.',
                           href: '/app/discover'
-                        },
-                        {
-                          name: 'List NFTs',
-                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ListNfTs),
-                          coins: 10,
-                          description: 'Get 2 reward points for each of the first 5 NFTs you list on NFT.com for at least one day.',
-                          href: '/app/assets'
                         }
                       ]
                     }
