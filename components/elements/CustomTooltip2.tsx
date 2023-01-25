@@ -4,6 +4,7 @@ type ToolTipProps = {
   orientation: 'top'| 'left'| 'right' | 'bottom' | 'custom';
   tooltipComponent: React.ReactNode;
   hidden?: boolean;
+  noFullHeight?: boolean;
   tooltipClick?: () => void;
   customLeftPosition?: string
 };
@@ -98,7 +99,7 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
 
   return (
     <div
-      className={`relative flex items-center w-full h-full ${props.tooltipClick && 'cursor-pointer'}`}
+      className={`relative flex items-center w-full ${props?.noFullHeight ? '' : 'h-full'} ${props.tooltipClick && 'cursor-pointer'}`}
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
     >
       <div

@@ -1,3 +1,4 @@
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseContext';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -247,7 +248,19 @@ export function NftCard(props: NftCardProps) {
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
               <ul
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
-                <li className="sm:text-[13px]	max-w-[200px] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.name}</li>
+                <CustomTooltip2
+                  noFullHeight={true}
+                  orientation='top'
+                  tooltipComponent={
+                    <div
+                      className="w-max"
+                    >
+                      <p>{props.name}</p>
+                    </div>
+                  }
+                >
+                  <li className="sm:text-[13px] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.name}</li>
+                </CustomTooltip2>
                 <li
                   className="sm:text-sm text-[16px] [200px]  leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
               </ul>
