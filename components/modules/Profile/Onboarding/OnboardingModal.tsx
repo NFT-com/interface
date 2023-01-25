@@ -6,7 +6,7 @@ import OnboardingModalItem from './OnboardingModalItem';
 
 import { CaretDown, CaretUp } from 'phosphor-react';
 import NftGoldLogo from 'public/nft_gold_logo.svg';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export interface OnboardingModalProps {
   profileURI: string;
@@ -16,8 +16,46 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
   const { profileData } = useProfileQuery(
     profileURI
   );
-  
+
+  const onboardingItems = useMemo(() => [
+    {
+      name: 'Create NFT Profile',
+      isCompleted: true,
+      coins: 5,
+    },
+    {
+      name: 'Customize Profile',
+      isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.CustomizeProfile),
+      description: 'Get 1 reward point by adding a profile picture, bio, and showcasing your favorite NFTs to your NFT Profile.',
+      coins: 1,
+      buttonText: 'Continue',
+    },
+    {
+      name: 'Refer Network',
+      isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ReferNetwork),
+      coins: 10,
+      description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 reward points per referral that mints a NFT Profile!',
+      buttonText: 'Continue'
+    },
+    {
+      name: 'Buy NFTs',
+      isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.BuyNfTs),
+      coins: 5,
+      description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase on NFT.com.',
+      href: '/app/discover'
+    }
+  ], [profileData]);
+
+  useEffect(() => {
+    const totalPoints = onboardingItems.reduce((acc, item) => {
+      return acc + item.coins;
+    }, 0);
+    setTotalPoints(totalPoints);
+  }, [onboardingItems]);
+
+  const [totalPoints, setTotalPoints] = useState(0);
   const [expanded, setExpanded] = useState(false);
+
   return (
     <>
       <div
@@ -50,10 +88,10 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                       <NftGoldLogo />
                     </div>
                     
-                    {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>31</span>
+                    {profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5}/<span className='text-[#6A6A6A]'>{totalPoints || '-'}</span>
                   </div>
                 </div>
-                <p className='mt-3 font-medium w-11/12'>Complete 5 steps to redeem all your <span className='bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>Reward points</span>!</p>
+                <p className='mt-3 font-medium w-11/12'>Complete 5 steps to redeem all your <span className='bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>reward points!</span></p>
 
                 <div className='mt-7'>
                   <div className={tw(
@@ -62,7 +100,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
                   )}>
                     <div className='w-[85%] h-3 bg-[#E6E6E6] rounded-full'>
                       <div
-                        style={{ width: `${Math.floor(((profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5) / 16) * 100)}%` }}
+                        style={{ width: `${totalPoints ? Math.floor(((profileData?.profile?.usersActionsWithPoints[0]?.totalPoints || 5) / totalPoints) * 100) : 0}%` }}
                         className={tw(
                           'h-3 bg-[#26AA73] rounded-full',
                         )}></div>
@@ -80,43 +118,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
               {expanded && <><div className='border-t pt-3 px-4'>
                 <div className='flex flex-col space-y-2'>
                   <OnboardingModalItem
-                    items={
-                      [
-                        {
-                          name: 'Create NFT Profile',
-                          isCompleted: true,
-                          coins: 5,
-                        },
-                        {
-                          name: 'Customize Profile',
-                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.CustomizeProfile),
-                          description: 'Get 1 reward point by adding a profile picture, bio, and showcasing your favorite NFTs to your NFT Profile.',
-                          coins: 1,
-                          buttonText: 'Continue',
-                        },
-                        {
-                          name: 'Refer Network',
-                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ReferNetwork),
-                          coins: 10,
-                          description: 'Refer 5 friends to NFT.com to grow awareness of your NFT Profile and obtain 2 reward points per referral that mints a NFT Profile!',
-                          buttonText: 'Continue'
-                        },
-                        {
-                          name: 'Buy NFTs',
-                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.BuyNfTs),
-                          coins: 5,
-                          description: 'As a new user, get 1 reward point for each of the first 5 NFTs you purchase on NFT.com.',
-                          href: '/app/discover'
-                        },
-                        {
-                          name: 'List NFTs',
-                          isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.ListNfTs),
-                          coins: 10,
-                          description: 'Get 2 reward points for each of the first 5 NFTs you list on NFT.com for at least one day.',
-                          href: '/app/assets'
-                        }
-                      ]
-                    }
+                    items={onboardingItems}
                   />
                 </div>
               </div>
