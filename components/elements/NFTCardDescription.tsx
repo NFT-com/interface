@@ -62,7 +62,7 @@ export const NFTCardDescription = (props: {
     
       {!isNullOrEmpty(props.description) && (
         <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
-          {props.description}
+          {props.description} hello
         </div>
       )}
       {
