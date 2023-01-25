@@ -1,16 +1,16 @@
 import DefaultLayout from 'components/layouts/DefaultLayout';
-import MintFreeProfileCard from 'components/modules/ProfileFactory/MintFreeProfileCard';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
 import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { useFreeMintAvailable } from 'hooks/state/useFreeMintAvailable';
 import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
+import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
+import { isNull, isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
+import { Tab } from '@headlessui/react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
@@ -21,15 +21,25 @@ import NFTLogoSmall from 'public/nft_logo_small.svg';
 import ProfileClickIcon from 'public/profile-click-icon.svg';
 import ProfileIcon from 'public/profile-icon.svg';
 import ProfileKeyIcon from 'public/profile-key-icon.svg';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
+
+const mintProfileTabs = {
+  0: {
+    displayName: 'Paid',
+    tabName: 'paid'
+  },
+  1: {
+    displayName: 'Genesis Key',
+    tabName: 'gk'
+  }
+};
 export default function MintProfilesPage() {
-  const [showPaid, setShowPaid] = useState(false);
   const { openConnectModal } = useConnectModal();
   const { address: currentAddress } = useAccount();
-  const { freeMintAvailable } = useFreeMintAvailable(currentAddress);
-  const { claimable } = useClaimableProfileCount(currentAddress);
-  const { maxProfiles } = useAllContracts();
+  const [mintType, setMintType] = useState('paid');
+  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
+  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   
   useMaybeCreateUser();
 
@@ -38,25 +48,6 @@ export default function MintProfilesPage() {
       openConnectModal();
     }
   }, [currentAddress, openConnectModal]);
-
-  const getMintProfileCard = useCallback(() => {
-    if(freeMintAvailable) {
-      return <MintFreeProfileCard/>;
-    }
-    if(!isNullOrEmpty(claimable) && !freeMintAvailable) {
-      if(showPaid){
-        return <MintPaidProfileCard type='mint' />;
-      }
-      return <MintGKProfileCard setShowPaid={setShowPaid} />;
-    }
-    if(freeMintAvailable && isNullOrEmpty(claimable) && maxProfiles.publicClaimBool) {
-      return <MintFreeProfileCard />;
-    }
-    if((!freeMintAvailable && isNullOrEmpty(claimable)) || !maxProfiles.publicClaimBool) {
-      return <MintPaidProfileCard type='mint' />;
-    }
-    return <MintProfileCardSkeleton />;
-  }, [claimable, freeMintAvailable, maxProfiles.publicClaimBool, showPaid]);
   
   return (
     <div
@@ -102,10 +93,34 @@ export default function MintProfilesPage() {
           </div>
           
         </div>
-
         {/* Mint Card Component */}
         {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
-          getMintProfileCard()
+          <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
+            <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
+              <h2 className='text-[32px] font-medium'>{mintType === 'gk' ? 'Claim your free NFT Profile' : <p>Create your <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>NFT Profile</span> to trade with lower fees</p>}</h2>
+              {hasGks && <div className='justify-start items-center flex mt-5'>
+                <Tab.Group onChange={(index) => {setMintType(mintProfileTabs[index].tabName);}}>
+                  <Tab.List className="w-full flex rounded-3xl z-10 bg-[#F6F6F6]">
+                    {Object.keys(mintProfileTabs).map((chartType, index) => (
+                      <Tab
+                        key={chartType}
+                        className={({ selected }) =>
+                          tw(
+                            'w-1/2 rounded-3xl font-medium py-2.5 md:px-5 px-8 font-noi-grotesk text-[16px] leading-5 text-[#6A6A6A]',
+                            selected && 'bg-black text-[#FFFFFF]'
+                          )
+                        }
+                      >
+                        {mintProfileTabs[index].displayName}
+                      </Tab>
+                    ))}
+                  </Tab.List>
+                </Tab.Group>
+              </div>
+              }
+              {isNull(ownedGenesisKeyTokens) ? <MintProfileCardSkeleton /> : mintType === 'paid' ? <MintPaidProfileCard type='mint' /> : <MintGKProfileCard />}
+            </div>
+          </div>
           :
           <MintGKProfileCard />
         }

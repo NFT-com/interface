@@ -102,6 +102,8 @@ export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
 
 export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
 
+export const isNull = (val: string | any[] | null | undefined) => val == null;
+
 export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
 
 export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) => boolean): T[] => {
