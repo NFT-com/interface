@@ -106,13 +106,13 @@ export function ExternalListings(props: ExternalListingsProps) {
   const getListingSummaryTitle = useCallback((listing: any) => {
     const protocolName = listing?.order?.exchange;
     return <div className='flex flex-col minmd:flex-row items-start minlg:items-center font-normal font-noi-grotesk text-[16px] text-[#6A6A6A] mt-2'>
-      <span>Current price on</span>
+      <span className='sm:hidden'>Current price on</span>
       <div className='flex items-center'>
-        {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='mx-1.5 h-7 w-7 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
-        {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='mx-1.5 h-7 w-7 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
-        {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='mx-1.5 h-7 w-7 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.Seaport && <OpenseaIcon className='ml-1.5 mr-1 sm:ml-0 h-7 w-7 relative shrink-0' alt="Opensea logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.LooksRare && <LooksrareIcon className='ml-1.5 mr-1 sm:ml-0 h-7 w-7 relative shrink-0' alt="Looksrare logo redirect" layout="fill"/>}
+        {listing?.order?.protocol === ExternalProtocol.X2Y2 && <X2Y2Icon className='ml-1.5 mr-1 sm:ml-0 h-7 w-7 relative shrink-0' alt="X2Y2 logo redirect" layout="fill"/>}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        {listing?.order?.protocol === ExternalProtocol.NFTCOM && <img src={NFTLogo.src} className='mx-1.5 h-6 w-6 relative shrink-0' alt="NFT.com logo redirect" />}
+        {listing?.order?.protocol === ExternalProtocol.NFTCOM && <img src={NFTLogo.src} className='ml-1.5 mr-1 sm:ml-0 h-6 w-6 relative shrink-0' alt="NFT.com logo redirect" />}
         <span className='text-black'>{getProtocolDisplayName(protocolName)}</span>
       </div>
     </div>;
@@ -121,16 +121,16 @@ export function ExternalListings(props: ExternalListingsProps) {
   const getIcon = useCallback((contract: string, currency: string) => {
     switch (currency) {
     case 'ETH':
-      return <ETH className='h-6 w-6 relative mr-2 shrink-0' alt="ETH logo redirect" layout="fill"/>;
+      return <ETH className='-ml-1 h-6 w-6 relative mr-2 shrink-0' alt="ETH logo redirect" layout="fill"/>;
     case 'USDC':
-      return <USDC className='h-6 w-6 relative mr-2 shrink-0' alt="USDC logo redirect" layout="fill"/>;
+      return <USDC className='-ml-1 h-6 w-6 relative mr-2 shrink-0' alt="USDC logo redirect" layout="fill"/>;
     default:
       if (!contract) {
         return <div>{currency}</div>;
       }
       // eslint-disable-next-line @next/next/no-img-element
-      return <div className='flex items-center'><img
-        className='mr-1.5 h-7 w-7 relative shrink-0'
+      return <div className='-ml-1 flex items-center'><img
+        className='-ml-1 mr-1.5 h-7 w-7 relative shrink-0'
         src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
         alt={currency}
       />
@@ -273,10 +273,10 @@ export function ExternalListings(props: ExternalListingsProps) {
           'grid grid-cols-2 gap-5 justify-between flex-col bg-white rounded-[18px] shadow-xl border border-gray-200 mb-5 w-full max-w-nftcom h-fit  relative font-noi-grotesk',
         )}>
           <div className="pl-6 pb-2 mt-6 w-full flex flex-col items-top border-r border-r-[#F2F2F2]">
-            <span className='text-[28px] font-semibold text-black'>
+            <span className='sm:text-[20px] text-[28px] font-semibold text-black'>
               {listing?.order?.protocol === ExternalProtocol.NFTCOM ? `${getAuctionTypeDisplayName((listing?.order?.protocolData as NftcomProtocolData).auctionType)}` : 'Fixed Price'}
             </span>
-            <div className='flex font-noi-grotesk text-black leading-6 items-center justify-between mt-6'>
+            <div className='flex font-noi-grotesk text-black leading-6 items-center justify-between mt-6 sm:mt-2'>
               <div className='flex md:flex-col md:items-start items-end leading-6 flex-wrap'>
                 <div className='flex items-end'>
                   <div className='flex items-end'>
@@ -284,12 +284,14 @@ export function ExternalListings(props: ExternalListingsProps) {
                       getByContractAddress(getListingCurrencyAddress(listing))?.contract,
                       getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
                     )}
-                    <span className='text-[37px] font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}</span>
+                    <span className='sm:text-[30px] text-[37px] font-semibold'>
+                      {getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}
+                    </span>
                   </div>
                   <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
                 </div>
                 <span className="md:ml-0 md:mt-2 ml-2 text-[15px] uppercase font-medium text-[#6A6A6A] flex flex-nowrap">
-                ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}{' USD'}
+                  ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}
                 </span>
               </div>
             </div>
