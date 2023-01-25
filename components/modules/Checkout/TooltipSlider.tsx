@@ -18,6 +18,7 @@ const HandleTooltip = (props: {
   const rafRef = React.useRef<number | null>(null);
 
   function cancelKeepAlign() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     raf.cancel(rafRef.current!);
   }
 
