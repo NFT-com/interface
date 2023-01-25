@@ -1,3 +1,4 @@
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseContext';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
@@ -21,12 +22,13 @@ import { DetailedNft } from './CollectionCard';
 
 import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
+import ETH from 'public/eth.svg';
 import Hidden from 'public/Hidden.svg';
 import Reorder from 'public/Reorder.svg';
 import ShopIcon from 'public/shop-icon.svg';
+import USDC from 'public/usdc.svg';
 import Visible from 'public/Visible.svg';
-import VolumeIcon from 'public/volumeIcon.svg';
-import { MouseEvent, useContext } from 'react';
+import { MouseEvent, useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -57,7 +59,7 @@ export interface NftCardProps {
 export function NftCard(props: NftCardProps) {
   const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
 
-  const { stagePurchase } = useContext(NFTPurchasesContext);
+  const { stagePurchase, stageBuyNow, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
@@ -85,7 +87,28 @@ export function NftCard(props: NftCardProps) {
       } else return date;
     }
   };
+
   const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
+
+  const getIcon = useCallback((contract: string, currency: string) => {
+    switch (currency) {
+    case 'ETH':
+      return <ETH className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="ETH logo redirect" layout="fill"/>;
+    case 'USDC':
+      return <USDC className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="USDC logo redirect" layout="fill"/>;
+    default:
+      if (!contract) {
+        return <div>{currency}</div>;
+      }
+      // eslint-disable-next-line @next/next/no-img-element
+      return <div className='-ml-1 mr-1 flex items-center'><img
+        className='h-5 w-5 relative shrink-0'
+        src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
+        alt={currency}
+      />
+      </div>;
+    }
+  }, []);
 
   return (
     <div className={tw(
@@ -155,7 +178,36 @@ export function NftCard(props: NftCardProps) {
                 <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
                   {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && (hasGks || getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) ?
                     <>
-                      <button className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] ">Buy Now</button>
+                      <button
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
+                          const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                          const price = getListingPrice(bestListing);
+                          stageBuyNow({
+                            nft: props?.nft || nft,
+                            activityId: bestListing?.id,
+                            currency: getListingCurrencyAddress(bestListing) ?? WETH.address,
+                            price: price,
+                            collectionName: props.collectionName,
+                            protocol: bestListing?.order?.protocol as ExternalProtocol,
+                            isApproved: BigNumber.from(allowance ?? 0).gt(price),
+                            orderHash: bestListing?.order?.orderHash,
+                            makerAddress: bestListing?.order?.makerAddress,
+                            takerAddress: bestListing?.order?.takerAddress,
+                            nonce: bestListing?.order?.nonce,
+                            protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
+                              bestListing?.order?.protocolData as SeaportProtocolData :
+                              bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?
+                                bestListing?.order?.protocolData as X2Y2ProtocolData:
+                                bestListing?.order?.protocolData as LooksrareProtocolData
+                          });
+                          togglePurchaseSummaryModal();
+                        }}
+                        className="sm:text-sm mx-[7px] px-[16px] py-[8px] bg-[#F9D54C] text-[#000000] rounded-[10px] text-[18px] leading-[24px] font-[500] hover:bg-black  hover:text-[#F9D54C] "
+                      >
+                        Buy Now
+                      </button>
                       <button
                         onClick={async (e) => {
                           e.preventDefault();
@@ -190,43 +242,55 @@ export function NftCard(props: NftCardProps) {
                 </div>
               </div>
             </div>
-
           </div>
 
           {props.nftsDescriptionsVisible != false &&
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
               <ul
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
-                <li className="sm:text-[13px]	max-w-[200px] list-none p-0 m-[0] sm:whitespace-nowrap sm:text-ellipsis sm:overflow-hidden">{props.name}</li>
+                <CustomTooltip2
+                  noFullHeight={true}
+                  orientation='top'
+                  tooltipComponent={
+                    <div
+                      className="w-max"
+                    >
+                      <p>{props.name}</p>
+                    </div>
+                  }
+                >
+                  <li className="sm:text-[13px] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.name}</li>
+                </CustomTooltip2>
                 <li
                   className="sm:text-sm text-[16px] [200px]  leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
               </ul>
               {
                 (props?.listings?.length || nft?.listings?.items?.length) && bestListing
                   ? (
-                    <ul className="flex flex-row justify-between mt-[14px] font-noi-grotesk">
+                    <ul className="flex flex-col justify-between mt-[14px] font-noi-grotesk">
                       <li className="p-0 m-[0] flex flex-col">
                         <div>
-                          <div className="font-noi-grotesk font-[500] text-[#000000] text-[18px] flex items-center">
-                            <div className="pr-1">
-                            </div>
-                            <div className='flex flex-col'>
-                              <span className="flex flex-row">
-                                <VolumeIcon className="mr-1"/>
-                                {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
+                          <div className="font-noi-grotesk font-[500] text-[#000000] text-[16px] flex items-center">
+                            <div className='flex items-center justify-between w-full'>
+                              <div className="flex items-center">
+                                {getIcon(
+                                  listingCurrencyData?.contract,
+                                  listingCurrencyData?.name ?? 'WETH',
+                                )}
+                                {listingCurrencyData?.decimals ? Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)).toLocaleString(undefined, { maximumSignificantDigits: 3 }) : '-'}
+                                &nbsp;
                                 {listingCurrencyData?.name ?? 'WETH'}
-                              </span>
-                              <span className='text-base text-[#747474]'>
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0)}<br/>
-                                {/*${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}*/}
-                              </span>
+                              </div>
+                              <span className="text-[#B2B2B2]">Ends in</span>
                             </div>
                           </div>
                         </div>
                       </li>
-                      <li className="text-[16px] p-0 m-[0] flex flex-col items-end font-noi-grotesk">
-                        <span className="text-[16px] text-[#B2B2B2] font-[400]">Ends in</span>
-                        <span className="text-[16px] text-[#6A6A6A] font-[500]">{checkEndDate()}</span>
+                      <li className="text-[14px] mt-1 p-0 m-[0] flex items-end justify-between font-noi-grotesk">
+                        <span className='text-[#B2B2B2]'>
+                          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0)}
+                        </span>
+                        <span className="text-[#6A6A6A] font-medium">{checkEndDate()}</span>
                       </li>
                     </ul>
                   )

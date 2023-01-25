@@ -1,5 +1,6 @@
 import Loader from 'components/elements/Loader';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NULL_ADDRESS } from 'constants/addresses';
 import { Nft } from 'graphql/generated/types';
 import { useMyAssetsQuery } from 'graphql/hooks/useMyAssetsQuery';
 import { useFetchNftCollectionAllowance } from 'hooks/balances/useFetchNftCollectionAllowance';
@@ -139,6 +140,7 @@ export default function AssetsPages() {
                   targets: [
                     {
                       protocol: ExternalProtocol.NFTCOM,
+                      currency: NULL_ADDRESS
                     }
                   ]
                 })));
