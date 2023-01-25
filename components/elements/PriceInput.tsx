@@ -1,4 +1,4 @@
-import { AuctionType, Maybe } from 'graphql/generated/types';
+import { Maybe } from 'graphql/generated/types';
 import { SupportedCurrency, useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
