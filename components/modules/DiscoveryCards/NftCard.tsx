@@ -259,10 +259,10 @@ export function NftCard(props: NftCardProps) {
                     </div>
                   }
                 >
-                  <li className="sm:text-[13px] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.name}</li>
+                  <li className="list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.name}</li>
                 </CustomTooltip2>
                 <li
-                  className="sm:text-sm text-[16px] [200px]  leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
+                  className="sm:text-sm text-[16px] [200px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
               </ul>
               {
                 (props?.listings?.length || nft?.listings?.items?.length) && bestListing
@@ -281,7 +281,7 @@ export function NftCard(props: NftCardProps) {
                                 &nbsp;
                                 {listingCurrencyData?.name ?? 'WETH'}
                               </div>
-                              <span className="text-[#B2B2B2]">Ends in</span>
+                              <span className="text-[#B2B2B2] text-[14px]">Ends in</span>
                             </div>
                           </div>
                         </div>

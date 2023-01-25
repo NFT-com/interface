@@ -26,7 +26,7 @@ function Countdown({ eventTime, interval }: CountdownProps) {
   return (
     <div>
       <p className='mb-1 text-[#B2B2B2]'>Ends in</p>
-      <p className='font-noi-grotesk text-2xl font-medium leading-6'>
+      <p className='font-noi-grotesk sm:text-xl text-2xl font-medium leading-6'>
         {duration.days()}<span className='text-[15px] text-[#6A6A6A] mr-[10px]'>d</span>
         {duration.hours()}<span className='text-[15px] text-[#6A6A6A] mr-[10px]'>h</span>
         {duration.minutes()}<span className='text-[15px] text-[#6A6A6A] mr-[10px]'>m</span>
