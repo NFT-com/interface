@@ -58,11 +58,12 @@ export const NFTCardDescription = (props: {
           </div>
           <span className="sr-only">Loading...</span>
         </div>)}
+  
       {props.imageLayout !== 'row' && (props.traits ?? []).map((pair, index) => makeTrait(pair, index))}
     
       {!isNullOrEmpty(props.description) && (
         <div className='mt-4 text-secondary-txt text-xs minmd:text-sm'>
-          {props.description} hello
+          {props.description}
         </div>
       )}
       {
