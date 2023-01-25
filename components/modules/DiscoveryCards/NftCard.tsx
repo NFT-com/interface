@@ -247,7 +247,7 @@ export function NftCard(props: NftCardProps) {
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
               <ul
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
-                <li className="sm:text-[13px]	max-w-[200px] list-none p-0 m-[0] sm:whitespace-nowrap sm:text-ellipsis sm:overflow-hidden">{props.name}</li>
+                <li className="sm:text-[13px]	max-w-[200px] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.name}</li>
                 <li
                   className="sm:text-sm text-[16px] [200px]  leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
               </ul>
