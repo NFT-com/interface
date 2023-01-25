@@ -21,12 +21,13 @@ import { DetailedNft } from './CollectionCard';
 
 import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
+import ETH from 'public/eth.svg';
 import Hidden from 'public/Hidden.svg';
 import Reorder from 'public/Reorder.svg';
 import ShopIcon from 'public/shop-icon.svg';
+import USDC from 'public/usdc.svg';
 import Visible from 'public/Visible.svg';
-import VolumeIcon from 'public/volumeIcon.svg';
-import { MouseEvent, useContext } from 'react';
+import { MouseEvent, useCallback, useContext } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
 export interface NftCardProps {
@@ -85,7 +86,28 @@ export function NftCard(props: NftCardProps) {
       } else return date;
     }
   };
+
   const nftImage = document.getElementsByClassName('nftImg')[0]?.clientWidth;
+
+  const getIcon = useCallback((contract: string, currency: string) => {
+    switch (currency) {
+    case 'ETH':
+      return <ETH className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="ETH logo redirect" layout="fill"/>;
+    case 'USDC':
+      return <USDC className='-ml-1 mr-1 h-4 w-4 relative shrink-0' alt="USDC logo redirect" layout="fill"/>;
+    default:
+      if (!contract) {
+        return <div>{currency}</div>;
+      }
+      // eslint-disable-next-line @next/next/no-img-element
+      return <div className='-ml-1 mr-1 flex items-center'><img
+        className='h-5 w-5 relative shrink-0'
+        src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract)}/logo.png`}
+        alt={currency}
+      />
+      </div>;
+    }
+  }, []);
 
   return (
     <div className={tw(
@@ -219,7 +241,6 @@ export function NftCard(props: NftCardProps) {
                 </div>
               </div>
             </div>
-
           </div>
 
           {props.nftsDescriptionsVisible != false &&
@@ -233,29 +254,30 @@ export function NftCard(props: NftCardProps) {
               {
                 (props?.listings?.length || nft?.listings?.items?.length) && bestListing
                   ? (
-                    <ul className="flex flex-row justify-between mt-[14px] font-noi-grotesk">
+                    <ul className="flex flex-col justify-between mt-[14px] font-noi-grotesk">
                       <li className="p-0 m-[0] flex flex-col">
                         <div>
-                          <div className="font-noi-grotesk font-[500] text-[#000000] text-[18px] flex items-center">
-                            <div className="pr-1">
-                            </div>
-                            <div className='flex flex-col'>
-                              <span className="flex flex-row">
-                                <VolumeIcon className="mr-1"/>
-                                {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}{' '}
+                          <div className="font-noi-grotesk font-[500] text-[#000000] text-[16px] flex items-center">
+                            <div className='flex items-center justify-between w-full'>
+                              <div className="flex items-center">
+                                {getIcon(
+                                  listingCurrencyData?.contract,
+                                  listingCurrencyData?.name ?? 'WETH',
+                                )}
+                                {listingCurrencyData?.decimals && ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18)}
+                                &nbsp;
                                 {listingCurrencyData?.name ?? 'WETH'}
-                              </span>
-                              <span className='text-base text-[#747474]'>
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0)}<br/>
-                                {/*${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0}*/}
-                              </span>
+                              </div>
+                              <span className="text-[#B2B2B2]">Ends in</span>
                             </div>
                           </div>
                         </div>
                       </li>
-                      <li className="text-[16px] p-0 m-[0] flex flex-col items-end font-noi-grotesk">
-                        <span className="text-[16px] text-[#B2B2B2] font-[400]">Ends in</span>
-                        <span className="text-[16px] text-[#6A6A6A] font-[500]">{checkEndDate()}</span>
+                      <li className="text-[14px] mt-1 p-0 m-[0] flex items-end justify-between font-noi-grotesk">
+                        <span className='text-[#B2B2B2]'>
+                          {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', currencyDisplay: 'narrowSymbol' }).format(listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(bestListing), listingCurrencyData?.decimals ?? 18))) ?? 0)}
+                        </span>
+                        <span className="text-[#6A6A6A] font-medium">{checkEndDate()}</span>
                       </li>
                     </ul>
                   )
