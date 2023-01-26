@@ -84,7 +84,7 @@ export function NftCard(props: NftCardProps) {
 
       if(date.includes('minute') || date.includes('second')){
         return 'less than 1 hour';
-      } else return date;
+      } else return date.replace('in ', '');
     }
   };
 
