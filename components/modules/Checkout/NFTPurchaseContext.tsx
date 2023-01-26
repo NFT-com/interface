@@ -256,7 +256,7 @@ export function NFTPurchaseContextProvider(
     togglePurchaseSummaryModal,
     buyNowActive
   }}>
-    <PurchaseSummaryModal visible={showPurchaseSummaryModal} onClose={() => setShowPurchaseSummaryModal(false)} />
+    {showPurchaseSummaryModal && <PurchaseSummaryModal visible={showPurchaseSummaryModal} onClose={() => setShowPurchaseSummaryModal(false)} />}
     {props.children}
   </NFTPurchasesContext.Provider>;
 }

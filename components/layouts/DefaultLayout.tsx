@@ -9,7 +9,9 @@ import { SearchContent } from 'components/modules/Search/SearchContent';
 import { SearchModal } from 'components/modules/Search/SearchModal';
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useChangeWallet } from 'hooks/state/useChangeWallet';
+import { useEmailCaptureModal } from 'hooks/state/useEmailCaptureModal';
 import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
 import { useUser } from 'hooks/state/useUser';
 import ClientOnly from 'utils/ClientOnly';
@@ -37,7 +39,9 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
   const { signOutDialogOpen, setSignOutDialogOpen } = useSignOutDialog();
   const { changeWallet, setChangeWallet } = useChangeWallet();
   const { setProfileSelectModalOpen, profileSelectModal } = useProfileSelectModal();
+  const { emailCaptureModal } = useEmailCaptureModal();
   const { signed } = useContext(GraphQLContext);
+  const { searchModalOpen } = useSearchModal();
   return (
     <div className={tw('flex flex-col',
       'h-screen w-full min-w-screen min-h-screen',
@@ -50,7 +54,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
         <ClientOnly>
           <Header />
           <MobileSidebar/>
-          <SearchModal />
+          {searchModalOpen && <SearchModal />}
         </ClientOnly>
         }
         {!hideSearch &&
@@ -64,7 +68,7 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
 
         {profileSelectModal && signed && <DynamicProfileSelectModal />}
         
-        <DynamicEmailCaptureModal />
+        {emailCaptureModal && <DynamicEmailCaptureModal />}
         <SignOutModal
           visible={signOutDialogOpen}
           onClose={() => {

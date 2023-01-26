@@ -240,28 +240,33 @@ export function ExternalListings(props: ExternalListingsProps) {
   }
 
   return <div className='w-full flex justify-center'>
-    <EditListingsModal
-      nft={props.nft}
-      collectionName={props.collectionName}
-      listings={filterValidListings(props.nft?.listings?.items)}
-      visible={editListingsModalOpen}
-      onClose={() => {
-        setEditListingsModalOpen(false);
-      }} />
-    <SelectListingModal
-      listings={[
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2),
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM)
-      ]?.filter( Boolean )}
-      nft={props.nft}
-      collectionName={props.collectionName}
-      visible={selectListingModalOpen}
-      onClose={() => {
-        setSelectListingModalOpen(false);
-      }}
-    />
+    {editListingsModalOpen &&
+      <EditListingsModal
+        nft={props.nft}
+        collectionName={props.collectionName}
+        listings={filterValidListings(props.nft?.listings?.items)}
+        visible={editListingsModalOpen}
+        onClose={() => {
+          setEditListingsModalOpen(false);
+        }} />
+    }
+    {selectListingModalOpen &&
+      <SelectListingModal
+        listings={[
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2),
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM)
+        ]?.filter( Boolean )}
+        nft={props.nft}
+        collectionName={props.collectionName}
+        visible={selectListingModalOpen}
+        onClose={() => {
+          setSelectListingModalOpen(false);
+        }}
+      />
+    }
+   
     <div className='flex flex-col max-w-nftcom w-full'>
       {[
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
