@@ -224,6 +224,14 @@ export function NFTListingsContextProvider(
     setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'Buy' : 'Sell'));
   }, [sidebarVisible, toBuy]);
 
+  const decreasingPriceErrorEnabled = useCallback((decresingPriceinvalidInputs: boolean) => {
+    setDecreasingPriceError(decresingPriceinvalidInputs);
+  }, []);
+
+  const englishAuctionPriceErrorEnabled = useCallback((englishAuctionPriceinvalidInputs: boolean) => {
+    setEnglishAuctionError(englishAuctionPriceinvalidInputs);
+  }, []);
+
   const allListingsConfigured = useCallback(() => {
     const unconfiguredNft = toList.find((stagedNft: StagedListing) => {
       const lowestX2Y2Listing = getLowestPriceListing(filterValidListings(stagedNft?.nft?.listings?.items), ethPriceUSD, defaultChainId, ExternalProtocol.X2Y2);
@@ -250,12 +258,12 @@ export function NFTListingsContextProvider(
         const decresingPriceinvalidInputs = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 2 &&
         ((target.endingPrice == null || BigNumber.from(target.endingPrice).eq(0)) ||
         (target.endingPrice && target.startingPrice && (Number(target.startingPrice) <= Number(target.endingPrice))));
-        setDecreasingPriceError(decresingPriceinvalidInputs);
+        decreasingPriceErrorEnabled(decresingPriceinvalidInputs);
 
         const englishAuctionPriceinvalidInputs = target.protocol === ExternalProtocol.NFTCOM && target.auctionType == 1 &&
         ((target.buyNowPrice == null || BigNumber.from(target.buyNowPrice).eq(0)) ||
         (target.buyNowPrice && target.reservePrice && (Number(target.reservePrice) > Number(target.buyNowPrice))));
-        setEnglishAuctionError(englishAuctionPriceinvalidInputs);
+        englishAuctionPriceErrorEnabled(englishAuctionPriceinvalidInputs);
 
         return target.startingPrice == null || BigNumber.from(target.startingPrice).eq(0) ||
           (target.duration ?? stagedNft.duration) == null ||
@@ -265,7 +273,7 @@ export function NFTListingsContextProvider(
       return unconfiguredTarget != null;
     });
     return unconfiguredNft == null;
-  }, [defaultChainId, ethPriceUSD, toList]);
+  }, [decreasingPriceErrorEnabled, defaultChainId, englishAuctionPriceErrorEnabled, ethPriceUSD, toList]);
 
   const toggleTargetMarketplace = useCallback((targetMarketplace: ExternalProtocol, toggleListing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => {
     const targetFullyEnabled = toList.find(nft => {
