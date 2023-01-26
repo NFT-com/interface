@@ -324,10 +324,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
                 </div>
               )
             }
-            <DiscoveryTabNav
-              isLeaderBoard={isLeaderBoard && tabView === 'collections'}
-              callBack={(tab) => toggleTabView(tab)}
-              active={tabView}/>
+            <DiscoveryTabNav />
             <div>
               <div className='flex justify-between mt-6 mb-10'>
                 <div className='flex justify-between items-center'>
