@@ -28,7 +28,7 @@ describe('MintSuccessModal', () => {
     cy.get('#openButton').click();
     cy.get('#isOpen').should('have.text', 'true');
     cy.findByText('Congratulations!').should('exist');
-    cy.findByText('Cheers to your first profile!').should('exist');
+    cy.findByText('Cheers to your new profile!').should('exist');
     cy.contains('You officially own nft.com/').should('exist');
     cy.findByText('Let’s continue your Web3 journey').should('exist');
 
