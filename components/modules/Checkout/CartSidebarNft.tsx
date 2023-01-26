@@ -8,6 +8,7 @@ import { StagedListing } from './NFTListingsContext';
 import { StagedPurchase } from './NFTPurchaseContext';
 
 import { ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -20,6 +21,7 @@ export interface CartSidebarNftProps {
 
 export function CartSidebarNft(props: CartSidebarNftProps) {
   const { chain } = useNetwork();
+  const router = useRouter();
   const nft = props.item?.nft;
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
     return await getContractMetadata(nft?.contract, chain?.id);
@@ -52,7 +54,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
 
   return <div className='flex items-start w-full px-5 mb-4'>
     <div className='flex w-2/3'>
-      <div className='relative aspect-square w-20 h-20'>
+      <div onClick={() => router.push(`/app/nft/${nft?.contract}/${nft?.tokenId}`)} className='cursor-pointer relative aspect-square w-20 h-20'>
         <video
           autoPlay
           muted
