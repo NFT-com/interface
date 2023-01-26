@@ -14,18 +14,18 @@ export type CollectionActivityProps = {
 export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
   const defaultChainId = useDefaultChainId();
   const [collectionData, setCollectionData] = useState([]);
-
   const [lastAddedPage, setLastAddedPage] = useState('');
   const {
     nextPage,
     afterCursor,
     setTotalCount,
-  } = usePaginator(5);
+    cachedTotalCount
+  } = usePaginator(25);
 
   const txs = useGetTxByContractQuery(
     contract,
     {
-      first: 5,
+      first: 25,
       afterCursor
     }
   );
@@ -84,7 +84,7 @@ export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
         </tbody>
       </table>
       }
-      {txs?.data?.totalItems > collectionData?.length &&
+      {cachedTotalCount > collectionData?.length &&
         <div className='w-full flex justify-center items-center'>
           <button onClick={() => loadMoreActivities()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
                 Load More
