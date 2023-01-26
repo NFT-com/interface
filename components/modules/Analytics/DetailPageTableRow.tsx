@@ -11,8 +11,10 @@ import Link from 'next/link';
 import DAI from 'public/dai.svg';
 import ETH from 'public/eth.svg';
 import LooksrareIcon from 'public/looksrare-icon.svg';
+import NFTCOMIcon from 'public/nft_logo_yellow.webp';
 import OpenseaIcon from 'public/opensea-icon.svg';
 import USDC from 'public/usdc.svg';
+import X2Y2Icon from 'public/x2y2-icon.svg';
 import { useCallback } from 'react';
 
 export interface DetailPageTableRowProps {
@@ -80,7 +82,24 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         />
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-1.5'>Looksrare</div>
       </div>;
-    } else {
+    } else if (name === 'NFTCOM') {
+      return <div className='flex items-center'>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={NFTCOMIcon.src} className='h-5 w-5 relative shrink-0 hover:opacity-70' alt="NFT.com logo" />
+        <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>NFT.com</div>
+      </div>;
+    } else if (name === 'x2y2') {
+      return <div className='flex items-center'>
+        <X2Y2Icon
+          className='ml-0.5 h-5 w-5 relative shrink-0 hover:opacity-70 '
+          alt="X2Y2 logo"
+          layout="fill"
+        />
+        <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>X2Y2</div>
+      </div>;
+    }
+    
+    else {
       return name;
     }
   };
@@ -172,7 +191,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
 
       {getRowContent()}
 
-      <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 capitalize">{
+      <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{
         formatMarketplaceName(tx.marketplace) || '—'
       }
       </td>

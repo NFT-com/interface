@@ -30,7 +30,8 @@ export default function ActivityPages() {
     {
       first: ACTIVITY_LOAD_COUNT,
       afterCursor
-    });
+    }
+  );
 
   const loadMoreActivities = useCallback(() => {
     nextPage(loadedActivitiesNextPage?.getActivities?.pageInfo?.lastCursor);

@@ -25,7 +25,7 @@ export function usePaginator(initialPageSize: number): Paginator {
 
   const setTotalCount = useCallback(
     (totalCount: number) => {
-      if (totalCount != null && cachedTotalCount === 1) {
+      if (totalCount != null && totalCount !== 0 && cachedTotalCount === 1) {
         setCachedTotalCount(totalCount);
       }
     },
