@@ -321,8 +321,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   };
   
   return (
-    <div className='minlg:h-44 flex flex-col minlg:flex-row mb-8'>
-      <div className='w-2/5 minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:pl-0 minxl:pr-8 w-full'>
+    <div className='minlg:min-h-[11rem] flex flex-col minlg:flex-row mb-8'>
+      <div className='w-2/5 minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:pl-0 minxl:pr-8'>
         {/*             {
             expanded ?
               <CaretDown onClick={() => {
