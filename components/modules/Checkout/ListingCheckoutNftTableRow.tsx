@@ -321,8 +321,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   };
   
   return (
-    <div className='minlg:min-h-[11rem] flex flex-col minlg:flex-row mb-8'>
-      <div className='minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:pl-0 minxl:pr-8 w-full'>
+    <div className='minlg:h-44 flex flex-col minlg:flex-row mb-8'>
+      <div className='w-2/5 minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:pl-0 minxl:pr-8 w-full'>
         {/*             {
             expanded ?
               <CaretDown onClick={() => {
@@ -357,16 +357,16 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
           <span className='text-sm line-clamp-1 capitalize'>{collection?.contractMetadata?.name?.toLowerCase()}</span>
         </ div>
       </ div>
-      {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
+      {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
       {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-2 minlg:pl-0'>
-        {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='minlg:flex text-base minlg:text-[0.85rem] minxl:text-base font-normal flex text-[#A6A6A6] mb-4'>
+        {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='hidden minlg:flex text-base minlg:text-[0.85rem] minxl:text-base font-normal text-[#A6A6A6] mb-4'>
           <div className='w-[22%]'>Marketplace</div>
           <div className='w-[28%] flex flex-row justify-between'>
             <span className='shrink-0'>Type of Auction</span>
             <CustomTooltip2
               tooltipClick={() => router.push('https://docs.nft.com/')}
               orientation='custom'
-              customLeftPosition='32'
+              customLeftPosition='50'
               hidden={false}
               tooltipComponent={
                 <div
