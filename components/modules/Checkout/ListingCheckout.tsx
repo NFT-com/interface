@@ -377,7 +377,7 @@ export function ListingCheckout() {
           stretch
         /></div>}
       </div>
-      <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />
+      { showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />}
     </div>;
   };
   
