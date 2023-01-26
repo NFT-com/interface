@@ -133,16 +133,11 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
   }, [profileAuction, profileURI, yearValue, profile, type]);
   
   return (
-    <div className={tw(
-      type === 'mint' && 'relative mt-16 minlg:mt-12 z-50 px-5'
-    )}>
-      <div className={tw(
-        type === 'mint' && 'max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'
-      )}>
+    <>
+      <>
         {type === 'mint' &&
           <>
-            <h2 className='text-[32px] font-medium'>Claim your free NFT Profile</h2>
-            <p className='mt-9 mb-4 text-xl '>You have already received one free mint</p>
+            <p className='mt-9 mb-4 text-xl '>Select your NFT Profile name</p>
             <p className='text-[#707070] font-normal mb-2'>Create your NFT Profile to build your social identity</p>
             <MintProfileInputField
               minting={minting}
@@ -152,13 +147,12 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
             />
           </>
         }
-            
         <div className={tw(
           type === 'mint' ? 'mt-8' : 'mt-4'
         )}>
           <div className='mb-10 font-noi-grotesk'>
             <div className='flex items-center space-x-1 mb-3'>
-              <h3 className='text-[22px] font-medium'>{type === 'mint' ? 'Register ': 'Renew'}</h3>
+              <h3 className='text-[22px] font-medium'>{type === 'mint' ? 'License': 'Renew'}</h3>
               <div className='w-max'>
                 <CustomTooltip2
                   orientation='top'
@@ -175,7 +169,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
               </div>
               
             </div>
-            <p className='text-[#707070] font-normal'>Increase registration period to avoid paying gas every year</p>
+            <p className='text-[#707070] font-normal'>Pre-pay your annual license to maintain ownership of your NFT Profile</p>
             <div className='mt-10 flex justify-between items-center pr-0 pl-0 minmd:pr-14 minmd:pl-8'>
               <div className='rounded-full w-max py-1 px-4 flex space-x-3 border border-[#B2B2B2] items-center'>
                 <div className='relative'>
@@ -193,8 +187,8 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
               <p className='text-xl'>{registrationFee && utils.formatEther(BigNumber.from(registrationFee))} ETH</p>
             </div>
             <div className='flex items-center justify-between pr-0 pl-2 minmd:pr-12 minmd:pl-14'>
-              <p className='text-[#B2B2B2] font-normal'>Registration Period</p>
-              <p className='text-[#B2B2B2] font-normal'>Registration Price</p>
+              <p className='text-[#B2B2B2] font-normal'>License Period</p>
+              <p className='text-[#B2B2B2] font-normal'>License Price</p>
             </div>
             <div className='rounded-2xl bg-[#F2F2F2] px-7 py-5 flex items-center justify-between mt-8 font-noi-grotesk'>
               <p className='font-normal'>Estimated Total (Price + Gas)</p>
@@ -249,9 +243,9 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
             </p>
           </a>
         </Link>
-      </div>
+      </>
       <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={type === 'mint' ? input : [{ profileURI: profile }]} type={type === 'mint' ? 'Paid' : 'Renew'} duration={yearValue} transactionCost={registrationFee} />
-    </div>
+    </>
   );
 }
     

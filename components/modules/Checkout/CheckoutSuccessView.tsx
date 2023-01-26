@@ -34,9 +34,11 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
 
   const {
     toBuy,
+    toBuyNow,
+    buyNowActive
   } = useContext(NFTPurchasesContext);
 
-  const list = props.type === SuccessType.Listing ? toList : toBuy;
+  const list = props.type === SuccessType.Listing ? toList : buyNowActive ? toBuyNow : toBuy;
 
   const images = () => {
     if (list.length == 1) {

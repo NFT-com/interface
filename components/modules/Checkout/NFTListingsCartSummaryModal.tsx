@@ -245,7 +245,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{'$' + (getMaxMarketplaceFees()?.toFixed(2) ?? 0) }</span>
+              <span className='font-semibold'>{'$' + (getMaxMarketplaceFees()?.toLocaleString('en-US', { maximumSignificantDigits: 12 }) ?? 0) }</span>
             </div>
           </div>
           <div className="mx-4 my-4 flex items-center justify-between">
@@ -256,7 +256,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className="flex flex-col justify-end">
-              <span className="font-semibold">{'$' + (getMaxRoyaltyFees()?.toFixed(2) ?? 0)}</span>
+              <span className="font-semibold">{'$' + (getMaxRoyaltyFees()?.toLocaleString('en-US', { maximumSignificantDigits: 12 }) ?? 0)}</span>
             </div>
           </div>
           <div className='px-8 border-t border-[#D5D5D5] w-full'/>
@@ -268,7 +268,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className='flex flex-col justify-end'>
-              <span className='font-semibold'>{'$' + (getTotalMinimumProfitUSD()?.toFixed(2) ?? 0)}</span>
+              <span className='font-semibold'>{'$' + (getTotalMinimumProfitUSD()?.toLocaleString('en-US', { maximumSignificantDigits: 12 }) ?? 0)}</span>
             </div>
           </div>
         </>
