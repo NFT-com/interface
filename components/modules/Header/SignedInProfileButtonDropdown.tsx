@@ -9,7 +9,7 @@ import { tw } from 'utils/tw';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretDown, CaretUp, Check } from 'phosphor-react';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 
 export function SignedInProfileButtonDropdown() {
@@ -18,7 +18,6 @@ export function SignedInProfileButtonDropdown() {
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const { user, getHiddenProfileWithExpiry, setCurrentProfileUrl } = useUser();
   const { address: currentAddress } = useAccount();
-  const { signed } = useContext(GraphQLContext);
 
   const [profiles, setProfiles] = useState(null);
   const [expanded, setExpanded] = useState(false);
@@ -44,12 +43,12 @@ export function SignedInProfileButtonDropdown() {
   }, [getHiddenProfileWithExpiry, profiles, user.currentProfileUrl]);
 
   useEffect(() => {
-    if(currentAddress && signed && profiles?.length && myOwnedProfileTokens?.length && (user.currentProfileUrl === '' || isNullOrEmpty(user.currentProfileUrl) || !profiles?.some((profile) => profile.title === user.currentProfileUrl) )){
+    if(currentAddress && profiles?.length && myOwnedProfileTokens?.length && (user.currentProfileUrl === '' || isNullOrEmpty(user.currentProfileUrl) || !profiles?.some((profile) => profile.title === user.currentProfileUrl) )){
       setProfileSelectModalOpen(true);
     } else {
       setProfileSelectModalOpen(false);
     }
-  }, [currentAddress, profiles, user.currentProfileUrl, setProfileSelectModalOpen, router, myOwnedProfileTokens, signed]);
+  }, [currentAddress, profiles, user.currentProfileUrl, setProfileSelectModalOpen, router, myOwnedProfileTokens]);
 
   return (
     <div
