@@ -14,7 +14,7 @@ import { Fragment } from 'react';
 export default function MintProfileSuccessModal() {
   const router = useRouter();
   const { me } = useMeQuery();
-  const { mintSuccessModal, setMintSuccessModalOpen }= useMintSuccessModal();
+  const { mintSuccessModal, setMintSuccessModalOpen } = useMintSuccessModal();
   const { setEmailCaptureModalOpen } = useEmailCaptureModal();
   return (
     <Transition appear show={mintSuccessModal} as={Fragment}>
@@ -70,7 +70,7 @@ export default function MintProfileSuccessModal() {
                   <div className='w-full minmd:w-3/5 pt-9 minmd:pt-[158px] pb-8 minmd:pb-[178px]  text-center'>
                     <h3 className='text-[32px] mt minmd:text-[42px] font-medium'>Congratulations!</h3>
                     <div className='mt-9 minmd:mt-5 font-medium text-xl minmd:text-[22px]'>
-                      <p>Cheers to your first profile! </p>
+                      <p>Cheers to your new profile!</p>
                       <p>You officially own <span className='text-transparent bg-clip-text bg-gradient-to-r from-[#FAC213] to-[#FF9B37] font-bold '>nft.com/{router?.query?.profileURI}</span></p>
                     </div>
 
