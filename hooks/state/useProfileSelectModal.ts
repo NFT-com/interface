@@ -16,7 +16,7 @@ export function useProfileSelectModal() {
     if(signed){
       setTimeout(() => {
         mutate(open);
-      }, 1000);
+      }, 2000);
     }
   }, [mutate, signed]);
 
