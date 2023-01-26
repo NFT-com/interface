@@ -1,6 +1,5 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler,getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -12,7 +11,6 @@ import { PurchaseSummary } from './PurchaseSummary';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { X } from 'phosphor-react';
-import { XCircle } from 'phosphor-react';
 import { useContext, useRef, useState } from 'react';
 
 export type CartSidebarTab = 'Buy' | 'Sell';
@@ -50,32 +48,20 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
   const sidebarRef = useRef();
   useOutsideClickAlerter(sidebarRef, () => toggleCartSidebar());
 
-  return !getEnvBool(Doppler.NEXT_PUBLIC_TX_ROUTER_RESKIN_ENABLED)
-    ? (
+  return (
+    <>
+      <div className='fixed inset-0 z-[105] w-screen h-screen backdrop-blur bg-gray-900 bg-opacity-20 '></div>
       <div ref={sidebarRef} className={tw(
-        'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-md bg-white flex flex-col grow',
-        'drop-shadow-md'
+        'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-sm bg-white flex flex-col grow drop-shadow-md',
+        !showAll ? 'overflow-y-scroll' : ''
       )}>
-        <div className="absolute top-24 right-4 h-10 w-10 flex items-center justify-center">
-          <div className='absolute hover:cursor-pointer h-8 w-8 bg-[#f9d963] rounded-full'></div>
-          <XCircle onClick={() => toggleCartSidebar()} className='absolute hover:cursor-pointer' size={40} color="black" weight="fill" />
+        <div className='flex items-center justify-between w-full px-5 py-9'>
+          <span className="text-xl font-semibold font-noi-grotesk">My Cart</span>
+          <div className='w-6'>
+            <X onClick={() => toggleCartSidebar()} className='hover:cursor-pointer' weight="fill" size={27} color="black" />
+          </div>
         </div>
-        <div className="flex px-4 mt-24 font-bold font-grotesk items-end justify-between">
-          <span className="text-4xl">My Cart</span>
-          {stagedNFTs?.length > 0 && <span
-            className="text-base text-link-yellow cursor-pointer hover:underline"
-            onClick={() => {
-              if (props.selectedTab === 'Sell') {
-                clearListings();
-              } else {
-                clearPurchases();
-              }
-            }}
-          >
-            {props.selectedTab === 'Buy' ? 'Clear Buy' : 'Clear Sell'}
-          </span>}
-        </div>
-        <div className='w-full px-4 mt-10'>
+        <div className='w-full px-5'>
           <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])} selectedIndex={props.selectedTab === 'Buy' ? 0 : 1}>
             <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
               {['Buy', 'Sell'].map((detailTab, index) => (
@@ -88,10 +74,10 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
                     )
                   }
                 >
-                  <span className='font-semibold'>{cartTabTypes[index]}</span>
+                  <span className='font-semibold ml-2'>{cartTabTypes[index]}</span>
                   <div
                     className={tw(
-                      'rounded-full h-4 w-4 flex items-center justify-center text-sm ml-2',
+                      'rounded-full h-5 w-5 flex items-center justify-center text-sm ml-2 justify-self-center',
                       cartTabTypes[index] === props.selectedTab ? 'bg-white text-black' : 'bg-[#6F6F6F] text-white'
                     )}>
                     {(cartTabTypes[index] === 'Buy' ? toBuy : toList).length}
@@ -101,25 +87,55 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
             </Tab.List>
           </Tab.Group>
         </div>
-        {stagedNFTs.map((stagedItem, index) => {
-          return <CartSidebarNft
-            item={stagedItem}
-            key={index}
-            onRemove={() => {
-              if (props.selectedTab === 'Sell') {
-                removeListing(stagedItem.nft);
-              } else {
-                removePurchase(stagedItem.nft);
-              }
-            }}
-          />;
-        })}
-        {(stagedNFTs.length > 0 &&
-        !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell')
-        ) && <div className="mx-8 my-4 flex">
+        <div className='flex items-center justify-between w-full font-semibold font-noi-grotesk px-5 py-6'>
+          <span>{stagedNFTs.length} items</span>
+          <div className="flex font-semibold font-noi-grotesk items-end justify-between">
+            {stagedNFTs?.length > 0 && <span
+              className="text-base cursor-pointer hover:underline"
+              onClick={() => {
+                if (props.selectedTab === 'Sell') {
+                  clearListings();
+                } else {
+                  clearPurchases();
+                }
+              }}
+            >
+              {props.selectedTab === 'Buy' ? 'Clear Buy' : 'Clear Sell'}
+            </span>}
+          </div>
+        </div>
+        <div className={tw(
+          'pr-2',
+          !showAll ? 'max-h-[30rem] min-h-[24rem] overflow-y-scroll hideScroll' : 'max-h-[17.3rem] overflow-y-hidden')}>
+          {stagedNFTs.map((stagedItem, index) => {
+            return <CartSidebarNft
+              item={stagedItem}
+              key={index}
+              onRemove={() => {
+                if (props.selectedTab === 'Sell') {
+                  removeListing(stagedItem.nft);
+                } else {
+                  removePurchase(stagedItem.nft);
+                }
+              }}
+            />;
+          })}
+        </div>
+        {stagedNFTs?.length > 3 && <span
+          className="text-base cursor-pointer hover:underline font-medium font-noi-grotesk self-center mt-2"
+          onClick={() => {
+            setShowAll(!showAll);
+          }}
+        >
+          {showAll ? 'Show all' : 'Show less'}
+        </span>}
+        {stagedNFTs.length > 0 && props.selectedTab === 'Buy' ? <PurchaseSummary /> : null}
+        {(stagedNFTs.length > 0 && props.selectedTab === 'Sell' &&
+      !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell')
+        ) && <div className="mx-7 my-4 flex">
           <Button
             stretch
-            label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Continue to Buy'}
+            label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Buy now'}
             onClick={() => {
               if (props.selectedTab === 'Sell') {
                 toggleCartSidebar();
@@ -132,107 +148,6 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           />
         </div>}
       </div>
-    ) :
-    (
-      <>
-        <div className='fixed inset-0 z-[105] w-screen h-screen backdrop-blur bg-gray-900 bg-opacity-20 '></div>
-        <div ref={sidebarRef} className={tw(
-          'z-[106] fixed pt-20 right-0 w-full h-full minmd:max-w-sm bg-white flex flex-col grow drop-shadow-md',
-          !showAll ? 'overflow-y-scroll' : ''
-        )}>
-          <div className='flex items-center justify-between w-full px-5 py-9'>
-            <span className="text-xl font-semibold font-noi-grotesk">My Cart</span>
-            <div className='w-6'>
-              <X onClick={() => toggleCartSidebar()} className='hover:cursor-pointer' weight="fill" size={27} color="black" />
-            </div>
-          </div>
-          <div className='w-full px-5'>
-            <Tab.Group onChange={(index) => props.onChangeTab(cartTabTypes[index])} selectedIndex={props.selectedTab === 'Buy' ? 0 : 1}>
-              <Tab.List className="flex rounded-3xl bg-[#F6F6F6]">
-                {['Buy', 'Sell'].map((detailTab, index) => (
-                  <Tab
-                    key={detailTab}
-                    className={({ selected }) =>
-                      tw(
-                        'flex items-center justify-center w-1/2 rounded-3xl py-2.5 text-[#6F6F6F] font-grotesk text-base font-semibold leading-6',
-                        selected && 'bg-black text-[#F8F8F8]'
-                      )
-                    }
-                  >
-                    <span className='font-semibold ml-2'>{cartTabTypes[index]}</span>
-                    <div
-                      className={tw(
-                        'rounded-full h-5 w-5 flex items-center justify-center text-sm ml-2 justify-self-center',
-                        cartTabTypes[index] === props.selectedTab ? 'bg-white text-black' : 'bg-[#6F6F6F] text-white'
-                      )}>
-                      {(cartTabTypes[index] === 'Buy' ? toBuy : toList).length}
-                    </div>
-                  </Tab>
-                ))}
-              </Tab.List>
-            </Tab.Group>
-          </div>
-          <div className='flex items-center justify-between w-full font-semibold font-noi-grotesk px-5 py-6'>
-            <span>{stagedNFTs.length} items</span>
-            <div className="flex font-semibold font-noi-grotesk items-end justify-between">
-              {stagedNFTs?.length > 0 && <span
-                className="text-base cursor-pointer hover:underline"
-                onClick={() => {
-                  if (props.selectedTab === 'Sell') {
-                    clearListings();
-                  } else {
-                    clearPurchases();
-                  }
-                }}
-              >
-                {props.selectedTab === 'Buy' ? 'Clear Buy' : 'Clear Sell'}
-              </span>}
-            </div>
-          </div>
-          <div className={tw(
-            'pr-2',
-            !showAll ? 'max-h-[30rem] min-h-[24rem] overflow-y-scroll hideScroll' : 'max-h-[17.3rem] overflow-y-hidden')}>
-            {stagedNFTs.map((stagedItem, index) => {
-              return <CartSidebarNft
-                item={stagedItem}
-                key={index}
-                onRemove={() => {
-                  if (props.selectedTab === 'Sell') {
-                    removeListing(stagedItem.nft);
-                  } else {
-                    removePurchase(stagedItem.nft);
-                  }
-                }}
-              />;
-            })}
-          </div>
-          {stagedNFTs?.length > 3 && <span
-            className="text-base cursor-pointer hover:underline font-medium font-noi-grotesk self-center mt-2"
-            onClick={() => {
-              setShowAll(!showAll);
-            }}
-          >
-            {showAll ? 'Show all' : 'Show less'}
-          </span>}
-          {stagedNFTs.length > 0 && props.selectedTab === 'Buy' ? <PurchaseSummary /> : null}
-          {(stagedNFTs.length > 0 && props.selectedTab === 'Sell' &&
-        !(router.pathname.includes('/app/list') && props.selectedTab === 'Sell')
-          ) && <div className="mx-7 my-4 flex">
-            <Button
-              stretch
-              label={props.selectedTab === 'Sell' ? 'Prepare Listings' : 'Buy now'}
-              onClick={() => {
-                if (props.selectedTab === 'Sell') {
-                  toggleCartSidebar();
-                  router.push('/app/list');
-                } else {
-                  togglePurchaseSummaryModal();
-                }
-              }}
-              type={ButtonType.PRIMARY}
-            />
-          </div>}
-        </div>
-      </>
-    );
+    </>
+  );
 }
