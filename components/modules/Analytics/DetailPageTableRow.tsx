@@ -85,8 +85,8 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     } else if (name === 'NFTCOM') {
       return <div className='flex items-center'>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={NFTCOMIcon.src} className='h-5 w-5 relative shrink-0 hover:opacity-70 ' alt="NFT.com logo" />
-        <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-1.5'>NFT.com</div>
+        <img src={NFTCOMIcon.src} className='h-5 w-5 relative shrink-0 hover:opacity-70' alt="NFT.com logo" />
+        <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>NFT.com</div>
       </div>;
     } else if (name === 'x2y2') {
       return <div className='flex items-center'>

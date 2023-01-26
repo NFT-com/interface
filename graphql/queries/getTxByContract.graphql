@@ -1,5 +1,10 @@
 query GetTxByContract($input: TransactionsByContractInput) {
   getTxByContract(input: $input) {
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
     items {
       block_hash
       block_number
