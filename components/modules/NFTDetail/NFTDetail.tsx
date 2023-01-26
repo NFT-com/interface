@@ -228,8 +228,8 @@ export const NFTDetail = (props: NFTDetailProps) => {
       </div>
       {
         (
-          (currentAddress === props.nft?.wallet?.address) ||
-          (currentAddress !== props.nft?.wallet?.address && !isNullOrEmpty(props.nft?.memo)))
+          (currentAddress === props.nft?.wallet?.address && !isNullOrEmpty(currentAddress)) ||
+          (currentAddress !== props.nft?.wallet?.address && !isNullOrEmpty(props.nft?.wallet?.address) && !isNullOrEmpty(props.nft?.memo)))
           &&
           <div className="flex minxl:basis-1/2">
             <NFTDetailContextProvider nft={props.nft} >

@@ -2,7 +2,7 @@ import { Nft } from 'graphql/generated/types';
 import { useGetTxByNFTQuery } from 'graphql/hooks/useGetTxByNFTQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { usePaginator } from 'hooks/usePaginator';
-import { filterNulls } from 'utils/helpers';
+import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
 import DetailPageTableRow from './DetailPageTableRow';
 
@@ -63,11 +63,9 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
     }
   }, [defaultChainId, nftData, nftTransactionHistory]);
 
-  console.log('nftData: ', nftData);
-
   return (
     <div className="font-noi-grotesk p-4 max-h-80 md:mb-0 overflow-x-auto sales-scrollbar whitespace-nowrap">
-      {!nftData?.length ?
+      {isNullOrEmpty(nftData) ?
         <span className='bg-white flex justify-center px-auto mx-auto w-full whitespace-nowrap font-normal text-base leading-6 text-[#1F2127] text-center items-center min-h-[280px]'>
           No Activity for this NFT yet
         </span>
@@ -92,7 +90,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
           </tbody>
         </table>
       }
-      {cachedTotalCount > nftData?.length && nftData?.length != 0 &&
+      {cachedTotalCount > nftData?.length && !isNullOrEmpty(nftData) &&
         <div className='w-full flex justify-center items-center'>
           <button onClick={() => loadMoreActivities()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
             Load More
