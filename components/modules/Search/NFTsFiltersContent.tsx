@@ -2,7 +2,6 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { CheckBox } from 'components/elements/CheckBox';
-import { Doppler, getEnvBool } from 'utils/env';
 
 import { ButtonFilter } from './filtersComponents/ButtonFilter';
 import { MinMaxFilter } from './filtersComponents/MinMaxFilter';
@@ -11,10 +10,9 @@ import { motion } from 'framer-motion';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
-import EllipseX from 'public/ellipse-x.svg';
 import SearchIcon from 'public/search.svg';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Minus,Plus, X } from 'react-feather';
+import { X } from 'react-feather';
 interface FilterOptionProps {
   fieldName?: string,
   item?: {
@@ -37,43 +35,27 @@ function usePrevious(value) {
 }
 
 const FilterOption = (props: FilterOptionProps) => {
-  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
   const { item, fieldName, onSelectFilter, clearedFilters, setClearedFilters, checkedInfo } = props;
   const [selected, setSelected] = useState(checkedInfo[0]?.selectedCheck?.includes(item.value));
 
   useEffect(() => {
     clearedFilters && setSelected(false);
   },[clearedFilters]);
-  if(newFiltersEnabledNew){
-    if(props.fieldName !== 'contractName'){
-      return (
-        <ButtonFilter
-          selectedValues={props.checkedTypes}
-          label={item.value}
-          value={item.value}
-          click={(event) => props.handleCheckTypes(event)}/>
-      );
-    }else {
-      return (
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <div className="text-base text-black">{item.value}</div>
-            <div className="text-blog-text-reskin text-[0.65rem] self-start">{item.count}</div>
-          </div>
-          <CheckBox
-            checked={!clearedFilters && selected}
-            onToggle={(selected: boolean) => {
-              setSelected(selected);
-              onSelectFilter && onSelectFilter(fieldName,item.value, selected);
-              setClearedFilters(false);
-            }}
-          />
-        </div>
-      );
-    }
+  if(props.fieldName !== 'contractName'){
+    return (
+      <ButtonFilter
+        selectedValues={props.checkedTypes}
+        label={item.value}
+        value={item.value}
+        click={(event) => props.handleCheckTypes(event)}/>
+    );
   }else {
     return (
-      <div className="flex items-startfont-grotesk">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col">
+          <div className="text-base text-black">{item.value}</div>
+          <div className="text-blog-text-reskin text-[0.65rem] self-start">{item.count}</div>
+        </div>
         <CheckBox
           checked={!clearedFilters && selected}
           onToggle={(selected: boolean) => {
@@ -82,10 +64,6 @@ const FilterOption = (props: FilterOptionProps) => {
             setClearedFilters(false);
           }}
         />
-        <div className="flex flex-col ml-2">
-          <div className="text-[0.85rem]">{item.value}</div>
-          <div className="text-blog-text-reskin text-[0.65rem] self-start">{item.count}</div>
-        </div>
       </div>
     );
   }
@@ -145,142 +123,6 @@ const ContractNameFilter = (props: any) => {
 };
 
 const Filter = (props: any) => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-  const NEW_NFT_FILTER_VARIABLE = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
-
-  const { filter, setCheckedFilters, clearedFilters, setClearedFilters } = props;
-  const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
-  const [isCollapsing, setIsCollapsing] = useState(false);
-
-  const { checkedArray } = useSearchModal();
-
-  const formatTitle = (title) => {
-    switch(title){
-    case getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? 'listedFloor' : 'listedPx':
-      return 'Price';
-    case 'nftType':
-      return 'Contract';
-    case 'contractName':
-      return 'Collections';
-    case getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? 'listings.type' : 'listingType':
-      return 'Listing Type';
-    default:
-      return title?.charAt(0).toUpperCase() + title?.slice(1);
-    }
-  };
-
-  const checkedInfo = checkedArray.filter(i => i.fieldName === filter.field_name);
-
-  useEffect(() => {
-    checkedInfo.length > 0 && checkedInfo[0]?.selectedCheck !== '' && !isCollapsing && setIsFilterCollapsed(false);
-  }, [checkedInfo, isCollapsing]);
-  if(discoverPageEnv){
-    return (
-      <div className="pb-4 border-b-[1px] border-[#F2F2F2] py-4 text-[#4D4D4D]">
-        <div
-          onClick={() => {
-            setIsFilterCollapsed(!isFilterCollapsed);
-            setIsCollapsing(true);
-          }}
-          className="flex justify-between items-center cursor-pointer">
-          <div className="text-xl font-black minmd:text-base font-grotesk font-[600]">{formatTitle(filter.field_name)}</div>
-          <CaretUp
-            color='#4D4D4D'
-            className={tw('cursor-pointer transition-transform font-bold', isFilterCollapsed ? 'rotate-180' : '')}
-          />
-        </div>
-        <motion.div
-          animate={{
-            height: isFilterCollapsed ? 0 : 'auto' }}
-          transition={{ duration: 0.2 }}
-          className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-hidden max-h-[16.5rem]')}
-        >
-          {
-            filter.field_name === 'contractName' ?
-              (<ContractNameFilter
-                filterOptions={filter.counts}
-                setCheckedFilters={setCheckedFilters}
-                clearedFilters={clearedFilters}
-                setClearedFilters={setClearedFilters}
-                checkedInfo={checkedInfo}
-              />) :
-              filter.counts?.map((item, index) => {
-                return (
-                  item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
-                    <FilterOption
-                      item={item}
-                      onSelectFilter={setCheckedFilters}
-                      fieldName={filter.field_name}
-                      clearedFilters={clearedFilters}
-                      setClearedFilters={setClearedFilters}
-                      checkedInfo={checkedInfo}
-                    />
-                  </div>);
-              })}
-          {NEW_NFT_FILTER_VARIABLE
-            ? (
-              <ContractNameFilter
-                filterOptions={filter.counts}
-                setCheckedFilters={setCheckedFilters}
-                clearedFilters={clearedFilters}
-                setClearedFilters={setClearedFilters}
-                checkedInfo={checkedInfo}
-              />
-            )
-            : null}
-
-        </motion.div>
-      </div>
-    );
-  }else {
-    return (
-      <div className="my-6 px-4">
-        <div
-          onClick={() => {
-            setIsFilterCollapsed(!isFilterCollapsed);
-            setIsCollapsing(true);
-          }}
-          className="flex justify-between cursor-pointer">
-          <div className="font-black text-base font-grotesk">{formatTitle(filter.field_name)}</div>
-          {!isFilterCollapsed && <Minus className="h-4 w-4"/>}
-          {isFilterCollapsed && <Plus className="h-4 w-4"/>}
-        </div>
-        <motion.div
-          animate={{
-            height: isFilterCollapsed ? 0 : 'auto' }}
-          transition={{ duration: 0.2 }}
-          className={tw(filter.field_name !== 'contractName' ? 'overflow-y-hidden' : 'overflow-y-hidden max-h-[16.5rem]')}
-        >
-          { /* filter.field_name === getEnvBool(Doppler.NEXT_PUBLIC_TYPESENSE_SETUP_ENABLED) ? 'listedFloor' : 'listedPx' ?
-          ( <CurrencyPriceFilter onGetCheckedFilters={onGetCheckedFilters}/> ) : */
-            filter.field_name === 'contractName' ?
-              (<ContractNameFilter
-                filterOptions={filter.counts}
-                setCheckedFilters={setCheckedFilters}
-                clearedFilters={clearedFilters}
-                setClearedFilters={setClearedFilters}
-                checkedInfo={checkedInfo}
-              />) :
-              filter.counts?.map((item, index) => {
-                return (
-                  item.value !== '' && <div key={index} className="mt-3 overflow-y-hidden">
-                    <FilterOption
-                      item={item}
-                      onSelectFilter={setCheckedFilters}
-                      fieldName={filter.field_name}
-                      clearedFilters={clearedFilters}
-                      setClearedFilters={setClearedFilters}
-                      checkedInfo={checkedInfo}
-                    />
-                  </div>);
-              })}
-        </motion.div>
-      </div>
-    );
-  }
-};
-//replace this name after release
-const FilterNew = (props: any) => {
   const { filter, setCheckedFilters, clearedFilters, setClearedFilters, dateFilterPeriod,statuses, checkedStatus, checked, checkedMarketPlaces, handleCheck,setFloor,collectionsFilter,nftSFilters, setCurrency, handleCheckTypes, checkedTypes, setVolumeValue, setListedFloor, handleCheckMarketPlace,setPrice,handleCheckStatus } = props;
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true);
   const [isCollapsing, setIsCollapsing] = useState(false);
@@ -473,17 +315,10 @@ const FilterNew = (props: any) => {
 };
 
 export const NFTsFiltersContent = () => {
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
-  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
-
   const router = useRouter();
-  const path = router.pathname.split('/');
-  const pathName = path[path.length - 1];
   const { setSearchModalOpen, searchFilters, searchModalOpen, setResultsPageAppliedFilters, nftsPageSortyBy, checkedArray, collectionsFilter, nftSFilters } = useSearchModal();
   const [sortBy,] = useState(nftsPageSortyBy);
   const [clearedFilters, setClearedFilters] = useState(false);
-  const [checked, setChecked] = useState([]);
-  const [checkedTypes, setCheckedTypes] = useState([]);
   const dateFilterPeriod = [
     {
       label: '30 Days',
@@ -614,14 +449,8 @@ export const NFTsFiltersContent = () => {
         }
       }
     }).filter(Boolean).join(' && ');
-    const nftsCheckedFiltersString = checkedList.join(' && ');
-
-    if(newFiltersEnabledNew){
-      setResultsPageAppliedFilters(sortBy, nftFilterString, collectionsFiltersString, checkedArray);
-    }else {
-      setResultsPageAppliedFilters(sortBy, nftsCheckedFiltersString, '', checkedArray);
-    }
-  }, [checkedArray, collectionsFilter, newFiltersEnabledNew, nftSFilters, setResultsPageAppliedFilters, sortBy]);
+    setResultsPageAppliedFilters(sortBy, nftFilterString, collectionsFiltersString, checkedArray);
+  }, [checkedArray, collectionsFilter, nftSFilters, setResultsPageAppliedFilters, sortBy]);
 
   const setCheckedFilters = useCallback((fieldName: string, selectedCheck: string, selected: boolean) => {
     const foundItem = checkedArray.find(i => i.fieldName === fieldName);
@@ -638,7 +467,7 @@ export const NFTsFiltersContent = () => {
     nftSFilters.contractName = checkedArray;
     updateCheckedString();
   }, [checkedArray, updateCheckedString, nftSFilters]);
-  const handleCheck = useCallback((event: any, array: any, fn: any, type: string) => {
+  const handleCheck = useCallback((event: any, array: any, type: string) => {
     let updatedList = [...array];
     if (event.target.checked ) {
       updatedList = [...array, event.target.value];
@@ -667,8 +496,6 @@ export const NFTsFiltersContent = () => {
 
   useEffect(() => {
     if (prevSearchTerm !== searchTerm){
-      setChecked([]);
-      setCheckedTypes([]);
       setResultsPageAppliedFilters('', '','', []);
       nftSFilters.nftTypes = [];
       nftSFilters.marketplace = [];
@@ -676,151 +503,68 @@ export const NFTsFiltersContent = () => {
     }
   },[nftSFilters, prevSearchTerm, searchTerm, setResultsPageAppliedFilters]);
 
-  const NEW_NFT_FILTER_VARIABLE = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
-  if(discoverPageEnv){
-    return (
-      <>
-        <div className="rounded-[10.5px] minlg:rounded-[0] px-6 minlg:px-0 py-4 minlg:py-0 max-w-[310px] bg-white minlg:bg-transparent flex flex-col w-full">
-          <div className="minlg:hidden flex justify-between items-center text-[28px] mb-1">Filters <X onClick={() => setSearchModalOpen(false)} size={22} className="text-[#6a6a6a] relative right-[-5px] cursor-pointer"/></div>
-          <div>
-            {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
-              if(NEW_NFT_FILTER_VARIABLE){
-                return (<div key={index}>
-                  <FilterNew
-                    filter={item}
-                    setCheckedFilters={setCheckedFilters}
-                    dateFilterPeriod={dateFilterPeriod}
-                    statuses={statuses}
-                    clearedFilters={clearedFilters}
-                    checked={collectionsFilter.issuance}
-                    checkedStatus={nftSFilters.status}
-                    checkedTypes={nftSFilters.nftTypes}
-                    checkedMarketPlaces={nftSFilters.marketplace}
-                    checkedArray={checkedArray}
-                    collectionsFilter={collectionsFilter}
-                    nftSFilters={nftSFilters}
-                    setFloor={(val) => {
-                      collectionsFilter.floor = val;
-                      updateCheckedString();
-                    }}
-                    setPrice={(val) => {
-                      nftSFilters.price = val;
-                      updateCheckedString();
-                    }}
-                    setListedFloor={(val) => {
-                      nftSFilters.listedFloor = val;
-                      updateCheckedString();
-                    }}
-                    setVolumeValue={(val) => {
-                      collectionsFilter.volume = val;
-                      updateCheckedString();
-                    }}
-                    setCurrency={(val) => {
-                      collectionsFilter.currency = val;
-                      nftSFilters.currency = val;
-                      // updateCheckedString();
-                    }}
-                    handleCheck={() => handleCheck(event, collectionsFilter.issuance ? collectionsFilter.issuance : [], setChecked, 'issuance')}
-                    handleCheckTypes={() => handleCheck(event, nftSFilters.nftTypes ? nftSFilters.nftTypes : [], setCheckedTypes, 'nftTypes')}
-                    handleCheckMarketPlace={() => handleCheck(event, nftSFilters.marketplace ? nftSFilters.marketplace : [], null, 'marketplace')}
-                    handleCheckStatus={() => handleCheck(event, nftSFilters.status ? nftSFilters.status : [], null, 'status')}
-                    setClearedFilters={setClearedFilters}
-                  />
-                </div>);
-              }else {
-                if(pathName !== 'collections'){
-                  if (['contractName', 'nftType'].includes(item.field_name)) {
-                    return (<div key={index}>
-                      <Filter
-                        filter={item}
-                        setCheckedFilters={setCheckedFilters}
-                        clearedFilters={clearedFilters}
-                        setClearedFilters={setClearedFilters}
-                      />
-                    </div>);
-                  }
-                }else {
-                  return (<div key={index}>
-                    <FilterNew
-                      filter={item}
-                      setCheckedFilters={setCheckedFilters}
-                      dateFilterPeriod={dateFilterPeriod}
-                      clearedFilters={clearedFilters}
-                      checked={checked}
-                      checkedTypes={checkedTypes}
-                      checkedArray={checkedArray}
-                      collectionsFilter={collectionsFilter}
-                      setFloor={(val) => {
-                        collectionsFilter.floor = val;
-                        updateCheckedString();
-                      }}
-                      setVolumeValue={(val) => {
-                        collectionsFilter.volume = val;
-                        updateCheckedString();
-                      }}
-                      setCurrency={(val) => {
-                        collectionsFilter.currency = val;
-                        updateCheckedString();
-                      }}
-                      handleCheck={() => handleCheck(event, checked, setChecked, 'issuance')}
-                      handleCheckTypes={() => handleCheck(event, checkedTypes, setCheckedTypes, 'status')}
-                      setClearedFilters={setClearedFilters}
-                    />
-                  </div>);
-                }
-              }
-            })}
-          </div>
-          <div className="px-4 minlg:px-0 hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
-            <Button
-              color={'black'}
-              accent={AccentType.SCALE}
-              stretch={true}
-              label={'Close Filter'}
-              onClick={() => {
-                searchModalOpen && setSearchModalOpen(false);
-              }}
-              type={ButtonType.PRIMARY}
-            />
-          </div>
+  return (
+    <>
+      <div className="rounded-[10.5px] minlg:rounded-[0] px-6 minlg:px-0 py-4 minlg:py-0 max-w-[310px] bg-white minlg:bg-transparent flex flex-col w-full">
+        <div className="minlg:hidden flex justify-between items-center text-[28px] mb-1">Filters <X onClick={() => setSearchModalOpen(false)} size={22} className="text-[#6a6a6a] relative right-[-5px] cursor-pointer"/></div>
+        <div>
+          {searchFilters?.length > 0 && searchFilters?.map((item, index) =>{
+            return (<div key={index}>
+              <Filter
+                filter={item}
+                setCheckedFilters={setCheckedFilters}
+                dateFilterPeriod={dateFilterPeriod}
+                statuses={statuses}
+                clearedFilters={clearedFilters}
+                checked={collectionsFilter.issuance}
+                checkedStatus={nftSFilters.status}
+                checkedTypes={nftSFilters.nftTypes}
+                checkedMarketPlaces={nftSFilters.marketplace}
+                checkedArray={checkedArray}
+                collectionsFilter={collectionsFilter}
+                nftSFilters={nftSFilters}
+                setFloor={(val) => {
+                  collectionsFilter.floor = val;
+                  updateCheckedString();
+                }}
+                setPrice={(val) => {
+                  nftSFilters.price = val;
+                  updateCheckedString();
+                }}
+                setListedFloor={(val) => {
+                  nftSFilters.listedFloor = val;
+                  updateCheckedString();
+                }}
+                setVolumeValue={(val) => {
+                  collectionsFilter.volume = val;
+                  updateCheckedString();
+                }}
+                setCurrency={(val) => {
+                  collectionsFilter.currency = val;
+                  nftSFilters.currency = val;
+                  // updateCheckedString();
+                }}
+                handleCheck={() => handleCheck(event, collectionsFilter.issuance ? collectionsFilter.issuance : [], 'issuance')}
+                handleCheckTypes={() => handleCheck(event, nftSFilters.nftTypes ? nftSFilters.nftTypes : [], 'nftTypes')}
+                handleCheckMarketPlace={() => handleCheck(event, nftSFilters.marketplace ? nftSFilters.marketplace : [], 'marketplace')}
+                handleCheckStatus={() => handleCheck(event, nftSFilters.status ? nftSFilters.status : [], 'status')}
+                setClearedFilters={setClearedFilters}
+              />
+            </div>);
+          })}
         </div>
-      </>);
-  }else {
-    return (
-      <>
-        <div className="flex flex-col w-full">
-          <div
-            className="minlg:hidden flex p-5 justify-end cursor-pointer"
+        <div className="px-4 minlg:px-0 hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
+          <Button
+            color={'black'}
+            accent={AccentType.SCALE}
+            stretch={true}
+            label={'Close Filter'}
             onClick={() => {
-              setSearchModalOpen(false);
-            }}>
-            <EllipseX />
-          </div>
-          <div className="block minlg:hidden font-grotesk font-black text-4xl self-start px-4">Filters</div>
-          <div>
-
-          </div>
-          <div
-            onClick={ () => {
-              setClearedFilters(true);
-              setResultsPageAppliedFilters('', '','', []);
+              searchModalOpen && setSearchModalOpen(false);
             }}
-            className="px-4 self-start font-black text-base font-grotesk cursor-pointer text-blog-text-reskin">
-            Clear filters
-          </div>
-          <div className="px-4 minlg:px-0 minlg:hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
-            <Button
-              color={'black'}
-              accent={AccentType.SCALE}
-              stretch={true}
-              label={'Close Filter'}
-              onClick={() => {
-                searchModalOpen && setSearchModalOpen(false);
-              }}
-              type={ButtonType.PRIMARY}
-            />
-          </div>
+            type={ButtonType.PRIMARY}
+          />
         </div>
-      </>);
-  }
+      </div>
+    </>);
 };

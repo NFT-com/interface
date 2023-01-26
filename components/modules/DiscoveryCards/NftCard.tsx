@@ -57,8 +57,6 @@ export interface NftCardProps {
 }
 
 export function NftCard(props: NftCardProps) {
-  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
-
   const { stagePurchase, stageBuyNow, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
@@ -113,7 +111,7 @@ export function NftCard(props: NftCardProps) {
   return (
     <div className={tw(
       'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative w-full mb-3',
-      props.nftsDescriptionsVisible != false ? `${newFiltersEnabled ? '' : 'h-[442px] sm:h-[auto]'}` : 'h-max'
+      props.nftsDescriptionsVisible != false ? '' : 'h-max'
     )}>
       {
         props.visible != null &&
@@ -163,9 +161,9 @@ export function NftCard(props: NftCardProps) {
           props.onClick && props.onClick();
         }}
       >
-        <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} relative object-cover w-full`}>
-          <div className={newFiltersEnabled ? `h-[${nftImage}px] object-cover overflow-hidden` : 'sm:h-[171px] relative h-[252px] object-cover overflow-hidden'}>
-            <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} group-hover/ntfCard:scale-110 hover:scale-105 transition `}>
+        <div className='relative object-cover w-full'>
+          <div className={`h-[${nftImage}px] object-cover overflow-hidden`}>
+            <div className='group-hover/ntfCard:scale-110 hover:scale-105 transition'>
               <RoundedCornerMedia
                 variant={RoundedCornerVariant.None}
                 width={600}
