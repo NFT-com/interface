@@ -32,7 +32,7 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>, currentTimesta
       const endPrice = order.takeAsset[0].minimumBid;
       const b = moment.unix(order?.start);
       const secondsElapsed = currentTimestamp ? currentTimestamp.diff(b, 'seconds') : 0;
-      return BigNumber.from((startPrice - (secondsElapsed / (order?.end - order?.start)) * (startPrice - endPrice)).toString());
+      return BigNumber.from(Math.round(startPrice - (secondsElapsed / (order?.end - order?.start)) * (startPrice - endPrice)).toString());
     }
     return BigNumber.from(order?.takeAsset[0]?.value ?? 0);
   }

@@ -146,7 +146,7 @@ export default function AssociatedAddress({ address, pending, rejected, submit, 
           </DropdownPickerModal>
         </div>
       </div>
-      <RemoveModal {...{ address }} isTxPending={txPending} remove={removeHandler} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />
+      {removeModalVisible && <RemoveModal {...{ address }} isTxPending={txPending} remove={removeHandler} rejected={rejected} visible={removeModalVisible} setVisible={setRemoveModalVisible} />}
     </>
   );
 }
