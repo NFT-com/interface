@@ -205,7 +205,7 @@ export function NFTCard(props: NFTCardProps) {
           <div className='absolute left-3 top-4 z-50'>
             {showNftcomListingIcon &&
                   <NFTLogo
-                    className='h-8 w-8 relative shrink-0 hover:opacity-70 '
+                    className='h-7 w-7 relative shrink-0 hover:opacity-70 ml-1 mb-0.5'
                     alt="Opensea logo redirect"
                     layout="fill"
                   />

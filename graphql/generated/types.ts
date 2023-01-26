@@ -462,6 +462,20 @@ export type GetOrders = {
   totalItems?: Maybe<Scalars['Int']>;
 };
 
+export type GetTxByContract = {
+  __typename?: 'GetTxByContract';
+  items?: Maybe<Array<Maybe<NftPortTxByContractTransactions>>>;
+  pageInfo?: Maybe<PageInfo>;
+  totalItems?: Maybe<Scalars['Int']>;
+};
+
+export type GetTxByNft = {
+  __typename?: 'GetTxByNFT';
+  items?: Maybe<Array<Maybe<NftPortTxByNftTransactions>>>;
+  pageInfo?: Maybe<PageInfo>;
+  totalItems?: Maybe<Scalars['Int']>;
+};
+
 export type GkOutput = {
   __typename?: 'GkOutput';
   metadata: Metadata;
@@ -1202,13 +1216,6 @@ export type NftPortStatistics = {
   updated_date?: Maybe<Scalars['String']>;
 };
 
-export type NftPortTxByContract = {
-  __typename?: 'NFTPortTxByContract';
-  continuation?: Maybe<Scalars['String']>;
-  response?: Maybe<Scalars['String']>;
-  transactions?: Maybe<Array<Maybe<NftPortTxByContractTransactions>>>;
-};
-
 export type NftPortTxByContractCreators = {
   __typename?: 'NFTPortTxByContractCreators';
   account_address?: Maybe<Scalars['String']>;
@@ -1247,25 +1254,21 @@ export type NftPortTxByContractTransactions = {
   block_number?: Maybe<Scalars['Int']>;
   buyer_address?: Maybe<Scalars['String']>;
   contract_address?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   marketplace?: Maybe<Scalars['String']>;
   nft?: Maybe<NftPortTxByContractNft>;
   owner_address?: Maybe<Scalars['String']>;
   price_details?: Maybe<NftPortTxByContractPriceDetails>;
+  protocolData?: Maybe<TxProtocolData>;
   quantity?: Maybe<Scalars['Int']>;
   seller_address?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['DateTime']>;
   token_id?: Maybe<Scalars['String']>;
   transaction_date?: Maybe<Scalars['String']>;
   transaction_hash?: Maybe<Scalars['String']>;
   transfer_from?: Maybe<Scalars['String']>;
   transfer_to?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
-};
-
-export type NftPortTxByNft = {
-  __typename?: 'NFTPortTxByNFT';
-  continuation?: Maybe<Scalars['String']>;
-  response?: Maybe<Scalars['String']>;
-  transactions?: Maybe<Array<Maybe<NftPortTxByNftTransactions>>>;
 };
 
 export type NftPortTxByNftListingDetails = {
@@ -1297,14 +1300,17 @@ export type NftPortTxByNftTransactions = {
   block_number?: Maybe<Scalars['Int']>;
   buyer_address?: Maybe<Scalars['String']>;
   contract_address?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   lister_address?: Maybe<Scalars['String']>;
   listing_details?: Maybe<NftPortTxByNftListingDetails>;
   marketplace?: Maybe<Scalars['String']>;
   nft?: Maybe<NftPortTxByNftNft>;
   owner_address?: Maybe<Scalars['String']>;
   price_details?: Maybe<NftPortTxByNftPriceDetails>;
+  protocolData?: Maybe<TxProtocolData>;
   quantity?: Maybe<Scalars['Int']>;
   seller_address?: Maybe<Scalars['String']>;
+  timestamp?: Maybe<Scalars['DateTime']>;
   token_id?: Maybe<Scalars['String']>;
   transaction_date?: Maybe<Scalars['String']>;
   transaction_hash?: Maybe<Scalars['String']>;
@@ -1640,8 +1646,8 @@ export type Query = {
   /** AUTHENTICATED */
   getSentReferralEmails: Array<Maybe<SentReferralEmailsOutput>>;
   getSwaps: GetMarketSwap;
-  getTxByContract?: Maybe<NftPortTxByContract>;
-  getTxByNFT?: Maybe<NftPortTxByNft>;
+  getTxByContract?: Maybe<GetTxByContract>;
+  getTxByNFT?: Maybe<GetTxByNft>;
   getUserSwaps: GetMarketSwap;
   gkNFTs: GetGkNftsOutput;
   ignoredEvents: Array<Event>;
@@ -2226,17 +2232,15 @@ export type TransactionSalesTx = {
 
 export type TransactionsByContractInput = {
   chain?: InputMaybe<Scalars['String']>;
-  continuation?: InputMaybe<Scalars['String']>;
   contractAddress: Scalars['String'];
-  pageSize?: InputMaybe<Scalars['Int']>;
+  pageInput: PageInput;
   type?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type TransactionsByNftInput = {
   chain?: InputMaybe<Scalars['String']>;
-  continuation?: InputMaybe<Scalars['String']>;
   contractAddress: Scalars['String'];
-  pageSize?: InputMaybe<Scalars['Int']>;
+  pageInput: PageInput;
   tokenId: Scalars['String'];
   type?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
@@ -3073,14 +3077,14 @@ export type GetTxByContractQueryVariables = Exact<{
 }>;
 
 
-export type GetTxByContractQuery = { __typename?: 'Query', getTxByContract?: { __typename?: 'NFTPortTxByContract', response?: string | null, continuation?: string | null, transactions?: Array<{ __typename?: 'NFTPortTxByContractTransactions', type?: string | null, owner_address?: string | null, contract_address?: string | null, token_id?: string | null, quantity?: number | null, transaction_hash?: string | null, block_hash?: string | null, block_number?: number | null, transaction_date?: string | null, transfer_from?: string | null, transfer_to?: string | null, buyer_address?: string | null, seller_address?: string | null, marketplace?: string | null, price_details?: { __typename?: 'NFTPortTxByContractPriceDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByContractNft', contract_type?: string | null, contract_address?: string | null, total?: number | null, metadata_url?: string | null, token_id?: string | null, signatures?: Array<string | null> | null, royalties?: Array<{ __typename?: 'NFTPortTxByContractRoyalties', account_address?: string | null, royalty_share?: string | null } | null> | null, creators?: Array<{ __typename?: 'NFTPortTxByContractCreators', account_address?: string | null, creator_share?: string | null } | null> | null } | null } | null> | null } | null };
+export type GetTxByContractQuery = { __typename?: 'Query', getTxByContract?: { __typename?: 'GetTxByContract', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'NFTPortTxByContractTransactions', block_hash?: string | null, block_number?: number | null, buyer_address?: string | null, contract_address?: string | null, marketplace?: string | null, type?: string | null, owner_address?: string | null, token_id?: string | null, quantity?: number | null, transaction_hash?: string | null, transaction_date?: string | null, transfer_from?: string | null, transfer_to?: string | null, seller_address?: string | null, price_details?: { __typename?: 'NFTPortTxByContractPriceDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByContractNft', contract_type?: string | null, contract_address?: string | null, token_id?: string | null, metadata_url?: string | null, total?: number | null, signatures?: Array<string | null> | null, royalties?: Array<{ __typename?: 'NFTPortTxByContractRoyalties', account_address?: string | null, royalty_share?: string | null } | null> | null, creators?: Array<{ __typename?: 'NFTPortTxByContractCreators', account_address?: string | null, creator_share?: string | null } | null> | null } | null } | null> | null } | null };
 
 export type GetTxByNftQueryVariables = Exact<{
   input?: InputMaybe<TransactionsByNftInput>;
 }>;
 
 
-export type GetTxByNftQuery = { __typename?: 'Query', getTxByNFT?: { __typename?: 'NFTPortTxByNFT', response?: string | null, continuation?: string | null, transactions?: Array<{ __typename?: 'NFTPortTxByNFTTransactions', type?: string | null, lister_address?: string | null, quantity?: number | null, transaction_date?: string | null, marketplace?: string | null, owner_address?: string | null, contract_address?: string | null, token_id?: string | null, transaction_hash?: string | null, block_number?: number | null, block_hash?: string | null, transfer_from?: string | null, transfer_to?: string | null, buyer_address?: string | null, seller_address?: string | null, price_details?: { __typename?: 'NFTPortTxByNFTPriceDetails', asset_type?: string | null, contract_address?: string | null, price?: number | null, price_usd?: number | null } | null, listing_details?: { __typename?: 'NFTPortTxByNFTListingDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByNFTNft', contract_type?: string | null, contract_address?: string | null, token_id?: string | null } | null } | null> | null } | null };
+export type GetTxByNftQuery = { __typename?: 'Query', getTxByNFT?: { __typename?: 'GetTxByNFT', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'NFTPortTxByNFTTransactions', block_hash?: string | null, block_number?: number | null, buyer_address?: string | null, contract_address?: string | null, lister_address?: string | null, marketplace?: string | null, owner_address?: string | null, quantity?: number | null, seller_address?: string | null, token_id?: string | null, transaction_date?: string | null, transaction_hash?: string | null, transfer_from?: string | null, transfer_to?: string | null, type?: string | null, listing_details?: { __typename?: 'NFTPortTxByNFTListingDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByNFTNft', contract_address?: string | null, contract_type?: string | null, token_id?: string | null } | null, price_details?: { __typename?: 'NFTPortTxByNFTPriceDetails', price_usd?: number | null, price?: number | null, contract_address?: string | null, asset_type?: string | null } | null } | null> | null } | null };
 
 export type IgnoredEventsQueryVariables = Exact<{
   input: IgnoredEventsInput;
@@ -4308,23 +4312,25 @@ export const GetSentReferralEmailsDocument = gql`
 export const GetTxByContractDocument = gql`
     query GetTxByContract($input: TransactionsByContractInput) {
   getTxByContract(input: $input) {
-    response
-    continuation
-    transactions {
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+    items {
+      block_hash
+      block_number
+      buyer_address
+      contract_address
+      marketplace
       type
       owner_address
-      contract_address
       token_id
       quantity
       transaction_hash
-      block_hash
-      block_number
       transaction_date
       transfer_from
       transfer_to
-      buyer_address
-      seller_address
-      marketplace
       price_details {
         asset_type
         contract_address
@@ -4334,9 +4340,9 @@ export const GetTxByContractDocument = gql`
       nft {
         contract_type
         contract_address
-        total
-        metadata_url
         token_id
+        metadata_url
+        total
         signatures
         royalties {
           account_address
@@ -4347,6 +4353,7 @@ export const GetTxByContractDocument = gql`
           creator_share
         }
       }
+      seller_address
     }
   }
 }
@@ -4354,41 +4361,44 @@ export const GetTxByContractDocument = gql`
 export const GetTxByNftDocument = gql`
     query GetTxByNFT($input: TransactionsByNFTInput) {
   getTxByNFT(input: $input) {
-    response
-    continuation
-    transactions {
-      type
-      lister_address
-      quantity
-      transaction_date
-      marketplace
-      owner_address
-      contract_address
-      token_id
-      transaction_hash
-      block_number
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+    items {
       block_hash
-      transfer_from
-      transfer_to
+      block_number
       buyer_address
-      seller_address
-      price_details {
-        asset_type
-        contract_address
-        price
-        price_usd
-      }
+      contract_address
+      lister_address
       listing_details {
         asset_type
         contract_address
         price
         price_usd
       }
+      marketplace
       nft {
-        contract_type
         contract_address
+        contract_type
         token_id
       }
+      owner_address
+      price_details {
+        price_usd
+        price
+        contract_address
+        asset_type
+      }
+      quantity
+      seller_address
+      token_id
+      transaction_date
+      transaction_hash
+      transfer_from
+      transfer_to
+      type
     }
   }
 }

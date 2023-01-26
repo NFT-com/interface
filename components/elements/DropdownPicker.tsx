@@ -127,10 +127,10 @@ export function DropdownPicker(props: DropdownPickerProps) {
         }
         <div className='flex items-center w-full'>
           {props?.options[selectedIndex]?.icon &&
-            <div className={`mr-2 flex items-center justify-center ${props?.options[selectedIndex]?.customIconClass || ''}`}>
+            <div className={`mr-1 relative w-[${props?.options[selectedIndex]?.imageSize || 26}px] h-[${props?.options[selectedIndex]?.imageSize || 26}px] flex items-center justify-center ${props?.options[selectedIndex]?.customIconClass || ''}`}>
               <Image
-                height={props?.options[selectedIndex]?.imageSize || 26}
-                width={props?.options[selectedIndex]?.imageSize || 26}
+                layout='fill'
+                objectFit='contain'
                 src={props?.options[selectedIndex]?.icon}
                 alt={props?.options[selectedIndex]?.label} />
             </div>

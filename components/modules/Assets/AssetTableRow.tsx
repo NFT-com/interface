@@ -47,7 +47,7 @@ export default function AssetTableRow({
     defaultChainId,
     true
   );
-  const nftSaleHistory = useGetTxByNFTQuery(item?.contract, parseInt(item?.tokenId, 16).toString(), 'sale');
+  const nftSaleHistory = useGetTxByNFTQuery(item?.contract, parseInt(item?.tokenId, 16).toString(), 'sale', { first: 1 });
 
   const processedImageURLs = sameAddress(item.contract, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(item.tokenId) ?
     [getGenesisKeyThumbnail(item.tokenId)]
@@ -147,12 +147,12 @@ export default function AssetTableRow({
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data?.transactions[0]?.price_details ? <p>{nftSaleHistory?.data?.transactions[0]?.price_details?.price}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.items[0]?.price_details ? <p>{nftSaleHistory?.data?.items[0]?.price_details?.price}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data?.transactions[0]?.price_details?.price_usd ? <p>${nftSaleHistory?.data?.transactions[0]?.price_details?.price_usd?.toFixed(2)}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.items[0]?.price_details?.price_usd ? <p>${nftSaleHistory?.data?.items[0]?.price_details?.price_usd?.toFixed(2)}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4 -mt-1" >

@@ -245,11 +245,11 @@ export function ListingCheckout() {
                 <span className='font-semibold text-base'>NFT.com</span>
                 <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ hasGks ? Number(NFTCOMGKFee)/100 : myOwnedProfileTokens?.length ? Number(NFTCOMProfileFee)/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
               </div>
-              <div className='text-[0.75rem] py-1'><span className='text-primary-yellow'>{NFTCOMGKFee/100}%</span> fee with GK</div>
+              <div className='text-[0.75rem] text-center py-1'><span className='text-primary-yellow'>{NFTCOMGKFee/100}%</span> fee with GK</div>
               <div className='border-b w-4/5'></div>
-              <div className='text-[0.75rem] py-1'><span className='text-primary-yellow'>{NFTCOMProfileFee/100}%</span> fee with profile</div>
+              <div className='text-[0.75rem] text-center py-1'><span className='text-primary-yellow'>{NFTCOMProfileFee/100}%</span> fee with profile</div>
               <div className='border-b w-4/5'></div>
-              <span className='text-[0.75rem] py-1'>{Number(NFTCOMProtocolFee)/100}% fee without profile</span>
+              <span className='text-[0.75rem] text-center py-1'>{Number(NFTCOMProtocolFee)/100}% fee without profile</span>
             </div>}
             <div
               onClick={() => {
@@ -279,9 +279,9 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
+                `mt-[100px] max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 py-3 cursor-pointer mt-2 minlg:mr-2 flex flex-col items-center',
+                'px-4 py-3 cursor-pointer minlg:mt-2 minlg:mr-2 flex flex-col items-center',
                 looksrareAtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
@@ -302,9 +302,9 @@ export function ListingCheckout() {
                 setShowSummary(false);
               }}
               className={tw(
-                `max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
+                `mt-[100px] max-h-[93px] w-[49%] minlg:${buttonsRowWidth()}`,
                 'border-[#D5D5D5] rounded-xl text-lg',
-                'px-4 pt-3 py-3 cursor-pointer mt-2 flex flex-col items-center',
+                'px-4 pt-3 py-3 cursor-pointer minlg:mt-2 flex flex-col items-center',
                 X2Y2AtLeastOneEnabled ? 'border-2 border-primary-yellow font-bold' : 'border-2'
               )}
             >
