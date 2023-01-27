@@ -2,8 +2,6 @@ import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
 import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
-import { useAllContracts } from 'hooks/contracts/useAllContracts';
-import { useClaimableProfileCount } from 'hooks/useClaimableProfileCount';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
