@@ -586,6 +586,7 @@ export function NFTListingsContextProvider(
           const nonce = await marketplace.nonces(currentAddress);
           const order = await createNativeParametersForNFTListing(
             currentAddress,
+            isNullOrEmpty(target?.NFTCOMOrder?.taker) ? NULL_ADDRESS : target?.NFTCOMOrder?.taker,
             noExpirationNFTCOM ? 0 : (Number(target.duration) ?? Number(stagedNft.duration)),
             onchainAuctionTypeToGqlAuctionType(target.auctionType),
             stagedNft.nft,
