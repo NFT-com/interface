@@ -1,6 +1,7 @@
 import { useGetSentReferralEmailsQuery } from 'graphql/hooks/useGetSentReferralEmailsQuery';
 import { useSendReferEmailMutation } from 'graphql/hooks/useSendReferEmailMutation';
 import { useUser } from 'hooks/state/useUser';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -90,14 +91,14 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
 
                   <p className='mt-3 text-[#6A6A6A] w-4/5 mx-auto'>{selectedItem?.description}</p>
                   <div className='flex flex-col mt-9'>
-                    <p className='text-[#B2B2B2]'>Rewards</p>
+                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <p className='text-[#B2B2B2]'>Rewards</p>}
 
-                    <div className='bg-[#FFF4CA] w-max rounded-full flex items-center py-1 pl-4 pr-1 mx-auto mt-2 mb-9'>
-                  +{selectedItem?.coins}
+                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='bg-[#FFF4CA] w-max rounded-full flex items-center py-1 pl-4 pr-1 mx-auto mt-2 mb-9'>
+                      +{selectedItem?.coins}
                       <div className='h-[24px] w-[24px] minmd:h-[34px] minmd:w-[34px] ml-[5px]'>
                         <NftGoldLogo />
                       </div>
-                    </div>
+                    </div>}
 
                     {selectedItem?.name === 'Refer Network' &&
                       <div className='flex flex-col px-7 mb-10 space-y-4'>
