@@ -360,8 +360,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
       {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-2 minlg:pl-0'>
         {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='hidden minlg:flex text-base minlg:text-[0.85rem] minxl:text-base font-normal text-[#A6A6A6] mb-4'>
-          <div className='w-[22%]'>Marketplace</div>
-          <div className='w-[28%] flex flex-row justify-between'>
+          <div className='w-[26%]'>Marketplace</div>
+          <div className='w-[27%] flex flex-row justify-between'>
             <span className='shrink-0'>Type of Auction</span>
             <CustomTooltip2
               tooltipClick={() => router.push('https://docs.nft.com/')}
@@ -379,7 +379,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               <InfoIcon className='ml-2' />
             </CustomTooltip2>
           </div>
-          <div className='w-[45%]'>Set Price</div>
+          <div className='w-[42%]'>Set Price</div>
           <div className='w-[5%]'>&nbsp;</div>
         </div>}
         {seaportEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
