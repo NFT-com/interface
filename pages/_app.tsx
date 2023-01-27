@@ -31,6 +31,8 @@ import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
 import { ReactElement, ReactNode, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactGA from 'react-ga';
 import { rainbowLight } from 'styles/RainbowKitThemes';
 import { v4 as uuid } from 'uuid';
@@ -168,13 +170,15 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
         >
           <AnimatePresence exitBeforeEnter>
             <GraphQLProvider>
-              <NotificationContextProvider>
-                <NFTPurchaseContextProvider>
-                  <NFTListingsContextProvider>
-                    {getLayout(<Component {...pageProps} key={router.pathname} />)}
-                  </NFTListingsContextProvider>
-                </NFTPurchaseContextProvider>
-              </NotificationContextProvider>
+              <DndProvider backend={HTML5Backend}>
+                <NotificationContextProvider>
+                  <NFTPurchaseContextProvider>
+                    <NFTListingsContextProvider>
+                      {getLayout(<Component {...pageProps} key={router.pathname} />)}
+                    </NFTListingsContextProvider>
+                  </NFTPurchaseContextProvider>
+                </NotificationContextProvider>
+              </DndProvider>
             </GraphQLProvider>
           </AnimatePresence>
         </RainbowKitProvider>
