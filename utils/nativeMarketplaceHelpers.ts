@@ -498,7 +498,6 @@ export function unhashedTakeAsset(
 
 export async function createNativeParametersForNFTListing(
   address: string,
-  takerAddress: string,
   duration: number,
   auctionType: AuctionType,
   nft: PartialDeep<Nft>,
@@ -518,7 +517,7 @@ export async function createNativeParametersForNFTListing(
   
   const unsignedOrder: UnsignedOrder = await getUnsignedOrder(
     ethers.utils.getAddress(address), // maker
-    takerAddress, //taker
+    NULL_ADDRESS, //taker
     salt,
     start,
     end,

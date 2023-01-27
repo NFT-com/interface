@@ -127,7 +127,7 @@ export function useListNFTMutations(): ListNftResult {
           target.currency,
           target.startingPrice as BigNumber,
           onchainAuctionTypeToGqlAuctionType(target.NFTCOMOrder.auctionType),
-          getByContractAddress(isNullOrEmpty(target.NFTCOMOrder?.taker) ? NULL_ADDRESS : target.NFTCOMOrder.taker).contract,
+          getByContractAddress(target?.currency).contract,
           target.endingPrice as BigNumber,
           target.reservePrice as BigNumber,
           target.buyNowPrice as BigNumber,
@@ -163,9 +163,7 @@ export function useListNFTMutations(): ListNftResult {
               getMarketplaceAssetInput(
                 unhashedTake,
                 0,
-                getByContractAddress(isNullOrEmpty(target.NFTCOMOrder.taker) ?
-                  NULL_ADDRESS :
-                  target.NFTCOMOrder.taker).contract
+                getByContractAddress(target?.currency).contract
               ),
             ],
             takerAddress: isNullOrEmpty(target.NFTCOMOrder.taker) ?
