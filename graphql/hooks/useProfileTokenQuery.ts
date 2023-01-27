@@ -18,8 +18,6 @@ export function useProfileTokenQuery(
   const [loading, setLoading] = useState(false);
   const { nftProfile } = useAllContracts();
 
-  console.log('nftProfile: ', nftProfile.address);
-
   const keyString = 'ProfileTokenQuery ' + url + nftProfile.address;
 
   const { data } = useSWR(keyString, async () => {
