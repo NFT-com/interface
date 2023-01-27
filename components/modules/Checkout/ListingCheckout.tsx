@@ -34,7 +34,7 @@ import ErrorIcon from 'public/red-error-icon.svg';
 import X2Y2Gray from 'public/x2y2-gray.svg';
 import X2Y2Icon from 'public/x2y2-icon.svg';
 import Slider from 'rc-slider';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
@@ -129,7 +129,7 @@ export function ListingCheckout() {
     }
   };
 
-  const ListingOneNFT = () => {
+  const ListingOneNFT = useCallback(() => {
     return(
       <div className='hidden minlg:flex flex-col justify-start items-center bg-gray-200 w-2/5 min-h-[100vh]'>
         <div className='w-full ml-44 mt-20'>
@@ -212,9 +212,9 @@ export function ListingCheckout() {
         }
       </div>
     );
-  };
+  },[defaultChainId, profileOwnerToShow?.photoURL, profileOwnerToShow?.url, toList]);
 
-  const ListingCheckoutInfo = () => {
+  const ListingCheckoutInfo = useCallback(() => {
     return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className={tw(
@@ -379,7 +379,7 @@ export function ListingCheckout() {
       </div>
       { showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />}
     </div>;
-  };
+  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, hasGks, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
   
   return (
     <div className='flex w-full justify-between h-full'>
