@@ -4,5 +4,5 @@ import { useNetwork } from 'wagmi';
 
 export function useDefaultChainId() {
   const { chain } = useNetwork();
-  return String(chain?.id ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID));
+  return String(getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) ?? chain?.id);
 }
