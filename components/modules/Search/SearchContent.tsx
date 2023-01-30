@@ -229,14 +229,6 @@ export const SearchContent = ({ isHeader, mobileSearch, mobileSidebar, leaderBoa
         </div>
         {showHits && keyword !== ''
           ? (
-            //   left: 0;
-            // right: 0;
-            // width: 100%;
-            // /* background: red; */
-            // z-index: 22;
-            // max-width: 100%;
-            // top: 37px;
-            // padding: 0px 38px;
             <div ref={resultsRef}>
               <DynamicResultsDropDown
                 isHeader={isHeader}

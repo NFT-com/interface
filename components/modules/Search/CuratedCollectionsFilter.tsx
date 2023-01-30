@@ -3,10 +3,8 @@ import { tw } from 'utils/tw';
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 
 export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void, collapsed?: boolean}) => {
-  const [isFilterCollapsed, setIsFilterCollapsed] = useState(props.collapsed ?? true);
   const { setSearchModalOpen, curatedCollections, setSelectedCuratedCollection, selectedCuratedCollection } = useSearchModal();
   const router = useRouter();
   return (
@@ -14,7 +12,7 @@ export const CuratedCollectionsFilter = (props: {onClick: (term: string) => void
       <div className="flex flex-col items-center pt-2">
         <motion.div
           animate={{
-            height: isFilterCollapsed ? 0 : 'auto' }}
+            height: props.collapsed ? 0 : 'auto' }}
           transition={{ duration: 0.2 }}
           className={tw('overflow-hidden px-7 minmd:px-44 minlg:px-0 mx-auto')}
         >

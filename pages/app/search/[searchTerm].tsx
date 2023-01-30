@@ -212,7 +212,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   : null
               }
               <div className={tw(`grid grid-cols-2 mt-4 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3 minlg:grid-cols-2  minmd:grid-cols-2 grid-cols-1' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 grid-cols-1'} `)}>
-                {/*'gap-5'*/}
                 {searchedData && searchedData.map((item, index) => {
                   return (
                     <div key={index} className='DiscoverCollectionItem'>
