@@ -2,9 +2,11 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { processIPFSURL } from 'utils/helpers';
+import { tw } from 'utils/tw';
 
 import { NFTListingsContext } from './NFTListingsContext';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
+import { PartialErrorView } from './PartialErrorView';
 
 import { useRouter } from 'next/router';
 import { Check } from 'phosphor-react';
@@ -21,6 +23,7 @@ export interface CheckoutSuccessViewProps {
   userAddress: string;
   type: SuccessType;
   subtitle?: string;
+  hasError?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -80,7 +83,10 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   };
 
   return myOwnedProfileTokens?.length > 0 ?
-    <div className="flex md:flex-col items-center md:h-screen h-[596px] font-noi-grotesk">
+    <div className={tw(
+      'flex md:flex-col items-center md:h-screen  h-[596px] font-noi-grotesk',
+      props?.hasError ? 'max-h-[744px] min-h-[650px]' : 'h-[596px]'
+    )}>
       <div onClick={() => router.push('/app/mint-profiles')} className='md:hidden absolute bottom-5 left-7 hover:cursor-pointer underline text-[16px] z-50 font-medium flex items-center'>
         <NullProfile className='mr-2' />Create a NFT Profile
       </div>
@@ -95,8 +101,11 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
         </div>
       </div>
       <div className="relative md:w-full h-full md:h-3/5 w-3/5 right-0">
-        <div className='flex flex-col items-center justify-center h-full w-full px-10'>
-          {images()}
+        <div className={tw(
+          'flex flex-col items-center justify-center h-full w-full px-10',
+          props?.hasError && 'pt-14 pb-3'
+        )}>
+          {!props.hasError && images()}
           <div className='text-[34px] font-medium'>Congratulations!</div>
           <div className='text-[18px] font-medium mt-4'>{message()}</div>
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
@@ -113,6 +122,12 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
             Share your {props.type == SuccessType.Listing ? 'Listing' : 'Purchase'}
           </button>
           <div onClick={() => props.type == SuccessType.Listing ? router.push('/app/assets') : router.push('/app/discover/collections')} className='text-[#E4BA18] font-medium underline text-[14px] cursor-pointer'>{props.type == SuccessType.Listing ? 'List' : 'Purchase'} another NFT</div>
+          {props.hasError && (
+            <div className='w-full flex flex-col space-y-[10px] p-[10px] rounded border border-[#ECECEC] overflow-auto mt-3'>
+              {list.map((item) => <PartialErrorView key={item.id} listing={item} />)}
+            </div>
+          )
+          }
         </div>
       </div>
     </div> :
