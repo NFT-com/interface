@@ -303,7 +303,6 @@ export default function MintGKProfileCard() {
                     return;
                   }
                   setModalOpen(true);
-                  setInputs(filteredInputs);
                 }}
               >
                 {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
@@ -321,7 +320,7 @@ export default function MintGKProfileCard() {
           </Link>
         </LoadedContainer>
       </>
-      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={filteredInputs} gkTokenId={selectedGK?.tokenId} type='GK' />
+      {modalOpen && <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={filteredInputs} gkTokenId={selectedGK?.tokenId} type='GK' />}
     </>
   );
 }

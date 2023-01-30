@@ -17,6 +17,7 @@ import { BigNumber, utils } from 'ethers';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Info, MinusCircle, PlusCircle } from 'phosphor-react';
+import ErrorIcon from 'public/red-error-icon.svg';
 import { useCallback, useEffect, useState } from 'react';
 import ReactLoading from 'react-loading';
 import useSWR from 'swr';
@@ -37,7 +38,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
   const [registrationFee, setRegistrationFee] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [minting, setMinting] = useState(false);
-
+  const [error, setError] = useState(null);
   const { address: currentAddress } = useAccount();
   const { profileTokenId } = useProfileTokenQuery(profileURI || '');
   const defaultChainId = useDefaultChainId();
@@ -66,19 +67,21 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       return feeData;
     });
   const { data } = usePrepareContractWrite({
-    // addressOrName: contractAddress,
-    // contractInterface: maxProfilesABI,
     address: contractAddress as `0x${string}`,
     abi: maxProfilesABI,
     functionName: type === 'mint' ? 'publicMint' : 'extendLicense',
     args: [type === 'mint' ? input[0]?.profileURI : profile, yearValue * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000', input[0]?.hash, input[0]?.signature],
+    onSuccess(){
+      setError(null);
+    },
     onError(err){
-      console.log('err:', err);
+      err.message.includes('insufficient funds') ? setError('Insufficient funds for transaction') : console.log(err);
     },
     overrides: {
       from: currentAddress,
       value: registrationFee && registrationFee,
     },
+    enabled: type === 'mint' ? !isNullOrEmpty(profileURI) : true
   });
   
   const getMintCost = useCallback(() => {
@@ -131,6 +134,11 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       }
     })();
   }, [profileAuction, profileURI, yearValue, profile, type]);
+
+  const updateProfileValue = useCallback((input) => {
+    setError(null);
+    setProfileURI(input);
+  }, []);
   
   return (
     <>
@@ -141,7 +149,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
             <p className='text-[#707070] font-normal mb-2'>Create your NFT Profile to build your social identity</p>
             <MintProfileInputField
               minting={minting}
-              setFreeProfile={setProfileURI}
+              setFreeProfile={updateProfileValue}
               name={'input-Paid'}
               type="Free"
             />
@@ -191,8 +199,17 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
               <p className='text-[#B2B2B2] font-normal'>License Price</p>
             </div>
             <div className='rounded-2xl bg-[#F2F2F2] px-7 py-5 flex items-center justify-between mt-8 font-noi-grotesk'>
-              <p className='font-normal'>Estimated Total (Price + Gas)</p>
-              <p className='font-medium text-xl'>~ {parseFloat(Number(getMintCost()).toFixed(5))} ETH <span className='font-normal text-base text-[#686868]'>(${(ethPriceUSD * Number(getMintCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span></p>
+              {isNullOrEmpty(error) ?
+                <>
+                  <p className='font-normal'>Estimated Total (Price + Gas)</p>
+                  <p className='font-medium text-xl'>~ {parseFloat(Number(getMintCost()).toFixed(5))} ETH <span className='font-normal text-base text-[#686868]'>(${(ethPriceUSD * Number(getMintCost())).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})</span></p>
+                </>
+                :
+                <div className='px-2 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded'>
+                  <ErrorIcon className='relative shrink-0 mr-2' />
+                  {error}
+                </div>
+              }
             </div>
           </div>
           
@@ -221,7 +238,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                 'focus:outline-none focus-visible:bg-[#E4BA18]',
                 'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
               )}
-              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') : false }
+              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : false }
               onClick={async () => {
                 if (
                   minting
@@ -244,7 +261,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
           </a>
         </Link>
       </>
-      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={type === 'mint' ? input : [{ profileURI: profile }]} type={type === 'mint' ? 'Paid' : 'Renew'} duration={yearValue} transactionCost={registrationFee} />
+      {modalOpen && <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={type === 'mint' ? input : [{ profileURI: profile }]} type={type === 'mint' ? 'Paid' : 'Renew'} duration={yearValue} transactionCost={registrationFee} />}
     </>
   );
 }
