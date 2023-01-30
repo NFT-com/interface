@@ -163,7 +163,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{'$' + getTotalPriceUSD()}</span>
+              <span className='font-semibold'>{'$' + (Number(getTotalPriceUSD()) - Number(getTotalRoyalties()) - Number(getTotalMarketplaceFees()))?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 12 })}</span>
             </div>
           </div>
           <div className="mx-4 my-4 flex items-center justify-between">
@@ -174,7 +174,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{'$' + getTotalMarketplaceFees()}</span>
+              <span className='font-semibold'>{'$' + getTotalMarketplaceFees()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 5 })}</span>
             </div>
           </div>
           <div className="mx-4 my-4 flex items-center justify-between">
@@ -185,7 +185,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{'$' + getTotalRoyalties()}</span>
+              <span className='font-semibold'>{'$' + getTotalRoyalties()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 5 })}</span>
             </div>
           </div>
           <div className="mx-4 my-4 flex items-center justify-between">
@@ -196,7 +196,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>${(Number(getTotalRoyalties()) + Number(getTotalMarketplaceFees()) + Number(getTotalPriceUSD())).toLocaleString('en-US', { maximumSignificantDigits: 5 })}</span>
+              <span className='font-semibold'>${Number(getTotalPriceUSD())?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 5 })}</span>
             </div>
           </div>
         </div>
