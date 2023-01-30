@@ -43,11 +43,11 @@ export function LinksToSection(props: LinksToSectionParams) {
       linkTo: '/app/gallery'
     },
     {
-      image: '/link-to-opensea.png',
+      image: '/link-to-nftcom-2.png',
       section: 'MARKET PLACE',
-      title: 'Opensea.io',
-      description: 'View our Genesis Key and NFT.com Profile Collections on Opensea',
-      linkTo: 'https://opensea.io/collection/genesiskey'
+      title: 'NFT.com',
+      description: 'Start building your NFT collection by buying NFTs on the NFT.com Marketplace.',
+      linkTo: 'https://www.nft.com/you'
     }
   ];
   
@@ -74,11 +74,11 @@ export function LinksToSection(props: LinksToSectionParams) {
       linkTo: '/app/gallery'
     },
     {
-      image: '/link-to-opensea.png',
+      image: '/link-to-nftcom-2.png',
       section: 'MARKET PLACE',
-      title: 'Opensea.io',
-      description: 'View our Genesis Key and NFT.com Profile Collections on Opensea',
-      linkTo: 'https://opensea.io/collection/genesiskey'
+      title: 'NFT.com',
+      description: 'Start building your NFT collection by buying NFTs on the NFT.com Marketplace.',
+      linkTo: 'https://www.nft.com/you'
     }
   ];
 
