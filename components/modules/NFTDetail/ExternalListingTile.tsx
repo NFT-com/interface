@@ -171,7 +171,8 @@ function ExternalListingTile(props: ExternalListingTileProps) {
               duration: null,
               looksrareOrder: null,
               seaportParameters: null,
-              X2Y2Order: null
+              X2Y2Order: null,
+              listingError: false
             }]
           });
           router.push('/app/list');
