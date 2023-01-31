@@ -30,7 +30,7 @@ export function PartialErrorView({ listing } : PartialErrorViewProps) {
             variant={RoundedCornerVariant.Success}
           />
           <div className='w-full'>
-            <div className='flex justify-between'>
+            <div className='flex flex-col minmd:flex-row justify-between'>
               <div className='mt-2'>
                 <p className='font-medium text-sm truncate'>{listing.nft?.metadata?.name}</p>
                 <p className='text-xs text-[#6A6A6A] truncate'>{listing.collectionName}</p>
