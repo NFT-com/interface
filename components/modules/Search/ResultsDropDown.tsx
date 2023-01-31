@@ -64,7 +64,6 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
           }}
         >
           See All
-          {/*{found < 1 ? '' : found > 1 ? 'SEE ALL ' + found : 'SEE ' + found}*/}
         </span>
       </div>
     );
@@ -92,7 +91,6 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                         'text-sm font-semibold text-black',
                         'flex justify-start items-center whitespace-nowrap text-ellipsis overflow-hidden')}
                       onClick={() => clickByItemResult(hit)}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       {hit.document.imageURL || hit.document.logoUrl ?
                         <div className="relative min-w-[48px] w-[48px] h-[48px] rounded-[16px] mr-2 overflow-hidden">
                           <RoundedCornerMedia
@@ -134,7 +132,6 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
           </div>) :
           <div className="bg-white py-4 rounded-b-2xl shadow-lg">
             {ResultsContent()}
-            {/*{isHeader && <span className="px-5 text-xs text-gray-400">Press enter for all results</span>}*/}
           </div>
         }
       </>}
