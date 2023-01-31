@@ -442,7 +442,8 @@ export const X2Y2BuyNow = async (
     );
     return tx;
   } catch (err) {
-    throw `error in X2Y2BuyNow: ${err}`;
+    console.log(`error in X2Y2BuyNow: ${err}`);
+    return null;
   }
 };
 
