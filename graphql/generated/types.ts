@@ -1290,7 +1290,7 @@ export type NftPortTxByNftPriceDetails = {
   __typename?: 'NFTPortTxByNFTPriceDetails';
   asset_type?: Maybe<Scalars['String']>;
   contract_address?: Maybe<Scalars['String']>;
-  price?: Maybe<Scalars['Float']>;
+  price?: Maybe<Scalars['String']>;
   price_usd?: Maybe<Scalars['Float']>;
 };
 
@@ -3084,7 +3084,7 @@ export type GetTxByNftQueryVariables = Exact<{
 }>;
 
 
-export type GetTxByNftQuery = { __typename?: 'Query', getTxByNFT?: { __typename?: 'GetTxByNFT', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'NFTPortTxByNFTTransactions', block_hash?: string | null, block_number?: number | null, buyer_address?: string | null, contract_address?: string | null, lister_address?: string | null, marketplace?: string | null, owner_address?: string | null, quantity?: number | null, seller_address?: string | null, token_id?: string | null, transaction_date?: string | null, transaction_hash?: string | null, transfer_from?: string | null, transfer_to?: string | null, type?: string | null, listing_details?: { __typename?: 'NFTPortTxByNFTListingDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByNFTNft', contract_address?: string | null, contract_type?: string | null, token_id?: string | null } | null, price_details?: { __typename?: 'NFTPortTxByNFTPriceDetails', price_usd?: number | null, price?: number | null, contract_address?: string | null, asset_type?: string | null } | null } | null> | null } | null };
+export type GetTxByNftQuery = { __typename?: 'Query', getTxByNFT?: { __typename?: 'GetTxByNFT', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'NFTPortTxByNFTTransactions', block_hash?: string | null, block_number?: number | null, buyer_address?: string | null, contract_address?: string | null, lister_address?: string | null, marketplace?: string | null, owner_address?: string | null, quantity?: number | null, seller_address?: string | null, token_id?: string | null, transaction_date?: string | null, transaction_hash?: string | null, transfer_from?: string | null, transfer_to?: string | null, type?: string | null, listing_details?: { __typename?: 'NFTPortTxByNFTListingDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByNFTNft', contract_address?: string | null, contract_type?: string | null, token_id?: string | null } | null, price_details?: { __typename?: 'NFTPortTxByNFTPriceDetails', price_usd?: number | null, price?: string | null, contract_address?: string | null, asset_type?: string | null } | null } | null> | null } | null };
 
 export type IgnoredEventsQueryVariables = Exact<{
   input: IgnoredEventsInput;
@@ -3139,7 +3139,7 @@ export type MyNfTsQueryVariables = Exact<{
 }>;
 
 
-export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, tokenId: any, id: string, type: NftType, isHide?: boolean | null, wallet?: { __typename?: 'Wallet', address: any } | null, listings?: { __typename?: 'TxActivitiesOutput', items?: Array<{ __typename?: 'TxActivity', status: ActivityStatus, order?: { __typename?: 'TxOrder', protocolData?: { __typename?: 'LooksrareProtocolData', price?: string | null } | { __typename?: 'NFTCOMProtocolData', takeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any } | null> | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', orderType?: number | null } | null } | { __typename?: 'X2Y2ProtocolData', price?: string | null } | null } | null } | null> | null } | null, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
+export type MyNfTsQuery = { __typename?: 'Query', myNFTs: { __typename?: 'NFTsOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'NFT', isOwnedByMe?: boolean | null, previewLink?: string | null, contract?: any | null, tokenId: any, id: string, type: NftType, isHide?: boolean | null, wallet?: { __typename?: 'Wallet', address: any } | null, listings?: { __typename?: 'TxActivitiesOutput', items?: Array<{ __typename?: 'TxActivity', status: ActivityStatus, order?: { __typename?: 'TxOrder', protocol: string, protocolData?: { __typename?: 'LooksrareProtocolData', price?: string | null } | { __typename?: 'NFTCOMProtocolData', takeAsset?: Array<{ __typename?: 'MarketplaceAsset', value: any } | null> | null } | { __typename?: 'SeaportProtocolData', signature?: string | null, parameters?: { __typename?: 'SeaportProtocolDataParams', orderType?: number | null } | null } | { __typename?: 'X2Y2ProtocolData', price?: string | null } | null } | null } | null> | null } | null, metadata?: { __typename?: 'NFTMetadata', imageURL?: string | null, description?: string | null, name?: string | null } | null }> } };
 
 export type MyPhotoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4519,6 +4519,7 @@ export const MyNfTsDocument = gql`
         items {
           status
           order {
+            protocol
             protocolData {
               ... on LooksrareProtocolData {
                 price
