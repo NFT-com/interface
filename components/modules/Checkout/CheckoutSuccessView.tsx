@@ -4,7 +4,7 @@ import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
-import { NFTListingsContext } from './NFTListingsContext';
+import { NFTListingsContext, StagedListing } from './NFTListingsContext';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { PartialErrorView } from './PartialErrorView';
 
@@ -79,7 +79,8 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   };
 
   const message = () => {
-    return list.length > 1 ?
+    const nfts = props.hasError ? (list as StagedListing[]).filter((item) => item.targets.some(target => !target.listingError)) : list;
+    return nfts.length > 1 ?
       `You have successfully ${props.type == SuccessType.Listing ? 'listed' : 'purchased'} ${list.length} NFTs` :
       `You have successfully ${props.type == SuccessType.Listing ? 'listed your' : 'purchased a'} NFT`;
   };

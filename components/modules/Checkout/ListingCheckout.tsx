@@ -367,7 +367,7 @@ export function ListingCheckout() {
             <span className='text-lg font-medium font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>You haven’t added any listings yet</span>
           </div>
         }
-        {!showSummary && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'><Button
+        {(!showSummary || allListingsFail) && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'><Button
           label={'Start Listing'}
           disabled={!allListingsConfigured()}
           onClick={async () => {

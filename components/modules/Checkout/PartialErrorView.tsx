@@ -37,7 +37,11 @@ export function PartialErrorView({ listing } : PartialErrorViewProps) {
               </div>
               <div>
                 <div className='flex flex-row items-center'>
-                  <p className='font-medium text-xs text-[#26AA73] mt-1 mr-1.5'>Completed</p>
+                  {listing?.targets?.some(t => !t.listingError) &&
+                    <p className='font-medium text-xs text-[#26AA73] mt-1 mr-1.5'>
+                      Completed
+                    </p>
+                  }
                   <div className='flex flex-row -space-x-2'>
                     {listing.targets.map((target) => (
                       !target.listingError &&

@@ -681,6 +681,7 @@ export function NFTListingsContextProvider(
         if (isNullOrEmpty(marketplace) ? target.protocol === ExternalProtocol.LooksRare : target.protocol === ExternalProtocol.LooksRare && marketplace === ExternalProtocol.LooksRare) {
           const signature = await signOrderForLooksrare(target.looksrareOrder).catch(() => null);
           if (isNullOrEmpty(signature)) {
+            setHasListingError(listing, true, ExternalProtocol.LooksRare);
             return ListAllResult.SignatureRejected;
           }
           const result = await listNftLooksrare({ ...target.looksrareOrder, signature });
@@ -703,6 +704,7 @@ export function NFTListingsContextProvider(
             moment().unix() + Number(listing.duration) ?? moment().unix() + Number(target.duration)
           );
           if(isNullOrEmpty(order.r) || isNullOrEmpty(order.s) || isNullOrEmpty(order.v.toString())){
+            setHasListingError(listing, true, ExternalProtocol.X2Y2);
             return ListAllResult.SignatureRejected;
           }
           const result = await listNftX2Y2(
@@ -724,6 +726,7 @@ export function NFTListingsContextProvider(
         } else if (isNullOrEmpty(marketplace) ? target.protocol === ExternalProtocol.NFTCOM : target.protocol === ExternalProtocol.NFTCOM && marketplace === ExternalProtocol.NFTCOM) {
           const signature = await signOrderForNativeMarketPlace(target.NFTCOMOrder).catch(() => null);
           if (isNullOrEmpty(signature)) {
+            setHasListingError(listing, true, ExternalProtocol.NFTCOM);
             return ListAllResult.SignatureRejected;
           }
           const result = await listNftNative(target, signature, listing.nft);
@@ -738,6 +741,7 @@ export function NFTListingsContextProvider(
         } else if (isNullOrEmpty(marketplace) ? target.protocol === ExternalProtocol.Seaport : target.protocol === ExternalProtocol.Seaport && marketplace === ExternalProtocol.Seaport) {
           const signature = await signOrderForSeaport(target.seaportParameters, seaportCounter).catch(() => null);
           if (isNullOrEmpty(signature)) {
+            setHasListingError(listing, true, ExternalProtocol.Seaport);
             return ListAllResult.SignatureRejected;
           }
           const result = await listNftSeaport(signature , { ...target.seaportParameters, counter: seaportCounter });
