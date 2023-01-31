@@ -57,7 +57,6 @@ export function CollectionCard(props: CollectionCardProps) {
       return '< 0.1 ETH';
     }else {
       return `${ethFormatting(price)} ETH`;
-      // return `${price.toFixed(3).replaceAll('.', ',')} ETH`;
     }
   };
   const ethFormatting = (value) => {

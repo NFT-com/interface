@@ -277,7 +277,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 'mt-4',
                 searchType?.toString() === 'collections' ? `minmd:grid gap-3 minxl:grid-cols-3 minlg:grid-cols-2 minhd:grid-cols-4 ${sideNavOpen ? 'minlg:grid-cols-2 minxl:grid-cols-3' : ''}` : `grid grid-cols-2 ${sideNavOpen ? 'gap-2 minhd:grid-cols-5 minxxl:grid-cols-4 minxl:grid-cols-3  minlg:grid-cols-2  minmd:grid-cols-2' : 'gap-2 minhd:grid-cols-6 minxxl:grid-cols-5 minxl:grid-cols-4  minlg:grid-cols-3  minmd:grid-cols-2 '} `,
               )}>
-                {/*searchType?.toString() === 'collections' ? 'space-y-4 minmd:space-y-0 minmd:gap-5' : 'gap-5'*/}
                 {searchedData && searchedData.map((item, index) => {
                   const collectionImages = nftsForCollections?.filter(i => i.collectionAddress === item.document.contractAddr);
                   return (
