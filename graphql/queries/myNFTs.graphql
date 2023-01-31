@@ -19,6 +19,7 @@ query MyNFTs($input: NFTsInput) {
         items {
           status
           order {
+            protocol
             protocolData {
               ... on LooksrareProtocolData {
                 price
