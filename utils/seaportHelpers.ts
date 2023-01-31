@@ -325,6 +325,7 @@ export const seaportBuyNow = async (
 
     return tx;
   } catch (err) {
-    throw `error in seaportBuyNow: ${err}`;
+    console.log(`error in seaportBuyNow: ${err}`);
+    return null;
   }
 };
