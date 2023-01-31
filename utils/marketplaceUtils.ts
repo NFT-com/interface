@@ -2,6 +2,7 @@ import { ListingTarget, StagedListing } from 'components/modules/Checkout/NFTLis
 import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { NFTSupportedCurrency } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 
@@ -9,6 +10,7 @@ import { filterDuplicates, sameAddress } from './helpers';
 import { multiplyBasisPoints } from './seaportHelpers';
 
 import { BigNumber, BigNumberish, ethers } from 'ethers';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 
 export const MAX_UINT_256 = BigNumber.from(2).pow(256).sub(1);
@@ -113,13 +115,36 @@ export function getTotalRoyaltiesUSD(
       const royalty = minAskAmount.sub(marketplaceFeeAmount);
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
-    } else {
+    } else if (stagedPurchase.protocol === ExternalProtocol.Seaport) {
       const protocolData = stagedPurchase?.protocolData as SeaportProtocolData;
       const royalty = BigNumber.from(protocolData?.parameters?.consideration.length === 3 ?
         protocolData?.parameters?.consideration[2].startAmount :
         0);
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
+    } else if (stagedPurchase.protocol === ExternalProtocol.X2Y2) {
+      const protocolData = stagedPurchase?.protocolData as X2Y2ProtocolData;
+      const royalty = BigNumber.from(protocolData?.royalty_fee);
+      const currencyData = getByContractAddress(stagedPurchase.currency);
+      return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
+    } else if (stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
+      const { marketplace } = useAllContracts();
+      const { data: NFTCOMRoyaltyFee } = useSWR(
+        'NFTCOMRoyaltyFee' + stagedPurchase.nft?.contract,
+        async () => {
+          return await marketplace.royaltyInfo(stagedPurchase.nft?.contract);
+        },
+        {
+          refreshInterval: 0,
+          revalidateOnFocus: false,
+        });
+
+      const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
+      const currencyData = getByContractAddress(stagedPurchase.currency);
+      return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(
+        royalty,
+        currencyData.decimals ?? 18
+      ))) ?? 0;
     }
   }, 0);
 }
@@ -128,7 +153,7 @@ export function getMaxMarketplaceFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
   getByContractAddress: (contract: string) => NFTSupportedCurrency,
-  NFTCOMFee: number,
+  NFTCOMFee: number
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const feesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
@@ -164,8 +189,7 @@ export function getMaxMarketplaceFeesUSD(
 export function getMaxRoyaltyFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency,
-  NFTCOMRoyaltyFees: [string, BigNumber] & { owner: string; percent: BigNumber; }
+  getByContractAddress: (contract: string) => NFTSupportedCurrency
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
@@ -191,7 +215,17 @@ export function getMaxRoyaltyFeesUSD(
           currencyData.decimals ?? 18
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.NFTCOM) {
-        const royalty = Number(NFTCOMRoyaltyFees ? NFTCOMRoyaltyFees[1] : 0);
+        const { marketplace } = useAllContracts();
+        const { data: NFTCOMRoyaltyFee } = useSWR(
+          'NFTCOMRoyaltyFee' + stagedListing.nft?.contract,
+          async () => {
+            return await marketplace.royaltyInfo(stagedListing.nft?.contract);
+          },
+          {
+            refreshInterval: 0,
+            revalidateOnFocus: false,
+          });
+        const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,
           currencyData.decimals ?? 18

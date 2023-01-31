@@ -1,3 +1,4 @@
+import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
@@ -24,8 +25,19 @@ export function useGetCreatorFee(
   tokenId: string
 ): CreatorFeeDetails {
   const { chain } = useNetwork();
+  const { marketplace } = useAllContracts();
 
   const keyString = 'GetCreatorFee ' + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + contractAddress + tokenId;
+
+  const { data: NFTCOMRoyaltyFee } = useSWR(
+    'NFTCOMRoyaltyFee' + contractAddress?.toLowerCase(),
+    async () => {
+      return await marketplace.royaltyInfo(contractAddress?.toLowerCase());
+    },
+    {
+      refreshInterval: 0,
+      revalidateOnFocus: false,
+    });
 
   const { data } = useSWR(keyString, async () => {
     if (chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {
@@ -53,6 +65,7 @@ export function useGetCreatorFee(
     const dataLR = await responseLR.json();
     const dataSeaport = await responseSeaport.json();
     const dataX2Y2 = await responseX2Y2.json();
+
     if (dataLR?.data?.collections?.length > 0) {
       royalty['looksrare'] = dataLR?.data?.collections[0]?.royaltyFee;
     }
@@ -61,6 +74,9 @@ export function useGetCreatorFee(
     }
     if (dataX2Y2?.data?.collections?.length > 0) {
       royalty['x2y2'] = dataX2Y2?.data?.collections[0]?.royaltyFee;
+    }
+    if (NFTCOMRoyaltyFee) {
+      royalty['nftcom'] = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
     }
 
     // if royalty is empty return 0

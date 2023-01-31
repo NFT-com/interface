@@ -60,16 +60,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       revalidateOnFocus: false,
     });
 
-  const { data: NFTCOMRoyaltyFee } = useSWR(
-    'NFTCOMRoyaltyFee' + currentAddress,
-    async () => {
-      return await marketplace.royaltyInfo(currentAddress);
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-    });
-
   const { data: NFTCOMProtocolFee } = useSWR(
     'NFTCOMProtocolFee' + currentAddress,
     async () => {
@@ -95,8 +85,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee]);
 
   const getMaxRoyaltyFees: () => number = useCallback(() => {
-    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, NFTCOMRoyaltyFee);
-  }, [toList, looksrareProtocolFeeBps, getByContractAddress, NFTCOMRoyaltyFee]);
+    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress]);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
