@@ -121,7 +121,7 @@ export default function MintProfilesPage() {
                 {isNull(ownedGenesisKeyTokens) ? <MintProfileCardSkeleton /> : mintType === 'paid' ? <MintPaidProfileCard type='mint' /> : <MintGKProfileCard />}
               </>
               :
-              <MintPaidProfileCard type='mint' />
+              <MintGKProfileCard />
             }
           </div>
         </div>
