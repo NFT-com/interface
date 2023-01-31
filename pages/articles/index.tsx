@@ -95,8 +95,8 @@ export async function getServerSideProps({ preview = false }) {
   return {
     props: {
       preview,
-      postData: posts.items ?? null,
-      totalPosts: posts.total ?? 0,
+      postData: posts ? posts.items : null,
+      totalPosts: posts ? posts.total : 0,
       data: homeData[0] ?? null
     }
   };
