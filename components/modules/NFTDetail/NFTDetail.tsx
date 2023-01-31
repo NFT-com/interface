@@ -37,7 +37,8 @@ export const NFTDetail = (props: NFTDetailProps) => {
   const { data: collectionMetadata } = useSWR('ContractMetadata' + props.nft?.contract, async () => {
     return await getContractMetadata(props.nft?.contract, defaultChainId);
   });
-  const collectionName = collectionMetadata?.contractMetadata?.name;
+
+  const collectionName = collectionMetadata?.contractMetadata?.name || collectionMetadata?.contractMetadata?.openSea?.collectionName;
 
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
