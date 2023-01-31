@@ -141,7 +141,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     } else if ((listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.NFTCOM) {
       listedCurrency = (listing?.order?.protocolData as NftcomProtocolData).takeAsset[0]?.standard?.contractAddress;
     }else {
-      listedCurrency = (listing?.order?.protocolData as SeaportProtocolData).parameters.consideration[0].token;
+      listedCurrency = (listing?.order?.protocolData as SeaportProtocolData).parameters?.consideration[0]?.token;
     }
 
     switch (type) {
@@ -322,7 +322,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             {Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), listingCurrencyData?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false, minimumFractionDigits: 1, maximumFractionDigits: 4 })}{' '}
             {listingCurrencyData?.name ?? 'ETH'}
             <span className="text-secondary-txt text-sm ml-4">
-              ${listingCurrencyData.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), listingCurrencyData?.decimals ?? 18)))}
+              ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), listingCurrencyData?.decimals ?? 18)))}
             </span>
           </span>
         </div>

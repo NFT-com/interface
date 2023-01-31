@@ -32,6 +32,8 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   const router = useRouter();
 
   const {
+    clear,
+    toggleCartSidebar,
     toList,
   } = useContext(NFTListingsContext);
 
@@ -109,17 +111,20 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <div className='text-[34px] font-medium'>Congratulations!</div>
           <div className='text-[18px] font-medium mt-4'>{message()}</div>
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
-          <button onClick={() => window.open(
-            'https://twitter.com/intent/tweet?' +
-            'text=' +
-            encodeURIComponent(
-              `Check out my latest NFT ${props.type == SuccessType.Listing ? 'listing' : 'purchase'}: ` +
-              'https://' + window.location.host + '/app/nft/' + list[0]?.nft?.contract + '/' + list[0]?.nft?.tokenId
-            ),
-            '_blank'
-          )
-          } className="bg-[#F9D963] w-[277px] my-8 font-medium hover:bg-[#fcd034] text-base text-black text-[14px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
-            Share your {props.type == SuccessType.Listing ? 'Listing' : 'Purchase'}
+          <button onClick={() => {
+            toggleCartSidebar();
+            clear();
+            window.open(
+              'https://twitter.com/intent/tweet?' +
+              'text=' +
+              encodeURIComponent(
+                `Check out my latest NFT ${props.type == SuccessType.Listing ? 'listing' : 'purchase'}: ` +
+                'https://' + window.location.host + '/app/nft/' + list[0]?.nft?.contract + '/' + list[0]?.nft?.tokenId
+              ),
+              '_blank'
+            );
+          }} className="bg-[#F9D963] w-[277px] my-8 font-medium hover:bg-[#fcd034] text-base text-black text-[14px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
+            Share
           </button>
           <div onClick={() => props.type == SuccessType.Listing ? router.push('/app/assets') : router.push('/app/discover/collections')} className='text-[#E4BA18] font-medium underline text-[14px] cursor-pointer'>{props.type == SuccessType.Listing ? 'List' : 'Purchase'} another NFT</div>
           {props.hasError && (

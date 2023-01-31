@@ -272,7 +272,7 @@ export function ListingCheckout() {
                 />
                 : <OpenSeaGray className='relative shrink-0 -mt-[1px]' />}
               <span className='font-semibold text-base'>Opensea</span>
-              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(1.5% fee)</span>
+              <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>(2.5% fee)</span>
             </div>
             <div
               onClick={() => {
