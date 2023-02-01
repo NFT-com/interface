@@ -426,8 +426,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                   setPartialError(true);
                   setShowProgressBar(false);
                 } else {
-                  setShowProgressBar(false);
                   setAllListingsFail(true);
+                  setShowProgressBar(false);
                 }
               }}
               type={ButtonType.PRIMARY}
