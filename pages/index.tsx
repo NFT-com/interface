@@ -4,7 +4,7 @@ import 'aos/dist/aos.css';
 import StaticPreviewBanner from 'components/elements/PreviewBanner';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
-import contentfulBackupData from 'constants/abis/contenful_backup_data.json';
+import contentfulBackupData from 'constants/contenful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
 import { tw } from 'utils/tw';
