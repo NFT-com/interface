@@ -53,7 +53,7 @@ export function PurchaseSummary() {
             <span className='font-normal'>Subtotal</span>
           </div>
           <div className="flex flex-col align-end">
-            <span className='font-normal'>{'$' + (Number(getTotalPriceUSD()) - Number(getTotalRoyalties()) - Number(getTotalMarketplaceFees()))?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 12 })}</span>
+            <span className='font-normal'>{'$' + (Number(getTotalPriceUSD()) - Number(getTotalRoyalties()) - Number(getTotalMarketplaceFees()))?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
           </div>
         </div>
         <div className="flex items-center justify-between text-xs">
@@ -61,7 +61,7 @@ export function PurchaseSummary() {
             <span className='font-normal text-[#6F6F6F] text-sm'>Marketplace Fees</span>
           </div>
           <div className="flex flex-col align-end">
-            <span className='font-normal text-[#6F6F6F]'>+ {'$' + getTotalMarketplaceFees()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 12 })}</span>
+            <span className='font-normal text-[#6F6F6F]'>+ {'$' + getTotalMarketplaceFees()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
           </div>
         </div>
         <div className="flex items-center justify-between text-xs">
@@ -69,7 +69,7 @@ export function PurchaseSummary() {
             <span className='font-normal text-[#6F6F6F] text-sm'>Creator Royalties</span>
           </div>
           <div className="flex flex-col align-end">
-            <span className='font-normal text-[#6F6F6F]'>+ {'$' + getTotalRoyalties()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 12 })}</span>
+            <span className='font-normal text-[#6F6F6F]'>+ {'$' + getTotalRoyalties()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
           </div>
         </div>
         <div className="flex items-center justify-between mt-6">
@@ -77,7 +77,7 @@ export function PurchaseSummary() {
             <span className='font-medium text-sm'>Total Price</span>
           </div>
           <div className="flex flex-col align-end text-lg">
-            <span className='font-bold'>${(Number(getTotalPriceUSD()))?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 12 })}</span>
+            <span className='font-bold'>${(Number(getTotalPriceUSD()))?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</span>
           </div>
         </div>
       </div>
