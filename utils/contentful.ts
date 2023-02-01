@@ -12,7 +12,7 @@ export async function getPaginatedPosts(
 
   const result = await fetch(url.toString())
     .then(res => {
-      return res.json();
+      return res.statusText == 'OK' ? res.json() : { items: null, total: 0 };
     })
     .catch(() => {
       return { items: null, total: 0 };

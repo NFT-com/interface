@@ -32,9 +32,10 @@ const contentfulPaginationHandler = async (req: NextApiRequest, res: NextApiResp
         },
         body: JSON.stringify({ query }),
       }
-    ).then(() => {
-      return { data: { blogPostCollection: { total: 0, items: [] } } };
-    });
+    ).then((response) => response.json())
+      .catch(() => {
+        return { data: { blogPostCollection: { total: 0, items: [] } } };
+      });
 
     const paginatedPosts = result.data.blogPostCollection
       ? result.data.blogPostCollection
