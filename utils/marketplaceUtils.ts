@@ -231,8 +231,18 @@ export function getMaxRoyaltyFeesUSD(
           4, // royalties from NFT.com have decimals 4
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.X2Y2) {
-        // TODO: lucas -> maybe re-use existing x2y2 order data, listingTarget -> x2y2 doesn't have royalty however
-        const royalty = 0; // BigNumber.from(target?.X2Y2Order?.royalty_fee || 0);
+        const x2y2 = 'https://api.thegraph.com/subgraphs/name/messari/x2y2-ethereum';
+        const query = `{\n  collections(where: { id: "${stagedListing.nft?.contract?.toLowerCase()}" }) {\n    id\n    royaltyFee\n  }\n}`;
+        // post request using fetch
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        };
+        
+        const responseX2Y2 = await fetch(x2y2, requestOptions);
+        const dataX2Y2 = await responseX2Y2.json();
+        const royalty = dataX2Y2?.data?.collections[0]?.royaltyFee ?? 0;
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,
           currencyData.decimals ?? 18
