@@ -33,7 +33,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       )}
     >
       {imageUrl && <Image
-        src={props?.draft ? imageUrl : imageUrl.indexOf('.svg') >= 0 ? imageUrl : `${getBaseUrl('https://nft.com/')}api/imageFetcher?gcp=${getEnvBool(Doppler.NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED)}&url=${encodeURIComponent(imageUrl)}&width=3000`}
+        src={props?.draft ? imageUrl : imageUrl.indexOf('.svg') >= 0 ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=${getEnvBool(Doppler.NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED)}&url=${encodeURIComponent(imageUrl)}&width=3000`}
         layout='fill'
         priority
         quality='100'
