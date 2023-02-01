@@ -4,7 +4,7 @@ import 'swiper/swiper.min.css';
 import 'swiper/components/pagination/pagination.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 
-import { Doppler, getEnvBool } from 'utils/env';
+import { Doppler, getEnv, getEnvBool } from 'utils/env';
 import { getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -41,7 +41,7 @@ export const LearnCards = (props: LearnCardsProps) => {
             )}
             onClick={() => router.push(card['linkTo'])}
             style={{
-              background: `url("${getBaseUrl()}api/imageFetcher?gcp=${getEnvBool(Doppler.NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED)}&url=${encodeURIComponent(props.cardImages[index].url)}&height=${1084}&width=${1084}")`,
+              background: `url("${getBaseUrl(getEnv(Doppler.NEXT_PUBLIC_BASE_URL))}api/imageFetcher?gcp=${getEnvBool(Doppler.NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED)}&url=${encodeURIComponent(props.cardImages[index].url)}&height=${1084}&width=${1084}")`,
               backgroundPosition: 'center center',
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
