@@ -15,7 +15,9 @@ async function fetchGraphQL(query, preview = false) {
       },
       body: JSON.stringify({ query }),
     }
-  ).then((response) => response.json());
+  ).then((response) => {
+    return response.json();
+  }).catch(() => { return {}; });
 }
 
 function extractPost(fetchResponse) {
@@ -108,7 +110,7 @@ export async function getCollection(preview, limit, type, schema) {
     }`,
     preview
   );
-  return entries.data[type].items;
+  return entries.data ? entries.data[type].items : [];
 }
 
 export async function getCuratedCollections(preview = false) {
