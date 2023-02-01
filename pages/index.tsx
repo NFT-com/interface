@@ -4,6 +4,7 @@ import 'aos/dist/aos.css';
 import StaticPreviewBanner from 'components/elements/PreviewBanner';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
+import contentfulBackupData from 'constants/abis/contenful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
 import { tw } from 'utils/tw';
@@ -985,10 +986,11 @@ Index.getLayout = function getLayout(page) {
 
 export async function getServerSideProps({ preview = false }) {
   const homeDataV2 = await getCollection(false, 10, 'homepageV2Collection', HOME_PAGE_FIELDS_V2);
+  
   return {
     props: {
       preview,
-      data_v2: homeDataV2[0] ?? null,
+      data_v2: homeDataV2[0] ?? contentfulBackupData[0],
     }
   };
 }

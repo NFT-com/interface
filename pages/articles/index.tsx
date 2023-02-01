@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import RelatedPostCard from 'components/modules/BlogPage/RelatedPostsCard';
+import contentfulBackupData from 'constants/abis/contenful_backup_data.json';
 import NotFoundPage from 'pages/404';
 import { PostData } from 'types/blogs';
 import { getPaginatedPosts } from 'utils/contentful';
@@ -95,9 +96,9 @@ export async function getServerSideProps({ preview = false }) {
   return {
     props: {
       preview,
-      postData: posts ? posts.items : null,
-      totalPosts: posts ? posts.total : 0,
-      data: homeData[0] ?? null
+      postData: posts ? posts.items : contentfulBackupData[2]?.items,
+      totalPosts: posts ? posts.total : contentfulBackupData[2]?.total,
+      data: homeData[0] ?? contentfulBackupData[1]
     }
   };
 }
