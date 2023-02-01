@@ -143,7 +143,7 @@ export function getTotalRoyaltiesUSD(
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(
         royalty,
-        currencyData.decimals ?? 18
+        4, // royalties from NFT.com have decimals 4
       ))) ?? 0;
     }
   }, 0);
@@ -228,7 +228,7 @@ export function getMaxRoyaltyFeesUSD(
         const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,
-          currencyData.decimals ?? 18
+          4, // royalties from NFT.com have decimals 4
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.X2Y2) {
         // TODO: lucas -> maybe re-use existing x2y2 order data, listingTarget -> x2y2 doesn't have royalty however

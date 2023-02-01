@@ -76,7 +76,7 @@ export function useGetCreatorFee(
       royalty['x2y2'] = dataX2Y2?.data?.collections[0]?.royaltyFee;
     }
     if (NFTCOMRoyaltyFee) {
-      royalty['nftcom'] = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
+      royalty['nftcom'] = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0) / 100; // divide 100 to get percent (10000 = 100%)
     }
 
     // if royalty is empty return 0
