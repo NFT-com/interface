@@ -53,12 +53,13 @@ export function SelectListingModal(props: SelectListingsModalProps) {
               nft={nft}
               collectionName={collectionName}
               buttons={[ListingButtonType.AddToCart]}
+              onClose={onClose}
             />;
           })
         }
       </div>
     </div>;
-  }, [nft, collectionName, listings]);
+  }, [nft, collectionName, listings, onClose]);
 
   return (
     <Modal

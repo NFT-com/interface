@@ -198,7 +198,8 @@ export const looksrareBuyNow = async (
     );
     return tx;
   } catch (err) {
-    throw `error in looksrareBuyNow: ${err}`;
+    console.log(`error in looksrareBuyNow: ${err}`);
+    return null;
   }
 };
 

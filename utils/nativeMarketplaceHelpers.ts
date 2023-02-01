@@ -612,6 +612,7 @@ export const nftcomBuyNow = async (
     );
     return tx;
   } catch (err) {
-    throw `error in nftcomBuyNow: ${err}`;
+    console.log(`error in nftcomBuyNow: ${err}`);
+    return null;
   }
 };
