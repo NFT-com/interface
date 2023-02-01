@@ -270,8 +270,8 @@ export const collectionCardImages = (collection: any) => {
   ];
 };
 
-export const getImageFetcherBaseURL = () => {
-  return window.location.origin + '/';
+export const getBaseUrl = () => {
+  return `${window.location.origin}/`; // getEnv(Doppler.NEXT_PUBLIC_BASE_URL)
 };
 
 export const sliceString = (description: string, maxCount: number, isStringCut: boolean) => {

@@ -4,8 +4,8 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { filterNulls } from 'utils/helpers';
+import { Doppler, getEnvBool } from 'utils/env';
+import { filterNulls, getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -21,8 +21,6 @@ import SpotlightIcon from 'public/layout_icon_spotlight.svg';
 import GearIcon from 'public/settings_icon.svg';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
-
-const baseUrl = `${window.location.origin}/` ?? getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
 
 export interface ProfileMenuProps {
   profileURI: string;
@@ -266,7 +264,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
           options={[
             {
               label: 'Copy link to clipboard',
-              onSelect: () => staticCopy(`${baseUrl}${router.query?.profileURI}`),
+              onSelect: () => staticCopy(`${getBaseUrl()}${router.query?.profileURI}`),
               icon: <LinkIcon className={tw(
                 'w-[18px] h-[18px] mr-3'
               )} />

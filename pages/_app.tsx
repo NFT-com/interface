@@ -7,7 +7,7 @@ import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurch
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
 import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { getChainIdString } from 'utils/helpers';
+import { getBaseUrl, getChainIdString } from 'utils/helpers';
 
 import {
   AvatarComponent,
@@ -71,8 +71,6 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-const baseUrl = `${window.location.origin}/` ?? getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
-
 export default function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -85,7 +83,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
       [
         jsonRpcProvider({
           rpc: (chain) => {
-            const url = new URL(baseUrl + 'api/ethrpc');
+            const url = new URL(getBaseUrl() + 'api/ethrpc');
             url.searchParams.set('chainId', getChainIdString(chain?.id));
             return {
               http: url.toString(),
