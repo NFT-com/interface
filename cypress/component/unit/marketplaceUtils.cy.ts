@@ -324,7 +324,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        0
       )).to.equal(25010);
     });
   });

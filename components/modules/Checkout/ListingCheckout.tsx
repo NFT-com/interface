@@ -363,7 +363,7 @@ export function ListingCheckout() {
         </div>
         {
           (isNullOrEmpty(toList) || toList.length === 0) && <div className='flex flex-col items-center justify-center mb-12'>
-            <NoActivityIcon />
+            <NoActivityIcon className='h-[300px]' />
             <span className='text-lg font-medium font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>You haven’t added any listings yet</span>
           </div>
         }
