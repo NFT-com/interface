@@ -1,3 +1,4 @@
+import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { useGetCreatorFee } from 'hooks/useGetCreatorFee';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -9,13 +10,14 @@ import { StagedPurchase } from './NFTPurchaseContext';
 
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
 
 export interface CartSidebarNftProps {
   item: PartialDeep<StagedListing | StagedPurchase>;
+  selectedTab: string;
   onRemove: () => void;
 }
 
@@ -28,6 +30,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
   });
 
   const { getByContractAddress } = useSupportedCurrencies();
+  const { toggleCartSidebar } = useContext(NFTListingsContext);
 
   const formatCurrency = useCallback((item: StagedPurchase) => {
     const currency = getByContractAddress((item as StagedPurchase).currency);
@@ -40,21 +43,42 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
 
   const { data: creatorFee, loading } = useGetCreatorFee(nft?.contract, nft?.tokenId);
 
-  const getRoyaltyRange = useCallback(() => {
+  const getRoyalty = useCallback(() => {
     if (loading) {
       return 'loading...';
     }
+    
+    // show single royalty fee when buying since marketplace is chosen already
+    if (props.selectedTab === 'Buy') {
+      const stagedPurchase = props.item as StagedPurchase;
+      switch (stagedPurchase?.protocol) {
+      case 'Seaport':
+        return `${creatorFee?.royalty?.opensea?.toFixed(2)}%`;
+      case 'LooksRare':
+        return `${creatorFee?.royalty?.looksrare?.toFixed(2)}%`;
+      case 'X2Y2':
+        return `${creatorFee?.royalty?.x2y2?.toFixed(2)}%`;
+      case 'NFTCOM':
+        return `${creatorFee?.royalty?.nftcom?.toFixed(2)}%`;
+      default:
+        return 'n/a%';
+      }
+    }
 
+    // show range if it's a listing (bc multiple marketplaces)
     if (creatorFee?.min == 0 && creatorFee?.max == 0) {
       return '0%';
     } else {
       return `${creatorFee?.min?.toFixed(2)}% - ${creatorFee?.max?.toFixed(2)}%`;
     }
-  }, [creatorFee, loading]);
+  }, [creatorFee?.max, creatorFee?.min, creatorFee?.royalty?.looksrare, creatorFee?.royalty?.nftcom, creatorFee?.royalty?.opensea, creatorFee?.royalty?.x2y2, loading, props.item, props.selectedTab]);
 
   return <div className='flex items-start w-full px-5 mb-4'>
     <div className='flex w-2/3'>
-      <div onClick={() => router.push(`/app/nft/${nft?.contract}/${nft?.tokenId}`)} className='cursor-pointer relative aspect-square w-20 h-20'>
+      <div onClick={() => {
+        router.push(`/app/nft/${nft?.contract}/${nft?.tokenId}`);
+        toggleCartSidebar();
+      }} className='cursor-pointer relative aspect-square w-20 h-20'>
         <video
           autoPlay
           muted
@@ -70,7 +94,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
       <div className='flex flex-col ml-4 font-grotesk'>
         <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
         <span className='text-sm mb-3 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
-        <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {getRoyaltyRange()}</span>
+        <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {getRoyalty()}</span>
       </div>
     </div>
     <div className='w-1/3 h-full flex flex-col items-end justify-between mt-1'>

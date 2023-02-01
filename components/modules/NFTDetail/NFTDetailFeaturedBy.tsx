@@ -65,7 +65,7 @@ export function NFTDetailFeaturedBy(props: NFTDetailFeaturedByProps) {
     })}
     {profiles.length == 0 && <div>
       <div className='flex items-center justify-center'>
-        <NoActivityIcon className='mt-10' />
+        <NoActivityIcon className='mt-10 h-[300px]' />
       </div>
       <span className='md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>Not Featured on a NFT.com Profile yet</span>
     </div>

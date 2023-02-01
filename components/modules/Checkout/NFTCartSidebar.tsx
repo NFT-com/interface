@@ -110,6 +110,7 @@ export function NFTCartSidebar(props: NFTCartSidebarProps) {
           {stagedNFTs.map((stagedItem, index) => {
             return <CartSidebarNft
               item={stagedItem}
+              selectedTab={props.selectedTab}
               key={index}
               onRemove={() => {
                 if (props.selectedTab === 'Sell') {
