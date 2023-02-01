@@ -83,7 +83,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
       [
         jsonRpcProvider({
           rpc: (chain) => {
-            const url = new URL(getBaseUrl() + 'api/ethrpc');
+            const url = new URL(getBaseUrl(`${window.location.origin}/`) + 'api/ethrpc');
             url.searchParams.set('chainId', getChainIdString(chain?.id));
             return {
               http: url.toString(),
