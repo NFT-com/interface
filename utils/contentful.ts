@@ -5,7 +5,7 @@ export async function getPaginatedPosts(
   pageSize: number,
   preview: boolean
 ) {
-  const url = new URL(getBaseUrl(`${window.location.origin}/`) + 'api/contentful');
+  const url = new URL(getBaseUrl('/') + 'api/contentful');
   url.searchParams.set('skip', String(skip));
   url.searchParams.set('pageSize', String(pageSize));
   url.searchParams.set('preview', String(preview));
