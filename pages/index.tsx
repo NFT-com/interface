@@ -774,8 +774,8 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               </svg>
 
               <div className='relative'>
-                <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-5 text-white'>{data_v2.newsTitle}</h2>
-                <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2.newsSubtitle}</p>
+                <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-5 text-white'>{data_v2?.newsTitle}</h2>
+                <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2?.newsSubtitle}</p>
               </div>
 
               <div className='-mx-9 overflow-hidden mb-12'>
