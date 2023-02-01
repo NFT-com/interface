@@ -104,37 +104,37 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     }
   };
 
-  const { profileTokens: tx_owner_tokens } = useNftProfileTokens(tx.owner_address);
+  const { profileTokens: tx_owner_tokens } = useNftProfileTokens(tx.ownerAddress);
   const { profileData: tx_owner } = useProfileQuery(
-    tx.owner_address == null ?
+    tx.ownerAddress == null ?
       tx_owner_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
       null
   );
 
-  const { profileTokens: tx_seller_tokens } = useNftProfileTokens(tx.seller_address);
+  const { profileTokens: tx_seller_tokens } = useNftProfileTokens(tx.sellerAddress);
   const { profileData: tx_seller } = useProfileQuery(
-    tx.owner_address == null ?
+    tx.ownerAddress == null ?
       tx_seller_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
       null
   );
 
-  const { profileTokens: tx_buyer_tokens } = useNftProfileTokens(tx.buyer_address);
+  const { profileTokens: tx_buyer_tokens } = useNftProfileTokens(tx.buyerAddress);
   const { profileData: tx_buyer } = useProfileQuery(
-    tx.owner_address == null ?
+    tx.ownerAddress == null ?
       tx_buyer_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
       null
   );
 
-  const { profileTokens: tx_from_tokens } = useNftProfileTokens(tx.transfer_from);
+  const { profileTokens: tx_from_tokens } = useNftProfileTokens(tx.transferFrom);
   const { profileData: tx_from } = useProfileQuery(
-    tx.owner_address == null ?
+    tx.ownerAddress == null ?
       tx_from_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
       null
   );
 
-  const { profileTokens: tx_to_tokens } = useNftProfileTokens(tx.transfer_to);
+  const { profileTokens: tx_to_tokens } = useNftProfileTokens(tx.transferTo);
   const { profileData: tx_to } = useProfileQuery(
-    tx.owner_address == null ?
+    tx.ownerAddress == null ?
       tx_to_tokens?.at(0)?.tokenUri?.raw?.split('/').pop() :
       null
   );
@@ -153,7 +153,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       return (
         <>
           <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{'0x0000...0000' || '—'}</td>
-          {tx_owner?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_owner?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.owner_address, 4) || '—'}</td>}
+          {tx_owner?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_owner?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.ownerAddress, 4) || '—'}</td>}
         </>
       );
     }
@@ -161,16 +161,16 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     if(tx.type === 'sale'){
       return (
         <>
-          {tx_seller?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_seller?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.seller_address, 4) || '—'}</td>}
-          {tx_buyer?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_buyer?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.buyer_address, 4) || '—'}</td>}
+          {tx_seller?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_seller?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.sellerAddress, 4) || '—'}</td>}
+          {tx_buyer?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_buyer?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.buyerAddress, 4) || '—'}</td>}
         </>
       );
     }
 
     return (
       <>
-        {tx_from?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_from?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.transfer_from, 4) || '—'}</td>}
-        {tx_to?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_to?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.transfer_to, 4) || '—'}</td>}
+        {tx_from?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_from?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.transferFrom, 4) || '—'}</td>}
+        {tx_to?.profile?.owner?.preferredProfile?.url ? <td>{styledProfile(tx_to?.profile?.owner?.preferredProfile?.url)}</td> : <td className="font-noi-grotesk text-[16px] leading-6 text-black font-medium p-4">{shortenAddress(tx.transferTo, 4) || '—'}</td>}
       </>
     );
   }, [tx, tx_owner, tx_seller, tx_buyer, tx_from, tx_to]);
@@ -183,9 +183,9 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 capitalize">{tx?.type || '—'}</td>
       {!isNftDetailPage ?
         tx?.type === 'sale' ?
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{tx?.nft.token_id?.length > 10 ? shorten(tx?.nft.token_id, true) || '—' : tx?.nft.token_id || '—'}</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{tx?.nft.tokenId?.length > 10 ? shorten(tx?.nft.tokenId, true) || '—' : tx?.nft.tokenId || '—'}</td>
           :
-          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{tx?.token_id?.length > 10 ? shorten(tx?.token_id, true) || '—' : tx?.token_id || '—'}</td>
+          <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{tx?.tokenId?.length > 10 ? shorten(tx?.tokenId, true) || '—' : tx?.tokenId || '—'}</td>
         : null
       }
 
@@ -195,13 +195,13 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         formatMarketplaceName(tx.marketplace) || '—'
       }
       </td>
-      {tx?.price_details ?
+      {tx?.priceDetails ?
         <>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4 whitespace-nowrap">
-            <GetAsset price={tx.price_details.price} asset_type={tx.price_details.asset_type} contract_address={tx.price_details.contract_address} />
+            <GetAsset price={tx.priceDetails.price} asset_type={tx.priceDetails.assetType} contract_address={tx.priceDetails.contractAddress} />
           </td>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
-            {tx.price_details.price_usd?.toFixed(2) ? `$${tx.price_details.price_usd?.toFixed(2)}` : '-'}
+            {tx.priceDetails.priceUSD ? `$${tx.priceDetails.priceUSD}` : '-'}
           </td></>
         :
         <>
@@ -210,18 +210,18 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         </>
       }
       <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
-        {moment.utc(tx.transaction_date).format('lll').toString() || '—'}
+        {moment.utc(tx.transactionDate).format('lll').toString() || '—'}
       </td>
       <td className="font-noi-grotesk text-[16px] leading-6 text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37] p-4">
         <a
           target="_blank"
-          rel="noreferrer" href={`https://etherscan.io/tx/${tx.transaction_hash}`}
+          rel="noreferrer" href={`https://etherscan.io/tx/${tx.transactionHash}`}
           className={tw(
             'tracking-wide',
-            shorten(tx?.transaction_hash, true) && 'underline decoration-[#FAC213] underline-offset-2'
+            shorten(tx?.transactionHash, true) && 'underline decoration-[#FAC213] underline-offset-2'
           )}
         >
-          {shorten(tx?.transaction_hash, true) || '—'}
+          {shorten(tx?.transactionHash, true) || '—'}
         </a>
       </td>
     </tr>
