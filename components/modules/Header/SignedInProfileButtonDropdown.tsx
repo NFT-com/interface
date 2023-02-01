@@ -1,4 +1,3 @@
-import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useProfileSelectModal } from 'hooks/state/useProfileSelectModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
