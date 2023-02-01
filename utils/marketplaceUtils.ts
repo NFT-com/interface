@@ -143,7 +143,7 @@ export function getTotalRoyaltiesUSD(
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(
         royalty,
-        4, // royalties from NFT.com have decimals 4
+        3, // royalties from NFT.com have decimals 3
       ))) ?? 0;
     }
   }, 0);
@@ -228,7 +228,7 @@ export function getMaxRoyaltyFeesUSD(
         const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,
-          4, // royalties from NFT.com have decimals 4
+          3, // royalties from NFT.com have decimals 3
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.X2Y2) {
         const x2y2 = 'https://api.thegraph.com/subgraphs/name/messari/x2y2-ethereum';
@@ -240,8 +240,26 @@ export function getMaxRoyaltyFeesUSD(
           body: JSON.stringify({ query })
         };
         
-        const responseX2Y2 = await fetch(x2y2, requestOptions);
-        const dataX2Y2 = await responseX2Y2.json();
+        const { data: responseX2Y2 } = useSWR(
+          'responseX2Y2 fetch' + stagedListing.nft?.contract,
+          async () => {
+            return await fetch(x2y2, requestOptions);
+          },
+          {
+            refreshInterval: 0,
+            revalidateOnFocus: false,
+          });
+
+        const { data: dataX2Y2 } = useSWR(
+          'responseX2Y2 json' + stagedListing.nft?.contract,
+          async () => {
+            return await responseX2Y2.json();
+          },
+          {
+            refreshInterval: 0,
+            revalidateOnFocus: false,
+          });
+
         const royalty = dataX2Y2?.data?.collections[0]?.royaltyFee ?? 0;
         return currencyData?.usd(Number(ethers.utils.formatUnits(
           royalty,

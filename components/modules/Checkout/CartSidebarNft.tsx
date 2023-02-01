@@ -1,3 +1,4 @@
+import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { useGetCreatorFee } from 'hooks/useGetCreatorFee';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getContractMetadata } from 'utils/alchemyNFT';
@@ -9,7 +10,7 @@ import { StagedPurchase } from './NFTPurchaseContext';
 
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
 import { useNetwork } from 'wagmi';
@@ -28,6 +29,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
   });
 
   const { getByContractAddress } = useSupportedCurrencies();
+  const { toggleCartSidebar } = useContext(NFTListingsContext);
 
   const formatCurrency = useCallback((item: StagedPurchase) => {
     const currency = getByContractAddress((item as StagedPurchase).currency);
@@ -54,7 +56,10 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
 
   return <div className='flex items-start w-full px-5 mb-4'>
     <div className='flex w-2/3'>
-      <div onClick={() => router.push(`/app/nft/${nft?.contract}/${nft?.tokenId}`)} className='cursor-pointer relative aspect-square w-20 h-20'>
+      <div onClick={() => {
+        router.push(`/app/nft/${nft?.contract}/${nft?.tokenId}`);
+        toggleCartSidebar();
+      }} className='cursor-pointer relative aspect-square w-20 h-20'>
         <video
           autoPlay
           muted
