@@ -144,12 +144,12 @@ export default function AssetTableRow({
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data?.items[0]?.price_details ? <p>{nftSaleHistory?.data?.items[0]?.price_details?.price}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.items[0]?.priceDetails ? <p>{nftSaleHistory?.data?.items[0]?.priceDetails?.price}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data?.items[0]?.price_details?.price_usd ? <p>${nftSaleHistory?.data?.items[0]?.price_details?.price_usd?.toFixed(2)}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD ? <p>${nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4 -mt-1" >
