@@ -264,7 +264,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
           options={[
             {
               label: 'Copy link to clipboard',
-              onSelect: () => staticCopy(`${getBaseUrl('/')}${router.query?.profileURI}`),
+              onSelect: () => staticCopy(`${getBaseUrl()}${router.query?.profileURI}`),
               icon: <LinkIcon className={tw(
                 'w-[18px] h-[18px] mr-3'
               )} />
