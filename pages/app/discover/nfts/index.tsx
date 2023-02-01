@@ -120,7 +120,7 @@ export default function CollectionsPage() {
                         !loading && nftSData?.length === 0
                           ? (
                             <div>
-                              <NoActivityIcon className='m-auto mt-10' />
+                              <NoActivityIcon className='m-auto mt-10 h-[300px]' />
                               <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
                             </div>
                           )
