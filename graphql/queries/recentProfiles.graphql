@@ -3,6 +3,7 @@ query RecentProfiles($input: LatestProfilesInput) {
     items {
       id
       bannerURL
+      isGKMinted
       owner {
         address
       }

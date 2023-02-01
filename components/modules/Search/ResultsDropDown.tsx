@@ -5,6 +5,7 @@ import { tw } from 'utils/tw';
 
 import { useRouter } from 'next/router';
 import { Image } from 'phosphor-react';
+import GK from 'public/Badge_Key.svg';
 import VerifiedIcon from 'public/verifiedIcon.svg';
 
 interface ResultsDropDownProps {
@@ -108,7 +109,10 @@ export const ResultsDropDown = ({ isHeader, searchResults, resultTitleOnClick, i
                           hit.document.isProfile ? <span className="text-[#F9D54C] text-xl font-bold">/ </span> : null
                         }
                         {hit.document.nftName ?? hit.document.contractName}
-                        {hit.document?.isOfficial && <VerifiedIcon className='inline ml-3'/>}
+                        {hit.document?.isOfficial && <VerifiedIcon className='inline ml-2'/>}
+                        {hit.document.isProfileGKMinted && <div className='h-6 w-6 ml-2'>
+                          <GK />
+                        </div>}
                       </span>
                     </div>
                   </div>
