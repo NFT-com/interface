@@ -4,6 +4,7 @@ import 'aos/dist/aos.css';
 import StaticPreviewBanner from 'components/elements/PreviewBanner';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
+import contentfulBackupData from 'constants/abis/contenful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
 import { tw } from 'utils/tw';
@@ -774,8 +775,8 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               </svg>
 
               <div className='relative'>
-                <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-5 text-white'>{data_v2.newsTitle}</h2>
-                <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2.newsSubtitle}</p>
+                <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-5 text-white'>{data_v2?.newsTitle}</h2>
+                <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2?.newsSubtitle}</p>
               </div>
 
               <div className='-mx-9 overflow-hidden mb-12'>
@@ -988,7 +989,7 @@ export async function getServerSideProps({ preview = false }) {
   return {
     props: {
       preview,
-      data_v2: homeDataV2[0] ?? null,
+      data_v2: homeDataV2[0] ?? contentfulBackupData[0],
     }
   };
 }
