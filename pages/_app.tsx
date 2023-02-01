@@ -71,6 +71,8 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
+const baseUrl = `${window.location.origin}/` ?? getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
+
 export default function MyApp({ Component, pageProps, router }: AppPropsWithLayout) {
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -83,7 +85,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
       [
         jsonRpcProvider({
           rpc: (chain) => {
-            const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
+            const url = new URL(baseUrl + 'api/ethrpc');
             url.searchParams.set('chainId', getChainIdString(chain?.id));
             return {
               http: url.toString(),

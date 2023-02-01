@@ -16,10 +16,12 @@ import { X2Y2BuyNow } from './X2Y2Helpers';
 import { BigNumber, BigNumberish, ContractTransaction, ethers, Signer } from 'ethers';
 import { useCallback } from 'react';
 
+const baseUrl = `${window.location.origin}/` ?? getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
+
 export async function getOpenseaCollection(
   contract: string,
 ): Promise<any> {
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/opensea');
+  const url = new URL(baseUrl + 'api/opensea');
   url.searchParams.set('contract', contract);
   url.searchParams.set('action', 'getCollection');
 
@@ -28,7 +30,7 @@ export async function getOpenseaCollection(
 }
 
 export async function getLooksrareNonce(address: string): Promise<number> {
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/looksrare');
+  const url = new URL(baseUrl + 'api/looksrare');
   url.searchParams.set('action', 'getNonce');
   url.searchParams.set('address', address);
   const result = await fetch(url.toString()).then(res => res.json());
@@ -39,7 +41,7 @@ export async function getSeaportOrders(contract: string, tokenId: BigNumberish):
   if (tokenId == null || isNullOrEmpty(contract)) {
     return [];
   }
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/seaport');
+  const url = new URL(baseUrl + 'api/seaport');
   url.searchParams.set('action', 'getOrders');
   url.searchParams.set('contract', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
@@ -51,7 +53,7 @@ export async function getLooksrareOrders(contract: string, tokenId: BigNumberish
   if (tokenId == null || isNullOrEmpty(contract)) {
     return [];
   }
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/looksrare');
+  const url = new URL(baseUrl + 'api/looksrare');
   url.searchParams.set('action', 'getOrders');
   url.searchParams.set('contract', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());

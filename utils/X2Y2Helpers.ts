@@ -152,6 +152,8 @@ export function decodeRunInput(data: string): RunInput {
   )[0] as RunInput;
 }
 
+const baseUrl = `${window.location.origin}/` ?? getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
+
 async function fetchOrderSign(
   caller: string,
   op: number,
@@ -163,7 +165,7 @@ async function fetchOrderSign(
   tokenId: string
 ): Promise<RunInput | undefined> {
   try {
-    const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
+    const url = new URL(baseUrl + 'api/x2y2');
     url.searchParams.set('action', 'fetchOrderSign');
     url.searchParams.set('caller', caller);
     url.searchParams.set('op', op.toString());
@@ -358,7 +360,7 @@ async function getCancelInput(
   signMessage: string,
   sign: string
 ): Promise<CancelInput> {
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
+  const url = new URL(baseUrl + 'api/x2y2');
   url.searchParams.set('action', 'fetchOrderCancel');
   url.searchParams.set('caller', caller);
   url.searchParams.set('op', op.toString());

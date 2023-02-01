@@ -271,7 +271,7 @@ export const collectionCardImages = (collection: any) => {
 };
 
 export const getImageFetcherBaseURL = () => {
-  return 'https://www.nft.com/';
+  return window.location.origin + '/';
 };
 
 export const sliceString = (description: string, maxCount: number, isStringCut: boolean) => {

@@ -22,6 +22,8 @@ import GearIcon from 'public/settings_icon.svg';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useAccount } from 'wagmi';
 
+const baseUrl = `${window.location.origin}/` ?? getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
+
 export interface ProfileMenuProps {
   profileURI: string;
 }
@@ -264,7 +266,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
           options={[
             {
               label: 'Copy link to clipboard',
-              onSelect: () => staticCopy(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}${router.query?.profileURI}`),
+              onSelect: () => staticCopy(`${baseUrl}${router.query?.profileURI}`),
               icon: <LinkIcon className={tw(
                 'w-[18px] h-[18px] mr-3'
               )} />
