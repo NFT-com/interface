@@ -267,7 +267,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 !searchedData?.length
                   ? (
                     <div className='flex items-center justify-center full-width flex-col my-10'>
-                      <NoActivityIcon className='mt-10' />
+                      <NoActivityIcon className='mt-10 h-[300px]' />
                       <div className="md:text-[20px] text-[24px] font-semibold font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]">No Results Found</div>
                     </div>
                   )
