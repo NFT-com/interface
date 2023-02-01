@@ -3159,6 +3159,7 @@ export type NftQueryVariables = Exact<{
   chainId?: InputMaybe<Scalars['String']>;
   listingsPageInput?: InputMaybe<PageInput>;
   listingsExpirationType?: InputMaybe<ActivityExpiration>;
+  listingsOwner?: InputMaybe<Scalars['Address']>;
 }>;
 
 
@@ -4773,7 +4774,7 @@ export const MyProfilesDocument = gql`
 }
     `;
 export const NftDocument = gql`
-    query Nft($contract: Address!, $id: String!, $chainId: String, $listingsPageInput: PageInput, $listingsExpirationType: ActivityExpiration) {
+    query Nft($contract: Address!, $id: String!, $chainId: String, $listingsPageInput: PageInput, $listingsExpirationType: ActivityExpiration, $listingsOwner: Address) {
   nft(contract: $contract, id: $id, chainId: $chainId) {
     id
     isOwnedByMe
@@ -4803,6 +4804,7 @@ export const NftDocument = gql`
     listings(
       listingsPageInput: $listingsPageInput
       listingsExpirationType: $listingsExpirationType
+      listingsOwner: $listingsOwner
     ) {
       totalItems
       pageInfo {

@@ -3,7 +3,8 @@ query Nft(
   $id: String!, 
   $chainId: String,
   $listingsPageInput: PageInput, 
-  $listingsExpirationType: ActivityExpiration
+  $listingsExpirationType: ActivityExpiration,
+  $listingsOwner: Address
 ) {
   nft(contract: $contract, id: $id, chainId: $chainId) {
     id
@@ -31,7 +32,7 @@ query Nft(
         value
       }
     }
-    listings(listingsPageInput: $listingsPageInput, listingsExpirationType: $listingsExpirationType) {
+    listings(listingsPageInput: $listingsPageInput, listingsExpirationType: $listingsExpirationType, listingsOwner: $listingsOwner) {
         totalItems
         pageInfo {
             firstCursor
