@@ -89,26 +89,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
   }, [toList, looksrareProtocolFeeBps, getByContractAddress]);
 
-  const { data: toListNftComRoyaltyFees } = useSWR(
-    'NFTCOMRoyaltyFee' + JSON.stringify(toList.map(i => i?.nft?.contract + i?.nft?.tokenId)),
-    async () => {
-      return (toList).map(async (stagedListing) => {
-        const targetProtocols = stagedListing.targets.map((target) => target.protocol);
-        if (targetProtocols.includes(ExternalProtocol.NFTCOM)) {
-          return await marketplace.royaltyInfo(stagedListing.nft?.contract);
-        } else {
-          return 0;
-        }
-      },
-      {
-        refreshInterval: 0,
-        revalidateOnFocus: false,
-      });
-    }
-  );
-
-  console.log('toListNftComRoyaltyFees: ', toListNftComRoyaltyFees);
-
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
       return total + stagedListing?.targets.length ?? 0;
