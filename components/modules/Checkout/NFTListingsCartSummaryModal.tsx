@@ -1,7 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { Maybe, NftType } from 'graphql/generated/types';
-import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
