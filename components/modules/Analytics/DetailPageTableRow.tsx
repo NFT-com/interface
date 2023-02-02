@@ -32,19 +32,19 @@ type GetAssetProps = {
 const getSymbol = (contract_address: string, symbol: string, price: string) => {
   switch (symbol) {
   case 'USDC':
-    return <div className='flex items-center'><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{price} USDC</div>;
+    return <div className='flex items-center'><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USDC</div>;
   case 'DAI':
-    return <div className='flex items-center'><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{price} DAI</div>;
+    return <div className='flex items-center'><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} DAI</div>;
   default:
     if (!contract_address) {
-      return <div>{price} {symbol}</div>;
+      return <div>{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {symbol}</div>;
     }
     // eslint-disable-next-line @next/next/no-img-element
     return <div className='flex items-center'><img
       className='mr-1.5 h-6 w-6 relative shrink-0'
       src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract_address)}/logo.png`}
       alt={symbol}
-    />{price} {symbol}
+    />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {symbol}
     </div>;
   }
 };
@@ -54,11 +54,11 @@ function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
 
   switch (asset_type) {
   case 'ETH':
-    return <div className='flex items-center'><ETH className='mr-1.5 h-5 w-5 relative shrink-0' /> {price} ETH</div>;
+    return <div className='flex items-center'><ETH className='mr-1.5 h-5 w-5 relative shrink-0' /> {Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ETH</div>;
   case 'ERC20':
     return <div className='flex items-center'>{getSymbol(contract_address, symbol, price)}</div>;
   default:
-    return <div>{price} {asset_type}</div>;
+    return <div>{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {asset_type}</div>;
   }
 }
 
