@@ -201,7 +201,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
             <GetAsset price={tx.priceDetails.price} asset_type={tx.priceDetails.assetType} contract_address={tx.priceDetails.contractAddress} />
           </td>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
-            {tx.priceDetails.priceUSD ? `$${Number(tx.priceDetails.priceUSD)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }) }` : '-'}
+            {tx.priceDetails.priceUSD ? `$${Number(tx.priceDetails.priceUSD)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }` : '-'}
           </td></>
         :
         <>
