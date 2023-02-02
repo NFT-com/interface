@@ -22,7 +22,7 @@ export interface DropdownPickerProps {
   selectedIndex?: number;
   constrain?: boolean;
   above?: boolean;
-  placeholder?: string;
+  placeholder?: string | Element;
   onChange?: (label: string) => void;
   showKeyIcon?: boolean;
   v2?: boolean;
@@ -99,7 +99,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
     <div
       ref={wrapperRef}
       className={tw(
-        props.v2 ? 'rounded-md' : 'rounded-xl',
+        props.placeholder && typeof(props.placeholder) != 'string' ? 'rounded-full' : props.v2 ? 'rounded-md' : 'rounded-xl',
         'cursor-pointer flex flex-col items-center',
         'text-sm',
         props.constrain ? '' : 'w-full h-full shrink-0',
@@ -112,10 +112,11 @@ export function DropdownPicker(props: DropdownPickerProps) {
     >
       <div
         ref={activeRowRef}
-        className={tw('flex flex-row items-center px-2.5',
-          'py-2 h-full',
+        className={tw('flex flex-row items-center ',
+          'py-2 ',
           'bg-white',
-          props.v2 ? 'rounded-md border-2 border-gray-300' : 'border rounded-xl shadow-lg border-0 ',
+          props.placeholder && typeof(props.placeholder) != 'string' ? 'rounded-full' : props.v2 ? 'rounded-md h-full px-2.5' : 'rounded-xl h-full px-2.5',
+          props.v2 ? 'border-2 border-gray-300' : 'shadow-lg border-0 ',
           'justify-between w-full')}
         key={props?.options[selectedIndex]?.label}
       >
@@ -135,25 +136,30 @@ export function DropdownPicker(props: DropdownPickerProps) {
             </div>
           }
           <div className='mr-2'>
-            {(props.placeholder && !selected) ?
-              <span style={{ color: secondaryText }}>{props.placeholder}</span>
-              : props.options[selectedIndex]?.label
+            {typeof(props.placeholder) == 'string' ?
+              (props.placeholder && !selected) ?
+                <span style={{ color: secondaryText }}>{props.placeholder}</span>
+                : props.options[selectedIndex]?.label
+              : <>{props.placeholder}</>
+            
             }
           </div>
         </div>
-        {expanded
-          ? (
-            expandedIcon
-          )
-          : (
-            collapsedIcon
-          )}
+        {(props.placeholder && typeof(props.placeholder) != 'string')
+          ? null :
+          expanded
+            ? (
+              expandedIcon
+            )
+            : (
+              collapsedIcon
+            )}
       </div>
       
       {expanded &&
         <div
           style={{
-            maxWidth: wrapperRef.current.clientWidth,
+            maxWidth: props.placeholder && typeof(props.placeholder) != 'string' ? 'fit-content': wrapperRef.current.clientWidth,
             marginTop: props.above ?
               (props.options?.length - 1) * -1 * activeRowRef.current.clientHeight - 12 :
               activeRowRef.current.clientHeight + 12
