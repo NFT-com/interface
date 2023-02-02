@@ -515,6 +515,7 @@ export type LeaderboardProfile = {
   __typename?: 'LeaderboardProfile';
   id: Scalars['ID'];
   index?: Maybe<Scalars['Int']>;
+  isGKMinted?: Maybe<Scalars['Boolean']>;
   itemsVisible?: Maybe<Scalars['Int']>;
   numberOfCollections?: Maybe<Scalars['Int']>;
   numberOfGenesisKeys?: Maybe<Scalars['Int']>;
@@ -1218,104 +1219,102 @@ export type NftPortStatistics = {
 
 export type NftPortTxByContractCreators = {
   __typename?: 'NFTPortTxByContractCreators';
-  account_address?: Maybe<Scalars['String']>;
-  creator_share?: Maybe<Scalars['String']>;
+  accountAddress?: Maybe<Scalars['String']>;
+  creatorShare?: Maybe<Scalars['String']>;
 };
 
 export type NftPortTxByContractNft = {
   __typename?: 'NFTPortTxByContractNft';
-  contract_address?: Maybe<Scalars['String']>;
-  contract_type?: Maybe<Scalars['String']>;
+  contractAddress?: Maybe<Scalars['String']>;
+  contractType?: Maybe<Scalars['String']>;
   creators?: Maybe<Array<Maybe<NftPortTxByContractCreators>>>;
-  metadata_url?: Maybe<Scalars['String']>;
+  metadataUrl?: Maybe<Scalars['String']>;
   royalties?: Maybe<Array<Maybe<NftPortTxByContractRoyalties>>>;
   signatures?: Maybe<Array<Maybe<Scalars['String']>>>;
-  token_id?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
   total?: Maybe<Scalars['Int']>;
 };
 
 export type NftPortTxByContractPriceDetails = {
   __typename?: 'NFTPortTxByContractPriceDetails';
-  asset_type?: Maybe<Scalars['String']>;
-  contract_address?: Maybe<Scalars['String']>;
+  assetType?: Maybe<Scalars['String']>;
+  contractAddress?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['String']>;
-  price_usd?: Maybe<Scalars['Float']>;
+  priceUSD?: Maybe<Scalars['String']>;
 };
 
 export type NftPortTxByContractRoyalties = {
   __typename?: 'NFTPortTxByContractRoyalties';
-  account_address?: Maybe<Scalars['String']>;
-  royalty_share?: Maybe<Scalars['String']>;
+  accountAddress?: Maybe<Scalars['String']>;
+  royaltyShare?: Maybe<Scalars['String']>;
 };
 
 export type NftPortTxByContractTransactions = {
   __typename?: 'NFTPortTxByContractTransactions';
-  block_hash?: Maybe<Scalars['String']>;
-  block_number?: Maybe<Scalars['Int']>;
-  buyer_address?: Maybe<Scalars['String']>;
-  contract_address?: Maybe<Scalars['String']>;
+  blockHash?: Maybe<Scalars['String']>;
+  blockNumber?: Maybe<Scalars['String']>;
+  buyerAddress?: Maybe<Scalars['String']>;
+  contractAddress?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   marketplace?: Maybe<Scalars['String']>;
   nft?: Maybe<NftPortTxByContractNft>;
-  owner_address?: Maybe<Scalars['String']>;
-  price_details?: Maybe<NftPortTxByContractPriceDetails>;
+  ownerAddress?: Maybe<Scalars['String']>;
+  priceDetails?: Maybe<NftPortTxByContractPriceDetails>;
   protocolData?: Maybe<TxProtocolData>;
   quantity?: Maybe<Scalars['Int']>;
-  seller_address?: Maybe<Scalars['String']>;
-  timestamp?: Maybe<Scalars['DateTime']>;
-  token_id?: Maybe<Scalars['String']>;
-  transaction_date?: Maybe<Scalars['String']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  transfer_from?: Maybe<Scalars['String']>;
-  transfer_to?: Maybe<Scalars['String']>;
+  sellerAddress?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
+  transactionDate?: Maybe<Scalars['DateTime']>;
+  transactionHash?: Maybe<Scalars['String']>;
+  transferFrom?: Maybe<Scalars['String']>;
+  transferTo?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
 };
 
 export type NftPortTxByNftListingDetails = {
   __typename?: 'NFTPortTxByNFTListingDetails';
-  asset_type?: Maybe<Scalars['String']>;
-  contract_address?: Maybe<Scalars['String']>;
+  assetType?: Maybe<Scalars['String']>;
+  contractAddress?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['String']>;
-  price_usd?: Maybe<Scalars['Float']>;
+  priceUSD?: Maybe<Scalars['String']>;
 };
 
 export type NftPortTxByNftNft = {
   __typename?: 'NFTPortTxByNFTNft';
-  contract_address?: Maybe<Scalars['String']>;
-  contract_type?: Maybe<Scalars['String']>;
-  token_id?: Maybe<Scalars['String']>;
+  contractAddress?: Maybe<Scalars['String']>;
+  contractType?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
 };
 
 export type NftPortTxByNftPriceDetails = {
   __typename?: 'NFTPortTxByNFTPriceDetails';
-  asset_type?: Maybe<Scalars['String']>;
-  contract_address?: Maybe<Scalars['String']>;
+  assetType?: Maybe<Scalars['String']>;
+  contractAddress?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['String']>;
-  price_usd?: Maybe<Scalars['Float']>;
+  priceUSD?: Maybe<Scalars['String']>;
 };
 
 export type NftPortTxByNftTransactions = {
   __typename?: 'NFTPortTxByNFTTransactions';
-  block_hash?: Maybe<Scalars['String']>;
-  block_number?: Maybe<Scalars['Int']>;
-  buyer_address?: Maybe<Scalars['String']>;
-  contract_address?: Maybe<Scalars['String']>;
+  blockHash?: Maybe<Scalars['String']>;
+  blockNumber?: Maybe<Scalars['String']>;
+  buyerAddress?: Maybe<Scalars['String']>;
+  contractAddress?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
-  lister_address?: Maybe<Scalars['String']>;
-  listing_details?: Maybe<NftPortTxByNftListingDetails>;
+  listerAddress?: Maybe<Scalars['String']>;
+  listingDetails?: Maybe<NftPortTxByNftListingDetails>;
   marketplace?: Maybe<Scalars['String']>;
   nft?: Maybe<NftPortTxByNftNft>;
-  owner_address?: Maybe<Scalars['String']>;
-  price_details?: Maybe<NftPortTxByNftPriceDetails>;
+  ownerAddress?: Maybe<Scalars['String']>;
+  priceDetails?: Maybe<NftPortTxByNftPriceDetails>;
   protocolData?: Maybe<TxProtocolData>;
   quantity?: Maybe<Scalars['Int']>;
-  seller_address?: Maybe<Scalars['String']>;
-  timestamp?: Maybe<Scalars['DateTime']>;
-  token_id?: Maybe<Scalars['String']>;
-  transaction_date?: Maybe<Scalars['String']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  transfer_from?: Maybe<Scalars['String']>;
-  transfer_to?: Maybe<Scalars['String']>;
+  sellerAddress?: Maybe<Scalars['String']>;
+  tokenId?: Maybe<Scalars['String']>;
+  transactionDate?: Maybe<Scalars['DateTime']>;
+  transactionHash?: Maybe<Scalars['String']>;
+  transferFrom?: Maybe<Scalars['String']>;
+  transferTo?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
 };
 
@@ -1500,6 +1499,7 @@ export type Profile = {
   id: Scalars['ID'];
   index?: Maybe<Scalars['Int']>;
   isFollowedByMe?: Maybe<Scalars['Boolean']>;
+  isGKMinted?: Maybe<Scalars['Boolean']>;
   isOwnedByMe?: Maybe<Scalars['Boolean']>;
   layoutType?: Maybe<ProfileLayoutType>;
   nftsDescriptionsVisible?: Maybe<Scalars['Boolean']>;
@@ -3077,14 +3077,14 @@ export type GetTxByContractQueryVariables = Exact<{
 }>;
 
 
-export type GetTxByContractQuery = { __typename?: 'Query', getTxByContract?: { __typename?: 'GetTxByContract', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'NFTPortTxByContractTransactions', block_hash?: string | null, block_number?: number | null, buyer_address?: string | null, contract_address?: string | null, marketplace?: string | null, type?: string | null, owner_address?: string | null, token_id?: string | null, quantity?: number | null, transaction_hash?: string | null, transaction_date?: string | null, transfer_from?: string | null, transfer_to?: string | null, seller_address?: string | null, price_details?: { __typename?: 'NFTPortTxByContractPriceDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByContractNft', contract_type?: string | null, contract_address?: string | null, token_id?: string | null, metadata_url?: string | null, total?: number | null, signatures?: Array<string | null> | null, royalties?: Array<{ __typename?: 'NFTPortTxByContractRoyalties', account_address?: string | null, royalty_share?: string | null } | null> | null, creators?: Array<{ __typename?: 'NFTPortTxByContractCreators', account_address?: string | null, creator_share?: string | null } | null> | null } | null } | null> | null } | null };
+export type GetTxByContractQuery = { __typename?: 'Query', getTxByContract?: { __typename?: 'GetTxByContract', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'NFTPortTxByContractTransactions', index?: number | null, type?: string | null, ownerAddress?: string | null, contractAddress?: string | null, tokenId?: string | null, quantity?: number | null, transactionHash?: string | null, blockHash?: string | null, blockNumber?: string | null, transactionDate?: any | null, transferFrom?: string | null, transferTo?: string | null, buyerAddress?: string | null, sellerAddress?: string | null, marketplace?: string | null, priceDetails?: { __typename?: 'NFTPortTxByContractPriceDetails', assetType?: string | null, contractAddress?: string | null, price?: string | null, priceUSD?: string | null } | null, nft?: { __typename?: 'NFTPortTxByContractNft', contractType?: string | null, contractAddress?: string | null, tokenId?: string | null, metadataUrl?: string | null, total?: number | null, signatures?: Array<string | null> | null, royalties?: Array<{ __typename?: 'NFTPortTxByContractRoyalties', accountAddress?: string | null, royaltyShare?: string | null } | null> | null, creators?: Array<{ __typename?: 'NFTPortTxByContractCreators', accountAddress?: string | null, creatorShare?: string | null } | null> | null } | null } | null> | null } | null };
 
 export type GetTxByNftQueryVariables = Exact<{
   input?: InputMaybe<TransactionsByNftInput>;
 }>;
 
 
-export type GetTxByNftQuery = { __typename?: 'Query', getTxByNFT?: { __typename?: 'GetTxByNFT', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'NFTPortTxByNFTTransactions', block_hash?: string | null, block_number?: number | null, buyer_address?: string | null, contract_address?: string | null, lister_address?: string | null, marketplace?: string | null, owner_address?: string | null, quantity?: number | null, seller_address?: string | null, token_id?: string | null, transaction_date?: string | null, transaction_hash?: string | null, transfer_from?: string | null, transfer_to?: string | null, type?: string | null, listing_details?: { __typename?: 'NFTPortTxByNFTListingDetails', asset_type?: string | null, contract_address?: string | null, price?: string | null, price_usd?: number | null } | null, nft?: { __typename?: 'NFTPortTxByNFTNft', contract_address?: string | null, contract_type?: string | null, token_id?: string | null } | null, price_details?: { __typename?: 'NFTPortTxByNFTPriceDetails', price_usd?: number | null, price?: string | null, contract_address?: string | null, asset_type?: string | null } | null } | null> | null } | null };
+export type GetTxByNftQuery = { __typename?: 'Query', getTxByNFT?: { __typename?: 'GetTxByNFT', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items?: Array<{ __typename?: 'NFTPortTxByNFTTransactions', index?: number | null, type?: string | null, listerAddress?: string | null, quantity?: number | null, transactionDate?: any | null, marketplace?: string | null, ownerAddress?: string | null, contractAddress?: string | null, tokenId?: string | null, transactionHash?: string | null, blockHash?: string | null, blockNumber?: string | null, transferFrom?: string | null, transferTo?: string | null, buyerAddress?: string | null, sellerAddress?: string | null, priceDetails?: { __typename?: 'NFTPortTxByNFTPriceDetails', assetType?: string | null, price?: string | null, contractAddress?: string | null, priceUSD?: string | null } | null, listingDetails?: { __typename?: 'NFTPortTxByNFTListingDetails', assetType?: string | null, contractAddress?: string | null, price?: string | null, priceUSD?: string | null } | null, nft?: { __typename?: 'NFTPortTxByNFTNft', contractType?: string | null, contractAddress?: string | null, tokenId?: string | null } | null } | null> | null } | null };
 
 export type IgnoredEventsQueryVariables = Exact<{
   input: IgnoredEventsInput;
@@ -3120,7 +3120,7 @@ export type LeaderboardQueryVariables = Exact<{
 }>;
 
 
-export type LeaderboardQuery = { __typename?: 'Query', leaderboard: { __typename?: 'LeaderboardOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'LeaderboardProfile', index?: number | null, id: string, url: string, photoURL?: string | null, numberOfGenesisKeys?: number | null, numberOfCollections?: number | null, itemsVisible?: number | null }> } };
+export type LeaderboardQuery = { __typename?: 'Query', leaderboard: { __typename?: 'LeaderboardOutput', totalItems?: number | null, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null, items: Array<{ __typename?: 'LeaderboardProfile', index?: number | null, id: string, url: string, photoURL?: string | null, numberOfGenesisKeys?: number | null, numberOfCollections?: number | null, itemsVisible?: number | null, isGKMinted?: boolean | null }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3205,7 +3205,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
+export type ProfileQuery = { __typename?: 'Query', profile: { __typename?: 'Profile', id: string, url: string, status?: ProfileStatus | null, bannerURL?: string | null, photoURL?: string | null, description?: string | null, gkIconVisible?: boolean | null, nftsDescriptionsVisible?: boolean | null, deployedContractsVisible?: boolean | null, layoutType?: ProfileLayoutType | null, isGKMinted?: boolean | null, profileView?: ProfileViewType | null, owner?: { __typename?: 'Wallet', address: any, chainId: string, network: string, preferredProfile?: { __typename?: 'Profile', url: string, id: string } | null } | null, usersActionsWithPoints?: Array<{ __typename?: 'UsersActionOutput', totalPoints?: number | null, userId?: string | null, action?: Array<ProfileActionType | null> | null } | null> | null } };
 
 export type ProfileBlocklistQueryVariables = Exact<{
   url: Scalars['String'];
@@ -3249,7 +3249,7 @@ export type RecentProfilesQueryVariables = Exact<{
 }>;
 
 
-export type RecentProfilesQuery = { __typename?: 'Query', latestProfiles: { __typename?: 'ProfilesOutput', totalItems?: number | null, items: Array<{ __typename?: 'Profile', id: string, bannerURL?: string | null, photoURL?: string | null, url: string, owner?: { __typename?: 'Wallet', address: any } | null }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
+export type RecentProfilesQuery = { __typename?: 'Query', latestProfiles: { __typename?: 'ProfilesOutput', totalItems?: number | null, items: Array<{ __typename?: 'Profile', id: string, bannerURL?: string | null, isGKMinted?: boolean | null, photoURL?: string | null, url: string, owner?: { __typename?: 'Wallet', address: any } | null }>, pageInfo?: { __typename?: 'PageInfo', firstCursor?: string | null, lastCursor?: string | null } | null } };
 
 export type SearchNfTsForProfileQueryVariables = Exact<{
   input: SearchNfTsForProfileInput;
@@ -4319,42 +4319,43 @@ export const GetTxByContractDocument = gql`
     }
     totalItems
     items {
-      block_hash
-      block_number
-      buyer_address
-      contract_address
-      marketplace
+      index
       type
-      owner_address
-      token_id
+      ownerAddress
+      contractAddress
+      tokenId
       quantity
-      transaction_hash
-      transaction_date
-      transfer_from
-      transfer_to
-      price_details {
-        asset_type
-        contract_address
+      transactionHash
+      blockHash
+      blockNumber
+      transactionDate
+      transferFrom
+      transferTo
+      buyerAddress
+      sellerAddress
+      marketplace
+      priceDetails {
+        assetType
+        contractAddress
         price
-        price_usd
+        priceUSD
       }
       nft {
-        contract_type
-        contract_address
-        token_id
-        metadata_url
+        contractType
+        contractAddress
+        tokenId
+        metadataUrl
         total
         signatures
         royalties {
-          account_address
-          royalty_share
+          accountAddress
+          royaltyShare
         }
         creators {
-          account_address
-          creator_share
+          accountAddress
+          creatorShare
         }
       }
-      seller_address
     }
   }
 }
@@ -4368,38 +4369,39 @@ export const GetTxByNftDocument = gql`
     }
     totalItems
     items {
-      block_hash
-      block_number
-      buyer_address
-      contract_address
-      lister_address
-      listing_details {
-        asset_type
-        contract_address
-        price
-        price_usd
-      }
-      marketplace
-      nft {
-        contract_address
-        contract_type
-        token_id
-      }
-      owner_address
-      price_details {
-        price_usd
-        price
-        contract_address
-        asset_type
-      }
-      quantity
-      seller_address
-      token_id
-      transaction_date
-      transaction_hash
-      transfer_from
-      transfer_to
+      index
       type
+      listerAddress
+      quantity
+      transactionDate
+      marketplace
+      ownerAddress
+      contractAddress
+      tokenId
+      transactionHash
+      blockHash
+      blockNumber
+      transferFrom
+      transferTo
+      buyerAddress
+      sellerAddress
+      priceDetails {
+        assetType
+        price
+        contractAddress
+        priceUSD
+      }
+      listingDetails {
+        assetType
+        contractAddress
+        price
+        priceUSD
+      }
+      nft {
+        contractType
+        contractAddress
+        tokenId
+      }
     }
   }
 }
@@ -4453,6 +4455,7 @@ export const LeaderboardDocument = gql`
       numberOfGenesisKeys
       numberOfCollections
       itemsVisible
+      isGKMinted
     }
   }
 }
@@ -5119,6 +5122,7 @@ export const ProfileDocument = gql`
     nftsDescriptionsVisible
     deployedContractsVisible
     layoutType
+    isGKMinted
     owner {
       address
       chainId
@@ -5422,6 +5426,7 @@ export const RecentProfilesDocument = gql`
     items {
       id
       bannerURL
+      isGKMinted
       owner {
         address
       }

@@ -40,7 +40,8 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   const {
     toBuy,
     toBuyNow,
-    buyNowActive
+    buyNowActive,
+    clear: clearPurchases,
   } = useContext(NFTPurchasesContext);
 
   const list = props.type === SuccessType.Listing ? toList : buyNowActive ? toBuyNow : toBuy;
@@ -114,7 +115,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
           <button onClick={() => {
             toggleCartSidebar();
-            clear();
+            props.type == SuccessType.Listing ? clear() : clearPurchases();
             window.open(
               'https://twitter.com/intent/tweet?' +
               'text=' +
@@ -127,7 +128,13 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           }} className="bg-[#F9D963] w-[277px] my-8 font-medium hover:bg-[#fcd034] text-base text-black text-[14px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
             Share
           </button>
-          <div onClick={() => props.type == SuccessType.Listing ? router.push('/app/assets') : router.push('/app/discover/collections')} className='text-[#E4BA18] font-medium underline text-[14px] cursor-pointer'>{props.type == SuccessType.Listing ? 'List' : 'Purchase'} another NFT</div>
+          <div onClick={() => {
+            toggleCartSidebar();
+            props.type == SuccessType.Listing ? clear() : clearPurchases();
+            props.type == SuccessType.Listing ?
+              router.push('/app/assets') :
+              router.push('/app/discover/collections');
+          }} className='text-[#E4BA18] font-medium underline text-[14px] cursor-pointer'>{props.type == SuccessType.Listing ? 'List' : 'Purchase'} another NFT</div>
           {props.hasError && (
             <div className='w-full flex flex-col space-y-[10px] p-[10px] rounded border border-[#ECECEC] overflow-auto mt-3 min-h-[200px]'>
               {list.map((item) => <PartialErrorView key={item.id} listing={item} />)}

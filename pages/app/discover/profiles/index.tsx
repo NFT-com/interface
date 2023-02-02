@@ -96,6 +96,7 @@ export default function ProfilePage() {
                         numberOfGenesisKeys={item.numberOfGenesisKeys}
                         photoURL={item.photoURL}
                         url={item.url}
+                        isGkMinted={item.isGKMinted}
                       />
                     );
                   })

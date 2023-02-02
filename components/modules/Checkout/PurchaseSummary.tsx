@@ -1,5 +1,4 @@
 import { Button, ButtonType } from 'components/elements/Button';
-import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD } from 'utils/marketplaceUtils';
@@ -16,7 +15,6 @@ export function PurchaseSummary() {
     togglePurchaseSummaryModal,
   } = useContext(NFTPurchasesContext);
 
-  const { marketplace } = useAllContracts();
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
 

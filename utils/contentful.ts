@@ -10,7 +10,13 @@ export async function getPaginatedPosts(
   url.searchParams.set('pageSize', String(pageSize));
   url.searchParams.set('preview', String(preview));
 
-  const result = await fetch(url.toString()).then(res => res.json());
+  const result = await fetch(url.toString())
+    .then(res => {
+      return res.statusText == 'OK' ? res.json() : { items: null, total: 0 };
+    })
+    .catch(() => {
+      return { items: null, total: 0 };
+    });
   return result;
 }
 
