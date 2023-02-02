@@ -1,6 +1,7 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { Maybe, NftType } from 'graphql/generated/types';
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -87,6 +88,26 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const getMaxRoyaltyFees: () => number = useCallback(() => {
     return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
   }, [toList, looksrareProtocolFeeBps, getByContractAddress]);
+
+  const { data: toListNftComRoyaltyFees } = useSWR(
+    'NFTCOMRoyaltyFee' + JSON.stringify(toList.map(i => i?.nft?.contract + i?.nft?.tokenId)),
+    async () => {
+      return (toList).map(async (stagedListing) => {
+        const targetProtocols = stagedListing.targets.map((target) => target.protocol);
+        if (targetProtocols.includes(ExternalProtocol.NFTCOM)) {
+          return await marketplace.royaltyInfo(stagedListing.nft?.contract);
+        } else {
+          return 0;
+        }
+      },
+      {
+        refreshInterval: 0,
+        revalidateOnFocus: false,
+      });
+    }
+  );
+
+  console.log('toListNftComRoyaltyFees: ', toListNftComRoyaltyFees);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
