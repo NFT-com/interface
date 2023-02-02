@@ -10,6 +10,7 @@ query Profile($url: String!, $chainId: String!) {
     nftsDescriptionsVisible
     deployedContractsVisible
     layoutType
+    isGKMinted
     owner {
       address
       chainId

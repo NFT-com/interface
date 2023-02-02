@@ -2,10 +2,11 @@ import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseContext';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { getAddressForChain, nftAggregator } from 'constants/contracts';
+import { getAddressForChain, nftAggregator, nftProfile } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
@@ -22,6 +23,7 @@ import { DetailedNft } from './CollectionCard';
 
 import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
+import GK from 'public/Badge_Key.svg';
 import ETH from 'public/eth.svg';
 import Hidden from 'public/Hidden.svg';
 import Reorder from 'public/Reorder.svg';
@@ -69,7 +71,7 @@ export function NftCard(props: NftCardProps) {
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   const isOwnedByMe = props?.isOwnedByMe || nft?.wallet?.address === currentAddress;
-
+  const { profileData: nftProfileData } = useProfileQuery(props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null);
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
@@ -244,7 +246,7 @@ export function NftCard(props: NftCardProps) {
 
           {props.nftsDescriptionsVisible != false &&
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
-              <ul
+              <div
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
                 <CustomTooltip2
                   noFullHeight={true}
@@ -257,11 +259,20 @@ export function NftCard(props: NftCardProps) {
                     </div>
                   }
                 >
-                  <li className="list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.name}</li>
+                  <div className='flex w-full'>
+                    <p className="p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">
+                      {props.name}
+                    </p>
+                    {nftProfileData?.profile?.isGKMinted &&
+                        <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
+                          <GK />
+                        </div>
+                    }
+                  </div>
                 </CustomTooltip2>
-                <li
-                  className="sm:text-sm text-[16px] [200px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
-              </ul>
+                <p
+                  className="sm:text-sm text-[16px] [200px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</p>
+              </div>
               {
                 (props?.listings?.length || nft?.listings?.items?.length) && bestListing
                   ? (

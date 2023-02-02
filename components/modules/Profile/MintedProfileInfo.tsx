@@ -11,6 +11,7 @@ import { tw } from 'utils/tw';
 import { ProfileContext } from './ProfileContext';
 import { ProfileMenu } from './ProfileMenu';
 
+import GK from 'public/Badge_Key.svg';
 import GKHolderIcon from 'public/gk-holder.svg';
 import { useCallback, useContext } from 'react';
 import { useThemeColors } from 'styles/theme//useThemeColors';
@@ -136,12 +137,17 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
             id="MintedProfileNameContainer"
             className={tw(
               getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'font-bold text-lg minlg:text-[44px] minlg:font-medium' :'font-bold text-2xl minxl:text-4xl',
-              'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4'
+              'text-primary-txt dark:text-primary-txt-dk text-center minlg:text-left mr-4 minmd:mt-4 flex items-center'
             )}>
             {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
             <span className='bg-gradient-to-r from-[#FF9B37] to-[#FAC213] text-transparent bg-clip-text text-2xl minlg:text-[40px] mr-1'>/</span>
             }
             {profileURI}
+            {profileData?.profile?.isGKMinted &&
+            <div className='h-5 w-5 minlg:h-7 minlg:w-7 ml-2'>
+              <GK />
+            </div>
+            }
           </div>
         </div>
         {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
