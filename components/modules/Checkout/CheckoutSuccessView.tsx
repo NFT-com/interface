@@ -37,7 +37,8 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   const {
     toBuy,
     toBuyNow,
-    buyNowActive
+    buyNowActive,
+    clear: clearPurchases,
   } = useContext(NFTPurchasesContext);
 
   const list = props.type === SuccessType.Listing ? toList : buyNowActive ? toBuyNow : toBuy;
@@ -104,7 +105,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
           <button onClick={() => {
             toggleCartSidebar();
-            clear();
+            props.type == SuccessType.Listing ? clear() : clearPurchases();
             window.open(
               'https://twitter.com/intent/tweet?' +
               'text=' +
@@ -119,7 +120,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           </button>
           <div onClick={() => {
             toggleCartSidebar();
-            clear();
+            props.type == SuccessType.Listing ? clear() : clearPurchases();
             props.type == SuccessType.Listing ?
               router.push('/app/assets') :
               router.push('/app/discover/collections');

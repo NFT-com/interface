@@ -85,6 +85,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
   const getSummaryContent = useCallback(() => {
     if (success) {
+      clear();
       return <CheckoutSuccessView
         userAddress={currentAddress}
         type={SuccessType.Purchase}
@@ -202,7 +203,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, success, toBuy]);
+  }, [clear, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, success, toBuy]);
 
   return (
     <Modal
