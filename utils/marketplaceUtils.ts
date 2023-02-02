@@ -190,7 +190,8 @@ export function getMaxMarketplaceFeesUSD(
 export function getMaxRoyaltyFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  toListNftComRoyaltyFees: any
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
