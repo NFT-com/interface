@@ -69,8 +69,9 @@ export function DropdownPicker(props: DropdownPickerProps) {
     return (
       item && <div
         key={item.label}
-        style={{ height: activeRowRef.current.clientHeight }}
-        className={`flex flex-row w-full pl-2.5 py-3
+        style={{ height: props.placeholder && typeof(props.placeholder) != 'string' ? 'fit-content': activeRowRef.current.clientHeight }}
+        className={`flex flex-row w-full 
+        ${ props.placeholder && typeof(props.placeholder) != 'string' ? 'px-6 py-4 font-medium text-base' : 'pl-2.5 py-3' }
         ${ index === optionHoverIndex ? 'text-primary-txt' : 'text-secondary-txt'}`}
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
@@ -85,7 +86,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         {item.label}
       </div>
     );
-  }, [optionHoverIndex]);
+  }, [optionHoverIndex, props.placeholder]);
 
   const expandedIcon = useMemo(() => props.above ?
     <ChevronDown size={24} color={primaryIcon} /> :
@@ -116,7 +117,8 @@ export function DropdownPicker(props: DropdownPickerProps) {
           'py-2 ',
           'bg-white',
           props.placeholder && typeof(props.placeholder) != 'string' ? 'rounded-full' : props.v2 ? 'rounded-md h-full px-2.5' : 'rounded-xl h-full px-2.5',
-          props.v2 ? 'border-2 border-gray-300' : 'shadow-lg border-0 ',
+          props.placeholder && typeof(props.placeholder) != 'string' ? 'border-2 ' : props.v2 ? 'border-2 border-gray-300' : 'shadow-lg border-0 ',
+          props.placeholder && typeof(props.placeholder) != 'string' && expanded && 'border-black',
           'justify-between w-full')}
         key={props?.options[selectedIndex]?.label}
       >
@@ -166,12 +168,12 @@ export function DropdownPicker(props: DropdownPickerProps) {
           }}
           className={tw(
             props.v2 ? 'rounded-md' : 'rounded-xl',
-            'border border-select-brdr',
             'divide-y',
             'bg-white',
             'w-full absolute z-50',
             'shadow-lg',
-            'max-h-[200px] overflow-auto'
+            '',
+            props.placeholder && typeof(props.placeholder) != 'string' ? 'right-8' : 'border border-select-brdr max-h-[200px] overflow-auto'
           )}
         >
             

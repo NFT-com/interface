@@ -1,7 +1,7 @@
 import { DropdownPicker } from 'components/elements/DropdownPicker';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 
-import InfoIcon from 'public/gray-info-icon.svg';
+import FilterIcon from 'public/filter-icon.svg';
 import React from 'react';
 
 const sortingDropdownOptions = [
@@ -32,7 +32,7 @@ export function DiscoveryOtherFiltersNav() {
         options={sortingDropdownOptions}
         //selectedIndex={0}
         // v2
-        placeholder={<InfoIcon className='ml-2' />}
+        placeholder={<FilterIcon className='ml-2' />}
       />
     </div>
   );
