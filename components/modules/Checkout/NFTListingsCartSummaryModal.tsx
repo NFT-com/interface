@@ -83,10 +83,10 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { data: toListNftComRoyaltyFees } = useSWR(
     'NFTCOMRoyaltyFee' + JSON.stringify(toList.map(i => i?.nft?.contract + i?.nft?.tokenId)),
     async () => {
-      return (toList).map(async (stagedListing) => {
+      return await Promise.all((toList).map(async (stagedListing) => {
         const targetProtocols = await stagedListing.targets.map((target) => target.protocol);
         if (targetProtocols.includes(ExternalProtocol.NFTCOM)) {
-          return await marketplace.royaltyInfo(stagedListing.nft?.contract);
+          return Number((await marketplace.royaltyInfo(stagedListing.nft?.contract))?.[1]);
         } else {
           return 0;
         }
@@ -94,7 +94,37 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       {
         refreshInterval: 0,
         revalidateOnFocus: false,
-      });
+      }));
+    }
+  );
+
+  const { data: x2y2Fees } = useSWR(
+    'x2y2Fees' + JSON.stringify(toList.map(i => i?.nft?.contract + i?.nft?.tokenId)),
+    async () => {
+      return await Promise.all((toList).map(async (stagedListing) => {
+        const targetProtocols = await stagedListing.targets.map((target) => target.protocol);
+        if (targetProtocols.includes(ExternalProtocol.X2Y2)) {
+          const x2y2 = 'https://api.thegraph.com/subgraphs/name/messari/x2y2-ethereum';
+          const query = `{\n  collections(where: { id: "${stagedListing.nft?.contract?.toLowerCase()}" }) {\n    id\n    royaltyFee\n  }\n}`;
+          // post request using fetch
+          const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query })
+          };
+          
+          const responseX2Y2 = await fetch(x2y2, requestOptions);
+          const dataX2Y2 = await responseX2Y2.json();
+
+          return dataX2Y2?.data?.collections[0]?.royaltyFee ?? 0;
+        } else {
+          return 0;
+        }
+      },
+      {
+        refreshInterval: 0,
+        revalidateOnFocus: false,
+      }));
     }
   );
 
@@ -103,8 +133,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee]);
 
   const getMaxRoyaltyFees: () => number = useCallback(() => {
-    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees);
-  }, [toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees]);
+    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees);
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees]);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
