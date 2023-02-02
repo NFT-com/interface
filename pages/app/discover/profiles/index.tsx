@@ -6,8 +6,6 @@ import { Profile } from 'graphql/generated/types';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { useRecentProfilesQuery } from 'graphql/hooks/useRecentProfilesQuery';
 import { usePaginator } from 'hooks/usePaginator';
-import NotFoundPage from 'pages/404';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -17,8 +15,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
 export default function ProfilePage() {
-  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
-
   const [isLoading, toggleLoadState] = useState(false);
   const [isLeaderBoard, toggleLeaderBoardState] = useState(false);
   const { data: leaderboardData } = useLeaderboardQuery({ pageInput: { first: 10 } });
@@ -62,32 +58,18 @@ export default function ProfilePage() {
     toggleLoadState(true);
     loadMoreProfiles();
   };
-  const filterUniq = (value, index, self) => {
-    return self.indexOf(value) === index;
-  };
 
   const filterUniqProfiles = () => {
-    if(newFiltersEnabled) {
-      if(!allLoadedProfiles && !allLoadedProfiles.length) return;
-      const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
-      return uniqData.map((profile, index) => {
-        return (
-          <ProfileCard
-            key={index}
-            profile={profile}
-          />
-        );
-      });
-    }else{
-      allLoadedProfiles.filter(filterUniq).map((profile, index) => {
-        return (
-          <ProfileCard
-            key={index}
-            profile={profile}
-          />
-        );
-      });
-    }
+    if(!allLoadedProfiles && !allLoadedProfiles.length) return;
+    const uniqData = _.uniqBy(allLoadedProfiles, (e) => e.id);
+    return uniqData.map((profile, index) => {
+      return (
+        <ProfileCard
+          key={index}
+          profile={profile}
+        />
+      );
+    });
   };
 
   const returnProfileBlock = () => {
@@ -114,6 +96,7 @@ export default function ProfilePage() {
                         numberOfGenesisKeys={item.numberOfGenesisKeys}
                         photoURL={item.photoURL}
                         url={item.url}
+                        isGkMinted={item.isGKMinted}
                       />
                     );
                   })
@@ -147,34 +130,30 @@ export default function ProfilePage() {
       );
     }
   };
-  if (!newFiltersEnabled) {
-    return <NotFoundPage />;
-  }else{
-    return(
-      <>
-        <div className="p-2 minmd:p-4 minlg:p-8 minhd:p-16 minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
-          <div className="flex">
-            <div className=" w-full min-h-disc">
-              <div>
-                <div className='flex justify-between mt-6 mb-10'>
-                  <div className='flex justify-between items-center'>
-                    <div className="flex flex-col minmd:flex-row minmd:items-center">
-                      {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
-                      <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
-                        {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
-                        {!isLeaderBoard ? 'Show leaderboard' : 'View Profiles' }
-                      </button>
-                    </div>
+  return(
+    <>
+      <div className="p-2 minmd:p-4 minlg:p-8 minhd:p-16 minmd:m-0 mb-10 minlg:mb-10 minlg:mt-20 minmd:max-w-full self-center minmd:self-stretch minxl:mx-auto min-h-screen ">
+        <div className="flex">
+          <div className=" w-full min-h-disc">
+            <div>
+              <div className='flex justify-between mt-6 mb-10'>
+                <div className='flex justify-between items-center'>
+                  <div className="flex flex-col minmd:flex-row minmd:items-center">
+                    {isLeaderBoard && <span className="text-[1.75rem] font-[500] mr-10">Leaderboard</span>}
+                    <button onClick={() => toggleLeaderBoardState(!isLeaderBoard)} className={`${isLeaderBoard ? 'text-[#6A6A6A]' : 'text-[#000]'} flex items-center underline`}>
+                      {!isLeaderBoard ? <LeaderBoardIcon className="mr-2"/> : null}
+                      {!isLeaderBoard ? 'Show leaderboard' : 'View Profiles' }
+                    </button>
                   </div>
                 </div>
-                {returnProfileBlock()}
               </div>
+              {returnProfileBlock()}
             </div>
           </div>
         </div>
-      </>
-    );
-  }
+      </div>
+    </>
+  );
 }
 
 ProfilePage.getLayout = function getLayout(page) {

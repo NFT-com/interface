@@ -6,42 +6,43 @@ query GetTxByContract($input: TransactionsByContractInput) {
     }
     totalItems
     items {
-      block_hash
-      block_number
-      buyer_address
-      contract_address
-      marketplace
+      index
       type
-      owner_address
-      token_id
+      ownerAddress
+      contractAddress
+      tokenId
       quantity
-      transaction_hash
-      transaction_date
-      transfer_from
-      transfer_to
-      price_details {
-        asset_type
-        contract_address
+      transactionHash
+      blockHash
+      blockNumber
+      transactionDate
+      transferFrom
+      transferTo
+      buyerAddress
+      sellerAddress
+      marketplace
+      priceDetails {
+        assetType
+        contractAddress
         price
-        price_usd
+        priceUSD
       }
       nft {
-        contract_type
-        contract_address
-        token_id
-        metadata_url
+        contractType
+        contractAddress
+        tokenId
+        metadataUrl
         total
         signatures
         royalties {
-          account_address
-          royalty_share
+          accountAddress
+          royaltyShare
         }
         creators {
-          account_address
-          creator_share
+          accountAddress
+          creatorShare
         }
       }
-      seller_address
     }
   }
 }

@@ -240,28 +240,33 @@ export function ExternalListings(props: ExternalListingsProps) {
   }
 
   return <div className='w-full flex justify-center'>
-    <EditListingsModal
-      nft={props.nft}
-      collectionName={props.collectionName}
-      listings={filterValidListings(props.nft?.listings?.items)}
-      visible={editListingsModalOpen}
-      onClose={() => {
-        setEditListingsModalOpen(false);
-      }} />
-    <SelectListingModal
-      listings={[
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2),
-        getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM)
-      ]?.filter( Boolean )}
-      nft={props.nft}
-      collectionName={props.collectionName}
-      visible={selectListingModalOpen}
-      onClose={() => {
-        setSelectListingModalOpen(false);
-      }}
-    />
+    {editListingsModalOpen &&
+      <EditListingsModal
+        nft={props.nft}
+        collectionName={props.collectionName}
+        listings={filterValidListings(props.nft?.listings?.items)}
+        visible={editListingsModalOpen}
+        onClose={() => {
+          setEditListingsModalOpen(false);
+        }} />
+    }
+    {selectListingModalOpen &&
+      <SelectListingModal
+        listings={[
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.LooksRare),
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.X2Y2),
+          getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.NFTCOM)
+        ]?.filter( Boolean )}
+        nft={props.nft}
+        collectionName={props.collectionName}
+        visible={selectListingModalOpen}
+        onClose={() => {
+          setSelectListingModalOpen(false);
+        }}
+      />
+    }
+   
     <div className='flex flex-col max-w-nftcom w-full'>
       {[
         getLowestPriceListing(filterValidListings(props.nft?.listings?.items), ethPriceUsd, chainId, ExternalProtocol.Seaport),
@@ -282,13 +287,13 @@ export function ExternalListings(props: ExternalListingsProps) {
                   <div className='flex items-end'>
                     {getIcon(
                       getByContractAddress(getListingCurrencyAddress(listing))?.contract,
-                      getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'
+                      getByContractAddress(getListingCurrencyAddress(listing))?.name ?? '-'
                     )}
                     <span className='sm:text-[30px] text-[37px] font-semibold'>
                       {getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}
                     </span>
                   </div>
-                  <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? 'WETH'}</span>
+                  <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? '-'}</span>
                 </div>
                 <span className="md:ml-0 md:mt-2 ml-2 text-[15px] uppercase font-medium text-[#6A6A6A] flex flex-nowrap">
                   ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)))?.toFixed(2) ?? 0}

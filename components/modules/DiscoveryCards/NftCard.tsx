@@ -2,10 +2,11 @@ import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseContext';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
-import { getAddressForChain, nftAggregator } from 'constants/contracts';
+import { getAddressForChain, nftAggregator, nftProfile } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
 import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
@@ -22,6 +23,7 @@ import { DetailedNft } from './CollectionCard';
 
 import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
+import GK from 'public/Badge_Key.svg';
 import ETH from 'public/eth.svg';
 import Hidden from 'public/Hidden.svg';
 import Reorder from 'public/Reorder.svg';
@@ -57,8 +59,6 @@ export interface NftCardProps {
 }
 
 export function NftCard(props: NftCardProps) {
-  const newFiltersEnabled = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE3_ENABLED);
-
   const { stagePurchase, stageBuyNow, togglePurchaseSummaryModal } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
@@ -71,7 +71,7 @@ export function NftCard(props: NftCardProps) {
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
   const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
   const isOwnedByMe = props?.isOwnedByMe || nft?.wallet?.address === currentAddress;
-
+  const { profileData: nftProfileData } = useProfileQuery(props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null);
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
@@ -113,7 +113,7 @@ export function NftCard(props: NftCardProps) {
   return (
     <div className={tw(
       'group/ntfCard transition-all cursor-pointer rounded-[16px] shadow-xl overflow-hidden cursor-p relative w-full mb-3',
-      props.nftsDescriptionsVisible != false ? `${newFiltersEnabled ? '' : 'h-[442px] sm:h-[auto]'}` : 'h-max'
+      props.nftsDescriptionsVisible != false ? '' : 'h-max'
     )}>
       {
         props.visible != null &&
@@ -163,9 +163,9 @@ export function NftCard(props: NftCardProps) {
           props.onClick && props.onClick();
         }}
       >
-        <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} relative object-cover w-full`}>
-          <div className={newFiltersEnabled ? `h-[${nftImage}px] object-cover overflow-hidden` : 'sm:h-[171px] relative h-[252px] object-cover overflow-hidden'}>
-            <div className={`${newFiltersEnabled ? '' : 'h-[252px]'} group-hover/ntfCard:scale-110 hover:scale-105 transition `}>
+        <div className='relative object-cover w-full'>
+          <div className={`h-[${nftImage}px] object-cover overflow-hidden`}>
+            <div className='group-hover/ntfCard:scale-110 hover:scale-105 transition'>
               <RoundedCornerMedia
                 variant={RoundedCornerVariant.None}
                 width={600}
@@ -246,7 +246,7 @@ export function NftCard(props: NftCardProps) {
 
           {props.nftsDescriptionsVisible != false &&
             <div className="sm:h-[auto] h-[190px] p-[18px] bg-white font-noi-grotesk">
-              <ul
+              <div
                 className="sm:leading-[18px] sm:h-[54px] h-[94px] flex flex-col text-[20px] leading-[28px] font-[600] list-none border-b-[1px] border-[#F2F2F2] pb-[8px] mb-[8px]">
                 <CustomTooltip2
                   noFullHeight={true}
@@ -259,11 +259,20 @@ export function NftCard(props: NftCardProps) {
                     </div>
                   }
                 >
-                  <li className="list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.name}</li>
+                  <div className='flex w-full'>
+                    <p className="p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">
+                      {props.name}
+                    </p>
+                    {nftProfileData?.profile?.isGKMinted &&
+                        <div className='h-4 w-4 minlg:h-6 minlg:w-6 ml-2 min-w-[24px] flex items-center'>
+                          <GK />
+                        </div>
+                    }
+                  </div>
                 </CustomTooltip2>
-                <li
-                  className="sm:text-sm text-[16px] [200px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</li>
-              </ul>
+                <p
+                  className="sm:text-sm text-[16px] [200px] leading-[25.5px] text-[#6A6A6A] mt-[4px] font-[400] list-none p-0 m-[0] whitespace-nowrap text-ellipsis overflow-hidden">{props.collectionName}</p>
+              </div>
               {
                 (props?.listings?.length || nft?.listings?.items?.length) && bestListing
                   ? (

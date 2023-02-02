@@ -42,7 +42,7 @@
     "@graphql-codegen/typescript": "^2.4.11",
     "@graphql-codegen/typescript-graphql-request": "^4.4.8",
     "@graphql-codegen/typescript-operations": "^2.4.0",
-    "@headlessui/react": "^1.6.1",
+    "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^1.0.6",
     "@looksrare/sdk": "^0.10.0",
     "@lottiefiles/react-lottie-player": "^3.4.7",
@@ -115,7 +115,7 @@
     "typesense": "1.4.0-3",
     "typesense-instantsearch-adapter": "^2.4.0",
     "uuid": "^8.3.2",
-    "wagmi": "^0.10.7"
+    "wagmi": "^0.11.0"
   },
   "devDependencies": {
     "@4tw/cypress-drag-drop": "^2.2.1",

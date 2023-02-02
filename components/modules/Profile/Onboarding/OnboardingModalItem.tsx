@@ -1,3 +1,5 @@
+import { Doppler, getEnvBool } from 'utils/env';
+
 import OnboardingSecondaryModal from './OnboardingSecondaryModal';
 
 import { CheckCircle } from 'phosphor-react';
@@ -31,12 +33,12 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
                 <CheckCircle size={25} color="#26AA73" weight="fill" className='mr-3' />
                 <p className='text-[#26AA73] line-through font-medium'>{item.name}</p>
               </div>
-              <div className='flex items-center'>
+              {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='flex items-center'>
                 <p className='w-2'>{item.coins}</p>
                 <div className='h-[25px] w-[25px] ml-2'>
                   <NftGoldLogo />
                 </div>
-              </div>
+              </div>}
             </div>
             :
             <div
@@ -50,12 +52,12 @@ export default function OnboardingModalItem({ items } : OnboardingModalItemProps
                 <div className='w-5 h-5 border rounded-full mr-3 ml-[2px] border-[#969696] group-hover:border-[#F9D54C]'></div>
                 <p className='text-[#B2B2B2] group-hover:text-black font-medium'>{item.name}</p>
               </div>
-              <div className='flex items-center bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>
+              {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='flex items-center bg-gradient-to-r bg-clip-text text-transparent from-[#FAC213] to-[#FF9B37]'>
                 <p className='w-2'>{item.coins}</p>
                 <div className='h-[25px] w-[25px] ml-2'>
                   <NftGoldLogo />
                 </div>
-              </div>
+              </div>}
             </div>
           }
         </>

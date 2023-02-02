@@ -349,7 +349,7 @@ export default function AssociatedProfile({ profile, pending, remove, isCollecti
           </div>
         </div>
       </Modal>
-      <RemoveModal isTxPending={transactionPending} isProfile isRemoved={isRemoved} rejected={pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner || profile.addr} remove={removeHandler} />
+      {removeModalVisible && <RemoveModal isTxPending={transactionPending} isProfile isRemoved={isRemoved} rejected={pending} visible={removeModalVisible} setVisible={setRemoveModalVisible} profileUrl={profile.profileUrl || profile.url} address={profile.owner || profile.addr} remove={removeHandler} />}
     </>
   );
 }

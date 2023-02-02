@@ -127,7 +127,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
 
       {!count ?
         <div className='flex flex-col items-center justify-center'>
-          <NoActivityIcon className='mx-auto' />
+          <NoActivityIcon className='mx-auto w-[80%] my-2' />
           <div className='text-[#4D4D4D] font-semibold text-[22px] my-5'>No activity so far</div>
           <div className='text-center text-[#4D4D4D] text-[14px] font-medium'>
             You’ll see here the offers to your listed NFTs and when other owners accept of decline your made offers.

@@ -33,10 +33,10 @@ const detailTabTypes = {
 };
 
 export function NFTDetailPage(props: NFTDetailPageProps) {
-  const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
-
   const { address: currentAddress } = useAccount();
   const defaultChainId = useDefaultChainId();
+
+  const { data: nft, mutate: mutateNft } = useNftQuery(props.collection, props.tokenId);
 
   const { data: collection } = useSWR('ContractMetadata' + nft?.contract, async () => {
     return await getContractMetadata(nft?.contract, defaultChainId);

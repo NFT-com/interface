@@ -13,6 +13,7 @@ query Leaderboard($input: LeaderboardInput) {
       numberOfGenesisKeys
       numberOfCollections
       itemsVisible
+      isGKMinted
     }
   }
 }

@@ -60,16 +60,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       revalidateOnFocus: false,
     });
 
-  const { data: NFTCOMRoyaltyFee } = useSWR(
-    'NFTCOMRoyaltyFee' + currentAddress,
-    async () => {
-      return await marketplace.royaltyInfo(currentAddress);
-    },
-    {
-      refreshInterval: 0,
-      revalidateOnFocus: false,
-    });
-
   const { data: NFTCOMProtocolFee } = useSWR(
     'NFTCOMProtocolFee' + currentAddress,
     async () => {
@@ -95,8 +85,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee]);
 
   const getMaxRoyaltyFees: () => number = useCallback(() => {
-    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, NFTCOMRoyaltyFee);
-  }, [toList, looksrareProtocolFeeBps, getByContractAddress, NFTCOMRoyaltyFee]);
+    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress]);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
@@ -245,7 +235,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className="flex flex-col align-end">
-              <span className='font-semibold'>{'$' + (getMaxMarketplaceFees()?.toLocaleString('en-US', { maximumSignificantDigits: 12 }) ?? 0) }</span>
+              <span className='font-semibold'>{'$' + (getMaxMarketplaceFees()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? 0) }</span>
             </div>
           </div>
           <div className="mx-4 my-4 flex items-center justify-between">
@@ -256,7 +246,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className="flex flex-col justify-end">
-              <span className="font-semibold">{'$' + (getMaxRoyaltyFees()?.toLocaleString('en-US', { maximumSignificantDigits: 12 }) ?? 0)}</span>
+              <span className="font-semibold">{'$' + (getMaxRoyaltyFees()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? 0)}</span>
             </div>
           </div>
           <div className='px-8 border-t border-[#D5D5D5] w-full'/>
@@ -268,7 +258,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               </span>
             </div>
             <div className='flex flex-col justify-end'>
-              <span className='font-semibold'>{'$' + (getTotalMinimumProfitUSD()?.toLocaleString('en-US', { maximumSignificantDigits: 12 }) ?? 0)}</span>
+              <span className='font-semibold'>{'$' + (getTotalMinimumProfitUSD()?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 }) ?? 0)}</span>
             </div>
           </div>
         </>

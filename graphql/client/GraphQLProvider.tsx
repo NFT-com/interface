@@ -129,11 +129,13 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         trySignature,
       }}
     >
-      <SignatureModal
-        visible={!signed && !isNullOrEmpty(currentAddress) && !loading}
-        showRetry={sigRejected}
-        onRetry={trySignature}
-      />
+      {!signed &&
+        <SignatureModal
+          visible={!signed && !isNullOrEmpty(currentAddress) && !loading}
+          showRetry={sigRejected}
+          onRetry={trySignature}
+        />
+      }
       {props.children}
     </GraphQLContext.Provider>
   );

@@ -98,7 +98,7 @@ export function NftGrid(props: NftGridProps) {
       <DraggableGridItem
         key={`${nft?.contract}-${nft?.tokenId}`}
         item={{ id: nft?.id, hidden: nft?.hidden, draggable: props.draggable ?? true }}
-        onMoveItem={moveItem}
+        onMoveItem={nft?.hidden ? null : moveItem}
       >
         {/*getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'max-w-[264px]',*/}
         <div

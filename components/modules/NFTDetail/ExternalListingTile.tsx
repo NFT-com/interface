@@ -38,6 +38,7 @@ export interface ExternalListingTileProps {
   nft: PartialDeep<Nft>;
   collectionName: string;
   buttons: ListingButtonType[];
+  onClose?: () => void;
 }
 
 const Colors = {
@@ -67,7 +68,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const { data: signer } = useSigner();
   const defaultChainId = useDefaultChainId();
   const { stagePurchase, toBuy } = useContext(NFTPurchasesContext);
-  const { stageListing } = useContext(NFTListingsContext);
+  const { stageListing, toggleCartSidebar } = useContext(NFTListingsContext);
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
   const X2Y2Exchange = useX2Y2ExchangeContract(signer);
@@ -141,7 +142,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
     } else if ((listing?.order?.protocol as ExternalProtocol) === ExternalProtocol.NFTCOM) {
       listedCurrency = (listing?.order?.protocolData as NftcomProtocolData).takeAsset[0]?.standard?.contractAddress;
     }else {
-      listedCurrency = (listing?.order?.protocolData as SeaportProtocolData).parameters.consideration[0].token;
+      listedCurrency = (listing?.order?.protocolData as SeaportProtocolData).parameters?.consideration[0]?.token;
     }
 
     switch (type) {
@@ -274,12 +275,14 @@ function ExternalListingTile(props: ExternalListingTileProps) {
                 listing?.order?.protocolData as X2Y2ProtocolData :
                 listing?.order?.protocolData as LooksrareProtocolData
           });
+          props.onClose();
+          toggleCartSidebar('Buy');
         }}
         type={ButtonType.PRIMARY}
       />;
     }
     }
-  }, [listing, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, currentDate, stagePurchase]);
+  }, [listing, stageListing, props, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, currentDate, stagePurchase, toggleCartSidebar]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2, ExternalProtocol.NFTCOM].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.
@@ -321,7 +324,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             {Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), listingCurrencyData?.decimals ?? 18)).toLocaleString('en',{ useGrouping: false, minimumFractionDigits: 1, maximumFractionDigits: 4 })}{' '}
             {listingCurrencyData?.name ?? 'ETH'}
             <span className="text-secondary-txt text-sm ml-4">
-              ${listingCurrencyData.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), listingCurrencyData?.decimals ?? 18)))}
+              ${listingCurrencyData?.usd(Number(ethers.utils.formatUnits(getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null), listingCurrencyData?.decimals ?? 18)))}
             </span>
           </span>
         </div>

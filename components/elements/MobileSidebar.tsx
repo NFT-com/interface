@@ -4,7 +4,6 @@ import { useAddFundsDialog } from 'hooks/state/useAddFundsDialog';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import usePromotableZIndex from 'hooks/usePromotableZIndex';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { Dialog } from '@headlessui/react';
@@ -18,8 +17,6 @@ import { isMobile } from 'react-device-detect';
 const DynamicResultsDropDown = dynamic<React.ComponentProps<typeof StaticResultsDropDown>>(() => import('components/modules/Search/ResultsDropDown').then(mod => mod.ResultsDropDown));
 
 export const MobileSidebar = () => {
-  const newFiltersEnabledNew = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE4_ENABLED);
-
   const { mobileSidebarOpen, setMobileSidebarOpen, toggleMobileSidebar } = useMobileSidebar();
   const { addFundsDialogOpen } = useAddFundsDialog();
   const { promoteZIndex, restoreZIndex } = usePromotableZIndex({ promotedZIndex: 200 });
@@ -117,22 +114,7 @@ export const MobileSidebar = () => {
           />}
         </div>
         <div className='border-b border-[#ECECEC]'>
-          {newFiltersEnabledNew ?
-            checkHeaderContent()
-            :
-            <div>
-              <Link href='/app/discover'>
-                <h2 className={tw(
-                  'w-full py-6 text-2xl font-medium font-noi-grotesk'
-                )}
-                onClick={() => toggleMobileSidebar()}
-                >
-                Discover
-                </h2>
-              </Link>
-            </div>
-          }
-
+          {checkHeaderContent()}
         </div>
         <div className='border-b border-[#ECECEC]'>
           <Link href='/app/gallery'>
@@ -177,7 +159,7 @@ export const MobileSidebar = () => {
         </div>
       </motion.div>
     );
-  }, [dropDownSearchResults, closeSideBarFn, newFiltersEnabledNew, checkHeaderContent, learnExpanded, toggleMobileSidebar]);
+  }, [dropDownSearchResults, closeSideBarFn, checkHeaderContent, learnExpanded, toggleMobileSidebar]);
 
   return (
     <AnimatePresence>

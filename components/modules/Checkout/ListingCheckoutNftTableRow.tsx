@@ -321,8 +321,8 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
   };
   
   return (
-    <div className='minlg:h-44 flex flex-col minlg:flex-row mb-8'>
-      <div className='w-2/5 minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:pl-0 minxl:pr-8 w-full'>
+    <div className='minlg:min-h-[11rem] flex flex-col minlg:flex-row mb-8'>
+      <div className='w-2/5 minlg:basis-2/12 minxxl:max-w-[10rem] flex flex-col justify-start items-start px-2 minxl:pl-0 minxl:pr-8'>
         {/*             {
             expanded ?
               <CaretDown onClick={() => {
@@ -359,9 +359,9 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
       </ div>
       {!seaportEnabled && !looksrareEnabled && !X2Y2Enabled && !NFTCOMEnabled && <span className='basis-7/12 minlg:basis-9/1 font-normal flex text-[#A6A6A6] px-4 minlg:pl-[20%] minxl:pl-[23%] minxl:pl-[26%] minhd:pl-[30%] self-center items-center whitespace-nowrap'>Select a Marketplace</span>}
       {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='basis-8/12 minlg:basis-10/12 pl-2 minlg:pl-0'>
-        {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='hidden minlg:flex text-base minlg:text-[0.85rem] minxl:text-base font-normal flex text-[#A6A6A6] mb-4'>
-          <div className='w-[22%]'>Marketplace</div>
-          <div className='w-[28%] flex flex-row justify-between'>
+        {(seaportEnabled || looksrareEnabled || X2Y2Enabled || NFTCOMEnabled) && <div className='hidden minlg:flex text-base minlg:text-[0.85rem] minxl:text-base font-normal text-[#A6A6A6] mb-4'>
+          <div className='w-[26%]'>Marketplace</div>
+          <div className='w-[27%] flex flex-row justify-between'>
             <span className='shrink-0'>Type of Auction</span>
             <CustomTooltip2
               tooltipClick={() => router.push('https://docs.nft.com/')}
@@ -379,13 +379,13 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               <InfoIcon className='ml-2' />
             </CustomTooltip2>
           </div>
-          <div className='w-[45%]'>Set Price</div>
+          <div className='w-[42%]'>Set Price</div>
           <div className='w-[5%]'>&nbsp;</div>
         </div>}
         {seaportEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-            <div className='mb-2 rounded-md h-12 md:w-full minlg:min-w-[140px] minglg:max-w-[140px]'>
+            <div className='mb-2 rounded-md h-12 md:w-full minlg:min-w-[136px] minlg:w-[26%]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(0, true)}
                 selectedIndex={0}
@@ -398,12 +398,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               type="text"
               value='Fixed price'
               className={tw(
-                'text-sm border border-gray-200 h-12 w-full minlg:w-[28%]',
+                'text-sm border border-gray-200 h-12 w-full minlg:w-[27%]',
                 'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
               )}
             />
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[42%] flex flex-row'>
               {OpenseaPriceInput()}
               <div className='w-full flex minlg:hidden -ml-[16rem] z-10 minlg:z-auto'>
                 <div className='w-full flex items-center justify-end '>
@@ -434,7 +434,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         {looksrareEnabled && /* && selectedOptionDropdown0.current !== ExternalProtocol.LooksRare &&*/
             <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
               <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-              <div className='mb-2 rounded-md h-12 md:w-full minlg:min-w-[140px] minglg:max-w-[140px]'>
+              <div className='mb-2 rounded-md h-12 md:w-full minlg:min-w-[136px] minlg:w-[26%]'>
                 <DropdownPicker
                   options={generateMarketPlaceOptions(1, true)}
                   selectedIndex={1}
@@ -447,12 +447,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
                 type="text"
                 value='Fixed price'
                 className={tw(
-                  'text-sm border border-gray-200 h-12 w-full minlg:w-[28%]',
+                  'text-sm border border-gray-200 h-12 w-full minlg:w-[27%]',
                   'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
                 )}
               />
               <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-              <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
+              <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[42%] flex flex-row'>
                 <CustomTooltip2
                   orientation='custom'
                   customLeftPosition='19'
@@ -498,7 +498,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         {X2Y2Enabled && /* selectedOptionDropdown0.current !== ExternalProtocol.X2Y2 && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-            <div className='mb-2 rounded-md h-12 md:w-full minlg:min-w-[140px] minglg:max-w-[140px]'>
+            <div className='mb-2 rounded-md h-12 md:w-full minlg:min-w-[136px] minlg:w-[26%]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(2, true)}
                 selectedIndex={2}
@@ -511,12 +511,12 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               type="text"
               value='Fixed price'
               className={tw(
-                'text-sm border border-gray-200 h-12 w-full minlg:w-[28%]',
+                'text-sm border border-gray-200 h-12 w-full minlg:w-[27%]',
                 'text-left p-1 rounded-md mb-2 bg-gray-200 pl-2 minlg:ml-1',
               )}
             />
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Set Price</div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row relative'>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[42%] flex flex-row relative'>
               <CustomTooltip2
                 orientation='custom'
                 customLeftPosition='19'
@@ -562,7 +562,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
         {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && NFTCOMEnabled && /*(selectedOptionDropdown0.current !== ExternalProtocol.Seaport && selectedOptionDropdown0.current !== 'Opensea') && */
           <div className='w-full flex flex-col minlg:flex-row border-b border-[#A6A6A6] minlg:border-0 pb-3 minlg:pb-0 mb-3 minlg:mb-0'>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Marketplace</div>
-            <div className='mb-2 rounded-md h-12 md:w-full minlg:min-w-[140px] minglg:max-w-[140px]'>
+            <div className='mb-2 rounded-md h-12 md:w-full minlg:min-w-[136px] minlg:w-[26%]'>
               <DropdownPicker
                 options={generateMarketPlaceOptions(3, true)}
                 selectedIndex={3}
@@ -570,7 +570,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
               />
             </div>
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>Type of Auction</div>
-            <div className='mb-2 rounded-md h-12 w-[89%] minlg:w-[28%] minlg:ml-1'>
+            <div className='mb-2 rounded-md h-12 w-[89%] minlg:w-[27%] minlg:ml-1'>
               <DropdownPicker
                 options={generateTypeOfAuctionOptions()}
                 placeholder={'Select'}
@@ -580,7 +580,7 @@ export function ListingCheckoutNftTableRow(props: ListingCheckoutNftTableRowProp
             <div className='minlg:hidden w-full text-base font-normal flex text-[#A6A6A6] mb-3'>
               Set Price
             </div>
-            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[45%] flex flex-row'>
+            <div className='mb-2 minlg:mx-1 h-12 w-full minlg:w-[42%] flex flex-row'>
               <CustomTooltip2
                 orientation='custom'
                 customLeftPosition='19'
