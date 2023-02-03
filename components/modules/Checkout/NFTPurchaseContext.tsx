@@ -30,6 +30,10 @@ export type StagedPurchase = {
    * purchasers need to give ERC20 approval to the Aggregator contract
    */
   isApproved: boolean;
+  isApprovedForSeaport: boolean;
+  isApprovedForNFTCOM: boolean;
+  isApprovedForLooksRare: boolean;
+  isApprovedForX2Y2: boolean;
   orderHash?: string;
   protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData | NftcomProtocolData;
   takerAddress: string;
@@ -129,7 +133,29 @@ export function NFTPurchaseContextProvider(
   const updateCurrencyApproval = useCallback((currency: string, approved: boolean) => {
     const nftsToApprove = buyNowActive ? toBuyNow : toBuy;
     const newToBuy = nftsToApprove.slice().map(item => {
-      if (item?.currency === currency) {
+      if(buyNowActive || nftsToApprove.length === 1){
+        if(item.protocol === ExternalProtocol.NFTCOM){
+          return {
+            ...item,
+            isApprovedForNFTCOM: approved
+          };
+        } else if (item.protocol === ExternalProtocol.Seaport){
+          return {
+            ...item,
+            isApprovedForSeaport: approved
+          };
+        } else if (item.protocol === ExternalProtocol.LooksRare){
+          return {
+            ...item,
+            isApprovedForLooksRare: approved
+          };
+        } else {
+          return {
+            ...item,
+            isApprovedForX2Y2: approved
+          };
+        }
+      } else if (item?.currency === currency) {
         return {
           ...item,
           isApproved: approved

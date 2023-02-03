@@ -33,6 +33,21 @@ export const convertDurationToSecForNumbersOnly = (d: number) => {
 };
 
 export function needsApprovals(stagedPurchases: StagedPurchase[]): boolean {
+  if(stagedPurchases.length === 1) {
+    return filterDuplicates(
+      stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+      (first, second) => first?.currency === second?.currency
+    ).some(purchase =>
+      purchase.protocol === ExternalProtocol.LooksRare ?
+        !purchase?.isApprovedForLooksRare :
+        purchase.protocol === ExternalProtocol.Seaport ?
+          !purchase?.isApprovedForSeaport :
+          purchase.protocol === ExternalProtocol.NFTCOM ?
+            !purchase?.isApprovedForNFTCOM :
+            !purchase?.isApprovedForX2Y2
+    );
+  }
+
   return filterDuplicates(
     stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
     (first, second) => first?.currency === second?.currency

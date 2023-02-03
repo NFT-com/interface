@@ -2,8 +2,10 @@ import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsConte
 import { NFTPurchasesContext } from 'components/modules/Checkout/NFTPurchaseContext';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, Nft, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, Nft, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useGetContractApprovalAddress } from 'hooks/useGetContractApprovalAddress';
+import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
@@ -24,6 +26,8 @@ export const NFTCardAddToCartButton = ( props: {
   const defaultChainId = useDefaultChainId();
   const { stagePurchase } = useContext(NFTPurchasesContext);
   const { toggleCartSidebar } = useContext(NFTListingsContext);
+  const getApprovalContractAddress = useGetContractApprovalAddress();
+  const currentDate = useGetCurrentDate();
   
   return (
     <button onClick={async (e: MouseEvent<HTMLButtonElement>) => {
@@ -32,15 +36,21 @@ export const NFTCardAddToCartButton = ( props: {
       const listing = lowestListing;
       const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
       const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
-      const price = getListingPrice(listing);
+      const protocolAllowance = await currencyData.allowance(currentAddress, getApprovalContractAddress(listing?.order?.protocol as ExternalProtocol));
+      const price = getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
+      const protocol = listing?.order?.protocol as ExternalProtocol;
       stagePurchase({
         nft: props.nft,
         activityId: listing?.id,
         currency: getListingCurrencyAddress(listing) ?? WETH.address,
         price: price,
         collectionName: props.collectionName,
-        protocol: listing?.order?.protocol as ExternalProtocol,
+        protocol: protocol,
         isApproved: BigNumber.from(allowance ?? 0).gt(price),
+        isApprovedForLooksRare: protocol === ExternalProtocol.LooksRare ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
+        isApprovedForSeaport: protocol === ExternalProtocol.Seaport ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
+        isApprovedForNFTCOM: protocol === ExternalProtocol.NFTCOM ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
+        isApprovedForX2Y2: protocol === ExternalProtocol.X2Y2 ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
         orderHash: listing?.order?.orderHash,
         makerAddress: listing?.order.makerAddress,
         takerAddress: listing?.order.takerAddress,

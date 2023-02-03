@@ -5,10 +5,12 @@ import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useGetContractApprovalAddress } from 'hooks/useGetContractApprovalAddress';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { useBuyNow } from 'utils/marketplaceHelpers';
 import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from 'utils/marketplaceUtils';
@@ -64,6 +66,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     });
 
   const nftsToBuy = buyNowActive ? toBuyNow : toBuy;
+  const getApprovalContractAddress = useGetContractApprovalAddress();
 
   const getNeedsApprovals = useCallback(() => {
     return needsApprovals(nftsToBuy);
@@ -265,14 +268,27 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               }
 
               if (getNeedsApprovals()) {
-                const missingApprovals = filterDuplicates(
-                  toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
-                  (first, second) => first?.currency === second?.currency
-                ).filter(purchase => !purchase?.isApproved);
+                const missingApprovals = nftsToBuy.length > 1 ?
+                  filterDuplicates(
+                    nftsToBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                    (first, second) => first?.currency === second?.currency
+                  ).filter(purchase => !purchase?.isApproved) :
+                  filterDuplicates(
+                    nftsToBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                    (first, second) => first?.currency === second?.currency
+                  ).filter(purchase =>
+                    purchase.protocol === ExternalProtocol.LooksRare ?
+                      !purchase?.isApprovedForLooksRare :
+                      purchase.protocol === ExternalProtocol.Seaport ?
+                        !purchase?.isApprovedForSeaport :
+                        purchase.protocol === ExternalProtocol.NFTCOM ?
+                          !purchase?.isApprovedForNFTCOM :
+                          !purchase?.isApprovedForX2Y2
+                  );
                 for (let i = 0; i < missingApprovals.length; i++) {
                   const purchase = missingApprovals[i];
                   const currencyData = getByContractAddress(purchase?.currency);
-                  await currencyData?.setAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id))
+                  await currencyData?.setAllowance(currentAddress, nftsToBuy.length > 1 ? getAddressForChain(nftAggregator, chain?.id) : getApprovalContractAddress(nftsToBuy[0].protocol))
                     .then((result: boolean) => {
                       if (!result) {
                         setError('ApprovalError');

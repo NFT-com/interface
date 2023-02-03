@@ -4,11 +4,13 @@ import { NFTPurchasesContext } from 'components/modules//Checkout/NFTPurchaseCon
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
 import { getAddressForChain, nftAggregator, nftProfile } from 'constants/contracts';
 import { WETH } from 'constants/tokens';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
+import { useGetContractApprovalAddress } from 'hooks/useGetContractApprovalAddress';
+import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
 import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
@@ -75,6 +77,8 @@ export function NftCard(props: NftCardProps) {
   const ethPriceUSD = useEthPriceUSD();
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
+  const getApprovalContractAddress = useGetContractApprovalAddress();
+  const currentDate = useGetCurrentDate();
 
   const checkEndDate = () => {
     if(bestListing){
@@ -182,15 +186,21 @@ export function NftCard(props: NftCardProps) {
                           e.preventDefault();
                           const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
                           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
-                          const price = getListingPrice(bestListing);
+                          const protocolAllowance = await currencyData.allowance(currentAddress, getApprovalContractAddress(bestListing?.order?.protocol as ExternalProtocol));
+                          const price = getListingPrice(bestListing, (bestListing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
+                          const protocol = bestListing?.order?.protocol as ExternalProtocol;
                           stageBuyNow({
                             nft: props?.nft || nft,
                             activityId: bestListing?.id,
                             currency: getListingCurrencyAddress(bestListing) ?? WETH.address,
                             price: price,
                             collectionName: props.collectionName,
-                            protocol: bestListing?.order?.protocol as ExternalProtocol,
+                            protocol: protocol,
                             isApproved: BigNumber.from(allowance ?? 0).gt(price),
+                            isApprovedForLooksRare: protocol === ExternalProtocol.LooksRare ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
+                            isApprovedForSeaport: protocol === ExternalProtocol.Seaport ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
+                            isApprovedForNFTCOM: protocol === ExternalProtocol.NFTCOM ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
+                            isApprovedForX2Y2: protocol === ExternalProtocol.X2Y2 ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
                             orderHash: bestListing?.order?.orderHash,
                             makerAddress: bestListing?.order?.makerAddress,
                             takerAddress: bestListing?.order?.takerAddress,
@@ -221,6 +231,10 @@ export function NftCard(props: NftCardProps) {
                             collectionName: props.collectionName,
                             protocol: bestListing?.order?.protocol as ExternalProtocol,
                             isApproved: BigNumber.from(allowance ?? 0).gt(price),
+                            isApprovedForLooksRare: false,
+                            isApprovedForSeaport: false,
+                            isApprovedForNFTCOM: false,
+                            isApprovedForX2Y2: false,
                             orderHash: bestListing?.order?.orderHash,
                             makerAddress: bestListing?.order?.makerAddress,
                             takerAddress: bestListing?.order?.takerAddress,
