@@ -4,6 +4,7 @@ import { Maybe, NftType } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
@@ -41,6 +42,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
   const { address: currentAddress } = useAccount();
+  const { data: toListNftComRoyaltyFees } = useNftComRoyalties(toList);
   const { getByContractAddress } = useSupportedCurrencies();
   const { marketplace } = useAllContracts();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
@@ -79,24 +81,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       refreshInterval: 0,
       revalidateOnFocus: false,
     });
-
-  const { data: toListNftComRoyaltyFees } = useSWR(
-    'NFTCOMRoyaltyFee' + JSON.stringify(toList.map(i => i?.nft?.contract + i?.nft?.tokenId)),
-    async () => {
-      return await Promise.all((toList).map(async (stagedListing) => {
-        const targetProtocols = await stagedListing.targets.map((target) => target.protocol);
-        if (targetProtocols.includes(ExternalProtocol.NFTCOM)) {
-          return Number((await marketplace.royaltyInfo(stagedListing.nft?.contract))?.[1]);
-        } else {
-          return 0;
-        }
-      },
-      {
-        refreshInterval: 0,
-        revalidateOnFocus: false,
-      }));
-    }
-  );
 
   const { data: x2y2Fees } = useSWR(
     'x2y2Fees' + JSON.stringify(toList.map(i => i?.nft?.contract + i?.nft?.tokenId)),
