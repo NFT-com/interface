@@ -24,7 +24,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   const { getByContractAddress } = useSupportedCurrencies();
   const [type, setType] = useState('');
   const defaultChainId = useDefaultChainId();
-  const nftId = BigNumber.from(item?.nftId[0].split('/')[2]).toString();
+  const nftId = item?.nftId[0]?.split('/')[2] ? BigNumber.from(item?.nftId[0]?.split('/')[2]).toString() : '-';
   const ethPriceUSD = useEthPriceUSD();
   const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.nftContract, async () => {
     return await getContractMetadata(item?.nftContract, defaultChainId);
@@ -155,7 +155,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
     if(item[type]?.protocol === ExternalProtocol.NFTCOM){
       const protocolData = item[type]?.protocolData as NftcomProtocolData;
-      if((type === 'transaction' || type === 'order') && !isNullOrEmpty(protocolData?.takeAsset[0]?.value) && !isNullOrEmpty(protocolData?.takeAsset[0]?.standard?.contractAddress)){
+      if((type === 'transaction' || type === 'order') && !isNullOrEmpty(protocolData?.takeAsset?.[0]?.value) && !isNullOrEmpty(protocolData?.takeAsset?.[0]?.standard?.contractAddress)){
         const ethAmount = ethers.utils.formatEther(protocolData?.takeAsset[0]?.value);
         const currencyData = getByContractAddress(protocolData?.takeAsset[0]?.standard?.contractAddress);
         return (

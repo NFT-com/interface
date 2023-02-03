@@ -7,6 +7,7 @@ import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivity
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { useBuyNow } from 'utils/marketplaceHelpers';
@@ -42,6 +43,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const { data: signer } = useSigner();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const provider = useProvider();
+  const { data: nftComRoyalties } = useNftComRoyalties(toBuy, true);
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { buyNow } = useBuyNow(signer);
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
@@ -81,12 +83,19 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   }, [nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, hasGk]);
  
   const getTotalRoyalties = useCallback(() => {
-    return getTotalRoyaltiesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress);
-  }, [getByContractAddress, looksrareProtocolFeeBps, nftsToBuy]);
+    return getTotalRoyaltiesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, nftComRoyalties);
+  }, [getByContractAddress, looksrareProtocolFeeBps, nftsToBuy, nftComRoyalties]);
 
   const getSummaryContent = useCallback(() => {
     if (success) {
       return <CheckoutSuccessView
+        onClose={() => {
+          setSuccess(false);
+          setLoading(false);
+          setError(null);
+          clearBuyNow();
+          props.onClose();
+        }}
         userAddress={currentAddress}
         type={SuccessType.Purchase}
         subtitle={`Congratulations! You have successfully purchased ${nftsToBuy?.length} NFT${nftsToBuy.length > 1 ? 's' : ''}`}
@@ -203,7 +212,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, success, toBuy]);
+  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, props, success, toBuy]);
 
   return (
     <Modal
