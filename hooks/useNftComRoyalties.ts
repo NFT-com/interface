@@ -1,4 +1,4 @@
-import { StagedListing } from 'components/modules/Checkout/NFTListingsContext'
+import { StagedListing } from 'components/modules/Checkout/NFTListingsContext';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { ExternalProtocol } from 'types';
 

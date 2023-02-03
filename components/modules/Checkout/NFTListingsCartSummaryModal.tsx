@@ -6,6 +6,7 @@ import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrate
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { useX2Y2Royalties } from 'hooks/useX2Y2Royalties';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, getProtocolDisplayName } from 'utils/marketplaceUtils';
@@ -43,6 +44,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { data: signer } = useSigner();
   const { address: currentAddress } = useAccount();
   const { data: toListNftComRoyaltyFees } = useNftComRoyalties(toList);
+  const { data: x2y2Fees } = useX2Y2Royalties(toList);
   const { getByContractAddress } = useSupportedCurrencies();
   const { marketplace } = useAllContracts();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
@@ -81,36 +83,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       refreshInterval: 0,
       revalidateOnFocus: false,
     });
-
-  const { data: x2y2Fees } = useSWR(
-    'x2y2Fees' + JSON.stringify(toList.map(i => i?.nft?.contract + i?.nft?.tokenId)),
-    async () => {
-      return await Promise.all((toList).map(async (stagedListing) => {
-        const targetProtocols = await stagedListing.targets.map((target) => target.protocol);
-        if (targetProtocols.includes(ExternalProtocol.X2Y2)) {
-          const x2y2 = 'https://api.thegraph.com/subgraphs/name/messari/x2y2-ethereum';
-          const query = `{\n  collections(where: { id: "${stagedListing.nft?.contract?.toLowerCase()}" }) {\n    id\n    royaltyFee\n  }\n}`;
-          // post request using fetch
-          const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query })
-          };
-          
-          const responseX2Y2 = await fetch(x2y2, requestOptions);
-          const dataX2Y2 = await responseX2Y2.json();
-
-          return dataX2Y2?.data?.collections[0]?.royaltyFee ?? 0;
-        } else {
-          return 0;
-        }
-      },
-      {
-        refreshInterval: 0,
-        revalidateOnFocus: false,
-      }));
-    }
-  );
 
   const getMaxMarketplaceFees: () => number = useCallback(() => {
     return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length ? NFTCOMProfileFee : Number(NFTCOMProtocolFee));
