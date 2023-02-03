@@ -86,7 +86,7 @@ export const libraryCall = (fnSig: string, entireHex: string): string => {
 };
 
 export type BuyNowInterface = {
-  buyNow: (executorAddress: string, order: StagedPurchase) => Promise<ContractTransaction>
+  buyNow: (executorAddress: string, order: StagedPurchase) => Promise<boolean>
 };
 
 export function useBuyNow(signer: Signer): BuyNowInterface {

@@ -287,6 +287,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               }
 
               const result = buyNowActive ? await buyNow(currentAddress, toBuyNow[0]) : toBuy.length > 1 ? await buyAll() : await buyNow(currentAddress, toBuy[0]);
+
               if (result) {
                 setSuccess(true);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
