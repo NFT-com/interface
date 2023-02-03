@@ -32,19 +32,19 @@ type GetAssetProps = {
 const getSymbol = (contract_address: string, symbol: string, price: string) => {
   switch (symbol) {
   case 'USDC':
-    return <div className='flex items-center'><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{price} USDC</div>;
+    return <div className='flex items-center'><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USDC</div>;
   case 'DAI':
-    return <div className='flex items-center'><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{price} DAI</div>;
+    return <div className='flex items-center'><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} DAI</div>;
   default:
     if (!contract_address) {
-      return <div>{price} {symbol}</div>;
+      return <div>{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {symbol}</div>;
     }
     // eslint-disable-next-line @next/next/no-img-element
     return <div className='flex items-center'><img
       className='mr-1.5 h-6 w-6 relative shrink-0'
       src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${ethers.utils.getAddress(contract_address)}/logo.png`}
       alt={symbol}
-    />{price} {symbol}
+    />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {symbol}
     </div>;
   }
 };
@@ -54,17 +54,17 @@ function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
 
   switch (asset_type) {
   case 'ETH':
-    return <div className='flex items-center'><ETH className='mr-1.5 h-5 w-5 relative shrink-0' /> {price} ETH</div>;
+    return <div className='flex items-center'><ETH className='mr-1.5 h-5 w-5 relative shrink-0' /> {Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ETH</div>;
   case 'ERC20':
     return <div className='flex items-center'>{getSymbol(contract_address, symbol, price)}</div>;
   default:
-    return <div>{price} {asset_type}</div>;
+    return <div>{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {asset_type}</div>;
   }
 }
 
 export default function DetailPageTableRow({ tx, index, isNftDetailPage }: DetailPageTableRowProps) {
   const formatMarketplaceName = (name) => {
-    if(name === 'opensea'){
+    if(name == 'opensea'){
       return <div className='flex items-center'>
         <OpenseaIcon
           className='h-6 w-6 relative shrink-0 hover:opacity-70 '
@@ -73,7 +73,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         />
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-1.5'>Opensea</div>
       </div>;
-    } else if (name === 'looksrare') {
+    } else if (name == 'looksrare') {
       return <div className='flex items-center'>
         <LooksrareIcon
           className='h-6 w-6 relative shrink-0 hover:opacity-70 '
@@ -82,13 +82,13 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         />
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-1.5'>Looksrare</div>
       </div>;
-    } else if (name === 'NFTCOM') {
+    } else if (name == 'nftcom') {
       return <div className='flex items-center'>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={NFTCOMIcon.src} className='h-5 w-5 relative shrink-0 hover:opacity-70' alt="NFT.com logo" />
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>NFT.com</div>
       </div>;
-    } else if (name === 'x2y2') {
+    } else if (name == 'x2y2') {
       return <div className='flex items-center'>
         <X2Y2Icon
           className='ml-0.5 h-5 w-5 relative shrink-0 hover:opacity-70 '
@@ -192,7 +192,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
       {getRowContent()}
 
       <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">{
-        formatMarketplaceName(tx.marketplace) || '—'
+        formatMarketplaceName(tx.marketplace?.toLowerCase()) || '—'
       }
       </td>
       {tx?.priceDetails ?
@@ -201,7 +201,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
             <GetAsset price={tx.priceDetails.price} asset_type={tx.priceDetails.assetType} contract_address={tx.priceDetails.contractAddress} />
           </td>
           <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
-            {tx.priceDetails.priceUSD ? `$${tx.priceDetails.priceUSD}` : '-'}
+            {tx.priceDetails.priceUSD ? `$${Number(tx.priceDetails.priceUSD)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }` : '-'}
           </td></>
         :
         <>

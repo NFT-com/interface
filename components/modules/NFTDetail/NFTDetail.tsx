@@ -2,6 +2,7 @@
 import LoggedInIdenticon from 'components/elements/LoggedInIdenticon';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NftMemo } from 'components/modules/Analytics/NftMemo';
+import { getAddressForChain, nftProfile } from 'constants/contracts';
 import { Nft, Profile } from 'graphql/generated/types';
 import { useCollectionQuery } from 'graphql/hooks/useCollectionQuery';
 import { useRefreshNftMutation } from 'graphql/hooks/useNftRefreshMutation';
@@ -18,6 +19,7 @@ import { NFTDetailContextProvider } from './NFTDetailContext';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ArrowClockwise } from 'phosphor-react';
+import GK from 'public/Badge_Key.svg';
 import { useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import useSWR from 'swr';
@@ -39,6 +41,8 @@ export const NFTDetail = (props: NFTDetailProps) => {
   });
 
   const collectionName = collectionMetadata?.contractMetadata?.name || collectionMetadata?.contractMetadata?.openSea?.collectionName;
+
+  const { profileData: nftProfileData } = useProfileQuery(props.nft?.contract === getAddressForChain(nftProfile, defaultChainId) ? props.nft?.metadata?.name : null);
 
   const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
@@ -92,15 +96,25 @@ export const NFTDetail = (props: NFTDetailProps) => {
                 : collectionName}
             </div>
           </Link>
-          <div className='font-noi-grotesk font-semibold text-[28px] leading-9 tracking-[-2px]'>
+          <div className='font-noi-grotesk font-semibold text-[28px] leading-9 tracking-[-2px] flex items-center'>
             {isNullOrEmpty(props.nft?.metadata?.name) ?
               (<div role="status" className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
                 <div className="w-full">
                   <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
                 </div>
                 <span className="sr-only">Loading...</span>
-              </div>)
-              : `${props.nft?.metadata?.name}`}
+              </div>
+              )
+              : (
+                <>
+                  {props.nft?.metadata?.name}
+                  {nftProfileData?.profile?.isGKMinted && <div className='h-5 w-5 minlg:h-6 minlg:w-6 ml-2'>
+                    <GK />
+                  </div>
+                  }
+                </>
+              )
+            }
           </div>
         </div>
         <div className='flex flex-col pl-4 minlg:pl-12'>
