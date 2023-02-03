@@ -66,18 +66,10 @@ export function useGetCreatorFee(
     const dataSeaport = await responseSeaport.json();
     const dataX2Y2 = await responseX2Y2.json();
 
-    if (dataLR?.data?.collections?.length > 0) {
-      royalty['looksrare'] = dataLR?.data?.collections[0]?.royaltyFee;
-    }
-    if (dataSeaport?.data?.collections?.length > 0) {
-      royalty['seaport'] = dataSeaport?.data?.collections[0]?.royaltyFee;
-    }
-    if (dataX2Y2?.data?.collections?.length > 0) {
-      royalty['x2y2'] = dataX2Y2?.data?.collections[0]?.royaltyFee;
-    }
-    if (NFTCOMRoyaltyFee) {
-      royalty['nftcom'] = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0) / 100; // divide 100 to get percent (10000 = 100%)
-    }
+    royalty['looksrare'] = (dataLR?.data?.collections[0]?.royaltyFee) || 0;
+    royalty['seaport'] = (dataSeaport?.data?.collections[0]?.royaltyFee) || 0;
+    royalty['x2y2'] = (dataX2Y2?.data?.collections[0]?.royaltyFee) || 0;
+    royalty['nftcom'] = (Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0) / 100) || 0; // divide 100 to get percent (10000 = 100%)
 
     // if royalty is empty return 0
     if (Object.keys(royalty).length === 0) {
