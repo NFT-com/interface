@@ -115,7 +115,7 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
       }
     } catch (err) {
       console.log(`error in buyNow: ${err}`);
-      return null;
+      return false;
     }
   }, [NftcomExchange, X2Y2Exchange, defaultChainId, looksrareExchange, seaportExchange]);
 

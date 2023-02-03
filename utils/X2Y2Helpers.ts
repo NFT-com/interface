@@ -449,10 +449,14 @@ export const X2Y2BuyNow = async (
       orderHash: order.orderHash,
     });
 
-    return await tx.wait(1).then(() => true).catch(() => false);
+    if (tx) {
+      return await tx.wait(1).then(() => true).catch(() => false);
+    } else {
+      return false;
+    }
   } catch (err) {
     console.log(`error in X2Y2BuyNow: ${err}`);
-    return null;
+    return false;
   }
 };
 
