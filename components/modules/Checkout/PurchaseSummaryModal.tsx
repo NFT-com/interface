@@ -6,6 +6,7 @@ import { ActivityStatus, Maybe } from 'graphql/generated/types';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { useBuyNow } from 'utils/marketplaceHelpers';
@@ -41,6 +42,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const { data: signer } = useSigner();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const provider = useProvider();
+  const { data: nftComRoyalties } = useNftComRoyalties(toBuy, true);
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { buyNow } = useBuyNow(signer);
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
@@ -80,8 +82,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   }, [nftsToBuy, looksrareProtocolFeeBps, getByContractAddress]);
  
   const getTotalRoyalties = useCallback(() => {
-    return getTotalRoyaltiesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress);
-  }, [getByContractAddress, looksrareProtocolFeeBps, nftsToBuy]);
+    return getTotalRoyaltiesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, nftComRoyalties);
+  }, [getByContractAddress, looksrareProtocolFeeBps, nftsToBuy, nftComRoyalties]);
 
   const getSummaryContent = useCallback(() => {
     if (success) {
