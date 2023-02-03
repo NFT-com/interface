@@ -100,7 +100,7 @@ export function getTotalRoyaltiesUSD(
   stagedPurchases: StagedPurchase[],
   looksrareProtocolFeeBps: BigNumberish,
   getByContractAddress: (contract: string) => NFTSupportedCurrency,
-  toListNftComRoyaltyFees: number[]
+  nftComRoyaltyFees: number[]
 ): number {
   return stagedPurchases?.reduce((cartTotal, stagedPurchase, index) => {
     if (stagedPurchase.protocol === ExternalProtocol.LooksRare) {
@@ -127,7 +127,7 @@ export function getTotalRoyaltiesUSD(
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
     } else if (stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
-      const NFTCOMRoyaltyFee = toListNftComRoyaltyFees?.[index];
+      const NFTCOMRoyaltyFee = nftComRoyaltyFees?.[index];
       
       const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
       const currencyData = getByContractAddress(stagedPurchase.currency);

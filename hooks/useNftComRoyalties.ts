@@ -1,4 +1,5 @@
 import { StagedListing } from 'components/modules/Checkout/NFTListingsContext';
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { ExternalProtocol } from 'types';
 
@@ -11,9 +12,9 @@ export interface NftComRoyaltyData {
   mutate: () => void;
 }
 
-export function useNftComRoyalties(toList: StagedListing[]): NftComRoyaltyData {
+export function useNftComRoyalties(listNFT: StagedListing[] | StagedPurchase[], purchase = false): NftComRoyaltyData {
   const { marketplace } = useAllContracts();
-  const keyString = 'NFTCOMRoyaltyFee' + JSON.stringify(toList.map(i => i?.nft?.contract + i?.nft?.tokenId));
+  const keyString = 'NFTCOMRoyaltyFee' + JSON.stringify(listNFT.map(i => i?.nft?.contract + i?.nft?.tokenId));
 
   const mutateThis = useCallback(() => {
     mutate(keyString);
@@ -22,12 +23,20 @@ export function useNftComRoyalties(toList: StagedListing[]): NftComRoyaltyData {
   const { data } = useSWR(
     keyString,
     async () => {
-      return await Promise.all((toList).map(async (stagedListing) => {
-        const targetProtocols = await stagedListing.targets.map((target) => target.protocol);
-        if (targetProtocols.includes(ExternalProtocol.NFTCOM)) {
-          return Number((await marketplace.royaltyInfo(stagedListing.nft?.contract))?.[1]);
+      return await Promise.all((listNFT).map(async (stagedNFT) => {
+        if (purchase) {
+          if (stagedNFT?.protocol === ExternalProtocol.NFTCOM) {
+            return Number((await marketplace.royaltyInfo(stagedNFT.nft?.contract))?.[1]);
+          } else {
+            return 0;
+          }
         } else {
-          return 0;
+          const targetProtocols = await stagedNFT.targets.map((target) => target.protocol);
+          if (targetProtocols.includes(ExternalProtocol.NFTCOM)) {
+            return Number((await marketplace.royaltyInfo(stagedNFT.nft?.contract))?.[1]);
+          } else {
+            return 0;
+          }
         }
       },
       {
