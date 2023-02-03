@@ -18,6 +18,7 @@ export function useSearchModal() {
       filtersList: null,
       checkedFiltersList: '',
       sortBy: '',
+      sortByPrice: '',
       clearedFilters: true,
       curatedCollections: null,
       selectedCuratedCollection: null,
@@ -122,6 +123,13 @@ export function useSearchModal() {
     });
   },[data, mutate]);
 
+  const setSortByPrice = useCallback((sortByPrice: string) => {
+    mutate({
+      ...data,
+      sortByPrice
+    });
+  },[data, mutate]);
+
   const setCuratedCollections = useCallback((curatedCollections: CuratedCollection[]) => {
     mutate({
       ...data,
@@ -164,6 +172,7 @@ export function useSearchModal() {
   },[data, mutate]);
 
   const setClearedFilters = useCallback(() => {
+    console.log('clear fdo in');
     mutate({
       ...data,
       clearedFilters: true,
@@ -187,6 +196,7 @@ export function useSearchModal() {
         status: null,
         contractName: null
       },
+      sortByPrice: '',
     });
   },[data, mutate]);
 
@@ -200,6 +210,7 @@ export function useSearchModal() {
     filtersList: data.filtersList,
     checkedFiltersList: data.checkedFiltersList,
     sortBy:data.sortBy,
+    sortByPrice:data.sortByPrice,
     clearedFilters: data.clearedFilters,
     curatedCollections: data.curatedCollections,
     selectedCuratedCollection: data.selectedCuratedCollection,
@@ -221,6 +232,7 @@ export function useSearchModal() {
     setModalType,
     setSideNavOpen,
     setSortBy,
+    setSortByPrice,
     setSearchFilters,
     setCuratedCollections,
     setSelectedCuratedCollection,

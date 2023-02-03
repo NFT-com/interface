@@ -9,7 +9,7 @@ import { tw } from 'utils/tw';
 
 import { SlidersHorizontal, X } from 'phosphor-react';
 import NoActivityIcon from 'public/no_activity.svg';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -20,7 +20,7 @@ function usePrevious(value) {
 
 export default function CollectionsPage() {
   const [page, setPage] = useState(1);
-  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy, setClearedFilters } = useSearchModal();
+  const { sideNavOpen, setSideNavOpen, setSearchModalOpen, nftsResultsFilterBy, sortByPrice, setClearedFilters } = useSearchModal();
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [nftSData, setNftsData] = useState([]);
@@ -28,6 +28,10 @@ export default function CollectionsPage() {
   const [loading, setLoading] = useState(false);
   const prevFilters = usePrevious(nftsResultsFilterBy);
 
+  const resultsSortedByPriceFn = useCallback((resultsHits) => {
+    return sortByPrice == '' ? page > 1 ? [...nftSData,...resultsHits] : [...resultsHits] : (page > 1 ? [...nftSData,...resultsHits] : [...resultsHits]).sort((a, b) => sortByPrice == 'asc' ? a?.document.listings[0].price - b.document.listings[0].price : b.document.listings[0].price - a.document.listings[0].price);
+  }, [nftSData, page, sortByPrice]);
+  
   useEffect(() => {
     if (page > 1 && nftsResultsFilterBy !== prevFilters){
       setPage(1);
@@ -44,17 +48,19 @@ export default function CollectionsPage() {
         per_page: 20,
         page: page,
       }).then((results) => {
-        setLoading(false);
         setTotalFound(results.found);
-        page > 1 ? setNftsData([...nftSData,...results.hits]) : setNftsData(results.hits);
+        const resultsSortedByPrice = resultsSortedByPriceFn(results.hits);
+        setNftsData([...resultsSortedByPrice]);
         filters.length < 1 && setFilters([...results.facet_counts]);
+        setLoading(false);
       });
     }
     return () => {
       setClearedFilters();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchTypesenseSearch, page, nftsResultsFilterBy, filters]);
+  }, [fetchTypesenseSearch, page, nftsResultsFilterBy, sortByPrice, filters]);
+
   const showNftView = () => {
     return (
       <div className={tw(

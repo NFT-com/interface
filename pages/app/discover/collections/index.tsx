@@ -13,7 +13,7 @@ import { tw } from 'utils/tw';
 import { SlidersHorizontal, X } from 'phosphor-react';
 import LeaderBoardIcon from 'public/leaderBoardIcon.svg';
 import NoActivityIcon from 'public/no_activity.svg';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 function usePrevious(value) {
   const ref = useRef(value);
   useEffect(() => {
@@ -24,14 +24,19 @@ function usePrevious(value) {
 
 export default function CollectionsPage() {
   const [page, setPage] = useState(1);
-  const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen, setClearedFilters } = useSearchModal();
+  const { sideNavOpen, activePeriod, setSideNavOpen, collectionsResultsFilterBy, isLeaderBoard, toggleLeaderBoardState, changeTimePeriod, setSearchModalOpen, setClearedFilters, sortByPrice, setSortByPrice } = useSearchModal();
   const { data: collectionData } = useCollectionQueryLeaderBoard(activePeriod);
   const { fetchTypesenseSearch } = useFetchTypesenseSearch();
   const [filters, setFilters] = useState([]);
   const [collections, setCollectionData] = useState([]);
   const [found, setTotalFound] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [localSortByPrice, setLocalSortByPrice] = useState('');
   const prevFilters = usePrevious(collectionsResultsFilterBy);
+
+  useEffect(() => {
+    setLocalSortByPrice(sortByPrice);
+  }, [sortByPrice]);
 
   useEffect(() => {
     if (page > 1 && collectionsResultsFilterBy !== prevFilters){
@@ -45,6 +50,7 @@ export default function CollectionsPage() {
         q: '*',
         query_by: 'contractAddr,contractName',
         filter_by: collectionsResultsFilterBy ? `isOfficial:true && ${collectionsResultsFilterBy}` : 'isOfficial:true',
+        sort_by: localSortByPrice !== '' ? `floor:${localSortByPrice}` : '',
         per_page: 20,
         page: page,
       }).then((results) => {
@@ -54,11 +60,12 @@ export default function CollectionsPage() {
         page > 1 ? setCollectionData([...collections,...results.hits]) : setCollectionData(results.hits);
       });
     }
+    console.log('clear fdo', page, collectionsResultsFilterBy, localSortByPrice, filters);
     return () => {
       setClearedFilters();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, filters]);
+  }, [fetchTypesenseSearch, page, collectionsResultsFilterBy, sortByPrice, filters]);
 
   const leaderBoardOrCollectionView = () => {
     if(isLeaderBoard){
