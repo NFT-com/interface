@@ -26,7 +26,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
 
   const nftTransactionHistory = useGetTxByNFTQuery(
     data?.contract,
-    BigNumber.from(data?.tokenId || 0).toString(),
+    data?.tokenId ? BigNumber.from(data?.tokenId).toString() : null,
     'all',
     {
       first: 25,
