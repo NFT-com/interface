@@ -4,7 +4,9 @@ import { Maybe, NftType } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
+import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { useX2Y2Royalties } from 'hooks/useX2Y2Royalties';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, isNullOrEmpty } from 'utils/helpers';
 import { getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, getProtocolDisplayName } from 'utils/marketplaceUtils';
@@ -41,6 +43,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
   const { address: currentAddress } = useAccount();
+  const { data: toListNftComRoyaltyFees } = useNftComRoyalties(toList);
+  const { data: x2y2Fees } = useX2Y2Royalties(toList);
   const { getByContractAddress } = useSupportedCurrencies();
   const { marketplace } = useAllContracts();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
@@ -85,8 +89,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee]);
 
   const getMaxRoyaltyFees: () => number = useCallback(() => {
-    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress);
-  }, [toList, looksrareProtocolFeeBps, getByContractAddress]);
+    return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees);
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees]);
 
   const getTotalListings = useCallback(() => {
     return toList?.reduce((total, stagedListing) => {
@@ -126,7 +130,21 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
   const getSummaryContent = useCallback(() => {
     if (success) {
-      return <CheckoutSuccessView userAddress={currentAddress} type={SuccessType.Listing} subtitle="You have successfully listed your items!" />;
+      return <CheckoutSuccessView
+        userAddress={currentAddress}
+        onClose={() => {
+          if (success) {
+            clear();
+            toggleCartSidebar();
+          }
+          setSuccess(false);
+          setShowProgressBar(false);
+          setError(null);
+          props.onClose();
+        }}
+        type={SuccessType.Listing}
+        subtitle="You have successfully listed your items!"
+      />;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">
@@ -264,18 +282,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         </>
       );
     }
-  }, [
-    currentAddress,
-    error,
-    getMaxMarketplaceFees,
-    getMaxRoyaltyFees,
-    getNeedsApprovals,
-    getTotalListings,
-    getTotalMinimumProfitUSD,
-    showProgressBar,
-    success,
-    toList
-  ]);
+  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, props, showProgressBar, success, toList, toggleCartSidebar]);
 
   return (
     <Modal

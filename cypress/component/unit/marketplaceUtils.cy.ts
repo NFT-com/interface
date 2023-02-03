@@ -236,7 +236,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        [0]
       )).to.equal(0.1);
     });
 
@@ -257,7 +258,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        [0]
       )).to.equal(88);
     });
 
@@ -294,7 +296,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        [0]
       )).to.equal(88.1);
     });
   });
@@ -368,7 +371,9 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        [0],
+        [0]
       )).to.equal(0.000001);
     });
   });

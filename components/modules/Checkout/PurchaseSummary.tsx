@@ -1,5 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD } from 'utils/marketplaceUtils';
 
@@ -17,6 +18,7 @@ export function PurchaseSummary() {
 
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
+  const { data: nftComRoyalties } = useNftComRoyalties(toBuy, true);
 
   const { getByContractAddress } = useSupportedCurrencies();
   
@@ -39,8 +41,8 @@ export function PurchaseSummary() {
   }, [toBuy, looksrareProtocolFeeBps, getByContractAddress]);
 
   const getTotalRoyalties = useCallback(() => {
-    return getTotalRoyaltiesUSD(toBuy, looksrareProtocolFeeBps, getByContractAddress);
-  }, [getByContractAddress, looksrareProtocolFeeBps, toBuy]);
+    return getTotalRoyaltiesUSD(toBuy, looksrareProtocolFeeBps, getByContractAddress, nftComRoyalties);
+  }, [getByContractAddress, looksrareProtocolFeeBps, toBuy, nftComRoyalties]);
 
   const getSummaryContent = useCallback(() => {
     // Cost Summary, Default view
