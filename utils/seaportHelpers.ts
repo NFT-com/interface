@@ -22,7 +22,7 @@ import {
 import { filterNulls } from './helpers';
 import { libraryCall, seaportLib } from './marketplaceHelpers';
 
-import { BigNumber, BigNumberish, ContractTransaction, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { _TypedDataEncoder } from 'ethers/lib/utils';
 import { PartialDeep } from 'type-fest';
 
@@ -286,7 +286,7 @@ export const seaportBuyNow = async (
   order: StagedPurchase,
   seaportExchange: Seaport,
   executorAddress: string
-): Promise<ContractTransaction> => {
+): Promise<boolean> => {
   try {
     const orderParams = [];
     const seaportOrder = order.protocolData as SeaportProtocolData;
@@ -332,7 +332,7 @@ export const seaportBuyNow = async (
       orderHash: order.orderHash,
     });
 
-    return tx;
+    return await tx.wait(1).then(() => true).catch(() => false);
   } catch (err) {
     console.log(`error in seaportBuyNow: ${err}`);
     return null;
