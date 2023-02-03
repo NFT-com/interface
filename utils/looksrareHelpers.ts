@@ -6,7 +6,7 @@ import { AggregatorResponse } from 'types';
 import { libraryCall, looksrareLib } from './marketplaceHelpers';
 
 import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
-import { BigNumber, BigNumberish, ContractTransaction, ethers } from 'ethers';
+import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
 
 export async function createLooksrareParametersForNFTListing(
@@ -144,7 +144,7 @@ export const looksrareBuyNow = async (
   order: StagedPurchase,
   looksrareExchange: LooksRareExchange,
   executorAddress: string
-): Promise<ContractTransaction> => {
+): Promise<boolean> => {
   try {
     const {
       collectionAddress,
@@ -206,7 +206,7 @@ export const looksrareBuyNow = async (
       orderHash: order.orderHash,
     });
 
-    return tx;
+    await tx.wait(1).then(() => true).catch(() => false);
   } catch (err) {
     console.log(`error in looksrareBuyNow: ${err}`);
     return null;
