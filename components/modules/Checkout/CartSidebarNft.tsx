@@ -78,7 +78,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
       <div onClick={() => {
         router.push(`/app/nft/${nft?.contract}/${nft?.tokenId}`);
         toggleCartSidebar();
-      }} className='cursor-pointer relative aspect-square w-20 h-20'>
+      }} className='cursor-pointer relative aspect-square max-w-[5rem]'>
         <video
           autoPlay
           muted

@@ -198,7 +198,7 @@ const Filter = (props: any) => {
                 <ButtonFilter
                   key={i}
                   selectedValues={checkedMarketPlaces}
-                  label={item.value}
+                  label={item.value == 'NFTCOM' ? 'NFT.com' : item.value}
                   value={item.value}
                   click={(event) => handleCheckMarketPlace(event)}
                   type='marketplace'
