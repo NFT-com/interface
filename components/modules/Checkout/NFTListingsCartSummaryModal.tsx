@@ -130,7 +130,21 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
 
   const getSummaryContent = useCallback(() => {
     if (success) {
-      return <CheckoutSuccessView userAddress={currentAddress} type={SuccessType.Listing} subtitle="You have successfully listed your items!" />;
+      return <CheckoutSuccessView
+        userAddress={currentAddress}
+        onClose={() => {
+          if (success) {
+            clear();
+            toggleCartSidebar();
+          }
+          setSuccess(false);
+          setShowProgressBar(false);
+          setError(null);
+          props.onClose();
+        }}
+        type={SuccessType.Listing}
+        subtitle="You have successfully listed your items!"
+      />;
     } else if (!isNullOrEmpty(error)) {
       return <div className='flex flex-col w-full'>
         <div className="text-3xl mx-4 font-bold">
@@ -268,18 +282,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         </>
       );
     }
-  }, [
-    currentAddress,
-    error,
-    getMaxMarketplaceFees,
-    getMaxRoyaltyFees,
-    getNeedsApprovals,
-    getTotalListings,
-    getTotalMinimumProfitUSD,
-    showProgressBar,
-    success,
-    toList
-  ]);
+  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, props, showProgressBar, success, toList, toggleCartSidebar]);
 
   return (
     <Modal

@@ -88,6 +88,13 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const getSummaryContent = useCallback(() => {
     if (success) {
       return <CheckoutSuccessView
+        onClose={() => {
+          setSuccess(false);
+          setLoading(false);
+          setError(null);
+          clearBuyNow();
+          props.onClose();
+        }}
         userAddress={currentAddress}
         type={SuccessType.Purchase}
         subtitle={`Congratulations! You have successfully purchased ${nftsToBuy?.length} NFT${nftsToBuy.length > 1 ? 's' : ''}`}
@@ -204,7 +211,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, success, toBuy]);
+  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, props, success, toBuy]);
 
   return (
     <Modal
