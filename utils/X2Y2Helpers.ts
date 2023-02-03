@@ -440,6 +440,15 @@ export const X2Y2BuyNow = async (
         value: order?.price
       }
     );
+
+    analytics.track('BuyNow', {
+      ethereumAddress: executorAddress,
+      protocol: order.protocol,
+      contractAddress: order?.nft?.contract,
+      tokenId: order?.nft?.tokenId,
+      txHash: tx,
+      orderHash: order.orderHash,
+    });
     return tx;
   } catch (err) {
     console.log(`error in X2Y2BuyNow: ${err}`);

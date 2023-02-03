@@ -610,6 +610,16 @@ export const nftcomBuyNow = async (
         value: order?.price
       }
     );
+
+    analytics.track('BuyNow', {
+      ethereumAddress: executorAddress,
+      protocol: order.protocol,
+      contractAddress: order?.nft?.contract,
+      tokenId: order?.nft?.tokenId,
+      txHash: tx.hash,
+      orderHash: order.orderHash,
+    });
+
     return tx;
   } catch (err) {
     console.log(`error in nftcomBuyNow: ${err}`);
