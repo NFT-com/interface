@@ -2,10 +2,11 @@ import DefaultLayout from 'components/layouts/DefaultLayout';
 import MintGKProfileCard from 'components/modules/ProfileFactory/MintGKProfileCard';
 import MintPaidProfileCard from 'components/modules/ProfileFactory/MintPaidProfileCard';
 import MintProfileCardSkeleton from 'components/modules/ProfileFactory/MintProfileCardSkeleton';
+import { useHasGk } from 'hooks/useHasGk';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNull, isNullOrEmpty } from 'utils/helpers';
+import { isNull } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { Tab } from '@headlessui/react';
@@ -37,7 +38,7 @@ export default function MintProfilesPage() {
   const { address: currentAddress } = useAccount();
   const [mintType, setMintType] = useState('paid');
   const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+  const hasGk = useHasGk();
   
   useMaybeCreateUser();
 
@@ -98,7 +99,7 @@ export default function MintProfilesPage() {
             {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
               <>
                 <h2 className='text-[32px] font-medium'>{mintType === 'gk' ? 'Claim your free NFT Profile' : <p>Create your <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>NFT Profile</span> to trade with lower fees</p>}</h2>
-                {hasGks && <div className='justify-start items-center flex mt-5'>
+                {hasGk && <div className='justify-start items-center flex mt-5'>
                   <Tab.Group onChange={(index) => {setMintType(mintProfileTabs[index].tabName);}}>
                     <Tab.List className="w-full flex rounded-3xl z-10 bg-[#F6F6F6]">
                       {Object.keys(mintProfileTabs).map((chartType, index) => (

@@ -3,9 +3,8 @@ import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import Toast from 'components/elements/Toast';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { useHasGk } from 'hooks/useHasGk';
 import { Doppler, getEnvBool } from 'utils/env';
-import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -26,8 +25,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
   const { address: currentAddress } = useAccount();
   const { user, setCurrentProfileUrl } = useUser();
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+  const hasGk = useHasGk();
   const { profileData } = useProfileQuery(profileURI);
   const { alwaysBlack } = useThemeColors();
   const {
@@ -45,7 +43,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
 
   const getProfileButton = useCallback(() => {
-    if (!userIsAdmin || (!hasGks && !getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)) {
+    if (!userIsAdmin || (!hasGk && !getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)) {
       return null;
     }
     
@@ -110,7 +108,7 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           />
         </div>
       </div>;
-  }, [clearDrafts, currentAddress, draftBio, draftHeaderImg?.preview, draftProfileImg?.preview, editMode, hasGks, profileURI, props.profileURI, saveProfile, setCurrentProfileUrl, setEditMode, user?.currentProfileUrl, userIsAdmin]);
+  }, [clearDrafts, currentAddress, draftBio, draftHeaderImg?.preview, draftProfileImg?.preview, editMode, hasGk, profileURI, props.profileURI, saveProfile, setCurrentProfileUrl, setEditMode, user?.currentProfileUrl, userIsAdmin]);
   
   const handleBioChange = (event) => {
     let bioValue = event.target.value;

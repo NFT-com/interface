@@ -77,7 +77,8 @@ export function getTotalFormattedPriceUSD(
 export function getTotalMarketplaceFeesUSD(
   stagedPurchases: StagedPurchase[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  hasGk: boolean
 ): number {
   return stagedPurchases?.reduce((cartTotal, stagedPurchase) => {
     if (stagedPurchase.protocol === ExternalProtocol.LooksRare) {
@@ -88,6 +89,8 @@ export function getTotalMarketplaceFeesUSD(
       );
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
+    } else if (hasGk && stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
+      return 0;
     } else {
       const fee = BigNumber.from(multiplyBasisPoints(stagedPurchase?.price ?? 0, 250));
       const currencyData = getByContractAddress(stagedPurchase.currency);
@@ -154,7 +157,8 @@ export function getMaxMarketplaceFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
   getByContractAddress: (contract: string) => NFTSupportedCurrency,
-  NFTCOMFee: number
+  NFTCOMFee: number,
+  hasGk: boolean
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const feesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
@@ -169,11 +173,15 @@ export function getMaxMarketplaceFeesUSD(
           currencyData.decimals ?? 18
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.NFTCOM) {
-        const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, NFTCOMFee));
-        return currencyData?.usd(Number(ethers.utils.formatUnits(
-          fee,
-          currencyData.decimals ?? 18
-        ))) ?? 0;
+        if(hasGk) {
+          return 0;
+        } else {
+          const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, NFTCOMFee));
+          return currencyData?.usd(Number(ethers.utils.formatUnits(
+            fee,
+            currencyData.decimals ?? 18
+          ))) ?? 0;
+        }
       } else {
         // Seaport fee is hard-coded in our codebase and not expected to change.
         const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, 250));
