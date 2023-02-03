@@ -323,6 +323,15 @@ export const seaportBuyNow = async (
       }
     );
 
+    analytics.track('BuyNow', {
+      ethereumAddress: executorAddress,
+      protocol: order.protocol,
+      contractAddress: order?.nft?.contract,
+      tokenId: order?.nft?.tokenId,
+      txHash: tx.hash,
+      orderHash: order.orderHash,
+    });
+
     return tx;
   } catch (err) {
     console.log(`error in seaportBuyNow: ${err}`);
