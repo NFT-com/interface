@@ -45,7 +45,7 @@ export default function AssetTableRow({
     defaultChainId,
     true
   );
-  const nftSaleHistory = useGetTxByNFTQuery(item?.contract, parseInt(item?.tokenId, 16).toString(), 'sale', { first: 1 });
+  const nftSaleHistory = useGetTxByNFTQuery(item?.contract, BigNumber.from(item?.tokenId || 0).toString(), 'sale', { first: 1 });
 
   const processedImageURLs = sameAddress(item.contract, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(item.tokenId) ?
     [getGenesisKeyThumbnail(item.tokenId)]
