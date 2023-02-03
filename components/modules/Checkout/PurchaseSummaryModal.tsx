@@ -5,6 +5,7 @@ import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -46,7 +47,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { buyNow } = useBuyNow(signer);
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-
+  const hasGk = useHasGk();
   const { getByContractAddress, getBalanceMap } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -78,8 +79,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   }, [nftsToBuy, getByContractAddress]);
 
   const getTotalMarketplaceFees = useCallback(() => {
-    return getTotalMarketplaceFeesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress);
-  }, [nftsToBuy, looksrareProtocolFeeBps, getByContractAddress]);
+    return getTotalMarketplaceFeesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, hasGk);
+  }, [nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, hasGk]);
  
   const getTotalRoyalties = useCallback(() => {
     return getTotalRoyaltiesUSD(nftsToBuy, looksrareProtocolFeeBps, getByContractAddress, nftComRoyalties);

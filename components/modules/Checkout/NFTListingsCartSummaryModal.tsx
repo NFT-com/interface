@@ -3,6 +3,7 @@ import { Modal } from 'components/elements/Modal';
 import { Maybe, NftType } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
@@ -48,6 +49,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { getByContractAddress } = useSupportedCurrencies();
   const { marketplace } = useAllContracts();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
+  const hasGk = useHasGk();
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<
@@ -85,8 +87,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     });
 
   const getMaxMarketplaceFees: () => number = useCallback(() => {
-    return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length ? NFTCOMProfileFee : Number(NFTCOMProtocolFee));
-  }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee]);
+    return getMaxMarketplaceFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length ? NFTCOMProfileFee : Number(NFTCOMProtocolFee), hasGk);
+  }, [toList, looksrareProtocolFeeBps, getByContractAddress, myOwnedProfileTokens?.length, NFTCOMProfileFee, NFTCOMProtocolFee, hasGk]);
 
   const getMaxRoyaltyFees: () => number = useCallback(() => {
     return getMaxRoyaltyFeesUSD(toList, looksrareProtocolFeeBps, getByContractAddress, toListNftComRoyaltyFees, x2y2Fees);
@@ -470,4 +472,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       </div>
     </Modal>
   );
+}
+
+function ownedGenesisKeyTokens(ownedGenesisKeyTokens: any) {
+  throw new Error('Function not implemented.');
 }
