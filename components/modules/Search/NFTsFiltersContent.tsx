@@ -2,6 +2,7 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { CheckBox } from 'components/elements/CheckBox';
+import { marketplace } from 'constants/contracts';
 
 import { ButtonFilter } from './filtersComponents/ButtonFilter';
 import { MinMaxFilter } from './filtersComponents/MinMaxFilter';
@@ -199,7 +200,9 @@ const Filter = (props: any) => {
                   selectedValues={checkedMarketPlaces}
                   label={item.value == 'NFTCOM' ? 'NFT.com' : item.value}
                   value={item.value}
-                  click={(event) => handleCheckMarketPlace(event)}/>
+                  click={(event) => handleCheckMarketPlace(event)}
+                  type='marketplace'
+                />
               );
             })
           }
@@ -296,7 +299,7 @@ const Filter = (props: any) => {
           setIsCollapsing(true);
         }}
         className="flex justify-between items-center cursor-pointer">
-        <div className="text-xl font-black minmd:text-base font-grotesk">{titles[filter.field_name]}</div>
+        <div className="text-xl text-black minmd:text-base font-grotesk font-semibold">{titles[filter.field_name]}</div>
         <CaretUp
           color='#4D4D4D'
           className={tw('cursor-pointer transition-transform font-bold', isFilterCollapsed ? 'rotate-180' : '')}
