@@ -27,12 +27,19 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>, currentTimesta
   }
   case (ExternalProtocol.NFTCOM): {
     const order = listing?.order?.protocolData as NftcomProtocolData;
-    if(order.auctionType === AuctionType.Decreasing) {
-      const startPrice = order.takeAsset[0].value;
-      const endPrice = order.takeAsset[0].minimumBid;
+
+    if (order.auctionType === AuctionType.Decreasing) {
+      const startPrice = BigNumber.from(order.takeAsset[0].value);
+      const endPrice = BigNumber.from(order.takeAsset[0].minimumBid);
       const b = moment.unix(order?.start);
-      const secondsElapsed = currentTimestamp ? currentTimestamp.diff(b, 'seconds') : 0;
-      return BigNumber.from(Math.round(startPrice - (secondsElapsed / (order?.end - order?.start)) * (startPrice - endPrice)).toString());
+      const secondsElapsed = currentTimestamp ? BigNumber.from(currentTimestamp.diff(b, 'seconds')) : BigNumber.from(0);
+
+      const stringTime = startPrice.sub((secondsElapsed.div(
+        BigNumber.from(order?.end).sub(
+          BigNumber.from(order?.start)
+        ))).mul(startPrice.sub(endPrice)));
+
+      return stringTime;
     }
     return BigNumber.from(order?.takeAsset[0]?.value ?? 0);
   }
