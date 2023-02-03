@@ -86,8 +86,8 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
     } else if (name == 'cryptopunks') {
       return <div className='flex items-center'>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={LarvaLabsIcon.src} className='h-5 w-5 relative shrink-0 hover:opacity-70' alt="Larva labs logo" />
-        <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>Cryptopunks</div>
+        <img src={LarvaLabsIcon.src} className='h-5 w-5 rounded-full relative shrink-0 hover:opacity-70' alt="Larva labs logo" />
+        <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>CryptoPunks</div>
       </div>;
     } else if (name == 'nftcom') {
       return <div className='flex items-center'>
