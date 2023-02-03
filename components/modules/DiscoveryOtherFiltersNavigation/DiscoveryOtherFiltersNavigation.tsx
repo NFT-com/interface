@@ -11,20 +11,18 @@ export function DiscoveryOtherFiltersNav() {
     {
       label: 'Price high to low',
       onSelect: () => {
-        // return setSortByPrice('listings[0].price:desc,');
         return setSortByPrice('desc');
       },
     },
     {
       label: 'Price low to high',
       onSelect: () => {
-        // return setSortByPrice('listings[0].price:asc,');
         return setSortByPrice('asc');
       },
     },
   ];
   return (
-    <div className="self-center">
+    <div className="self-center border-[##ECECEC] border-b-[2px] py-[0.81rem]">
       <DropdownPicker
         options={sortingDropdownOptions}
         //selectedIndex={0}
