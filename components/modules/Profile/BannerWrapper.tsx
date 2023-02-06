@@ -29,7 +29,7 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
         'bg-cover bg-center',
-        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'h-[120px] minlg:h-[320px]' : props.isCollection ? 'h-[320px]' : 'h-60 minxl:h-72',
+        'h-[120px] minlg:h-[320px]',
       )}
     >
       {imageUrl && <Image
