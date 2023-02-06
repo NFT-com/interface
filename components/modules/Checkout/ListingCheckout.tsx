@@ -120,11 +120,7 @@ export function ListingCheckout() {
   }) != null;
 
   const buttonsRowWidth = () => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST)) {
-      return 'w-1/4';
-    } else {
-      return 'w-full';
-    }
+    return 'w-1/4';
   };
 
   const ListingOneNFT = useCallback(() => {
@@ -216,11 +212,11 @@ export function ListingCheckout() {
     return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className={tw(
-          getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && 'mb-16',
+          'mb-16',
           'w-full flex flex-col items-center')}>
           <span className='text-lg w-full font-semibold flex text-[#A6A6A6]'>Select Marketplace(s)</span>
           <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
-            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div className={`max-h-[93px] w-[49%] minlg:${buttonsRowWidth()} minlg:mr-2 flex flex-col items-center`}>
+            <div className={`max-h-[93px] w-[49%] minlg:${buttonsRowWidth()} minlg:mr-2 flex flex-col items-center`}>
               <div
                 onClick={() => {
                   toggleTargetMarketplace(ExternalProtocol.NFTCOM);
@@ -248,7 +244,7 @@ export function ListingCheckout() {
               <div className='text-[0.75rem] text-center py-1'><span className='text-primary-yellow'>{NFTCOMProfileFee/100}%</span> fee with profile</div>
               <div className='border-b w-4/5'></div>
               <span className='text-[0.75rem] text-center py-1'>{Number(NFTCOMProtocolFee)/100}% fee without profile</span>
-            </div>}
+            </div>
             <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.Seaport);
