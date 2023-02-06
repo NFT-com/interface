@@ -9,8 +9,8 @@ import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
-import { useGetContractApprovalAddress } from 'hooks/useGetContractApprovalAddress';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
+import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
@@ -77,7 +77,7 @@ export function NftCard(props: NftCardProps) {
   const ethPriceUSD = useEthPriceUSD();
   const bestListing = getLowestPriceListing(filterValidListings(props.listings ?? nft?.listings?.items), ethPriceUSD, chainId);
   const listingCurrencyData = getByContractAddress(getListingCurrencyAddress(bestListing));
-  const getApprovalContractAddress = useGetContractApprovalAddress();
+  const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
   const currentDate = useGetCurrentDate();
 
   const checkEndDate = () => {
@@ -186,7 +186,7 @@ export function NftCard(props: NftCardProps) {
                           e.preventDefault();
                           const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
                           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
-                          const protocolAllowance = await currencyData.allowance(currentAddress, getApprovalContractAddress(bestListing?.order?.protocol as ExternalProtocol));
+                          const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(bestListing?.order?.protocol as ExternalProtocol));
                           const price = getListingPrice(bestListing, (bestListing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
                           const protocol = bestListing?.order?.protocol as ExternalProtocol;
                           stageBuyNow({
@@ -196,11 +196,8 @@ export function NftCard(props: NftCardProps) {
                             price: price,
                             collectionName: props.collectionName,
                             protocol: protocol,
-                            isApproved: BigNumber.from(allowance ?? 0).gt(price),
-                            isApprovedForLooksRare: protocol === ExternalProtocol.LooksRare ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
-                            isApprovedForSeaport: protocol === ExternalProtocol.Seaport ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
-                            isApprovedForNFTCOM: protocol === ExternalProtocol.NFTCOM ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
-                            isApprovedForX2Y2: protocol === ExternalProtocol.X2Y2 ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
+                            isERC20ApprovedForAggregator: BigNumber.from(allowance ?? 0).gt(price),
+                            isERC20ApprovedForProtocol: BigNumber.from(protocolAllowance ?? 0).gt(price),
                             orderHash: bestListing?.order?.orderHash,
                             makerAddress: bestListing?.order?.makerAddress,
                             takerAddress: bestListing?.order?.takerAddress,
@@ -222,6 +219,7 @@ export function NftCard(props: NftCardProps) {
                           e.preventDefault();
                           const currencyData = getByContractAddress(getListingCurrencyAddress(bestListing) ?? WETH.address);
                           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, chainId));
+                          const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(bestListing?.order?.protocol as ExternalProtocol));
                           const price = getListingPrice(bestListing);
                           stagePurchase({
                             nft: props?.nft || nft,
@@ -230,11 +228,8 @@ export function NftCard(props: NftCardProps) {
                             price: price,
                             collectionName: props.collectionName,
                             protocol: bestListing?.order?.protocol as ExternalProtocol,
-                            isApproved: BigNumber.from(allowance ?? 0).gt(price),
-                            isApprovedForLooksRare: false,
-                            isApprovedForSeaport: false,
-                            isApprovedForNFTCOM: false,
-                            isApprovedForX2Y2: false,
+                            isERC20ApprovedForAggregator: BigNumber.from(allowance ?? 0).gt(price),
+                            isERC20ApprovedForProtocol: BigNumber.from(protocolAllowance ?? 0).gt(price),
                             orderHash: bestListing?.order?.orderHash,
                             makerAddress: bestListing?.order?.makerAddress,
                             takerAddress: bestListing?.order?.takerAddress,

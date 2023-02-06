@@ -12,8 +12,8 @@ import { useNftcomExchangeContract } from 'hooks/contracts/useNftcomExchangeCont
 import { useSeaportContract } from 'hooks/contracts/useSeaportContract';
 import { useX2Y2ExchangeContract } from 'hooks/contracts/useX2Y2ExchangeContract';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { useGetContractApprovalAddress } from 'hooks/useGetContractApprovalAddress';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
+import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalExchange, ExternalProtocol } from 'types';
 import { getListingCurrencyAddress, getListingPrice } from 'utils/listingUtils';
@@ -76,7 +76,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
   const NftcomExchange = useNftcomExchangeContract(signer);
   const { getByContractAddress } = useSupportedCurrencies();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
-  const getApprovalContractAddress = useGetContractApprovalAddress();
+  const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
   
   const nftInPurchaseCart = useMemo(() => {
     return toBuy?.find((purchase) => purchase.nft?.id === props.nft?.id && purchase?.orderHash === props?.listing?.order?.orderHash) != null;
@@ -259,7 +259,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
         onClick={async () => {
           const currencyData = getByContractAddress(getListingCurrencyAddress(listing) ?? WETH.address);
           const allowance = await currencyData.allowance(currentAddress, getAddressForChain(nftAggregator, defaultChainId));
-          const protocolAllowance = await currencyData.allowance(currentAddress, getApprovalContractAddress(listing?.order?.protocol as ExternalProtocol));
+          const protocolAllowance = await currencyData.allowance(currentAddress, getERC20ProtocolApprovalAddress(listing?.order?.protocol as ExternalProtocol));
           const price = getListingPrice(listing, (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing ? currentDate : null);
           const protocol = listingProtocol as ExternalProtocol;
           stagePurchase({
@@ -269,11 +269,8 @@ function ExternalListingTile(props: ExternalListingTileProps) {
             price: price,
             collectionName: props.collectionName,
             protocol: protocol,
-            isApproved: BigNumber.from(allowance ?? 0).gt(price),
-            isApprovedForLooksRare: protocol === ExternalProtocol.LooksRare ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
-            isApprovedForSeaport: protocol === ExternalProtocol.Seaport ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
-            isApprovedForNFTCOM: protocol === ExternalProtocol.NFTCOM ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
-            isApprovedForX2Y2: protocol === ExternalProtocol.X2Y2 ? BigNumber.from(protocolAllowance ?? 0).gt(price) : false,
+            isERC20ApprovedForAggregator: BigNumber.from(allowance ?? 0).gt(price),
+            isERC20ApprovedForProtocol: BigNumber.from(protocolAllowance ?? 0).gt(price),
             orderHash: listing?.order?.orderHash,
             makerAddress: listing?.order?.makerAddress,
             takerAddress: listing?.order?.takerAddress,
@@ -291,7 +288,7 @@ function ExternalListingTile(props: ExternalListingTileProps) {
       />;
     }
     }
-  }, [listing, stageListing, props, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, getApprovalContractAddress, currentDate, stagePurchase, toggleCartSidebar]);
+  }, [listing, stageListing, props, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router, cancelling, listingProtocol, looksrareExchange, updateActivityStatus, signer, X2Y2Exchange, seaportExchange, mutateNft, NftcomExchange, nftInPurchaseCart, getByContractAddress, currentAddress, defaultChainId, getERC20ProtocolApprovalAddress, currentDate, stagePurchase, toggleCartSidebar]);
 
   if (![ExternalProtocol.LooksRare, ExternalProtocol.Seaport, ExternalProtocol.X2Y2, ExternalProtocol.NFTCOM].includes(listingProtocol as ExternalProtocol)) {
     // Unsupported marketplace.

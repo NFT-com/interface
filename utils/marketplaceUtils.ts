@@ -32,26 +32,17 @@ export const convertDurationToSecForNumbersOnly = (d: number) => {
   return 60 * 60 * 24 * d;
 };
 
-export function needsApprovals(stagedPurchases: StagedPurchase[]): boolean {
+export function needsERC20Approvals(stagedPurchases: StagedPurchase[]): boolean {
   if(stagedPurchases.length === 1) {
     return filterDuplicates(
       stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
       (first, second) => first?.currency === second?.currency
-    ).some(purchase =>
-      purchase.protocol === ExternalProtocol.LooksRare ?
-        !purchase?.isApprovedForLooksRare :
-        purchase.protocol === ExternalProtocol.Seaport ?
-          !purchase?.isApprovedForSeaport :
-          purchase.protocol === ExternalProtocol.NFTCOM ?
-            !purchase?.isApprovedForNFTCOM :
-            !purchase?.isApprovedForX2Y2
-    );
+    ).some(purchase => !purchase?.isERC20ApprovedForProtocol);
   }
-
   return filterDuplicates(
     stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
     (first, second) => first?.currency === second?.currency
-  ).some(purchase => !purchase?.isApproved);
+  ).some(purchase => !purchase?.isERC20ApprovedForAggregator);
 }
 
 export function hasSufficientBalances(
