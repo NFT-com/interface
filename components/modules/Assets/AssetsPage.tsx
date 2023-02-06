@@ -138,7 +138,8 @@ export default function AssetsPages() {
                   targets: [
                     {
                       protocol: ExternalProtocol.NFTCOM,
-                      currency: NULL_ADDRESS
+                      currency: NULL_ADDRESS,
+                      listingError: false
                     }
                   ]
                 })));

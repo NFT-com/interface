@@ -51,6 +51,8 @@ export function ListingCheckout() {
     allListingsConfigured,
     decreasingPriceError,
     englishAuctionError,
+    allListingsFail,
+    setAllListingsFail,
   } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
   const { marketplace } = useAllContracts();
@@ -360,20 +362,23 @@ export function ListingCheckout() {
             <span className='text-lg font-medium font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>You haven’t added any listings yet</span>
           </div>
         }
-        {!showSummary && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'><Button
+        {(!showSummary || allListingsFail) && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'><Button
           label={'Start Listing'}
           disabled={!allListingsConfigured()}
           onClick={async () => {
             await prepareListings();
+            if(allListingsFail){
+              setAllListingsFail(false);
+            }
             setShowSummary(true);
           }}
           type={ButtonType.PRIMARY}
           stretch
         /></div>}
       </div>
-      { showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />}
+      {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
     </div>;
-  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
+  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
   
   return (
     <div className='flex w-full justify-between h-full'>
@@ -413,6 +418,24 @@ export function ListingCheckout() {
             Reserve Price Price should be higher than Buy Now Price
           </div>
           : null}
+        {allListingsFail &&
+          <div className='px-2 py-2.5 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
+            <ErrorIcon className='relative shrink-0 mr-2' />
+            <div className='flex flex-col'>
+              <p>There was an error while creating your listing{toList.length > 1 && 's'}.</p>
+              <p
+                onClick={async () => {
+                  await prepareListings();
+                  setAllListingsFail(false);
+                  setShowSummary(true);
+                }}
+                className='underline hover:cursor-pointer w-max'
+              >
+                Please try again
+              </p>
+            </div>
+          </div>
+        }
       </div>
       {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'></div>}
     </div>
