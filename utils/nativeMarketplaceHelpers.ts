@@ -22,7 +22,7 @@ import { encodeAssetClass, getAssetBytes, getAssetTypeBytes } from './signatureU
 
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { SignTypedDataArgs } from '@wagmi/core';
-import { ContractTransaction, ethers, Signature } from 'ethers';
+import { ethers, Signature } from 'ethers';
 import moment from 'moment';
 import { PartialDeep } from 'type-fest';
 import { PartialObjectDeep } from 'type-fest/source/partial-deep';
@@ -563,7 +563,7 @@ export const nftcomBuyNow = async (
   nftcomExchange: Marketplace,
   executorAddress: string,
   chainId: string
-): Promise<ContractTransaction> => {
+): Promise<boolean> => {
   try {
     const {
       salt,
@@ -610,9 +610,23 @@ export const nftcomBuyNow = async (
         value: order?.price
       }
     );
-    return tx;
+
+    analytics.track('BuyNow', {
+      ethereumAddress: executorAddress,
+      protocol: order.protocol,
+      contractAddress: order?.nft?.contract,
+      tokenId: order?.nft?.tokenId,
+      txHash: tx.hash,
+      orderHash: order.orderHash,
+    });
+
+    if (tx) {
+      return await tx.wait(1).then(() => true).catch(() => false);
+    } else {
+      return false;
+    }
   } catch (err) {
     console.log(`error in nftcomBuyNow: ${err}`);
-    return null;
+    return false;
   }
 };

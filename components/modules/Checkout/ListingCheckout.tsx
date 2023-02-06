@@ -9,9 +9,9 @@ import { Profile } from 'graphql/generated/types';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftProfileTokens } from 'hooks/useNftProfileTokens';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls, isNullOrEmpty } from 'utils/helpers';
@@ -57,8 +57,7 @@ export function ListingCheckout() {
   const { address: currentAddress } = useAccount();
   const { marketplace } = useAllContracts();
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+  const hasGk = useHasGk();
 
   const defaultChainId = useDefaultChainId();
   const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
@@ -244,7 +243,7 @@ export function ListingCheckout() {
                   />
                   : <NFTLogo className='h-[26px] relative shrink-0 -my-[4px] mb-[3px]' />}
                 <span className='font-semibold text-base'>NFT.com</span>
-                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ hasGks ? Number(NFTCOMGKFee)/100 : myOwnedProfileTokens?.length ? Number(NFTCOMProfileFee)/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
+                <span className='ml-2 font-medium text-sm text-[#6F6F6F]'>({ hasGk ? Number(NFTCOMGKFee)/100 : myOwnedProfileTokens?.length ? Number(NFTCOMProfileFee)/100 : Number(NFTCOMProtocolFee)/100 }% fee)</span>
               </div>
               <div className='text-[0.75rem] text-center py-1'><span className='text-primary-yellow'>{NFTCOMGKFee/100}%</span> fee with GK</div>
               <div className='border-b w-4/5'></div>

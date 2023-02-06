@@ -21,7 +21,7 @@ import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
 
 import { OP_CANCEL_OFFER } from '@x2y2-io/sdk';
 import { CancelInput, TokenPair, TokenStandard, X2Y2Order } from '@x2y2-io/sdk/dist/types';
-import { BigNumber, ContractTransaction, ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 export const getNetworkMeta = (network: Network): NetworkMeta => {
   switch (network) {
   case 'mainnet':
@@ -373,7 +373,6 @@ async function getCancelInput(
 export async function cancelX2Y2Listing(
   network: Network,
   signer: ethers.Signer,
-
   orderId: number,
   X2Y2Exchange: X2y2_exchange
 ) {
@@ -397,7 +396,7 @@ export const X2Y2BuyNow = async (
   order: StagedPurchase,
   X2Y2Exchange: X2y2_exchange,
   executorAddress: string
-): Promise<ContractTransaction> => {
+): Promise<boolean> => {
   try {
     const {
       contract,
@@ -433,16 +432,30 @@ export const X2Y2BuyNow = async (
       taker: executorAddress,
     };
     const runInput = await buyOrder('mainnet', executorAddress, x2y2Order);
-    const tx = X2Y2Exchange.run(
+    const tx = await X2Y2Exchange.run(
       runInput,
       {
         value: order?.price
       }
     );
-    return tx;
+
+    analytics.track('BuyNow', {
+      ethereumAddress: executorAddress,
+      protocol: order.protocol,
+      contractAddress: order?.nft?.contract,
+      tokenId: order?.nft?.tokenId,
+      txHash: tx,
+      orderHash: order.orderHash,
+    });
+
+    if (tx) {
+      return await tx.wait(1).then(() => true).catch(() => false);
+    } else {
+      return false;
+    }
   } catch (err) {
     console.log(`error in X2Y2BuyNow: ${err}`);
-    return null;
+    return false;
   }
 };
 

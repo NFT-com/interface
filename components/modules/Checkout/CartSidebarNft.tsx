@@ -53,13 +53,13 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
       const stagedPurchase = props.item as StagedPurchase;
       switch (stagedPurchase?.protocol) {
       case 'Seaport':
-        return `${creatorFee?.royalty?.opensea?.toFixed(2)}%`;
+        return `${creatorFee?.royalty?.opensea ? Number(creatorFee?.royalty?.opensea).toFixed(2) : 0}%`;
       case 'LooksRare':
-        return `${creatorFee?.royalty?.looksrare?.toFixed(2)}%`;
+        return `${creatorFee?.royalty?.looksrare ? Number(creatorFee?.royalty?.looksrare).toFixed(2) : 0}%`;
       case 'X2Y2':
-        return `${creatorFee?.royalty?.x2y2?.toFixed(2)}%`;
+        return `${creatorFee?.royalty?.x2y2 ? Number(creatorFee?.royalty?.x2y2).toFixed(2) : 0}%`;
       case 'NFTCOM':
-        return `${creatorFee?.royalty?.nftcom?.toFixed(2)}%`;
+        return `${creatorFee?.royalty?.nftcom ? Number(creatorFee?.royalty?.nftcom).toFixed(2) : 0}%`;
       default:
         return 'n/a%';
       }
@@ -78,7 +78,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
       <div onClick={() => {
         router.push(`/app/nft/${nft?.contract}/${nft?.tokenId}`);
         toggleCartSidebar();
-      }} className='cursor-pointer relative aspect-square w-20 h-20'>
+      }} className='cursor-pointer relative aspect-square max-w-[5rem]'>
         <video
           autoPlay
           muted

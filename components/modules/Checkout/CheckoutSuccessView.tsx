@@ -24,6 +24,7 @@ export interface CheckoutSuccessViewProps {
   type: SuccessType;
   subtitle?: string;
   hasError?: boolean;
+  onClose: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -115,6 +116,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
           <button onClick={() => {
             toggleCartSidebar();
+            props.onClose();
             props.type == SuccessType.Listing ? clear() : clearPurchases();
             window.open(
               'https://twitter.com/intent/tweet?' +
@@ -130,6 +132,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           </button>
           <div onClick={() => {
             toggleCartSidebar();
+            props.onClose();
             props.type == SuccessType.Listing ? clear() : clearPurchases();
             props.type == SuccessType.Listing ?
               router.push('/app/assets') :
@@ -166,7 +169,12 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
               <div className='font-medium line-through'>2.5% fee</div>
             </div>
           </div>
-          <button onClick={() => router.push('/app/mint-profiles')} className="bg-[#F9D963] w-[277px] mt-8 mb-14 font-medium hover:bg-[#fcd034] text-base text-black text-[16px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
+          <button onClick={() => {
+            props.onClose();
+            clear();
+            toggleCartSidebar();
+            router.push('/app/mint-profiles');
+          }} className="bg-[#F9D963] w-[277px] mt-8 mb-14 font-medium hover:bg-[#fcd034] text-base text-black text-[16px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
             Create a Profile
           </button>
         </div>

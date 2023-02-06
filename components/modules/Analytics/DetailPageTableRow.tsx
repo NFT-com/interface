@@ -10,6 +10,7 @@ import moment from 'moment';
 import Link from 'next/link';
 import DAI from 'public/dai.svg';
 import ETH from 'public/eth.svg';
+import LarvaLabsIcon from 'public/larva_labs.png';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import NFTCOMIcon from 'public/nft_logo_yellow.webp';
 import OpenseaIcon from 'public/opensea-icon.svg';
@@ -64,7 +65,7 @@ function GetAsset({ price, asset_type, contract_address }: GetAssetProps) {
 
 export default function DetailPageTableRow({ tx, index, isNftDetailPage }: DetailPageTableRowProps) {
   const formatMarketplaceName = (name) => {
-    if(name == 'opensea'){
+    if (name == 'opensea'){
       return <div className='flex items-center'>
         <OpenseaIcon
           className='h-6 w-6 relative shrink-0 hover:opacity-70 '
@@ -81,6 +82,12 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
           layout="fill"
         />
         <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-1.5'>Looksrare</div>
+      </div>;
+    } else if (name == 'cryptopunks') {
+      return <div className='flex items-center'>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={LarvaLabsIcon.src} className='h-5 w-5 rounded-full relative shrink-0 hover:opacity-70' alt="Larva labs logo" />
+        <div className='font-noi-grotesk text-[16px] text-[#6A6A6A] ml-2'>CryptoPunks</div>
       </div>;
     } else if (name == 'nftcom') {
       return <div className='flex items-center'>

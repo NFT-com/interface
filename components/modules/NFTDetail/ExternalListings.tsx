@@ -9,7 +9,7 @@ import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/u
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useGetCurrentDate } from 'hooks/useGetCurrentDate';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -48,8 +48,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   const currentDate = useGetCurrentDate();
   const [editListingsModalOpen, setEditListingsModalOpen] = useState(false);
   const [selectListingModalOpen, setSelectListingModalOpen] = useState(false);
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+  const hasGk = useHasGk();
 
   const {
     allowedAll: openseaAllowed,
@@ -139,7 +138,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   }, []);
 
   const getListingSummaryButtons = useCallback((orderHash: string) => {
-    if (!hasGks && !getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) {
+    if (!hasGk && !getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) {
       return 'You must have a Genesis Key to purchase';
     } else if (currentAddress === props.nft?.wallet?.address) {
       return <Button
@@ -195,11 +194,11 @@ export function ExternalListings(props: ExternalListingsProps) {
         type={ButtonType.PRIMARY}
       />;
     }
-  }, [hasGks, currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, currentDate, stagePurchase, toggleCartSidebar]);
+  }, [hasGk, currentAddress, props.nft, props.collectionName, nftInPurchaseCart, getByContractAddress, chainId, currentDate, stagePurchase, toggleCartSidebar]);
 
   if (isNullOrEmpty(filterValidListings(props.nft?.listings?.items))) {
     return (
-      currentAddress === props.nft?.wallet?.address && hasGks &&
+      currentAddress === props.nft?.wallet?.address && hasGk &&
         <div className={tw(
           'w-full flex mb-5',
         )}>

@@ -6,6 +6,7 @@ import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
 import DetailPageTableRow from './DetailPageTableRow';
 
+import { BigNumber } from 'ethers';
 import { useCallback, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -25,7 +26,7 @@ export const NFTActivity = ({ data }: TxHistoryProps) => {
 
   const nftTransactionHistory = useGetTxByNFTQuery(
     data?.contract,
-    parseInt(data?.tokenId, 16).toString(),
+    data?.tokenId ? BigNumber.from(data?.tokenId).toString() : null,
     'all',
     {
       first: 25,
