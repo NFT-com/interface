@@ -57,7 +57,7 @@ export function NftGrid(props: NftGridProps) {
     mosaicArray2.push(seq2);
   }
 
-  const savedLayoutType = getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'Default' : profileData?.profile?.layoutType;
+  const savedLayoutType = 'Default';
 
   const mosaicCardType = (layoutType, index) => {
     if (layoutType === 'Mosaic') {
@@ -81,9 +81,9 @@ export function NftGrid(props: NftGridProps) {
   return <div
     className={tw(
       'grid w-full',
-      getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'gap-4 mt-4 minlg:mt-0' : 'gap-8 mt-2' ,
-      (draftLayoutType ?? savedLayoutType) === 'Default' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-5 minxxl:grid-cols-6' : 'grid-cols-1 minmd:grid-cols-2 minlg:grid-cols-4' : '',
-      (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED)? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : 'grid-cols-1 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
+      'gap-4 mt-4 minlg:mt-0',
+      (draftLayoutType ?? savedLayoutType) === 'Default' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-5 minxxl:grid-cols-6' : '',
+      (draftLayoutType ?? savedLayoutType) === 'Mosaic' ? 'grid-cols-2 minmd:grid-cols-3 minlg:grid-cols-4 minxl:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Featured' ? 'grid-cols-2 minmd:grid-cols-4 minlg:grid-cols-6' : '',
       (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'grid-cols-4 minlg:grid-cols-8' : '',
     )}
@@ -100,7 +100,6 @@ export function NftGrid(props: NftGridProps) {
         item={{ id: nft?.id, hidden: nft?.hidden, draggable: props.draggable ?? true }}
         onMoveItem={nft?.hidden ? null : moveItem}
       >
-        {/*getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'max-w-[264px]',*/}
         <div
           className={tw(
             'NFTCardContainer',
@@ -113,75 +112,36 @@ export function NftGrid(props: NftGridProps) {
             (draftLayoutType ?? savedLayoutType) === 'Spotlight' ? 'col-start-2 minlg:col-start-3 col-span-2 minlg:col-span-4 mb-4' : '',
           )}
         >
-          {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-            <NftCard
-              name={nft?.metadata?.name}
-              images={[nft?.previewLink || nft?.metadata?.imageURL]}
-              collectionName={nft?.collection?.name}
-              isOwnedByMe={nft?.isOwnedByMe}
-              listings={nft?.listings?.items || []}
-              nft={nft}
-              fallbackImage={nft?.metadata?.imageURL}
-              contractAddr={nft?.contract}
-              tokenId={nft?.tokenId}
-              // only show the eye icons to the owner in edit mode
-              visible={editMode ?
-                !nft?.hidden :
-                null
+          <NftCard
+            name={nft?.metadata?.name}
+            images={[nft?.previewLink || nft?.metadata?.imageURL]}
+            collectionName={nft?.collection?.name}
+            isOwnedByMe={nft?.isOwnedByMe}
+            listings={nft?.listings?.items || []}
+            nft={nft}
+            fallbackImage={nft?.metadata?.imageURL}
+            contractAddr={nft?.contract}
+            tokenId={nft?.tokenId}
+            // only show the eye icons to the owner in edit mode
+            visible={editMode ?
+              !nft?.hidden :
+              null
+            }
+            onVisibleToggle={() => {
+              if (editMode) {
+                toggleHidden(nft?.id, !nft?.hidden);
               }
-              onVisibleToggle={() => {
-                if (editMode) {
-                  toggleHidden(nft?.id, !nft?.hidden);
-                }
-              }}
-              onClick={() => {
-                if (editMode) {
-                  toggleHidden(nft?.id, !nft?.hidden);
-                }
-              }}
-              redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
-              customBackground={tileBackgroundSecondary}
-              nftsDescriptionsVisible={draftNftsDescriptionsVisible}
-              preventDefault={editMode}
-            />
-            :
-            <NFTCard
-              title={nft?.metadata?.name}
-              traits={[{ key: '', value: shortenAddress(nft?.contract?.address) }]}
-              images={[nft?.previewLink || nft?.metadata?.imageURL]}
-              collectionName={nft?.collection?.name}
-              isOwnedByMe={nft?.isOwnedByMe}
-              listings={nft?.listings?.items || []}
-              nft={nft}
-              fallbackImage={nft?.metadata?.imageURL}
-              profileURI={props.profileURI}
-              contractAddress={nft?.contract}
-              tokenId={nft?.tokenId}
-              // only show the eye icons to the owner in edit mode
-              visible={editMode ?
-                !nft?.hidden :
-                null
+            }}
+            onClick={() => {
+              if (editMode) {
+                toggleHidden(nft?.id, !nft?.hidden);
               }
-              onVisibleToggle={() => {
-                if (editMode) {
-                  toggleHidden(nft?.id, !nft?.hidden);
-                }
-              }}
-              onClick={() => {
-                if (editMode) {
-                  toggleHidden(nft?.id, !nft?.hidden);
-                }
-              }}
-              redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
-              customBackground={tileBackgroundSecondary}
-              nftsDescriptionsVisible={getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-                currentNftsDescriptionsVisible :
-                draftNftsDescriptionsVisible
-              }
-              layoutType={mosaicCardType(draftLayoutType ?? savedLayoutType, index)}
-              preventDefault={editMode}
-            />
-          }
+            }}
+            redirectTo={!editMode && ('/app/nft/' + nft?.contract + '/' + BigNumber.from(nft?.tokenId).toString())}
+            customBackground={tileBackgroundSecondary}
+            nftsDescriptionsVisible={draftNftsDescriptionsVisible}
+            preventDefault={editMode}
+          />
         </div>
       </DraggableGridItem>
     ))}
