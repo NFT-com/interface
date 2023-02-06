@@ -7,6 +7,7 @@ type ToolTipProps = {
   noFullHeight?: boolean;
   tooltipClick?: () => void;
   customLeftPosition?: string
+  customFullLeftPosition?: string
 };
 
 function Tooltip(props : PropsWithChildren<ToolTipProps>) {
@@ -34,7 +35,7 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
     custom: 'custom',
   };
 
-  const setContainerPosition = (orientation, customLeftPosition) => {
+  const setContainerPosition = (orientation, customLeftPosition, customFullLeftPosition) => {
     let classnames;
 
     switch (orientation) {
@@ -51,7 +52,7 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
       classnames = 'top-full left-[50%] translate-x-[-50%] translate-y-2';
       break;
     case orientations.custom:
-      classnames = `bottom-full left-[${customLeftPosition}%] translate-x-[-50%] -translate-y-2`;
+      classnames = `bottom-full ${customFullLeftPosition ?? `left-[${customLeftPosition}%]`} translate-x-[-50%] -translate-y-2`;
       break;
 
     default:
@@ -91,6 +92,7 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   const classContainer = `w-max absolute z-10 ${setContainerPosition(
     props.orientation,
     props.customLeftPosition,
+    props.customFullLeftPosition,
   )} bg-black text-white text-sm p-2 rounded-xl flex items-center transition-all duration-150 ${props.tooltipClick ? 'cursor-pointer' : 'pointer-events-none'}`;
 
   const pointerClasses = `bg-black h-3 w-3 absolute z-10 ${setPointerPosition(
