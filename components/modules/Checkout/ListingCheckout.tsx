@@ -382,7 +382,7 @@ export function ListingCheckout() {
       </div>
       {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
     </div>;
-  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGks, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
+  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
   
   return (
     <div className='flex w-full justify-between h-full'>
