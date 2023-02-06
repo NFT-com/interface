@@ -144,7 +144,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
         </div>
         {(showListings || nft?.wallet?.address === currentAddress) ?
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4 minxl:pt-12'>
-            <div className="md:hidden flex minxl:flex-row w-full items-start">
+            <div className="lg:hidden flex minxl:flex-row w-full items-start">
               <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />
             </div>
             <div className="w-full hidden minxl:flex minxl:items-end">

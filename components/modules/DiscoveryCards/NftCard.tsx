@@ -9,7 +9,7 @@ import { useNftQuery } from 'graphql/hooks/useNFTQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
-import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
+import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -68,8 +68,7 @@ export function NftCard(props: NftCardProps) {
   const processedImageURLs = sameAddress(props.contractAddr, getAddress('genesisKey', defaultChainId)) && !isNullOrEmpty(props.tokenId) ?
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
-  const { data: ownedGenesisKeyTokens } = useOwnedGenesisKeyTokens(currentAddress);
-  const hasGks = !isNullOrEmpty(ownedGenesisKeyTokens);
+  const hasGk = useHasGk();
   const isOwnedByMe = props?.isOwnedByMe || nft?.wallet?.address === currentAddress;
   const { profileData: nftProfileData } = useProfileQuery(props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null);
   const chainId = useDefaultChainId();
@@ -176,7 +175,7 @@ export function NftCard(props: NftCardProps) {
               />
               <div className="group-hover/ntfCard:opacity-100 opacity-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.40)] absolute top-0">
                 <div className="absolute bottom-[24.5px] flex flex-row justify-center w-[100%]">
-                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && (hasGks || getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) ?
+                  {(props?.listings?.length || nft?.listings?.items?.length) && bestListing && !isOwnedByMe && (hasGk || getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) ?
                     <>
                       <button
                         onClick={async (e) => {
