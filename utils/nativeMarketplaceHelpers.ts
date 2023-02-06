@@ -620,9 +620,13 @@ export const nftcomBuyNow = async (
       orderHash: order.orderHash,
     });
 
-    await tx.wait(1).then(() => true).catch(() => false);
+    if (tx) {
+      return await tx.wait(1).then(() => true).catch(() => false);
+    } else {
+      return false;
+    }
   } catch (err) {
     console.log(`error in nftcomBuyNow: ${err}`);
-    return null;
+    return false;
   }
 };

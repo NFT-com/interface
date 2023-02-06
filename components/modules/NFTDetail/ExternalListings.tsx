@@ -232,6 +232,7 @@ export function ExternalListings(props: ExternalListingsProps) {
                   isApprovedForNFTCOM: NFTCOMAllowed,
                   targets: [
                     {
+                      listingError: false,
                       protocol: ExternalProtocol.NFTCOM,
                       currency: NULL_ADDRESS
                     }
