@@ -291,6 +291,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               if (result) {
                 setSuccess(true);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
+                clear();
+                clearBuyNow();
               } else {
                 const hasSuffictientBalance = await getHasSufficientBalance();
                 if (!hasSuffictientBalance) {
