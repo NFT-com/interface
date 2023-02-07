@@ -13,7 +13,7 @@ export type NFTSupportedCurrency = {
   logo: string;
   contract: string;
   decimals: number;
-  usd: (val: number) => number | '-';
+  usd: (val: number) => number;
   allowance: (address: string, proxy: string) => Promise<BigNumberish>;
   setAllowance: (address: string, proxy: string) => Promise<boolean>;
   balance: (address: string) => Promise<BigNumberish>;
@@ -64,7 +64,7 @@ export function useSupportedCurrencies(): NFTSupportedCurrenciesInterface {
         logo: 'https://cdn.nft.com/weth.svg',
         contract: weth.address,
         decimals: 18,
-        usd: (val: number) => ethPriceUSD ? Number(Number(val * ethPriceUSD).toFixed(2)) : '-',
+        usd: (val: number) => ethPriceUSD ? Number(Number(val * ethPriceUSD).toFixed(2)) : 0,
         allowance: async (currentAddress: string, proxy: string) => {
           const wethAllowance = await weth.allowance(currentAddress, proxy ?? NULL_ADDRESS);
           return wethAllowance;
