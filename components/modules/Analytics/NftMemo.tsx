@@ -53,7 +53,7 @@ export const NftMemo = (props: NftMemoProps) => {
                 `${editMemo ? 'border-2' : 'border-none'}`,
               )}
               maxLength={300}
-              placeholder={currentAddress === nft?.wallet?.address && isNullOrEmpty(nft?.memo) ? 'Enter message (optional)' : undefined}
+              placeholder={currentAddress === (nft?.wallet?.address ?? props.nft?.owner) && isNullOrEmpty(nft?.memo) ? 'Enter message (optional)' : undefined}
               value={draftMemo ?? nft?.memo ?? ''}
               onChange={e => {
                 handleMemoChange(e);
@@ -61,10 +61,10 @@ export const NftMemo = (props: NftMemoProps) => {
               style={{
                 color: alwaysBlack,
               }}
-              disabled={!currentAddress === nft?.wallet?.address || !editMemo}
+              disabled={!currentAddress === (nft?.wallet?.address ?? props.nft?.owner) || !editMemo}
             />
             <div className='flex flex-row w-full justify-center items-center py-2 minxl:float-right minxl:flex-row-reverse minxl:w-1/4 minxl:-mb-12'>
-              {currentAddress === nft?.wallet?.address && !editMemo &&
+              {currentAddress === (nft?.wallet?.address ?? props.nft?.owner) && !editMemo &&
             <Button
               type={ButtonType.PRIMARY}
               stretch
@@ -75,7 +75,7 @@ export const NftMemo = (props: NftMemoProps) => {
               }}
             />
               }
-              {currentAddress === nft?.wallet?.address && editMemo &&
+              {currentAddress === (nft?.wallet?.address ?? props.nft?.owner) && editMemo &&
             <div className='inline-flex space-x-4'>
               <Button
                 type={ButtonType.PRIMARY}

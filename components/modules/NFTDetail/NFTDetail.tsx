@@ -44,7 +44,7 @@ export const NFTDetail = (props: NFTDetailProps) => {
 
   const { profileData: nftProfileData } = useProfileQuery(props.nft?.contract === getAddressForChain(nftProfile, defaultChainId) ? props.nft?.metadata?.name : null);
 
-  const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address);
+  const { profileTokens } = useNftProfileTokens(props.nft?.wallet?.address ?? props.nft?.owner);
   const { profileTokens: creatorTokens } = useNftProfileTokens(collection?.collection?.deployer);
   const { address: currentAddress } = useAccount();
 
