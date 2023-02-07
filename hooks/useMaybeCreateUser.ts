@@ -44,11 +44,12 @@ export function useMaybeCreateUser(): boolean {
       return;
     }
     const cachedUserId = localStorage.getItem(getCacheKey(currentAddress, chain?.id));
-    if (cachedUserId != null) {
+
+    if (cachedUserId != null && cachedUserId != 'undefined') {
       setCreatedUser(true);
       return;
     }
-    if(
+    if (
       (!createdUser) &&
       (!creating) &&
       (signed) &&
@@ -81,9 +82,9 @@ export function useMaybeCreateUser(): boolean {
               }
             };
           const result = await createUser(userData);
-          localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
+          if (result?.signUp?.id) localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
         } else {
-          localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
+          if (meResult?.id) localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
         }
         setCreatedUser(true);
       })();
