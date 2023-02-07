@@ -1,5 +1,6 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
+import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
@@ -54,7 +55,11 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
-  
+  const {
+    purchasedNfts,
+    setPurchasedNfts
+  } = useContext(NotificationContext);
+
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
     async () => {
@@ -298,6 +303,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
               if (result) {
                 setSuccess(true);
+                setPurchasedNfts(buyNowActive ? [...purchasedNfts, toBuyNow[0]] : [...purchasedNfts, ...toBuy]);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
                 clear();
                 clearBuyNow();
