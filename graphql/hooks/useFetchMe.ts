@@ -4,40 +4,39 @@ import { User } from 'graphql/generated/types';
 import { useSupportedNetwork } from 'hooks/useSupportedNetwork';
 import { isNullOrEmpty } from 'utils/helpers';
 
-import { useCallback, useContext, useState } from 'react';
+import { useContext } from 'react';
+import useSWR from 'swr';
 import { PartialDeep } from 'type-fest';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface FetchMeData {
-  fetchMe: () => Promise<PartialDeep<User>>;
-  loading: boolean;
+  data: PartialDeep<User>;
+  mutate: () => void
 }
 
 export function useFetchMe(): FetchMeData {
   const sdk = useGraphQLSDK();
-  const [loading, setLoading] = useState(false);
   const { address: currentAddress } = useAccount();
   const { signed } = useContext(GraphQLContext);
   const { isSupported } = useSupportedNetwork();
+  const { chain } = useNetwork();
 
-  const fetchMe = useCallback(async () => {
-    if (isNullOrEmpty(currentAddress) || !signed || !isSupported) {
-      return null;
-    }
-    try {
-      setLoading(true);
+  const keyString = 'useFetchMe' + currentAddress + chain?.id;
+
+  const { data, mutate } = useSWR(
+    keyString,
+    async () => {
+      if (isNullOrEmpty(currentAddress) || !signed || !isSupported) {
+        return null;
+      }
       const result = await sdk.Me();
-      setLoading(false);
+      
       return result.me;
-    } catch (error) {
-      setLoading(false);
-      // todo: handle the error based on the error code.
-      return null;
     }
-  }, [currentAddress, isSupported, sdk, signed]);
+  );
 
   return {
-    fetchMe,
-    loading: loading,
+    data,
+    mutate,
   };
 }

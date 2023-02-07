@@ -20,7 +20,7 @@ export function useMaybeCreateUser(): boolean {
   const { isSupported } = useSupportedNetwork();
   const router = useRouter();
   const { mutate: mutateMeInfo } = useMeQuery();
-  const { fetchMe } = useFetchMe();
+  const { data: meResult, mutate: mutateMe } = useFetchMe();
 
   useEffect(() => {
     setCreatedUser(false);
@@ -35,6 +35,8 @@ export function useMaybeCreateUser(): boolean {
     },
   });
 
+  console.log('meResult: ', meResult);
+
   const getCacheKey = (address: string, chainId: number) => {
     return 'uidForWallet:' + address + ':chainId:' + chainId;
   };
@@ -43,6 +45,7 @@ export function useMaybeCreateUser(): boolean {
     if (isNullOrEmpty(currentAddress)) {
       return;
     }
+
     const cachedUserId = localStorage.getItem(getCacheKey(currentAddress, chain?.id));
 
     if (cachedUserId != null && cachedUserId != 'undefined') {
@@ -56,7 +59,6 @@ export function useMaybeCreateUser(): boolean {
       (isSupported)
     ) {
       (async () => {
-        const meResult = await fetchMe();
         if (meResult == null) {
           const referredBy = router?.query?.makerReferralCode?.toString() || null;
           const referralUrl = router?.query?.referralUrl?.toString() || null;
@@ -82,6 +84,7 @@ export function useMaybeCreateUser(): boolean {
               }
             };
           const result = await createUser(userData);
+          mutateMe();
           if (result?.signUp?.id) localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
         } else {
           if (meResult?.id) localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
@@ -89,17 +92,7 @@ export function useMaybeCreateUser(): boolean {
         setCreatedUser(true);
       })();
     }
-  }, [
-    isSupported,
-    createUser,
-    currentAddress,
-    chain?.id,
-    creating,
-    createdUser,
-    fetchMe,
-    signed,
-    router?.query
-  ]);
+  }, [isSupported, createUser, currentAddress, chain?.id, creating, createdUser, signed, router?.query, meResult, mutateMe]);
 
   return createdUser;
 }
