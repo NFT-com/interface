@@ -154,7 +154,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         }
         {isOwnerAndSignedIn &&
             <>
-              {getEnvBool(Doppler.NEXT_MOSAIC_LAYOUT_ENABLED) &&
+              {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&
                 <DropdownPickerModal
                   pointer
                   align='center'
