@@ -14,6 +14,7 @@ import { X2Y2BuyNow } from './X2Y2Helpers';
 
 import { BigNumber, BigNumberish, ContractTransaction, ethers, Signer } from 'ethers';
 import { useCallback } from 'react';
+import { useAccount, useBalance } from 'wagmi';
 
 export async function getOpenseaCollection(
   contract: string,
@@ -89,11 +90,13 @@ export type BuyNowInterface = {
 };
 
 export function useBuyNow(signer: Signer): BuyNowInterface {
+  const { address: currentAddress } = useAccount();
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const NftcomExchange = useNftcomExchangeContract(signer);
   const X2Y2Exchange = useX2Y2ExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
   const defaultChainId = useDefaultChainId();
+  const { data: ethBalance } = useBalance({ address: currentAddress, watch: true });
   
   const buyNow = useCallback(async (
     executorAddress: string,
@@ -102,7 +105,7 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
     try {
       switch(order.protocol){
       case ExternalProtocol.LooksRare:
-        return await looksrareBuyNow(order, looksrareExchange, executorAddress);
+        return await looksrareBuyNow(order, looksrareExchange, executorAddress, ethBalance);
       case ExternalProtocol.NFTCOM:
         return await nftcomBuyNow(order, NftcomExchange, executorAddress, defaultChainId);
       case ExternalProtocol.X2Y2:
@@ -116,7 +119,7 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
       console.log(`error in buyNow: ${err}`);
       return false;
     }
-  }, [NftcomExchange, X2Y2Exchange, defaultChainId, looksrareExchange, seaportExchange]);
+  }, [NftcomExchange, X2Y2Exchange, defaultChainId, ethBalance, looksrareExchange, seaportExchange]);
 
   return {
     buyNow
