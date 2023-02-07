@@ -60,7 +60,7 @@ export function ListingCheckout() {
   const hasGk = useHasGk();
 
   const defaultChainId = useDefaultChainId();
-  const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
+  const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner);
   const { profileData } = useProfileQuery(
     toList[0]?.nft?.wallet?.preferredProfile == null ?
       profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
@@ -180,14 +180,14 @@ export function ListingCheckout() {
                     if (profileOwnerToShow?.url) {
                       router.push('/' + profileOwnerToShow?.url);
                     } else {
-                      window.open(getEtherscanLink(Number(defaultChainId), toList[0]?.nft?.wallet?.address, 'address'), '_blank');
+                      window.open(getEtherscanLink(Number(defaultChainId), toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner, 'address'), '_blank');
                     }
                   }}
                 >
                   <span className="text-base whitespace-nowrap text-ellipsis overflow-hidden font-medium leading-5 font-noi-grotesk">
                     {profileOwnerToShow?.url ?
                       profileOwnerToShow?.url :
-                      shortenAddress(toList[0]?.nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown'
+                      shortenAddress(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner, isMobile ? 4 : 6) ?? 'Unknown'
                     }
                   </span>
                 </div>

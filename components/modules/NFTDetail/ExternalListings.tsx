@@ -142,7 +142,7 @@ export function ExternalListings(props: ExternalListingsProps) {
   const getListingSummaryButtons = useCallback((orderHash: string) => {
     if (!hasGk && !getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED)) {
       return 'You must have a Genesis Key to purchase';
-    } else if (currentAddress === props.nft?.wallet?.address) {
+    } else if (currentAddress === (props.nft?.wallet?.address ?? props.nft?.owner)) {
       return <Button
         stretch
         label={'Edit Listing'}
@@ -203,7 +203,7 @@ export function ExternalListings(props: ExternalListingsProps) {
 
   if (isNullOrEmpty(filterValidListings(props.nft?.listings?.items))) {
     return (
-      currentAddress === props.nft?.wallet?.address && hasGk &&
+      currentAddress === (props.nft?.wallet?.address ?? props.nft?.owner) && hasGk &&
         <div className={tw(
           'w-full flex mb-5',
         )}>
