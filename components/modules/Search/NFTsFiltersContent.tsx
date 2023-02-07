@@ -2,7 +2,6 @@ import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
 import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { CheckBox } from 'components/elements/CheckBox';
-import { marketplace } from 'constants/contracts';
 
 import { ButtonFilter } from './filtersComponents/ButtonFilter';
 import { MinMaxFilter } from './filtersComponents/MinMaxFilter';
@@ -555,7 +554,7 @@ export const NFTsFiltersContent = () => {
             </div>);
           })}
         </div>
-        <div className="px-4 minlg:px-0 hidden mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
+        <div className="px-4 minlg:px-0 mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
           <Button
             color={'black'}
             accent={AccentType.SCALE}

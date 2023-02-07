@@ -32,11 +32,17 @@ export const convertDurationToSecForNumbersOnly = (d: number) => {
   return 60 * 60 * 24 * d;
 };
 
-export function needsApprovals(stagedPurchases: StagedPurchase[]): boolean {
+export function needsERC20Approvals(stagedPurchases: StagedPurchase[]): boolean {
+  if(stagedPurchases.length === 1) {
+    return filterDuplicates(
+      stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+      (first, second) => first?.currency === second?.currency
+    ).some(purchase => !purchase?.isERC20ApprovedForProtocol);
+  }
   return filterDuplicates(
     stagedPurchases?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
     (first, second) => first?.currency === second?.currency
-  ).some(purchase => !purchase?.isApproved);
+  ).some(purchase => !purchase?.isERC20ApprovedForAggregator);
 }
 
 export function hasSufficientBalances(
@@ -77,7 +83,8 @@ export function getTotalFormattedPriceUSD(
 export function getTotalMarketplaceFeesUSD(
   stagedPurchases: StagedPurchase[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  hasGk: boolean
 ): number {
   return stagedPurchases?.reduce((cartTotal, stagedPurchase) => {
     if (stagedPurchase.protocol === ExternalProtocol.LooksRare) {
@@ -88,6 +95,8 @@ export function getTotalMarketplaceFeesUSD(
       );
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
+    } else if (hasGk && stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
+      return 0;
     } else {
       const fee = BigNumber.from(multiplyBasisPoints(stagedPurchase?.price ?? 0, 250));
       const currencyData = getByContractAddress(stagedPurchase.currency);
@@ -99,9 +108,10 @@ export function getTotalMarketplaceFeesUSD(
 export function getTotalRoyaltiesUSD(
   stagedPurchases: StagedPurchase[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  nftComRoyaltyFees: number[]
 ): number {
-  return stagedPurchases?.reduce((cartTotal, stagedPurchase) => {
+  return stagedPurchases?.reduce((cartTotal, stagedPurchase, index) => {
     if (stagedPurchase.protocol === ExternalProtocol.LooksRare) {
       const protocolData = stagedPurchase?.protocolData as LooksrareProtocolData;
       const minAskAmount = BigNumber.from(protocolData?.minPercentageToAsk ?? 0)
@@ -126,26 +136,14 @@ export function getTotalRoyaltiesUSD(
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(royalty, currencyData?.decimals ?? 18)));
     } else if (stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
-      return 0;
-
-      // TODO: temp for longer fix
-      // const { marketplace } = useAllContracts();
-      // const { data: NFTCOMRoyaltyFee } = useSWR(
-      //   'NFTCOMRoyaltyFee' + stagedPurchase.nft?.contract,
-      //   async () => {
-      //     return await marketplace.royaltyInfo(stagedPurchase.nft?.contract);
-      //   },
-      //   {
-      //     refreshInterval: 0,
-      //     revalidateOnFocus: false,
-      //   });
-
-      // const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
-      // const currencyData = getByContractAddress(stagedPurchase.currency);
-      // return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(
-      //   royalty,
-      //   3, // royalties from NFT.com have decimals 3
-      // ))) ?? 0;
+      const NFTCOMRoyaltyFee = nftComRoyaltyFees?.[index];
+      
+      const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
+      const currencyData = getByContractAddress(stagedPurchase.currency);
+      return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(
+        royalty,
+        3, // royalties from NFT.com have decimals 3
+      ))) ?? 0;
     }
   }, 0);
 }
@@ -154,7 +152,8 @@ export function getMaxMarketplaceFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
   getByContractAddress: (contract: string) => NFTSupportedCurrency,
-  NFTCOMFee: number
+  NFTCOMFee: number,
+  hasGk: boolean
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
     const feesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
@@ -169,11 +168,15 @@ export function getMaxMarketplaceFeesUSD(
           currencyData.decimals ?? 18
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.NFTCOM) {
-        const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, NFTCOMFee));
-        return currencyData?.usd(Number(ethers.utils.formatUnits(
-          fee,
-          currencyData.decimals ?? 18
-        ))) ?? 0;
+        if(hasGk) {
+          return 0;
+        } else {
+          const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, NFTCOMFee));
+          return currencyData?.usd(Number(ethers.utils.formatUnits(
+            fee,
+            currencyData.decimals ?? 18
+          ))) ?? 0;
+        }
       } else {
         // Seaport fee is hard-coded in our codebase and not expected to change.
         const fee = BigNumber.from(multiplyBasisPoints((stagedListing.startingPrice ?? target?.startingPrice) ?? 0, 250));
@@ -190,10 +193,12 @@ export function getMaxMarketplaceFeesUSD(
 export function getMaxRoyaltyFeesUSD(
   stagedListings: StagedListing[],
   looksrareProtocolFeeBps: BigNumberish,
-  getByContractAddress: (contract: string) => NFTSupportedCurrency
+  getByContractAddress: (contract: string) => NFTSupportedCurrency,
+  toListNftComRoyaltyFees: number[],
+  x2y2Fees: number[]
 ): number {
   return stagedListings?.reduce((cartTotal, stagedListing) => {
-    const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget) => {
+    const royaltiesByMarketplace = stagedListing?.targets.map((target: ListingTarget, index: number) => {
       const currencyData = getByContractAddress(stagedListing.currency ?? target.currency);
       if (target.protocol === ExternalProtocol.LooksRare) {
         const minAskAmount = BigNumber.from(target?.looksrareOrder?.minPercentageToAsk ?? 0)
@@ -216,61 +221,18 @@ export function getMaxRoyaltyFeesUSD(
           currencyData.decimals ?? 18
         ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.NFTCOM) {
-        return 0;
-
-        // TODO: temp
-        // const { marketplace } = useAllContracts();
-        // const { data: NFTCOMRoyaltyFee } = useSWR(
-        //   'NFTCOMRoyaltyFee' + stagedListing.nft?.contract,
-        //   async () => {
-        //     return await marketplace.royaltyInfo(stagedListing.nft?.contract);
-        //   },
-        //   {
-        //     refreshInterval: 0,
-        //     revalidateOnFocus: false,
-        //   });
-        // const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
-        // return currencyData?.usd(Number(ethers.utils.formatUnits(
-        //   royalty,
-        //   3, // royalties from NFT.com have decimals 3
-        // ))) ?? 0;
+        const NFTCOMRoyaltyFee = toListNftComRoyaltyFees?.[index];
+        const royalty = NFTCOMRoyaltyFee ?? 0;
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          royalty,
+          3, // royalties from NFT.com have decimals 3
+        ))) ?? 0;
       } else if (target.protocol === ExternalProtocol.X2Y2) {
-        return 0;
-        // TODO: temp
-        // const x2y2 = 'https://api.thegraph.com/subgraphs/name/messari/x2y2-ethereum';
-        // const query = `{\n  collections(where: { id: "${stagedListing.nft?.contract?.toLowerCase()}" }) {\n    id\n    royaltyFee\n  }\n}`;
-        // // post request using fetch
-        // const requestOptions = {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ query })
-        // };
-        
-        // const { data: responseX2Y2 } = useSWR(
-        //   'responseX2Y2 fetch' + stagedListing.nft?.contract,
-        //   async () => {
-        //     return await fetch(x2y2, requestOptions);
-        //   },
-        //   {
-        //     refreshInterval: 0,
-        //     revalidateOnFocus: false,
-        //   });
-
-        // const { data: dataX2Y2 } = useSWR(
-        //   'responseX2Y2 json' + stagedListing.nft?.contract,
-        //   async () => {
-        //     return await responseX2Y2.json();
-        //   },
-        //   {
-        //     refreshInterval: 0,
-        //     revalidateOnFocus: false,
-        //   });
-
-        // const royalty = dataX2Y2?.data?.collections[0]?.royaltyFee ?? 0;
-        // return currencyData?.usd(Number(ethers.utils.formatUnits(
-        //   royalty,
-        //   currencyData.decimals ?? 18
-        // ))) ?? 0;
+        const royalty = x2y2Fees?.[index] ?? 0;
+        return currencyData?.usd(Number(ethers.utils.formatUnits(
+          royalty,
+          currencyData.decimals ?? 18
+        ))) ?? 0;
       } else {
         // TODO: handle
       }

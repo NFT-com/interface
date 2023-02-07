@@ -2,7 +2,7 @@
 
 import { NULL_ADDRESS } from '../../../constants/addresses';
 import { ExternalProtocol } from '../../../types';
-import { convertDurationToSec, getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from '../../../utils/marketplaceUtils';
+import { convertDurationToSec, getMaxMarketplaceFeesUSD, getMaxRoyaltyFeesUSD, getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsERC20Approvals } from '../../../utils/marketplaceUtils';
 
 import { BigNumber, BigNumberish } from 'ethers';
   
@@ -27,7 +27,7 @@ describe('Unit test our marketplace helper functions', () => {
           isApproved: false
         }
       ];
-      expect(needsApprovals(toBuy)).to.be.true;
+      expect(needsERC20Approvals(toBuy)).to.be.true;
     });
 
     it('should return true with duplicate currency', () => {
@@ -41,45 +41,45 @@ describe('Unit test our marketplace helper functions', () => {
           isApproved: true
         }
       ];
-      expect(needsApprovals(toBuy)).to.be.true;
+      expect(needsERC20Approvals(toBuy)).to.be.true;
     });
 
     it('should return false with one currency approved', () => {
       const toBuy = [
         {
           currency: 'test_currency',
-          isApproved: true
+          isERC20ApprovedForAggregator: true
         },
         {
           currency: 'test_currency',
-          isApproved: true
+          isERC20ApprovedForAggregator: true
         }
       ];
-      expect(needsApprovals(toBuy)).to.be.false;
+      expect(needsERC20Approvals(toBuy)).to.be.false;
     });
 
     it('should return false with all currencies approved', () => {
       const toBuy = [
         {
           currency: 'test_currency',
-          isApproved: true
+          isERC20ApprovedForAggregator: true
         },
         {
           currency: 'test_currency2',
-          isApproved: true
+          isERC20ApprovedForAggregator: true
         }
       ];
-      expect(needsApprovals(toBuy)).to.be.false;
+      expect(needsERC20Approvals(toBuy)).to.be.false;
     });
 
     it('should return false for native currency', () => {
       const toBuy = [
         {
           currency: NULL_ADDRESS,
-          isApproved: false
+          isERC20ApprovedForAggregator: false
         },
       ];
-      expect(needsApprovals(toBuy)).to.be.false;
+      expect(needsERC20Approvals(toBuy)).to.be.false;
     });
   });
 
@@ -167,7 +167,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        false
       )).to.equal(250000);
     });
 
@@ -184,7 +185,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        false
       )).to.equal(100000);
     });
 
@@ -206,7 +208,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        false
       )).to.equal(350000);
     });
   });
@@ -236,7 +239,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        [0]
       )).to.equal(0.1);
     });
 
@@ -257,7 +261,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        [0]
       )).to.equal(88);
     });
 
@@ -294,7 +299,8 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        [0]
       )).to.equal(88.1);
     });
   });
@@ -325,7 +331,8 @@ describe('Unit test our marketplace helper functions', () => {
           decimals: 18,
           usd: (val: number) => val
         }),
-        0
+        0,
+        false
       )).to.equal(25010);
     });
   });
@@ -368,7 +375,9 @@ describe('Unit test our marketplace helper functions', () => {
         () => ({
           decimals: 18,
           usd: (val: number) => val
-        })
+        }),
+        [0],
+        [0]
       )).to.equal(0.000001);
     });
   });

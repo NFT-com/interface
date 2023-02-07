@@ -7,19 +7,19 @@ import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
 import { nftcomBuyNow } from 'utils/nativeMarketplaceHelpers';
 
-import { Doppler, getEnv } from './env';
-import { isNullOrEmpty } from './helpers';
+import { getBaseUrl, isNullOrEmpty } from './helpers';
 import { looksrareBuyNow } from './looksrareHelpers';
 import { seaportBuyNow } from './seaportHelpers';
 import { X2Y2BuyNow } from './X2Y2Helpers';
 
 import { BigNumber, BigNumberish, ContractTransaction, ethers, Signer } from 'ethers';
 import { useCallback } from 'react';
+import { useAccount, useBalance } from 'wagmi';
 
 export async function getOpenseaCollection(
   contract: string,
 ): Promise<any> {
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/opensea');
+  const url = new URL(getBaseUrl() + 'api/opensea');
   url.searchParams.set('contract', contract);
   url.searchParams.set('action', 'getCollection');
 
@@ -28,7 +28,7 @@ export async function getOpenseaCollection(
 }
 
 export async function getLooksrareNonce(address: string): Promise<number> {
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/looksrare');
+  const url = new URL(getBaseUrl() + 'api/looksrare');
   url.searchParams.set('action', 'getNonce');
   url.searchParams.set('address', address);
   const result = await fetch(url.toString()).then(res => res.json());
@@ -39,7 +39,7 @@ export async function getSeaportOrders(contract: string, tokenId: BigNumberish):
   if (tokenId == null || isNullOrEmpty(contract)) {
     return [];
   }
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/seaport');
+  const url = new URL(getBaseUrl() + 'api/seaport');
   url.searchParams.set('action', 'getOrders');
   url.searchParams.set('contract', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
@@ -51,7 +51,7 @@ export async function getLooksrareOrders(contract: string, tokenId: BigNumberish
   if (tokenId == null || isNullOrEmpty(contract)) {
     return [];
   }
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/looksrare');
+  const url = new URL(getBaseUrl() + 'api/looksrare');
   url.searchParams.set('action', 'getOrders');
   url.searchParams.set('contract', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
@@ -86,15 +86,17 @@ export const libraryCall = (fnSig: string, entireHex: string): string => {
 };
 
 export type BuyNowInterface = {
-  buyNow: (executorAddress: string, order: StagedPurchase) => Promise<ContractTransaction>
+  buyNow: (executorAddress: string, order: StagedPurchase) => Promise<boolean>
 };
 
 export function useBuyNow(signer: Signer): BuyNowInterface {
+  const { address: currentAddress } = useAccount();
   const looksrareExchange = useLooksrareExchangeContract(signer);
   const NftcomExchange = useNftcomExchangeContract(signer);
   const X2Y2Exchange = useX2Y2ExchangeContract(signer);
   const seaportExchange = useSeaportContract(signer);
   const defaultChainId = useDefaultChainId();
+  const { data: ethBalance } = useBalance({ address: currentAddress, watch: true });
   
   const buyNow = useCallback(async (
     executorAddress: string,
@@ -103,7 +105,7 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
     try {
       switch(order.protocol){
       case ExternalProtocol.LooksRare:
-        return await looksrareBuyNow(order, looksrareExchange, executorAddress);
+        return await looksrareBuyNow(order, looksrareExchange, executorAddress, ethBalance);
       case ExternalProtocol.NFTCOM:
         return await nftcomBuyNow(order, NftcomExchange, executorAddress, defaultChainId);
       case ExternalProtocol.X2Y2:
@@ -115,9 +117,9 @@ export function useBuyNow(signer: Signer): BuyNowInterface {
       }
     } catch (err) {
       console.log(`error in buyNow: ${err}`);
-      return null;
+      return false;
     }
-  }, [NftcomExchange, X2Y2Exchange, defaultChainId, looksrareExchange, seaportExchange]);
+  }, [NftcomExchange, X2Y2Exchange, defaultChainId, ethBalance, looksrareExchange, seaportExchange]);
 
   return {
     buyNow

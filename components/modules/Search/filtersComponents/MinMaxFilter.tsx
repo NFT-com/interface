@@ -74,7 +74,7 @@ export const MinMaxFilter = (props: FilterInputOptionProps) => {
           {props.currency ? props.currency : 'ETH'}
           <ArrowDown/>
         </div>
-        <ul className={`${props.isOpen ? 'h-[96px]' : 'h-0'} bg-[#F2F2F2] relative transition-all w-full p-0 h-0 overflow-hidden rounded-b-[8px]`}>
+        <ul className={`${props.isOpen ? 'h-[96px]' : 'h-0'} bg-[#F2F2F2] transition-all relative w-full p-0 h-0 overflow-hidden rounded-b-[8px]`}>
           <li onClick={() => {
             props.changeCurrency('ETH');
             props.toggleSelect(props.isOpen);
