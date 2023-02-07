@@ -36,6 +36,8 @@ const getSymbol = (contract_address: string, symbol: string, price: string) => {
     return <div className='flex items-center'><USDC className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} USDC</div>;
   case 'DAI':
     return <div className='flex items-center'><DAI className='mr-1.5 h-5 w-5 relative shrink-0' />{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} DAI</div>;
+  case 'ETH':
+    return <div className='flex items-center'><ETH className='mr-1.5 h-5 w-5 relative shrink-0' /> {Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} ETH</div>;
   default:
     if (!contract_address) {
       return <div>{Number(price)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })} {symbol}</div>;
