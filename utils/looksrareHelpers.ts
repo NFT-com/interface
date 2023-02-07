@@ -6,6 +6,7 @@ import { AggregatorResponse } from 'types';
 import { libraryCall, looksrareLib } from './marketplaceHelpers';
 
 import { Addresses, addressesByNetwork, MakerOrder } from '@looksrare/sdk';
+import { FetchBalanceResult } from '@wagmi/core';
 import { BigNumber, BigNumberish, ethers } from 'ethers';
 import { PartialDeep } from 'type-fest';
 
@@ -143,8 +144,10 @@ export const getLooksrareHex = (
 export const looksrareBuyNow = async (
   order: StagedPurchase,
   looksrareExchange: LooksRareExchange,
-  executorAddress: string
+  executorAddress: string,
+  ethBalance: FetchBalanceResult
 ): Promise<boolean> => {
+  const hasEnoughEth = Number(ethers.utils.formatEther(ethBalance.value.sub(order?.price))) > 0;
   try {
     const {
       collectionAddress,
@@ -193,7 +196,7 @@ export const looksrareBuyNow = async (
         s,
       },
       {
-        value: order?.price
+        value: hasEnoughEth ? order?.price : 0
       }
     );
 
