@@ -117,7 +117,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       )}>
         <input
           type="text"
-          placeholder="Search your NFTs.."
+          placeholder={isOwnerAndSignedIn ? 'Search your NFTs..' : 'Search NFTs...'}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
