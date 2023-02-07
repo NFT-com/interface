@@ -16,8 +16,7 @@ import {
   Order,
   orderParamType, orderParamTypes, RunInput, runInputParamType } from 'types';
 
-import { Doppler, getEnv } from './env';
-import { isNullOrEmpty } from './helpers';
+import { getBaseUrl, isNullOrEmpty } from './helpers';
 import { libraryCall, X2Y2Lib } from './marketplaceHelpers';
 
 import { OP_CANCEL_OFFER } from '@x2y2-io/sdk';
@@ -163,7 +162,7 @@ async function fetchOrderSign(
   tokenId: string
 ): Promise<RunInput | undefined> {
   try {
-    const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
+    const url = new URL(getBaseUrl() + 'api/x2y2');
     url.searchParams.set('action', 'fetchOrderSign');
     url.searchParams.set('caller', caller);
     url.searchParams.set('op', op.toString());
@@ -358,7 +357,7 @@ async function getCancelInput(
   signMessage: string,
   sign: string
 ): Promise<CancelInput> {
-  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/x2y2');
+  const url = new URL(getBaseUrl() + 'api/x2y2');
   url.searchParams.set('action', 'fetchOrderCancel');
   url.searchParams.set('caller', caller);
   url.searchParams.set('op', op.toString());

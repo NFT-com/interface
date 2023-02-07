@@ -1,17 +1,20 @@
 import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
+import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { useBuyNow } from 'utils/marketplaceHelpers';
-import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsApprovals } from 'utils/marketplaceUtils';
+import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsERC20Approvals } from 'utils/marketplaceUtils';
 
 import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
@@ -52,7 +55,11 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
-  
+  const {
+    purchasedNfts,
+    setPurchasedNfts
+  } = useContext(NotificationContext);
+
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
     async () => {
@@ -64,9 +71,10 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     });
 
   const nftsToBuy = buyNowActive ? toBuyNow : toBuy;
+  const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
 
   const getNeedsApprovals = useCallback(() => {
-    return needsApprovals(nftsToBuy);
+    return needsERC20Approvals(nftsToBuy);
   }, [nftsToBuy]);
 
   const getHasSufficientBalance = useCallback(async () => {
@@ -138,7 +146,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                     const currencyData = getByContractAddress(purchase?.currency);
                     return {
                       label: 'Approve ' + currencyData.name,
-                      endIcon: purchase?.isApproved ?
+                      endIcon: purchase?.isERC20ApprovedForAggregator ?
                         <CheckCircle size={16} className="text-green-500 mx-2" /> :
                         error === 'ApprovalError' ?
                           <X size={16} className="text-red-400 mx-2" /> :
@@ -265,14 +273,19 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
               }
 
               if (getNeedsApprovals()) {
-                const missingApprovals = filterDuplicates(
-                  toBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
-                  (first, second) => first?.currency === second?.currency
-                ).filter(purchase => !purchase?.isApproved);
+                const missingApprovals = nftsToBuy.length > 1 ?
+                  filterDuplicates(
+                    nftsToBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                    (first, second) => first?.currency === second?.currency
+                  ).filter(purchase => !purchase?.isERC20ApprovedForAggregator) :
+                  filterDuplicates(
+                    nftsToBuy?.filter(purchase => !sameAddress(NULL_ADDRESS, purchase?.currency)),
+                    (first, second) => first?.currency === second?.currency
+                  ).filter(purchase => !purchase?.isERC20ApprovedForProtocol);
                 for (let i = 0; i < missingApprovals.length; i++) {
                   const purchase = missingApprovals[i];
                   const currencyData = getByContractAddress(purchase?.currency);
-                  await currencyData?.setAllowance(currentAddress, getAddressForChain(nftAggregator, chain?.id))
+                  await currencyData?.setAllowance(currentAddress, nftsToBuy.length > 1 ? getAddressForChain(nftAggregator, chain?.id) : getERC20ProtocolApprovalAddress(nftsToBuy[0].protocol))
                     .then((result: boolean) => {
                       if (!result) {
                         setError('ApprovalError');
@@ -290,6 +303,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
               if (result) {
                 setSuccess(true);
+                setPurchasedNfts(buyNowActive ? [...purchasedNfts, toBuyNow[0]] : [...purchasedNfts, ...toBuy]);
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
                 clear();
                 clearBuyNow();

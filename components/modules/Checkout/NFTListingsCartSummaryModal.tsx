@@ -38,7 +38,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     approveCollection,
     toggleCartSidebar,
     clear,
-    allListingsConfigured
+    allListingsConfigured,
+    setAllListingsFail,
   } = useContext(NFTListingsContext);
   const provider = useProvider();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
@@ -52,6 +53,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const hasGk = useHasGk();
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [partialError, setPartialError] = useState(false);
   const [error, setError] = useState<Maybe<
   'ApprovalError' | 'ListingSignatureRejected' | 'ListingUnknownError' | 'ConnectionError'
   >>(null);
@@ -134,7 +136,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     if (success) {
       return <CheckoutSuccessView
         userAddress={currentAddress}
-        onClose={() => {
+         onClose={() => {
           if (success) {
             clear();
             toggleCartSidebar();
@@ -147,20 +149,25 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         type={SuccessType.Listing}
         subtitle="You have successfully listed your items!"
       />;
-    } else if (!isNullOrEmpty(error)) {
-      return <div className='flex flex-col w-full'>
-        <div className="text-3xl mx-4 font-bold">
-          {error === 'ApprovalError' ? 'Approval' : 'Listing'} Failed
-          <div className='w-full my-8'>
-            <span className='font-medium text-[#6F6F6F] text-base'>
-              {error === 'ConnectionError' && 'Your wallet is not connected. Please connect your wallet and try again.'}
-              {error === 'ListingSignatureRejected' && 'You must sign the listing data to proceed.'}
-              {error === 'ListingUnknownError' && 'Your signature was valid, but we encountered an unexpected issue. Please try again later.'}
-            </span>
-          </div>
-        </div>.
-      </div>;
-    } else if (showProgressBar) {
+    } else if (partialError){
+      return <CheckoutSuccessView
+        hasError
+         onClose={() => {
+          if (success) {
+            clear();
+            toggleCartSidebar();
+          }
+          setSuccess(false);
+          setShowProgressBar(false);
+          setError(null);
+          props.onClose();
+        }}
+        userAddress={currentAddress}
+        type={SuccessType.Listing}
+        subtitle="You have successfully listed your items!"
+      />;
+    }
+    else if (showProgressBar) {
       return (
         <div className="">
           <VerticalProgressBar
@@ -284,7 +291,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         </>
       );
     }
-  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, props, showProgressBar, success, toList, toggleCartSidebar]);
+  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, partialError, props, showProgressBar, success, toList, toggleCartSidebar]);
 
   return (
     <Modal
@@ -302,10 +309,10 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       fullModal
       pure
     >
-      <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 py-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
-        <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
+      <div className={`max-w-full overflow-hidden ${success || partialError ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : partialError ? 'minlg:max-w-[873px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 py-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
+        <div className={`font-noi-grotesk ${success || partialError ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
-            if (success) {
+            if (success || partialError) {
               clear();
               toggleCartSidebar();
             }
@@ -315,14 +322,14 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             props.onClose();
           }} className='absolute top-3 z-50 right-3 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
           {getSummaryContent()}
-          {!success && <div className="my-4 mt-8 flex">
+          {!success && !partialError && <div className="my-4 mt-8 flex">
             <Button
               stretch
-              loading={showProgressBar && !error && !success}
-              disabled={!allListingsConfigured() || (showProgressBar && !error && !success)}
-              label={success ? 'Finish' : error ? 'Try Again' : 'Proceed to list'}
+              loading={showProgressBar && !error && !success && !partialError}
+              disabled={!allListingsConfigured() || (showProgressBar && !error && !success && !partialError)}
+              label={success || partialError ? 'Finish' : error ? 'Try Again' : 'Proceed to list'}
               onClick={async () => {
-                if (success) {
+                if (success || partialError) {
                   clear();
                   setSuccess(false);
                   toggleCartSidebar();
@@ -437,16 +444,15 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                     }
                   }
                 }
-
-                const result: ListAllResult = await listAll();
+                const result: ListAllResult = await listAll(toList);
                 if (result === ListAllResult.Success) {
                   setSuccess(true);
+                } else if (result === ListAllResult.PartialError){
+                  setPartialError(true);
+                  setShowProgressBar(false);
                 } else {
-                  setError(
-                    result === ListAllResult.SignatureRejected ?
-                      'ListingSignatureRejected' :
-                      'ListingUnknownError'
-                  );
+                  setAllListingsFail(true);
+                  setShowProgressBar(false);
                 }
               }}
               type={ButtonType.PRIMARY}
