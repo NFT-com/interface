@@ -85,15 +85,20 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
   });
   
   const getMintCost = useCallback(() => {
-    if(feeData?.gasPrice){
-      if(data?.request.gasLimit && registrationFee) {
+    console.log('[getMintCost] =====> feeData: ', JSON.stringify(feeData, null, 2));
+    console.log('[getMintCost] =====> data: ', JSON.stringify(data?.request?.gasLimit, null, 2));
+    console.log('[getMintCost] =====> registrationFee: ', Number(registrationFee));
+
+    if (feeData?.gasPrice){
+      if (data?.request.gasLimit && registrationFee) {
         const gasFee = BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString()));
         return utils.formatEther(BigNumber.from(registrationFee).add(gasFee));
-      }
-      else {
+      } else {
+        console.log('zero from 1st exit');
         return 0;
       }
     } else {
+      console.log('zero from 2nd exit');
       return 0;
     }
   }, [feeData, data, registrationFee]);
