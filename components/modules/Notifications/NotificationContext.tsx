@@ -54,7 +54,7 @@ export const NotificationContext = React.createContext<NotificationContextType>(
     hasSoldActivity: false,
     hasExpiredListings: false,
     profileExpiration: false,
-    nftPurchase: true
+    nftPurchase: false
   },
   setUserNotificationActive: () => null,
   pendingAssociationCount: 0,
@@ -103,7 +103,7 @@ export function NotificationContextProvider(
     hasSoldActivity: false,
     hasExpiredListings: false,
     profileExpiration: false,
-    nftPurchase: true
+    nftPurchase: false
   });
   const [removedAssociationNotifClicked, setRemovedAssociationNotifClicked] = useState(false);
   const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
