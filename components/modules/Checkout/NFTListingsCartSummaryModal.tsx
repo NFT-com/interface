@@ -136,7 +136,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     if (success) {
       return <CheckoutSuccessView
         userAddress={currentAddress}
-         onClose={() => {
+        onClose={() => {
           if (success) {
             clear();
             toggleCartSidebar();
@@ -152,7 +152,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     } else if (partialError){
       return <CheckoutSuccessView
         hasError
-         onClose={() => {
+        onClose={() => {
           if (success) {
             clear();
             toggleCartSidebar();
@@ -478,8 +478,4 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
       </div>
     </Modal>
   );
-}
-
-function ownedGenesisKeyTokens(ownedGenesisKeyTokens: any) {
-  throw new Error('Function not implemented.');
 }
