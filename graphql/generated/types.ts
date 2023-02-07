@@ -3126,7 +3126,7 @@ export type LeaderboardQuery = { __typename?: 'Query', leaderboard: { __typename
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, avatarURL?: string | null, email?: string | null, username?: string | null, isEmailConfirmed: boolean, referralId: string } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, avatarURL?: string | null, email?: string | null, username?: string | null, isEmailConfirmed: boolean, referralId: string, myAddresses?: Array<{ __typename?: 'Wallet', address: any }> | null } };
 
 export type MyBidsQueryVariables = Exact<{
   input?: InputMaybe<BidsInput>;
@@ -4477,6 +4477,9 @@ export const MeDocument = gql`
     username
     isEmailConfirmed
     referralId
+    myAddresses {
+      address
+    }
   }
 }
     `;
