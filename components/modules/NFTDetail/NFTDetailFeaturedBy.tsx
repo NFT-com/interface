@@ -1,5 +1,5 @@
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
-import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
+import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
 import { useProfilesByDisplayedNft } from 'graphql/hooks/useProfilesByDisplayedNftQuery';
 import { useProfileTokenQuery } from 'graphql/hooks/useProfileTokenQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
@@ -100,7 +100,7 @@ const PublicProfileNftsCount = ({ id }: { id: string }) => {
   const defaultChainId = useDefaultChainId();
   const {
     totalItems: publicProfileNftsCount,
-  } = useProfileNFTsQuery(
+  } = useProfileNFTsTotalItemsQuery(
     id,
     defaultChainId,
     1000

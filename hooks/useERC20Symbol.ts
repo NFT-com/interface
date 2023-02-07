@@ -14,6 +14,10 @@ export function useERC20Symbol(contractAddress: string): string | null {
     async () => {
       if (!contractAddress) return null;
 
+      if (contractAddress == '0x0000000000000000000000000000000000000000') {
+        return 'ETH';
+      }
+
       const contract = new Contract(
         contractAddress,
         [
