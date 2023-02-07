@@ -117,7 +117,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       )}>
         <input
           type="text"
-          placeholder="Search your NFTs.."
+          placeholder={isOwnerAndSignedIn ? 'Search your NFTs..' : 'Search NFTs...'}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -154,7 +154,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         }
         {isOwnerAndSignedIn &&
             <>
-              {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) &&
+              {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&
                 <DropdownPickerModal
                   pointer
                   align='center'
