@@ -83,14 +83,12 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       ] :
       [
         profile,
-        input[0]?.profileURI,
         yearValue * 60 * 60 * 24 * 365,
         0,
         '0x0000000000000000000000000000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000000000000000000000000000',
       ],
-    onSuccess(data) {
-      console.log('[onSuccess] =====> data: ', data);
+    onSuccess() {
       setError(null);
     },
     onError(err){
@@ -104,29 +102,17 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
   });
   
   const getMintCost = useCallback(() => {
-    console.log('[getMintCost] =====> feeData: ', JSON.stringify(feeData, null, 2));
-    console.log('1: currentAddress: ', currentAddress);
-    console.log('2: contractAddress: ', contractAddress);
-    console.log('3: type: ', type === 'mint' ? 'publicMint' : 'extendLicense');
-    console.log('4: args: ', [type === 'mint' ? input[0]?.profileURI : profile, yearValue * 60 * 60 * 24 * 365, 0 , '0x0000000000000000000000000000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000000000000000000000000000', input[0]?.hash, input[0]?.signature]);
-    console.log('5: enabled: ', type === 'mint' ? !isNullOrEmpty(profileURI) : true);
-    console.log('6: profileURI: ', profileURI);
-    console.log('[getMintCost] =====> data: ', JSON.stringify(data, null, 2));
-    console.log('[getMintCost] =====> registrationFee: ', Number(registrationFee));
-    
     if (feeData?.gasPrice){
       if (data?.request.gasLimit && registrationFee) {
         const gasFee = BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString()));
         return utils.formatEther(BigNumber.from(registrationFee).add(gasFee));
       } else {
-        console.log('zero from 1st exit');
         return 0;
       }
     } else {
-      console.log('zero from 2nd exit');
       return 0;
     }
-  }, [feeData, currentAddress, contractAddress, type, input, profile, yearValue, profileURI, data, registrationFee]);
+  }, [feeData, data, registrationFee]);
 
   useEffect(() => {
     if(profileStatus === 'Listed') {
@@ -268,7 +254,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                 'focus:outline-none focus-visible:bg-[#E4BA18]',
                 'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
               )}
-              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : false }
+              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : !isNullOrEmpty(error) }
               onClick={async () => {
                 if (
                   minting
