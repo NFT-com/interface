@@ -1,31 +1,26 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { Maybe, Nft, PageInfo } from 'graphql/generated/types';
+import { Maybe } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty, profileSaveCounter } from 'utils/helpers';
 
 import { useAtom } from 'jotai';
-import useSWR, { mutate } from 'swr';
-import { PartialDeep } from 'type-fest';
+import useSWR from 'swr';
 
-export interface ProfileNFTsQueryData {
-  nfts: PartialDeep<Nft>[];
-  pageInfo: PageInfo;
-  totalItems: number,
-  loading: boolean;
-  mutate: () => void;
+export interface ProfileNFTsTotalItemsQueryData {
+  totalItems: number
 }
 
-export function useProfileNFTsQuery(
+export function useProfileNFTsTotalItemsQuery(
   profileId: string,
   chainId: Maybe<string>,
   first: number,
   beforeCursor?: string,
   query?: string
-): ProfileNFTsQueryData {
+): ProfileNFTsTotalItemsQueryData {
   const sdk = useGraphQLSDK();
   const [savedCount,] = useAtom(profileSaveCounter);
   
-  const keyString = 'ProfileNFTsQuery' +
+  const keyString = 'ProfileNFTsTotalItemsQuery' +
     profileId +
     first +
     beforeCursor +
@@ -36,14 +31,15 @@ export function useProfileNFTsQuery(
     if (isNullOrEmpty(profileId)) {
       return null;
     }
-    const result = await sdk.ProfileNFTs({
+    const result = await sdk.ProfileNFTsTotalItems({
       input: {
         profileId,
         chainId: chainId ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
         pageInput: { first: first, beforeCursor: beforeCursor },
         query
-      }
+      },
     });
+
     return result;
   }, {
     revalidateOnFocus: false,
@@ -51,12 +47,6 @@ export function useProfileNFTsQuery(
     refreshInterval: 0,
   });
   return {
-    nfts: data?.updateNFTsForProfile.items,
-    pageInfo: data?.updateNFTsForProfile.pageInfo,
     totalItems: data?.updateNFTsForProfile.totalItems,
-    loading: data == null,
-    mutate: () => {
-      mutate(keyString);
-    },
   };
 }
