@@ -1,10 +1,12 @@
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
-import { filterNulls } from 'utils/helpers';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
 import { NotificationButton } from './NotificationButton';
 
+import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import NoActivityIcon from 'public/no_activity.svg';
@@ -26,10 +28,28 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     setAddedAssociatedNotifClicked,
     soldActivityDate,
     expiredActivityDate,
-    profileExpiringSoon
+    profileExpiringSoon,
+    purchasedNfts,
+    setPurchasedNfts
   } = useContext(NotificationContext);
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
+  const { getByContractAddress } = useSupportedCurrencies();
+
+  const purchaseNotifications = !isNullOrEmpty(purchasedNfts) ?
+    purchasedNfts.map((purchase) => (
+      {
+        text: `You purchased ${purchase.nft.metadata.name} for ${ethers.utils.formatEther(BigNumber.from(purchase.price))} ${getByContractAddress(purchase.currency)?.name}.`,
+        onClick: () => {
+          setVisible(false);
+          setSidebarOpen(false);
+          router.push(`/app/nft/${purchase.nft.contract}/${purchase.nft.tokenId}`);
+          setPurchasedNfts([]);
+        },
+        date: null
+      }
+    ))
+    : [];
 
   const notificationData = [
     profileExpiringSoon ?
@@ -140,7 +160,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
         </div>
         :
         <div className='flex flex-col w-full items-center'>
-          {filterNulls(notificationData).sort((a, b) => moment(b.date, 'MM-DD-YYYY').diff(moment(a.date, 'MM-DD-YYYY'))).map((item, index) => (
+          {filterNulls([...notificationData, ...purchaseNotifications]).sort((a, b) => moment(b.date, 'MM-DD-YYYY').diff(moment(a.date, 'MM-DD-YYYY'))).map((item, index) => (
             <NotificationButton
               key={index}
               buttonText={item.text}
