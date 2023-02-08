@@ -4,8 +4,8 @@ import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { filterNulls } from 'utils/helpers';
+import { Doppler, getEnvBool } from 'utils/env';
+import { filterNulls, getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
@@ -117,7 +117,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       )}>
         <input
           type="text"
-          placeholder="Search your NFTs.."
+          placeholder={isOwnerAndSignedIn ? 'Search your NFTs..' : 'Search NFTs...'}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -154,7 +154,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         }
         {isOwnerAndSignedIn &&
             <>
-              {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) &&
+              {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&
                 <DropdownPickerModal
                   pointer
                   align='center'
@@ -264,7 +264,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
           options={[
             {
               label: 'Copy link to clipboard',
-              onSelect: () => staticCopy(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}${router.query?.profileURI}`),
+              onSelect: () => staticCopy(`${getBaseUrl()}${router.query?.profileURI}`),
               icon: <LinkIcon className={tw(
                 'w-[18px] h-[18px] mr-3'
               )} />

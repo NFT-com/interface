@@ -115,7 +115,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         className={tw('flex flex-row items-center px-2.5',
           'py-2 h-full',
           'bg-white',
-          props.v2 ? 'rounded-md border-2 border-gray-300' : 'border rounded-xl shadow-lg border-0 ',
+          props.v2 ? 'rounded-md border-2 border-gray-300' : 'rounded-xl shadow-lg border-0 ',
           'justify-between w-full')}
         key={props?.options[selectedIndex]?.label}
       >
