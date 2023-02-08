@@ -554,18 +554,6 @@ export const NFTsFiltersContent = () => {
             </div>);
           })}
         </div>
-        <div className="px-4 minlg:px-0 mx-auto w-full minxl:w-3/5 flex justify-center mt-7 font-medium ">
-          <Button
-            color={'black'}
-            accent={AccentType.SCALE}
-            stretch={true}
-            label={'Close Filter'}
-            onClick={() => {
-              searchModalOpen && setSearchModalOpen(false);
-            }}
-            type={ButtonType.PRIMARY}
-          />
-        </div>
       </div>
     </>);
 };

@@ -18,6 +18,7 @@ import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
 import * as Sentry from '@sentry/nextjs';
 import { BigNumber, ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
@@ -43,6 +44,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     setAllListingsFail,
   } = useContext(NFTListingsContext);
   const provider = useProvider();
+  const router = useRouter();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
   const { address: currentAddress } = useAccount();
@@ -316,6 +318,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             if (success || partialError) {
               clear();
               toggleCartSidebar();
+              router.push('/app/discover/nfts');
             }
             setSuccess(false);
             setShowProgressBar(false);
