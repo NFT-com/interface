@@ -33,7 +33,6 @@ export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: 
     const result: MyNfTsQuery = await sdk.MyNFTs({
       input: {
         pageInput: { first: first, beforeCursor: beforeCursor },
-        // profileId: profileId,
         ownedByWallet: true,
         ...(query && { query })
       }
