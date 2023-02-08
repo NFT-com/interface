@@ -142,7 +142,7 @@ export function NFTDetailPage(props: NFTDetailPageProps) {
             <DetailTabsComponent />
           </div>
         </div>
-        {(showListings || nft?.wallet?.address === currentAddress) ?
+        {(showListings || (nft?.wallet?.address ?? nft?.owner) === currentAddress) ?
           <div className='flex minxl:w-1/2 w-full items-end minxl:items-start minxl:flex-col minxl:p-4 minxl:pt-12'>
             <div className="lg:hidden flex minxl:flex-row w-full items-start">
               <ExternalListings nft={nft} collectionName={collection?.contractMetadata?.name} />

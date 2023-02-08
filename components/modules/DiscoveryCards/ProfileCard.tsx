@@ -1,6 +1,6 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Profile } from 'graphql/generated/types';
-import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
+import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import Image from 'next/image';
@@ -33,15 +33,16 @@ export function ProfileCard(props: ProfileCardProps) {
   const defaultChainId = useDefaultChainId();
   const {
     totalItems: publicProfileNftsCount,
-  } = useProfileNFTsQuery(
+  } = useProfileNFTsTotalItemsQuery(
     props?.profile?.id,
     defaultChainId,
     1000
   );
+
   if(isLeaderBoard){
     return (
       <div className='flex justify-center'>
-        <a href={'/' + props?.url} className="max-w-[320px] minmd:max-w-[100%] flex-col minmd:flex-row py-4 minmd:py-0 px-6 flex font-noi-grotesk w-full flex justify-between items-start minmd:items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] minmd:h-[6.25rem] shadow-lg overflow-hidden">
+        <a href={'/' + props?.url} className="max-w-[320px] minmd:max-w-[100%] flex-col minmd:flex-row py-4 minmd:py-0 px-6 font-noi-grotesk w-full flex justify-between items-start minmd:items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] minmd:h-[6.25rem] shadow-lg overflow-hidden">
           <div className="mb-3 minmd:mb-0 flex justify-start items-center">
             <div className="flex justify-start items-center">
               <div className="mr-2 minmd:mr-6">

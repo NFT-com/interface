@@ -51,6 +51,8 @@ export function ListingCheckout() {
     allListingsConfigured,
     decreasingPriceError,
     englishAuctionError,
+    allListingsFail,
+    setAllListingsFail,
   } = useContext(NFTListingsContext);
   const { address: currentAddress } = useAccount();
   const { marketplace } = useAllContracts();
@@ -58,7 +60,7 @@ export function ListingCheckout() {
   const hasGk = useHasGk();
 
   const defaultChainId = useDefaultChainId();
-  const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address);
+  const { profileTokens } = useNftProfileTokens(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner);
   const { profileData } = useProfileQuery(
     toList[0]?.nft?.wallet?.preferredProfile == null ?
       profileTokens[0]?.tokenUri?.raw?.split('/').pop() :
@@ -120,11 +122,7 @@ export function ListingCheckout() {
   }) != null;
 
   const buttonsRowWidth = () => {
-    if (getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST)) {
-      return 'w-1/4';
-    } else {
-      return 'w-full';
-    }
+    return 'w-1/4';
   };
 
   const ListingOneNFT = useCallback(() => {
@@ -182,14 +180,14 @@ export function ListingCheckout() {
                     if (profileOwnerToShow?.url) {
                       router.push('/' + profileOwnerToShow?.url);
                     } else {
-                      window.open(getEtherscanLink(Number(defaultChainId), toList[0]?.nft?.wallet?.address, 'address'), '_blank');
+                      window.open(getEtherscanLink(Number(defaultChainId), toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner, 'address'), '_blank');
                     }
                   }}
                 >
                   <span className="text-base whitespace-nowrap text-ellipsis overflow-hidden font-medium leading-5 font-noi-grotesk">
                     {profileOwnerToShow?.url ?
                       profileOwnerToShow?.url :
-                      shortenAddress(toList[0]?.nft?.wallet?.address, isMobile ? 4 : 6) ?? 'Unknown'
+                      shortenAddress(toList[0]?.nft?.wallet?.address ?? toList[0]?.nft?.owner, isMobile ? 4 : 6) ?? 'Unknown'
                     }
                   </span>
                 </div>
@@ -216,11 +214,11 @@ export function ListingCheckout() {
     return <div className="flex flex-col items-center minlg:mx-auto minmd:w-full mt-10">
       <div className="flex flex-col items-center w-full">
         <div className={tw(
-          getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && 'mb-16',
+          'mb-16',
           'w-full flex flex-col items-center')}>
           <span className='text-lg w-full font-semibold flex text-[#A6A6A6]'>Select Marketplace(s)</span>
           <div className='flex flex-wrap minlg:flex-nowrap justify-between minlg:flex-row items-start w-full mt-2'>
-            {getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST) && <div className={`max-h-[93px] w-[49%] minlg:${buttonsRowWidth()} minlg:mr-2 flex flex-col items-center`}>
+            <div className={`max-h-[93px] w-[49%] minlg:${buttonsRowWidth()} minlg:mr-2 flex flex-col items-center`}>
               <div
                 onClick={() => {
                   toggleTargetMarketplace(ExternalProtocol.NFTCOM);
@@ -248,7 +246,7 @@ export function ListingCheckout() {
               <div className='text-[0.75rem] text-center py-1'><span className='text-primary-yellow'>{NFTCOMProfileFee/100}%</span> fee with profile</div>
               <div className='border-b w-4/5'></div>
               <span className='text-[0.75rem] text-center py-1'>{Number(NFTCOMProtocolFee)/100}% fee without profile</span>
-            </div>}
+            </div>
             <div
               onClick={() => {
                 toggleTargetMarketplace(ExternalProtocol.Seaport);
@@ -364,20 +362,23 @@ export function ListingCheckout() {
             <span className='text-lg font-medium font-noi-grotesk mb-2 flex items-center justify-center mt-5 text-[#4D4D4D]'>You haven’t added any listings yet</span>
           </div>
         }
-        {!showSummary && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'><Button
+        {(!showSummary || allListingsFail) && toList.length > 0 && <div className='w-full pb-8 mt-[10%]'><Button
           label={'Start Listing'}
           disabled={!allListingsConfigured()}
           onClick={async () => {
             await prepareListings();
+            if(allListingsFail){
+              setAllListingsFail(false);
+            }
             setShowSummary(true);
           }}
           type={ButtonType.PRIMARY}
           stretch
         /></div>}
       </div>
-      { showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0} onClose={() => setShowSummary(false)} />}
+      {showSummary && toList.length > 0 && <NFTListingsCartSummaryModal visible={showSummary && toList.length > 0 && !allListingsFail} onClose={() => setShowSummary(false)} />}
     </div>;
-  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
+  },[NFTCOMAtLeastOneEnabled, NFTCOMGKFee, NFTCOMProfileFee, NFTCOMProtocolFee, X2Y2AtLeastOneEnabled, allListingsConfigured, allListingsFail, hasGk, looksrareAtLeastOneEnabled, myOwnedProfileTokens?.length, noExpirationNFTCOM, openseaAtLeastOneEnabled, prepareListings, setAllListingsFail, setDuration, setNoExpirationNFTCOM, showSummary, toList, toggleTargetMarketplace]);
   
   return (
     <div className='flex w-full justify-between h-full'>
@@ -418,6 +419,24 @@ export function ListingCheckout() {
             Reserve Price Price should be higher than Buy Now Price
           </div>
           : null}
+        {allListingsFail &&
+          <div className='px-2 py-2.5 min-h-[3rem] border border-[#E43D20] max-h-[5rem] w-full -mt-4 bg-[#FFF8F7] text-[#E43D20] flex items-center font-medium font-noi-grotesk rounded mb-4'>
+            <ErrorIcon className='relative shrink-0 mr-2' />
+            <div className='flex flex-col'>
+              <p>There was an error while creating your listing{toList.length > 1 && 's'}.</p>
+              <p
+                onClick={async () => {
+                  await prepareListings();
+                  setAllListingsFail(false);
+                  setShowSummary(true);
+                }}
+                className='underline hover:cursor-pointer w-max'
+              >
+                Please try again
+              </p>
+            </div>
+          </div>
+        }
       </div>
       {(toList.length === 0 || toList.length > 1) && <div className='hidden minlg:block w-1/5 mt-20'></div>}
     </div>

@@ -16,7 +16,7 @@ export function CheckBox(props: CheckBoxProps) {
   return (
     <div
       className={tw(
-        'flex items-center justify-center rounded h-6 w-6 rounded-[8px]',
+        'flex items-center justify-center h-6 w-6 rounded-[8px]',
         'cursor-pointer',
         'shrink-0'
       )}

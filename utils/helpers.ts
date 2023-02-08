@@ -270,8 +270,8 @@ export const collectionCardImages = (collection: any) => {
   ];
 };
 
-export const getImageFetcherBaseURL = () => {
-  return 'https://www.nft.com/';
+export const getBaseUrl = (override = '') => {
+  return override || getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
 };
 
 export const sliceString = (description: string, maxCount: number, isStringCut: boolean) => {
