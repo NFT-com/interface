@@ -1344,6 +1344,7 @@ export enum NftType {
 
 export type NfTsInput = {
   chainId?: InputMaybe<Scalars['String']>;
+  invalidateCache?: InputMaybe<Scalars['Boolean']>;
   ownedByWallet?: InputMaybe<Scalars['Boolean']>;
   pageInput?: InputMaybe<PageInput>;
   profileId?: InputMaybe<Scalars['ID']>;
