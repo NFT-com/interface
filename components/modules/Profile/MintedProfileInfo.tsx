@@ -1,20 +1,14 @@
-import { Button, ButtonType } from 'components/elements/Button';
 import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import Toast from 'components/elements/Toast';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUser } from 'hooks/state/useUser';
-import { useHasGk } from 'hooks/useHasGk';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
 import { ProfileMenu } from './ProfileMenu';
 
 import GK from 'public/Badge_Key.svg';
-import GKHolderIcon from 'public/gk-holder.svg';
-import { useCallback, useContext } from 'react';
-import { useThemeColors } from 'styles/theme//useThemeColors';
-import { useAccount } from 'wagmi';
+import { useContext } from 'react';
 
 export interface MintedProfileInfoProps {
   profileURI: string;
@@ -23,92 +17,16 @@ export interface MintedProfileInfoProps {
 
 export function MintedProfileInfo(props: MintedProfileInfoProps) {
   const { profileURI, userIsAdmin } = props;
-  const { address: currentAddress } = useAccount();
-  const { user, setCurrentProfileUrl } = useUser();
-  const hasGk = useHasGk();
+  const { user } = useUser();
   const { profileData } = useProfileQuery(profileURI);
-  const { alwaysBlack } = useThemeColors();
   const {
     editMode,
     draftBio,
     setDraftBio,
     draftGkIconVisible,
-    draftProfileImg,
-    draftHeaderImg,
-    saveProfile,
-    setEditMode,
-    clearDrafts,
   } = useContext(ProfileContext);
 
   const isOwnerAndSignedIn = userIsAdmin && user?.currentProfileUrl === props.profileURI;
-
-  const getProfileButton = useCallback(() => {
-    if (!userIsAdmin || (!hasGk && !getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED))) {
-      return null;
-    }
-    
-    if (user?.currentProfileUrl !== props.profileURI) {
-      return (
-        <div
-          className='mt-3 minlg:mt-6'
-        >
-          <Button
-            type={ButtonType.PRIMARY}
-            label={'Switch'}
-            onClick={() => {
-              setCurrentProfileUrl(props.profileURI);
-            }}
-          />
-        </div>
-      );
-    }
-
-    return editMode ?
-      <div
-        className="flex mt-3 minlg:mt-6"
-        style={{ zIndex: 49 }}
-      >
-        <div className='mr-4'>
-          <Button
-            type={ButtonType.PRIMARY}
-            label={'Save'}
-            onClick={() => {
-              analytics.track('Update Profile', {
-                ethereumAddress: currentAddress,
-                profile: profileURI,
-                newProfile: draftProfileImg?.preview ? true : false,
-                newHeader: draftHeaderImg?.preview ? true : false,
-                newDescription: draftBio,
-              });
-
-              saveProfile();
-              setTimeout(() => {
-                setEditMode(false);
-              }, 3000);
-            }}
-          />
-        </div>
-        <Button
-          type={ButtonType.SECONDARY}
-          label={'Cancel'}
-          onClick={clearDrafts}
-        />
-      </div> :
-      <div
-        className="flex items-center mt-3 minlg:mt-6 "
-        style={{ zIndex: 49 }}
-      >
-        <div>
-          <Button
-            type={ButtonType.PRIMARY}
-            label={'Edit Profile'}
-            onClick={() => {
-              setEditMode(true);
-            }}
-          />
-        </div>
-      </div>;
-  }, [clearDrafts, currentAddress, draftBio, draftHeaderImg?.preview, draftProfileImg?.preview, editMode, hasGk, profileURI, props.profileURI, saveProfile, setCurrentProfileUrl, setEditMode, user?.currentProfileUrl, userIsAdmin]);
   
   const handleBioChange = (event) => {
     let bioValue = event.target.value;
@@ -148,7 +66,6 @@ export function MintedProfileInfo(props: MintedProfileInfoProps) {
           <ProfileMenu profileURI={profileURI} />
         </div>
       </div>
-      {getProfileButton()}
 
       {profileData?.profile?.description && !editMode && isOwnerAndSignedIn &&
         <div className="w-full minlg:w-1/2 flex items-end flex-col text-[#6A6A6A]">

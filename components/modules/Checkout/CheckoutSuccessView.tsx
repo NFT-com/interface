@@ -117,6 +117,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <button onClick={() => {
             toggleCartSidebar();
             props.onClose();
+            router.push(`/app/nft/${list[0]?.nft?.contract}/${list[0]?.nft?.tokenId}`);
             props.type == SuccessType.Listing ? clear() : clearPurchases();
             window.open(
               'https://twitter.com/intent/tweet?' +
@@ -136,7 +137,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
             props.type == SuccessType.Listing ? clear() : clearPurchases();
             props.type == SuccessType.Listing ?
               router.push('/app/assets') :
-              router.push('/app/discover/collections');
+              router.push('/app/discover/nfts');
           }} className='text-[#E4BA18] font-medium underline text-[14px] cursor-pointer'>{props.type == SuccessType.Listing ? 'List' : 'Purchase'} another NFT</div>
           {props.hasError && (
             <div className='w-full flex flex-col space-y-[10px] p-[10px] rounded border border-[#ECECEC] overflow-auto mt-3 min-h-[200px]'>

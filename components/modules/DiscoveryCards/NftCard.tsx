@@ -71,7 +71,7 @@ export function NftCard(props: NftCardProps) {
     [getGenesisKeyThumbnail(props.tokenId)]
     : props.images.length > 0 ? props.images?.map(processIPFSURL) : [nft?.metadata?.imageURL].map(processIPFSURL);
   const hasGk = useHasGk();
-  const isOwnedByMe = props?.isOwnedByMe || nft?.wallet?.address === currentAddress;
+  const isOwnedByMe = props?.isOwnedByMe || (nft?.wallet?.address ?? nft?.owner) === currentAddress;
   const { profileData: nftProfileData } = useProfileQuery(props?.contractAddr === getAddressForChain(nftProfile, defaultChainId) ? props.name : null);
   const chainId = useDefaultChainId();
   const ethPriceUSD = useEthPriceUSD();

@@ -16,7 +16,9 @@ import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { ListAllResult, ListingTarget, NFTListingsContext } from './NFTListingsContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
+import * as Sentry from '@sentry/nextjs';
 import { BigNumber, ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
@@ -42,6 +44,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     setAllListingsFail,
   } = useContext(NFTListingsContext);
   const provider = useProvider();
+  const router = useRouter();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
   const { address: currentAddress } = useAccount();
@@ -315,6 +318,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
             if (success || partialError) {
               clear();
               toggleCartSidebar();
+              router.push('/app/discover/nfts');
             }
             setSuccess(false);
             setShowProgressBar(false);
@@ -329,132 +333,137 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
               disabled={!allListingsConfigured() || (showProgressBar && !error && !success && !partialError)}
               label={success || partialError ? 'Finish' : error ? 'Try Again' : 'Proceed to list'}
               onClick={async () => {
-                if (success || partialError) {
-                  clear();
+                try {
+                  if (success || partialError) {
+                    clear();
+                    setSuccess(false);
+                    toggleCartSidebar();
+                    setShowProgressBar(false);
+                    return;
+                  }
+
+                  if (signer == null) {
+                    setError('ConnectionError');
+                    return;
+                  }
+
+                  setShowProgressBar(true);
+                  setError(null);
                   setSuccess(false);
-                  toggleCartSidebar();
-                  setShowProgressBar(false);
-                  return;
-                }
 
-                if (signer == null) {
-                  setError('ConnectionError');
-                  return;
-                }
+                  if (signer == null) {
+                    setError('ConnectionError');
+                    return;
+                  }
 
-                setShowProgressBar(true);
-                setError(null);
-                setSuccess(false);
+                  if (getNeedsApprovals()) {
+                    const uniqueCollections = filterDuplicates(
+                      toList,
+                      (first, second) => first.nft?.contract === second.nft?.contract
+                    );
+                    for (let i = 0; i < uniqueCollections.length; i++) {
+                      const stagedListing = uniqueCollections[i];
+                      for (let j = 0; j < uniqueCollections[i].targets.length; j++) {
+                        const protocol = uniqueCollections[i].targets[j].protocol;
+                        const approved = protocol === ExternalProtocol.LooksRare ?
+                          stagedListing?.nft.type === NftType.Erc721 ?
+                            stagedListing?.isApprovedForLooksrare :
+                            stagedListing?.isApprovedForLooksrare1155 :
+                          protocol === ExternalProtocol.X2Y2 ?
+                            stagedListing?.nft?.type === NftType.Erc721 ?
+                              stagedListing?.isApprovedForX2Y2 :
+                              stagedListing?.isApprovedForX2Y21155 :
+                            protocol === ExternalProtocol.NFTCOM
+                              ? stagedListing?.isApprovedForNFTCOM :
+                              stagedListing?.isApprovedForSeaport;
 
-                if (signer == null) {
-                  setError('ConnectionError');
-                  return;
-                }
-
-                if (getNeedsApprovals()) {
-                  const uniqueCollections = filterDuplicates(
-                    toList,
-                    (first, second) => first.nft?.contract === second.nft?.contract
-                  );
-                  for (let i = 0; i < uniqueCollections.length; i++) {
-                    const stagedListing = uniqueCollections[i];
-                    for (let j = 0; j < uniqueCollections[i].targets.length; j++) {
-                      const protocol = uniqueCollections[i].targets[j].protocol;
-                      const approved = protocol === ExternalProtocol.LooksRare ?
-                        stagedListing?.nft.type === NftType.Erc721 ?
-                          stagedListing?.isApprovedForLooksrare :
-                          stagedListing?.isApprovedForLooksrare1155 :
-                        protocol === ExternalProtocol.X2Y2 ?
-                          stagedListing?.nft?.type === NftType.Erc721 ?
-                            stagedListing?.isApprovedForX2Y2 :
-                            stagedListing?.isApprovedForX2Y21155 :
-                          protocol === ExternalProtocol.NFTCOM
-                            ? stagedListing?.isApprovedForNFTCOM :
-                            stagedListing?.isApprovedForSeaport;
-
-                      if (!approved && protocol === ExternalProtocol.LooksRare) {
-                        const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
-                          .then(result => {
-                            if (!result) {
+                        if (!approved && protocol === ExternalProtocol.LooksRare) {
+                          const result = await approveCollection(stagedListing, ExternalProtocol.LooksRare)
+                            .then(result => {
+                              if (!result) {
+                                setError('ApprovalError');
+                                return false;
+                              }
+                              return true;
+                            })
+                            .catch(() => {
                               setError('ApprovalError');
                               return false;
-                            }
-                            return true;
-                          })
-                          .catch(() => {
-                            setError('ApprovalError');
-                            return false;
-                          });
-                        stagedListing.isApprovedForLooksrare = result;
-                        if (!result) {
-                          return;
-                        }
-                      } else if (!approved && protocol === ExternalProtocol.Seaport) {
-                        const result = await approveCollection(stagedListing, ExternalProtocol.Seaport)
-                          .then(result => {
-                            if (!result) {
+                            });
+                          stagedListing.isApprovedForLooksrare = result;
+                          if (!result) {
+                            return;
+                          }
+                        } else if (!approved && protocol === ExternalProtocol.Seaport) {
+                          const result = await approveCollection(stagedListing, ExternalProtocol.Seaport)
+                            .then(result => {
+                              if (!result) {
+                                setError('ApprovalError');
+                                return false;
+                              }
+                              return true;
+                            })
+                            .catch(() => {
                               setError('ApprovalError');
                               return false;
-                            }
-                            return true;
-                          })
-                          .catch(() => {
-                            setError('ApprovalError');
-                            return false;
-                          });
-                        stagedListing.isApprovedForSeaport = result;
-                        if (!result) {
-                          return;
-                        }
-                      } else if (!approved && protocol === ExternalProtocol.X2Y2) {
-                        const result = await approveCollection(stagedListing, ExternalProtocol.X2Y2)
-                          .then(result => {
-                            if (!result) {
+                            });
+                          stagedListing.isApprovedForSeaport = result;
+                          if (!result) {
+                            return;
+                          }
+                        } else if (!approved && protocol === ExternalProtocol.X2Y2) {
+                          const result = await approveCollection(stagedListing, ExternalProtocol.X2Y2)
+                            .then(result => {
+                              if (!result) {
+                                setError('ApprovalError');
+                                return false;
+                              }
+                              return true;
+                            })
+                            .catch(() => {
                               setError('ApprovalError');
                               return false;
-                            }
-                            return true;
-                          })
-                          .catch(() => {
-                            setError('ApprovalError');
-                            return false;
-                          });
-                        stagedListing.isApprovedForX2Y2 = result;
-                        if (!result) {
-                          return;
-                        }
-                      } else if (!approved && protocol === ExternalProtocol.NFTCOM) {
-                        const result = await approveCollection(stagedListing, ExternalProtocol.NFTCOM)
-                          .then(result => {
-                            if (!result) {
+                            });
+                          stagedListing.isApprovedForX2Y2 = result;
+                          if (!result) {
+                            return;
+                          }
+                        } else if (!approved && protocol === ExternalProtocol.NFTCOM) {
+                          const result = await approveCollection(stagedListing, ExternalProtocol.NFTCOM)
+                            .then(result => {
+                              if (!result) {
+                                setError('ApprovalError');
+                                return false;
+                              }
+                              return true;
+                            })
+                            .catch(() => {
                               setError('ApprovalError');
                               return false;
-                            }
-                            return true;
-                          })
-                          .catch(() => {
-                            setError('ApprovalError');
-                            return false;
-                          });
-                        stagedListing.isApprovedForNFTCOM = result;
-                        if (!result) {
-                          return;
+                            });
+                          stagedListing.isApprovedForNFTCOM = result;
+                          if (!result) {
+                            return;
+                          }
                         }
                       }
                     }
                   }
+                  const result: ListAllResult = await listAll(toList);
+                  if (result === ListAllResult.Success) {
+                    setSuccess(true);
+                  } else if (result === ListAllResult.PartialError){
+                    setPartialError(true);
+                    setShowProgressBar(false);
+                  } else {
+                    setAllListingsFail(true);
+                    setShowProgressBar(false);
+                  }
+                } catch (err) {
+                  Sentry.captureException(err);
                 }
-                const result: ListAllResult = await listAll(toList);
-                if (result === ListAllResult.Success) {
-                  setSuccess(true);
-                } else if (result === ListAllResult.PartialError){
-                  setPartialError(true);
-                  setShowProgressBar(false);
-                } else {
-                  setAllListingsFail(true);
-                  setShowProgressBar(false);
-                }
-              }}
+              }
+              }
               type={ButtonType.PRIMARY}
             />
           </div>}

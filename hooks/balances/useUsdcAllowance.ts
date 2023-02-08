@@ -1,7 +1,7 @@
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { BalanceData } from 'types';
 
 import useSWR from 'swr';
-import { BalanceData } from 'types';
 import { useNetwork } from 'wagmi';
 
 export function useUsdcAllowance(
