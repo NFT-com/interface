@@ -346,7 +346,7 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               'minlg:w-[55%] minxl:w-[58.5%] minlg:h-screen'
             )}>
               <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                'text-[3rem] minmd:text-[6rem] minlg:text-[4rem] minxl:text-[5.5rem] minxxl:text-[6.8rem] leading-[1.15]',
+                'text-[2.5rem] minmd:text-[6rem] minlg:text-[4rem] minxl:text-[5.5rem] minxxl:text-[6.8rem] leading-[1.15]',
                 'text-black font-normal tracking-tight mb-14'
               )}>
                 Create a Profile<span className='inline-block rotate-[40deg]'><img className={tw(
