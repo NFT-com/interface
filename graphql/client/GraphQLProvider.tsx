@@ -66,7 +66,10 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   }, [chain?.id]);
 
   const trySignature = useCallback(async () => {
+    if (connector == null) return;
+
     setSigned(false);
+    setLoading(true);
     /**
      * First check if there's a signature available in the cache.
      */
@@ -98,7 +101,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       console.log('Failed to get login signature. Only public endpoints will succeed.');
       return false;
     }
-  }, [currentAddress, createSignedClient, signMessageAsync, unixTimestamp]);
+  }, [connector, currentAddress, createSignedClient, signMessageAsync, unixTimestamp]);
 
   useEffect(() => {
     if (!currentAddress) {
@@ -107,19 +110,29 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   }, [currentAddress]);
 
   useEffect(() => {
-    if((currentAddress && !isSupported) || connector == null) {
+    if(currentAddress && !isSupported) {
       return;
     }
     if (isNullOrEmpty(currentAddress)) {
       setSigRejected(false);
     }
+    if (loading) {
+      return;
+    }
+
     (async () => {
+      console.log('--------------------: trying signature again');
+      console.log('currentAddress', currentAddress);
+      console.log('isSupported', isSupported);
+
       const sigResult = await trySignature();
+
+      console.log('sigResult: ', sigResult);
       // we only want to count the rejection of a real signature request.
       // if there is no connected wallet, it should fail silently.
       setSigRejected(!sigResult && !isNullOrEmpty(currentAddress));
     })();
-  }, [currentAddress, connector, isSupported, trySignature]);
+  }, [currentAddress, isSupported, loading, trySignature]);
   
   return (
     <GraphQLContext.Provider
@@ -133,7 +146,10 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         <SignatureModal
           visible={!signed && !isNullOrEmpty(currentAddress) && !loading}
           showRetry={sigRejected}
-          onRetry={trySignature}
+          onRetry={() => {
+            console.log('retrying signature inside onRetry');
+            trySignature();
+          }}
         />
       }
       {props.children}
