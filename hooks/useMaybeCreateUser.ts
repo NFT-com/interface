@@ -8,7 +8,7 @@ import { useSupportedNetwork } from './useSupportedNetwork';
 
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
 export function useMaybeCreateUser(): void {
@@ -17,6 +17,7 @@ export function useMaybeCreateUser(): void {
   const { signed } = useContext(GraphQLContext);
   const { isSupported } = useSupportedNetwork();
   const router = useRouter();
+  const [recentlyCreatedUser, setRecentlyCreatedUser] = useState(false);
   const { me: meResult, mutate: mutateMe } = useMeQuery();
   const myWalletAddress = meResult?.myAddresses?.map(i => ethers.utils.getAddress(i.address));
   const currentUserMatchesUserId = myWalletAddress?.includes(ethers.utils.getAddress(currentAddress || ''));
@@ -35,6 +36,10 @@ export function useMaybeCreateUser(): void {
   };
 
   useEffect(() => {
+    setRecentlyCreatedUser(false);
+  }, [currentAddress, chain?.id]);
+
+  useEffect(() => {
     if (isNullOrEmpty(currentAddress)) {
       return;
     }
@@ -48,7 +53,7 @@ export function useMaybeCreateUser(): void {
       (isSupported)
     ) {
       (async () => {
-        if (meResult == null) {
+        if (meResult == null && !recentlyCreatedUser) {
           const referredBy = router?.query?.makerReferralCode?.toString() || null;
           const referralUrl = router?.query?.referralUrl?.toString() || null;
           const referralId = router?.query?.receiverReferralCode?.toString() || null;
@@ -74,13 +79,14 @@ export function useMaybeCreateUser(): void {
             };
           const result = await createUser(userData);
           mutateMe();
+          setRecentlyCreatedUser(true);
           if (result?.signUp?.id) localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
         } else {
           if (meResult?.id && currentUserMatchesUserId) localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
         }
       })();
     }
-  }, [isSupported, createUser, currentAddress, chain?.id, creating, signed, router?.query, meResult, mutateMe, currentUserMatchesUserId]);
+  }, [isSupported, createUser, currentAddress, chain?.id, creating, signed, router?.query, meResult, mutateMe, currentUserMatchesUserId, recentlyCreatedUser]);
 
   return;
 }
