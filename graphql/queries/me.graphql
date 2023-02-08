@@ -6,5 +6,8 @@ query Me {
     username
     isEmailConfirmed
     referralId
+    myAddresses {
+      address
+    }
   }
 }

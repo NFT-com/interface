@@ -83,14 +83,12 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
       ] :
       [
         profile,
-        input[0]?.profileURI,
         yearValue * 60 * 60 * 24 * 365,
         0,
         '0x0000000000000000000000000000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000000000000000000000000000',
       ],
-    onSuccess(data) {
-      console.log('[onSuccess] =====> data: ', data);
+    onSuccess() {
       setError(null);
     },
     onError(err){
@@ -109,11 +107,9 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
         const gasFee = BigNumber.from(data?.request?.gasLimit.toString()).mul(BigNumber.from(feeData?.gasPrice.toString()));
         return utils.formatEther(BigNumber.from(registrationFee).add(gasFee));
       } else {
-        console.log('zero from 1st exit');
         return 0;
       }
     } else {
-      console.log('zero from 2nd exit');
       return 0;
     }
   }, [feeData, data, registrationFee]);
@@ -258,7 +254,7 @@ export default function MintPaidProfileCard({ type, profile } : MintPaidProfileC
                 'focus:outline-none focus-visible:bg-[#E4BA18]',
                 'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
               )}
-              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : false }
+              disabled={ type === 'mint' ? input.some(item => item.profileStatus === 'Owned') || isNullOrEmpty(input) || input.some(item => item.profileURI === '') || !isNullOrEmpty(error) : !isNullOrEmpty(error) }
               onClick={async () => {
                 if (
                   minting
