@@ -2,7 +2,6 @@ import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
 import { ActivityExpiration, ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
-import { ExpirationStatus } from '@aws-sdk/client-s3';
 import { useCallback } from 'react';
 import { mutate } from 'swr';
 import useSWRImmutable from 'swr/immutable';
