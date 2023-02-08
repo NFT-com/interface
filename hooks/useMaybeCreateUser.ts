@@ -34,8 +34,6 @@ export function useMaybeCreateUser(): void {
     return 'uidForWallet:' + address + ':chainId:' + chainId;
   };
 
-  console.log('meResult: ', meResult);
-
   useEffect(() => {
     if (isNullOrEmpty(currentAddress)) {
       return;
