@@ -27,7 +27,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   const { address: currentAddress, connector } = useAccount();
   
   const { chain } = useNetwork();
-  const [loading, setLoading] = useState(true);
+  const [loadIndex, setLoadIndex] = useState(0);
   const [client, setClient] = useState(defaultClient);
   const [signed, setSigned] = useState(false);
   const [sigRejected, setSigRejected] = useState(!currentAddress);
@@ -68,8 +68,10 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   const trySignature = useCallback(async () => {
     if (connector == null) return;
 
+    if (loadIndex > 0) return;
+
+    setLoadIndex(loadIndex + 1);
     setSigned(false);
-    setLoading(true);
     /**
      * First check if there's a signature available in the cache.
      */
@@ -83,25 +85,26 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
         if (currentAddress === cachedAddress && moment().unix() < cachedTimestamp && !isNullOrEmpty(cachedTimestamp)) {
           createSignedClient(cachedSignature, cachedTimestamp);
           setSigned(true);
-          setLoading(false);
+          setLoadIndex(loadIndex > 0 ? loadIndex - 1 : 0);
           return true;
         }
       } catch {
-        setLoading(false);
+        setLoadIndex(loadIndex > 0 ? loadIndex - 1 : 0);
         // fall through if invalid signature or incorrect address.
       }
     }
     try {
-      setLoading(false);
       const signature = await signMessageAsync();
       createSignedClient(signature, String(unixTimestamp));
+      setLoadIndex(loadIndex > 0 ? loadIndex - 1 : 0);
       return true;
     } catch (error) {
       setSigned(false);
+      setLoadIndex(loadIndex > 0 ? loadIndex - 1 : 0);
       console.log('Failed to get login signature. Only public endpoints will succeed.');
       return false;
     }
-  }, [connector, currentAddress, createSignedClient, signMessageAsync, unixTimestamp]);
+  }, [connector, loadIndex, currentAddress, createSignedClient, signMessageAsync, unixTimestamp]);
 
   useEffect(() => {
     if (!currentAddress) {
@@ -109,14 +112,12 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
     }
   }, [currentAddress]);
 
-  useEffect(() => {
-    if(currentAddress && !isSupported) {
+  const loadSignature = useCallback(async () => {
+    if (!isSupported) {
       return;
     }
     if (isNullOrEmpty(currentAddress)) {
       setSigRejected(false);
-    }
-    if (loading) {
       return;
     }
 
@@ -132,7 +133,11 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       // if there is no connected wallet, it should fail silently.
       setSigRejected(!sigResult && !isNullOrEmpty(currentAddress));
     })();
-  }, [currentAddress, isSupported, loading, trySignature]);
+  }, [currentAddress, isSupported, trySignature]);
+
+  useEffect(() => {
+    loadSignature();
+  }, [loadSignature]);
   
   return (
     <GraphQLContext.Provider
@@ -144,7 +149,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
     >
       {!signed &&
         <SignatureModal
-          visible={!signed && !isNullOrEmpty(currentAddress) && !loading}
+          visible={!signed && !isNullOrEmpty(currentAddress) && loadIndex > 0}
           showRetry={sigRejected}
           onRetry={() => {
             console.log('retrying signature inside onRetry');

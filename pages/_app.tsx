@@ -119,7 +119,7 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
 
   const wagmiClient = useMemo(() => {
     return createClient({
-      autoConnect: true,
+      autoConnect: false,
       connectors,
       provider
     });
