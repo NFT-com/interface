@@ -154,7 +154,7 @@ export default function AssetTableRow({
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4" >
         <div >
-          {nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD ? <p>${nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD}</p> : <p>—</p>}
+          {nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD ? <p>${Number(nftSaleHistory?.data?.items[0]?.priceDetails?.priceUSD).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p> : <p>—</p>}
         </div>
       </td>
       <td className="minmd:text-body text-sm leading-body pr-8 minmd:pr-4 -mt-1" >
