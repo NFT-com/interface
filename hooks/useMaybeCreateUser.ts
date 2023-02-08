@@ -8,11 +8,10 @@ import { useSupportedNetwork } from './useSupportedNetwork';
 
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
-export function useMaybeCreateUser(): boolean {
-  const [createdUser, setCreatedUser] = useState(false);
+export function useMaybeCreateUser(): void {
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const { signed } = useContext(GraphQLContext);
@@ -21,10 +20,6 @@ export function useMaybeCreateUser(): boolean {
   const { me: meResult, mutate: mutateMe } = useMeQuery();
   const myWalletAddress = meResult?.myAddresses?.map(i => ethers.utils.getAddress(i.address));
   const currentUserMatchesUserId = myWalletAddress?.includes(ethers.utils.getAddress(currentAddress || ''));
-
-  useEffect(() => {
-    setCreatedUser(false);
-  }, [currentAddress, chain?.id]);
 
   const { createUser, creating } = useCreateUserMutation({
     onCreateSuccess: () => {
@@ -39,6 +34,8 @@ export function useMaybeCreateUser(): boolean {
     return 'uidForWallet:' + address + ':chainId:' + chainId;
   };
 
+  console.log('meResult: ', meResult);
+
   useEffect(() => {
     if (isNullOrEmpty(currentAddress)) {
       return;
@@ -46,12 +43,8 @@ export function useMaybeCreateUser(): boolean {
 
     const cachedUserId = localStorage.getItem(getCacheKey(currentAddress, chain?.id));
 
-    if (cachedUserId != null && cachedUserId != 'undefined' && meResult && currentUserMatchesUserId) {
-      setCreatedUser(true);
-      return;
-    }
     if (
-      (!createdUser) &&
+      (meResult == null || (cachedUserId != meResult?.id)) &&
       (!creating) &&
       (signed) &&
       (isSupported)
@@ -87,10 +80,9 @@ export function useMaybeCreateUser(): boolean {
         } else {
           if (meResult?.id && currentUserMatchesUserId) localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
         }
-        setCreatedUser(true);
       })();
     }
-  }, [isSupported, createUser, currentAddress, chain?.id, creating, createdUser, signed, router?.query, meResult, mutateMe, currentUserMatchesUserId]);
+  }, [isSupported, createUser, currentAddress, chain?.id, creating, signed, router?.query, meResult, mutateMe, currentUserMatchesUserId]);
 
-  return createdUser;
+  return;
 }
