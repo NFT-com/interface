@@ -1,3 +1,4 @@
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { ProfileLayoutType } from 'graphql/generated/types';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
@@ -164,7 +165,18 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
           </div>
         }
-        {!editMode &&
+        {!editMode &&<CustomTooltip2
+          orientation='custom'
+          customFullLeftPosition='left-6'
+          hidden={false}
+          tooltipComponent={
+            <div
+              className="rounded-xl max-w-[200px] w-max cursor-pointer"
+            >
+              <p>Refresh Profile NFTs</p>
+            </div>
+          }
+        >
           <div
             onClick={() => {
               mutateProfileData();
@@ -178,7 +190,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             id="profileRefreshNftButton">
             <ArrowClockwise className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
           </div>
-        }
+        </CustomTooltip2>}
         {isOwnerAndSignedIn &&
             <>
               {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&
