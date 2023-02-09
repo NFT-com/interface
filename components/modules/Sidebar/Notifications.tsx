@@ -90,7 +90,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
   const purchaseNotifications = !isNullOrEmpty(purchasedNfts) ?
     purchasedNfts.map((purchase) => (
       {
-        text: `You purchased ${purchase.nft.metadata.name} for ${ethers.utils.formatEther(BigNumber.from(purchase.price))} ${getByContractAddress(purchase.currency)?.name}.`,
+        text: `You purchased ${purchase.nft.metadata.name} for ${ethers.utils.formatEther(BigNumber.from(purchase.price ?? 0))} ${getByContractAddress(purchase.currency)?.name}.`,
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);
