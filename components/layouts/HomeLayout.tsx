@@ -54,16 +54,18 @@ export default function HomeLayout({ children, hideFooter, hideHeader }: HomeLay
         {children}
 
         {profileSelectModal && signed && <DynamicProfileSelectModal />}
-        <SignOutModal
-          visible={signOutDialogOpen}
-          onClose={() => {
-            setSignOutDialogOpen(false);
-            changeWallet && openConnectModal();
-            setChangeWallet(false);
-            setProfileSelectModalOpen(false);
-            setCurrentProfileUrl('');
-          }}
-        />
+        {signOutDialogOpen &&
+          <SignOutModal
+            visible={signOutDialogOpen}
+            onClose={() => {
+              setSignOutDialogOpen(false);
+              changeWallet && openConnectModal();
+              setChangeWallet(false);
+              setProfileSelectModalOpen(false);
+              setCurrentProfileUrl('');
+            }}
+          />
+        }
         {!hideFooter && <DynamicFooter />}
       </div>
     </div>
