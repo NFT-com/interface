@@ -239,9 +239,11 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       loading={false}
       title={''}
       onClose={() => {
+        if (success && !router.pathname.includes('/nft/')) router.push(`/app/nft/${nftsToBuy?.[0]?.nft?.contract}/${nftsToBuy?.[0]?.nft?.tokenId}`);
         setSuccess(false);
         setLoading(false);
         setError(null);
+        clear();
         clearBuyNow();
         mutatePublicProfileNfts();
         mutateAllOwnerNfts();
@@ -260,6 +262,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
             setSuccess(false);
             setLoading(false);
             setError(null);
+            clear();
             clearBuyNow();
             props.onClose();
           }} className='absolute top-5 right-5 z-50 hover:cursor-pointer closeButton' size={20} color="black" weight="fill" />
