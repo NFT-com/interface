@@ -252,6 +252,14 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         setError(null);
         clearBuyNow();
         props.onClose();
+        if (success) {
+          console.log('nftsToBuy fdo', nftsToBuy);
+          nftsToBuy.forEach(nftToBuy => {
+            setProfileId(nftToBuy.profileId);
+            mutatePublicProfileNfts();
+            mutateAllOwnerNfts();
+          });
+        }
       }}
       bgColor='white'
       hideX
@@ -262,6 +270,14 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
             if (success) router.push('/app/discover/nfts');
+            if (success) {
+              console.log('nftsToBuy fdo', nftsToBuy);
+              nftsToBuy.forEach(nftToBuy => {
+                setProfileId(nftToBuy.profileId);
+                mutatePublicProfileNfts();
+                mutateAllOwnerNfts();
+              });
+            }
             setSuccess(false);
             setLoading(false);
             setError(null);
@@ -327,6 +343,12 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
                 clear();
                 clearBuyNow();
+                console.log('nftsToBuy fdo', nftsToBuy);
+                nftsToBuy.forEach(nftToBuy => {
+                  setProfileId(nftToBuy.profileId);
+                  mutatePublicProfileNfts();
+                  mutateAllOwnerNfts();
+                });
               } else {
                 const hasSuffictientBalance = await getHasSufficientBalance();
                 if (!hasSuffictientBalance) {
