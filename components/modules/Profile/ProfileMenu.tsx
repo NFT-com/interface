@@ -165,7 +165,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
           </div>
         }
-        {!editMode &&<CustomTooltip2
+        {isOwnerAndSignedIn &&<CustomTooltip2
           orientation='custom'
           customFullLeftPosition='left-6'
           hidden={false}
