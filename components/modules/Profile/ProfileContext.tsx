@@ -245,7 +245,7 @@ export function ProfileContextProvider(
   const [hideAllNFTsValue, setHideAllNFTsValue] = useState(publicProfileNftsCount === 0);
 
   const [savedCount, setSavedCount] = useAtom(profileSaveCounter);
-
+  
   // Profile page NO Edit Mode ONLY
   useEffect(() => {
     if(!loading && !editMode) {
@@ -539,6 +539,9 @@ export function ProfileContextProvider(
       .includes(props.profileURI),
     editMode,
     setEditMode: (enabled: boolean) => {
+      mutateProfileData();
+      mutatePublicProfileNfts();
+      mutateAllOwnerNfts();
       if (enabled) {
         setAfterCursorEditMode('');
         setEditModeNfts(null);

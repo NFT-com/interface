@@ -4,6 +4,8 @@ import { NotificationContext } from 'components/modules/Notifications/Notificati
 import { NULL_ADDRESS } from 'constants/addresses';
 import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
+import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
+import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
@@ -11,6 +13,7 @@ import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { Doppler, getEnv } from 'utils/env';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { useBuyNow } from 'utils/marketplaceHelpers';
 import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsERC20Approvals } from 'utils/marketplaceUtils';
@@ -60,6 +63,15 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     purchasedNfts,
     setPurchasedNfts
   } = useContext(NotificationContext);
+  const [profileId, setProfileId] = useState('');
+
+  const {
+    mutate: mutatePublicProfileNfts,
+  } = useProfileNFTsQuery(profileId,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
+
+  const {
+    mutate: mutateAllOwnerNfts,
+  } = useMyNFTsQuery(8, profileId);
 
   const { data: looksrareProtocolFeeBps } = useSWR(
     'LooksrareProtocolFeeBps' + String(looksrareStrategy == null),
@@ -99,6 +111,12 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
     if (success) {
       return <CheckoutSuccessView
         onClose={() => {
+          console.log('nftsToBuy fdo', nftsToBuy);
+          nftsToBuy.forEach(nftToBuy => {
+            setProfileId(nftToBuy.profileId);
+            mutatePublicProfileNfts();
+            mutateAllOwnerNfts();
+          });
           setSuccess(false);
           setLoading(false);
           setError(null);
@@ -221,7 +239,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         </div>
       );
     }
-  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, nftsToBuy.length, props, success, toBuy]);
+  }, [clearBuyNow, currentAddress, error, getByContractAddress, getNeedsApprovals, getTotalMarketplaceFees, getTotalPriceUSD, getTotalRoyalties, loading, mutateAllOwnerNfts, mutatePublicProfileNfts, nftsToBuy, props, success, toBuy]);
 
   return (
     <Modal
