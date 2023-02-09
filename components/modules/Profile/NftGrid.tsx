@@ -141,6 +141,7 @@ export function NftGrid(props: NftGridProps) {
             customBackground={tileBackgroundSecondary}
             nftsDescriptionsVisible={draftNftsDescriptionsVisible}
             preventDefault={editMode}
+            profileId={profileData.profile.id}
           />
         </div>
       </DraggableGridItem>
