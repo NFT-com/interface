@@ -14,8 +14,9 @@ import { tw } from 'utils/tw';
 import { ProfileContext } from './ProfileContext';
 
 import { SearchIcon } from '@heroicons/react/outline';
+import delay from 'delay';
 import { useRouter } from 'next/router';
-import { ArrowClockwise } from 'phosphor-react';
+import { ArrowClockwise, Check } from 'phosphor-react';
 import { ShareNetwork, TwitterLogo, X } from 'phosphor-react';
 import LinkIcon from 'public/icon_link.svg';
 import FeaturedIcon from 'public/layout_icon_featured.svg';
@@ -38,6 +39,8 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const [selectedLayout, setSelectedLayout] = useState(null);
   const [showDescriptions, setShowDescriptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const inputRef = useRef();
   const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
   const { chain } = useNetwork();
@@ -179,16 +182,30 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
         >
           <div
             onClick={() => {
+              setLoading(true);
               mutateProfileData();
               mutatePublicProfileNfts();
               mutateAllOwnerNfts();
+
+              (async () => {
+                await delay(2000);
+                setLoading(false);
+                setSuccess(true);
+                await delay(1500);
+                setSuccess(false);
+              })();
             }}
             className={tw(
               'w-10 h-10 minlg:w-12 minlg:h-12 rounded-full px-2.5 minlg:px-3.5',
-              'flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer'
+              'flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer',
+              loading ? 'animate-spin' : null,
+              success ? 'bg-[#26AA73]' : null
             )}
             id="profileRefreshNftButton">
-            <ArrowClockwise className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
+            {success ?
+              <Check className='font-medium text-white bg-[#26AA73] h-[18px] minlg:h-5' /> :
+              <ArrowClockwise className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
+            }
           </div>
         </CustomTooltip2>}
         {isOwnerAndSignedIn &&
