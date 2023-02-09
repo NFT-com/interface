@@ -23,6 +23,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretDown, List, X } from 'phosphor-react';
+import Beta from 'public/beta-icon.svg';
 import ShoppingCartSimple from 'public/cart.svg';
 import WalletSimple from 'public/header_wallet.svg';
 import NavLogo from 'public/Logo.svg';
@@ -101,6 +102,9 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                       <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="black" />
                       <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="black" />
                     </svg>
+                    <div className='w-9 h-4 ml-2'>
+                      <Beta />
+                    </div>
                   </div>
                 </Link>
               </div>
@@ -331,6 +335,9 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="black" />
                     <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="black" />
                   </svg>
+                  <div className='w-9 h-4 ml-2'>
+                    <Beta />
+                  </div>
                 </div>
               </Link>
             </div>
