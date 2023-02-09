@@ -38,8 +38,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     toList,
     listAll,
     approveCollection,
-    toggleCartSidebar,
     clear,
+    closeCartSidebar,
     allListingsConfigured,
     setAllListingsFail,
   } = useContext(NFTListingsContext);
@@ -143,7 +143,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
           if (success) {
             if (!router.pathname.includes('/nft/')) router.push(`/app/nft/${toList?.[0]?.nft?.contract}/${toList?.[0]?.nft?.tokenId}`);
             clear();
-            toggleCartSidebar();
+            closeCartSidebar();
           }
           setSuccess(false);
           setShowProgressBar(false);
@@ -160,7 +160,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
           if (success) {
             if (!router.pathname.includes('/nft/')) router.push(`/app/nft/${toList?.[0]?.nft?.contract}/${toList?.[0]?.nft?.tokenId}`);
             clear();
-            toggleCartSidebar();
+            closeCartSidebar();
           }
           setSuccess(false);
           setShowProgressBar(false);
@@ -296,7 +296,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         </>
       );
     }
-  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, partialError, props, router, showProgressBar, success, toList, toggleCartSidebar]);
+  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, partialError, props, router, showProgressBar, success, toList]);
 
   return (
     <Modal
@@ -319,7 +319,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
           <X onClick={() => {
             if (success || partialError) {
               clear();
-              toggleCartSidebar();
+              closeCartSidebar();
               router.push('/app/discover/nfts');
             }
             setSuccess(false);
@@ -339,7 +339,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                   if (success || partialError) {
                     clear();
                     setSuccess(false);
-                    toggleCartSidebar();
                     setShowProgressBar(false);
                     return;
                   }

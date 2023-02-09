@@ -34,7 +34,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
 
   const {
     clear,
-    toggleCartSidebar,
+    closeCartSidebar,
     toList,
   } = useContext(NFTListingsContext);
 
@@ -115,7 +115,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <div className='text-[18px] font-medium mt-4'>{message()}</div>
           <div className='text-[16px] mt-10'>Let&apos;s continue your web3 journey</div>
           <button onClick={() => {
-            toggleCartSidebar();
+            closeCartSidebar();
             props.onClose();
             router.push(`/app/nft/${list[0]?.nft?.contract}/${list[0]?.nft?.tokenId}`);
             props.type == SuccessType.Listing ? clear() : clearPurchases();
@@ -132,7 +132,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
             Share
           </button>
           <div onClick={() => {
-            toggleCartSidebar();
+            closeCartSidebar();
             props.onClose();
             props.type == SuccessType.Listing ? clear() : clearPurchases();
             props.type == SuccessType.Listing ?
@@ -173,7 +173,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <button onClick={() => {
             props.onClose();
             clear();
-            toggleCartSidebar();
+            closeCartSidebar();
             router.push('/app/mint-profiles');
           }} className="bg-[#F9D963] w-[277px] mt-8 mb-14 font-medium hover:bg-[#fcd034] text-base text-black text-[16px] p-4 rounded-[12px] focus:outline-none focus:shadow-outline" type="button">
             Create a Profile
