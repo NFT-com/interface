@@ -84,7 +84,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   
   const {
     mutate: mutateAllOwnerNfts,
-  } = useMyNFTsQuery(8, profileData.profile.id, '', null, true);
+  } = useMyNFTsQuery(8, profileId, '', null, true);
     
   const nftsToBuy = buyNowActive ? toBuyNow : toBuy;
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
