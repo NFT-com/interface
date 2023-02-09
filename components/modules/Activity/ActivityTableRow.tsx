@@ -29,7 +29,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.nftContract, async () => {
     return await getContractMetadata(item?.nftContract, defaultChainId);
   });
-  const { data: nftMetadata } = useSWR('NFTMetadata' + item?.nftContract, async () => {
+  const { data: nftMetadata } = useSWR('NFTMetadata' + item?.nftContract + nftId, async () => {
     return await getNftMetadata(item?.nftContract, nftId, defaultChainId);
   });
   const nftName = nftMetadata?.metadata?.name;
