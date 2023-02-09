@@ -55,7 +55,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const hasGk = useHasGk();
   const [showProgressBar, setShowProgressBar] = useState(false);
-  const [success, setSuccess] = useState(true);
+  const [success, setSuccess] = useState(false);
   const [partialError, setPartialError] = useState(false);
   const [error, setError] = useState<Maybe<
   'ApprovalError' | 'ListingSignatureRejected' | 'ListingUnknownError' | 'ConnectionError'
