@@ -4,6 +4,7 @@ import { SignedOutView } from 'components/modules/GenesisKeyAuction/SignedOutVie
 import { InsiderProfileClaim } from 'components/modules/ProfilePreferences/InsiderProfileClaim';
 import { ProfilePreferencesSearch } from 'components/modules/ProfilePreferences/ProfilePreferencesSearch';
 import { useGenesisKeyInsiderMerkleCheck } from 'hooks/merkle/useGenesisKeyInsiderMerkleCheck';
+import { useInsiderReservedProfiles } from 'hooks/useInsiderReservedProfiles';
 import { useMintedReservedProfileCount } from 'hooks/useMintedReservedProfileCount';
 import { useOwnedGenesisKeyTokens } from 'hooks/useOwnedGenesisKeyTokens';
 import { tw } from 'utils/tw';
@@ -15,13 +16,14 @@ import { useAccount } from 'wagmi';
 const keySplash = 'https://cdn.nft.com/key_splash2.png';
 
 export default function ProfilePreferencesPage() {
+  const { reservedProfiles } = useInsiderReservedProfiles();
   const { address: currentAddress } = useAccount();
   const { data: ownedGKs, loading: loadingOwnedGKs } = useOwnedGenesisKeyTokens(currentAddress ?? null);
   const insiderMerkleData = useGenesisKeyInsiderMerkleCheck(currentAddress);
   const { mintedReservedProfileCount, loading: loadingReservedCount } = useMintedReservedProfileCount();
   const showInsiderReservedProfiles = insiderMerkleData != null &&
     ownedGKs?.length >= 1 &&
-    (mintedReservedProfileCount ?? 2) < 2;
+    (mintedReservedProfileCount ?? 2) < (reservedProfiles?.length || 2);
 
   const [firstLoaded, setFirstLoaded] = useState(false);
 
