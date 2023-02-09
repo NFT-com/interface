@@ -70,6 +70,7 @@ export interface NFTCardProps {
   layoutType?: string;
   redirectTo?: string;
   preventDefault?: boolean
+  profileId?: string;
 }
 
 const DynamicNFTCardDescription = dynamic<React.ComponentProps<typeof StaticNFTCardDescription>>(() => import('components/elements/NFTCardDescription').then(mod => mod.NFTCardDescription));

@@ -39,7 +39,6 @@ export type StagedPurchase = {
   takerAddress: string;
   makerAddress: string;
   nonce: number;
-  profileId: string;
 }
 
 interface NFTPurchaseContextType {
