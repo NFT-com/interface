@@ -47,11 +47,11 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
 
   const {
     mutate: mutatePublicProfileNfts,
-  } = useProfileNFTsQuery(profileData.profile.id,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
+  } = useProfileNFTsQuery(profileData?.profile?.id,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
 
   const {
     mutate: mutateAllOwnerNfts,
-  } = useMyNFTsQuery(8, profileData.profile.id, '', null, true);
+  } = useMyNFTsQuery(8, profileData?.profile?.id, '', null, true);
 
   const {
     setEditMode,
