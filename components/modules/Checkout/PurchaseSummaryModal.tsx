@@ -20,6 +20,7 @@ import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
 import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
+import { useRouter } from 'next/router';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import { useCallback, useContext, useState } from 'react';
 import useSWR from 'swr';
@@ -43,6 +44,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
 
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
+  const router = useRouter();
   const { data: signer } = useSigner();
   const { updateActivityStatus } = useUpdateActivityStatusMutation();
   const provider = useProvider();
@@ -235,6 +237,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 py-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
         <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
+            if (success) router.push('/app/discover/nfts');
             setSuccess(false);
             setLoading(false);
             setError(null);

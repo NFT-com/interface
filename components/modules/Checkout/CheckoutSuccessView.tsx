@@ -90,7 +90,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
   return myOwnedProfileTokens?.length > 0 ?
     <div className={tw(
       'flex md:flex-col items-center h-screen font-noi-grotesk overflow-auto',
-      props?.hasError ? 'h-full minlg:max-h-[744px] min-h-[650px]' : 'h-[596px]'
+      props?.hasError ? 'h-full minlg:max-h-[744px] min-h-[650px]' : 'h-[596px] md:h-screen'
     )}>
       <div onClick={() => router.push('/app/mint-profiles')} className='md:hidden absolute bottom-5 left-7 hover:cursor-pointer underline text-[16px] z-50 font-medium flex items-center'>
         <NullProfile className='mr-2' />Create a NFT Profile
@@ -107,7 +107,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
       </div>
       <div className="relative md:w-full h-full md:h-max w-3/5 right-0">
         <div className={tw(
-          'flex flex-col items-center justify-center h-full w-full px-10',
+          'flex flex-col items-center justify-center h-full w-full md:mt-5 px-10',
           props?.hasError && 'pt-14 pb-3'
         )}>
           {!props.hasError && images()}
@@ -117,6 +117,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <button onClick={() => {
             toggleCartSidebar();
             props.onClose();
+            router.push(`/app/nft/${list[0]?.nft?.contract}/${list[0]?.nft?.tokenId}`);
             props.type == SuccessType.Listing ? clear() : clearPurchases();
             window.open(
               'https://twitter.com/intent/tweet?' +
@@ -136,7 +137,7 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
             props.type == SuccessType.Listing ? clear() : clearPurchases();
             props.type == SuccessType.Listing ?
               router.push('/app/assets') :
-              router.push('/app/discover/collections');
+              router.push('/app/discover/nfts');
           }} className='text-[#E4BA18] font-medium underline text-[14px] cursor-pointer'>{props.type == SuccessType.Listing ? 'List' : 'Purchase'} another NFT</div>
           {props.hasError && (
             <div className='w-full flex flex-col space-y-[10px] p-[10px] rounded border border-[#ECECEC] overflow-auto mt-3 min-h-[200px]'>
