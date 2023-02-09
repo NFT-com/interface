@@ -1,11 +1,11 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { NftcomProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, TxSeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { useEthPriceUSD } from 'hooks/useEthPriceUSD';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { ExternalProtocol } from 'types';
 import { getContractMetadata, getNftMetadata } from 'utils/alchemyNFT';
-import { isNullOrEmpty, shortenAddress } from 'utils/helpers';
+import { isNullOrEmpty, isObjEmpty, shortenAddress } from 'utils/helpers';
 import { getProtocolDisplayName } from 'utils/marketplaceUtils';
 import { tw } from 'utils/tw';
 
@@ -16,7 +16,7 @@ import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 export interface ActivityTableRowProps {
-  item: any;
+  item: TxActivity;
   index: number;
 }
 
@@ -29,7 +29,7 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   const { data: collectionMetadata } = useSWR('ContractMetadata' + item?.nftContract, async () => {
     return await getContractMetadata(item?.nftContract, defaultChainId);
   });
-  const { data: nftMetadata } = useSWR('NFTMetadata' + item?.nftContract + nftId, async () => {
+  const { data: nftMetadata } = useSWR('NFTMetadata' + item?.nftContract + item?.nftId, async () => {
     return await getNftMetadata(item?.nftContract, nftId, defaultChainId);
   });
   const nftName = nftMetadata?.metadata?.name;
@@ -37,9 +37,10 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
   const getPriceColumns = useCallback(() => {
     if(item[type]?.protocol === 'LooksRare'){
+      const protocolData = item[type]?.protocolData as LooksrareProtocolData;
       if(type === 'transaction' || type === 'order'){
-        const ethAmount = ethers.utils.formatEther(item[type]?.protocolData?.price);
-        const currencyData = getByContractAddress(item[type]?.protocolData?.currencyAddress);
+        const ethAmount = ethers.utils.formatEther(protocolData?.price);
+        const currencyData = getByContractAddress(protocolData?.currencyAddress);
         return (
           <>
             <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
@@ -66,13 +67,15 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
 
     if(item[type]?.protocol === 'Seaport'){
       if(type === 'order'){
+        const protocolData = item[type]?.protocolData as SeaportProtocolData;
+
         const sum = item[type]?.orderType === 'Bid' ?
-          item[type]?.protocolData?.parameters.offer?.reduce((acc, o) => acc + parseInt(o.startAmount), 0):
-          item[type]?.protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
-        const ethAmount = !isNullOrEmpty(sum) ? ethers.utils.formatEther(BigInt(sum).toString()) : 0;
+          protocolData?.parameters.offer?.reduce((acc, o) => acc + parseInt(o.startAmount), 0) :
+          protocolData?.parameters?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
+        const ethAmount = sum && sum > 0 ? ethers.utils.formatEther(BigInt(sum).toString()) : 0;
         const currencyData = item[type]?.orderType === 'Bid' ?
-          getByContractAddress(item[type]?.protocolData?.parameters?.offer[0].token):
-          getByContractAddress(item[type]?.protocolData?.parameters?.consideration[0].token);
+          getByContractAddress(protocolData?.parameters?.offer[0].token):
+          getByContractAddress(protocolData?.parameters?.consideration[0].token);
         return (
           <>
             <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
@@ -86,10 +89,12 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
       }
 
       if(type === 'transaction'){
-        if(!isNullOrEmpty(item?.transaction?.protocolData?.consideration[0].startAmount)) {
-          const sum = item[type]?.protocolData?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
+        const protocolData = item[type]?.protocolData as TxSeaportProtocolData;
+        if(!isNullOrEmpty(protocolData?.consideration[0].startAmount)) {
+          const sum = protocolData?.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
           const ethAmount = ethers.utils.formatEther(BigInt(sum).toString());
-          const currencyData = getByContractAddress(item[type]?.protocolData?.consideration[0].token);
+          const currencyData = getByContractAddress(protocolData?.consideration[0].token);
+
           return (
             <>
               <td className="text-body leading-body pr-8 minmd:pr-4 whitespace-nowrap">
@@ -126,9 +131,10 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
     }
 
     if(item[type]?.protocol === ExternalProtocol.X2Y2){
-      if((type === 'transaction' || type === 'order') && !isNullOrEmpty(item[type]?.protocolData?.price) && !isNullOrEmpty(item[type]?.protocolData?.currencyAddress)){
-        const ethAmount = ethers.utils.formatEther(item[type]?.protocolData?.price);
-        const currencyData = getByContractAddress(item[type]?.protocolData?.currencyAddress);
+      const protocolData = item[type]?.protocolData as X2Y2ProtocolData;
+      if((type === 'transaction' || type === 'order') && !isNullOrEmpty(protocolData?.price) && !isNullOrEmpty(protocolData?.currencyAddress)){
+        const ethAmount = ethers.utils.formatEther(protocolData?.price);
+        const currencyData = getByContractAddress(protocolData?.currencyAddress);
         return (
           <>
             <td className="text-body leading-body pr-8 minmd:pr-4 w-max" >
@@ -200,14 +206,14 @@ export default function ActivityTableRow({ item, index }: ActivityTableRowProps)
   ]);
   
   useEffect(() => {
-    if(!isNullOrEmpty(item.transaction)){
+    if(!isObjEmpty(item?.transaction)){
       setType('transaction');
-    } else if(!isNullOrEmpty(item.cancel)) {
+    } else if(!isObjEmpty(item.cancel)) {
       setType('cancel');
     } else {
       setType('order');
     }
-  }, [item]);
+  }, [item, type]);
 
   return (
     <tr
