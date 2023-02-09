@@ -10,10 +10,11 @@ import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApp
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
 import { useNftComRoyalties } from 'hooks/useNftComRoyalties';
+import useNFTPurchaseError, { PurchaseErrorResponse } from 'hooks/useNFTPurchaseError';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { filterDuplicates, filterNulls, isNullOrEmpty, sameAddress } from 'utils/helpers';
 import { useBuyNow } from 'utils/marketplaceHelpers';
-import { getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, hasSufficientBalances, needsERC20Approvals } from 'utils/marketplaceUtils';
+import { getErrorText, getTotalFormattedPriceUSD, getTotalMarketplaceFeesUSD, getTotalRoyaltiesUSD, needsERC20Approvals } from 'utils/marketplaceUtils';
 
 import { CheckoutSuccessView, SuccessType } from './CheckoutSuccessView';
 import { NFTPurchasesContext } from './NFTPurchaseContext';
@@ -52,10 +53,11 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const { buyNow } = useBuyNow(signer);
   const { profileTokens: myOwnedProfileTokens } = useMyNftProfileTokens();
   const hasGk = useHasGk();
-  const { getByContractAddress, getBalanceMap } = useSupportedCurrencies();
+  const purchaseError = useNFTPurchaseError();
+  const { getByContractAddress } = useSupportedCurrencies();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<Maybe<'ApprovalError' | 'PurchaseUnknownError' | 'PurchaseBalanceError' | 'ConnectionError'>>(null);
+  const [error, setError] = useState<Maybe<PurchaseErrorResponse['error']>>(null);
   const {
     purchasedNfts,
     setPurchasedNfts
@@ -77,11 +79,6 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const getNeedsApprovals = useCallback(() => {
     return needsERC20Approvals(nftsToBuy);
   }, [nftsToBuy]);
-
-  const getHasSufficientBalance = useCallback(async () => {
-    const balances = await getBalanceMap(currentAddress, ['WETH', 'ETH', 'USDC', 'DAI']);
-    return hasSufficientBalances(nftsToBuy, balances);
-  }, [currentAddress, getBalanceMap, nftsToBuy]);
     
   const getTotalPriceUSD = useCallback(() => {
     return getTotalFormattedPriceUSD(nftsToBuy, getByContractAddress);
@@ -115,10 +112,7 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
           {error === 'ApprovalError' ? 'Approval' : 'Transaction'} Failed
           <div className='w-full my-8'>
             <span className='font-medium text-[#6F6F6F] text-base'>
-              {error === 'ConnectionError' && 'Your wallet is not connected. Please connect your wallet and try again.'}
-              {error === 'ApprovalError' && 'The approval was not accepted in your wallet. If you would like to continue your purchase, please try again.'}
-              {error === 'PurchaseBalanceError' && 'The purchase failed because your token balance is too low.'}
-              {error === 'PurchaseUnknownError' && 'The transaction failed for an unknown reason. Please verify that your cart is valid and try again.'}
+              {error && getErrorText(error)}
             </span>
           </div>
         </div>
@@ -310,12 +304,10 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 clear();
                 clearBuyNow();
               } else {
-                const hasSuffictientBalance = await getHasSufficientBalance();
-                if (!hasSuffictientBalance) {
-                  setError('PurchaseBalanceError');
-                } else {
-                  setError('PurchaseUnknownError');
+                purchaseError().then((res) => {
+                  setError(res);
                 }
+                );
               }
             }}
             type={ButtonType.PRIMARY} />}
