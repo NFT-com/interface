@@ -237,7 +237,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       <div className={`max-w-full overflow-hidden ${success ? myOwnedProfileTokens?.length == 0 ? 'minlg:max-w-[458px]' : 'minlg:max-w-[700px]' : 'minlg:max-w-[458px] px-4 py-5'} h-screen minlg:h-max maxlg:h-max bg-white text-left rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto`}>
         <div className={`font-noi-grotesk ${success ? myOwnedProfileTokens?.length == 0 ? 'lg:max-w-md max-w-lg' : 'lg:w-full' : 'pt-3 lg:max-w-md max-w-lg'} m-auto minlg:relative`}>
           <X onClick={() => {
-            if (success) router.push('/app/discover/nfts');
+            // non NFT routes
+            if (success && !router.pathname.includes('/nft/')) router.push(`/app/nft/${nftsToBuy?.[0]?.nft?.contract}/${nftsToBuy?.[0]?.nft?.tokenId}`);
             setSuccess(false);
             setLoading(false);
             setError(null);
