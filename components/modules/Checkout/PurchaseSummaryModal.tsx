@@ -6,8 +6,10 @@ import { getAddressForChain, nftAggregator } from 'constants/contracts';
 import { ActivityStatus, Maybe } from 'graphql/generated/types';
 import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
 import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
+import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import { useUpdateActivityStatusMutation } from 'graphql/hooks/useUpdateActivityStatusMutation';
 import { useLooksrareStrategyContract } from 'hooks/contracts/useLooksrareStrategyContract';
+import { useUser } from 'hooks/state/useUser';
 import { useGetERC20ProtocolApprovalAddress } from 'hooks/useGetERC20ProtocolApprovalAddress';
 import { useHasGk } from 'hooks/useHasGk';
 import { useMyNftProfileTokens } from 'hooks/useMyNftProfileTokens';
@@ -61,6 +63,9 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<Maybe<PurchaseErrorResponse['error']>>(null);
+
+  const { user } = useUser();
+  const { profileData } = useProfileQuery(user.currentProfileUrl);
   const {
     purchasedNfts,
     setPurchasedNfts
@@ -76,15 +81,13 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
       revalidateOnFocus: false,
     });
 
-  const [profileId, setProfileId] = useState('');
-
   const {
     mutate: mutatePublicProfileNfts,
-  } = useProfileNFTsQuery(profileId,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
+  } = useProfileNFTsQuery(profileData?.profile?.id,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
   
   const {
     mutate: mutateAllOwnerNfts,
-  } = useMyNFTsQuery(8, profileId, '', null, true);
+  } = useMyNFTsQuery(8, profileData?.profile?.id, '', null, true);
     
   const nftsToBuy = buyNowActive ? toBuyNow : toBuy;
   const getERC20ProtocolApprovalAddress = useGetERC20ProtocolApprovalAddress();
@@ -240,11 +243,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
         setLoading(false);
         setError(null);
         clearBuyNow();
-        nftsToBuy.forEach(nftToBuy => {
-          setProfileId(nftToBuy.profileId);
-          mutatePublicProfileNfts();
-          mutateAllOwnerNfts();
-        });
+        mutatePublicProfileNfts();
+        mutateAllOwnerNfts();
         props.onClose();
       }}
       bgColor='white'
@@ -274,11 +274,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 clear();
                 setSuccess(false);
                 clearBuyNow();
-                nftsToBuy.forEach(nftToBuy => {
-                  setProfileId(nftToBuy.profileId);
-                  mutatePublicProfileNfts();
-                  mutateAllOwnerNfts();
-                });
+                mutatePublicProfileNfts();
+                mutateAllOwnerNfts();
                 props.onClose();
                 return;
               }
@@ -327,11 +324,8 @@ export function PurchaseSummaryModal(props: PurchaseSummaryModalProps) {
                 updateActivityStatus(toBuy?.map(stagedPurchase => stagedPurchase.activityId), ActivityStatus.Executed);
                 clear();
                 clearBuyNow();
-                nftsToBuy.forEach(nftToBuy => {
-                  setProfileId(nftToBuy.profileId);
-                  mutatePublicProfileNfts();
-                  mutateAllOwnerNfts();
-                });
+                mutatePublicProfileNfts();
+                mutateAllOwnerNfts();
               } else {
                 purchaseError().then((res) => {
                   setError(res);
