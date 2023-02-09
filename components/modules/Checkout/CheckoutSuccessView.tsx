@@ -42,7 +42,6 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
     toBuy,
     toBuyNow,
     buyNowActive,
-    clear: clearPurchases,
   } = useContext(NFTPurchasesContext);
 
   const list = props.type === SuccessType.Listing ? toList : buyNowActive ? toBuyNow : toBuy;
@@ -118,7 +117,6 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
             closeCartSidebar();
             props.onClose();
             router.push(`/app/nft/${list[0]?.nft?.contract}/${list[0]?.nft?.tokenId}`);
-            props.type == SuccessType.Listing ? clear() : clearPurchases();
             window.open(
               'https://twitter.com/intent/tweet?' +
               'text=' +
@@ -134,7 +132,6 @@ export function CheckoutSuccessView(props: CheckoutSuccessViewProps) {
           <div onClick={() => {
             closeCartSidebar();
             props.onClose();
-            props.type == SuccessType.Listing ? clear() : clearPurchases();
             props.type == SuccessType.Listing ?
               router.push('/app/assets') :
               router.push('/app/discover/nfts');
