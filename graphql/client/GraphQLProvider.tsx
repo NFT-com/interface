@@ -107,7 +107,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
   }, [currentAddress]);
 
   useEffect(() => {
-    if((currentAddress && !isSupported) || connector == null) {
+    if((currentAddress && !isSupported) || connector == null || sigRejected) {
       return;
     }
     if (isNullOrEmpty(currentAddress)) {
@@ -119,7 +119,7 @@ export function GraphQLProvider(props: PropsWithChildren<typeof GraphQLProviderP
       // if there is no connected wallet, it should fail silently.
       setSigRejected(!sigResult && !isNullOrEmpty(currentAddress));
     })();
-  }, [currentAddress, connector, isSupported, trySignature]);
+  }, [currentAddress, connector, isSupported, trySignature, sigRejected]);
   
   return (
     <GraphQLContext.Provider
