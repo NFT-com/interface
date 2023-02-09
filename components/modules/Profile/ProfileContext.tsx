@@ -539,6 +539,8 @@ export function ProfileContextProvider(
       .includes(props.profileURI),
     editMode,
     setEditMode: (enabled: boolean) => {
+      mutatePublicProfileNfts();
+      mutateAllOwnerNfts();
       if (enabled) {
         setAfterCursorEditMode('');
         setEditModeNfts(null);
