@@ -43,7 +43,7 @@ export default function OnboardingModal({ profileURI } : OnboardingModalProps) {
       isCompleted: profileData?.profile?.usersActionsWithPoints[0]?.action.includes(ProfileActionType.BuyNfTs),
       coins: 5,
       description: 'Grow your collection by purchasing NFTs on NFT.com',
-      href: '/app/discover'
+      href: '/app/discover/nfts'
     }
   ], [profileData]);
 

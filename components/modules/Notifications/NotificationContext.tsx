@@ -1,3 +1,5 @@
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
+import { TxActivity } from 'graphql/generated/types';
 import { useExpiredNotificationsQuery } from 'graphql/hooks/useExpiredNotificationsQuery';
 import { useIsProfileCustomized } from 'graphql/hooks/useIsProfileCustomized';
 import { usePendingAssociationQuery } from 'graphql/hooks/usePendingAssociationQuery';
@@ -14,6 +16,7 @@ import { isNullOrEmpty } from 'utils/helpers';
 import moment from 'moment';
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
+import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 import { useAccount } from 'wagmi';
 
 export interface NotificationContextType {
@@ -26,7 +29,8 @@ export interface NotificationContextType {
     associatedProfileRemoved: boolean,
     hasSoldActivity: boolean,
     hasExpiredListings: boolean,
-    profileExpiration: boolean
+    profileExpiration: boolean,
+    nftPurchase: boolean
   },
   setUserNotificationActive: (notification: keyof UserNotifications, notificationValue: boolean) => void,
   pendingAssociationCount: number,
@@ -34,9 +38,11 @@ export interface NotificationContextType {
   totalClaimableForThisAddress: number,
   setRemovedAssociationNotifClicked: (input: boolean) => void,
   setAddedAssociatedNotifClicked: (input: boolean) => void,
-  soldActivityDate: string,
   expiredActivityDate: string,
-  profileExpiringSoon: boolean
+  profileExpiringSoon: boolean,
+  purchasedNfts: StagedPurchase[],
+  setPurchasedNfts: (input: StagedPurchase[]) => void,
+  soldNfts: PartialObjectDeep<TxActivity, unknown>[]
 }
 
 export const NotificationContext = React.createContext<NotificationContextType>({
@@ -49,7 +55,8 @@ export const NotificationContext = React.createContext<NotificationContextType>(
     associatedProfileRemoved: false,
     hasSoldActivity: false,
     hasExpiredListings: false,
-    profileExpiration: false
+    profileExpiration: false,
+    nftPurchase: false
   },
   setUserNotificationActive: () => null,
   pendingAssociationCount: 0,
@@ -57,9 +64,11 @@ export const NotificationContext = React.createContext<NotificationContextType>(
   totalClaimableForThisAddress: 0,
   setRemovedAssociationNotifClicked: () => null,
   setAddedAssociatedNotifClicked: () => null,
-  soldActivityDate: null,
   expiredActivityDate: null,
-  profileExpiringSoon: null
+  profileExpiringSoon: null,
+  purchasedNfts: [],
+  setPurchasedNfts: () => null,
+  soldNfts: []
 });
 
 export function NotificationContextProvider(
@@ -95,14 +104,15 @@ export function NotificationContextProvider(
     associatedProfileRemoved: false,
     hasSoldActivity: false,
     hasExpiredListings: false,
-    profileExpiration: false
+    profileExpiration: false,
+    nftPurchase: false
   });
   const [removedAssociationNotifClicked, setRemovedAssociationNotifClicked] = useState(false);
   const [addedAssociatedNotifClicked, setAddedAssociatedNotifClicked] = useState(false);
   const [pendingAssociationCount, setPendingAssociationCount] = useState(null);
-  const [soldActivityDate, setSoldActivityDate] = useState(null);
   const [expiredActivityDate, setExpiredActivityDate] = useState(null);
   const [profileExpiringSoon, setProfileExpiringSoon] = useState(null);
+  const [purchasedNfts, setPurchasedNfts] = useState([]);
 
   const setUserNotificationActive = useCallback((notification: keyof UserNotifications, notificationValue: boolean) => {
     setNotifications({
@@ -171,11 +181,9 @@ export function NotificationContextProvider(
     }
     if(saleActivities && saleActivities.length > 0 && !notifications.hasSoldActivity) {
       setUserNotificationActive('hasSoldActivity', true);
-      setSoldActivityDate(saleActivities[0].timestamp);
     }
     if((isNullOrEmpty(saleActivities) || saleActivities.length === 0) && notifications.hasSoldActivity){
       setUserNotificationActive('hasSoldActivity', false);
-      setSoldActivityDate(null);
     }
 
     if(expiredListings && expiredListings.length > 0 && !notifications.hasExpiredListings) {
@@ -193,7 +201,13 @@ export function NotificationContextProvider(
     if(getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && profileExpiringSoon && !moment(now).isAfter(eightWeeksBeforeExpiry)){
       setProfileExpiringSoon(false);
     }
-  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, currentAddress, pendingAssociationCount, notifications, saleActivities, expiredListings, expiry, now, eightWeeksBeforeExpiry, profileExpiringSoon]);
+    if(!isNullOrEmpty(purchasedNfts) && !notifications.nftPurchase) {
+      setUserNotificationActive('nftPurchase', true);
+    }
+    if(isNullOrEmpty(purchasedNfts) && notifications.nftPurchase) {
+      setUserNotificationActive('nftPurchase', false);
+    }
+  }, [addedAssociatedNotifClicked, hasUnclaimedProfiles, pendingAssociatedProfiles, profileCustomizationStatus, removedAssociationNotifClicked, setUserNotificationActive, currentAddress, pendingAssociationCount, notifications, saleActivities, expiredListings, expiry, now, eightWeeksBeforeExpiry, profileExpiringSoon, purchasedNfts]);
 
   return (
     <NotificationContext.Provider
@@ -212,9 +226,13 @@ export function NotificationContextProvider(
         setAddedAssociatedNotifClicked: (input: boolean) => {
           setAddedAssociatedNotifClicked(input);
         },
-        soldActivityDate: soldActivityDate,
         expiredActivityDate: expiredActivityDate,
-        profileExpiringSoon: profileExpiringSoon
+        profileExpiringSoon: profileExpiringSoon,
+        purchasedNfts: purchasedNfts,
+        setPurchasedNfts: (input: StagedPurchase[]) => {
+          setPurchasedNfts(input);
+        },
+        soldNfts: saleActivities
       }}>
       {props.children}
     </NotificationContext.Provider>);

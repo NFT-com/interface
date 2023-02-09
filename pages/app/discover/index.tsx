@@ -313,7 +313,7 @@ export default function DiscoverPage({ data, dataDev }: DiscoverPageProps) {
             {
               isLeaderBoard && tabView === 'collections' && (
                 <div className='mb-10 mt-8'>
-                  <div className="text-xl mb-3 minmd:text-3xl minmd:mb-5 mb-3	minlg:text-[54px] font-semibold text-[#000000] text-center minlg:leading-[63px] minlg:mb-10">
+                  <div className="text-xl minmd:text-3xl minmd:mb-5 mb-3	minlg:text-[54px] font-semibold text-[#000000] text-center minlg:leading-[63px] minlg:mb-10">
                     Find your next collectible<br/> <span className="text-[#000000] textColorGradient">wherever it lives</span>
                   </div>
                   <div>
