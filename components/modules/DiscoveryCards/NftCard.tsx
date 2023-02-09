@@ -58,6 +58,7 @@ export interface NftCardProps {
   nftsDescriptionsVisible?: boolean;
   preventDefault?: boolean;
   fallbackImage?: string;
+  profileId?: string;
 }
 
 export function NftCard(props: NftCardProps) {
@@ -202,6 +203,7 @@ export function NftCard(props: NftCardProps) {
                             makerAddress: bestListing?.order?.makerAddress,
                             takerAddress: bestListing?.order?.takerAddress,
                             nonce: bestListing?.order?.nonce,
+                            profileId: props.profileId,
                             protocolData: bestListing?.order?.protocol === ExternalProtocol.Seaport ?
                               bestListing?.order?.protocolData as SeaportProtocolData :
                               bestListing?.order?.protocol === ExternalProtocol.X2Y2 ?

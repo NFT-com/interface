@@ -141,6 +141,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         userAddress={currentAddress}
         onClose={() => {
           if (success) {
+            if (!router.pathname.includes('/nft/')) router.push(`/app/nft/${toList?.[0]?.nft?.contract}/${toList?.[0]?.nft?.tokenId}`);
             clear();
             toggleCartSidebar();
           }
@@ -157,6 +158,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         hasError
         onClose={() => {
           if (success) {
+            if (!router.pathname.includes('/nft/')) router.push(`/app/nft/${toList?.[0]?.nft?.contract}/${toList?.[0]?.nft?.tokenId}`);
             clear();
             toggleCartSidebar();
           }
@@ -294,7 +296,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         </>
       );
     }
-  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, partialError, props, showProgressBar, success, toList, toggleCartSidebar]);
+  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, partialError, props, router, showProgressBar, success, toList, toggleCartSidebar]);
 
   return (
     <Modal

@@ -69,16 +69,19 @@ export default function DefaultLayout({ children, hideFooter, hideHeader, hideSe
         {profileSelectModal && signed && <DynamicProfileSelectModal />}
         
         {emailCaptureModal && <DynamicEmailCaptureModal />}
-        <SignOutModal
-          visible={signOutDialogOpen}
-          onClose={() => {
-            setSignOutDialogOpen(false);
-            changeWallet && openConnectModal();
-            setChangeWallet(false);
-            setProfileSelectModalOpen(false);
-            setCurrentProfileUrl('');
-          }}
-        />
+        {signOutDialogOpen &&
+         <SignOutModal
+           visible={signOutDialogOpen}
+           onClose={() => {
+             setSignOutDialogOpen(false);
+             changeWallet && openConnectModal();
+             setChangeWallet(false);
+             setProfileSelectModalOpen(false);
+             setCurrentProfileUrl('');
+           }}
+         />
+        }
+        
         {!hideFooter && <DynamicFooter />}
       </div>
     </div>
