@@ -1,5 +1,5 @@
-import { USDC, WETH } from 'constants/tokens';
-import { AuctionType, Nft, NftcomProtocolData, TxActivity } from 'graphql/generated/types';
+import { WETH } from 'constants/tokens';
+import { Nft, TxActivity } from 'graphql/generated/types';
 import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { Doppler, getEnvBool } from 'utils/env';
