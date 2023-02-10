@@ -30,6 +30,7 @@ import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
 import CameraIconEdit from 'public/camera_icon.svg';
+import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
