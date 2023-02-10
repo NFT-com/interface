@@ -40,7 +40,6 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
                 makerAddress
                 takerAddress
                 protocol
-                nonce
                 protocolData {
                     ... on LooksrareProtocolData {
                         isOrderAsk
@@ -59,68 +58,6 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
                         v
                         r
                         s
-                    }
-                    ... on X2Y2ProtocolData {
-                        side
-                        type
-                        erc_type
-                        status
-                        maker
-                        contract
-                        price
-                        X2Y2Amount: amount
-                        tokenId
-                        currencyAddress
-                        id
-                        created_at
-                        updated_at
-                        end_at
-                        royalty_fee
-                        is_collection_offer
-                        is_bundle
-                        is_private
-                    }
-                    ... on NFTCOMProtocolData {
-                        makeAsset {
-                        standard {
-                            assetClass
-                            bytes
-                            contractAddress
-                            tokenId
-                            allowAll
-                        }
-                        nftId
-                        bytes
-                        value
-                        minimumBid
-                        }
-                        takeAsset {
-                        standard {
-                            assetClass
-                            bytes
-                            contractAddress
-                            tokenId
-                            allowAll
-                        }
-                        nftId
-                        bytes
-                        value
-                        minimumBid
-                        }
-                        swapTransactionId
-                        acceptedAt
-                        rejectedAt
-                        listingId
-                        buyNowTaker
-                        orderSignature: signature {
-                            v
-                            r
-                            s
-                        }
-                        auctionType
-                        salt
-                        start
-                        end
                     }
                     ... on SeaportProtocolData {
                         signature
@@ -191,16 +128,6 @@ mutation ProfileNFTs($input: UpdateNFTsForProfileInput) {
                     v
                     r
                     s
-                }
-                ... on TxX2Y2ProtocolData {
-                    amount
-                    currency
-                    data
-                    deadline
-                    delegateType
-                    intent
-                    orderSalt
-                    settleSalt
                 }
                 ... on TxSeaportProtocolData {
                     offer {

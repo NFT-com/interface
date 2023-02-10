@@ -1,0 +1,41 @@
+mutation CreateMarketBid($input: CreateBidInput!) {
+  createBid(input: $input) {
+    takerAddress
+    takeAsset {
+      value
+      standard {
+        tokenId
+        contractAddress
+        bytes
+        assetClass
+        allowAll
+      }
+      nftId
+      minimumBid
+      bytes
+    }
+    structHash
+    start
+    salt
+    rejectedReason
+    rejectedAt
+    offerAcceptedAt
+    message
+    marketSwapId
+    marketAskId
+    makerAddress
+    makeAsset {
+      value
+      standard {
+        tokenId
+        contractAddress
+        bytes
+        assetClass
+        allowAll
+      }
+      nftId
+      minimumBid
+      bytes
+    }
+  }
+}

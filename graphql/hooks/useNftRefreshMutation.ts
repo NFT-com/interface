@@ -22,7 +22,7 @@ export function useRefreshNftMutation(): RefreshNftResult {
     async (nftId: string) => {
       setLoading(true);
       try {
-        await delay(1000); // give more UI time for user
+        await delay(1500); // give more UI time for user
         await sdk.RefreshNft({ id: nftId });
 
         setSuccess(true);

@@ -1,9 +1,7 @@
 import { currentAddress } from './constants';
 
 import { BaseProvider, WebSocketProvider } from '@ethersproject/providers';
-import { Chain } from '@wagmi/core';
-import { hardhat } from '@wagmi/core/chains';
-import * as allChains from '@wagmi/core/chains';
+import { allChains, Chain, chain as chain_ } from '@wagmi/core';
 import { MockConnector } from '@wagmi/core/connectors/mock';
 import { providers } from 'ethers';
 import { Wallet } from 'ethers/lib/ethers';
@@ -38,9 +36,9 @@ export function getSigners() {
 }
 
 export function getProvider({ chainId }: { chainId?: number } = {}) {
-  const chain = Object.values(allChains).find((x) => x.id === chainId) ?? hardhat;
+  const chain = allChains.find((x) => x.id === chainId) ?? chain_.hardhat;
   const network = getNetwork(chain);
-  const url = hardhat.rpcUrls.default.toString();
+  const url = chain_.hardhat.rpcUrls.default.toString();
   return new EthersProviderWrapper(url, network);
 }
 
@@ -67,9 +65,9 @@ class EthersWebSocketProviderWrapper extends providers.WebSocketProvider {
 }
 
 export function getWebSocketProvider({ chainId }: { chainId?: number } = {}) {
-  const chain = Object.values(allChains).find((x) => x.id === chainId) ?? hardhat;
+  const chain = allChains.find((x) => x.id === chainId) ?? chain_.hardhat;
   const network = getNetwork(chain);
-  const url = hardhat.rpcUrls.default.toString().replace('http', 'ws');
+  const url = chain_.hardhat.rpcUrls.default.toString().replace('http', 'ws');
   return new EthersWebSocketProviderWrapper(url, network);
 }
 

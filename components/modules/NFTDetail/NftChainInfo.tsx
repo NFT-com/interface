@@ -18,8 +18,8 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
   
   return (
     <div className='flex flex-row w-full' id="NftChainInfoContainer">
-      <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[24px] font-[18px] text-[#6A6A6A] w-full py-5 md:py-4 md:px-6 px-10 space-y-2">
-        <div className='flex flex-row w-full items-center font-noi-grotesk justify-between md:py-1 py-1.5'>
+      <div className="flex flex-col items-center bg-[#F6F6F6] rounded-[24px] font-[18px] text-[#6A6A6A] w-full py-5 px-10 space-y-2">
+        <div className='flex flex-row w-full items-center font-noi-grotesk justify-between py-1.5'>
           <p className='flex flex-row w-1/2 font-base items-center text-base leading-6'>
             Contract
           </p>
@@ -32,7 +32,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
         </div>
         {//todo: add volume
         }
-        <div className='flex flex-row w-full items-center font-noi-grotesk md:py-1 py-1.5 justify-between'>
+        <div className='flex flex-row w-full items-center font-noi-grotesk py-1.5 justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center text-base leading-6 whitespace-nowrap'>
             Token ID
           </p>
@@ -64,7 +64,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
               )}
           </span>}
         </div>
-        <div className='flex flex-row w-full items-center font-noi-grotesk md:py-1 py-1.5 justify-between'>
+        <div className='flex flex-row w-full items-center font-noi-grotesk py-1.5 justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center text-base leading-6 whitespace-nowrap'>
             Token Standard
           </p>
@@ -72,7 +72,7 @@ export const NftChainInfo = (props: NftChainInfoProps) => {
             {nft?.type}
           </span>
         </div>
-        <div className='flex flex-row w-full items-center font-noi-grotesk md:py-1 py-1.5 justify-between'>
+        <div className='flex flex-row w-full items-center font-noi-grotesk py-1.5 justify-between'>
           <p className='flex flex-row w-1/2 font-base items-center text-base leading-6 whitespace-nowrap'>
             Blockchain
           </p>

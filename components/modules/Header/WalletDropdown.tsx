@@ -1,4 +1,3 @@
-import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import NotificationsModal from 'components/modules/Notifications/NotificationsModal';
 import { useChangeWallet } from 'hooks/state/useChangeWallet';
 import { useSignOutDialog } from 'hooks/state/useSignOutDialog';
@@ -9,7 +8,7 @@ import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import { CaretUp } from 'phosphor-react';
 import ETHIcon from 'public/eth_icon.svg';
-import { PropsWithChildren, useCallback, useContext, useRef, useState } from 'react';
+import { PropsWithChildren, useRef, useState } from 'react';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
 
 export interface WalletDropdownProps {
@@ -22,11 +21,9 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   const { disconnect } = useDisconnect();
   const { setSignOutDialogOpen } = useSignOutDialog();
   const { setChangeWallet } = useChangeWallet();
-  const { data: balanceData } = useBalance({ address: currentAddress, watch: true });
+  const { data: balanceData } = useBalance({ addressOrName: currentAddress, watch: true });
   const router = useRouter();
-  const {
-    setPurchasedNfts
-  } = useContext(NotificationContext);
+
   const [notificationsModalVisible, setNotificationModalVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -34,13 +31,6 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
   useOutsideClickAlerter(wrapperRef, () => {
     setExpanded(false);
   });
-
-  const setModalVisibile = useCallback((input: boolean) => {
-    if(!input) {
-      setPurchasedNfts([]);
-    }
-    setNotificationModalVisible(input);
-  }, [setPurchasedNfts]);
 
   return (
     <div
@@ -78,10 +68,10 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
             'rounded-xl',
             'bg-white dark:bg-secondary-dk',
             'absolute z-50 px-4 pb-6',
-            'min-w-[12rem] drop-shadow-md left-[-150%] minlg:left-[-100%]',
+            'min-w-[14rem] drop-shadow-md left-[-150%] minlg:left-[-100%]',
           )}
         >
-          <CaretUp size={32} color="white" weight="fill" className='absolute -top-[18px] left-[50%]'/>
+          <CaretUp size={32} color="white" weight="fill" className='absolute -top-[18px] left-[43%]'/>
           <div
             style={{ height: '10%' }}
             className={'flex flex-row w-full py-2 items-center justify-between hover:cursor-pointer text-primary-txt font-medium'}
@@ -160,7 +150,7 @@ export function WalletDropdown(props: PropsWithChildren<WalletDropdownProps>) {
           </div>
         </div>
       }
-      <NotificationsModal visible={notificationsModalVisible} setVisible={setModalVisibile} />
+      <NotificationsModal visible={notificationsModalVisible} setVisible={setNotificationModalVisible} />
     </div>
   );
 }

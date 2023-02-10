@@ -13,14 +13,14 @@ export const Properties = (props: PropertiesProps) => {
   const nftTraits = props?.nft?.metadata?.traits;
 
   return (
-    <div className="flex flex-col w-full h-fit justify-between" id="NftPropertiesContainer">
+    <div className="flex flex-col w-full justify-between" id="NftPropertiesContainer">
       {
         !nftTraits || nftTraits.length === 0 ?
           <div className='text-secondary-txt'>
               No Properties Found
           </div> :
           <div className={tw(
-            'traits-gap grid grid-cols-2 gap-3 rounded-[18px]',
+            'traits-gap grid grid-cols-2 gap-3 rounded-[18px] overflow-y-auto overflow-x-hidden',
             'grid-cols-2 minlg:grid-cols-3',
           )}>
             {nftTraits?.map((item, index) => {

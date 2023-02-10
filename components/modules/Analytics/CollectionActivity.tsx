@@ -1,95 +1,52 @@
 
 import { useGetTxByContractQuery } from 'graphql/hooks/useGetTxByContractQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
-import { usePaginator } from 'hooks/usePaginator';
-import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
 import DetailPageTableRow from './DetailPageTableRow';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export type CollectionActivityProps = {
   contract: string;
 }
 export const CollectionActivity = ({ contract }: CollectionActivityProps) => {
   const defaultChainId = useDefaultChainId();
-  const [collectionData, setCollectionData] = useState([]);
-  const [lastAddedPage, setLastAddedPage] = useState('');
-  const {
-    nextPage,
-    afterCursor,
-    setTotalCount,
-    cachedTotalCount
-  } = usePaginator(25);
-
-  const txs = useGetTxByContractQuery(
-    contract,
-    {
-      first: 25,
-      afterCursor
-    }
-  );
-
-  const loadMoreActivities = useCallback(() => {
-    nextPage(txs?.data?.pageInfo?.lastCursor);
-  }, [nextPage, txs?.data?.pageInfo?.lastCursor]);
-
-  useEffect(() => {
-    if (
-      txs?.data?.items?.length > 0 &&
-      lastAddedPage !== txs?.data?.pageInfo?.firstCursor
-    ) {
-      setCollectionData([
-        ...collectionData,
-        ...filterNulls(txs?.data?.items)
-      ]);
-      setLastAddedPage(txs?.data?.pageInfo?.firstCursor);
-      setTotalCount(txs?.data?.totalItems);
-    } else {
-      setTotalCount(txs?.data?.totalItems || 0);
-    }
-  }, [lastAddedPage, setTotalCount, afterCursor, txs?.data?.items, txs?.data?.pageInfo?.firstCursor, txs?.data?.totalItems, collectionData]);
+  const txs = useGetTxByContractQuery(contract);
+  const [collectionData, setCollectionData] = useState(null);
   
   useEffect(() => {
     if(defaultChainId !== '1' || !txs) {
       return;
     } else {
       if(!collectionData && txs) {
-        setCollectionData(txs?.data?.items);
+        setCollectionData(txs?.data?.transactions);
       }
-    }}, [defaultChainId, collectionData, txs, setTotalCount]);
+    }}, [defaultChainId, collectionData, txs]);
 
   return (
     <div className="overflow-x-auto my-8 font-grotesk rounded-md p-4">
-      {isNullOrEmpty(collectionData) ?
-        <p className='text-[#6F6F6F] flex items-center justify-center border h-[200px] rounded-[10px]'>No activity available</p> :
-        <table className="border-collapse table-auto w-full">
-          <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
-            <tr className='p-4 pt-0 pb-3 text-left ...'>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Type</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Token ID</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>From</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>To</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Marketplace</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Price</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>USD Value</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Timestamp</th>
-              <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Transaction Hash</th>
-            </tr>
-          </thead>
-          <tbody className='p-4'>
-            {collectionData?.map((tx , index) => (
-              <DetailPageTableRow key={tx?.id} tx={tx} index={index} />
-            ))}
-          </tbody>
-        </table>
-      }
-      {cachedTotalCount > collectionData?.length && !isNullOrEmpty(collectionData) &&
-        <div className='w-full flex justify-center items-center'>
-          <button onClick={() => loadMoreActivities()} className="bg-[#F9D963] font-bold tracking-normal hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-full focus:outline-none focus:shadow-outline w-full minlg:w-[250px] mt-6" type="button">
-                Load More
-          </button>
-        </div>
+      {!collectionData && <p className='text-[#6F6F6F] flex items-center justify-center border h-[200px] rounded-[10px]'>No activity available</p>}
+      {collectionData &&
+      <table className="border-collapse table-auto w-full">
+        <thead className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>
+          <tr className='p-4 pt-0 pb-3 text-left ...'>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Type</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Token ID</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>From</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>To</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Marketplace</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4'>Price</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>USD Value</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Timestamp</th>
+            <th className='text-[#6F6F6F] text-sm font-medium leading-6 p-4 whitespace-nowrap'>Transaction Hash</th>
+          </tr>
+        </thead>
+        <tbody className='p-4'>
+          {collectionData?.map((tx , index) => (
+            <DetailPageTableRow key={tx?.id} tx={tx} index={index} />
+          ))}
+        </tbody>
+      </table>
       }
     </div>
   );

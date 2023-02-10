@@ -90,8 +90,8 @@ export default function GalleryPage() {
         />
       </Modal>
       <div className={tw(
-        'flex h-5/6 w-full overflow-hidden minlg:pt-20 bg-pagebg',
-        'text-primary-txt-dk relative mb-[-30px]'
+        'flex h-full w-full overflow-hidden minlg:pt-20 bg-pagebg',
+        'text-primary-txt-dk absolute'
       )}>
         {/* Desktop Filters - sidebar */}
         {!isMobile &&
@@ -109,7 +109,7 @@ export default function GalleryPage() {
             </div>
         }
         <div className={tw(
-          'flex flex-col flex-grow h-screen overflow-auto',
+          'flex flex-col flex-grow h-full overflow-auto',
           'bg-pagebg dark:bg-pagebg-dk',
           'minmd:px-4 px-0 pt-6',
           'hideScroll overflow-y-hidden'
@@ -147,7 +147,7 @@ export default function GalleryPage() {
         />
       </div>
       <div className={tw(
-        'absolute bottom-[-9rem] mb-2 left-0 minlg:hidden w-full flex justify-center',
+        'absolute bottom-20 mb-2 left-0 minlg:hidden w-full flex justify-center',
         'drop-shadow-md px-8'
       )}>
         <Button
@@ -165,7 +165,7 @@ export default function GalleryPage() {
 
 GalleryPage.getLayout = function getLayout(page) {
   return (
-    <DefaultLayout>
+    <DefaultLayout hideFooter>
       { page }
     </DefaultLayout>
   );

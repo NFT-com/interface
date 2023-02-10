@@ -1,9 +1,7 @@
 import { Modal } from 'components/elements/Modal';
-import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { Notifications } from 'components/modules/Sidebar/Notifications';
 
-import { X } from 'phosphor-react';
-import { useContext } from 'react';
+import { XCircle } from 'phosphor-react';
 
 type NotificationsModalProps = {
   visible: boolean;
@@ -11,10 +9,6 @@ type NotificationsModalProps = {
 };
 
 export default function NotificationsModal({ visible, setVisible }: NotificationsModalProps) {
-  const {
-    count,
-  } = useContext(NotificationContext);
-
   return (
     <Modal
       visible={visible}
@@ -28,17 +22,14 @@ export default function NotificationsModal({ visible, setVisible }: Notification
       fullModal
       pure
     >
-      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
-        <div className='py-5 font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative px-3'>
-          <X onClick={() => setVisible(false)} className='absolute top-5 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
+      <div className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
+        <div className='pt-28 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+          <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#F9D963] rounded-full'></div>
+          <XCircle onClick={() => setVisible(false)} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
           <Notifications setVisible={setVisible} />
-          {/* only show when notifications exist for better UI */}
-          {count ?
-            <button onClick={() => setVisible(false)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
-              Close
-            </button> :
-            null
-          }
+          <button onClick={() => setVisible(false)} className="bg-[#F9D963] hover:bg-[#fcd034] text-base text-black py-2 px-4 rounded-[10px] focus:outline-none focus:shadow-outline w-full mt-6" type="button">
+            Close
+          </button>
         </div>
       </div>
     </Modal>

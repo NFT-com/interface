@@ -19,6 +19,7 @@ describe('AddressInput', () => {
               name: 'luc'
             }
           }}
+          index={1}
           onChange={() => null}
           isChecked={false}
           
@@ -41,6 +42,7 @@ describe('AddressInput', () => {
               name: 'robo'
             }
           }}
+          index={1}
           onChange={() => null}
           isChecked={true}
           
@@ -63,6 +65,7 @@ describe('AddressInput', () => {
               name: 'robo'
             }
           }}
+          index={1}
           onChange={() => null}
           isChecked={false}
           

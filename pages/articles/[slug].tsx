@@ -2,7 +2,6 @@ import DefaultLayout from 'components/layouts/DefaultLayout';
 import BlogHeader from 'components/modules/BlogPage/BlogHeader';
 import BlogHeroImage from 'components/modules/BlogPage/BlogHeroImage';
 import Markdown from 'components/modules/BlogPage/Markdown';
-import contentfulBackupData from 'constants/contenful_backup_data.json';
 import NotFoundPage from 'pages/404';
 import { PostData } from 'types/blogs';
 
@@ -105,7 +104,7 @@ export async function getServerSideProps({ params, preview = false }) {
   const data = await getPost(params.slug, preview);
   return {
     props: {
-      post: data?.post ?? contentfulBackupData[2].items.find(item => item.slug == params.slug),
+      post: data?.post ?? null,
       preview
     },
   };

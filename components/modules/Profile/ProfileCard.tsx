@@ -1,6 +1,6 @@
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Profile } from 'graphql/generated/types';
-import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
+import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
@@ -17,7 +17,7 @@ export function ProfileCard(props: ProfileCardProps) {
   const defaultChainId = useDefaultChainId();
   const {
     totalItems: publicProfileNftsCount,
-  } = useProfileNFTsTotalItemsQuery(
+  } = useProfileNFTsQuery(
     props?.profile?.id,
     defaultChainId,
     1000

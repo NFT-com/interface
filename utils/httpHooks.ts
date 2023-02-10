@@ -18,13 +18,13 @@ import {
   genesisKeyDistributor,
   genesisKeyTeamClaim,
   genesisKeyTeamDistributor,
-  marketplace,
   maxProfiles,
   nftAggregator,
   nftProfile,
   nftResolver,
   nftToken,
-  profileAuction } from 'constants/contracts';
+  profileAuction,
+} from 'constants/contracts';
 import { DeployedContract } from 'constants/contracts';
 import {
   DAI,
@@ -109,8 +109,6 @@ export const getAddress = (token: SupportedTokenContract, chainId: number | stri
     return ethers.utils.getAddress(isSandbox(chainId) ? WETH_GOERLI.address : WETH.address);
   case 'aggregator':
     return deployedContractAddressResolver(chainId, nftAggregator);
-  case 'marketplace':
-    return deployedContractAddressResolver(chainId, marketplace);
   default:
     return '';
   }

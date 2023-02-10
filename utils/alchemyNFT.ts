@@ -1,7 +1,7 @@
 import { Maybe } from 'graphql/generated/types';
 
 import { Doppler,getEnv } from './env';
-import { getBaseUrl, getChainIdString } from './helpers';
+import { getChainIdString } from './helpers';
 
 import { BigNumber, BigNumberish } from 'ethers';
 
@@ -10,7 +10,7 @@ export async function getNftMetadata(
   tokenId: BigNumberish,
   chainId: string | number,
 ) {
-  const url = new URL(getBaseUrl() + 'api/alchemynft');
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('contractAddress', contract);
   url.searchParams.set('tokenId', BigNumber.from(tokenId).toString());
   url.searchParams.set('tokenType', 'erc721');
@@ -26,7 +26,7 @@ export async function getNftsByContractAndOwner(
   chainId: string | number,
   pageKey: string | null,
 ) {
-  const url = new URL(getBaseUrl() + 'api/alchemynft');
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('contractAddress', contract);
   url.searchParams.set('owner', owner);
   url.searchParams.set('action', 'getNfts');
@@ -40,7 +40,7 @@ export async function getContractMetadata(
   contract: string,
   chainId?: Maybe<string | number>,
 ) {
-  const url = new URL(getBaseUrl() + 'api/alchemynft');
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('contractAddress', contract);
   url.searchParams.set('action', 'getContractMetadata');
   url.searchParams.set('chainId', getChainIdString(chainId) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID));
@@ -52,7 +52,7 @@ export async function getNftsForCollection(
   contract: string,
   limit: number | null
 ) {
-  const url = new URL(getBaseUrl() + 'api/alchemynft');
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('action', 'getNFTsForCollection');
   url.searchParams.set('contractAddress', contract);
   url.searchParams.set('limit', String(limit));
@@ -63,7 +63,7 @@ export async function getNftsForCollection(
 export async function getFloorPrice(
   contract: string,
 ) {
-  const url = new URL(getBaseUrl() + 'api/alchemynft');
+  const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/alchemynft');
   url.searchParams.set('action', 'getFloorPrice');
   url.searchParams.set('contractAddress', contract);
   const result = await fetch(url.toString()).then(res => res.json());

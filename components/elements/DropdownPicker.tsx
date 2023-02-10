@@ -12,9 +12,6 @@ export interface PickerOption {
   onSelect: () => void;
   color?: string;
   icon?: string;
-  imageSize?: number;
-  customIconClass?: string;
-  disabled?: boolean
 }
 
 export interface DropdownPickerProps {
@@ -25,7 +22,6 @@ export interface DropdownPickerProps {
   placeholder?: string;
   onChange?: (label: string) => void;
   showKeyIcon?: boolean;
-  v2?: boolean;
 }
 
 /**
@@ -44,10 +40,10 @@ export interface DropdownPickerProps {
 export function DropdownPicker(props: DropdownPickerProps) {
   const [optionHoverIndex, setOptionHoverIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  const [selected, setSelected] = useState(props.options[props.selectedIndex]);
+  const [selected, setSelected] = useState(null);
   const { primaryIcon, secondaryText } =
     useThemeColors();
-  const [selectedIndex, setSelectedIndex] = useState(props.selectedIndex);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const wrapperRef = useRef(null);
   const activeRowRef = useRef(null);
   useOutsideClickAlerter(wrapperRef, () => {
@@ -61,13 +57,19 @@ export function DropdownPicker(props: DropdownPickerProps) {
   );
 
   useEffect(() => {
-    setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : selectedIndex);
+    setSelectedIndex(props.selectedIndex);
+    setSelected(props.options[props.selectedIndex]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setSelectedIndex(props.options.findIndex((i) => i.label === selected?.label) >= 0 ? props.options.findIndex((i) => i.label === selected?.label) : 0);
     onChangeHandler();
-  }, [selected, props, onChangeHandler, selectedIndex]);
+  }, [selected, props, onChangeHandler]);
 
   const getOptionRow = useCallback((item: PickerOption, index: number) => {
     return (
-      item && <div
+      <div
         key={item.label}
         style={{ height: activeRowRef.current.clientHeight }}
         className={`flex flex-row w-full pl-2.5 py-3
@@ -75,7 +77,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
         onMouseLeave={() => setOptionHoverIndex(null)}
         onMouseEnter={() => setOptionHoverIndex(index)}
         onClick={() => {
-          item.onSelect && item.onSelect();
+          item.onSelect();
           setSelected(item);
         }}
       >
@@ -99,8 +101,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
     <div
       ref={wrapperRef}
       className={tw(
-        props.v2 ? 'rounded-md' : 'rounded-xl',
-        'cursor-pointer flex flex-col items-center',
+        'cursor-pointer flex flex-col items-center rounded-xl',
         'text-sm',
         props.constrain ? '' : 'w-full h-full shrink-0',
         'text-primary-txt',
@@ -113,10 +114,9 @@ export function DropdownPicker(props: DropdownPickerProps) {
       <div
         ref={activeRowRef}
         className={tw('flex flex-row items-center px-2.5',
-          'py-2 h-full',
+          'border py-2 h-full',
           'bg-white',
-          props.v2 ? 'rounded-md border-2 border-gray-300' : 'rounded-xl shadow-lg border-0 ',
-          'justify-between w-full')}
+          'justify-between rounded-xl shadow-lg border-0 w-full')}
         key={props?.options[selectedIndex]?.label}
       >
         {props.showKeyIcon &&
@@ -124,22 +124,17 @@ export function DropdownPicker(props: DropdownPickerProps) {
           <KeyIcon className='inline mr-1' stroke="black" />
         </div>
         }
-        <div className='flex items-center w-full'>
-          {props?.options[selectedIndex]?.icon &&
-            <div className={`mr-1 relative w-[${props?.options[selectedIndex]?.imageSize || 26}px] h-[${props?.options[selectedIndex]?.imageSize || 26}px] flex items-center justify-center ${props?.options[selectedIndex]?.customIconClass || ''}`}>
-              <Image
-                layout='fill'
-                objectFit='contain'
-                src={props?.options[selectedIndex]?.icon}
-                alt={props?.options[selectedIndex]?.label} />
-            </div>
+        {props?.options[selectedIndex]?.icon &&
+          <Image
+            className="h-4 mr-2"
+            src={props?.options[selectedIndex]?.icon}
+            alt={props?.options[selectedIndex]?.label} />
+        }
+        <div className='mr-2'>
+          {(props.placeholder && !selected) ?
+            <span style={{ color: secondaryText }}>{props.placeholder}</span>
+            : props.options[selectedIndex]?.label
           }
-          <div className='mr-2'>
-            {(props.placeholder && !selected) ?
-              <span style={{ color: secondaryText }}>{props.placeholder}</span>
-              : props.options[selectedIndex]?.label
-            }
-          </div>
         </div>
         {expanded
           ? (
@@ -159,8 +154,7 @@ export function DropdownPicker(props: DropdownPickerProps) {
               activeRowRef.current.clientHeight + 12
           }}
           className={tw(
-            props.v2 ? 'rounded-md' : 'rounded-xl',
-            'border border-select-brdr',
+            'border-b rounded-xl border-select-brdr',
             'divide-y',
             'bg-white',
             'w-full absolute z-50',

@@ -1,8 +1,6 @@
 import { SettleDetail, SettleShared, TokenStandard, X2Y2Order, X2Y2OrderItem } from '@x2y2-io/sdk/dist/types';
 import { BigNumberish } from 'ethers';
 
-export const X2Y2_EXCHANGE_CONTRACT = '0x74312363e45DCaBA76c59ec49a7Aa8A65a67EeD3';
-
 export const data1155ParamType = 'tuple(address token, uint256 tokenId, uint256 amount)[]';
 export const data721ParamType = 'tuple(address token, uint256 tokenId)[]';
 

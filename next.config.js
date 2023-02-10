@@ -62,6 +62,10 @@ const moduleExports = withTM({
   async headers() {
     const securityHeaders = [
       {
+        key: 'X-Frame-Options',
+        value: 'DENY'
+      },
+      {
         key: 'X-XSS-Protection',
         value: '1; mode=block'
       },
@@ -82,24 +86,6 @@ const moduleExports = withTM({
         value: 'max-age=31536000; includeSubDomains'
       }
     ];
-    const manifestHeaders = [
-      {
-        key: 'Access-Control-Allow-Origin',
-        value: '*'
-      },
-      {
-        key: 'Access-Control-Allow-Methods',
-        value: 'GET'
-      },
-      {
-        key: 'Access-Control-Allow-Headers',
-        value: 'X-Requested-With, content-type, Authorization'
-      },
-      {
-        key: 'Referrer-Policy',
-        value: 'strict-origin-when-cross-origin'
-      }
-    ];
     return [
       {
         source: '/',
@@ -116,20 +102,6 @@ const moduleExports = withTM({
       {
         source: '/articles/:path',
         headers: securityHeaders
-      },
-      {
-        source: '/manifest.json',
-        headers: manifestHeaders
-      },
-      {
-        // matching all API routes
-        source: '/api/:path*',
-        headers: [
-          { key: 'Access-Control-Allow-Credentials', value: 'true' },
-          { key: 'Access-Control-Allow-Origin', value: '*' },
-          { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
-          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version' },
-        ]
       }
     ];
   },

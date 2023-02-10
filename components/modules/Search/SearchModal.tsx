@@ -1,6 +1,7 @@
 import { Modal } from 'components/elements/Modal';
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import useWindowDimensions from 'hooks/useWindowDimensions';
+import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { CollectionsFiltersContent as StaticCollectionsFiltersContent } from './CollectionsFiltersContent';
@@ -14,6 +15,7 @@ const DynamicNFTsFiltersContent = dynamic<React.ComponentProps<typeof StaticNFTs
 const DynamicSearchContent = dynamic<React.ComponentProps<typeof StaticSearchContent>>(() => import('./SearchContent').then(mod => mod.SearchContent));
 
 export const SearchModal = () => {
+  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
   const { searchModalOpen, setSearchModalOpen, modalType } = useSearchModal();
   const { width: screenWidth } = useWindowDimensions();
   return (
@@ -26,11 +28,11 @@ export const SearchModal = () => {
       loading={false}
       onClose={function (): void {
         setSearchModalOpen(false);
-      }}
+      } }
     >
       <div className={tw(
         'absolute top-0 left-0 min-h-screen overflow-scroll w-screen',
-        'bg-[rgba(0,0,0,0.4)] flex items-center justify-center',
+        `${discoverPageEnv ? 'bg-[rgba(0,0,0,0.4)] flex items-center justify-center' : 'bg-white'}`,
         'text-primary-txt',
         'py-12'
       )}>

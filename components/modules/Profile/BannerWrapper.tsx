@@ -1,6 +1,6 @@
 import Loader from 'components/elements/Loader';
 import { Doppler, getEnvBool } from 'utils/env';
-import { getBaseUrl } from 'utils/helpers';
+import { getImageFetcherBaseURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import Image from 'next/image';
@@ -29,11 +29,11 @@ export function BannerWrapper(props: PropsWithChildren<BannerWrapperProps>) {
       className={tw(
         'relative flex flex-row items-end justify-center bg-[#05080c]',
         'bg-cover bg-center',
-        'h-[120px] minlg:h-[320px]',
+        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'h-[120px] minlg:h-[320px]' : props.isCollection ? 'h-[320px]' : 'h-60 minxl:h-72',
       )}
     >
       {imageUrl && <Image
-        src={props?.draft ? imageUrl : imageUrl.indexOf('.svg') >= 0 ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=${getEnvBool(Doppler.NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED)}&url=${encodeURIComponent(imageUrl)}&width=3000`}
+        src={props?.draft ? imageUrl : imageUrl.indexOf('.svg') >= 0 ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&width=3000`}
         layout='fill'
         priority
         quality='100'

@@ -2,6 +2,7 @@ import Loader from 'components/elements/Loader';
 import DefaultLayout from 'components/layouts/DefaultLayout';
 import { NFTDetailPage } from 'components/modules/NFTDetail/NFTDetailPage';
 import NotFoundPage from 'pages/404';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -27,7 +28,8 @@ export default function ProfileURI() {
   } else if(
     isNullOrEmpty(collection) ||
     isNullOrEmpty(tokenId) ||
-    !validCollectionReg.test(collection as string)
+    !validCollectionReg.test(collection as string) ||
+    !getEnvBool(Doppler.NEXT_PUBLIC_NATIVE_TRADING_TEST)
   )
   {
     return <NotFoundPage />;

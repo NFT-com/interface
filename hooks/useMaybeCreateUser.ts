@@ -1,5 +1,6 @@
 import { GraphQLContext } from 'graphql/client/GraphQLProvider';
 import { useCreateUserMutation } from 'graphql/hooks/useCreateUserMutation';
+import { useFetchMe } from 'graphql/hooks/useFetchMe';
 import { useMeQuery } from 'graphql/hooks/useMeQuery';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
@@ -11,20 +12,23 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 import { useAccount, useNetwork } from 'wagmi';
 
-export function useMaybeCreateUser(): void {
+export function useMaybeCreateUser(): boolean {
+  const [createdUser, setCreatedUser] = useState(false);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
   const { signed } = useContext(GraphQLContext);
   const { isSupported } = useSupportedNetwork();
   const router = useRouter();
-  const [recentlyCreatedUser, setRecentlyCreatedUser] = useState(false);
-  const { me: meResult, mutate: mutateMe } = useMeQuery();
-  const myWalletAddress = meResult?.myAddresses?.map(i => ethers.utils.getAddress(i.address));
-  const currentUserMatchesUserId = myWalletAddress?.includes(ethers.utils.getAddress(currentAddress || ''));
+  const { mutate: mutateMeInfo } = useMeQuery();
+  const { fetchMe } = useFetchMe();
+
+  useEffect(() => {
+    setCreatedUser(false);
+  }, [currentAddress, chain?.id]);
 
   const { createUser, creating } = useCreateUserMutation({
     onCreateSuccess: () => {
-      mutateMe();
+      mutateMeInfo();
     },
     onCreateFailure: () => {
       // todo: internal error logging.
@@ -36,24 +40,23 @@ export function useMaybeCreateUser(): void {
   };
 
   useEffect(() => {
-    setRecentlyCreatedUser(false);
-  }, [currentAddress, chain?.id]);
-
-  useEffect(() => {
     if (isNullOrEmpty(currentAddress)) {
       return;
     }
-
     const cachedUserId = localStorage.getItem(getCacheKey(currentAddress, chain?.id));
-
-    if (
-      (meResult == null || (cachedUserId != meResult?.id)) &&
+    if (cachedUserId != null) {
+      setCreatedUser(true);
+      return;
+    }
+    if(
+      (!createdUser) &&
       (!creating) &&
       (signed) &&
       (isSupported)
     ) {
       (async () => {
-        if (meResult == null && !recentlyCreatedUser) {
+        const meResult = await fetchMe();
+        if (meResult == null) {
           const referredBy = router?.query?.makerReferralCode?.toString() || null;
           const referralUrl = router?.query?.referralUrl?.toString() || null;
           const referralId = router?.query?.receiverReferralCode?.toString() || null;
@@ -78,15 +81,24 @@ export function useMaybeCreateUser(): void {
               }
             };
           const result = await createUser(userData);
-          mutateMe();
-          setRecentlyCreatedUser(true);
-          if (result?.signUp?.id) localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
+          localStorage.setItem(getCacheKey(currentAddress, chain?.id), result?.signUp?.id);
         } else {
-          if (meResult?.id && currentUserMatchesUserId) localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
+          localStorage.setItem(getCacheKey(currentAddress, chain?.id), meResult?.id);
         }
+        setCreatedUser(true);
       })();
     }
-  }, [isSupported, createUser, currentAddress, chain?.id, creating, signed, router?.query, meResult, mutateMe, currentUserMatchesUserId, recentlyCreatedUser]);
+  }, [
+    isSupported,
+    createUser,
+    currentAddress,
+    chain?.id,
+    creating,
+    createdUser,
+    fetchMe,
+    signed,
+    router?.query
+  ]);
 
-  return;
+  return createdUser;
 }

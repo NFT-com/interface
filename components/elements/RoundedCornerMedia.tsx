@@ -1,5 +1,4 @@
-import { Doppler, getEnvBool } from 'utils/env';
-import { getBaseUrl, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
+import { getImageFetcherBaseURL, isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { RoundedCornerMediaImage as StaticRoundedCornerMediaImage } from './RoundedCornerMediaImage';
@@ -16,8 +15,6 @@ export enum RoundedCornerVariant {
   Right = 'right',
   All = 'all',
   Full = 'full',
-  Asset = 'asset',
-  Success = 'success',
   None = 'none',
 }
 
@@ -59,10 +56,6 @@ export const getRoundedClass = (variant: RoundedCornerVariant, amount: RoundedCo
     return amount === RoundedCornerAmount.Medium ? 'rounded-l-md' : 'rounded-l-3xl';
   case RoundedCornerVariant.All:
     return `${amount === RoundedCornerAmount.Medium ? 'rounded-md' : 'rounded-3xl'} object-cover`;
-  case RoundedCornerVariant.Asset:
-    return 'rounded-[6px]';
-  case RoundedCornerVariant.Success:
-    return 'rounded-[18px]';
   case RoundedCornerVariant.Full:
     return 'rounded-full object-cover';
   case RoundedCornerVariant.None:
@@ -75,7 +68,6 @@ const DynamicRoundedCornerMediaImage = dynamic<React.ComponentProps<typeof Stati
 
 export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: RoundedCornerMediaProps) {
   const [imageSrc, setImageSrc] = useState(null);
-  const [loading, setLoading] = useState(true);
   const url = props?.src?.split('?')[0];
   const ext = url?.split('.').pop();
   useEffect(() => {
@@ -91,9 +83,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
   }, [props?.src, ext, url]);
 
   const imageUrl = imageSrc || props?.src;
-  const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) ||
-    imageUrl?.indexOf('ens.domains') >= 0 ||
-    (imageUrl?.indexOf('storage.googleapis.com') >= 0 && imageUrl?.indexOf('.svg') >= 0);
+  const rawImageBool = (imageUrl?.indexOf('cdn.nft.com') >= 0 && imageUrl?.indexOf('.svg') >= 0) || imageUrl?.indexOf('ens.domains') >= 0;
 
   return (
     <div className={tw(
@@ -104,38 +94,20 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
     onClick={props?.onClick}
     >
       {(props.videoOverride || imageUrl?.indexOf('data:') >= 0) ?
-        <div>
-          {loading &&
-            <div
-              className={tw(
-                props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-                'absolute w-full h-full flex justify-center items-center',
-                getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-                props.extraClasses
-              )}
-            >
-              <div className={tw(
-                'animate-pulse bg-gray-300 h-11/12 aspect-square',
-                'rounded-md'
-              )} />
-            </div>
-          }
-          <video
-            autoPlay
-            muted={!props.videoOverride}
-            loop
-            key={props?.src}
-            src={props?.src}
-            poster={props?.src}
-            onLoadedData={() => setLoading(false)}
-            className={tw(
-              props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
-              'absolute w-full h-full justify-center',
-              getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
-              props.extraClasses
-            )}
-          />
-        </div>
+        <video
+          autoPlay
+          muted={!props.videoOverride}
+          loop
+          key={props?.src}
+          src={props?.src}
+          poster={props?.src}
+          className={tw(
+            props.objectFit === 'contain' ? 'object-cover minmd:object-contain' : 'object-cover',
+            'absolute w-full h-full justify-center',
+            getRoundedClass(props.variant, props.amount ?? RoundedCornerAmount.Default),
+            props.extraClasses
+          )}
+        />
         : rawImageBool ?
         // SVG has hard time displaying on Next Image
         // eslint-disable-next-line @next/next/no-img-element
@@ -152,7 +124,7 @@ export const RoundedCornerMedia = React.memo(function RoundedCornerMedia(props: 
           /> :
           (imageUrl != 'null?width=600') && <DynamicRoundedCornerMediaImage
             priority={props?.priority}
-            src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getBaseUrl('https://www.nft.com/')}api/imageFetcher?gcp=${getEnvBool(Doppler.NEXT_PUBLIC_GCP_IMG_PROXY_ENABLED)}&url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
+            src={(imageUrl?.indexOf('.svg') >= 0 && imageUrl?.indexOf('nft.com') >= 0) ? imageUrl : `${getImageFetcherBaseURL()}api/imageFetcher?url=${encodeURIComponent(imageUrl)}&height=${props?.height || 300}&width=${props?.width || 300}`}
             onError={() => {
               setImageSrc(!isNullOrEmpty(props?.fallbackImage) ? processIPFSURL(props?.fallbackImage) : props?.src?.includes('?width=600') ? props?.src?.split('?')[0] : props?.src);
             }}

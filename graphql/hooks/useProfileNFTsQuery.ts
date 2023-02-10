@@ -28,7 +28,7 @@ export function useProfileNFTsQuery(
   const keyString = 'ProfileNFTsQuery' +
     profileId +
     first +
-    beforeCursor +
+    beforeCursor + 
     savedCount +
     query;
   

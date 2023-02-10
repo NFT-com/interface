@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { ActivityExpiration, ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
+import { ActivityStatus, ActivityType, TxActivity } from 'graphql/generated/types';
 import { isNullOrEmpty } from 'utils/helpers';
 
 import { useCallback } from 'react';
@@ -32,8 +32,7 @@ export function useSaleNotificationsQuery(address: string, chainId: string): Sal
         activityType: ActivityType.Sale,
         chainId,
         status: ActivityStatus.Valid,
-        read: false,
-        expirationType: ActivityExpiration.Both
+        read: false
       }
     });
     return result?.getActivities?.items;

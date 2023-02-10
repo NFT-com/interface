@@ -8,7 +8,7 @@ describe('listing checkout page tests', () => {
   it('should show an empty listing cart', () => {
     cy.findByText('Opensea').should('exist');
     cy.findByText('Looksrare').should('exist');
-    cy.findByText('You haven’t added any listings yet').should('exist');
+    cy.findByText('No NFTs staged for listing').should('exist');
   });
 });
       
