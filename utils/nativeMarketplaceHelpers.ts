@@ -513,7 +513,8 @@ export async function createNativeParametersForNFTListing(
 ): Promise<UnsignedOrder> {
   const salt = moment.utc().unix();
   const now = Date.now();
-  const start = noExpirationNFTCOM ? 0 : Math.floor((now / 1000) - (60 * 10));
+  // 1 minutes before for padding
+  const start = noExpirationNFTCOM ? 0 : Math.floor((now / 1000) - (60 * 1));
   const end = noExpirationNFTCOM ? 0 : Math.floor((now + duration * 1000) / 1000);
   
   const unsignedOrder: UnsignedOrder = await getUnsignedOrder(
