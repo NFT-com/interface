@@ -1,5 +1,5 @@
-import { WETH } from 'constants/tokens';
-import { Nft, TxActivity } from 'graphql/generated/types';
+import { USDC, WETH } from 'constants/tokens';
+import { AuctionType, Nft, NftcomProtocolData, TxActivity } from 'graphql/generated/types';
 import { useHasGk } from 'hooks/useHasGk';
 import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { Doppler, getEnvBool } from 'utils/env';
@@ -18,7 +18,6 @@ export const NFTCardListingIcons = (props: {
   collectionName?: string | any;
   nft: PartialObjectDeep<Nft, unknown>
 }) => {
-  const lowestPrice = getListingPrice(props.lowestListing);
   const { getByContractAddress } = useSupportedCurrencies();
   const hasGk = useHasGk();
   
@@ -27,7 +26,13 @@ export const NFTCardListingIcons = (props: {
       <div className='flex flex-col pr-2'>
         <p className='text-[#6F6F6F] text-sm'>Lowest Price</p>
         <p className='font-medium'>
-          {lowestPrice && Number(ethers.utils.formatEther(lowestPrice)).toLocaleString(undefined, { maximumSignificantDigits: 3 })}
+          {getByContractAddress(getListingCurrencyAddress(props?.lowestListing))?.decimals && Number(
+            ethers.utils.formatUnits(
+              getListingPrice(
+                props?.lowestListing
+              ),
+              getByContractAddress(getListingCurrencyAddress(props?.lowestListing))?.decimals ?? 18)
+          ).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}
           {' '}
           {props.lowestListing && getByContractAddress(getListingCurrencyAddress(props.lowestListing) ?? WETH.address)?.name}
         </p>
