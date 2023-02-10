@@ -34,7 +34,7 @@ export function SignatureModal(props: SignatureModalProps) {
               <Button
                 stretch
                 label={'TRY AGAIN'}
-                onClick={props.onRetry}
+                onClick={() => props.onRetry()}
                 type={ButtonType.PRIMARY}
               />
             </div>

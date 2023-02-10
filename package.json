@@ -63,7 +63,7 @@
     "email-validator": "^2.0.4",
     "embla-carousel-autoplay": "^6.2.0",
     "embla-carousel-react": "^6.2.0",
-    "ethers": "^5.7.1",
+    "ethers": "^5.7.2",
     "file-saver": "^2.0.5",
     "framer-motion": "^6.3.3",
     "from-exponential": "^1.1.1",

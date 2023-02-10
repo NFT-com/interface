@@ -18,6 +18,7 @@ import { ProgressBarItem, VerticalProgressBar } from './VerticalProgressBar';
 
 import * as Sentry from '@sentry/nextjs';
 import { BigNumber, ethers } from 'ethers';
+import { useRouter } from 'next/router';
 import { CheckCircle, SpinnerGap, X } from 'phosphor-react';
 import LooksrareIcon from 'public/looksrare-icon.svg';
 import NFTLogo from 'public/nft_logo_yellow.svg';
@@ -37,12 +38,13 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
     toList,
     listAll,
     approveCollection,
-    toggleCartSidebar,
     clear,
+    closeCartSidebar,
     allListingsConfigured,
     setAllListingsFail,
   } = useContext(NFTListingsContext);
   const provider = useProvider();
+  const router = useRouter();
   const looksrareStrategy = useLooksrareStrategyContract(provider);
   const { data: signer } = useSigner();
   const { address: currentAddress } = useAccount();
@@ -139,8 +141,9 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         userAddress={currentAddress}
         onClose={() => {
           if (success) {
+            if (!router.pathname.includes('/nft/')) router.push(`/app/nft/${toList?.[0]?.nft?.contract}/${toList?.[0]?.nft?.tokenId}`);
             clear();
-            toggleCartSidebar();
+            closeCartSidebar();
           }
           setSuccess(false);
           setShowProgressBar(false);
@@ -155,8 +158,9 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         hasError
         onClose={() => {
           if (success) {
+            if (!router.pathname.includes('/nft/')) router.push(`/app/nft/${toList?.[0]?.nft?.contract}/${toList?.[0]?.nft?.tokenId}`);
             clear();
-            toggleCartSidebar();
+            closeCartSidebar();
           }
           setSuccess(false);
           setShowProgressBar(false);
@@ -292,7 +296,7 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
         </>
       );
     }
-  }, [clear, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, partialError, props, showProgressBar, success, toList, toggleCartSidebar]);
+  }, [clear, closeCartSidebar, currentAddress, error, getMaxMarketplaceFees, getMaxRoyaltyFees, getNeedsApprovals, getTotalListings, getTotalMinimumProfitUSD, partialError, props, router, showProgressBar, success, toList]);
 
   return (
     <Modal
@@ -315,7 +319,8 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
           <X onClick={() => {
             if (success || partialError) {
               clear();
-              toggleCartSidebar();
+              closeCartSidebar();
+              router.push('/app/discover/nfts');
             }
             setSuccess(false);
             setShowProgressBar(false);
@@ -334,7 +339,6 @@ export function NFTListingsCartSummaryModal(props: NFTListingsCartSummaryModalPr
                   if (success || partialError) {
                     clear();
                     setSuccess(false);
-                    toggleCartSidebar();
                     setShowProgressBar(false);
                     return;
                   }
