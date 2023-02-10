@@ -219,7 +219,7 @@ export default function DetailPageTableRow({ tx, index, isNftDetailPage }: Detai
         </>
       }
       <td className="font-noi-grotesk text-[16px] leading-6 text-[#6A6A6A] p-4">
-        {moment.utc(tx.transactionDate).format('lll').toString() || '—'}
+        {moment(tx.transactionDate).format('lll').toString() || '—'}
       </td>
       <td className="font-noi-grotesk text-[16px] leading-6 text-transparent bg-clip-text bg-gradient-to-br from-[#FAC213] to-[#FF9B37] p-4">
         <a
