@@ -15,9 +15,10 @@ export interface NftData {
   mutate: () => void;
 }
 
-export function useNftQuery(contract: string, id: BigNumberish): NftData {
+// listingsOwner is optional, but if it is provided, it filters NFT listings by that address
+export function useNftQuery(contract: string, id: BigNumberish, listingsOwner?: string): NftData {
   const sdk = useGraphQLSDK();
-  const keyString = 'NftQuery ' + contract + id;
+  const keyString = 'NftQuery ' + contract + id + listingsOwner;
 
   const { chain } = useNetwork();
 
@@ -29,12 +30,13 @@ export function useNftQuery(contract: string, id: BigNumberish): NftData {
     if (isNullOrEmpty(contract) || id == null) {
       return null;
     }
+    
     // All NFT IDs are stored in hex string format.
-    const result = await sdk.Nft({
-      contract,
-      id: BigNumber.from(id).toHexString() ,
-      chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID),
-    });
+    const input = listingsOwner ?
+      { chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID), contract, id: BigNumber.from(id).toHexString(), listingsOwner } :
+      { chainId: getChainIdString(chain?.id) ?? getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID), contract, id: BigNumber.from(id).toHexString() };
+
+    const result = await sdk.Nft(input);
     return result?.nft;
   });
   return {

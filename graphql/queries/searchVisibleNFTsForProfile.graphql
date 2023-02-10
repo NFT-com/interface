@@ -23,6 +23,9 @@ query SearchVisibleNFTsForProfile($input: SearchVisibleNFTsForProfileInput!) {
               ... on LooksrareProtocolData {
                 price
               }
+              ... on X2Y2ProtocolData {
+                price
+              }
               ... on SeaportProtocolData {
                 parameters {
                   orderType

@@ -5,9 +5,9 @@ import { NotificationBadge as StaticNotificationBadge } from 'components/modules
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
 import { useScrollPosition } from 'graphql/hooks/useScrollPosition';
 import { useMobileSidebar } from 'hooks/state/useMobileSidebar';
+import { useSearchModal } from 'hooks/state/useSearchModal';
 import { useUser } from 'hooks/state/useUser';
 import { useMaybeCreateUser } from 'hooks/useMaybeCreateUser';
-import { Doppler, getEnvBool } from 'utils/env';
 import { filterNulls } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -23,6 +23,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CaretDown, List, X } from 'phosphor-react';
+import Beta from 'public/beta-icon.svg';
 import ShoppingCartSimple from 'public/cart.svg';
 import WalletSimple from 'public/header_wallet.svg';
 import NavLogo from 'public/Logo.svg';
@@ -50,6 +51,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   const { toBuy } = useContext(NFTPurchasesContext);
   const { toggleMobileSidebar, mobileSidebarOpen } = useMobileSidebar();
   const { currentScrollPosition } = useScrollPosition();
+  const { setClearedFilters } = useSearchModal();
   const { user } = useUser();
 
   useMaybeCreateUser();
@@ -100,6 +102,9 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                       <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="black" />
                       <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="black" />
                     </svg>
+                    <div className='w-9 h-4 ml-2'>
+                      <Beta />
+                    </div>
                   </div>
                 </Link>
               </div>
@@ -113,60 +118,48 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                   'pr-4 py-[2px]'
                 )}
               >
-                {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
-                  <DropdownPickerModal
-                    pointer
-                    align='center'
-                    constrain
-                    selectedIndex={0}
-                    options={filterNulls(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)
-                      ? [
-
-                        {
-                          label: 'Collections',
-                          onSelect: () => router.push('app/discover?collections'),
-                          icon: null,
-                        },
-                        {
-                          label: 'Profiles',
-                          onSelect: () => router.push('app/discover?profiles'),
-                          icon: null,
-                        }
-                      ]
-                      : [
-                        {
-                          label: 'NFTs',
-                          onSelect: () => router.push('/discover'),
-                          icon: null,
-                        },
-                        {
-                          label: 'Collections',
-                          onSelect: () => router.push('/discover'),
-                          icon: null,
-                        },
-                        {
-                          label: 'Profiles',
-                          onSelect: () => router.push('/discover'),
-                          icon: null,
-                        }
-                      ])
-                    }>
-                    <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] flex items-center relative'>
-                      Discover
-                      <CaretDown size={20} color="black" weight="bold" className='ml-2' />
-                    </a>
-                  </DropdownPickerModal>
-                  :
-                  <Link href='/app/discover'>
-                    <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Discover</p>
-                  </Link>
-                }
+                <DropdownPickerModal
+                  closeModalOnClick
+                  pointer
+                  align='center'
+                  constrain
+                  selectedIndex={0}
+                  options={filterNulls([
+                    {
+                      label: 'NFTs',
+                      onSelect: () => {
+                        setClearedFilters();
+                        router.push('app/discover/nfts');
+                      },
+                      icon: null,
+                    },
+                    {
+                      label: 'Collections',
+                      onSelect: () => {
+                        setClearedFilters();
+                        router.push('/app/discover/collections');
+                      },
+                      icon: null,
+                    },
+                    {
+                      label: 'Profiles',
+                      onSelect: () => router.push('app/discover/profiles'),
+                      icon: null,
+                    }
+                  ])
+                  }>
+                  <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] flex items-center relative'>
+                    Discover
+                    <CaretDown size={20} color="black" weight="bold" className='ml-2' />
+                  </a>
+                </DropdownPickerModal>
 
                 <Link href='/app/gallery'>
                   <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
                 </Link>
 
                 <DropdownPickerModal
+                  closeModalOnClick
                   pointer
                   align='center'
                   constrain
@@ -307,12 +300,14 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
   }
 
   return (
-    <header className={tw(
-      'font-noi-grotesk bg-white',
-      'fixed w-full px-6 minlg:px-10',
-      'h-[5rem] minlg:h-[5.5rem] z-[106]',
-      !mobileSidebarOpen && 'shadow-lg'
-    )}>
+    <header
+      className={tw(
+        'font-noi-grotesk bg-white',
+        'fixed inset-x-0 top-0',
+        'h-[5rem] minlg:h-[5.5rem] z-[110]',
+        'px-6 minlg:px-10'
+      )}
+    >
       <div className="w-full h-full mx-auto">
         <div className="flex items-center justify-between h-full">
           <div className="flex items-center h-full minlg:w-[60%]">
@@ -340,6 +335,9 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                     <path d="M26.3558 10.393V17.125H22.7712V0.875H40.9113V4.12529H26.3574V7.14268H39.4787V10.393H26.3558Z" fill="black" />
                     <path d="M54.6126 4.12529V17.125H51.028V4.12529H43.1409V0.875H62.4996V4.12529H54.6126Z" fill="black" />
                   </svg>
+                  <div className='w-9 h-4 ml-2'>
+                    <Beta />
+                  </div>
                 </div>
               </Link>
             </div>
@@ -353,60 +351,50 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
                 'pr-4 py-[2px]'
               )}
             >
-              {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) ?
-                <DropdownPickerModal
-                  pointer
-                  align='center'
-                  constrain
-                  selectedIndex={0}
-                  options={filterNulls(getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED)
-                    ? [
-
-                      {
-                        label: 'Collections',
-                        onSelect: () => router.push('/app/discover?collections'),
-                        icon: null,
-                      },
-                      {
-                        label: 'Profiles',
-                        onSelect: () => router.push('/app/discover?profiles'),
-                        icon: null,
-                      }
-                    ]
-                    : [
-                      {
-                        label: 'NFTs',
-                        onSelect: () => router.push('/discover'),
-                        icon: null,
-                      },
-                      {
-                        label: 'Collections',
-                        onSelect: () => router.push('/discover'),
-                        icon: null,
-                      },
-                      {
-                        label: 'Profiles',
-                        onSelect: () => router.push('/discover'),
-                        icon: null,
-                      }
-                    ])
-                  }>
-                  <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] flex items-center relative'>
-                      Discover
-                    <CaretDown size={20} color="black" weight="bold" className='ml-2' />
-                  </a>
-                </DropdownPickerModal>
-                :
-                <Link href='/app/discover'>
-                  <p className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] mr-2 hover:cursor-pointer'>Discover</p>
-                </Link>
-              }
+              <DropdownPickerModal
+                closeModalOnClick
+                pointer
+                align='center'
+                constrain
+                selectedIndex={0}
+                options={filterNulls([
+                  {
+                    label: 'NFTs',
+                    onSelect: () => {
+                      setClearedFilters();
+                      router.push('/app/discover/nfts');
+                    },
+                    icon: null,
+                  },
+                  {
+                    label: 'Collections',
+                    onSelect: () => {
+                      setClearedFilters();
+                      router.push('/app/discover/collections');
+                    },
+                    closeModalOnClick: true,
+                    icon: null,
+                  },
+                  {
+                    label: 'Profiles',
+                    onSelect: () => router.push('/app/discover/profiles'),
+                    closeModalOnClick: true,
+                    icon: null,
+                  }
+                ])
+                }>
+                <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A] flex items-center relative'>
+                  Discover
+                  <CaretDown size={20} color="black" weight="bold" className='ml-2' />
+                </a>
+              </DropdownPickerModal>
 
               <Link href='/app/gallery'>
                 <a className='text-black text-[2.5rem] minlg:text-lg hover:text-[#6A6A6A]'>Gallery</a>
               </Link>
 
               <DropdownPickerModal
+                closeModalOnClick
                 pointer
                 align='center'
                 constrain
@@ -442,7 +430,7 @@ export const Header = ({ removeBg, homepageHeader }: HeaderProps) => {
             </div>
 
             {currentScrollPosition !== 0 ?
-              <ScrollLink to='mobile-search' spy={true} smooth={true} duration={500} offset={-100} >
+              <ScrollLink to='mobile-search' spy={true} smooth={true} duration={500} offset={-currentScrollPosition} >
                 <button
                   className='block minlg:hidden cursor-pointer -mr-1 minlg:mr-0 h-full w-7'
                 >

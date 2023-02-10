@@ -1,17 +1,22 @@
+import CustomTooltip2 from 'components/elements/CustomTooltip2';
 import { DropdownPickerModal } from 'components/elements/DropdownPickerModal';
 import { ProfileLayoutType } from 'graphql/generated/types';
+import { useMyNFTsQuery } from 'graphql/hooks/useMyNFTsQuery';
+import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useProfileQuery } from 'graphql/hooks/useProfileQuery';
 import useCopyClipboard from 'hooks/useCopyClipboard';
 import { useIsOwnerAndSignedIn } from 'hooks/useIsOwnerAndSignedIn';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { filterNulls } from 'utils/helpers';
+import { Doppler, getEnv,getEnvBool } from 'utils/env';
+import { filterNulls, getBaseUrl } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
 import { ProfileContext } from './ProfileContext';
 
 import { SearchIcon } from '@heroicons/react/outline';
+import delay from 'delay';
 import { useRouter } from 'next/router';
+import { ArrowClockwise, Check } from 'phosphor-react';
 import { ShareNetwork, TwitterLogo, X } from 'phosphor-react';
 import LinkIcon from 'public/icon_link.svg';
 import FeaturedIcon from 'public/layout_icon_featured.svg';
@@ -20,7 +25,7 @@ import MosaicIcon from 'public/layout_icon_mosaic.svg';
 import SpotlightIcon from 'public/layout_icon_spotlight.svg';
 import GearIcon from 'public/settings_icon.svg';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 
 export interface ProfileMenuProps {
   profileURI: string;
@@ -30,16 +35,27 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
   const { address: currentAddress } = useAccount();
   const router = useRouter();
   const [, staticCopy] = useCopyClipboard();
-  const { profileData } = useProfileQuery(profileURI);
+  const { profileData, mutate: mutateProfileData } = useProfileQuery(profileURI);
   const [selectedLayout, setSelectedLayout] = useState(null);
   const [showDescriptions, setShowDescriptions] = useState(null);
   const [searchVisible, setSearchVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const inputRef = useRef();
   const isOwnerAndSignedIn = useIsOwnerAndSignedIn(profileURI);
+  const { chain } = useNetwork();
 
   useOutsideClickAlerter(inputRef, () => {
     searchQuery === '' && setSearchVisible(false);
   });
+
+  const {
+    mutate: mutatePublicProfileNfts,
+  } = useProfileNFTsQuery(profileData?.profile?.id,String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)),8);
+
+  const {
+    mutate: mutateAllOwnerNfts,
+  } = useMyNFTsQuery(8, profileData?.profile?.id, '', null, true);
 
   const {
     setEditMode,
@@ -117,7 +133,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
       )}>
         <input
           type="text"
-          placeholder="Search your NFTs.."
+          placeholder={isOwnerAndSignedIn ? 'Search your NFTs..' : 'Search NFTs...'}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
@@ -152,9 +168,49 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
             <SearchIcon className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
           </div>
         }
+        {isOwnerAndSignedIn &&<CustomTooltip2
+          orientation='custom'
+          customFullLeftPosition='left-6'
+          hidden={false}
+          tooltipComponent={
+            <div
+              className="rounded-xl max-w-[200px] w-max cursor-pointer"
+            >
+              <p>Refresh Profile NFTs</p>
+            </div>
+          }
+        >
+          <div
+            onClick={() => {
+              setLoading(true);
+              mutateProfileData();
+              mutatePublicProfileNfts();
+              mutateAllOwnerNfts();
+
+              (async () => {
+                await delay(2000);
+                setLoading(false);
+                setSuccess(true);
+                await delay(1500);
+                setSuccess(false);
+              })();
+            }}
+            className={tw(
+              'w-10 h-10 minlg:w-12 minlg:h-12 rounded-full px-2.5 minlg:px-3.5',
+              'flex justify-center items-center border border-[#ECECEC] hover:cursor-pointer',
+              loading ? 'animate-spin' : null,
+              success ? 'bg-[#26AA73]' : null
+            )}
+            id="profileRefreshNftButton">
+            {success ?
+              <Check className='font-medium text-white bg-[#26AA73] h-[18px] minlg:h-5' /> :
+              <ArrowClockwise className='font-medium h-[18px] minlg:h-5' color='#0F0F0F' />
+            }
+          </div>
+        </CustomTooltip2>}
         {isOwnerAndSignedIn &&
             <>
-              {getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) &&
+              {getEnvBool(Doppler.NEXT_PUBLIC_MOSAIC_LAYOUT_ENABLED) &&
                 <DropdownPickerModal
                   pointer
                   align='center'
@@ -264,7 +320,7 @@ export function ProfileMenu({ profileURI } : ProfileMenuProps) {
           options={[
             {
               label: 'Copy link to clipboard',
-              onSelect: () => staticCopy(`${getEnv(Doppler.NEXT_PUBLIC_BASE_URL)}${router.query?.profileURI}`),
+              onSelect: () => staticCopy(`${getBaseUrl()}${router.query?.profileURI}`),
               icon: <LinkIcon className={tw(
                 'w-[18px] h-[18px] mr-3'
               )} />

@@ -75,6 +75,10 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
           :
           <div className='flex py-2 h-full items-stretch relative'>
             <div className='absolute right-[-1px] top-0 bottom-0 w-[150px] z-10 lg:hidden bg-gradient-to-r from-transparent to-[#ECECEC]' />
+            <div className='absolute left-[-1px] top-0 bottom-0 w-[150px] z-10 lg:hidden bg-gradient-to-l from-transparent to-[#ECECEC]' />
+            <RightSlider onClick={() => {
+              my_swiper.slidePrev();
+            }} className='rotate-180 cursor-pointer absolute left-[-50px] lg:hidden hover:scale-105 top-1/2 bottom-1/2 z-20' />
             <RightSlider onClick={() => {
               my_swiper.slideNext();
             }} className='cursor-pointer absolute right-[-50px] lg:hidden hover:scale-105 top-1/2 bottom-1/2 z-20' />
@@ -84,7 +88,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
               }}
               slidesPerView={Math.min(data?.length ?? 5, screenWidth < 600
                 ? 2
-                : (screenWidth >= 600 && screenWidth < 900)
+                : (screenWidth >= 600 && screenWidth < 950)
                   ? (data?.length >= 3)
                     ? 4
                     : data?.length
@@ -98,7 +102,7 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                 'delay': 4500,
                 'disableOnInteraction': false
               }}
-              className="flex"
+              className="flex overflow-y-visible"
             >
               {data?.map((nft, index) => {
                 return (
@@ -110,6 +114,8 @@ export function NFTDetailMoreFromCollection(props: NFTDetailMoreFromCollectionPr
                       tokenId={nft.tokenId}
                       name={nft.metadata.name}
                       nft={nft}
+                      isOwnedByMe={nft?.isOwnedByMe}
+                      listings={nft?.listings?.items || []}
                       images={[nft.metadata.imageURL]}
                       fallbackImage={nft.metadata.imageURL}
                       collectionName={props.collectionName}

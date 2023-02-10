@@ -30,7 +30,6 @@ import { BigNumber } from 'ethers';
 import Image from 'next/image';
 import cameraIcon from 'public/camera.png';
 import CameraIconEdit from 'public/camera_icon.svg';
-import PencilIconRounded from 'public/pencil-icon-rounded.svg';
 import { useCallback, useContext, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
@@ -57,7 +56,6 @@ export function MintedProfile(props: MintedProfileProps) {
     userIsAdmin,
     publiclyVisibleNftsNoEdit,
     loading,
-    draftDeployedContractsVisible
   } = useContext(ProfileContext);
   const { address: currentAddress } = useAccount();
   const { chain } = useNetwork();
@@ -153,16 +151,7 @@ export function MintedProfile(props: MintedProfileProps) {
                     <div {...getRootProps()} style={{ outline: 'none' }}>
                       <input {...getInputProps()} />
                     </div>
-                    {editMode && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && isOwnerAndSignedIn && <div
-                      className={tw(
-                        'absolute bottom-5 right-5 minmd:right-4'
-                      )}
-                      onClick={open}
-                    >
-                      <PencilIconRounded alt="Edit banner" color="white" className='rounded-full h-10 w-10 cursor-pointer'/>
-                    </div>}
-
-                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && isOwnerAndSignedIn && !saving && <div
+                    {editMode && isOwnerAndSignedIn && !saving && <div
                       onClick={open}
                       className='group-hover:cursor-pointer'
                     >
@@ -196,7 +185,7 @@ export function MintedProfile(props: MintedProfileProps) {
           <div
             className={tw(
               'flex justify-start items-start',
-              getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'flex-col' : 'flex-col minmd:flex-row minmd:items-center'
+              'flex-col'
             )}
             style={{
               zIndex: 103,
@@ -208,7 +197,7 @@ export function MintedProfile(props: MintedProfileProps) {
               onMouseLeave={() => setIsPicturedHovered(false)}>
               <Dropzone
                 accept={'image/*' ['.*']}
-                disabled={!userIsAdmin || !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !editMode || getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && !editMode}
+                disabled={!userIsAdmin && !editMode || !editMode}
                 onDrop={files => {
                   if (userIsAdmin) onDropProfile(files);
                 }}
@@ -217,30 +206,18 @@ export function MintedProfile(props: MintedProfileProps) {
                   <div {...getRootProps()} className={tw(
                     'relative outline-none',
                     userIsAdmin ? '' : 'cursor-default',
-                    getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'w-[88px] h-[88px] minlg:w-[120px] minlg:h-[120px] minlg:ml-20' :'h-32 minlg:h-52 w-32 minlg:w-52 '
+                    'w-[88px] h-[88px] minlg:w-[120px] minlg:h-[120px] minlg:ml-20',
                   )}>
                     <input {...getInputProps()} />
                     {saving && <div
                       style={{ zIndex: 102 }}
                       className={tw(
-                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
-                          'bg-white/10 mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :
-                          'border bg-white/10 mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px]',
+                        'bg-white/10 mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md',
                         'rounded-full absolute flex ',
                         'items-center justify-center h-full w-full',
                       )}
                     >
                       <Loader/>
-                    </div>}
-                    {editMode && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && <div
-                      style={{ zIndex: 102, }}
-                      className={tw(
-                        isPicturedHovered ? 'opacity-100' : 'opacity-30',
-                        'absolute right-4 minlg:right-9 minxl:right-6',
-                        'bottom-24 minmd:bottom-[9.5rem] minlg:bottom-[9.5rem] minxl:bottom-40'
-                      )}
-                    >
-                      <PencilIconRounded alt="Edit mode" color="white" className='rounded-full h-6 minlg:h-10 w-6 minlg:w-10  cursor-pointer'/>
                     </div>}
 
                     <div
@@ -248,14 +225,13 @@ export function MintedProfile(props: MintedProfileProps) {
                         'object-center',
                         'h-full w-full group',
                         'shrink-0 aspect-square',
-                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && 'hover:cursor-pointer',
+                        editMode && 'hover:cursor-pointer',
                         isOwnerAndSignedIn && editMode ? 'hover:cursor-pointer' : '',
-                        !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && userIsAdmin && !isMobile && editMode ? 'hoverBlue' : '',
-                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'box-border border-[5px] border-white rounded-full',
-                        getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md' :'mt-[-67px] minmd:mt-[-120px] minlg:mt-[-115px] absolute'
+                        'box-border border-[5px] border-white rounded-full',
+                        'mt-[-45px] minlg:mt-[-60px] ml-6 minlg:ml-0 absolute shadow-md'
                       )}
                     >
-                      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && editMode && !saving && isOwnerAndSignedIn && <div
+                      {editMode && !saving && isOwnerAndSignedIn && <div
                         style={{ zIndex: 102, }}
                         className={tw(
                           'absolute -top-[5px] -bottom-[5px] -right-[5px] -left-[5px] rounded-full'
@@ -306,46 +282,16 @@ export function MintedProfile(props: MintedProfileProps) {
               profileURI={profileURI}
             />
           </div>
-          {
-            draftDeployedContractsVisible && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) &&
-          <div className={tw(
-            'flex w-full px-12',
-            editMode ? 'mt-8' : 'mt-8'
-          )}>
-            <span
-              onClick={() => {
-                setSelectedTab('nfts');
-              }}
-              className={tw(
-                'cursor-pointer text-lg tracking-wide mr-4',
-                selectedTab === 'nfts' ? 'text-black' : 'text-secondary-txt'
-              )}
-            >
-              NFTs
-            </span>
-            <span
-              onClick={() => {
-                setSelectedTab('deployed');
-              }}
-              className={tw(
-                'cursor-pointer text-lg tracking-wide',
-                selectedTab === 'deployed' ? 'text-black' : 'text-secondary-txt'
-              )}
-            >
-              Created Collections
-            </span>
-          </div>
-          }
           <div
             className={tw(
               'h-full',
-              editMode && !draftDeployedContractsVisible && !getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'mt-28 minmd:mt-16' :'mt-5 minmd:mt-0' ,
-              getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) && 'mt-6',
+              'mt-5 minmd:mt-0',
+              'mt-6',
               'w-full justify-start space-y-4 flex flex-col',
               selectedTab === 'nfts' ? 'flex' : 'hidden'
             )}
           >
-            {user?.currentProfileUrl === props.profileURI && getEnvBool(Doppler.NEXT_PUBLIC_GA_ENABLED) && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
+            {user?.currentProfileUrl === props.profileURI && profileCustomizationStatus && !profileCustomizationStatus?.isProfileCustomized &&
               <div className='block minlg:hidden mt-2 px-2'>
                 <ClaimProfileCard />
               </div>

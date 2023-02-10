@@ -164,7 +164,7 @@ export function Collection(props: CollectionProps) {
               </div>
               <span className="sr-only">Loading...</span>
             </div>)
-            : (collectionName || collectionData?.collection.name)}
+            : ( collectionData?.collection?.name || collectionName)}
         </h2>
         <div className="grid grid-cols-2 gap-4 mt-6 minlg:w-1/2">
           <div className='flex'>

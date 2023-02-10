@@ -165,7 +165,7 @@ export function CollectionLeaderBoardCard(props: CollectionLeaderBoardCardProps)
               </div>
               <div>
                 <div className="text-lg text-[#000000] font-[600] -mb-1">{statsData.volume.toFixed(2).replaceAll('.', ',')}</div>
-                <div className="text-base leading-[18px] text-[#747474] font-[400]">{convertCurrency(statsData.volume)}</div>
+                <div className="text-base leading-[18px] text-[#747474] font-[400]">{checkMinPrice(statsData.volume)}</div>
               </div>
             </div>
           </div>

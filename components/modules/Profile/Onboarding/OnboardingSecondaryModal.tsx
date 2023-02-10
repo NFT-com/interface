@@ -1,6 +1,7 @@
 import { useGetSentReferralEmailsQuery } from 'graphql/hooks/useGetSentReferralEmailsQuery';
 import { useSendReferEmailMutation } from 'graphql/hooks/useSendReferEmailMutation';
 import { useUser } from 'hooks/state/useUser';
+import { Doppler, getEnvBool } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 import { tw } from 'utils/tw';
 
@@ -80,24 +81,24 @@ export default function OnboardingSecondaryModal({ selectedItem, modalOpen, setM
             >
               <Dialog.Panel className="w-[463px] max-w-full transform overflow-hidden rounded-[20px] bg-white align-middle shadow-xl transition-all text-center">
                 <div className='flex flex-col font-medium relative text-center'>
-                  <X className='absolute right-2 top-2 hover:cursor-pointer' size={20} onClick={() => setModalOpen(false)} />
+                  <X className='absolute right-4 top-4 hover:cursor-pointer' size={24} onClick={() => setModalOpen(false)} />
                   <Dialog.Title
                     as="h3"
-                    className="text-[24px] leading-6 text-gray-900 mt-9"
+                    className="text-[24px] leading-6 text-gray-900 mt-5"
                   >
                     {selectedItem?.name}
                   </Dialog.Title>
 
                   <p className='mt-3 text-[#6A6A6A] w-4/5 mx-auto'>{selectedItem?.description}</p>
                   <div className='flex flex-col mt-9'>
-                    <p className='text-[#B2B2B2]'>Rewards</p>
+                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <p className='text-[#B2B2B2]'>Rewards</p>}
 
-                    <div className='bg-[#FFF4CA] w-max rounded-full flex items-center py-1 pl-4 pr-1 mx-auto mt-2 mb-9'>
-                  +{selectedItem?.coins}
+                    {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_POINTS_ENABLED) && <div className='bg-[#FFF4CA] w-max rounded-full flex items-center py-1 pl-4 pr-1 mx-auto mt-2 mb-9'>
+                      +{selectedItem?.coins}
                       <div className='h-[24px] w-[24px] minmd:h-[34px] minmd:w-[34px] ml-[5px]'>
                         <NftGoldLogo />
                       </div>
-                    </div>
+                    </div>}
 
                     {selectedItem?.name === 'Refer Network' &&
                       <div className='flex flex-col px-7 mb-10 space-y-4'>

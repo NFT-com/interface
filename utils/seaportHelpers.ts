@@ -1,7 +1,8 @@
+import { StagedPurchase } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NULL_ADDRESS } from 'constants/addresses';
 import { Seaport } from 'constants/typechain';
 import { OrderComponentsStruct } from 'constants/typechain/Seaport';
-import { Maybe, Nft, SeaportConsideration, SeaportProtocolData, SeaportProtocolDataParams } from 'graphql/generated/types';
+import { Maybe, Nft, NftType, SeaportConsideration, SeaportProtocolData, SeaportProtocolDataParams } from 'graphql/generated/types';
 import { AggregatorResponse } from 'types';
 import {
   CROSS_CHAIN_SEAPORT_ADDRESS,
@@ -30,7 +31,7 @@ export function getTypedDataDomain(chainId: string | number) {
     name: SEAPORT_CONTRACT_NAME,
     version: SEAPORT_CONTRACT_VERSION,
     chainId,
-    verifyingContract: CROSS_CHAIN_SEAPORT_ADDRESS,
+    verifyingContract: CROSS_CHAIN_SEAPORT_ADDRESS as `0x${string}`,
   };
 }
 
@@ -50,8 +51,8 @@ export const generateRandomSalt: () => string = () => {
 };
 
 export const multiplyBasisPoints = (amount: BigNumberish, basisPoints: BigNumberish) =>
-  BigNumber.from(amount)
-    .mul(BigNumber.from(basisPoints))
+  BigNumber.from(amount || 0)
+    .mul(BigNumber.from(basisPoints || 0))
     .div(ONE_HUNDRED_PERCENT_BP);
 
 export const isCurrencyItem = ({ itemType }: SeaportConsiderationItem) =>
@@ -142,11 +143,12 @@ export function createSeaportParametersForNFTListing(
       })
       : null
   ]);
+
   return {
     offerer: offerer ?? NULL_ADDRESS,
     zone: chainId === '4' ? SEAPORT_ZONE_RINKEBY : SEAPORT_ZONE,
     offer: [{
-      itemType: ItemType.ERC721,
+      itemType: nft?.type == NftType.Erc721 ? ItemType.ERC721 : ItemType.ERC1155,
       token: nft?.contract,
       identifierOrCriteria: BigNumber.from(nft?.tokenId).toString(),
       startAmount: BigNumber.from(1).toString(),
@@ -174,7 +176,7 @@ export async function cancelSeaportListing(
     .catch(() => false);
 }
 
-const generateOfferArray = (array: any) => {
+export const generateOfferArray = (array: any) => {
   return array.map((item: any, index: string) => [
     {
       orderIndex: index,
@@ -192,7 +194,7 @@ interface ConsiderationFulfillmentUnit {
   itemIndex: string;
 }
 
-const generateOrderConsiderationArray = (
+export const generateOrderConsiderationArray = (
   considerations: Array<Array<SeaportConsideration>>,
 ): Array<Array<ConsiderationFulfillmentUnit>> | undefined => {
   const mapIndex: ConsiderationObjMap = {};
@@ -279,3 +281,64 @@ export const getSeaportHex = (
 export function getOpenseaAssetPageUrl(contractAddress: string, tokenId: string) {
   return `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
 }
+
+export const seaportBuyNow = async (
+  order: StagedPurchase,
+  seaportExchange: Seaport,
+  executorAddress: string
+): Promise<boolean> => {
+  try {
+    const orderParams = [];
+    const seaportOrder = order.protocolData as SeaportProtocolData;
+    orderParams.push({
+      denominator: '1',
+      numerator: '1',
+      parameters: {
+        conduitKey: seaportOrder?.parameters?.conduitKey,
+        consideration: seaportOrder?.parameters?.consideration,
+        endTime: seaportOrder?.parameters?.endTime,
+        offer: seaportOrder?.parameters?.offer,
+        offerer: seaportOrder?.parameters?.offerer, // seller
+        orderType: seaportOrder?.parameters?.orderType,
+        salt: seaportOrder?.parameters?.salt,
+        startTime: seaportOrder?.parameters?.startTime,
+        totalOriginalConsiderationItems: seaportOrder?.parameters?.totalOriginalConsiderationItems,
+        zone: seaportOrder?.parameters?.zone, // opensea pausable zone
+        zoneHash: seaportOrder?.parameters?.zoneHash,
+      },
+      signature: seaportOrder?.signature,
+      extraData: '0x',
+    });
+
+    const tx = await seaportExchange.fulfillAvailableAdvancedOrders(
+      orderParams, // advancedOrders
+      [], // criteria resolvers
+      generateOfferArray(orderParams.map(i => i.parameters.offer)), // array of all offers (offers fulfillment)
+      generateOrderConsiderationArray(orderParams.map(i => i.parameters.consideration)), // array of all considerations (considerations fulfillment)
+      '0x0000000000000000000000000000000000000000000000000000000000000000', // fulfillerConduitKey
+      executorAddress, // recipient
+      1, // maximumFulfilled)
+      {
+        value: order?.price
+      }
+    );
+
+    analytics.track('BuyNow', {
+      ethereumAddress: executorAddress,
+      protocol: order.protocol,
+      contractAddress: order?.nft?.contract,
+      tokenId: order?.nft?.tokenId,
+      txHash: tx.hash,
+      orderHash: order.orderHash,
+    });
+
+    if (tx) {
+      return await tx.wait(1).then(() => true).catch(() => false);
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log(`error in seaportBuyNow: ${err}`);
+    return false;
+  }
+};
