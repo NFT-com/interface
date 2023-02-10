@@ -464,12 +464,10 @@ export function ProfileContextProvider(
         });
 
         if (result) {
-          if (getEnvBool(Doppler.NEXT_PUBLIC_REORDER_ENABLED)) {
-            await updateOrder({
-              profileId: profileData?.profile?.id,
-              updates: editModeNfts?.map((nft, index) => ({ nftId: nft.id, newIndex: index }))
-            });
-          }
+          await updateOrder({
+            profileId: profileData?.profile?.id,
+            updates: editModeNfts?.map((nft, index) => ({ nftId: nft.id, newIndex: index }))
+          });
           setSavedCount(savedCount + 1); // update global state
           window.scrollTo(0, 0);
           setAfterCursorEditMode('');
@@ -541,6 +539,8 @@ export function ProfileContextProvider(
       .includes(props.profileURI),
     editMode,
     setEditMode: (enabled: boolean) => {
+      mutatePublicProfileNfts();
+      mutateAllOwnerNfts();
       if (enabled) {
         setAfterCursorEditMode('');
         setEditModeNfts(null);

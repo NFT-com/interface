@@ -1,14 +1,16 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
+import { AuctionType, LooksrareProtocolData, NftcomProtocolData, SeaportProtocolData, TxActivity, X2Y2ProtocolData } from 'graphql/generated/types';
 import { ExternalProtocol } from 'types';
 
 import { isNullOrEmpty, sameAddress } from './helpers';
 import { getAddress } from './httpHooks';
 
 import { BigNumber, ethers } from 'ethers';
+import moment, { Moment } from 'moment';
 import { PartialDeep } from 'type-fest';
+import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 
-export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
+export const getListingPrice = (listing: PartialDeep<TxActivity>, currentTimestamp?: Moment) => {
   switch(listing?.order?.protocol) {
   case (ExternalProtocol.LooksRare): {
     const order = listing?.order?.protocolData as LooksrareProtocolData;
@@ -22,6 +24,24 @@ export const getListingPrice = (listing: PartialDeep<TxActivity>) => {
   case (ExternalProtocol.X2Y2): {
     const order = listing?.order?.protocolData as X2Y2ProtocolData;
     return BigNumber.from(order?.price ?? 0);
+  }
+  case (ExternalProtocol.NFTCOM): {
+    const order = listing?.order?.protocolData as NftcomProtocolData;
+
+    if (order.auctionType === AuctionType.Decreasing) {
+      const startPrice = BigNumber.from(order.takeAsset[0].value);
+      const endPrice = BigNumber.from(order.takeAsset[0].minimumBid);
+      const b = moment.unix(order?.start);
+      const secondsElapsed = currentTimestamp ? BigNumber.from(currentTimestamp.diff(b, 'seconds')) : BigNumber.from(0);
+
+      const stringTime = startPrice.sub((secondsElapsed.div(
+        BigNumber.from(order?.end).sub(
+          BigNumber.from(order?.start)
+        ))).mul(startPrice.sub(endPrice)));
+
+      return stringTime;
+    }
+    return BigNumber.from(order?.takeAsset[0]?.value ?? 0);
   }
   }
 };
@@ -58,6 +78,10 @@ export const getListingCurrencyAddress = (listing: PartialDeep<TxActivity>) => {
     const order = listing?.order?.protocolData as X2Y2ProtocolData;
     return order?.currencyAddress ?? order?.['currency'];
   }
+  case (ExternalProtocol.NFTCOM): {
+    const order = listing?.order?.protocolData as NftcomProtocolData;
+    return order?.takeAsset[0]?.standard?.contractAddress ?? order?.['currency'];
+  }
   }
 };
 
@@ -79,4 +103,23 @@ export const getLowestPriceListing = (
     }
   }
   return lowestPriceListing;
+};
+
+export const getListingEndDate = (
+  listing: PartialObjectDeep<TxActivity, unknown>,
+  protocolFilter?: ExternalProtocol
+) => {
+  const protocolData = listing.order?.protocolData;
+  switch(protocolFilter){
+  case(ExternalProtocol.NFTCOM):
+    return (protocolData as NftcomProtocolData)?.end;
+  case(ExternalProtocol.LooksRare):
+    return Number((protocolData as LooksrareProtocolData)?.endTime);
+  case(ExternalProtocol.Seaport):
+    return Number((protocolData as SeaportProtocolData)?.parameters?.endTime);
+  case(ExternalProtocol.X2Y2):
+    return (protocolData as X2Y2ProtocolData)?.end_at;
+  default:
+    return null;
+  }
 };

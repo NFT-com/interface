@@ -18,7 +18,7 @@ export interface NftsData {
   mutate: () => void,
 }
 
-export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: string, query?: string): NftsData {
+export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: string, query?: string, invalidateCache?: boolean): NftsData {
   const sdk = useGraphQLSDK();
   const { signed } = useContext(GraphQLContext);
   const { address: currentAddress } = useAccount();
@@ -34,6 +34,7 @@ export function useMyNFTsQuery(first: number, profileId: string, beforeCursor?: 
       input: {
         pageInput: { first: first, beforeCursor: beforeCursor },
         profileId: profileId,
+        invalidateCache: invalidateCache,
         ...(query && { query })
       }
     });

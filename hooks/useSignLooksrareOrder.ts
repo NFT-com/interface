@@ -1,4 +1,4 @@
-import { generateMakerOrderTypedData,MakerOrder } from '@looksrare/sdk';
+import { generateMakerOrderTypedData, MakerOrder } from '@looksrare/sdk';
 import { useCallback } from 'react';
 import { useAccount, useNetwork, useSignTypedData } from 'wagmi';
 
@@ -15,9 +15,10 @@ export function useSignLooksrareOrder() {
       domain: {
         ...domain,
         chainId: chain?.id,
-      },
-      types: type,
-      value
+      } as { chainId: number; name?: string; version?: string; verifyingContract?: `0x${string}`; salt?: `0x${string}`; },
+      types: type as { EIP712Domain: { name: string; type: string }[]; Order: { name: string; type: string }[]; },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      value: value as any
     });
     return signature;
   }, [currentAddress, chain?.id, signTypedDataAsync]);

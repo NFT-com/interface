@@ -4,8 +4,6 @@ import { ProfileContext } from 'components/modules/Profile/ProfileContext';
 import { DndScrollWrapper } from './DndScrollWrapper';
 
 import React, { createContext, PropsWithChildren, useCallback, useContext } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 
 function move(array: any[], oldIndex: number, newIndex: number) {
   if (newIndex >= array.length) {
@@ -53,14 +51,12 @@ export function GridContextProvider(
     setAllItemsOrder(newItems);
   }, [props.items, setAllItemsOrder]);
 
-  return <DndProvider backend={HTML5Backend}>
-    <GridContext.Provider value={{
-      items: props.items,
-      moveItem
-    }}>
-      <DndScrollWrapper>
-        {props.children}
-      </DndScrollWrapper>
-    </GridContext.Provider>
-  </DndProvider>;
+  return <GridContext.Provider value={{
+    items: props.items,
+    moveItem
+  }}>
+    <DndScrollWrapper>
+      {props.children}
+    </DndScrollWrapper>
+  </GridContext.Provider>;
 }

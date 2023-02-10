@@ -63,6 +63,16 @@ export const nftAggregator: DeployedContract = {
   mainnet: '0xf2821154d4752862b49a7C7fA7728B76ea44495e',
 };
 
+export const marketplace: DeployedContract = {
+  goerli: '0xa75F995f252ba5F7C17f834b314201271d32eC35',
+  mainnet: '0x1fD9Bc58C7FfdB18D19a8A8d791B6ae9fa2BD097',
+};
+
+export const transferProxy: DeployedContract = {
+  goerli: '0xCD979ec33B43eCE6523B41BA5c9e409568eDFB97',
+  mainnet: '0x151271EF11D8FA022A81f8de70feA53fdCCc0107'
+};
+
 export function getAddressForChain(contract: DeployedContract, chainId: number | string): string {
   switch (chainId) {
   case 1:

@@ -1,8 +1,8 @@
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
+import { BalanceData } from 'types';
 import { getAddress } from 'utils/httpHooks';
 
 import useSWR from 'swr';
-import { BalanceData } from 'types';
 import { useNetwork } from 'wagmi';
 
 export function useNftTokenBalance(currentAddress: string): BalanceData | null {

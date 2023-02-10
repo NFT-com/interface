@@ -1,12 +1,21 @@
+import { ListingTarget } from 'components/modules/Checkout/NFTListingsContext';
+import { NULL_ADDRESS } from 'constants/addresses';
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
+import { Nft, Signature } from 'graphql/generated/types';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
 import { SeaportOrderComponents } from 'types';
+import { isNullOrEmpty } from 'utils/helpers';
+import { getMarketplaceAssetInput, onchainAuctionTypeToGqlAuctionType, unhashedMakeAsset, unhashedTakeAsset } from 'utils/nativeMarketplaceHelpers';
+import { getOrderHash } from 'utils/signatureUtils';
 import { encodeOrder } from 'utils/X2Y2Helpers';
 
 import { MakerOrderWithSignature } from '@looksrare/sdk';
 import * as Sentry from '@sentry/nextjs';
 import { X2Y2Order } from '@x2y2-io/sdk/dist/types';
+import { BigNumber } from 'ethers';
 import { useCallback } from 'react';
+import { PartialDeep } from 'type-fest';
 
 export interface ListNftResult {
   listNftSeaport: (
@@ -20,7 +29,14 @@ export interface ListNftResult {
     order: X2Y2Order,
     tokenId: string,
     contract: string,
-    maker: string
+    maker: string,
+    hasOpenOrder: boolean,
+    openOrderId: number[]
+  ) => Promise<boolean>,
+  listNftNative: (
+    target: ListingTarget,
+    signature: Signature,
+    nft: PartialDeep<Nft>,
   ) => Promise<boolean>,
 }
 
@@ -28,7 +44,8 @@ export function useListNFTMutations(): ListNftResult {
   const sdk = useGraphQLSDK();
 
   const defaultChainId = useDefaultChainId();
-
+  const { getByContractAddress } = useSupportedCurrencies();
+  
   const listNftSeaport = useCallback(
     async (
       signature: string,
@@ -39,8 +56,7 @@ export function useListNFTMutations(): ListNftResult {
           input: {
             seaportSignature: signature,
             seaportParams: JSON.stringify(parameters),
-            chainId: defaultChainId,
-            createdInternally: true
+            chainId: defaultChainId
           }
         });
         return result?.listNFTSeaport ?? false;
@@ -58,8 +74,7 @@ export function useListNFTMutations(): ListNftResult {
         const result = await sdk.ListNftLooksrare({
           input: {
             looksrareOrder: JSON.stringify(order),
-            chainId: defaultChainId,
-            createdInternally: true
+            chainId: defaultChainId
           }
         });
         return result?.listNFTLooksrare ?? false;
@@ -72,7 +87,7 @@ export function useListNFTMutations(): ListNftResult {
   );
 
   const listNftX2Y2 = useCallback(
-    async (order: X2Y2Order, tokenId: string, contract: string, maker: string) => {
+    async (order: X2Y2Order, tokenId: string, contract: string, maker: string, hasOpenOrder: boolean, openOrderId: number[]) => {
       try {
         const result = await sdk.ListNFTX2Y2({
           input: {
@@ -81,18 +96,17 @@ export function useListNFTMutations(): ListNftResult {
               isBundle: false,
               bundleName: '',
               bundleDesc: '',
-              orderIds: [],
+              orderIds: openOrderId,
               royalties: [],
-              changePrice: false,
+              changePrice: hasOpenOrder,
               isCollection: false, // for sell orders
               isPrivate: false,
               taker: null,
             }),
-            chainId:  defaultChainId,
+            chainId: defaultChainId,
             tokenId,
             contract,
-            maker,
-            createdInternally: true
+            maker
           }
         });
         return result?.listNFTX2Y2 ?? false;
@@ -105,9 +119,72 @@ export function useListNFTMutations(): ListNftResult {
     [defaultChainId, sdk]
   );
 
+  const listNftNative = useCallback(
+    async (target: ListingTarget, signature: Signature, nft: PartialDeep<Nft>) => {
+      try {
+        const unhashedMake = unhashedMakeAsset(nft);
+        const unhashedTake = unhashedTakeAsset(
+          target.currency,
+          target.startingPrice as BigNumber,
+          onchainAuctionTypeToGqlAuctionType(target.NFTCOMOrder.auctionType),
+          getByContractAddress(target?.currency).contract,
+          target.endingPrice as BigNumber,
+          target.reservePrice as BigNumber,
+          target.buyNowPrice as BigNumber,
+        );
+        const orderHash = getOrderHash({
+          ...target.NFTCOMOrder,
+          makeAssets: [unhashedMake],
+          takeAssets: [unhashedTake]
+        });
+        const result = await sdk.CreateMarketListing({
+          input: {
+            auctionType: onchainAuctionTypeToGqlAuctionType(target.NFTCOMOrder.auctionType),
+            chainId: defaultChainId,
+            end: target.NFTCOMOrder.end,
+            makeAsset: [
+              getMarketplaceAssetInput(
+                unhashedMake,
+                BigNumber.from(nft.tokenId),
+                nft.contract
+              ),
+            ],
+            makerAddress: target.NFTCOMOrder.maker,
+            nonce: target.NFTCOMOrder.nonce,
+            salt: target.NFTCOMOrder.salt,
+            signature : {
+              r: signature.r,
+              s: signature.s,
+              v: signature.v
+            },
+            start: target.NFTCOMOrder.start,
+            structHash: orderHash,
+            takeAsset: [
+              getMarketplaceAssetInput(
+                unhashedTake,
+                0,
+                getByContractAddress(target?.currency).contract
+              ),
+            ],
+            takerAddress: isNullOrEmpty(target.NFTCOMOrder.taker) ?
+              NULL_ADDRESS:
+              target.NFTCOMOrder.taker,
+          }
+        });
+        return result?.createMarketListing ? true : false;
+      } catch (err) {
+        Sentry.captureException(err);
+        console.log('err:', err);
+        return false;
+      }
+    },
+    [defaultChainId, getByContractAddress, sdk]
+  );
+
   return {
     listNftSeaport,
     listNftLooksrare,
-    listNftX2Y2
+    listNftX2Y2,
+    listNftNative
   };
 }

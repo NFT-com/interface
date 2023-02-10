@@ -4,6 +4,7 @@ import 'aos/dist/aos.css';
 import StaticPreviewBanner from 'components/elements/PreviewBanner';
 import HomeLayout from 'components/layouts/HomeLayout';
 import { LeaderBoard as StaticLeaderboard } from 'components/modules/Profile/LeaderBoard';
+import contentfulBackupData from 'constants/contenful_backup_data.json';
 import { useLeaderboardQuery } from 'graphql/hooks/useLeaderboardQuery';
 import { HomePageV2 } from 'types';
 import { tw } from 'utils/tw';
@@ -345,22 +346,22 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               'minlg:w-[55%] minxl:w-[58.5%] minlg:h-screen'
             )}>
               <h2 data-aos="fade-up" data-aos-delay="100" className={tw(
-                'text-[3rem] minmd:text-[6rem] minlg:text-[4rem] minxl:text-[6.25rem] minxxl:text-[7.5rem] leading-[1.15]',
+                'text-[2.5rem] minmd:text-[6rem] minlg:text-[4rem] minxl:text-[5.5rem] minxxl:text-[6.8rem] leading-[1.15]',
                 'text-black font-normal tracking-tight mb-14'
               )}>
-                Build Your<span className='inline-block rotate-[40deg]'><img className={tw(
+                Create a Profile<span className='inline-block rotate-[40deg]'><img className={tw(
                   'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s]',
-                  'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                  'mx-[1.8rem] -my-[.5rem] rounded-xl'
+                  'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[4.5rem]',
+                  'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl'
                 )} src={data_v2?.heroNfTsCollection?.items[0]?.url} alt="NFT image" /></span>
                 <br />
-                NFT<span className='inline-block rotate-[40deg]'><img className={tw(
+                Pay<span className='inline-block rotate-[40deg]'><img className={tw(
                   'anim-profile-icon -translate-y-[120vw] transition transform duration-[2s] delay-200',
-                  'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[5.5rem]',
-                  'mx-[1.8rem] -my-[.5rem] rounded-xl',
+                  'drop-shadow-md inline-block w-[3.125rem] minxxl:w-[4.5rem]',
+                  'mx-[1.8rem] minxxl:mx-[2.2rem] -my-[.5rem] rounded-xl',
                 )} src={data_v2?.heroNfTsCollection?.items[1]?.url} alt="NFT image" /></span>
                 <span data-aos="fade-left" data-aos-delay="200"
-                  className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>Identity</span></h2>
+                  className='bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>No Fees</span></h2>
 
               <a data-aos="zoom-out" data-aos-delay="300" href={data_v2?.heroCta?.link} className={tw(
                 'bg-[#121212] hover:bg-[#414141] transition-colors drop-shadow-lg rounded-full',
@@ -774,8 +775,8 @@ const Index: NextPageWithLayout = ({ preview, data_v2 }: HomePageProps) => {
               </svg>
 
               <div className='relative'>
-                <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-5 text-white'>{data_v2.newsTitle}</h2>
-                <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2.newsSubtitle}</p>
+                <h2 data-aos="fade-up" className='text-[3rem] minmd:text-[3.75rem] minxl:text-[5.125rem] minxxl:text-[7.5rem] leading-[1.0854] font-normal mb-5 text-white'>{data_v2?.newsTitle}</h2>
+                <p data-aos="fade-up" data-aos-delay="100" className='text-base minlg:text-2xl minxxl:text-4xl text-[#8B8B8B] mb-[2.6rem]'>{data_v2?.newsSubtitle}</p>
               </div>
 
               <div className='-mx-9 overflow-hidden mb-12'>
@@ -988,7 +989,7 @@ export async function getServerSideProps({ preview = false }) {
   return {
     props: {
       preview,
-      data_v2: homeDataV2[0] ?? null,
+      data_v2: homeDataV2[0] ?? contentfulBackupData[0],
     }
   };
 }

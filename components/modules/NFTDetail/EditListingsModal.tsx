@@ -2,16 +2,18 @@ import { Button, ButtonType } from 'components/elements/Button';
 import { Modal } from 'components/elements/Modal';
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { NFTListingsContext } from 'components/modules/Checkout/NFTListingsContext';
+import { NULL_ADDRESS } from 'constants/addresses';
 import { Nft, TxActivity } from 'graphql/generated/types';
 import { TransferProxyTarget, useNftCollectionAllowance } from 'hooks/balances/useNftCollectionAllowance';
 import { useOutsideClickAlerter } from 'hooks/useOutsideClickAlerter';
+import { ExternalProtocol } from 'types';
 import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 
 import { ListingButtonType } from './ExternalListingTile';
 import ExternalListingTile from './ExternalListingTile';
 
 import { useRouter } from 'next/router';
-import { XCircle } from 'phosphor-react';
+import { X } from 'phosphor-react';
 import { useCallback, useContext, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount } from 'wagmi';
@@ -50,6 +52,38 @@ export function EditListingsModal(props: EditListingsModalProps) {
     props.nft?.contract,
     currentAddress,
     TransferProxyTarget.LooksRare
+  );
+
+  const {
+    allowedAll: looksRareAllowed1155,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.LooksRare1155
+  );
+
+  const {
+    allowedAll: X2Y2Allowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.X2Y2
+  );
+
+  const {
+    allowedAll: X2Y2Allowed1155,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.X2Y21155
+  );
+
+  const {
+    allowedAll: NFTCOMAllowed,
+  } = useNftCollectionAllowance(
+    props.nft?.contract,
+    currentAddress,
+    TransferProxyTarget.NFTCOM
   );
 
   const getModalContent = useCallback(() => {
@@ -92,7 +126,17 @@ export function EditListingsModal(props: EditListingsModalProps) {
                 collectionName: props.collectionName,
                 isApprovedForSeaport: openseaAllowed,
                 isApprovedForLooksrare: looksRareAllowed,
-                targets: []
+                isApprovedForLooksrare1155: looksRareAllowed1155,
+                isApprovedForX2Y2: X2Y2Allowed,
+                isApprovedForX2Y21155: X2Y2Allowed1155,
+                isApprovedForNFTCOM: NFTCOMAllowed,
+                targets: [
+                  {
+                    protocol: ExternalProtocol.NFTCOM,
+                    currency: NULL_ADDRESS,
+                    listingError: false
+                  }
+                ]
               });
               router.push('/app/list');
             }}
@@ -101,17 +145,7 @@ export function EditListingsModal(props: EditListingsModalProps) {
         </div>
       </div>
     </div>;
-  }, [
-    nft,
-    collectionName,
-    listings,
-    stageListing,
-    props.nft,
-    props.collectionName,
-    openseaAllowed,
-    looksRareAllowed,
-    router
-  ]);
+  }, [nft, collectionName, listings, stageListing, props.nft, props.collectionName, openseaAllowed, looksRareAllowed, looksRareAllowed1155, X2Y2Allowed, X2Y2Allowed1155, NFTCOMAllowed, router]);
 
   return (
     <Modal
@@ -124,11 +158,10 @@ export function EditListingsModal(props: EditListingsModalProps) {
       fullModal
       pure
     >
-      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
-        <div className='pt-20 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-          <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
-          <XCircle onClick={onClose} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
-          {<h2 className='text-4xl tracking-wide font-medium mb-10'>Edit Listings</h2>}
+      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] minlg:h-[80vh] overflow-y-scroll hideScroll bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
+        <div className='font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+          <X onClick={onClose} className='absolute right-3 minlg:right-0 hover:cursor-pointer closeButton' size={32} color="black" weight="fill" />
+          {<h2 className='text-4xl tracking-wide font-medium mb-10 mt-6'>Edit Listings</h2>}
           {getModalContent()}
         </div>
       </div>

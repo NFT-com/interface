@@ -4,6 +4,7 @@ import {
   Genesis_key_distributor,
   Genesis_key_team_claim,
   Genesis_key_team_distributor,
+  Marketplace,
   MaxProfiles,
   Nft_aggregator,
   Nft_profile,
@@ -25,6 +26,7 @@ import { getAddress } from 'utils/httpHooks';
 import { getGenesisKeyDistributorContract } from './getGenesisKeyDistributorContract';
 import { getGenesisKeyTeamClaimContract } from './getGenesisKeyTeamClaimContract';
 import { getGenesisKeyTeamDistributorContract } from './getGenesisKeyTeamDistributorContract';
+import { getMarketplaceContract } from './getMarketplaceContract';
 import { getMaxProfilesContract } from './getMaxProfilesContract';
 import { getNftAggregatorContract } from './getNftAggregatorContract';
 import { getNftResolverContract } from './getNftResolverContract';
@@ -46,6 +48,7 @@ export interface Contracts {
   genesisKeyTeamDistributor: Genesis_key_team_distributor;
   genesisKeyTeamClaim: Genesis_key_team_claim;
   aggregator: Nft_aggregator;
+  marketplace: Marketplace;
 }
 
 export function useAllContracts(): Contracts {
@@ -92,6 +95,8 @@ export function useAllContracts(): Contracts {
   const [aggregator, setAggregator] = useState<Nft_aggregator>(
     getNftAggregatorContract(getAddress('aggregator', chainId), signer ?? provider)
   );
+  const [marketPlaceContract, setMarketPlaceContract] =
+    useState(getMarketplaceContract(getAddress('marketplace', chainId), provider));
 
   useEffect(() => {
     setDaiContract(getDaiContract(getAddress('dai', chainId), provider));
@@ -118,6 +123,9 @@ export function useAllContracts(): Contracts {
       getNftResolverContract(getAddress('nftResolver', chainId), signer, provider)
     );
     setAggregator(getNftAggregatorContract(getAddress('aggregator', chainId), signer ?? provider));
+    setMarketPlaceContract(
+      getMarketplaceContract(getAddress('marketplace', chainId), provider)
+    );
   }, [chainId, provider, signer]);
   
   return {
@@ -133,6 +141,7 @@ export function useAllContracts(): Contracts {
     genesisKeyDistributor: genesisKeyDistributorContract,
     genesisKeyTeamDistributor: genesisKeyTeamDistributorContract,
     genesisKeyTeamClaim: genesisKeyTeamClaim,
-    aggregator
+    aggregator,
+    marketplace: marketPlaceContract
   };
 }

@@ -18,6 +18,14 @@ export function isAddress(value: any): string | false {
   }
 }
 
+export function isChromeBrowser() {
+  let isChromeBrowser = false;
+  if (typeof window !== 'undefined') {
+    isChromeBrowser = window.navigator.userAgent.toString().toLocaleLowerCase().includes('chrome');
+  }
+  return isChromeBrowser;
+}
+
 export const profileSaveCounter = atom(0);
 
 export function sameAddress(first: Maybe<string>, second: Maybe<string>) {
@@ -93,6 +101,10 @@ export const convertValue = (value: number, first: number, second: number) => {
 export const joinClasses = (...args: string[]) => filterNulls(args).join(' ');
 
 export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == null || val.length === 0;
+
+export const isNull = (val: string | any[] | null | undefined) => val == null;
+
+export const isObjEmpty = (obj: Record<string, unknown> | null | undefined) => obj== null || Object.keys(obj).length === 0;
 
 export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
 
@@ -260,8 +272,8 @@ export const collectionCardImages = (collection: any) => {
   ];
 };
 
-export const getImageFetcherBaseURL = () => {
-  return 'https://www.nft.com/';
+export const getBaseUrl = (override = '') => {
+  return override || getEnv(Doppler.NEXT_PUBLIC_BASE_URL);
 };
 
 export const sliceString = (description: string, maxCount: number, isStringCut: boolean) => {

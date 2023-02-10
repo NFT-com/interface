@@ -3,7 +3,8 @@ query Nft(
   $id: String!, 
   $chainId: String,
   $listingsPageInput: PageInput, 
-  $listingsExpirationType: ActivityExpiration
+  $listingsExpirationType: ActivityExpiration,
+  $listingsOwner: Address
 ) {
   nft(contract: $contract, id: $id, chainId: $chainId) {
     id
@@ -13,6 +14,7 @@ query Nft(
     tokenId
     memo
     type
+    owner
     previewLink
     wallet {
       address
@@ -31,7 +33,7 @@ query Nft(
         value
       }
     }
-    listings(listingsPageInput: $listingsPageInput, listingsExpirationType: $listingsExpirationType) {
+    listings(listingsPageInput: $listingsPageInput, listingsExpirationType: $listingsExpirationType, listingsOwner: $listingsOwner) {
         totalItems
         pageInfo {
             firstCursor
@@ -55,6 +57,8 @@ query Nft(
                 makerAddress
                 takerAddress
                 protocol
+                nonce
+                id
                 protocolData {
                     ... on LooksrareProtocolData {
                         isOrderAsk
@@ -73,6 +77,48 @@ query Nft(
                         v
                         r
                         s
+                    }
+                    ... on NFTCOMProtocolData {
+                      makeAsset {
+                        standard {
+                          assetClass
+                          bytes
+                          contractAddress
+                          tokenId
+                          allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                      }
+                      takeAsset {
+                        standard {
+                          assetClass
+                          bytes
+                          contractAddress
+                          tokenId
+                          allowAll
+                        }
+                        nftId
+                        bytes
+                        value
+                        minimumBid
+                      }
+                      swapTransactionId
+                      acceptedAt
+                      rejectedAt
+                      listingId
+                      buyNowTaker
+                      auctionType
+                      orderSignature: signature {
+                        v
+                        r
+                        s
+                      }
+                      salt
+                      start
+                      end
                     }
                     ... on X2Y2ProtocolData {
                       side
@@ -164,6 +210,56 @@ query Nft(
                     r
                     s
                 }
+                ... on TxX2Y2ProtocolData {
+                    amount
+                    currency
+                    data
+                    deadline
+                    delegateType
+                    intent
+                    orderSalt
+                    settleSalt
+                }
+... on TxNFTCOMProtocolData {
+              makeAsset {
+                standard {
+                  assetClass
+                  bytes
+                  contractAddress
+                  tokenId
+                  allowAll
+                }
+                nftId
+                bytes
+                value
+                minimumBid
+              }
+              takeAsset {
+                standard {
+                  assetClass
+                  bytes
+                  contractAddress
+                  tokenId
+                  allowAll
+                }
+                nftId
+                bytes
+                value
+                minimumBid
+              }
+              swapTransactionId
+              acceptedAt
+              rejectedAt
+              listingId
+              buyNowTaker
+              auctionType
+              salt
+              start
+              end
+              private
+              listingOrderId
+              bidOrderId
+            }
                 ... on TxSeaportProtocolData {
                     offer {
                     itemType

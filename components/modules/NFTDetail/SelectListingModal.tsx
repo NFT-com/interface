@@ -7,7 +7,7 @@ import { isNullOrEmpty, processIPFSURL } from 'utils/helpers';
 import { ListingButtonType } from './ExternalListingTile';
 import ExternalListingTile from './ExternalListingTile';
 
-import { XCircle } from 'phosphor-react';
+import { X } from 'phosphor-react';
 import { useCallback, useRef } from 'react';
 import { PartialDeep } from 'type-fest';
 
@@ -53,12 +53,13 @@ export function SelectListingModal(props: SelectListingsModalProps) {
               nft={nft}
               collectionName={collectionName}
               buttons={[ListingButtonType.AddToCart]}
+              onClose={onClose}
             />;
           })
         }
       </div>
     </div>;
-  }, [nft, collectionName, listings]);
+  }, [nft, collectionName, listings, onClose]);
 
   return (
     <Modal
@@ -71,10 +72,9 @@ export function SelectListingModal(props: SelectListingsModalProps) {
       fullModal
       pure
     >
-      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-10 rounded-none minlg:rounded-[10px] minlg:mt-24 minlg:m-auto'>
-        <div className='pt-20 font-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
-          <div className='absolute top-4 right-4 minlg:right-1 hover:cursor-pointer w-6 h-6 bg-[#f9d963] rounded-full'></div>
-          <XCircle onClick={onClose} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
+      <div ref={modalRef} className='max-w-full minlg:max-w-[458px] h-screen minlg:h-max maxlg:h-max bg-white text-left px-4 pb-5 rounded-none minlg:rounded-[20px] minlg:mt-24 minlg:m-auto'>
+        <div className='font-noi-grotesk lg:max-w-md max-w-lg m-auto minlg:relative'>
+          <X onClick={onClose} className='absolute top-3 right-3 minlg:right-0 hover:cursor-pointer' size={32} color="black" weight="fill" />
           {<h2 className='text-4xl tracking-wide font-medium mb-10'>Select Listing</h2>}
           {getModalContent()}
         </div>

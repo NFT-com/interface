@@ -30,6 +30,8 @@ export function InsiderProfileClaim() {
   const [selectedReservedProfile, setSelectedReservedProfile] = useState(null);
   const [firstReservedProfileMinted, setFirstReservedProfileMinted] = useState(false);
   const [secondReservedProfileMinted, setSecondReservedProfileMinted] = useState(false);
+  const [thirdReservedProfileMinted, setThirdReservedProfileMinted] = useState(false);
+  const [fourthReservedProfileMinted, setFourthReservedProfileMinted] = useState(false);
   const [mutateMintedStatusFlag, setMutateMintedStatusFlag] = useState(0);
   const [loadedMintedState, setLoadedMintedState] = useState(false);
   const { mutate: mutateMintedReservedProfileCount } = useMintedReservedProfileCount();
@@ -85,6 +87,18 @@ export function InsiderProfileClaim() {
             setSecondReservedProfileMinted(true);
           }).catch(() => {
             setSecondReservedProfileMinted(false);
+          }),
+        nftProfile.profileOwner(reservedProfiles?.[2])
+          .then(() => {
+            setThirdReservedProfileMinted(true);
+          }).catch(() => {
+            setThirdReservedProfileMinted(false);
+          }),
+        nftProfile.profileOwner(reservedProfiles?.[3])
+          .then(() => {
+            setFourthReservedProfileMinted(true);
+          }).catch(() => {
+            setFourthReservedProfileMinted(false);
           }),
       ]);
       setLoadedMintedState(true);
@@ -152,70 +166,50 @@ export function InsiderProfileClaim() {
           Your profile reservations are ready. Select one of your profiles to mint:
         </span>
         <div className='flex w-full justify-center mb-8'>
-          <div className={tw(
-            'flex items-center rounded-xl p-4 w-2/5 cursor-pointer',
-            'bg-modal-overlay-dk border border-accent-border-dk mr-5'
-          )}
-          onClick={() => {
-            if (!firstReservedProfileMinted) {
-              setSelectedReservedProfile(reservedProfiles?.[0]);
-            }
-          }}
-          >
-            <input
-              className='mr-4'
-              type="radio"
-              disabled={firstReservedProfileMinted}
-              checked={selectedReservedProfile === reservedProfiles?.[0] ||
-                  firstReservedProfileMinted}
-              onChange={() => null}
-            />
-            <div className='flex flex-col w-[90%]'>
-              <div className="flex justify-between items-center">
-                <span className='text-secondary-txt text-base'>
-                  NFT.com/
+          {reservedProfiles.map((profile, index) => {
+            const reservedProfileMinted = index === 0 ?
+              firstReservedProfileMinted :
+              index === 1 ?
+                secondReservedProfileMinted :
+                index === 2 ?
+                  thirdReservedProfileMinted :
+                  index === 3 ?
+                    fourthReservedProfileMinted :
+                    false;
+
+            return <div key={index} className={tw(
+              'flex items-center rounded-xl p-4 w-2/5 cursor-pointer',
+              'bg-modal-overlay-dk border border-accent-border-dk mr-5'
+            )}
+            onClick={() => {
+              if (!reservedProfileMinted) {
+                setSelectedReservedProfile(profile);
+              }
+            }}
+            >
+              <input
+                className='mr-4'
+                type="radio"
+                disabled={reservedProfileMinted}
+                checked={selectedReservedProfile === profile ||
+                    reservedProfileMinted}
+                onChange={() => null}
+              />
+              <div className='flex flex-col w-[90%]'>
+                <div className="flex justify-between items-center">
+                  <span className='text-secondary-txt text-base'>
+                    NFT.com/
+                  </span>
+                  {reservedProfileMinted && <span className='text-primary-green text-sm'>
+                    MINTED!
+                  </span>}
+                </div>
+                <span className='text-primary-txt-dk font-bold text-2xl'>
+                  {profile}
                 </span>
-                {firstReservedProfileMinted && <span className='text-primary-green text-sm'>
-                  MINTED!
-                </span>}
               </div>
-              <span className='text-primary-txt-dk font-bold text-2xl'>
-                {reservedProfiles?.[0]}
-              </span>
-            </div>
-          </div>
-          <div className={tw(
-            'flex rounded-xl p-4 w-2/5 cursor-pointer items-center',
-            'bg-modal-overlay-dk border border-accent-border-dk'
-          )}
-          onClick={() => {
-            if (!secondReservedProfileMinted) {
-              setSelectedReservedProfile(reservedProfiles?.[1]);
-            }
-          }}
-          >
-            <input
-              className='mr-4'
-              type="radio"
-              disabled={secondReservedProfileMinted}
-              checked={selectedReservedProfile === reservedProfiles?.[1] ||
-                  secondReservedProfileMinted}
-              onChange={() => null}
-            />
-            <div className='flex flex-col w-[90%]'>
-              <div className="flex justify-between items-center">
-                <span className='text-secondary-txt text-base'>
-                  NFT.com/
-                </span>
-                {secondReservedProfileMinted && <span className='text-primary-green text-sm'>
-                  MINTED!
-                </span>}
-              </div>
-              <span className='text-primary-txt-dk font-bold text-2xl'>
-                {reservedProfiles?.[1]}
-              </span>
-            </div>
-          </div>
+            </div>;
+          })}
         </div>
         <span className={tw(
           'font-hero-heading1 uppercase',
@@ -254,18 +248,7 @@ export function InsiderProfileClaim() {
         </span>
       </div>
     );
-  }, [
-    alwaysBlack,
-    firstReservedProfileMinted,
-    link,
-    mintProfile,
-    mintSuccess,
-    minting,
-    reservedProfiles,
-    secondReservedProfileMinted,
-    selectedReservedProfile,
-    mutateMintedReservedProfileCount
-  ]);
+  }, [mintSuccess, firstReservedProfileMinted, secondReservedProfileMinted, reservedProfiles, minting, alwaysBlack, selectedReservedProfile, mutateMintedReservedProfileCount, link, thirdReservedProfileMinted, fourthReservedProfileMinted, mintProfile]);
   return <LoadedContainer loaded={loadedMintedState}>
     {getContent()}
   </LoadedContainer>;

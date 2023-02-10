@@ -26,11 +26,7 @@ import { useAccount, useNetwork } from 'wagmi';
 
 const DynamicMintProfileModal = dynamic<React.ComponentProps<typeof MintProfileModal>>(() => import('components/modules/ProfileFactory/MintProfileModal').then(mod => mod.default));
 
-type MintGKProfileCardProps = {
-  setShowPaid?: (show: boolean) => void
-}
-
-export default function MintGKProfileCard({ setShowPaid } : MintGKProfileCardProps) {
+export default function MintGKProfileCard() {
   const [currentValue, setCurrentValue] = useState(null);
   const [profileStatus, setProfileStatus] = useState('');
   const [selectedGK, setSelectedGK] = useState(null);
@@ -167,11 +163,9 @@ export default function MintGKProfileCard({ setShowPaid } : MintGKProfileCardPro
   }, [setModalOpen]);
   
   return (
-    <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
-      <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
-        
-        <h2 className='text-[32px] font-medium'>Claim your free NFT Profile</h2>
-        <p className='mt-9 text-xl font-normal'>Genesis Key holders receive <span className='font-bold text-transparent bg-text-gradient bg-clip-text'>four free mints!</span></p>
+    <>
+      <>
+        <p className='mt-9 text-xl font-normal'>Genesis Key holders receive <span className='font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FBC214] to-[#FF9C38]'>four free mints!</span></p>
         <LoadedContainer newLoader fitToParent loaded={isLoaded}>
           {currentAddress && claimable?.length === 0 &&
           <div className='flex flex-col justify-center items-center'>
@@ -309,29 +303,11 @@ export default function MintGKProfileCard({ setShowPaid } : MintGKProfileCardPro
                     return;
                   }
                   setModalOpen(true);
-                  setInputs(filteredInputs);
                 }}
               >
                 {minting ? <ReactLoading type='spin' color='#707070' height={28} width={28} /> : <span>Mint your NFT profile</span>}
               </button>
               : null
-            }
-
-            {!hasMintsAvailable &&
-            <button
-              type="button"
-              className={tw(
-                'inline-flex w-full justify-center',
-                'rounded-xl border border-transparent bg-[#F9D54C] hover:bg-[#EFC71E]',
-                'px-4 py-4 text-lg font-medium text-black',
-                'focus:outline-none focus-visible:bg-[#E4BA18]',
-                'disabled:bg-[#D5D5D5] disabled:text-[#7C7C7C]'
-              )}
-              onClick={() => setShowPaid(true)}
-            >
-              <span>Mint more NFT Profiles</span>
-            </button>
-            
             }
               
           </div>
@@ -343,9 +319,9 @@ export default function MintGKProfileCard({ setShowPaid } : MintGKProfileCardPro
             </a>
           </Link>
         </LoadedContainer>
-      </div>
-      <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={filteredInputs} gkTokenId={selectedGK?.tokenId} type='GK' />
-    </div>
+      </>
+      {modalOpen && <DynamicMintProfileModal isOpen={modalOpen} setIsOpen={setMintingModal} profilesToMint={filteredInputs} gkTokenId={selectedGK?.tokenId} type='GK' />}
+    </>
   );
 }
     

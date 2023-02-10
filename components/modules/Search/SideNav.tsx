@@ -1,9 +1,7 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
-import { Doppler, getEnvBool } from 'utils/env';
 import { tw } from 'utils/tw';
 
 import { CollectionsFiltersContent } from './CollectionsFiltersContent';
-import { CuratedCollectionsFilter } from './CuratedCollectionsFilter';
 import { NFTsFiltersContent as StaticNFTsFiltersContent } from './NFTsFiltersContent';
 
 import { motion } from 'framer-motion';
@@ -26,7 +24,6 @@ export const SideNav = (props: {
   isCollectionView?: boolean
 }) => {
   const { sideNavOpen, setSearchFilters } = useSearchModal();
-  const discoverPageEnv = getEnvBool(Doppler.NEXT_PUBLIC_DISCOVER2_PHASE1_ENABLED);
 
   useEffect(() => {
     setSearchFilters(props.filtersData);
@@ -39,12 +36,11 @@ export const SideNav = (props: {
       transition={{ duration: 0.2 }}
       className={tw(
         'w-[19rem]',
-        sideNavOpen ? 'pr-4' : '-ml-[19rem]')}
+        sideNavOpen ? 'pr-6': '-ml-[19rem]')}
     >
       {!props.isCollectionView
         ? (
           <>
-            {discoverPageEnv ? null : <CuratedCollectionsFilter onClick={props.onSideNav} collapsed={false}/>}
             {props.filtersData?.length > 0 && <DynamicNFTsFiltersContent />}
           </>
         )
