@@ -1,0 +1,32 @@
+mutation CreateMarketAsk($input: CreateAskInput!) {
+  createAsk(input: $input) {
+    makerAddress
+    takerAddress
+    makeAsset {
+      standard {
+        assetClass
+        contractAddress
+        tokenId
+        allowAll
+      }
+      value
+      minimumBid
+    }
+    takeAsset {
+      standard {
+        assetClass
+        contractAddress
+        tokenId
+        allowAll
+      }
+      value
+      minimumBid
+    }
+    start
+    end
+    salt
+    offerAcceptedAt
+    chainId
+    auctionType
+  }
+}

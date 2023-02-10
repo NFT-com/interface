@@ -1,0 +1,76 @@
+query GetUserSwaps($input: UserSwapsInput!) {
+  getUserSwaps(input: $input) {
+    pageInfo {
+      firstCursor
+      lastCursor
+    }
+    totalItems
+    items {
+      marketAsk {
+        id
+        makerAddress
+        takerAddress
+        makeAsset {
+          standard {
+            assetClass
+            contractAddress
+            tokenId
+            allowAll
+            bytes
+          }
+          nftId
+          value
+          minimumBid
+          bytes
+        }
+        takeAsset {
+          standard {
+            assetClass
+            contractAddress
+            tokenId
+            allowAll
+            bytes
+          }
+          nftId
+          bytes
+          value
+          minimumBid
+        }
+      }
+      marketBid {
+        id
+        makerAddress
+        takerAddress
+        makeAsset {
+          standard {
+            assetClass
+            contractAddress
+            tokenId
+            allowAll
+            bytes
+          }
+          nftId
+          value
+          minimumBid
+          bytes
+        }
+        takeAsset {
+          standard {
+            assetClass
+            contractAddress
+            tokenId
+            allowAll
+            bytes
+          }
+          nftId
+          bytes
+          value
+          minimumBid
+        }
+      }
+      txHash
+      blockNumber
+      private
+    }
+  }
+}

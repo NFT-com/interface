@@ -12,7 +12,6 @@ import { getLooksrareAssetPageUrl } from 'utils/looksrareHelpers';
 import { filterValidListings } from 'utils/marketplaceUtils';
 import { getOpenseaAssetPageUrl } from 'utils/seaportHelpers';
 import { tw } from 'utils/tw';
-import { getX2Y2AssetPageUrl } from 'utils/X2Y2Helpers';
 
 import { NFTCardDescription as StaticNFTCardDescription } from './NFTCardDescription';
 import { RoundedCornerAmount, RoundedCornerMedia, RoundedCornerVariant } from './RoundedCornerMedia';
@@ -21,9 +20,7 @@ import { BigNumber } from 'ethers';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import LooksrareIcon from 'public/looksrare-icon.svg';
-import NFTLogo from 'public/nft_logo_yellow.svg';
 import OpenseaIcon from 'public/opensea-icon.svg';
-import X2Y2Icon from 'public/x2y2-icon.svg';
 import { MouseEvent, useMemo, useState } from 'react';
 import { CheckSquare, Eye, EyeOff, Square } from 'react-feather';
 import { useThemeColors } from 'styles/theme/useThemeColors';
@@ -122,14 +119,6 @@ export function NFTCard(props: NFTCardProps) {
     return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.LooksRare) != null;
   }, [props, nft]);
 
-  const showNftcomListingIcon: boolean = useMemo(() => {
-    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.NFTCOM) != null;
-  }, [props, nft]);
-
-  const showX2Y2ListingIcon: boolean = useMemo(() => {
-    return filterValidListings(props?.listings || nft?.listings?.items)?.find(activity => activity.order?.protocol === ExternalProtocol.X2Y2) != null;
-  }, [props, nft]);
-
   return (
     <Link href={props.redirectTo && props.redirectTo !== '' ? props.redirectTo : '#'} passHref>
       <a
@@ -203,13 +192,6 @@ export function NFTCard(props: NFTCardProps) {
         }
         {showListingIcons && (
           <div className='absolute left-3 top-4 z-50'>
-            {showNftcomListingIcon &&
-                  <NFTLogo
-                    className='h-7 w-7 relative shrink-0 hover:opacity-70 ml-1 mb-0.5'
-                    alt="Opensea logo redirect"
-                    layout="fill"
-                  />
-            }
             {showOpenseaListingIcon &&
                   <OpenseaIcon
                     onClick={(e: MouseEvent<any>) => {
@@ -235,20 +217,6 @@ export function NFTCard(props: NFTCardProps) {
                     }}
                     className='h-9 w-9 relative shrink-0 hover:opacity-70'
                     alt="Looksrare logo redirect"
-                    layout="fill"
-                  />
-            }
-            {showX2Y2ListingIcon &&
-                  <X2Y2Icon
-                    onClick={(e: MouseEvent<any>) => {
-                      window.open(
-                        getX2Y2AssetPageUrl(props.contractAddress, BigNumber.from(props.tokenId).toString()),
-                        '_blank'
-                      );
-                      e.stopPropagation();
-                    }}
-                    className='h-7 w-7 mt-1 ml-1 relative shrink-0 hover:opacity-70 '
-                    alt="Opensea logo redirect"
                     layout="fill"
                   />
             }

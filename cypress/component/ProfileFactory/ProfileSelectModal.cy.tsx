@@ -28,7 +28,7 @@ describe('ProfileSelectModal', () => {
     cy.get('#openButton').click();
     cy.get('#isOpen').should('have.text', 'true');
     cy.findByText('Select NFT Profile').should('exist');
-    cy.findByText('Please select your primary NFT Profile').should('exist');
+    cy.findByText('Good news! We found your profiles').should('exist');
     cy.contains('Minted 0 out of 0 free NFT Profiles').should('exist');
     cy.get('.z-10 > path').click().then(() => {
       cy.get('#isOpen').should('have.text', 'false');

@@ -1,5 +1,5 @@
 import { useGraphQLSDK } from 'graphql/client/useGraphQLSDK';
-import { GetTxByContract, PageInput } from 'graphql/generated/types';
+import { NftPortTxByContract } from 'graphql/generated/types';
 import { Doppler, getEnv } from 'utils/env';
 import { isNullOrEmpty } from 'utils/helpers';
 
@@ -7,16 +7,16 @@ import useSWR, { mutate } from 'swr';
 import { useNetwork } from 'wagmi';
 
 export interface TxData {
-  data: GetTxByContract;
+  data: NftPortTxByContract;
   loading: boolean;
   mutate: () => void;
 }
 
-export function useGetTxByContractQuery(contractAddress: string, pageInput: PageInput): TxData {
+export function useGetTxByContractQuery(contractAddress: string): TxData {
   const sdk = useGraphQLSDK();
   const { chain } = useNetwork();
 
-  const keyString = 'GetTxByContractQuery ' + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + contractAddress + pageInput?.afterCursor;
+  const keyString = 'GetTxByContractQuery ' + String(chain?.id || getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID)) + contractAddress;
 
   const { data } = useSWR(keyString, async () => {
     if(chain?.id !== 1 && getEnv(Doppler.NEXT_PUBLIC_CHAIN_ID) !== '1') {
@@ -28,9 +28,7 @@ export function useGetTxByContractQuery(contractAddress: string, pageInput: Page
 
     const result = await sdk.GetTxByContract({
       input: {
-        contractAddress,
-        pageInput,
-        type: ['all']
+        contractAddress
       }
     });
     return result;

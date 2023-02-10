@@ -1,30 +1,19 @@
 import { PropsWithChildren, useState } from 'react';
 
 type ToolTipProps = {
-  orientation: 'top'| 'left'| 'right' | 'bottom' | 'custom';
+  orientation: 'top'| 'left'| 'right' | 'bottom';
   tooltipComponent: React.ReactNode;
-  hidden?: boolean;
-  noFullHeight?: boolean;
-  tooltipClick?: () => void;
-  customLeftPosition?: string
-  customFullLeftPosition?: string
 };
 
 function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   const [opacity, setOpacity] = useState(0);
 
   function handleMouseEnter() {
-    if(!props.hidden){
-      setOpacity(1);
-    }
+    setOpacity(1);
   }
 
   function handleMouseLeave() {
-    if (props.tooltipClick) {
-      setTimeout(() => setOpacity(0), 3000);
-    } else {
-      setOpacity(0);
-    }
+    setOpacity(0);
   }
 
   const orientations = {
@@ -32,10 +21,9 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
     top: 'top',
     left: 'left',
     bottom: 'bottom',
-    custom: 'custom',
   };
 
-  const setContainerPosition = (orientation, customLeftPosition, customFullLeftPosition) => {
+  const setContainerPosition = (orientation) => {
     let classnames;
 
     switch (orientation) {
@@ -50,9 +38,6 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
       break;
     case orientations.bottom:
       classnames = 'top-full left-[50%] translate-x-[-50%] translate-y-2';
-      break;
-    case orientations.custom:
-      classnames = `bottom-full ${customFullLeftPosition ?? `left-[${customLeftPosition}%]`} translate-x-[-50%] -translate-y-2`;
       break;
 
     default:
@@ -78,9 +63,6 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
     case orientations.bottom:
       classnames = 'bottom-full left-[50%] translate-x-[-50%] translate-y-2';
       break;
-    case orientations.custom:
-      classnames = 'top-full left-[50%] translate-x-[-50%] -translate-y-2';
-      break;
 
     default:
       break;
@@ -90,23 +72,16 @@ function Tooltip(props : PropsWithChildren<ToolTipProps>) {
   };
 
   const classContainer = `w-max absolute z-10 ${setContainerPosition(
-    props.orientation,
-    props.customLeftPosition,
-    props.customFullLeftPosition,
-  )} bg-black text-white text-sm p-2 rounded-xl flex items-center transition-all duration-150 ${props.tooltipClick ? 'cursor-pointer' : 'pointer-events-none'}`;
+    props.orientation
+  )} bg-black text-white text-sm p-2 rounded-xl flex items-center transition-all duration-150 pointer-events-none`;
 
   const pointerClasses = `bg-black h-3 w-3 absolute z-10 ${setPointerPosition(
-    props.orientation,
-  )} rotate-45 ${props.tooltipClick ? 'cursor-pointer' : 'pointer-events-none'}`;
+    props.orientation
+  )} rotate-45 pointer-events-none`;
 
   return (
-    <div
-      className={`relative flex items-center w-full ${props?.noFullHeight ? '' : 'h-full'} ${props.tooltipClick && 'cursor-pointer'}`}
-      onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
-    >
-      <div
-        onClick={() => props.tooltipClick()}
-        className={classContainer} style={{ opacity: opacity }}>
+    <div className="relative flex items-center w-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div className={classContainer} style={{ opacity: opacity }} >
         <div className={pointerClasses} />
         {props.tooltipComponent}
       </div>

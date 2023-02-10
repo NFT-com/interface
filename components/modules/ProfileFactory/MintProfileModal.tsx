@@ -101,8 +101,8 @@ export default function MintProfileModal({ isOpen, setIsOpen, transactionCost, p
   },[duration, gkMintProfiles, profileToMint?.hash, profileToMint?.profileURI, profileToMint?.signature, type]);
 
   const { data } = usePrepareContractWrite({
-    address: contractAddress as `0x${string}`,
-    abi: maxProfilesABI,
+    addressOrName: contractAddress,
+    contractInterface: maxProfilesABI,
     functionName: getFunctionName(),
     args: getArgs(),
     onError(err){

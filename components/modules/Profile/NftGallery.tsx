@@ -45,7 +45,7 @@ export function NftGallery(props: NftGalleryProps) {
     }
   });
 
-  const savedLayoutType = 'Default';
+  const savedLayoutType = getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'Default' : profileData?.profile?.layoutType;
 
   if (allOwnerNfts == null || publiclyVisibleNftsNoEdit == null || profileData == null || saving) {
     return (

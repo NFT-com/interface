@@ -1,10 +1,9 @@
 import { RoundedCornerMedia, RoundedCornerVariant } from 'components/elements/RoundedCornerMedia';
 import { Profile } from 'graphql/generated/types';
-import { useProfileNFTsTotalItemsQuery } from 'graphql/hooks/useProfileNFTsTotalItemsQuery';
+import { useProfileNFTsQuery } from 'graphql/hooks/useProfileNFTsQuery';
 import { useDefaultChainId } from 'hooks/useDefaultChainId';
 
 import Image from 'next/image';
-import GK from 'public/Badge_Key.svg';
 import BannerPreview from 'public/banner_1@2x.png';
 import ProfilePreview from 'public/profilePreview.png';
 import { PartialDeep } from 'type-fest';
@@ -24,8 +23,7 @@ export interface ProfileCardProps {
   numberOfGenesisKeys?: number,
   photoURL?: string,
   url?: string,
-  profile?: PartialDeep<Profile>,
-  isGkMinted?: boolean
+  profile?: PartialDeep<Profile>
 }
 
 export function ProfileCard(props: ProfileCardProps) {
@@ -33,16 +31,15 @@ export function ProfileCard(props: ProfileCardProps) {
   const defaultChainId = useDefaultChainId();
   const {
     totalItems: publicProfileNftsCount,
-  } = useProfileNFTsTotalItemsQuery(
+  } = useProfileNFTsQuery(
     props?.profile?.id,
     defaultChainId,
     1000
   );
-
   if(isLeaderBoard){
     return (
       <div className='flex justify-center'>
-        <a href={'/' + props?.url} className="max-w-[320px] minmd:max-w-[100%] flex-col minmd:flex-row py-4 minmd:py-0 px-6 font-noi-grotesk w-full flex justify-between items-start minmd:items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] minmd:h-[6.25rem] shadow-lg overflow-hidden">
+        <a href={'/' + props?.url} className="max-w-[320px] minmd:max-w-[100%] flex-col minmd:flex-row py-4 minmd:py-0 px-6 flex font-noi-grotesk w-full flex justify-between items-start minmd:items-center hover:scale-[1.01] transition-all cursor-pointer rounded-[16px] minmd:h-[6.25rem] shadow-lg overflow-hidden">
           <div className="mb-3 minmd:mb-0 flex justify-start items-center">
             <div className="flex justify-start items-center">
               <div className="mr-2 minmd:mr-6">
@@ -60,10 +57,9 @@ export function ProfileCard(props: ProfileCardProps) {
               </div>
             </div>
             <div className="pl-3 minmd:pl-8 flex flex-row items-center justify-start">
-              <span className="pr-2 text-xl text-[#000000] font-[500]">{props.url}</span>
-              {props?.isGkMinted && <div className='h-5 w-5 minlg:h-6 minlg:w-6'>
-                <GK />
-              </div>}
+              <span className="pr-5 text-xl text-[#000000] font-[500]">{props.url}</span>
+              {/*<VerifiedIcon/>*/}
+              {/*<span className="pr-[20px] text-xl leading-7 text-[#000000] font-[600] max-w-[60%]">{collectionName}</span>*/}
             </div>
           </div>
           <div className="flex flex-row items-center">
@@ -128,10 +124,11 @@ export function ProfileCard(props: ProfileCardProps) {
             <li className="m-0 p-0 list-none text-xl text-[#000000] font-[600] flex items-center">
               <span className='text-[#F9D54C] text-xl font-bold pr-2'>/ </span>
               {props.profile?.url}
-              {props?.profile?.isGKMinted && <div className='h-5 w-5 minlg:h-6 minlg:w-6 ml-2'>
-                <GK />
-              </div>}
+              {/*<VerifiedIcon className="ml-2"/>*/}
             </li>
+            {/*<li className="m-0 p-0 list-none">*/}
+            {/*  <button className="bg-[#F9D54C] py-1 px-4 text-6 leading-6 text-[#000000] font-[500] rounded-[8px]">{props.btnName}</button>*/}
+            {/*</li>*/}
           </ul>
           <ul className="mt-2 list-none flex flex-row justify-between">
             <li className="m-0 p-0 list-none text-5 leading-7 text-[#000000] font-[600]">{publicProfileNftsCount} <span className="text-[#6A6A6A] text-4 leading-6 font-[400]"> NFTs collected</span></li>

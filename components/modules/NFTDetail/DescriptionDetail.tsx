@@ -41,7 +41,7 @@ export const DescriptionDetail = (props: DescriptionDetailProps) => {
       <span className='flex flex-row w-full justify-start not-italic font-medium text-[16px] my-6 leading-5 text-[#6A6A6A] font-noi-grotesk'>
         Description
       </span>
-      <div className='font-noi-grotesk md:text-[15px] text-[18px] leading-6 text-black'>
+      <div className='font-noi-grotesk text-[18px] leading-6 text-black'>
         {descriptionExpanded ?
           <>
             <ReactMarkdown components={theme} skipHtml linkTarget="_blank">

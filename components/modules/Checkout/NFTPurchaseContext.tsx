@@ -1,20 +1,17 @@
 import { NULL_ADDRESS } from 'constants/addresses';
-import { LooksrareProtocolData, Nft, NftcomProtocolData, NftType, SeaportProtocolData, X2Y2ProtocolData } from 'graphql/generated/types';
+import { LooksrareProtocolData, Nft, SeaportProtocolData } from 'graphql/generated/types';
 import { useAllContracts } from 'hooks/contracts/useAllContracts';
 import { useLooksrareExchangeContract } from 'hooks/contracts/useLooksrareExchangeContract';
-import { useDefaultChainId } from 'hooks/useDefaultChainId';
 import { ExternalProtocol } from 'types';
 import { filterDuplicates, filterNulls, sameAddress } from 'utils/helpers';
 import { getLooksrareHex } from 'utils/looksrareHelpers';
-import { getNftcomHex } from 'utils/nativeMarketplaceHelpers';
 import { getSeaportHex } from 'utils/seaportHelpers';
-import { getX2Y2Hex } from 'utils/X2Y2Helpers';
 
 import { NFTListingsContext } from './NFTListingsContext';
 import { PurchaseSummaryModal } from './PurchaseSummaryModal';
 
 import { BigNumber } from '@ethersproject/bignumber';
-import { ethers, Signature } from 'ethers';
+import { ethers } from 'ethers';
 import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { PartialDeep } from 'type-fest';
 import { useAccount, useSigner } from 'wagmi';
@@ -29,54 +26,35 @@ export type StagedPurchase = {
   /**
    * purchasers need to give ERC20 approval to the Aggregator contract
    */
-  isERC20ApprovedForAggregator: boolean;
-  /**
-   * purchasers need to give ERC20 approval to the protocol specific contract
-   */
-  isERC20ApprovedForProtocol: boolean;
-  orderHash?: string;
-  protocolData: SeaportProtocolData | LooksrareProtocolData | X2Y2ProtocolData | NftcomProtocolData;
-  takerAddress: string;
-  makerAddress: string;
-  nonce: number;
-  profileId: string;
+  isApproved: boolean;
+  protocolData: SeaportProtocolData | LooksrareProtocolData;
 }
 
 interface NFTPurchaseContextType {
   toBuy: StagedPurchase[];
-  toBuyNow: StagedPurchase[];
   stagePurchase: (listing: PartialDeep<StagedPurchase>) => void;
-  stageBuyNow: (listing: PartialDeep<StagedPurchase>) => void;
   clear: () => void;
-  clearBuyNow: () => void;
   buyAll: () => Promise<boolean>;
   updateCurrencyApproval: (currency: string, approved: boolean) => void;
   removePurchase: (nft: PartialDeep<Nft>) => void;
   togglePurchaseSummaryModal: () => void;
-  buyNowActive: boolean
 }
 
 // initialize with default values
 export const NFTPurchasesContext = React.createContext<NFTPurchaseContextType>({
   toBuy: [],
-  toBuyNow: [],
   stagePurchase: () => null,
-  stageBuyNow: () => null,
   clear: () => null,
-  clearBuyNow: () => null,
   buyAll: () => null,
   updateCurrencyApproval: () => null,
   removePurchase: () => null,
-  togglePurchaseSummaryModal: () => null,
-  buyNowActive: false
+  togglePurchaseSummaryModal: () => null
 });
 
 export function NFTPurchaseContextProvider(
   props: PropsWithChildren<any>
 ) {
   const [toBuy, setToBuy] = useState<Array<StagedPurchase>>([]);
-  const [buyNowActive, setBuyNowActive] = useState<boolean>(false);
-  const [toBuyNow, setToBuyNow] = useState<Array<StagedPurchase>>([]);
   const [showPurchaseSummaryModal, setShowPurchaseSummaryModal] = useState(false);
   
   const { toggleCartSidebar } = useContext(NFTListingsContext);
@@ -85,7 +63,6 @@ export function NFTPurchaseContextProvider(
   const { data: signer } = useSigner();
   const { aggregator } = useAllContracts();
   const looksrareExchange = useLooksrareExchangeContract(signer);
-  const defaultChainId = useDefaultChainId();
 
   useEffect(() => {
     if (window != null) {
@@ -108,18 +85,6 @@ export function NFTPurchaseContextProvider(
     localStorage.setItem('stagedNftPurchases', JSON.stringify(filterNulls([...toBuy, purchase])));
   }, [toBuy, toggleCartSidebar]);
 
-  const stageBuyNow = useCallback((
-    purchase: StagedPurchase
-  ) => {
-    setBuyNowActive(true);
-    setToBuyNow([purchase]);
-  }, []);
-
-  const clearBuyNow = useCallback(() => {
-    setBuyNowActive(false);
-    setToBuyNow([]);
-  }, []);
-
   const removePurchase = useCallback((nft: PartialDeep<Nft>) => {
     const newToBuy = toBuy.slice().filter(l => l.nft?.id !== nft?.id);
     setToBuy(newToBuy);
@@ -132,39 +97,18 @@ export function NFTPurchaseContextProvider(
   }, []);
 
   const updateCurrencyApproval = useCallback((currency: string, approved: boolean) => {
-    const nftsToApprove = buyNowActive ? toBuyNow : toBuy;
-    const newToBuy = nftsToApprove.slice().map(item => {
-      if(buyNowActive || nftsToApprove.length === 1){
+    const newToBuy = toBuy.slice().map(item => {
+      if (item?.currency === currency) {
         return {
           ...item,
-          isERC20ApprovedForProtocol: approved
-        };
-      } else if (item?.currency === currency) {
-        return {
-          ...item,
-          isERC20ApprovedForAggregator: approved
+          isApproved: approved
         };
       }
       return item;
     });
-    if(buyNowActive){
-      setToBuyNow(newToBuy);
-    } else {
-      setToBuy(newToBuy);
-      localStorage.setItem('stagedNftPurchases', JSON.stringify(newToBuy));
-    }
-  }, [buyNowActive, toBuy, toBuyNow]);
-
-  const fetchX2Y2Hex = useCallback(async (purchase) => {
-    const response = await getX2Y2Hex(
-      aggregator.address,
-      purchase?.protocolData as X2Y2ProtocolData,
-      purchase.currency === NULL_ADDRESS ? BigNumber.from(purchase?.price).toString() : '0',
-      purchase.nft.type === NftType.Erc1155 ? 'erc1155' : 'erc721',
-      purchase.orderHash
-    );
-    return response;
-  },[aggregator.address]);
+    setToBuy(newToBuy);
+    localStorage.setItem('stagedNftPurchases', JSON.stringify(newToBuy));
+  }, [toBuy]);
 
   const buyAll = useCallback(async () => {
     const allDistinctErc20s: string[] = filterDuplicates(
@@ -194,26 +138,6 @@ export function NFTPurchaseContextProvider(
           looksrarePurchase.currency === NULL_ADDRESS ? BigNumber.from(looksrarePurchase?.price).toString() : '0'
         );
       }) ?? []),
-      //X2Y2
-      ...(await Promise.all(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.X2Y2)?.map(X2Y2Purchase => {
-        return fetchX2Y2Hex(X2Y2Purchase);
-      })))
-      ,
-      //NFTCOM
-      ...(await Promise.all(toBuy?.filter(purchase => purchase?.protocol === ExternalProtocol.NFTCOM)?.map(NftcomPurchase => {
-        return getNftcomHex(
-          NftcomPurchase.protocolData as NftcomProtocolData & { orderSignature: Signature },
-          NftcomPurchase.currency === NULL_ADDRESS ? BigNumber.from(NftcomPurchase?.price).toString() : '0',
-          NftcomPurchase.orderHash,
-          NftcomPurchase.makerAddress,
-          NftcomPurchase.takerAddress,
-          NftcomPurchase.activityId,
-          defaultChainId,
-          NftcomPurchase.nonce,
-          ethers.utils.getAddress(currentAddress)
-        );
-      })))
-      ,
       // Seaport orders are combined
       toBuy?.find(purchase => purchase.protocol === ExternalProtocol.Seaport) != null ?
         getSeaportHex(
@@ -227,6 +151,7 @@ export function NFTPurchaseContextProvider(
         ) :
         null
     ]);
+
     const tx = await aggregator.batchTrade(
       erc20Details,
       tradeDetails,
@@ -251,22 +176,18 @@ export function NFTPurchaseContextProvider(
       return await tx.wait(1).then(() => true).catch(() => false);
     }
     return false;
-  }, [aggregator, currentAddress, defaultChainId, fetchX2Y2Hex, looksrareExchange, toBuy]);
+  }, [aggregator, currentAddress, looksrareExchange, toBuy]);
 
   return <NFTPurchasesContext.Provider value={{
     removePurchase,
     toBuy,
-    toBuyNow,
     stagePurchase,
-    stageBuyNow,
-    clearBuyNow,
     clear,
     buyAll,
     updateCurrencyApproval,
-    togglePurchaseSummaryModal,
-    buyNowActive
+    togglePurchaseSummaryModal
   }}>
-    {showPurchaseSummaryModal && <PurchaseSummaryModal visible={showPurchaseSummaryModal} onClose={() => setShowPurchaseSummaryModal(false)} />}
+    <PurchaseSummaryModal visible={showPurchaseSummaryModal} onClose={() => setShowPurchaseSummaryModal(false)} />
     {props.children}
   </NFTPurchasesContext.Provider>;
 }

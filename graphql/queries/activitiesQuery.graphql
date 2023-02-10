@@ -15,7 +15,6 @@ query Activities($input: TxActivitiesInput) {
             nftContract
             nftId
             status
-            read
             order {
                 chainId
                 exchange
@@ -24,7 +23,6 @@ query Activities($input: TxActivitiesInput) {
                 makerAddress
                 takerAddress
                 protocol
-                nonce
                 protocolData {
                     ... on LooksrareProtocolData {
                         isOrderAsk
@@ -63,48 +61,6 @@ query Activities($input: TxActivitiesInput) {
                         is_collection_offer
                         is_bundle
                         is_private
-                    }
-                    ... on NFTCOMProtocolData {
-                      makeAsset {
-                        standard {
-                          assetClass
-                          bytes
-                          contractAddress
-                          tokenId
-                          allowAll
-                        }
-                        nftId
-                        bytes
-                        value
-                        minimumBid
-                      }
-                      takeAsset {
-                        standard {
-                          assetClass
-                          bytes
-                          contractAddress
-                          tokenId
-                          allowAll
-                        }
-                        nftId
-                        bytes
-                        value
-                        minimumBid
-                      }
-                      swapTransactionId
-                      acceptedAt
-                      rejectedAt
-                      listingId
-                      buyNowTaker
-                      auctionType
-                      orderSignature: signature {
-                        v
-                        r
-                        s
-                      }
-                      salt
-                      start
-                      end
                     }
                     ... on SeaportProtocolData {
                         signature
@@ -176,56 +132,6 @@ query Activities($input: TxActivitiesInput) {
                     r
                     s
                 }
-                ... on TxX2Y2ProtocolData {
-                    amount
-                    currency
-                    data
-                    deadline
-                    delegateType
-                    intent
-                    orderSalt
-                    settleSalt
-                }
-                ... on TxNFTCOMProtocolData {
-                        makeAsset {
-                        standard {
-                            assetClass
-                            bytes
-                            contractAddress
-                            tokenId
-                            allowAll
-                        }
-                        nftId
-                        bytes
-                        value
-                        minimumBid
-                        }
-                        takeAsset {
-                        standard {
-                            assetClass
-                            bytes
-                            contractAddress
-                            tokenId
-                            allowAll
-                        }
-                        nftId
-                        bytes
-                        value
-                        minimumBid
-                        }
-                        swapTransactionId
-                        acceptedAt
-                        rejectedAt
-                        listingId
-                        buyNowTaker
-                        auctionType
-                        salt
-                        start
-                        end
-                        private
-                        listingOrderId
-                        bidOrderId
-                    }
                 ... on TxSeaportProtocolData {
                     offer {
                     itemType
@@ -245,6 +151,8 @@ query Activities($input: TxActivitiesInput) {
                 }
                 }
             }
+
+            
         }
     }
 }

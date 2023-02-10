@@ -58,7 +58,7 @@ export default function ProfileSelectModal() {
                 
                 <div className='max-h-max mx-auto bg-white rounded-[20px] pt-[60px] minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[65px] pb-10 font-medium'>
                   <h3 className='text-[32px] font-medium'>Select NFT Profile</h3>
-                  <p className=' my-6 minmd:my-9 text-xl font-normal'>Please select your primary NFT Profile</p>
+                  <p className=' my-6 minmd:my-9 text-xl font-normal'>Good news! We found your profiles</p>
 
                   <div className='overflow-auto max-h-[300px] h-max'>
                     {myOwnedProfileTokens && myOwnedProfileTokens .map((profile) =>

@@ -6,23 +6,15 @@ import { NFTListingsContextProvider } from 'components/modules/Checkout/NFTListi
 import { NFTPurchaseContextProvider } from 'components/modules/Checkout/NFTPurchaseContext';
 import { NotificationContextProvider } from 'components/modules/Notifications/NotificationContext';
 import { GraphQLProvider } from 'graphql/client/GraphQLProvider';
-import { Doppler, getEnv, getEnvBool } from 'utils/env';
-import { getBaseUrl, getChainIdString } from 'utils/helpers';
+import { Doppler,getEnv, getEnvBool } from 'utils/env';
+import { getChainIdString } from 'utils/helpers';
 
 import {
   AvatarComponent,
   connectorsForWallets,
   RainbowKitProvider,
+  wallet
 } from '@rainbow-me/rainbowkit';
-import {
-  argentWallet,
-  coinbaseWallet,
-  ledgerWallet,
-  metaMaskWallet,
-  rainbowWallet,
-  trustWallet,
-  walletConnectWallet
-} from '@rainbow-me/rainbowkit/wallets';
 import { AnimatePresence } from 'framer-motion';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
@@ -31,15 +23,11 @@ import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
 import { ReactElement, ReactNode, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import ReactGA from 'react-ga';
 import { rainbowLight } from 'styles/RainbowKitThemes';
 import { v4 as uuid } from 'uuid';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { goerli, mainnet } from 'wagmi/chains';
+import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-// import { safeWallet } from 'wallets/SafeWallet';
 
 const GOOGLE_ANALYTICS_ID: string | undefined = getEnv(Doppler.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID);
 if (GOOGLE_ANALYTICS_ID != null) {
@@ -78,12 +66,12 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
   const { chains, provider } = useMemo(() => {
     return configureChains(
       getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' ?
-        [mainnet, goerli] :
-        [mainnet],
+        [chain.mainnet, chain.goerli] :
+        [chain.mainnet],
       [
         jsonRpcProvider({
           rpc: (chain) => {
-            const url = new URL(getBaseUrl() + 'api/ethrpc');
+            const url = new URL(getEnv(Doppler.NEXT_PUBLIC_BASE_URL) + 'api/ethrpc');
             url.searchParams.set('chainId', getChainIdString(chain?.id));
             return {
               http: url.toString(),
@@ -93,25 +81,24 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
       ]
     );
   }, []);
-
+  
   const connectors = useMemo(() => {
     return connectorsForWallets([
       {
         groupName: 'Recommended',
         wallets: [
-          metaMaskWallet({ chains, shimDisconnect: true }),
-          // safeWallet({ chains }),
-          rainbowWallet({ chains }),
+          wallet.metaMask({ chains, shimDisconnect: true }),
+          wallet.rainbow({ chains }),
         ],
       },
       {
         groupName: 'Others',
         wallets: [
-          walletConnectWallet({ chains }),
-          coinbaseWallet({ chains, appName: 'NFT.com' }),
-          trustWallet({ chains }),
-          ledgerWallet({ chains }),
-          argentWallet({ chains })
+          wallet.walletConnect({ chains }),
+          wallet.coinbase({ chains, appName: 'NFT.com' }),
+          wallet.trust({ chains }),
+          wallet.ledger({ chains }),
+          wallet.argent({ chains })
         ],
       },
     ]);
@@ -165,20 +152,18 @@ export default function MyApp({ Component, pageProps, router }: AppPropsWithLayo
           }}
           theme={rainbowLight}
           chains={chains}
-          initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? goerli : mainnet}
+          initialChain={getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'PRODUCTION' && getEnv(Doppler.NEXT_PUBLIC_ENV) !== 'STAGING' ? chain.goerli : chain.mainnet}
           avatar={CustomAvatar}
         >
           <AnimatePresence exitBeforeEnter>
             <GraphQLProvider>
-              <DndProvider backend={HTML5Backend}>
-                <NotificationContextProvider>
-                  <NFTPurchaseContextProvider>
-                    <NFTListingsContextProvider>
-                      {getLayout(<Component {...pageProps} key={router.pathname} />)}
-                    </NFTListingsContextProvider>
-                  </NFTPurchaseContextProvider>
-                </NotificationContextProvider>
-              </DndProvider>
+              <NotificationContextProvider>
+                <NFTPurchaseContextProvider>
+                  <NFTListingsContextProvider>
+                    {getLayout(<Component {...pageProps} key={router.pathname} />)}
+                  </NFTListingsContextProvider>
+                </NFTPurchaseContextProvider>
+              </NotificationContextProvider>
             </GraphQLProvider>
           </AnimatePresence>
         </RainbowKitProvider>

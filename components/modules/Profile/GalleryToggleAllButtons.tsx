@@ -21,25 +21,33 @@ export function GalleryToggleAllButtons(props: GalleryToggleAllButtonsProps) {
     <div
       className={tw(
         'flex mr-4 items-center cursor-pointer',
-        (publiclyVisibleNftCount == allOwnerNftCount && !hideAllNFTsValue) || showAllNFTsValue ? 'text-[#F9D54C]' : ''
+        (publiclyVisibleNftCount == allOwnerNftCount && !hideAllNFTsValue) || showAllNFTsValue ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'text-[#F9D54C]' : 'text-link' : ''
       )}
       onClick={props.onShowAll}
     >
-      <Visible className={tw(
-        'w-7 h-6 text-black fill-black'
-      )} />
+      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
+        <Visible className={tw(
+          'w-7 h-6 text-black fill-black'
+        )} />
+        :
+        <Eye size={16} className="mr-2" />
+      }
       Show All
     </div>
     <div
       className={tw(
         'flex items-center cursor-pointer',
-        hideAllNFTsValue ? 'text-[#F9D54C]' : ''
+        hideAllNFTsValue ? getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ? 'text-[#F9D54C]' : 'text-link' : ''
       )}
       onClick={props.onHideAll}
     >
-      <Hidden className={tw(
-        'w-7 h-6 text-black fill-black'
-      )} />
+      {getEnvBool(Doppler.NEXT_PUBLIC_PROFILE_V2_ENABLED) ?
+        <Hidden className={tw(
+          'w-7 h-6 text-black fill-black'
+        )} />
+        :
+        <EyeOff size={16} className="mr-2" />
+      }
       Hide All
     </div>
   </div>;

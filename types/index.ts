@@ -21,7 +21,6 @@ export type UserNotifications = {
   hasSoldActivity: boolean;
   hasExpiredListings: boolean;
   profileExpiration: boolean;
-  nftPurchase: boolean;
 };
 
 export type ValidTimeFrame = '1D' | '7D' | '1M' | '3M' | '1Y' | 'ALL';

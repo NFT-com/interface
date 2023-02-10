@@ -1,43 +1,38 @@
 query GetTxByNFT($input: TransactionsByNFTInput) {
   getTxByNFT(input: $input) {
-    pageInfo {
-      firstCursor
-      lastCursor
-    }
-    totalItems
-    items {
-      index
+    response
+    continuation
+    transactions {
       type
-      listerAddress
+      lister_address
       quantity
-      transactionDate
+      transaction_date
       marketplace
-      ownerAddress
-      contractAddress
-      tokenId
-      transactionHash
-      blockHash
-      blockNumber
-      transferFrom
-      transferTo
-      buyerAddress
-      sellerAddress
-      priceDetails {
-        assetType
+      owner_address
+      contract_address
+      token_id
+      transaction_hash
+      block_number
+      block_hash
+      transfer_from
+      transfer_to
+      buyer_address
+      seller_address
+      price_details {
+        asset_type
         price
-        contractAddress
-        priceUSD
+        price_usd
       }
-      listingDetails {
-        assetType
-        contractAddress
+      listing_details {
+        asset_type
+        contract_address
         price
-        priceUSD
+        price_usd
       }
       nft {
-        contractType
-        contractAddress
-        tokenId
+        contract_type
+        contract_address
+        token_id
       }
     }
   }

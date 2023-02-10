@@ -117,7 +117,7 @@ export default function ConnectedAccounts({ selectedProfile, associatedAddresses
           </div>
         )
         : null}
-      {modalVisible && <RequestModal {...{ submitHandler, success }} isPending={transactionPending} address={inputVal} transaction={transaction} visible={modalVisible} setVisible={setModalVisible} setAddressVal={setInputVal} />}
+      <RequestModal {...{ submitHandler, success }} isPending={transactionPending} address={inputVal} transaction={transaction} visible={modalVisible} setVisible={setModalVisible} setAddressVal={setInputVal} />
     </div>
   );
 }

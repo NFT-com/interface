@@ -17,7 +17,6 @@ type DraggableGridItemProps = {
 
 const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => {
   const ref = useRef(null);
-  const dummyRef = useRef(null);
 
   const { editMode } = useContext(ProfileContext);
 
@@ -45,13 +44,8 @@ const DraggableGridItem = (props: PropsWithChildren<DraggableGridItemProps>) => 
     })
   }));
 
-  if (props.item.hidden) {
-    connectDrag(dummyRef);
-    connectDrop(dummyRef);
-  } else {
-    connectDrag(ref);
-    connectDrop(ref);
-  }
+  connectDrag(ref);
+  connectDrop(ref);
 
   const opacity = isDragging ? 0.8 : 1;
   const border = isOver ? '1px solid #ffffff' : 'none';

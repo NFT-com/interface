@@ -21,7 +21,7 @@ export default function ConfirmEmailPage() {
     try {
       const result = await fetch(`${getEnv(Doppler.NEXT_PUBLIC_GRAPHQL_URL).replace('/graphql', '')}/verify/${email}/${token}`);
       if (Number(result.status) == 200) {
-        toast.success('Success! Your email is successfully verified!');
+        toast.success('Success! You are now subscribed to NFT.com');
         
         setTimeout(function() {
           // 2 second delay
@@ -43,7 +43,7 @@ export default function ConfirmEmailPage() {
 
   return <div className="flex flex-col h-full w-full items-center md:justify-start justify-center">
     {success ?
-      <div>Success! Your email is successfully verified! Redirecting to NFT.com...</div> :
+      <div>Success! You are now subscribed to NFT.com. Redirecting...</div> :
       loading ?
         <div>Loading...</div> :
         <div>Error: {message}</div>

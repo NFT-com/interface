@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 export default function MintProfileCardSkeleton() {
   return (
-    <div className='relative mt-16 minlg:mt-12 z-50'>
-      <div>
+    <div className='relative mt-16 minlg:mt-12 z-50 px-5'>
+      <div className='max-w-[600px] mx-auto bg-white rounded-[20px] pt-6 minmd:pt-[64px] px-4 minmd:px-12 minlg:px-[76px] pb-10 font-medium'>
         <div className='bg-gray-300 h-10 animate-pulse rounded-xl'></div>
         <div className='bg-gray-300 h-8 animate-pulse mt-9 rounded-xl'></div>
 
