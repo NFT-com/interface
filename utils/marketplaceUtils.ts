@@ -95,13 +95,13 @@ export function getTotalMarketplaceFeesUSD(
           : multiplyBasisPoints(stagedPurchase?.price ?? 0, looksrareProtocolFeeBps)
       );
       const currencyData = getByContractAddress(stagedPurchase.currency);
-      return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
+      return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, Number(currencyData?.decimals) ?? 18)));
     } else if (hasGk && stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
       return 0;
     } else {
       const fee = BigNumber.from(multiplyBasisPoints(stagedPurchase?.price ?? 0, 250));
       const currencyData = getByContractAddress(stagedPurchase.currency);
-      return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, currencyData?.decimals ?? 18)));
+      return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(fee, Number(currencyData?.decimals) ?? 18)));
     }
   }, 0);
 }
@@ -139,7 +139,7 @@ export function getTotalRoyaltiesUSD(
     } else if (stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
       const NFTCOMRoyaltyFee = nftComRoyaltyFees?.[index];
       
-      const royalty = Number(NFTCOMRoyaltyFee ? NFTCOMRoyaltyFee[1] : 0);
+      const royalty = NFTCOMRoyaltyFee ? Number(NFTCOMRoyaltyFee[1]) : 0;
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(
         royalty,
