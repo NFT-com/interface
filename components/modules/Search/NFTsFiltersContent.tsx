@@ -1,6 +1,5 @@
 import { useSearchModal } from 'hooks/state/useSearchModal';
 import { tw } from 'utils/tw'; 'utils/typeSenseAdapters';
-import { AccentType, Button, ButtonType } from 'components/elements/Button';
 import { CheckBox } from 'components/elements/CheckBox';
 
 import { ButtonFilter } from './filtersComponents/ButtonFilter';

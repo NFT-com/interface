@@ -91,7 +91,7 @@ export function CartSidebarNft(props: CartSidebarNftProps) {
           )}
         />
       </div>
-      <div className='flex flex-col ml-4 font-grotesk'>
+      <div className='whitespace-nowrap overflow-hidden text-ellipsis flex flex-col ml-4 font-grotesk'>
         <span className="text-lg line-clamp-1 font-bold">{collection?.contractMetadata?.name}</span>
         <span className='text-sm mb-3 line-clamp-1 text-[#6F6F6F]'>{nft?.metadata?.name}</span>
         <span className='text-[0.6rem] text-[#6F6F6F]'>Creator fee: {getRoyalty()}</span>

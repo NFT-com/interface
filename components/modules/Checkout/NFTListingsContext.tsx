@@ -102,6 +102,7 @@ export interface NFTListingsContextType {
 
   submitting: boolean;
   toggleCartSidebar: (selectedTab?: CartSidebarTab) => void;
+  closeCartSidebar: () => void;
   toggleTargetMarketplace: (marketplace: ExternalProtocol, listing?: PartialDeep<StagedListing>, previousSelectedMarketplace?: ExternalProtocol) => void;
   setDuration: (duration: SaleDuration | number) => void;
   setNoExpirationNFTCOM: (noExpiration: boolean) => void;
@@ -134,6 +135,7 @@ export const NFTListingsContext = React.createContext<NFTListingsContextType>({
   prepareListings: () => null,
   submitting: false,
   toggleCartSidebar: () => null,
+  closeCartSidebar: () => null,
   toggleTargetMarketplace: () => null,
   setDuration: () => null,
   setNoExpirationNFTCOM: () => null,
@@ -232,6 +234,10 @@ export function NFTListingsContextProvider(
     setSidebarVisible(!sidebarVisible);
     setSelectedTab(selectedTab ?? (toBuy?.length > 0 ? 'Buy' : 'Sell'));
   }, [sidebarVisible, toBuy]);
+
+  const closeCartSidebar = useCallback(() => {
+    setSidebarVisible(false);
+  }, []);
 
   const decreasingPriceErrorEnabled = useCallback((decresingPriceinvalidInputs: boolean) => {
     setDecreasingPriceError(decresingPriceinvalidInputs);
@@ -836,6 +842,7 @@ export function NFTListingsContextProvider(
     prepareListings,
     submitting,
     toggleCartSidebar,
+    closeCartSidebar,
     toggleTargetMarketplace,
     setDuration,
     setNoExpirationNFTCOM,

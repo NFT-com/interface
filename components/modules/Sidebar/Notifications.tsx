@@ -71,12 +71,12 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
       }
     } else if (sale.protocol === ExternalProtocol.NFTCOM) {
       const protocolData = sale.protocolData as any;
-      const ethAmount = ethers.utils.formatEther(protocolData?.takeAsset[0]?.value);
+      const ethAmount = ethers.utils.formatEther(protocolData?.takeAsset[0]?.value ?? 0);
       const currencyData = getByContractAddress(protocolData?.takeAsset[0]?.standard?.contractAddress);
       if(type === 'price'){
         return ethAmount;
       } else {
-        return currencyData.name;
+        return currencyData?.name ?? '';
       }
     } else {
       if(type === 'price'){
@@ -90,7 +90,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
   const purchaseNotifications = !isNullOrEmpty(purchasedNfts) ?
     purchasedNfts.map((purchase) => (
       {
-        text: `You purchased ${purchase.nft.metadata.name} for ${ethers.utils.formatEther(BigNumber.from(purchase.price))} ${getByContractAddress(purchase.currency)?.name}.`,
+        text: `You purchased ${purchase.nft.metadata.name} for ${ethers.utils.formatEther(BigNumber.from(purchase?.price ?? 0))} ${getByContractAddress(purchase?.currency)?.name}.`,
         onClick: () => {
           setVisible(false);
           setSidebarOpen(false);

@@ -104,6 +104,8 @@ export const isNullOrEmpty = (val: string | any[] | null | undefined) => val == 
 
 export const isNull = (val: string | any[] | null | undefined) => val == null;
 
+export const isObjEmpty = (obj: Record<string, unknown> | null | undefined) => obj== null || Object.keys(obj).length === 0;
+
 export const filterNulls = <T>(items: Maybe<T>[]): T[] => items.filter(item => item != null);
 
 export const filterDuplicates = <T>(items: T[], isSame: (first: T, second: T) => boolean): T[] => {
