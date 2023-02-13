@@ -351,8 +351,10 @@ export function ProfileContextProvider(
   }, [editMode]);
 
   useEffect(() => {
-    setAfterCursor('');
-    setPubliclyVisibleNftsNoEdit(null);
+    if(debouncedSearch !== null){
+      setAfterCursor('');
+      setPubliclyVisibleNftsNoEdit(null);
+    }
   }, [debouncedSearch]);
 
   const setAllItemsOrder = useCallback((orderedItems: DetailedNft[]) => {
