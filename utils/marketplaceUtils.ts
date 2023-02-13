@@ -139,7 +139,7 @@ export function getTotalRoyaltiesUSD(
     } else if (stagedPurchase.protocol === ExternalProtocol.NFTCOM) {
       const NFTCOMRoyaltyFee = nftComRoyaltyFees?.[index];
       
-      const royalty = NFTCOMRoyaltyFee ? !Number.isNaN(NFTCOMRoyaltyFee) ? NFTCOMRoyaltyFee : NFTCOMRoyaltyFee[0] : 0;
+      const royalty = Number(NFTCOMRoyaltyFee ?? 0);
       const currencyData = getByContractAddress(stagedPurchase.currency);
       return cartTotal + currencyData?.usd(Number(ethers.utils.formatUnits(
         royalty,
