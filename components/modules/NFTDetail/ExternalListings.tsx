@@ -20,6 +20,7 @@ import { filterValidListings, getAuctionTypeDisplayName, getProtocolDisplayName 
 import { tw } from 'utils/tw';
 
 import Countdown from './Countdown';
+import DecreasingPriceNftCom from './DecreasingPriceNftCom';
 import { EditListingsModal } from './EditListingsModal';
 import { SelectListingModal } from './SelectListingModal';
 
@@ -294,34 +295,17 @@ export function ExternalListings(props: ExternalListingsProps) {
                       getByContractAddress(getListingCurrencyAddress(listing))?.contract,
                       getByContractAddress(getListingCurrencyAddress(listing))?.name ?? '-'
                     )}
-                    <span className='sm:text-[30px] text-[37px] font-semibold'>
-                      {getByContractAddress(getListingCurrencyAddress(listing))?.decimals && Number(
-                        ethers.utils.formatUnits(
-                          getListingPrice(
-                            listing,
-                            (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing
-                              ? currentDate :
-                              null
-                          ),
-                          getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18)
-                      ).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 })}
-                    </span>
+                    <DecreasingPriceNftCom
+                      listing={listing}
+                      usd={false}
+                    />
                   </div>
                   <span className='mx-1.5 text-[15px] uppercase font-semibold'>{getByContractAddress(getListingCurrencyAddress(listing))?.name ?? '-'}</span>
                 </div>
-                <span className="md:ml-0 md:mt-2 ml-2 text-[15px] uppercase font-medium text-[#6A6A6A] flex flex-nowrap">
-                  ${getByContractAddress(getListingCurrencyAddress(listing))?.usd(
-                    Number(
-                      ethers.utils.formatUnits(
-                        getListingPrice(
-                          listing,
-                          (listing?.order?.protocolData as NftcomProtocolData).auctionType === AuctionType.Decreasing
-                            ? currentDate :
-                            null
-                        ),
-                        getByContractAddress(getListingCurrencyAddress(listing))?.decimals ?? 18))
-                  ).toLocaleString('en',{ useGrouping: false,minimumFractionDigits: 1, maximumFractionDigits: 4 }) ?? 0}
-                </span>
+                <DecreasingPriceNftCom
+                  listing={listing}
+                  usd={true}
+                />
               </div>
             </div>
           </div>
