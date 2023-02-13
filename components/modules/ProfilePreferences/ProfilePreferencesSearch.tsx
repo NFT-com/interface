@@ -319,13 +319,13 @@ export function ProfilePreferencesSearch() {
                     return;
                   }
                   try {
-                    const tx = await profileAuctionSigner.genesisKeyClaimProfile(
-                      currentURI,
-                      nextTokenIdWithClaimable,
-                      currentAddress,
-                      profileClaimHash?.hash,
-                      profileClaimHash?.signature
-                    );
+                    const tx = await profileAuctionSigner.genesisKeyBatchClaimProfile([{
+                      profileUrl: currentURI,
+                      tokenId: nextTokenIdWithClaimable,
+                      recipient: currentAddress,
+                      hash: profileClaimHash?.hash,
+                      signature: profileClaimHash?.signature
+                    }]);
                     setMinting(true);
 
                     if (tx) {

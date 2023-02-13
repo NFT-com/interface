@@ -41,13 +41,16 @@ export function InsiderProfileClaim() {
   const mintProfile = useCallback((profileURIToMint: string) => {
     (async () => {
       try {
-        const tx = await profileAuctionSigner.genesisKeyClaimProfile(
-          profileURIToMint,
-          ownedGKTokens?.[0]?.id?.tokenId,
-          currentAddress,
-          profileClaimHash?.hash,
-          profileClaimHash?.signature
-        );
+        console.log('profileURIToMint: ', profileURIToMint);
+        const tx = await profileAuctionSigner.genesisKeyBatchClaimProfile([
+          {
+            profileUrl: profileURIToMint,
+            tokenId: ownedGKTokens?.[0]?.id?.tokenId,
+            recipient: currentAddress,
+            hash: profileClaimHash.hash,
+            signature: profileClaimHash.signature
+          }
+        ]);
         setMinting(true);
         if (tx) {
           await tx.wait(1);
