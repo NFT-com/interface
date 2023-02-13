@@ -417,6 +417,11 @@ export type FollowersOutput = {
   totalItems?: Maybe<Scalars['Int']>;
 };
 
+export type FulfillActivitiesNftIdOutput = {
+  __typename?: 'FulfillActivitiesNFTIdOutput';
+  message?: Maybe<Scalars['String']>;
+};
+
 export type FullFillEventTokenIdsOutput = {
   __typename?: 'FullFillEventTokenIdsOutput';
   message?: Maybe<Scalars['String']>;
@@ -655,6 +660,8 @@ export type Mutation = {
   /** AUTHENTICATED */
   followProfile: Profile;
   /** AUTHENTICATED */
+  fulfillActivitiesNFTId: FulfillActivitiesNftIdOutput;
+  /** AUTHENTICATED */
   fullFillEventTokenIds: FullFillEventTokenIdsOutput;
   /** AUTHENTICATED */
   ignoreAssociations: Array<Maybe<Event>>;
@@ -728,10 +735,10 @@ export type Mutation = {
   updateProfile: Profile;
   /** AUTHENTICATED */
   updateProfileView: Profile;
-  /** AUTHETICATED */
+  /** AUTHENTICATED */
   updateReadByIds: UpdateReadOutput;
   updateSpamStatus: UpdateSpamStatusOutput;
-  /** AUTHETICATED */
+  /** AUTHENTICATED */
   updateStatusByIds: UpdateReadOutput;
   /** AUTHENTICATED */
   updateWalletProfileId: Wallet;
@@ -809,6 +816,11 @@ export type MutationFillChainIdsArgs = {
 
 export type MutationFollowProfileArgs = {
   url?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationFulfillActivitiesNftIdArgs = {
+  count: Scalars['Int'];
 };
 
 
@@ -1621,9 +1633,9 @@ export type Query = {
   filterListings: GetOrders;
   getActivities: TxActivitiesOutput;
   getActivitiesByType?: Maybe<Array<Maybe<TxActivity>>>;
-  /** AUTHETICATED */
+  /** AUTHENTICATED */
   getActivitiesByWalletAddress?: Maybe<Array<Maybe<TxActivity>>>;
-  /** AUTHETICATED */
+  /** AUTHENTICATED */
   getActivitiesByWalletAddressAndType?: Maybe<Array<Maybe<TxActivity>>>;
   /** AUTHENTICATED */
   getApprovedAssociations: Array<Maybe<ApprovedAssociationOutput>>;
@@ -2854,6 +2866,13 @@ export type ResendEmailMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type ResendEmailMutation = { __typename?: 'Mutation', resendEmailConfirm: { __typename?: 'User', id: string } };
 
+export type SaveUserActionForBuyNfTsMutationVariables = Exact<{
+  profileUrl: Scalars['String'];
+}>;
+
+
+export type SaveUserActionForBuyNfTsMutation = { __typename?: 'Mutation', saveUserActionForBuyNFTs: { __typename?: 'SaveUserActionForBuyNFTsOutput', message?: string | null } };
+
 export type SendReferEmailMutationVariables = Exact<{
   input: SendReferEmailInput;
 }>;
@@ -3443,6 +3462,13 @@ export const ResendEmailDocument = gql`
     mutation ResendEmail {
   resendEmailConfirm {
     id
+  }
+}
+    `;
+export const SaveUserActionForBuyNfTsDocument = gql`
+    mutation SaveUserActionForBuyNFTs($profileUrl: String!) {
+  saveUserActionForBuyNFTs(profileUrl: $profileUrl) {
+    message
   }
 }
     `;
@@ -5851,6 +5877,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     ResendEmail(variables?: ResendEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<ResendEmailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ResendEmailMutation>(ResendEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ResendEmail', 'mutation');
+    },
+    SaveUserActionForBuyNFTs(variables: SaveUserActionForBuyNfTsMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SaveUserActionForBuyNfTsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SaveUserActionForBuyNfTsMutation>(SaveUserActionForBuyNfTsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SaveUserActionForBuyNFTs', 'mutation');
     },
     SendReferEmail(variables: SendReferEmailMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SendReferEmailMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SendReferEmailMutation>(SendReferEmailDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SendReferEmail', 'mutation');
