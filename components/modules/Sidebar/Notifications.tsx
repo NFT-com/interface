@@ -1,14 +1,19 @@
 import { NotificationContext } from 'components/modules/Notifications/NotificationContext';
+import { TxActivity, TxLooksrareProtocolData, TxSeaportProtocolData, TxX2Y2ProtocolData } from 'graphql/generated/types';
 import { useSidebar } from 'hooks/state/useSidebar';
 import { useUser } from 'hooks/state/useUser';
-import { filterNulls } from 'utils/helpers';
+import { useSupportedCurrencies } from 'hooks/useSupportedCurrencies';
+import { ExternalProtocol } from 'types';
+import { filterNulls, isNullOrEmpty } from 'utils/helpers';
 
 import { NotificationButton } from './NotificationButton';
 
+import { BigNumber, ethers } from 'ethers';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import NoActivityIcon from 'public/no_activity.svg';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
+import { PartialObjectDeep } from 'type-fest/source/partial-deep';
 
 type NotificationsProps = {
   setVisible: (input:boolean) => void;
@@ -24,12 +29,92 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
     totalClaimableForThisAddress,
     setRemovedAssociationNotifClicked,
     setAddedAssociatedNotifClicked,
-    soldActivityDate,
     expiredActivityDate,
-    profileExpiringSoon
+    profileExpiringSoon,
+    purchasedNfts,
+    setPurchasedNfts,
+    soldNfts
   } = useContext(NotificationContext);
   const router = useRouter();
   const { setSidebarOpen } = useSidebar();
+  const { getByContractAddress } = useSupportedCurrencies();
+
+  const getPriceFields = useCallback((item: PartialObjectDeep<TxActivity, unknown>, type: 'price' | 'currency') => {
+    const sale = item.transaction;
+    if(sale.protocol === ExternalProtocol.Seaport){
+      const protocolData = sale?.protocolData as TxSeaportProtocolData;
+      const sum = protocolData.consideration.reduce((acc, o) => acc + parseInt(o.startAmount), 0);
+      const ethAmount = ethers.utils.formatEther(BigInt(sum).toString());
+      const currencyData = getByContractAddress(protocolData?.consideration[0].token);
+      if(type === 'price'){
+        return ethAmount;
+      } else {
+        return currencyData.name;
+      }
+    } else if(sale.protocol === ExternalProtocol.LooksRare){
+      const protocolData = sale?.protocolData as TxLooksrareProtocolData;
+      const ethAmount = ethers.utils.formatEther(protocolData?.price);
+      const currencyData = getByContractAddress(protocolData?.currencyAddress);
+      if(type === 'price'){
+        return ethAmount;
+      } else {
+        return currencyData.name;
+      }
+    } else if(sale.protocol === ExternalProtocol.X2Y2){
+      const protocolData = sale?.protocolData as TxX2Y2ProtocolData;
+      const ethAmount = ethers.utils.formatEther(protocolData?.amount);
+      const currencyData = getByContractAddress(protocolData?.currency);
+      if(type === 'price'){
+        return ethAmount;
+      } else {
+        return currencyData.name;
+      }
+    } else if (sale.protocol === ExternalProtocol.NFTCOM) {
+      const protocolData = sale.protocolData as any;
+      const ethAmount = ethers.utils.formatEther(protocolData?.takeAsset[0]?.value ?? 0);
+      const currencyData = getByContractAddress(protocolData?.takeAsset[0]?.standard?.contractAddress);
+      if(type === 'price'){
+        return ethAmount;
+      } else {
+        return currencyData?.name ?? '';
+      }
+    } else {
+      if(type === 'price'){
+        return null;
+      } else {
+        return null;
+      }
+    }
+  },[getByContractAddress]);
+
+  const purchaseNotifications = !isNullOrEmpty(purchasedNfts) ?
+    purchasedNfts.map((purchase) => (
+      {
+        text: `You purchased ${purchase.nft.metadata.name} for ${ethers.utils.formatEther(BigNumber.from(purchase?.price ?? 0))} ${getByContractAddress(purchase?.currency)?.name}.`,
+        onClick: () => {
+          setVisible(false);
+          setSidebarOpen(false);
+          router.push(`/app/nft/${purchase.nft.contract}/${purchase.nft.tokenId}`);
+          setPurchasedNfts([]);
+        },
+        date: null
+      }
+    ))
+    : [];
+
+  const soldNotifications = !isNullOrEmpty(soldNfts) ?
+    soldNfts.map((nft) => (
+      {
+        text: `Your NFT sold for ${getPriceFields(nft, 'price')} ${getPriceFields(nft, 'currency')}.`,
+        onClick: () => {
+          setVisible(false);
+          setSidebarOpen(false);
+          router.push('/app/activity');
+        },
+        date: nft.timestamp
+      }
+    ))
+    : [];
 
   const notificationData = [
     profileExpiringSoon ?
@@ -41,17 +126,6 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
           router.push('/app/settings');
         },
         date:  null
-      }
-      : null,
-    activeNotifications.hasSoldActivity ?
-      {
-        text: 'NFT Sold! View My Activity',
-        onClick: () => {
-          setVisible(false);
-          setSidebarOpen(false);
-          router.push('/app/activity');
-        },
-        date:  soldActivityDate
       }
       : null,
     activeNotifications.hasExpiredListings ?
@@ -140,7 +214,7 @@ export const Notifications = ({ setVisible }: NotificationsProps) => {
         </div>
         :
         <div className='flex flex-col w-full items-center'>
-          {filterNulls(notificationData).sort((a, b) => moment(b.date, 'MM-DD-YYYY').diff(moment(a.date, 'MM-DD-YYYY'))).map((item, index) => (
+          {filterNulls([...notificationData, ...purchaseNotifications, ...soldNotifications]).sort((a, b) => moment(b.date, 'MM-DD-YYYY').diff(moment(a.date, 'MM-DD-YYYY'))).map((item, index) => (
             <NotificationButton
               key={index}
               buttonText={item.text}
